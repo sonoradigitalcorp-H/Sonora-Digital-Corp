@@ -15,7 +15,7 @@ data/clients/[client-name]/
 └── assets/               # Logo, colores, fonts
 
 prompts/CLIENTS/[client-name].md  # Prompt de este cliente
-specs/[spec-number]-[client-name]/ # Spec SDD
+sonora-enterprise-os/adr/[spec-number]-[client-name]/ # Spec SDD
 ```
 
 ## ONBOARDING CHECKLIST
