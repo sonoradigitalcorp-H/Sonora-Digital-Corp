@@ -92,4 +92,4 @@ Cada spec en `specs/` sigue: `spec.md` → `plan.md` → `tasks.md` → `checkli
 
 ## Origen
 
-Consolidado desde `jarvis/` (código activo, backup preservado), `archive-sonora-digital-corp-git/` (referencia histórica), `sdcorp/` (agentes opencode), y `products/` (clientes). Repo GitHub: `github.com/sonoradigitalcorp-H/sonora-digital-corp`.
+Consolidado desde `jarvis/` (código activo, backup preservado), `archive-sonora-digital-corp-git/` (referencia histórica), `sdcorp/` (agentes opencode), y `products/` (clientes). Repo GitHub: `github.com/sonoradigitalcorp-H/Sonora-Digital-Corp`.
