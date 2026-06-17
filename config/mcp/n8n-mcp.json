@@ -1,0 +1,36 @@
+{
+  "server": {
+    "name": "n8n-mcp",
+    "version": "1.0.0",
+    "description": "MCP Server para n8n — Automatización visual de workflows"
+  },
+  "transport": {
+    "type": "http",
+    "endpoint": "http://127.0.0.1:5678",
+    "healthEndpoint": "/healthz"
+  },
+  "tools": [
+    {
+      "name": "n8n_workflows_list",
+      "description": "Lista todos los workflows",
+      "endpoint": "/rest/workflows",
+      "method": "GET"
+    },
+    {
+      "name": "n8n_workflow_execute",
+      "description": "Ejecuta un workflow por ID",
+      "endpoint": "/rest/workflows/:id/execute",
+      "method": "POST"
+    },
+    {
+      "name": "n8n_workflow_get",
+      "description": "Obtiene detalle de un workflow",
+      "endpoint": "/rest/workflows/:id",
+      "method": "GET"
+    }
+  ],
+  "resources": [
+    { "uri": "mcp://n8n/status", "name": "Estado de n8n" },
+    { "uri": "mcp://n8n/workflows", "name": "Lista de workflows" }
+  ]
+}

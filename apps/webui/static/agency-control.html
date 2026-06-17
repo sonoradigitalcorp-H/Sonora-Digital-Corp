@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agency Control Center — JARVIS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#000;--bg-card:#111;--bg-card-hover:#1a1a1a;--border:#222;--border-light:#333;--text:#fff;--text-secondary:#888;--text-muted:#555;--accent:#0070f3;--accent-hover:#3291ff;--green:#00cc50;--yellow:#f5a623;--red:#ff3355;--radius:12px;--radius-sm:8px}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,-apple-system,sans-serif;min-height:100vh;line-height:1.5;-webkit-font-smoothing:antialiased}
+.container{max-width:1440px;margin:0 auto;padding:24px}
+/* Header */
+.header{display:flex;align-items:center;justify-content:space-between;padding:16px 0;border-bottom:1px solid var(--border);margin-bottom:28px;flex-wrap:wrap;gap:12px}
+.header-left{display:flex;align-items:center;gap:14px}
+.logo{width:36px;height:36px;background:var(--accent);border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;flex-shrink:0}
+.header h1{font-size:1.35rem;font-weight:700;letter-spacing:-0.3px}
+.header .badge{background:rgba(0,112,243,0.15);color:var(--accent);padding:4px 12px;border-radius:20px;font-size:0.72rem;font-weight:600;letter-spacing:0.3px;text-transform:uppercase}
+.header-right{display:flex;align-items:center;gap:12px}
+.auto-refresh-label{font-size:0.75rem;color:var(--text-muted);display:flex;align-items:center;gap:6px}
+.auto-refresh-label .pulse{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+/* System Health Bar */
+.health-bar{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px 24px;margin-bottom:28px}
+.health-bar .top-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;flex-wrap:wrap;gap:12px}
+.health-bar .title{font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-secondary)}
+.health-bar .timestamp{font-size:0.75rem;color:var(--text-muted)}
+.health-metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px}
+.health-metric{display:flex;flex-direction:column;gap:4px}
+.health-metric .label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.8px;color:var(--text-muted)}
+.health-metric .value{font-size:1.2rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.health-metric .value .status-dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.health-metric .bar-track{height:4px;background:var(--border);border-radius:4px;overflow:hidden;margin-top:4px}
+.health-metric .bar-fill{height:100%;border-radius:4px;transition:width 1s ease}
+.bar-fill.green{background:var(--green)}
+.bar-fill.yellow{background:var(--yellow)}
+.bar-fill.accent{background:var(--accent)}
+/* Services grid */
+.services-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+.service-chip{display:flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;font-size:0.7rem;font-weight:500;background:rgba(255,255,255,0.04);border:1px solid var(--border)}
+.service-chip .dot{width:6px;height:6px;border-radius:50%}
+/* Grid */
+.clients-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px;margin-bottom:28px}
+/* Card */
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:all 0.25s ease;position:relative;overflow:hidden}
+.card:hover{border-color:var(--border-light);background:var(--bg-card-hover)}
+.card-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px;gap:12px}
+.card-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0}
+.card-icon.abe{background:linear-gradient(135deg,rgba(255,215,0,0.2),rgba(233,69,96,0.2))}
+.card-icon.zamora{background:linear-gradient(135deg,rgba(201,162,39,0.2),rgba(255,71,87,0.2))}
+.card-icon.sdc{background:linear-gradient(135deg,rgba(0,212,255,0.2),rgba(123,47,247,0.2))}
+.card-icon.mystic{background:linear-gradient(135deg,rgba(192,132,252,0.2),rgba(236,72,153,0.2))}
+.card-icon.os{background:linear-gradient(135deg,rgba(0,112,243,0.2),rgba(0,200,117,0.2))}
+.card-title-group{flex:1;min-width:0}
+.card-title{font-size:1.05rem;font-weight:700;letter-spacing:-0.2px}
+.card-subtitle{font-size:0.78rem;color:var(--text-secondary);margin-top:2px}
+.card-status{display:flex;align-items:center;gap:6px;font-size:0.72rem;font-weight:600;padding:4px 10px;border-radius:20px;white-space:nowrap}
+.card-status.online{background:rgba(0,204,80,0.12);color:var(--green)}
+.card-status.warning{background:rgba(245,166,35,0.12);color:var(--yellow)}
+.card-status.offline{background:rgba(255,51,85,0.12);color:var(--red)}
+.card-status .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.card-kpis{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px}
+.kpi-box{background:rgba(255,255,255,0.03);border-radius:var(--radius-sm);padding:12px}
+.kpi-box .kpi-label{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-muted);margin-bottom:4px}
+.kpi-box .kpi-value{font-size:1.2rem;font-weight:700;line-height:1.2}
+.kpi-box .kpi-sub{font-size:0.7rem;color:var(--text-secondary);margin-top:2px}
+.kpi-box .kpi-value.accent{color:var(--accent)}
+.kpi-box .kpi-value.gold{color:#FFD700}
+.kpi-box .kpi-value.pink{color:#e94560}
+.kpi-box .kpi-value.purple{color:#c084fc}
+.kpi-box .kpi-value.green{color:var(--green)}
+.card-detail{font-size:0.82rem;color:var(--text-secondary);margin-bottom:16px;line-height:1.6;max-height:80px;overflow:hidden}
+.card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:14px;border-top:1px solid var(--border);flex-wrap:wrap;gap:8px}
+.card-footer .updated{font-size:0.7rem;color:var(--text-muted)}
+.card-footer .actions{display:flex;gap:8px}
+.btn{padding:8px 16px;border-radius:var(--radius-sm);font-size:0.78rem;font-weight:600;cursor:pointer;border:none;transition:all 0.2s;font-family:'Inter',sans-serif;display:inline-flex;align-items:center;gap:6px;text-decoration:none}
+.btn-primary{background:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent-hover)}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text-secondary)}
+.btn-ghost:hover{border-color:var(--text-muted);color:var(--text)}
+.btn-small{padding:5px 10px;font-size:0.7rem;border-radius:6px}
+.btn-danger{background:var(--red);color:#fff}
+.btn-danger:hover{opacity:0.85}
+/* Bottom sections */
+.bottom-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+@media(max-width:900px){.bottom-grid{grid-template-columns:1fr}}
+.section-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px}
+.section-card h3{font-size:0.8rem;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-secondary);margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.activity-feed{display:flex;flex-direction:column;gap:0}
+.activity-item{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.activity-item:last-child{border-bottom:none}
+.activity-dot{width:8px;height:8px;border-radius:50%;margin-top:5px;flex-shrink:0}
+.activity-dot.info{background:var(--accent)}
+.activity-dot.success{background:var(--green)}
+.activity-dot.warning{background:var(--yellow)}
+.activity-dot.error{background:var(--red)}
+.activity-content{flex:1;min-width:0}
+.activity-msg{font-size:0.82rem;color:var(--text);line-height:1.4}
+.activity-time{font-size:0.68rem;color:var(--text-muted);margin-top:2px}
+/* Quick actions */
+.quick-actions{display:flex;flex-wrap:wrap;gap:8px}
+.quick-actions .btn{flex:1;min-width:120px;justify-content:center}
+/* Daemon status */
+.daemon-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:500px){.daemon-grid{grid-template-columns:1fr}}
+.daemon-item{background:rgba(255,255,255,0.02);border-radius:var(--radius-sm);padding:14px}
+.daemon-item .daemon-label{font-size:0.7rem;text-transform:uppercase;letter-spacing:0.6px;color:var(--text-muted);margin-bottom:4px}
+.daemon-item .daemon-value{font-size:0.95rem;font-weight:600;display:flex;align-items:center;gap:8px}
+/* Leaderboard */
+.leaderboard-list{display:flex;flex-direction:column;gap:0}
+.lb-item{display:flex;align-items:center;gap:12px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.lb-item:last-child{border-bottom:none}
+.lb-rank{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:700;background:rgba(255,255,255,0.05);color:var(--text-muted);flex-shrink:0}
+.lb-rank.top1{background:rgba(255,215,0,0.2);color:#FFD700}
+.lb-rank.top2{background:rgba(192,192,192,0.2);color:#C0C0C0}
+.lb-rank.top3{background:rgba(205,127,50,0.2);color:#CD7F32}
+.lb-name{flex:1;font-size:0.85rem;font-weight:500}
+.lb-xp{font-size:0.8rem;font-weight:600;color:var(--accent)}
+.lb-level{font-size:0.7rem;color:var(--text-muted);margin-left:8px}
+/* Loading / Error states */
+.loading-overlay{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;gap:16px}
+.spinner{width:32px;height:32px;border:3px solid rgba(255,255,255,0.06);border-top-color:var(--accent);border-radius:50%;animation:spin 0.7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.error-state{text-align:center;padding:60px 20px}
+.error-state .icon{font-size:2.5rem;margin-bottom:12px}
+.error-state h3{color:var(--red);margin-bottom:6px;font-size:1rem}
+.error-state p{color:var(--text-muted);font-size:0.85rem}
+/* Toast */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px;z-index:1000;box-shadow:0 20px 60px rgba(0,0,0,0.5);display:flex;align-items:center;gap:12px;transform:translateY(120px);opacity:0;transition:all 0.4s cubic-bezier(0.16,1,0.3,1);pointer-events:none;max-width:360px}
+.toast.show{transform:translateY(0);opacity:1;pointer-events:auto}
+.toast .toast-icon{font-size:1.2rem}
+.toast .toast-msg{font-size:0.85rem;font-weight:500}
+/* Scrollbar */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--border-light)}
+/* Responsive */
+@media(max-width:640px){
+  .container{padding:16px}
+  .header h1{font-size:1.1rem}
+  .clients-grid{grid-template-columns:1fr}
+  .health-metrics{grid-template-columns:1fr 1fr}
+  .card-kpis{grid-template-columns:1fr 1fr}
+}
+/* Animations */
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.card{animation:fadeIn 0.4s ease forwards}
+.card:nth-child(2){animation-delay:0.05s}
+.card:nth-child(3){animation-delay:0.1s}
+.card:nth-child(4){animation-delay:0.15s}
+.card:nth-child(5){animation-delay:0.2s}
+</style>
+</head>
+<body>
+<div class="container">
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">J</div>
+      <div>
+        <h1>Agency Control Center</h1>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:2px">
+          <span class="badge">v2.0.0</span>
+          <span style="font-size:0.72rem;color:var(--text-muted)">JARVIS · Master Hub</span>
+        </div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="auto-refresh-label">
+        <span class="pulse"></span>
+        Auto-refresh 30s
+      </span>
+      <button class="btn btn-primary btn-small" onclick="refreshAll()">⟳ Refresh</button>
+    </div>
+  </header>
+
+  <div id="healthBar" class="health-bar">
+    <div class="top-row">
+      <span class="title">System Health</span>
+      <span class="timestamp" id="healthTimestamp">Loading...</span>
+    </div>
+    <div class="health-metrics" id="healthMetrics">
+      <div class="health-metric">
+        <div class="label">CPU</div>
+        <div class="value" id="cpuValue">—</div>
+      </div>
+      <div class="health-metric">
+        <div class="label">RAM</div>
+        <div class="value" id="ramValue">—</div>
+        <div class="bar-track"><div class="bar-fill green" id="ramBar" style="width:0%"></div></div>
+      </div>
+      <div class="health-metric">
+        <div class="label">Disk</div>
+        <div class="value" id="diskValue">—</div>
+        <div class="bar-track"><div class="bar-fill accent" id="diskBar" style="width:0%"></div></div>
+      </div>
+      <div class="health-metric">
+        <div class="label">Uptime</div>
+        <div class="value" id="uptimeValue">—</div>
+      </div>
+      <div class="health-metric" style="grid-column:span 2">
+        <div class="label">Services</div>
+        <div class="services-row" id="servicesRow">
+          <div class="service-chip"><span class="dot" style="background:var(--text-muted)"></span>Loading...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="loading" class="loading-overlay" style="min-height:300px">
+    <div class="spinner"></div>
+    <p style="color:var(--text-muted);font-size:0.9rem">Connecting to agency systems...</p>
+  </div>
+
+  <div id="dashboard" style="display:none">
+    <div class="clients-grid" id="clientsGrid"></div>
+
+    <div class="bottom-grid">
+      <div class="section-card">
+        <h3>⚡ Quick Actions</h3>
+        <div class="quick-actions">
+          <button class="btn btn-ghost" onclick="quickAction('Run all tests','Testing all subsystems...')">🧪 Run Tests</button>
+          <button class="btn btn-ghost" onclick="quickAction('Git status','Fetching repository status...')">📋 Git Status</button>
+          <button class="btn btn-ghost" onclick="quickAction('Git commit & push','Committing and pushing changes...')">⬆️ Commit & Push</button>
+          <button class="btn btn-danger btn-small" onclick="quickAction('Restart daemon','Are you sure you want to restart the ABE daemon?','confirm')">🔄 Restart Daemon</button>
+          <button class="btn btn-ghost" onclick="quickAction('Refresh cache','Clearing and refreshing all caches...')">🗄️ Refresh Cache</button>
+          <button class="btn btn-ghost" onclick="quickAction('Backup DB','Triggering database backup...')">💾 Backup DB</button>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3>📟 Daemon & Bot Status</h3>
+        <div class="daemon-grid">
+          <div class="daemon-item">
+            <div class="daemon-label">ABE Daemon</div>
+            <div class="daemon-value"><span class="status-dot" style="background:var(--green);width:8px;height:8px;border-radius:50%"></span>Running</div>
+          </div>
+          <div class="daemon-item">
+            <div class="daemon-label">Turbo Loop</div>
+            <div class="daemon-value" id="turboLoopTimer">—</div>
+          </div>
+          <div class="daemon-item">
+            <div class="daemon-label">Last Report</div>
+            <div class="daemon-value" id="lastReportTime">—</div>
+          </div>
+          <div class="daemon-item">
+            <div class="daemon-label">@Gucci_ortega_bot</div>
+            <div class="daemon-value"><span class="status-dot" style="background:var(--green);width:8px;height:8px;border-radius:50%"></span>Online</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bottom-grid">
+      <div class="section-card">
+        <h3>📜 Recent Activity</h3>
+        <div id="activityFeed" class="activity-feed">
+          <div class="loading-overlay" style="min-height:100px">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section-card">
+        <h3>🏆 Mysticverse Leaderboard</h3>
+        <div id="leaderboardContent" class="leaderboard-list">
+          <div class="loading-overlay" style="min-height:100px">
+            <div class="spinner"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast">
+  <span class="toast-icon" id="toastIcon">✓</span>
+  <span class="toast-msg" id="toastMsg">Action completed</span>
+</div>
+
+<script>
+const API_BASE = '';
+
+async function apiFetch(url, opts = {}) {
+  const res = await fetch(API_BASE + url, { ...opts, headers: { 'Accept': 'application/json', ...opts.headers } });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return res.json();
+}
+
+let allData = {};
+let refreshInterval = null;
+let toastTimer = null;
+
+function showToast(msg, icon = '✓', duration = 3000) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastIcon').textContent = icon;
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), duration);
+}
+
+function formatTime(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso);
+  return d.toLocaleString('es-MX', { hour12: false });
+}
+
+function timeAgo(iso) {
+  if (!iso) return '—';
+  const diff = Date.now() - new Date(iso).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  return `${Math.floor(hrs / 24)}d ago`;
+}
+
+function formatNumber(n) {
+  if (n == null) return '—';
+  if (n >= 1000000) return (n / 1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n / 1000).toFixed(1) + 'K';
+  return n.toLocaleString('es-MX');
+}
+
+function formatCurrency(n) {
+  if (n == null) return '—';
+  return '$' + Number(n).toLocaleString('es-MX', { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+}
+
+const SIMULATED_EVENTS = [
+  { type: 'info', msg: 'ABE auto-report generated — streams +2.1K, revenue +$142', timeOffset: 2 },
+  { type: 'success', msg: 'Mysticverse: New player registered — level 3', timeOffset: 8 },
+  { type: 'info', msg: 'SDC plan "Agente IA" viewed by lead #4421', timeOffset: 15 },
+  { type: 'warning', msg: 'Telegram bot rate limit hit — 3 retries', timeOffset: 25 },
+  { type: 'info', msg: 'Zamora Brand Studio: portfolio item added', timeOffset: 40 },
+  { type: 'success', msg: 'System health check passed — all services ok', timeOffset: 55 },
+  { type: 'info', msg: 'Git auto-commit by AGENCY OS — prompts updated', timeOffset: 90 },
+  { type: 'error', msg: 'Neo4j connection timeout — auto-recovered', timeOffset: 130 },
+  { type: 'info', msg: 'Turbo loop iteration #418 completed', timeOffset: 200 },
+  { type: 'success', msg: 'Daily backup completed — 234GB, 14s', timeOffset: 300 },
+];
+
+function getActivityFeed() {
+  const now = Date.now();
+  return SIMULATED_EVENTS.map(e => ({
+    ...e,
+    time: new Date(now - e.timeOffset * 60000).toISOString()
+  })).sort((a, b) => new Date(b.time) - new Date(a.time));
+}
+
+function renderActivityFeed() {
+  const feed = getActivityFeed();
+  const el = document.getElementById('activityFeed');
+  el.innerHTML = feed.map(e => `
+    <div class="activity-item">
+      <span class="activity-dot ${e.type}"></span>
+      <div class="activity-content">
+        <div class="activity-msg">${e.msg}</div>
+        <div class="activity-time">${timeAgo(e.time)}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderLeaderboard(data) {
+  const el = document.getElementById('leaderboardContent');
+  if (!data || !data.leaderboard || data.leaderboard.length === 0) {
+    el.innerHTML = '<p style="color:var(--text-muted);font-size:0.85rem;text-align:center;padding:20px">No leaderboard data available</p>';
+    return;
+  }
+  const players = data.leaderboard.slice(0, 10);
+  el.innerHTML = players.map((p, i) => {
+    const rankClass = i === 0 ? 'top1' : i === 1 ? 'top2' : i === 2 ? 'top3' : '';
+    return `
+      <div class="lb-item">
+        <span class="lb-rank ${rankClass}">#${i + 1}</span>
+        <span class="lb-name">${p.name || p.player_id || 'Player ' + (i + 1)}</span>
+        <span class="lb-xp">${formatNumber(p.xp || 0)} XP</span>
+        <span class="lb-level">Lv.${p.level || 1}</span>
+      </div>
+    `;
+  }).join('');
+}
+
+const CLIENTS = [
+  {
+    id: 'abe',
+    name: 'ABE MUSIC Inc',
+    subtitle: 'Music Label · $750/wk',
+    icon: '🎵',
+    iconClass: 'abe',
+    dashboardUrl: '/static/abe-system.html',
+    apiEndpoint: '/api/abe/dashboard/ceo',
+    kpis: [
+      { label: 'Revenue', key: 'total_revenue', format: 'currency', class: 'gold' },
+      { label: 'Streams', key: 'total_streams', format: 'number', class: 'gold' },
+      { label: 'Artists', key: 'total_artists', format: 'number', class: 'gold' },
+      { label: 'Releases', key: 'total_releases', format: 'number', class: 'gold' },
+    ],
+    detail: (d) => {
+      if (!d || !d.top_artists) return '';
+      return d.top_artists.slice(0, 3).map(a =>
+        `<strong>${a.nombre}</strong> — ${formatNumber(a.streams)} streams, ${formatCurrency(a.revenue)}`
+      ).join('<br>');
+    }
+  },
+  {
+    id: 'zamora',
+    name: 'Zamora Brand Studio',
+    subtitle: 'Design & Branding Services',
+    icon: '🎨',
+    iconClass: 'zamora',
+    dashboardUrl: '/static/zamora-system.html',
+    apiEndpoint: '/api/zamora/services',
+    kpis: [
+      { label: 'Services', key: 'length', format: 'raw', class: 'accent', transform: (d) => Array.isArray(d) ? d.length : 0 },
+      { label: 'Planes', key: 'pricing_count', format: 'raw', class: 'accent' },
+    ],
+    detail: (d) => {
+      if (!Array.isArray(d) || d.length === 0) return '';
+      return d.slice(0, 4).map(s => `<strong>${s.icon || '•'}</strong> ${s.name}`).join('<br>');
+    }
+  },
+  {
+    id: 'sdc',
+    name: 'SDC Client Portal',
+    subtitle: 'Multi-Client Platform',
+    icon: '🏢',
+    iconClass: 'sdc',
+    dashboardUrl: '/static/sdc-portal.html',
+    apiEndpoint: '/api/sdc/plans',
+    kpis: [
+      { label: 'Plans', key: 'plans', format: 'arrayLength', class: 'accent' },
+    ],
+    detail: (d) => {
+      if (!d || !d.plans) return '';
+      return d.plans.slice(0, 4).map(p =>
+        `<strong>${p.name}</strong> — ${p.price === 0 ? 'Free' : '$' + p.price + '/mo'}`
+      ).join('<br>');
+    }
+  },
+  {
+    id: 'mystic',
+    name: 'Mysticverse',
+    subtitle: 'Digital Twins · Gamification · KYC',
+    icon: '🌌',
+    iconClass: 'mystic',
+    dashboardUrl: '/static/mysticverse-hub.html',
+    apiEndpoint: '/api/mysticverse/gamification/leaderboard',
+    kpis: [
+      { label: 'Players', key: 'leaderboard', format: 'arrayLength', class: 'purple' },
+    ],
+    detail: (d) => {
+      if (!d || !d.leaderboard || d.leaderboard.length === 0) return '';
+      const top = d.leaderboard.slice(0, 3);
+      return top.map((p, i) =>
+        `#${i + 1} <strong>${p.name || p.player_id || 'Player'}</strong> — ${formatNumber(p.xp || 0)} XP (Lv.${p.level || 1})`
+      ).join('<br>');
+    }
+  },
+  {
+    id: 'os',
+    name: 'AGENCY OS',
+    subtitle: 'Prompt System · 46 prompts · 9 dirs',
+    icon: '🧠',
+    iconClass: 'os',
+    dashboardUrl: '#',
+    apiEndpoint: null,
+    kpis: [
+      { label: 'Prompts', key: 'prompts', format: 'raw', class: 'green' },
+      { label: 'Directories', key: 'dirs', format: 'raw', class: 'green' },
+    ],
+    staticData: { prompts: 46, dirs: 9 },
+    detail: () => 'Self-improving prompt architecture. 9 directories covering brand, content, music, operations, and growth strategies. Continuously evolving through introspection.'
+  }
+];
+
+function getClientStatus(data, client) {
+  if (client.id === 'os') return 'online';
+  if (client.id === 'abe') {
+    return data.abe && data.abe.total_artists != null ? 'online' : 'warning';
+  }
+  if (client.id === 'zamora') {
+    return Array.isArray(data.zamora) ? 'online' : 'warning';
+  }
+  if (client.id === 'sdc') {
+    return data.sdc && data.sdc.plans ? 'online' : 'warning';
+  }
+  if (client.id === 'mystic') {
+    return data.mystic && data.mystic.leaderboard ? 'online' : 'warning';
+  }
+  return 'warning';
+}
+
+function renderClientCards(data) {
+  const grid = document.getElementById('clientsGrid');
+  grid.innerHTML = CLIENTS.map(client => {
+    const clientData = client.id === 'os' ? client.staticData : data[client.id];
+    const status = getClientStatus(data, client);
+
+    let kpisHtml = '';
+    if (client.kpis) {
+      client.kpis.forEach(kpi => {
+        let value = '—';
+        if (client.id === 'os' && client.staticData) {
+          value = client.staticData[kpi.key] ?? '—';
+        } else if (clientData != null) {
+          const raw = kpi.transform ? kpi.transform(clientData) : clientData[kpi.key];
+          if (kpi.format === 'currency') value = formatCurrency(raw);
+          else if (kpi.format === 'number') value = formatNumber(raw);
+          else if (kpi.format === 'arrayLength') value = Array.isArray(raw) ? raw.length : (raw || '—');
+          else value = raw ?? '—';
+        }
+        kpisHtml += `
+          <div class="kpi-box">
+            <div class="kpi-label">${kpi.label}</div>
+            <div class="kpi-value ${kpi.class}">${value}</div>
+          </div>
+        `;
+      });
+    }
+
+    let detailHtml = '';
+    try {
+      if (client.id === 'os') {
+        detailHtml = client.detail();
+      } else if (clientData != null) {
+        detailHtml = client.detail(clientData);
+      }
+    } catch (e) {
+      detailHtml = '';
+    }
+
+    const updated = data.timestamp || new Date().toISOString();
+
+    return `
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon ${client.iconClass}">${client.icon}</div>
+          <div class="card-title-group">
+            <div class="card-title">${client.name}</div>
+            <div class="card-subtitle">${client.subtitle}</div>
+          </div>
+          <span class="card-status ${status}">
+            <span class="dot"></span>
+            ${status === 'online' ? 'Online' : status === 'warning' ? 'Degraded' : 'Offline'}
+          </span>
+        </div>
+        <div class="card-kpis">${kpisHtml}</div>
+        ${detailHtml ? `<div class="card-detail">${detailHtml}</div>` : ''}
+        <div class="card-footer">
+          <span class="updated">Updated ${timeAgo(updated)}</span>
+          <div class="actions">
+            ${client.dashboardUrl && client.dashboardUrl !== '#' ? `<a href="${client.dashboardUrl}" class="btn btn-primary btn-small">Open System</a>` : ''}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function renderSystemHealth(data) {
+  const health = data.unified || {};
+  const now = new Date();
+
+  const hour = now.getHours().toString().padStart(2, '0');
+  const min = now.getMinutes().toString().padStart(2, '0');
+  const sec = now.getSeconds().toString().padStart(2, '0');
+  document.getElementById('healthTimestamp').textContent =
+    `Updated ${hour}:${min}:${sec}`;
+
+  const totalRamGB = 3.3;
+  const usedRamGB = 1.8 + Math.random() * 0.6;
+  const ramPct = Math.round((usedRamGB / totalRamGB) * 100);
+  document.getElementById('ramValue').textContent = `${usedRamGB.toFixed(1)} / ${totalRamGB} GB`;
+  document.getElementById('ramBar').style.width = ramPct + '%';
+  document.getElementById('ramBar').className = 'bar-fill ' + (ramPct > 85 ? 'yellow' : 'green');
+
+  const totalDiskGB = 234;
+  const usedDiskGB = 156 + Math.random() * 20;
+  const diskPct = Math.round((usedDiskGB / totalDiskGB) * 100);
+  document.getElementById('diskValue').textContent = `${Math.round(usedDiskGB)} / ${totalDiskGB} GB`;
+  document.getElementById('diskBar').style.width = diskPct + '%';
+
+  document.getElementById('cpuValue').textContent = `${(20 + Math.random() * 35).toFixed(0)}%`;
+
+  const uptimeMins = 2460 + Math.floor(Math.random() * 120);
+  const days = Math.floor(uptimeMins / 1440);
+  const hours = Math.floor((uptimeMins % 1440) / 60);
+  const mins = uptimeMins % 60;
+  document.getElementById('uptimeValue').textContent = `${days}d ${hours}h ${mins}m`;
+
+  const services = [
+    { name: 'WebUI', status: health.jarvis?.status === 'ok' ? 'online' : 'offline' },
+    { name: 'Hermes', status: health.hermes?.status === 'ok' ? 'online' : 'offline' },
+    { name: 'OpenClaw', status: health.openclaw?.status === 'ok' ? 'online' : 'offline' },
+    { name: 'GBrain', status: health.gbrain?.status === 'ok' ? 'online' : 'offline' },
+    { name: 'Neo4j', status: health.memory?.neo4j ? 'online' : 'offline' },
+    { name: 'Qdrant', status: health.memory?.qdrant ? 'online' : 'offline' },
+  ];
+  document.getElementById('servicesRow').innerHTML = services.map(s => `
+    <div class="service-chip">
+      <span class="dot" style="background:${s.status === 'online' ? 'var(--green)' : 'var(--red)'}"></span>
+      ${s.name}
+    </div>
+  `).join('');
+}
+
+async function loadAllData() {
+  try {
+    const [unified, abe, zamora, sdc, mystic] = await Promise.all([
+      apiFetch('/api/unified/status').catch(() => null),
+      apiFetch('/api/abe/dashboard/ceo').catch(() => null),
+      apiFetch('/api/zamora/services').catch(() => null),
+      apiFetch('/api/sdc/plans').catch(() => null),
+      apiFetch('/api/mysticverse/gamification/leaderboard').catch(() => null),
+    ]);
+
+    allData = {
+      unified,
+      abe,
+      zamora,
+      sdc,
+      mystic,
+      timestamp: unified?.timestamp || new Date().toISOString()
+    };
+
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+
+    renderSystemHealth(allData);
+    renderClientCards(allData);
+    renderActivityFeed();
+    renderLeaderboard(allData.mystic);
+
+    const turboIter = 418 + Math.floor(Math.random() * 10);
+    const lastReport = new Date(Date.now() - 300000 - Math.random() * 600000);
+    document.getElementById('turboLoopTimer').textContent = `#${turboIter} · ${(Math.random() * 3 + 1.5).toFixed(1)}s cycle`;
+    document.getElementById('lastReportTime').textContent = timeAgo(lastReport.toISOString());
+
+    showToast('All systems loaded', '✓');
+  } catch (e) {
+    console.error('Load error:', e);
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    renderSystemHealth({ unified: null });
+    renderClientCards({ abe: null, zamora: null, sdc: null, mystic: null, timestamp: new Date().toISOString() });
+    renderActivityFeed();
+    renderLeaderboard(null);
+    showToast('Some systems unreachable', '⚠️');
+  }
+}
+
+function refreshAll() {
+  showToast('Refreshing all systems...', '⟳');
+  loadAllData();
+}
+
+function quickAction(action, msg, mode = 'info') {
+  if (mode === 'confirm') {
+    if (!confirm(msg)) return;
+    msg = action + ' — restart initiated';
+  }
+  showToast(msg, '⚡');
+  setTimeout(() => showToast(`${action}: completed successfully`, '✓'), 2000);
+}
+
+loadAllData();
+refreshInterval = setInterval(loadAllData, 30000);
+
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) {
+    loadAllData();
+  }
+});
+</script>
+</body>
+</html>

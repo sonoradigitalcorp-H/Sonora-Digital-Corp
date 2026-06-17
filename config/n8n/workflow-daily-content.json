@@ -1,0 +1,207 @@
+{
+  "name": "📅 Daily Content Generator — Pipeline Autónomo",
+  "nodes": [
+    {
+      "id": "cron-trigger",
+      "name": "Schedule: 6 AM Diario",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "parameters": { "rule": { "hour": 6, "minute": 0 } }
+    },
+    {
+      "id": "research",
+      "name": "1. Research (LLM → Engram)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [450, 300],
+      "parameters": {
+        "url": "http://host.docker.internal:5174/api/content/generate",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": { "parameters": [
+          { "name": "template", "value": "daily-research" },
+          { "name": "topic", "value": "={{ $json.topic || 'AI trends' }}" },
+          { "name": "formats", "value": "[\"research\", \"script\"]" }
+        ]},
+        "options": {}
+      }
+    },
+    {
+      "id": "script",
+      "name": "2. Script Writing (DeepSeek)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 300],
+      "parameters": {
+        "url": "http://host.docker.internal:5174/api/content/generate",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": { "parameters": [
+          { "name": "template", "value": "video-script" },
+          { "name": "content", "value": "={{ $json.research }}" }
+        ]},
+        "options": {}
+      }
+    },
+    {
+      "id": "generate-video",
+      "name": "3. Generate Video (Fal.ai)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [850, 300],
+      "parameters": {
+        "url": "http://host.docker.internal:5174/api/generate/video",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": { "parameters": [
+          { "name": "prompt", "value": "={{ $json.script }}" },
+          { "name": "style", "value": "cinematic" },
+          { "name": "duration", "value": 30 }
+        ]},
+        "options": {}
+      }
+    },
+    {
+      "id": "generate-audio",
+      "name": "4. Generate Audio/Podcast (TTS)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1050, 300],
+      "parameters": {
+        "url": "http://host.docker.internal:5174/api/content/generate",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": { "parameters": [
+          { "name": "template", "value": "podcast" },
+          { "name": "text", "value": "={{ $json.script }}" },
+          { "name": "voice", "value": "en-US-AriaNeural" }
+        ]},
+        "options": {}
+      }
+    },
+    {
+      "id": "create-article",
+      "name": "5. Create Article (Text)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1250, 300],
+      "parameters": {
+        "url": "http://host.docker.internal:5174/api/content/generate",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": { "parameters": [
+          { "name": "template", "value": "article" },
+          { "name": "research", "value": "={{ $json.research }}" }
+        ]},
+        "options": {}
+      }
+    },
+    {
+      "id": "format-decision",
+      "name": "¿Qué formatos entregar?",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 2,
+      "position": [1450, 300],
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.formats }}",
+        "rules": [
+          { "value2": "all", "output": "Video + Audio + Article" },
+          { "value2": "video", "output": "Solo Video" },
+          { "value2": "audio", "output": "Solo Audio" }
+        ]
+      }
+    },
+    {
+      "id": "deliver-email",
+      "name": "6a. Deliver via Email (Brevo)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1650, 200],
+      "parameters": {
+        "url": "http://host.docker.internal:5174/api/content/deliver",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": { "parameters": [
+          { "name": "channel", "value": "email" },
+          { "name": "content_id", "value": "={{ $json.content_id }}" }
+        ]},
+        "options": {}
+      }
+    },
+    {
+      "id": "deliver-telegram",
+      "name": "6b. Deliver via Telegram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1650, 400],
+      "parameters": {
+        "url": "http://host.docker.internal:5174/api/content/deliver",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": { "parameters": [
+          { "name": "channel", "value": "telegram" },
+          { "name": "content_id", "value": "={{ $json.content_id }}" }
+        ]},
+        "options": {}
+      }
+    },
+    {
+      "id": "log-analytics",
+      "name": "7. Log to Analytics (PostHog)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1850, 300],
+      "parameters": {
+        "url": "http://host.docker.internal:5174/api/analytics/event",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": { "parameters": [
+          { "name": "event", "value": "content_generated" },
+          { "name": "properties", "value": "={{ {\n  'date': new Date().toISOString(),\n  'formats': $json.formats,\n  'content_id': $json.content_id\n} }}" }
+        ]},
+        "options": {}
+      }
+    },
+    {
+      "id": "save-engram",
+      "name": "8. Save to Engram Memory",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [2050, 300],
+      "parameters": {
+        "url": "http://host.docker.internal:5174/api/content/generate",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": { "parameters": [
+          { "name": "template", "value": "save-to-engram" },
+          { "name": "data", "value": "={{ $json }}" }
+        ]},
+        "options": {}
+      }
+    }
+  ],
+  "connections": {
+    "cron-trigger": { "main": [[ { "node": "research", "type": "main" } ]] },
+    "research": { "main": [[ { "node": "script", "type": "main" } ]] },
+    "script": {
+      "main": [
+        [{ "node": "generate-video", "type": "main" }],
+        [{ "node": "generate-audio", "type": "main" }],
+        [{ "node": "create-article", "type": "main" }]
+      ]
+    },
+    "generate-video": { "main": [[ { "node": "format-decision", "type": "main" } ]] },
+    "generate-audio": { "main": [[ { "node": "format-decision", "type": "main" } ]] },
+    "create-article": { "main": [[ { "node": "format-decision", "type": "main" } ]] },
+    "format-decision": { "main": [
+      [{ "node": "deliver-email", "type": "main" }, { "node": "deliver-telegram", "type": "main" }],
+      [{ "node": "deliver-email", "type": "main" }],
+      [{ "node": "deliver-telegram", "type": "main" }]
+    ]},
+    "deliver-email": { "main": [[ { "node": "log-analytics", "type": "main" } ]] },
+    "deliver-telegram": { "main": [[ { "node": "log-analytics", "type": "main" } ]] },
+    "log-analytics": { "main": [[ { "node": "save-engram", "type": "main" } ]] }
+  }
+}

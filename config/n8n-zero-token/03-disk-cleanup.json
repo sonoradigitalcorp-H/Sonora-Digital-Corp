@@ -1,0 +1,58 @@
+{
+  "name": "Disk Cleanup & Docker Prune (Zero Token)",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": 1440 } },
+      "name": "Daily at 3AM",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "command": "df -h / | tail -1 | awk '{print $5, $4}'",
+        "options": {}
+      },
+      "name": "Check Disk",
+      "type": "n8n-nodes-base.execCommand",
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            { "value1": "={{$json[\"stdout\"]}}", "operation": "contains", "value2": "85" }
+          ]
+        }
+      },
+      "name": "Over 85%?",
+      "type": "n8n-nodes-base.if",
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "command": "docker system prune -f 2>&1 && docker image prune -f 2>&1 && echo 'Prune done'",
+        "options": {}
+      },
+      "name": "Docker Prune",
+      "type": "n8n-nodes-base.execCommand",
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "command": "find /tmp -type f -atime +7 -delete 2>/dev/null; find /home/mystic/jarvis/logs -type f -name '*.log' -mtime +7 -delete 2>/dev/null; echo 'Cleanup done'",
+        "options": {}
+      },
+      "name": "Temp Cleanup",
+      "type": "n8n-nodes-base.execCommand",
+      "position": [850, 500]
+    }
+  ],
+  "connections": {
+    "Daily at 3AM": { "main": [[ { "node": "Check Disk" } ]] },
+    "Check Disk": { "main": [[ { "node": "Over 85%?" } ]] },
+    "Over 85%?": { "main": [[ { "node": "Docker Prune" } ], [ { "node": "Temp Cleanup" } ]] }
+  },
+  "active": true,
+  "settings": {},
+  "tags": ["zero-token", "disk", "cleanup"]
+}

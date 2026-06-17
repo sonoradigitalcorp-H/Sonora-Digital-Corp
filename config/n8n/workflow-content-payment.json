@@ -1,0 +1,204 @@
+{
+  "name": "🎨 Caso 1: Crear Contenido → Pago → Entrega Automática",
+  "nodes": [
+    {
+      "id": "webhook-entry",
+      "name": "Webhook: Nuevo Pedido",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "parameters": {
+        "path": "content-order",
+        "responseMode": "lastNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "parse-order",
+      "name": "Parsear Datos del Pedido",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [450, 300],
+      "parameters": {
+        "values": {
+          "string": [
+            { "name": "customer", "value": "={{ $json.body.customer }}" },
+            { "name": "product", "value": "={{ $json.body.product }}" },
+            { "name": "price", "value": "={{ $json.body.price }}" },
+            { "name": "currency", "value": "={{ $json.body.currency || 'MXN' }}" },
+            { "name": "email", "value": "={{ $json.body.email }}" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "generate-content",
+      "name": "Generar Contenido (Fal.ai)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 300],
+      "parameters": {
+        "url": "http://host.docker.internal:5174/api/generate/content",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "prompt", "value": "={{ $json.product.prompt }}" },
+            { "name": "style", "value": "={{ $json.product.style || 'realistic' }}" },
+            { "name": "format", "value": "={{ $json.product.format || 'png' }}" }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "check-payment",
+      "name": "Esperar Confirmación de Pago",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1,
+      "position": [850, 300],
+      "parameters": {
+        "resume": "webhook",
+        "webhookSuffix": "payment-confirm/={{ $json.id }}",
+        "limitSleep": false
+      }
+    },
+    {
+      "id": "verify-payment",
+      "name": "Verificar Pago (Mercado Pago/Bitso)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1050, 300],
+      "parameters": {
+        "url": "http://host.docker.internal:5174/api/payments/verify",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "order_id", "value": "={{ $json.order_id }}" },
+            { "name": "payment_id", "value": "={{ $json.payment_id }}" }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "deliver-content",
+      "name": "Entregar Contenido al Cliente",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 1,
+      "position": [1250, 300],
+      "parameters": {
+        "fromEmail": "content@tudominio.com",
+        "toEmail": "={{ $json.customer.email }}",
+        "subject": "✅ Tu contenido está listo — [Pedido #{{ $json.order_id }}]",
+        "text": "Gracias por tu compra. Aquí está tu contenido:\n\n{{ $json.content_url }}\n\nDescárgalo antes de 48 horas.\n\n🔗 Tienda: https://tudominio.com\n💬 Soporte: @tu_telegram"
+      }
+    },
+    {
+      "id": "notify-telegram",
+      "name": "Notificar Vía Telegram",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1450, 300],
+      "parameters": {
+        "url": "https://api.telegram.org/bot8875376383:AAG4dDoxdUfHqR7oIqW0lC4ygLxfzfg1EMA/sendMessage",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "chat_id", "value": "5738935134" },
+            { "name": "text", "value": "💰 Nuevo pedido completado:\nProducto: {{ $json.product.name }}\nMonto: {{ $json.price }} {{ $json.currency }}\nCliente: {{ $json.customer }}" },
+            { "name": "parse_mode", "value": "HTML" }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "payment-gate",
+      "name": "Payment Gate: SPEI o Crypto?",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 2,
+      "position": [450, 500],
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.currency }}",
+        "rules": [
+          { "value2": "MXN", "output": "SPEI" },
+          { "value2": "USDC", "output": "Crypto" },
+          { "value2": "BTC", "output": "Crypto" },
+          { "value2": "USDT", "output": "Crypto" }
+        ]
+      }
+    },
+    {
+      "id": "payment-spei",
+      "name": "Generar Pago SPEI (Mercado Pago)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 500],
+      "parameters": {
+        "url": "http://host.docker.internal:5174/api/payments/spei/create",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "amount", "value": "={{ $json.price }}" },
+            { "name": "description", "value": "={{ 'Pedido #' + $json.order_id }}" },
+            { "name": "email", "value": "={{ $json.email }}" }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "payment-crypto",
+      "name": "Generar Pago Crypto (Bitso)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 700],
+      "parameters": {
+        "url": "http://host.docker.internal:5174/api/payments/crypto/create",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "amount", "value": "={{ $json.price }}" },
+            { "name": "currency", "value": "={{ $json.currency }}" },
+            { "name": "description", "value": "={{ 'Pedido #' + $json.order_id }}" }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "return-payment-link",
+      "name": "Responder con Link de Pago",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [850, 500],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  'status': 'ok',\n  'order_id': $json.order_id,\n  'payment_url': $json.payment_url,\n  'instructions': $json.instructions,\n  'expires_at': $json.expires_at\n} }}"
+      }
+    }
+  ],
+  "connections": {
+    "webhook-entry": { "main": [[ { "node": "parse-order", "type": "main" } ]] },
+    "parse-order": { "main": [[ { "node": "payment-gate", "type": "main" } ]] },
+    "payment-gate": { "main": [
+      [{ "node": "payment-spei", "type": "main" }],
+      [{ "node": "payment-crypto", "type": "main" }],
+      [{ "node": "payment-crypto", "type": "main" }],
+      [{ "node": "payment-crypto", "type": "main" }]
+    ]},
+    "payment-spei": { "main": [[ { "node": "return-payment-link", "type": "main" } ]] },
+    "payment-crypto": { "main": [[ { "node": "return-payment-link", "type": "main" } ]] },
+    "return-payment-link": { "main": [[ { "node": "generate-content", "type": "main" } ]] },
+    "generate-content": { "main": [[ { "node": "check-payment", "type": "main" } ]] },
+    "check-payment": { "main": [[ { "node": "verify-payment", "type": "main" } ]] },
+    "verify-payment": { "main": [[ { "node": "deliver-content", "type": "main" } ]] },
+    "deliver-content": { "main": [[ { "node": "notify-telegram", "type": "main" } ]] }
+  }
+}

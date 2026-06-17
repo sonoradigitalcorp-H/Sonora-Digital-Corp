@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>24-Hour Session Report — JARVIS + AzREC</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  :root {
+    --bg: #0a0a0f;
+    --card: #12121a;
+    --border: #1e1e2e;
+    --text: #e0e0f0;
+    --muted: #7a7a9a;
+    --accent: #6c5ce7;
+    --green: #00d68f;
+    --red: #ff5a5a;
+    --orange: #ff9f43;
+    --blue: #54a0ff;
+    --purple: #a29bfe;
+    --gold: #ffd700;
+    --cyan: #00d2d3;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, sans-serif;
+    padding: 0;
+    overflow-x: hidden;
+  }
+  .slide {
+    min-height: 100vh;
+    padding: 40px 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+  }
+  .slide::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(ellipse at 20% 50%, rgba(108,92,231,0.05) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  h1 { font-size: 4rem; font-weight: 800; letter-spacing: -2px; line-height: 1.1; }
+  h1 .gradient { background: linear-gradient(135deg, var(--accent), var(--cyan)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  h2 { font-size: 2rem; font-weight: 700; margin-bottom: 24px; color: var(--text); }
+  h2 .sub { font-size: 1rem; font-weight: 400; color: var(--muted); display: block; margin-top: 4px; }
+  h3 { font-size: 1.1rem; font-weight: 600; color: var(--text); margin-bottom: 8px; }
+  p, li { color: var(--muted); line-height: 1.6; }
+  a { color: var(--cyan); text-decoration: none; }
+
+  .grid { display: grid; gap: 16px; }
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+  .grid-4 { grid-template-columns: 1fr 1fr 1fr 1fr; }
+
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 24px;
+    transition: all 0.2s;
+  }
+  .card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(108,92,231,0.1); }
+  .card .label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); margin-bottom: 4px; }
+  .card .value { font-size: 2rem; font-weight: 700; color: var(--text); }
+  .card .value.green { color: var(--green); }
+  .card .value.red { color: var(--red); }
+  .card .value.orange { color: var(--orange); }
+  .card .value.cyan { color: var(--cyan); }
+  .card .value.gold { color: var(--gold); }
+  .card .value.purple { color: var(--purple); }
+  .card p { margin-top: 8px; }
+
+  /* Airtable-style table */
+  .airtable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    font-size: 0.875rem;
+  }
+  .airtable th {
+    background: var(--card);
+    color: var(--muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.7rem;
+    padding: 10px 14px;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+    position: sticky; top: 0;
+  }
+  .airtable td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .airtable tr:hover td { background: rgba(108,92,231,0.05); }
+  .airtable .status { 
+    display: inline-block; padding: 2px 10px; border-radius: 20px;
+    font-size: 0.75rem; font-weight: 600;
+  }
+  .status.pass, .status.success { background: rgba(0,214,143,0.15); color: var(--green); }
+  .status.fail { background: rgba(255,90,90,0.15); color: var(--red); }
+  .status.skip { background: rgba(122,122,154,0.15); color: var(--muted); }
+  .status.fix { background: rgba(84,160,255,0.15); color: var(--blue); }
+
+  /* Charts container */
+  .chart-container { position: relative; height: 220px; width: 100%; }
+  canvas { max-width: 100%; }
+
+  .hero-stats { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 32px; }
+  .hero-stat {
+    background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+    padding: 16px 24px; text-align: center; flex: 1; min-width: 120px;
+  }
+  .hero-stat .num { font-size: 2rem; font-weight: 700; }
+  .hero-stat .lbl { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.5px; color: var(--muted); margin-top: 4px; }
+
+  .error-entry {
+    background: rgba(255,90,90,0.05);
+    border-left: 3px solid var(--red);
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    border-radius: 0 8px 8px 0;
+  }
+  .error-entry .err { color: var(--red); font-weight: 600; font-size: 0.85rem; }
+  .error-entry .fix { color: var(--green); font-size: 0.85rem; margin-top: 4px; }
+  .error-entry .file { color: var(--muted); font-size: 0.75rem; font-family: monospace; }
+
+  .tag {
+    display: inline-block; padding: 2px 8px; border-radius: 4px;
+    font-size: 0.7rem; font-weight: 600; margin-right: 4px;
+  }
+  .tag.green { background: rgba(0,214,143,0.15); color: var(--green); }
+  .tag.blue { background: rgba(84,160,255,0.15); color: var(--blue); }
+  .tag.purple { background: rgba(162,155,254,0.15); color: var(--purple); }
+  .tag.orange { background: rgba(255,159,67,0.15); color: var(--orange); }
+
+  .flex { display: flex; gap: 16px; align-items: center; }
+  .flex-wrap { flex-wrap: wrap; }
+  .gap-8 { gap: 8px; }
+  .mt-16 { margin-top: 16px; }
+  .mt-24 { margin-top: 24px; }
+  .mb-8 { margin-bottom: 8px; }
+  .w-full { width: 100%; }
+
+  @media (max-width: 768px) {
+    .slide { padding: 20px; }
+    h1 { font-size: 2.2rem; }
+    .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+    .hero-stats { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== SLIDE 1: HERO ===== -->
+<div class="slide" style="text-align:center;">
+  <div style="max-width: 800px; margin: 0 auto;">
+    <div style="font-size:0.75rem; text-transform:uppercase; letter-spacing:3px; color:var(--muted); margin-bottom:16px;">Session Report &middot; 2026-06-12</div>
+    <h1><span class="gradient">24 Horas de Poder</span></h1>
+    <p style="font-size:1.2rem; margin-top:16px; color:var(--muted);">De CI roto a verde brillante &middot; AzREC despegado &middot; Pipeline de contenido vivo</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num" style="color:var(--cyan);">10</div><div class="lbl">Commits</div></div>
+      <div class="hero-stat"><div class="num" style="color:var(--green);">376</div><div class="lbl">Tests Pasando</div></div>
+      <div class="hero-stat"><div class="num" style="color:var(--gold);">63</div><div class="lbl">Archivos Reformateados</div></div>
+      <div class="hero-stat"><div class="num" style="color:var(--purple);">12</div><div class="lbl">Servicios Activos</div></div>
+      <div class="hero-stat"><div class="num" style="color:var(--orange);">11</div><div class="lbl">CI Runs</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 2: CI PIPELINE BEFORE/AFTER ===== -->
+<div class="slide">
+  <h2>CI Pipeline <span class="sub">De 5 fallos consecutivos a verde completo</span></h2>
+  <div class="grid grid-2 mt-16">
+    <div class="card">
+      <h3 style="color:var(--red);">❌ Antes</h3>
+      <div class="chart-container"><canvas id="chartBefore"></canvas></div>
+      <div style="margin-top:12px;">
+        <div class="flex gap-8 flex-wrap">
+          <span class="tag blue">Run #2</span><span class="tag blue">#3</span><span class="tag blue">#4</span>
+          <span class="tag blue">#5</span><span class="tag blue">#6</span>
+        </div>
+        <p class="mt-8">Lint fail, Test fail, Docker fail. PyAudio sin portaudio.h, flake8 escaneando references/, paths absolutos rotos, black furioso.</p>
+      </div>
+    </div>
+    <div class="card">
+      <h3 style="color:var(--green);">✅ Después</h3>
+      <div class="chart-container"><canvas id="chartAfter"></canvas></div>
+      <div style="margin-top:12px;">
+        <div class="flex gap-8 flex-wrap">
+          <span class="tag green">Run #7</span><span class="tag green">#8</span><span class="tag green">#9</span>
+          <span class="tag green">#10</span><span class="tag gold">#11 ✅</span>
+        </div>
+        <p class="mt-8">Lint ✅ Test ✅ Specs ✅ Docker ✅ — Todo verde.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 3: ERROR LOG ===== -->
+<div class="slide">
+  <h2>Bitácora de Errores <span class="sub">7 bugs cazados y eliminados</span></h2>
+  <div class="grid grid-2 mt-16">
+    <div>
+      <div class="error-entry">
+        <div class="err">1. PyAudio needs portaudio.h</div>
+        <div class="fix">→ apt-get install portaudio19-dev en CI</div>
+        <div class="file">.github/workflows/ci.yml</div>
+      </div>
+      <div class="error-entry">
+        <div class="err">2. flake8 scanning references/ (cloned repos)</div>
+        <div class="fix">→ .flake8 config con exclude = references/</div>
+        <div class="file">.flake8 (CREADO)</div>
+      </div>
+      <div class="error-entry">
+        <div class="err">3. engram.db hardcoded to /home/mystic/jarvis/</div>
+        <div class="fix">→ db_path relative via Path(__file__)</div>
+        <div class="file">src/core/engram.py:12</div>
+      </div>
+      <div class="error-entry">
+        <div class="err">4. verify.py hardcoded /home/mystic/ paths</div>
+        <div class="fix">→ Path(__file__).resolve().parent.parent.parent</div>
+        <div class="file">src/core/verify.py:46-47,68</div>
+      </div>
+    </div>
+    <div>
+      <div class="error-entry">
+        <div class="err">5. black refused 63 files</div>
+        <div class="fix">→ black src/ webui/ docker/ auto-format</div>
+        <div class="file">63 files reformatted, 1 left unchanged</div>
+      </div>
+      <div class="error-entry">
+        <div class="err">6. test overwrite: Path mock patched everything</div>
+        <div class="fix">→ main() ahora acepta specs_dir param</div>
+        <div class="file">src/core/verify.py:66 + tests/unit/test_verify.py:78</div>
+      </div>
+      <div class="error-entry">
+        <div class="err">7. Docker buildx + gha cache rotos</div>
+        <div class="fix">→ docker build directo sin buildx/gha</div>
+        <div class="file">.github/workflows/ci.yml</div>
+      </div>
+      <div class="error-entry">
+        <div class="err">8. GitHub Runner apuntaba a repo equivocado</div>
+        <div class="fix">→ config.sh reconectado a sonoradigitalcorp-H/JARVIS</div>
+        <div class="file">actions-runner/ (reconfigurado)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 4: COMMITS TIMELINE ===== -->
+<div class="slide">
+  <h2>Timeline de Commits <span class="sub">10 commits, ~3500 líneas cambiadas</span></h2>
+  <div class="chart-container" style="height:350px;"><canvas id="chartCommits"></canvas></div>
+  <div class="grid grid-2 mt-16">
+    <div class="card">
+      <div class="label">Commits Hoy</div>
+      <div class="value cyan">10</div>
+    </div>
+    <div class="card">
+      <div class="label">SHA más reciente</div>
+      <div class="value" style="font-size:1rem;font-family:monospace;">d4223855</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 5: AZREC PROJECT ===== -->
+<div class="slide">
+  <h2>Proyecto AzREC <span class="sub">Landing, productos, branding, Telegram</span></h2>
+  <div class="grid grid-4 mt-16">
+    <div class="card"><div class="label">Páginas</div><div class="value gold">5</div><p>Landing + catálogo + 3 productos individuales</p></div>
+    <div class="card"><div class="label">Imágenes Generadas</div><div class="value cyan">5</div><p>Gorra Classic/Sunset, Playera, Hoodie, Tote Bag via fal.ai</p></div>
+    <div class="card"><div class="label">Módulos Telegram</div><div class="value purple">9</div><p>Masterclass Completa: fundamentals → deployment</p></div>
+    <div class="card"><div class="label">Bots Creados</div><div class="value green">2</div><p>AzREC Bot + Abe Music Bot (tokens pendientes)</p></div>
+  </div>
+  <div class="grid grid-2 mt-16">
+    <div class="card">
+      <h3>Branding</h3>
+      <p>Logo SVG con AZ naranja + REC dorado. Paleta Sonoran Sunset: #E05A2A, #2B1D3B, #F4A261. Guía de marca completa.</p>
+    </div>
+    <div class="card">
+      <h3>Roadmap 1 Año</h3>
+      <p>4 fases: Fundación → Crecimiento → Expansión → Consolidación. Presupuesto casa $20k/mes + estudio $88k inicial.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 6: ERROR STATS CHART ===== -->
+<div class="slide">
+  <h2>Diagnóstico de Errores <span class="sub">Antes de la cirugía vs. después</span></h2>
+  <div class="grid grid-2">
+    <div class="card">
+      <h3>Jobs Fallando por Run</h3>
+      <div class="chart-container" style="height:250px;"><canvas id="chartFailures"></canvas></div>
+    </div>
+    <div class="card">
+      <h3>Tipos de Errores</h3>
+      <div class="chart-container" style="height:250px;"><canvas id="chartErrorTypes"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 7: SYSTEM ===== -->
+<div class="slide">
+  <h2>Estado del Sistema <span class="sub">12 servicios, 3.2GB RAM, 24073 archivos</span></h2>
+  <div class="grid grid-3 mt-16">
+    <div class="card"><div class="label">Total Archivos</div><div class="value">24,073</div></div>
+    <div class="card"><div class="label">Tests</div><div class="value green">376</div><div class="lbl">pasando en 74s</div></div>
+    <div class="card"><div class="label">Cobertura</div><div class="value orange">56%</div><div class="lbl">src/webui coverage</div></div>
+    <div class="card"><div class="label">Servicios Systemd</div><div class="value cyan">4</div><div class="lbl">thumbnails, publisher, runner, hermes</div></div>
+    <div class="card"><div class="label">Docker</div><div class="value purple">6</div><div class="lbl">neo4j, qdrant, postgres, redis, n8n, wa-evolution</div></div>
+    <div class="card"><div class="label">Lenguaje Principal</div><div class="value gold">TS</div><div class="lbl">18,031 archivos .ts</div></div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 8: FIX DETAIL TABLE (Airtable style) ===== -->
+<div class="slide">
+  <h2>Fixes Detallados <span class="sub">Airtable-style — cada bug con su solución</span></h2>
+  <div style="overflow-x:auto;">
+  <table class="airtable">
+    <thead>
+      <tr>
+        <th>#</th><th>Error</th><th>Archivo</th><th>Status</th><th>Solución</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>PyAudio build fail</td><td>ci.yml</td><td><span class="status success">Fixed</span></td><td>apt install portaudio19-dev</td></tr>
+      <tr><td>2</td><td>Flake8 scanning cloned repos</td><td>.flake8</td><td><span class="status success">Fixed</span></td><td>exclude references/</td></tr>
+      <tr><td>3</td><td>Hardcoded engram path</td><td>engram.py:12</td><td><span class="status success">Fixed</span></td><td>Path(__file__) relative</td></tr>
+      <tr><td>4</td><td>Hardcoded verify paths</td><td>verify.py:46</td><td><span class="status success">Fixed</span></td><td>Path(__file__).resolve()</td></tr>
+      <tr><td>5</td><td>63 files not black-formatted</td><td>src/ webui/</td><td><span class="status success">Fixed</span></td><td>black auto-format</td></tr>
+      <tr><td>6</td><td>Test overwriting Path globally</td><td>test_verify.py</td><td><span class="status success">Fixed</span></td><td>main() accepts specs_dir param</td></tr>
+      <tr><td>7</td><td>Docker buildx/gha cache fail</td><td>ci.yml</td><td><span class="status success">Fixed</span></td><td>docker build direct</td></tr>
+      <tr><td>8</td><td>Runner apuntaba a repo equivocado</td><td>actions-runner/</td><td><span class="status success">Fixed</span></td><td>reconfigurado con token</td></tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+
+<!-- ===== SLIDE 9: ARCHITECTURE ===== -->
+<div class="slide">
+  <h2>Arquitectura Actual <span class="sub">JARVIS + AzREC + Content Pipeline</span></h2>
+  <div style="font-family:monospace; font-size:0.75rem; line-height:1.8; white-space:pre; overflow-x:auto; background:var(--card); padding:24px; border-radius:12px; border:1px solid var(--border);">
+    <span style="color:var(--cyan);">┌─────────────────────────────────────────────────────────────┐</span>
+    <span style="color:var(--cyan);">│                     INTERNET (ngrok)                       │</span>
+    <span style="color:var(--cyan);">└────────────────────────┬────────────────────────────────────┘</span>
+    <span style="color:var(--cyan);">                         │</span>
+    <span style="color:var(--cyan);">            ┌────────────┴────────────┐</span>
+    <span style="color:var(--cyan);">            │    nginx (puerto 80/443)  │</span>
+    <span style="color:var(--cyan);">            └────────────┬────────────┘</span>
+    <span style="color:var(--cyan);">                         │</span>
+    <span style="color:var(--cyan);">       ┌─────────────────┼─────────────────┐</span>
+    <span style="color:var(--cyan);">       ▼                 ▼                 ▼</span>
+    <span style="color:var(--gold);">  ┌──────────┐   ┌────────────┐   ┌──────────────┐</span>
+    <span style="color:var(--gold);">  │ JARVIS   │   │ AzREC      │   │ Content      │</span>
+    <span style="color:var(--gold);">  │ Web UI   │   │ Landing    │   │ Pipeline     │</span>
+    <span style="color:var(--gold);">  │ :3000    │   │ /azrec/    │   │ :8765/8766   │</span>
+    <span style="color:var(--gold);">  └────┬─────┘   └────────────┘   └──────┬───────┘</span>
+    <span style="color:var(--gold);">       │                                    │</span>
+    <span style="color:var(--cyan);">       └──────────────┬─────────────────────┘</span>
+    <span style="color:var(--cyan);">                      ▼</span>
+    <span style="color:var(--purple);">       ┌─────────────────────────────┐</span>
+    <span style="color:var(--purple);">       │       Docker Stack          │</span>
+    <span style="color:var(--purple);">       │  Neo4j  Qdrant  Postgres    │</span>
+    <span style="color:var(--purple);">       │  Redis  n8n    WA-Evolution  │</span>
+    <span style="color:var(--purple);">       └─────────────────────────────┘</span>
+    <span style="color:var(--purple);">                      │</span>
+    <span style="color:var(--cyan);">       ┌──────────────┴──────────────┐</span>
+    <span style="color:var(--cyan);">       ▼                              ▼</span>
+    <span style="color:var(--green);">  ┌──────────┐              ┌───────────────┐</span>
+    <span style="color:var(--green);">  │ Telegram │              │ GitHub Actions │</span>
+    <span style="color:var(--green);">  │ Bots x3  │              │ Runner v2.335  │</span>
+    <span style="color:var(--green);">  └──────────┘              └───────────────┘</span>
+  </div>
+</div>
+
+<!-- ===== SLIDE 10: FINAL ===== -->
+<div class="slide" style="text-align:center;">
+  <div style="max-width:600px; margin:0 auto;">
+    <div style="font-size:4rem; margin-bottom:16px;">✅</div>
+    <h1><span class="gradient">Misión Cumplida</span></h1>
+    <p style="font-size:1.2rem; margin-top:16px; color:var(--muted);">
+      10 commits · 8 errores corregidos · 376 tests verdes<br>
+      CI pipeline funcional · AzREC en producción · Runner reconectado
+    </p>
+    <div class="hero-stats" style="justify-content:center;">
+      <div class="hero-stat"><div class="num" style="color:var(--green);">100%</div><div class="lbl">CI Pass Rate</div></div>
+      <div class="hero-stat"><div class="num" style="color:var(--gold);">47</div><div class="lbl">Archivos en Commit SDD</div></div>
+      <div class="hero-stat"><div class="num" style="color:var(--cyan);">12</div><div class="lbl">Servicios Estables</div></div>
+    </div>
+    <p style="margin-top:32px; color:var(--muted); font-size:0.85rem;">
+      mysticpc · Ubuntu 22.04 · 3.2GB RAM · sonoradigitalcorp.com<br>
+      Próximo: SSL cert + ngrok static domain + apps mobile
+    </p>
+  </div>
+</div>
+
+<script>
+// --- CHART: Before CI ---
+new Chart(document.getElementById('chartBefore'), {
+  type: 'bar',
+  data: {
+    labels: ['Run #2','Run #3','Run #4','Run #5','Run #6'],
+    datasets: [{
+      label: 'Failing Jobs',
+      data: [3,3,3,3,3],
+      backgroundColor: 'rgba(255,90,90,0.3)',
+      borderColor: '#ff5a5a',
+      borderWidth: 1,
+      borderRadius: 4
+    }, {
+      label: 'Passing Jobs',
+      data: [1,1,1,1,1],
+      backgroundColor: 'rgba(0,214,143,0.2)',
+      borderColor: '#00d68f',
+      borderWidth: 1,
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { color:'#7a7a9a', font:{size:10} } } },
+    scales: {
+      x: { ticks: { color:'#7a7a9a', font:{size:9} }, grid: { color:'rgba(30,30,46,0.5)' } },
+      y: { ticks: { color:'#7a7a9a', font:{size:9} }, grid: { color:'rgba(30,30,46,0.5)' }, beginAtZero: true, max: 4 }
+    }
+  }
+});
+
+// --- CHART: After CI ---
+new Chart(document.getElementById('chartAfter'), {
+  type: 'bar',
+  data: {
+    labels: ['Run #7','Run #8','Run #9','Run #10','Run #11'],
+    datasets: [{
+      label: 'Failing Jobs',
+      data: [2,2,1,0,0],
+      backgroundColor: 'rgba(255,90,90,0.3)',
+      borderColor: '#ff5a5a',
+      borderWidth: 1,
+      borderRadius: 4
+    }, {
+      label: 'Passing Jobs',
+      data: [2,2,3,4,4],
+      backgroundColor: 'rgba(0,214,143,0.2)',
+      borderColor: '#00d68f',
+      borderWidth: 1,
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { color:'#7a7a9a', font:{size:10} } } },
+    scales: {
+      x: { ticks: { color:'#7a7a9a', font:{size:9} }, grid: { color:'rgba(30,30,46,0.5)' } },
+      y: { ticks: { color:'#7a7a9a', font:{size:9} }, grid: { color:'rgba(30,30,46,0.5)' }, beginAtZero: true, max: 4 }
+    }
+  }
+});
+
+// --- CHART: Failures per Run ---
+new Chart(document.getElementById('chartFailures'), {
+  type: 'line',
+  data: {
+    labels: ['#2','#3','#4','#5','#6','#7','#8','#9','#10','#11'],
+    datasets: [{
+      label: 'Jobs Failed',
+      data: [3,3,3,3,3,2,2,1,0,0],
+      borderColor: '#ff5a5a',
+      backgroundColor: 'rgba(255,90,90,0.1)',
+      fill: true,
+      tension: 0.4,
+      pointBackgroundColor: '#ff5a5a',
+      pointRadius: 5
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { labels: { color:'#7a7a9a', font:{size:10} } } },
+    scales: {
+      x: { ticks: { color:'#7a7a9a', font:{size:9} }, grid: { color:'rgba(30,30,46,0.5)' } },
+      y: { ticks: { color:'#7a7a9a', font:{size:9} }, grid: { color:'rgba(30,30,46,0.5)' }, beginAtZero: true, max: 4 }
+    }
+  }
+});
+
+// --- CHART: Error Types ---
+new Chart(document.getElementById('chartErrorTypes'), {
+  type: 'doughnut',
+  data: {
+    labels: ['CI Config','Hardcoded Paths','Formatting','Docker','Runner Config'],
+    datasets: [{
+      data: [2, 2, 1, 1, 1],
+      backgroundColor: ['rgba(84,160,255,0.6)','rgba(255,90,90,0.6)','rgba(255,159,67,0.6)','rgba(0,210,211,0.6)','rgba(162,155,254,0.6)'],
+      borderColor: ['#54a0ff','#ff5a5a','#ff9f43','#00d2d3','#a29bfe'],
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'bottom', labels: { color:'#7a7a9a', font:{size:10}, padding:12 } }
+    }
+  }
+});
+
+// --- CHART: Commits Timeline ---
+const commits = [
+  '3f0056a6 [006] Sys Harden',
+  'a9043ea1 [007] Session Close',
+  'f24fdf11 AzREC Project',
+  '946fde9a Trigger CI',
+  '9a4d660f portaudio fix',
+  '14915fba engram+flake8',
+  '78fc35fa verify+black',
+  'b3e70419 black format',
+  '7c32267d specs_dir param',
+  'd4223855 docker fix'
+];
+new Chart(document.getElementById('chartCommits'), {
+  type: 'bar',
+  data: {
+    labels: commits.map((_,i) => `#${i+1}`),
+    datasets: [{
+      label: 'Files Changed',
+      data: [47, 12, 6, 1, 1, 2, 2, 63, 2, 1],
+      backgroundColor: 'rgba(108,92,231,0.4)',
+      borderColor: '#6c5ce7',
+      borderWidth: 1,
+      borderRadius: 4
+    }, {
+      label: 'Insertions (+100)',
+      data: [19.31, 2.5, 1.5, 0, 0.08, 0.06, 0.04, 34.51, 0.09, 0.02],
+      backgroundColor: 'rgba(0,214,143,0.3)',
+      borderColor: '#00d68f',
+      borderWidth: 1,
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { labels: { color:'#7a7a9a', font:{size:10} } },
+      tooltip: { callbacks: { label: ctx => ctx.datasetIndex === 0 ? `${ctx.raw} files` : `${ctx.raw*100} lines` } }
+    },
+    scales: {
+      x: { ticks: { color:'#7a7a9a', font:{size:9} }, grid: { color:'rgba(30,30,46,0.5)' } },
+      y: { ticks: { color:'#7a7a9a', font:{size:9} }, grid: { color:'rgba(30,30,46,0.5)' }, beginAtZero: true }
+    }
+  }
+});
+</script>
+</body>
+</html>

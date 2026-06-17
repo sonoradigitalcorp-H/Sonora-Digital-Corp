@@ -1,0 +1,19 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: sonora-digital-corp-redis-1
+    ports:
+      - "127.0.0.1:6379:6379"
+    volumes:
+      - sonora_redis_data:/data
+    restart: unless-stopped
+    networks:
+      - sonora-digital-corp_default
+
+volumes:
+  sonora_redis_data:
+    external: true
+
+networks:
+  sonora-digital-corp_default:
+    external: true

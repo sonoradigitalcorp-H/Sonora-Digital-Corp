@@ -1,0 +1,100 @@
+name: 🤖 Automation Health - FASE 2
+
+on:
+  push:
+    paths:
+      - 'scripts/automation/**'
+      - 'skills/**'
+      - '.github/workflows/automation-validate.yml'
+  schedule:
+    - cron: '0 6 * * *'  # 06:00 UTC diario
+  workflow_dispatch:
+
+jobs:
+  validate-scripts:
+    name: Validate Shell Scripts
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check shell script syntax
+        run: |
+          echo "🔍 Validando sintaxis de scripts de automación..."
+          failed=0
+          for script in scripts/automation/*.sh; do
+            if bash -n "$script" 2>/dev/null; then
+              echo "  ✅ $(basename $script)"
+            else
+              echo "  ❌ $(basename $script) - ERROR de sintaxis"
+              bash -n "$script" 2>&1
+              failed=$((failed + 1))
+            fi
+          done
+          [ $failed -eq 0 ] || exit 1
+
+      - name: Check scripts have proper headers
+        run: |
+          echo "🔍 Verificando headers de scripts..."
+          for script in scripts/automation/*.sh; do
+            header=$(head -1 "$script")
+            if [[ "$header" == "#!/bin/bash" || "$header" == "#!/usr/bin/env bash" ]]; then
+              echo "  ✅ $(basename $script)"
+            else
+              echo "  ⚠️  $(basename $script) - header: $header"
+            fi
+          done
+
+      - name: Check for hardcoded secrets
+        run: |
+          echo "🔍 Buscando posibles secretos hardcodeados..."
+          patterns=("sk-or-" "api_key" "token.*=" "password.*=" "secret.*=")
+          for pattern in "${patterns[@]}"; do
+            matches=$(grep -rn "$pattern" scripts/automation/ --include="*.sh" 2>/dev/null || true)
+            if [ -n "$matches" ]; then
+              echo "  ⚠️  Posible secreto encontrado: $pattern"
+              echo "$matches" | head -5
+            fi
+          done
+          echo "  ✅ Revisión completa"
+
+  validate-skills:
+    name: Validate Skills Metadata
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check skill metadata
+        run: |
+          echo "🔍 Validando metadatos de skills..."
+          for skill_dir in skills/*/; do
+            name=$(basename "$skill_dir")
+            if [ -f "${skill_dir}SKILL.md" ]; then
+              echo "  ✅ $name - SKILL.md presente"
+            else
+              echo "  ❌ $name - SKILL.md faltante"
+            fi
+            if [ -f "${skill_dir}_meta.json" ]; then
+              echo "  ✅ $name - _meta.json presente"
+            else
+              echo "  ⚠️  $name - _meta.json faltante"
+            fi
+          done
+
+  notify-status:
+    name: Notify Status
+    needs: [validate-scripts, validate-skills]
+    if: always() && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check all jobs passed
+        run: |
+          SCRIPTS="${{ needs.validate-scripts.result }}"
+          SKILLS="${{ needs.validate-skills.result }}"
+          echo "📊 Automation Health Results:"
+          echo "  Scripts: $SCRIPTS"
+          echo "  Skills:  $SKILLS"
+          if [ "$SCRIPTS" = "success" ] && [ "$SKILLS" = "success" ]; then
+            echo "✅ Todo en orden"
+          else
+            echo "⚠️  Algo necesita atención"
+          fi

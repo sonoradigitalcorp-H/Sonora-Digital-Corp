@@ -1,0 +1,94 @@
+{
+  "name": "System Health Check (Zero Token)",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": 15 } },
+      "name": "Every 15 min",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "options": {},
+        "command": "df -h / | tail -1 | awk '{print $5}' | tr -d '%'"
+      },
+      "name": "Check Disk",
+      "type": "n8n-nodes-base.execCommand",
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            { "value1": "={{$json[\"stdout\"]}}", "value2": 85, "operation": "largerEqual" }
+          ]
+        }
+      },
+      "name": "Disk >85%?",
+      "type": "n8n-nodes-base.if",
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "command": "docker ps -a --filter status=exited --format '{{.Names}}' | head -5",
+        "options": {}
+      },
+      "name": "Check Failed Containers",
+      "type": "n8n-nodes-base.execCommand",
+      "position": [450, 500]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            { "value1": "={{$json[\"stdout\"]}}", "operation": "notEmpty" }
+          ]
+        }
+      },
+      "name": "Containers Failed?",
+      "type": "n8n-nodes-base.if",
+      "position": [650, 500]
+    },
+    {
+      "parameters": {
+        "command": "docker start $(docker ps -a --filter status=exited --format '{{.Names}}' | head -5) 2>/dev/null; echo 'restarted'",
+        "options": {}
+      },
+      "name": "Restart Containers",
+      "type": "n8n-nodes-base.execCommand",
+      "position": [850, 500]
+    },
+    {
+      "parameters": {
+        "command": "free -m | awk 'NR==2{print $7}'"
+      },
+      "name": "Check RAM",
+      "type": "n8n-nodes-base.execCommand",
+      "position": [450, 100]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            { "value1": "={{$json[\"stdout\"]}}", "value2": 200, "operation": "smaller" }
+          ]
+        }
+      },
+      "name": "RAM <200MB?",
+      "type": "n8n-nodes-base.if",
+      "position": [650, 100]
+    }
+  ],
+  "connections": {
+    "Every 15 min": { "main": [[ { "node": "Check Disk" }, { "node": "Check Failed Containers" }, { "node": "Check RAM" } ]] },
+    "Check Disk": { "main": [[ { "node": "Disk >85%?" } ]] },
+    "Disk >85%?": { "main": [[ ], [ ]] },
+    "Check Failed Containers": { "main": [[ { "node": "Containers Failed?" } ]] },
+    "Containers Failed?": { "main": [[ { "node": "Restart Containers" } ], [ ]] },
+    "Check RAM": { "main": [[ { "node": "RAM <200MB?" } ]] },
+    "RAM <200MB?": { "main": [[ ], [ ]] }
+  },
+  "active": true,
+  "settings": {},
+  "tags": ["zero-token", "health", "system"]
+}

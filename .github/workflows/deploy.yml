@@ -1,0 +1,48 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: self-hosted
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build Docker images
+        run: |
+          docker compose -f infra/docker-compose.vps.yml build --parallel
+      - name: Prisma generate
+        run: |
+          npx prisma generate
+
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    timeout-minutes: 15
+    steps:
+      - name: Deploy via docker compose
+        run: |
+          cd /home/mystic/sonora-digital-corp
+          docker compose -f infra/docker-compose.vps.yml up -d --no-build
+      - name: Health check
+        run: |
+          FAIL=0
+          sleep 5
+          for svc in localhost:3001 127.0.0.1:8000 127.0.0.1:3000; do
+            code=$(curl -so /dev/null -w "%{http_code}" --connect-timeout 5 http://$svc/ 2>/dev/null || echo "000")
+            echo "  $svc → $code"
+            [ "$code" = "000" ] && FAIL=1
+          done
+          if [ $FAIL -eq 0 ]; then
+            echo "Health check OK"
+          else
+            echo "Some services are not responding"
+            exit 1
+          fi
+      - name: Prisma migrations
+        run: |
+          npx prisma migrate deploy

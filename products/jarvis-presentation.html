@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧠 JARVIS — Quantum Caveman Presentation</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0a0a1a; color: #e0e0e0; font-family: 'Segoe UI', system-ui, sans-serif; overflow: hidden; }
+.slide { display: none; min-height: 100vh; padding: 60px 40px; position: relative; }
+.slide.active { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+h1 { font-size: 3.5em; font-weight: 800; margin-bottom: 20px; }
+h2 { font-size: 2.5em; font-weight: 700; margin-bottom: 16px; }
+p { font-size: 1.3em; line-height: 1.6; max-width: 800px; margin: 8px auto; color: #aaa; }
+.highlight { color: #00d4ff; font-weight: 600; }
+.quantum { color: #7b2ff7; font-weight: 700; }
+.caveman { color: #ff6b35; font-weight: 600; font-size: 1.1em; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; max-width: 1000px; margin: 30px auto; }
+.card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 24px; transition: all 0.3s; }
+.card:hover { border-color: rgba(0,212,255,0.3); transform: translateY(-4px); }
+.card .icon { font-size: 2.5em; margin-bottom: 12px; }
+.card h3 { font-size: 1.3em; margin-bottom: 8px; }
+.card p { font-size: 0.95em; color: #888; }
+.nav { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 100; }
+.nav button { padding: 12px 24px; border: none; border-radius: 8px; background: rgba(255,255,255,0.1); color: #fff; cursor: pointer; font-size: 1em; transition: all 0.3s; }
+.nav button:hover { background: rgba(0,212,255,0.2); }
+.nav .current { background: linear-gradient(135deg, #00d4ff, #7b2ff7); font-weight: 600; }
+.progress { position: fixed; top: 0; left: 0; height: 4px; background: linear-gradient(90deg, #00d4ff, #7b2ff7, #ff6b35); transition: width 0.3s; z-index: 100; }
+.atom { position: absolute; width: 200px; height: 200px; border-radius: 50%; border: 2px solid rgba(123,47,247,0.2); animation: spin 8s linear infinite; }
+.atom::before { content: ''; position: absolute; top: 50%; left: 50%; width: 20px; height: 20px; background: #00d4ff; border-radius: 50%; transform: translate(-50%, -50%); }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.atom .orbit { position: absolute; top: 50%; left: 50%; width: 100px; height: 100px; border-radius: 50%; border: 1px solid rgba(0,212,255,0.3); transform: translate(-50%, -50%); animation: orbit 4s linear infinite; }
+.atom .orbit::after { content: ''; position: absolute; top: -5px; left: 50%; width: 10px; height: 10px; background: #ff6b35; border-radius: 50%; }
+@keyframes orbit { from { transform: translate(-50%, -50%) rotate(0deg); } to { transform: translate(-50%, -50%) rotate(360deg); } }
+.version { font-size: 0.9em; color: #666; margin-top: 40px; }
+.timeline { max-width: 600px; margin: 20px auto; text-align: left; }
+.timeline .item { padding: 12px 0; border-left: 2px solid rgba(0,212,255,0.3); padding-left: 20px; margin-left: 20px; }
+.timeline .item .ver { color: #00d4ff; font-weight: 600; }
+.timeline .item .desc { color: #888; font-size: 0.95em; }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+
+<!-- SLIDE 1: Intro -->
+<div class="slide active" id="slide-0">
+  <div class="atom" style="opacity: 0.1; top: 10%; right: 10%;">
+    <div class="orbit"></div>
+  </div>
+  <h1>🧠 <span class="quantum">Quantum</span> <span class="caveman">Caveman</span></h1>
+  <p style="font-size: 1.5em;">JARVIS — De <span class="caveman">fuego</span> a <span class="quantum">entrelazamiento cuántico</span></p>
+  <p>v2.0 → v3.22.2 | 58 commits | 17 specs | 330 tests</p>
+  <p class="version">Presiona → o ← para navegar</p>
+</div>
+
+<!-- SLIDE 2: El Problema -->
+<div class="slide" id="slide-1">
+  <h2>🔥 <span class="caveman">Caveman</span> Tenía Problemas</h2>
+  <p>Antes de JARVIS, el <span class="caveman">caveman</span> hacía todo manualmente:</p>
+  <div class="grid">
+    <div class="card"><div class="icon">🔨</div><h3>Escribía código</h3><p>Sin tests, sin specs</p></div>
+    <div class="card"><div class="icon">🤔</div><h3>Adivinaba</h3><p>No verificaba antes de afirmar</p></div>
+    <div class="card"><div class="icon">💸</div><h3>Gastaba tokens</h3><p>Sin cache, sin skills</p></div>
+    <div class="card"><div class="icon">🔓</div><h3>Puertos abiertos</h3><p>Firewall débil, expuesto</p></div>
+  </div>
+  <p class="caveman">"Yo golpear teclado. Código funcionar a veces. Yo confundido."</p>
+</div>
+
+<!-- SLIDE 3: La Solución Cuántica -->
+<div class="slide" id="slide-2">
+  <h2>⚛️ <span class="quantum">Superposición Cuántica</span></h2>
+  <p>El sistema ahora existe en <span class="quantum">todos los estados a la vez</span>:</p>
+  <div class="grid">
+    <div class="card"><div class="icon">🧠</div><h3>15 Agentes</h3><p>Research, Code, Memory, Spec, Design, Apply, Verify, Archive...</p></div>
+    <div class="card"><div class="icon">🛡️</div><h3>Anti-Inyección</h3><p>20+ patrones bloqueados, API keys redactadas</p></div>
+    <div class="card"><div class="icon">🔒</div><h3>Firewall</h3><p>Puertos internos cerrados, solo SSH + web</p></div>
+    <div class="card"><div class="icon">💰</div><h3>$0 Tokens</h3><p>deepseek-v4-flash-free, cache Engram, shell first</p></div>
+  </div>
+  <p class="quantum">"El sistema está en todos los estados hasta que el usuario observa. Entonces colapsa a la solución correcta."</p>
+</div>
+
+<!-- SLIDE 4: Arquitectura -->
+<div class="slide" id="slide-3">
+  <h2>🌌 <span class="quantum">Entrelazamiento</span> del Sistema</h2>
+  <p>Cada componente se comunica sin intervención humana:</p>
+  <div style="max-width: 700px; margin: 20px auto; text-align: left; font-size: 1.1em;">
+    <p>👤 <span class="caveman">Usuario</span> → <span class="quantum">Habla</span> (Ctrl+B)</p>
+    <p>↓</p>
+    <p>🗣️ <span class="highlight">Hermes Desktop</span> → <span class="quantum">STT</span> → texto</p>
+    <p>↓</p>
+    <p>🧠 <span class="highlight">JARVIS Core</span> → <span class="quantum">Orquestador</span> → 15 agentes</p>
+    <p>↓</p>
+    <p>🛠️ <span class="highlight">OpenClaw</span> → <span class="quantum">55 skills</span> (fal-ai, stripe, etc.)</p>
+    <p>↓</p>
+    <p>📦 <span class="highlight">n8n</span> → <span class="quantum">3 workflows</span> automatizados</p>
+    <p>↓</p>
+    <p>💾 <span class="highlight">Engram</span> → <span class="quantum">Memoria persistente</span> (SQLite+FTS5)</p>
+  </div>
+  <p class="quantum">"Como partículas entrelazadas: cada acción en un componente afecta a todos los demás instantáneamente."</p>
+</div>
+
+<!-- SLIDE 5: Timeline -->
+<div class="slide" id="slide-4">
+  <h2>📈 <span class="quantum">Evolución</span> del <span class="caveman">Caveman</span></h2>
+  <div class="timeline">
+    <div class="item"><span class="ver">v2.0</span> <span class="desc">— Caveman descubre fuego (SDD specs 001-010)</span></div>
+    <div class="item"><span class="ver">v3.0</span> <span class="desc">— Caveman une tribus (JARVIS+Hermes+OpenClaw)</span></div>
+    <div class="item"><span class="ver">v3.10</span> <span class="desc">— Caveman inventa rueda (Mystic UI + Voz)</span></div>
+    <div class="item"><span class="ver">v3.18</span> <span class="desc">— Caveman descubre gravedad (SDD 100%)</span></div>
+    <div class="item"><span class="ver">v3.19</span> <span class="desc">— Caveman construye máquina (Agent Harness)</span></div>
+    <div class="item"><span class="ver">v3.20</span> <span class="desc">— Caveman ve el universo (Brain Graph 38 nodos)</span></div>
+    <div class="item"><span class="ver">v3.21</span> <span class="desc">— Caveman abre tienda (Ecommerce + SPEI/Crypto)</span></div>
+    <div class="item"><span class="ver">v3.22</span> <span class="desc">— <span class="quantum">Caveman cuántico</span> (Autónomo 24/7 + Verificación)</span></div>
+  </div>
+  <p class="quantum">"De golpear piedras a manipular estados cuánticos. La evolución es inevitable."</p>
+</div>
+
+<!-- SLIDE 6: Reglas -->
+<div class="slide" id="slide-5">
+  <h2>⚡ <span class="quantum">Leyes</span> del <span class="caveman">Caveman Cuántico</span></h2>
+  <div class="grid">
+    <div class="card"><div class="icon">🔍</div><h3>1. Verificar antes de afirmar</h3><p>No HTTP 200 = funciona. Probar contenido real.</p></div>
+    <div class="card"><div class="icon">🚫</div><h3>2. No overpromising</h3><p>"Todo listo" solo si cada pieza fue probada.</p></div>
+    <div class="card"><div class="icon">📝</div><h3>3. SDD completo</h3><p>Spec→Plan→Tasks→Implement→Verify→Archive</p></div>
+    <div class="card"><div class="icon">💬</div><h3>4. Transparencia</h3><p>"No lo sé, voy a verificarlo" mejor que mentir.</p></div>
+    <div class="card"><div class="icon">🔒</div><h3>5. Seguridad primero</h3><p>Firewall, anti-inyección, API keys redactadas.</p></div>
+    <div class="card"><div class="icon">💰</div><h3>6. $0 Tokens</h3><p>Shell first, cache Engram, deepseek free.</p></div>
+  </div>
+  <p class="quantum">"Estas leyes son inmutables como la velocidad de la luz."</p>
+</div>
+
+<!-- SLIDE 7: Futuro -->
+<div class="slide" id="slide-6">
+  <h1>🚀 <span class="quantum">El Futuro</span> es <span class="caveman">Ahora</span></h1>
+  <p>El sistema está <span class="highlight">100% operacional</span>:</p>
+  <div class="grid">
+    <div class="card"><div class="icon">🛍️</div><h3>Tienda</h3><p>localhost:5174/api/store/page</p></div>
+    <div class="card"><div class="icon">🧠</div><h3>Cerebro</h3><p>localhost:5174/api/brain/graph-page</p></div>
+    <div class="card"><div class="icon">⚡</div><h3>n8n</h3><p>localhost:5679 (incógnito)</p></div>
+    <div class="card"><div class="icon">🗣️</div><h3>Hermes</h3><p>Ctrl+B para hablar</p></div>
+  </div>
+  <p class="quantum">"El caveman ya no golpea piedras. Ahora manipula la realidad cuántica."</p>
+  <p class="version">v3.22.2 | 58 commits | 17 specs | 330 tests | $0 tokens</p>
+</div>
+
+<div class="nav">
+  <button onclick="go(-1)">← Anterior</button>
+  <button class="current" id="nav-current">1/7</button>
+  <button onclick="go(1)">Siguiente →</button>
+</div>
+
+<script>
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+
+function go(dir) {
+  slides[current].classList.remove('active');
+  current = (current + dir + total) % total;
+  slides[current].classList.add('active');
+  document.getElementById('nav-current').textContent = `${current+1}/${total}`;
+  document.getElementById('progress').style.width = `${((current+1)/total)*100}%`;
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') go(1);
+  if (e.key === 'ArrowLeft') go(-1);
+});
+
+document.getElementById('progress').style.width = `${(1/total)*100}%`;
+</script>
+</body>
+</html>

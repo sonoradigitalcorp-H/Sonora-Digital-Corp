@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ABE Music — Artist Evolution OS</title>
+<meta name="description" content="El ecosistema musical más avanzado para artistas emergentes y profesionales. Estrategia, distribución, contenido, crecimiento e infraestructura.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root {
+  --black: #050505;
+  --black-2: #0a0a0a;
+  --black-3: #111111;
+  --wine: #7B1F3A;
+  --wine-dark: #4a0f1f;
+  --wine-glow: rgba(123,31,58,0.3);
+  --gold: #C9A84C;
+  --gold-light: #E8D48B;
+  --gold-dark: #A08030;
+  --gold-glow: rgba(201,168,76,0.25);
+  --cream: #F5F0E8;
+  --cream-muted: #C8C0B0;
+  --cream-dark: #8A8070;
+  --font-display: 'Cinzel', serif;
+  --font-body: 'Inter', sans-serif;
+  --font-serif: 'Cormorant Garamond', serif;
+  --transition-slow: 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-med: 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-fast: 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-snap-type:y mandatory;overflow-y:scroll;-webkit-overflow-scrolling:touch}
+body{font-family:var(--font-body);background:var(--black);color:var(--cream);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--black)}
+::-webkit-scrollbar-thumb{background:var(--wine);border-radius:3px}
+::selection{background:var(--wine);color:var(--cream)}
+
+/* Canvas */
+#particle-canvas{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:0;pointer-events:none}
+#mouse-trail{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1;pointer-events:none}
+
+/* Navigation */
+.scene-nav{position:fixed;right:24px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:12px;align-items:center}
+.scene-dot{width:10px;height:10px;border-radius:50%;border:1.5px solid var(--cream-muted);background:transparent;cursor:pointer;transition:all var(--transition-fast);position:relative}
+.scene-dot.active{background:var(--gold);border-color:var(--gold);box-shadow:0 0 12px var(--gold-glow);transform:scale(1.3)}
+.scene-dot:hover{border-color:var(--gold)}
+.scene-dot .label{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:11px;font-family:var(--font-body);color:var(--cream-muted);opacity:0;transition:opacity var(--transition-fast);white-space:nowrap;letter-spacing:0.5px;text-transform:uppercase;pointer-events:none}
+.scene-dot:hover .label{opacity:1}
+
+.logo-nav{position:fixed;top:24px;left:24px;z-index:100;opacity:0;transition:opacity var(--transition-med)}
+.logo-nav.visible{opacity:1}
+.logo-nav svg{width:32px;height:32px}
+
+.scroll-indicator{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);z-index:100;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0.6;animation:fadeInOut 2s ease-in-out infinite}
+.scroll-indicator span{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--cream-muted)}
+.scroll-indicator .line{width:1px;height:40px;background:linear-gradient(to bottom,var(--cream-muted),transparent)}
+
+@keyframes fadeInOut{0%,100%{opacity:0.6}50%{opacity:0.2}}
+
+/* Scenes */
+.scene{position:relative;width:100vw;height:100vh;scroll-snap-align:start;display:flex;align-items:center;justify-content:center;overflow:hidden;z-index:2}
+.scene-inner{position:relative;z-index:3;width:100%;max-width:1200px;padding:40px 60px;text-align:center}
+
+/* Typography */
+h1{font-family:var(--font-display);font-weight:700;font-size:clamp(2rem,5vw,4.5rem);line-height:1.15;letter-spacing:0.02em}
+h2{font-family:var(--font-display);font-weight:600;font-size:clamp(1.5rem,3.5vw,3.2rem);line-height:1.2;letter-spacing:0.02em}
+h3{font-family:var(--font-display);font-weight:600;font-size:clamp(1.1rem,2vw,1.6rem);letter-spacing:0.05em;text-transform:uppercase}
+h4{font-family:var(--font-display);font-weight:600;font-size:clamp(1rem,1.5vw,1.2rem);letter-spacing:0.08em;text-transform:uppercase}
+p{font-family:var(--font-body);font-weight:300;font-size:clamp(0.95rem,1.4vw,1.15rem);line-height:1.8;color:var(--cream-muted)}
+.serif{font-family:var(--font-serif);font-style:italic}
+.gold{color:var(--gold)}
+.wine{color:var(--wine)}
+.cream-muted{color:var(--cream-muted)}
+.overline{font-family:var(--font-display);font-size:clamp(0.6rem,0.8vw,0.75rem);letter-spacing:0.15em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:12px;padding:14px 36px;font-family:var(--font-display);font-size:0.8rem;letter-spacing:0.12em;text-transform:uppercase;text-decoration:none;cursor:pointer;transition:all var(--transition-med);border:none;position:relative;overflow:hidden}
+.btn-primary{background:var(--gold);color:var(--black)}
+.btn-primary:hover{background:var(--gold-light);transform:translateY(-2px);box-shadow:0 8px 32px var(--gold-glow)}
+.btn-outline{background:transparent;color:var(--cream);border:1px solid var(--cream-muted)}
+.btn-outline:hover{background:var(--cream);color:var(--black)}
+.btn-wine{background:var(--wine);color:var(--cream)}
+.btn-wine:hover{background:#8a2a45;transform:translateY(-2px);box-shadow:0 8px 32px var(--wine-glow)}
+.btn .arrow{transition:transform var(--transition-fast)}
+.btn:hover .arrow{transform:translateX(4px)}
+
+/* Reveal animations */
+.reveal{opacity:0;transform:translateY(40px);transition:opacity var(--transition-slow),transform var(--transition-slow)}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:0.1s}
+.reveal-delay-2{transition-delay:0.25s}
+.reveal-delay-3{transition-delay:0.4s}
+.reveal-delay-4{transition-delay:0.55s}
+.reveal-delay-5{transition-delay:0.7s}
+.reveal-left{opacity:0;transform:translateX(-60px);transition:opacity var(--transition-slow),transform var(--transition-slow)}
+.reveal-left.visible{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(60px);transition:opacity var(--transition-slow),transform var(--transition-slow)}
+.reveal-right.visible{opacity:1;transform:translateX(0)}
+.reveal-scale{opacity:0;transform:scale(0.9);transition:opacity var(--transition-slow),transform var(--transition-slow)}
+.reveal-scale.visible{opacity:1;transform:scale(1)}
+
+/* Scene backgrounds */
+.scene-bg{position:absolute;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none}
+.scene-overlay{position:absolute;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none}
+
+/* Scene 1: Arrival */
+#scene-arrival .scene-bg{background:radial-gradient(ellipse at center,var(--wine-dark) 0%,var(--black) 70%)}
+#scene-arrival .logo-main{display:flex;flex-direction:column;align-items:center;gap:8px;margin-bottom:40px}
+#scene-arrival .logo-main svg{width:80px;height:80px;opacity:0;animation:logoReveal 2s var(--transition-slow) forwards}
+#scene-arrival .logo-main h1{opacity:0;animation:fadeUp 1.2s 0.6s forwards}
+#scene-arrival .logo-main .tagline{opacity:0;animation:fadeUp 1.2s 1s forwards;font-family:var(--font-serif);font-style:italic;font-size:clamp(1rem,1.8vw,1.4rem);color:var(--cream-muted)}
+#scene-arrival .subtitle{opacity:0;animation:fadeUp 1.2s 1.4s forwards;font-family:var(--font-display);font-size:clamp(0.65rem,0.9vw,0.8rem);letter-spacing:0.2em;text-transform:uppercase;color:var(--gold)}
+
+@keyframes logoReveal{0%{opacity:0;transform:scale(0.8) rotate(-5deg)}100%{opacity:1;transform:scale(1) rotate(0deg)}}
+@keyframes fadeUp{0%{opacity:0;transform:translateY(20px)}100%{opacity:1;transform:translateY(0)}}
+
+/* Scene divider flourish */
+.flourish{display:flex;align-items:center;justify-content:center;gap:16px;margin:24px auto;width:200px}
+.flourish .line{flex:1;height:1px;background:linear-gradient(to right,transparent,var(--gold),transparent)}
+.flourish .diamond{width:6px;height:6px;background:var(--gold);transform:rotate(45deg)}
+
+/* Scene 2: Artist Reality */
+#scene-reality .scene-bg{background:radial-gradient(ellipse at 30% 50%,var(--wine-dark) 0%,var(--black) 70%)}
+.reality-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-top:48px;text-align:left}
+.reality-card{padding:32px;border:1px solid rgba(201,168,76,0.1);background:rgba(255,255,255,0.02);backdrop-filter:blur(10px);transition:all var(--transition-med);position:relative;overflow:hidden}
+.reality-card::before{content:'';position:absolute;top:0;left:0;width:2px;height:0;background:var(--gold);transition:height var(--transition-slow)}
+.reality-card.visible::before{height:100%}
+.reality-card:hover{background:rgba(255,255,255,0.04);border-color:rgba(201,168,76,0.3);transform:translateY(-4px)}
+.reality-card .num{font-family:var(--font-display);font-size:2.5rem;font-weight:900;color:var(--wine);line-height:1;margin-bottom:8px}
+.reality-card h4{margin-bottom:8px;color:var(--cream)}
+.reality-card p{font-size:0.9rem;font-weight:300}
+
+/* Scene 3: Artist Evolution */
+#scene-evolution .scene-bg{background:radial-gradient(ellipse at 70% 30%,var(--wine-dark) 0%,var(--black) 70%)}
+.evolution-timeline{position:relative;display:flex;flex-direction:column;gap:0;margin-top:40px}
+.evolution-step{display:flex;align-items:center;gap:24px;padding:16px 0;opacity:0;transform:translateX(-20px);transition:all var(--transition-med)}
+.evolution-step.visible{opacity:1;transform:translateX(0)}
+.evolution-step .step-num{font-family:var(--font-display);font-size:0.7rem;letter-spacing:0.15em;color:var(--gold);min-width:60px}
+.evolution-step .step-line{width:1px;height:20px;background:linear-gradient(to bottom,var(--gold),transparent)}
+.evolution-step:last-child .step-line{display:none}
+.evolution-step .step-content{text-align:left}
+.evolution-step .step-content h4{font-size:clamp(0.85rem,1.2vw,1rem);margin-bottom:4px}
+.evolution-step .step-content p{font-size:0.85rem}
+
+/* Scene 4: Ecosystem */
+#scene-ecosystem .scene-bg{background:radial-gradient(ellipse at center,var(--black-3) 0%,var(--black) 100%)}
+.ecosystem-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:40px}
+.eco-card{padding:28px 20px;border:1px solid rgba(123,31,58,0.3);background:rgba(255,255,255,0.01);transition:all var(--transition-med);position:relative;cursor:default}
+.eco-card:hover{border-color:var(--gold);background:rgba(201,168,76,0.04);transform:translateY(-4px)}
+.eco-card .icon{font-size:1.8rem;margin-bottom:12px;display:block}
+.eco-card h4{font-size:0.75rem;letter-spacing:0.12em;margin-bottom:8px;color:var(--gold)}
+.eco-card p{font-size:0.82rem;font-weight:300;color:var(--cream-muted)}
+.eco-card .eco-number{position:absolute;top:12px;right:16px;font-family:var(--font-display);font-size:2.5rem;font-weight:900;color:rgba(123,31,58,0.15);line-height:1}
+
+/* Scene 5: Featured Artists */
+#scene-artists .scene-bg{background:radial-gradient(ellipse at 50% 80%,var(--wine-dark) 0%,var(--black) 70%)}
+.artist-showcase{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px}
+.artist-card{text-align:center;padding:32px 20px;border:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.02);transition:all var(--transition-med);position:relative}
+.artist-card:hover{background:rgba(255,255,255,0.04);border-color:var(--gold);transform:translateY(-4px)}
+.artist-card .avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--wine),var(--gold));margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:1.8rem;color:var(--cream);font-weight:700}
+.artist-card h4{font-size:0.85rem;margin-bottom:4px}
+.artist-card .genre{font-size:0.75rem;color:var(--gold);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:12px}
+.artist-card p{font-size:0.8rem;font-style:italic}
+.artist-card .quote-mark{font-family:var(--font-serif);font-size:2rem;color:var(--gold);line-height:0.5;margin-bottom:8px;opacity:0.5}
+
+/* Scene 6: Growth Infrastructure */
+#scene-growth .scene-bg{background:radial-gradient(ellipse at 30% 70%,var(--black-3) 0%,var(--black) 100%)}
+.growth-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:40px;text-align:left}
+.growth-item{display:flex;gap:16px;padding:20px;border-left:2px solid var(--wine);background:rgba(255,255,255,0.01);transition:all var(--transition-med)}
+.growth-item:hover{border-left-color:var(--gold);background:rgba(201,168,76,0.03)}
+.growth-item .g-icon{font-size:1.4rem;margin-top:2px}
+.growth-item h4{font-size:0.8rem;letter-spacing:0.1em;margin-bottom:4px}
+.growth-item p{font-size:0.82rem;font-weight:300}
+
+/* Metrics strip */
+.metrics-strip{display:flex;justify-content:center;gap:48px;margin-top:32px;flex-wrap:wrap}
+.metric{text-align:center}
+.metric .num{font-family:var(--font-display);font-size:clamp(1.8rem,3vw,2.8rem);font-weight:700;color:var(--gold)}
+.metric .label{font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--cream-muted);margin-top:4px}
+
+/* Scene 7: Founder Vision */
+#scene-vision .scene-bg{background:radial-gradient(ellipse at 50% 50%,var(--black-3) 0%,var(--black) 100%)}
+.vision-content{max-width:800px;margin:0 auto}
+.vision-content .serif{font-size:clamp(1.1rem,1.8vw,1.4rem);line-height:1.9;margin-bottom:24px}
+.vision-content .signature{font-family:var(--font-serif);font-size:1rem;color:var(--gold);margin-top:24px}
+
+/* Scene 8: Apply */
+#scene-apply .scene-bg{background:radial-gradient(ellipse at center,var(--wine-dark) 0%,var(--black) 80%)}
+.apply-form{max-width:520px;margin:32px auto 0;text-align:left}
+.form-group{margin-bottom:16px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:14px 18px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);color:var(--cream);font-family:var(--font-body);font-size:0.9rem;transition:all var(--transition-fast);outline:none}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold);background:rgba(201,168,76,0.04);box-shadow:0 0 20px rgba(201,168,76,0.05)}
+.form-group input::placeholder,.form-group textarea::placeholder{color:var(--cream-dark)}
+.form-group select option{background:var(--black);color:var(--cream)}
+.form-group textarea{resize:vertical;min-height:100px}
+.form-btn{width:100%;justify-content:center}
+.form-note{text-align:center;margin-top:16px;font-size:0.75rem;color:var(--cream-dark)}
+
+/* Responsive */
+@media(max-width:900px){
+  .reality-grid{grid-template-columns:1fr;gap:16px}
+  .ecosystem-grid{grid-template-columns:1fr 1fr}
+  .artist-showcase{grid-template-columns:1fr 1fr}
+  .growth-grid{grid-template-columns:1fr}
+  .scene-inner{padding:30px 24px}
+  .metrics-strip{gap:24px}
+}
+@media(max-width:600px){
+  .ecosystem-grid{grid-template-columns:1fr}
+  .artist-showcase{grid-template-columns:1fr}
+  .scene-nav{right:12px;gap:8px}
+  .scene-dot{width:8px;height:8px}
+  .scene-dot .label{display:none}
+  .reality-card{padding:24px}
+  .metrics-strip{gap:16px}
+  .apply-form{margin-top:20px}
+}
+@media(max-width:400px){
+  .scene-inner{padding:20px 16px}
+  .growth-item{padding:14px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}
+  .reveal,.reveal-left,.reveal-right,.reveal-scale{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<canvas id="particle-canvas"></canvas>
+<canvas id="mouse-trail"></canvas>
+
+<nav class="logo-nav" id="logoNav">
+  <svg viewBox="0 0 32 32" fill="none">
+    <circle cx="16" cy="16" r="14" stroke="#C9A84C" stroke-width="1.5"/>
+    <path d="M10 12 L16 8 L22 12 L22 20 L16 24 L10 20 Z" stroke="#C9A84C" stroke-width="1" fill="none"/>
+    <circle cx="16" cy="16" r="3" fill="#C9A84C"/>
+  </svg>
+</nav>
+
+<nav class="scene-nav" id="sceneNav" aria-label="Navegación de escenas">
+  <div class="scene-dot active" data-scene="0"><span class="label">Arrival</span></div>
+  <div class="scene-dot" data-scene="1"><span class="label">Artist Reality</span></div>
+  <div class="scene-dot" data-scene="2"><span class="label">Evolution</span></div>
+  <div class="scene-dot" data-scene="3"><span class="label">Ecosystem</span></div>
+  <div class="scene-dot" data-scene="4"><span class="label">Artists</span></div>
+  <div class="scene-dot" data-scene="5"><span class="label">Infrastructure</span></div>
+  <div class="scene-dot" data-scene="6"><span class="label">Vision</span></div>
+  <div class="scene-dot" data-scene="7"><span class="label">Join</span></div>
+</nav>
+
+<div class="scroll-indicator" id="scrollIndicator">
+  <span>Descubre</span>
+  <div class="line"></div>
+</div>
+
+<!-- Scene 1: Arrival -->
+<section class="scene" id="scene-arrival" data-scene-index="0">
+  <div class="scene-bg"></div>
+  <div class="scene-overlay"></div>
+  <div class="scene-inner">
+    <div class="logo-main">
+      <svg viewBox="0 0 80 80" fill="none">
+        <circle cx="40" cy="40" r="36" stroke="#C9A84C" stroke-width="2"/>
+        <path d="M24 30 L40 20 L56 30 L56 50 L40 60 L24 50 Z" stroke="#C9A84C" stroke-width="1.5" fill="none"/>
+        <circle cx="40" cy="40" r="8" fill="#C9A84C"/>
+        <path d="M40 20 L40 60" stroke="#C9A84C" stroke-width="0.5" opacity="0.3"/>
+        <path d="M24 40 L56 40" stroke="#C9A84C" stroke-width="0.5" opacity="0.3"/>
+      </svg>
+      <h1>ABE MUSIC</h1>
+      <div class="tagline">donde tu arte encuentra su ecosistema</div>
+    </div>
+    <div class="subtitle">Experience OS &mdash; Artist Evolution</div>
+  </div>
+</section>
+
+<!-- Scene 2: Artist Reality -->
+<section class="scene" id="scene-reality" data-scene-index="1">
+  <div class="scene-bg"></div>
+  <div class="scene-overlay"></div>
+  <div class="scene-inner">
+    <div class="overline reveal">La realidad del artista hoy</div>
+    <h2 class="reveal reveal-delay-1">El talento no basta</h2>
+    <p class="reveal reveal-delay-2 serif" style="max-width:600px;margin:16px auto 0">La industria cambió. Las disqueras tradicionales ya no construyen carreras &mdash; solo firman artistas que ya llegaron.</p>
+    <div class="reality-grid">
+      <div class="reality-card reveal reveal-delay-1">
+        <div class="num">01</div>
+        <h4>Sin estrategia real</h4>
+        <p>Lanzar música sin plan es ruido. El 90% de los lanzamientos desaparecen en 48 horas.</p>
+      </div>
+      <div class="reality-card reveal reveal-delay-2">
+        <div class="num">02</div>
+        <h4>Distribución sin alcance</h4>
+        <p>Estar en plataformas no es suficiente. Sin curaduría y promoción, nadie te encuentra.</p>
+      </div>
+      <div class="reality-card reveal reveal-delay-3">
+        <div class="num">03</div>
+        <h4>Contenido sin dirección</h4>
+        <p>Publicar por publicar desgasta tu marca. Cada pieza debe construir tu historia.</p>
+      </div>
+      <div class="reality-card reveal reveal-delay-4">
+        <div class="num">04</div>
+        <h4>Crecimiento sin sistema</h4>
+        <p>El crecimiento orgánico tiene techo. Sin infraestructura, el impulso se pierde.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Scene 3: Artist Evolution -->
+<section class="scene" id="scene-evolution" data-scene-index="2">
+  <div class="scene-bg"></div>
+  <div class="scene-overlay"></div>
+  <div class="scene-inner">
+    <div class="overline reveal">La evolución</div>
+    <h2 class="reveal reveal-delay-1">De artista a <span class="gold">potencia musical</span></h2>
+    <p class="reveal reveal-delay-2 serif" style="max-width:600px;margin:16px auto 32px">No se trata solo de sonar bien. Se trata de tener un sistema que convierte talento en carrera.</p>
+    <div class="evolution-timeline" style="max-width:600px;margin:0 auto">
+      <div class="evolution-step reveal-left" style="transition-delay:0.1s">
+        <span class="step-num">FASE 1</span>
+        <div class="step-line"></div>
+        <div class="step-content">
+          <h4>Diagnóstico Estratégico</h4>
+          <p>Analizamos tu posición actual, audiencia, competencia y oportunidades de crecimiento.</p>
+        </div>
+      </div>
+      <div class="evolution-step reveal-left" style="transition-delay:0.25s">
+        <span class="step-num">FASE 2</span>
+        <div class="step-line"></div>
+        <div class="step-content">
+          <h4>Infraestructura de Carrera</h4>
+          <p>Desplegamos tu ecosistema digital: distribución inteligente, contenido automatizado y presencia 24/7.</p>
+        </div>
+      </div>
+      <div class="evolution-step reveal-left" style="transition-delay:0.4s">
+        <span class="step-num">FASE 3</span>
+        <div class="step-line"></div>
+        <div class="step-content">
+          <h4>Crecimiento Sostenido</h4>
+          <p>Activamos canales de adquisición, retención y monetización mientras tú creas.</p>
+        </div>
+      </div>
+      <div class="evolution-step reveal-left" style="transition-delay:0.55s">
+        <span class="step-num">FASE 4</span>
+        <div class="step-line"></div>
+        <div class="step-content">
+          <h4>Escala y Evolución</h4>
+          <p>Tu carrera se convierte en un sistema autónomo que crece con cada lanzamiento.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Scene 4: Ecosystem -->
+<section class="scene" id="scene-ecosystem" data-scene-index="3">
+  <div class="scene-bg"></div>
+  <div class="scene-overlay"></div>
+  <div class="scene-inner">
+    <div class="overline reveal">El ecosistema</div>
+    <h2 class="reveal reveal-delay-1">Cinco pilares,<br>un <span class="gold">sistema vivo</span></h2>
+    <p class="reveal reveal-delay-2 serif" style="max-width:550px;margin:12px auto 0">Cada pilar funciona como un engranaje. Juntos, forman la máquina de crecimiento más avanzada para artistas.</p>
+    <div class="ecosystem-grid">
+      <div class="eco-card reveal reveal-delay-1">
+        <span class="eco-number">01</span>
+        <span class="icon">&#9835;</span>
+        <h4>Estrategia</h4>
+        <p>Planeación de carrera, posicionamiento de marca, análisis de mercado y roadmaps editoriales.</p>
+      </div>
+      <div class="eco-card reveal reveal-delay-2">
+        <span class="eco-number">02</span>
+        <span class="icon">&#9776;</span>
+        <h4>Distribución</h4>
+        <p>Lanzamiento multiplataforma con curaduría editorial, optimización de algoritmos y sincronización global.</p>
+      </div>
+      <div class="eco-card reveal reveal-delay-3">
+        <span class="eco-number">03</span>
+        <span class="icon">&#9733;</span>
+        <h4>Contenido</h4>
+        <p>Pipeline automatizado de visualizers,短视频, reels, stories y material promocional con IA invisible.</p>
+      </div>
+      <div class="eco-card reveal reveal-delay-4">
+        <span class="eco-number">04</span>
+        <span class="icon">&#8593;</span>
+        <h4>Crecimiento</h4>
+        <p>Ads inteligentes, campañas de retargeting, growth hacking y expansión de audiencia orgánica.</p>
+      </div>
+      <div class="eco-card reveal reveal-delay-5">
+        <span class="eco-number">05</span>
+        <span class="icon">&#9881;</span>
+        <h4>Infraestructura</h4>
+        <p>Agentes autónomos 24/7, analytics en tiempo real, dashboard de carrera y automatización de procesos.</p>
+      </div>
+      <div class="eco-card reveal reveal-delay-5" style="border-color:var(--gold);background:rgba(201,168,76,0.03)">
+        <span class="eco-number" style="color:var(--gold)">+</span>
+        <span class="icon" style="color:var(--gold)">&#8734;</span>
+        <h4 style="color:var(--gold)">Tu Arte</h4>
+        <p style="color:var(--cream)">Tú creas. Nosotros construimos el sistema que multiplica tu impacto.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Scene 5: Featured Artists -->
+<section class="scene" id="scene-artists" data-scene-index="4">
+  <div class="scene-bg"></div>
+  <div class="scene-overlay"></div>
+  <div class="scene-inner">
+    <div class="overline reveal">Artistas en evolución</div>
+    <h2 class="reveal reveal-delay-1">Los que ya <span class="gold">aceleraron</span></h2>
+    <p class="reveal reveal-delay-2 serif" style="max-width:550px;margin:12px auto 32px">Cada artista en ABE Music tiene un plan único. Esto no es una disquera. Es un sistema de evolución musical.</p>
+    <div class="artist-showcase">
+      <div class="artist-card reveal reveal-delay-1">
+        <div class="avatar">A</div>
+        <div class="quote-mark">&ldquo;</div>
+        <p>Pasé de lanzar canciones a construir una carrera. Mi música llegó a playlists que antes veía imposibles.</p>
+        <h4 style="margin-top:16px">Artist Name</h4>
+        <div class="genre">Género</div>
+      </div>
+      <div class="artist-card reveal reveal-delay-2">
+        <div class="avatar">B</div>
+        <div class="quote-mark">&ldquo;</div>
+        <p>El sistema de contenido automatizado me permitió enfocarme en crear. Mi engagement creció 340% en 3 meses.</p>
+        <h4 style="margin-top:16px">Artist Name</h4>
+        <div class="genre">Género</div>
+      </div>
+      <div class="artist-card reveal reveal-delay-3">
+        <div class="avatar">C</div>
+        <div class="quote-mark">&ldquo;</div>
+        <p>Intenté disqueras tradicionales. ABE Music me dio lo que ellas prometen pero nunca cumplen: control + crecimiento real.</p>
+        <h4 style="margin-top:16px">Artist Name</h4>
+        <div class="genre">Género</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Scene 6: Growth Infrastructure -->
+<section class="scene" id="scene-growth" data-scene-index="5">
+  <div class="scene-bg"></div>
+  <div class="scene-overlay"></div>
+  <div class="scene-inner">
+    <div class="overline reveal">Infraestructura de crecimiento</div>
+    <h2 class="reveal reveal-delay-1">Tu carrera <span class="gold">24/7</span></h2>
+    <p class="reveal reveal-delay-2 serif" style="max-width:550px;margin:12px auto 0">Mientras tú creas, tu ecosistema trabaja. Automatización, datos e inteligencia al servicio de tu arte.</p>
+    <div class="metrics-strip">
+      <div class="metric reveal reveal-delay-2">
+        <div class="num"><span class="countup" data-target="24">0</span>/<span class="countup" data-target="7">0</span></div>
+        <div class="label">Operación continua</div>
+      </div>
+      <div class="metric reveal reveal-delay-3">
+        <div class="num"><span class="countup" data-target="340">0</span>%</div>
+        <div class="label">Crecimiento promedio</div>
+      </div>
+      <div class="metric reveal reveal-delay-4">
+        <div class="num"> Plataformas</div>
+        <div class="label">Cobertura global</div>
+      </div>
+    </div>
+    <div class="growth-grid">
+      <div class="growth-item reveal reveal-delay-2">
+        <span class="g-icon">&#9889;</span>
+        <div>
+          <h4>Agentes Autónomos</h4>
+          <p>Distribución, contenido y monitoreo funcionan 24/7 sin intervención humana.</p>
+        </div>
+      </div>
+      <div class="growth-item reveal reveal-delay-3">
+        <span class="g-icon">&#9776;</span>
+        <div>
+          <h4>Analytics en Tiempo Real</h4>
+          <p>Dashboard vivo con métricas de reproducciones, crecimiento, engagement y revenue.</p>
+        </div>
+      </div>
+      <div class="growth-item reveal reveal-delay-4">
+        <span class="g-icon">&#9998;</span>
+        <div>
+          <h4>Pipeline de Contenido</h4>
+          <p>De tu estudio a todas las plataformas con optimización automática por canal.</p>
+        </div>
+      </div>
+      <div class="growth-item reveal reveal-delay-5">
+        <span class="g-icon">&#9733;</span>
+        <div>
+          <h4>Crecimiento Multi-canal</h4>
+          <p>Campañas inteligentes que escalan tu audiencia en cada plataforma simultáneamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Scene 7: Founder Vision -->
+<section class="scene" id="scene-vision" data-scene-index="6">
+  <div class="scene-bg"></div>
+  <div class="scene-overlay"></div>
+  <div class="scene-inner">
+    <div class="overline reveal">La visión del fundador</div>
+    <div class="vision-content">
+      <div class="reveal reveal-delay-1 flourish">
+        <span class="line"></span>
+        <span class="diamond"></span>
+        <span class="line"></span>
+      </div>
+      <p class="serif reveal reveal-delay-2" style="font-size:clamp(1.1rem,1.8vw,1.4rem);font-style:italic;margin-bottom:24px">
+        &ldquo;Creemos que el talento merece un sistema tan ambicioso como el artista que lo posee. No construimos una disquera. Construimos el sistema operativo de tu carrera musical.&rdquo;
+      </p>
+      <p class="reveal reveal-delay-3" style="font-size:0.9rem;max-width:600px;margin:0 auto;color:var(--cream-muted)">
+        ABE Music nace de una convicción: la tecnología debe ser invisible, la estrategia debe ser profunda, y el artista debe ser el único protagonista. No reemplazamos tu creatividad. La multiplicamos.
+      </p>
+      <div class="reveal reveal-delay-4 signature">— Fundador, ABE Music</div>
+    </div>
+  </div>
+</section>
+
+<!-- Scene 8: Apply -->
+<section class="scene" id="scene-apply" data-scene-index="7">
+  <div class="scene-bg"></div>
+  <div class="scene-overlay"></div>
+  <div class="scene-inner">
+    <div class="overline reveal">Únete</div>
+    <h2 class="reveal reveal-delay-1">Tu carrera empieza <span class="gold">aquí</span></h2>
+    <p class="reveal reveal-delay-2 serif" style="max-width:500px;margin:12px auto 0">No es un formulario. Es el primer paso hacia tu ecosistema musical.</p>
+    <form class="apply-form" id="applyForm">
+      <div class="form-group reveal reveal-delay-2">
+        <input type="text" placeholder="Nombre del artista / banda" required aria-label="Nombre del artista">
+      </div>
+      <div class="form-group reveal reveal-delay-2">
+        <input type="email" placeholder="Correo electrónico" required aria-label="Correo electrónico">
+      </div>
+      <div class="form-group reveal reveal-delay-3">
+        <input type="url" placeholder="Link a tu música (Spotify, YouTube, SoundCloud)" aria-label="Link a tu música">
+      </div>
+      <div class="form-group reveal reveal-delay-3">
+        <select aria-label="Género musical principal">
+          <option value="">Género principal</option>
+          <option>Urbano / Rap / Trap</option>
+          <option>Reggaetón / Dancehall</option>
+          <option>Pop / Balada</option>
+          <option>Rock / Indie</option>
+          <option>Electrónica</option>
+          <option>Regional Mexicano</option>
+          <option>Jazz / Soul / R&amp;B</option>
+          <option>Clásica / Experimental</option>
+          <option>Otro</option>
+        </select>
+      </div>
+      <div class="form-group reveal reveal-delay-4">
+        <textarea placeholder="Cuéntanos sobre ti y tus metas musicales..." aria-label="Mensaje"></textarea>
+      </div>
+      <div class="form-group reveal reveal-delay-4">
+        <button type="submit" class="btn btn-primary form-btn">
+          Enviar solicitud
+          <span class="arrow">→</span>
+        </button>
+      </div>
+      <p class="form-note reveal reveal-delay-5">Revisamos cada solicitud personalmente. Te responderemos en 48 horas.</p>
+    </form>
+  </div>
+</section>
+
+<script>
+(function(){
+'use strict';
+
+/* ========== SCENE ENGINE ========== */
+class SceneEngine {
+  constructor() {
+    this.scenes = document.querySelectorAll('.scene');
+    this.dots = document.querySelectorAll('.scene-dot');
+    this.current = 0;
+    this.isAnimating = false;
+    this.observer = null;
+    this.init();
+  }
+
+  init() {
+    const options = { threshold: 0.45, rootMargin: '0px' };
+    this.observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const idx = parseInt(entry.target.dataset.sceneIndex);
+          this.onSceneEnter(idx);
+          const reveals = entry.target.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale');
+          reveals.forEach((el, i) => {
+            setTimeout(() => el.classList.add('visible'), i * 80);
+          });
+          this.triggerCountups(entry.target);
+        }
+      });
+    }, options);
+    this.scenes.forEach(s => this.observer.observe(s));
+    this.dots.forEach(d => d.addEventListener('click', () => {
+      const idx = parseInt(d.dataset.scene);
+      this.scrollTo(idx);
+    }));
+    // Scene entrance events
+    this.scenes.forEach((scene, idx) => {
+      scene.addEventListener('sceneEnter', (e) => {
+        if (window._sceneCallbacks && window._sceneCallbacks[idx]) {
+          window._sceneCallbacks[idx](scene, e.detail.entry);
+        }
+      });
+    });
+  }
+
+  onSceneEnter(idx) {
+    if (this.current === idx) return;
+    this.current = idx;
+    this.dots.forEach(d => d.classList.toggle('active', parseInt(d.dataset.scene) === idx));
+    const logo = document.getElementById('logoNav');
+    logo.classList.toggle('visible', idx > 0);
+    const indicator = document.getElementById('scrollIndicator');
+    indicator.style.display = idx >= this.scenes.length - 1 ? 'none' : 'flex';
+    // Dispatch event
+    const scene = this.scenes[idx];
+    scene.dispatchEvent(new CustomEvent('sceneEnter', { detail: { entry: { isIntersecting: true } } }));
+  }
+
+  scrollTo(idx) {
+    if (idx >= 0 && idx < this.scenes.length) {
+      this.scenes[idx].scrollIntoView({ behavior: 'smooth' });
+    }
+  }
+
+  destroy() {
+    if (this.observer) this.observer.disconnect();
+  }
+}
+
+/* ========== ANIMATION ENGINE ========== */
+class AnimationEngine {
+  constructor() {
+    this.animations = new Map();
+    this.frameId = null;
+    this.running = true;
+  }
+
+  register(name, fn) {
+    this.animations.set(name, fn);
+    if (this.animations.size === 1) this.start();
+  }
+
+  unregister(name) {
+    this.animations.delete(name);
+    if (this.animations.size === 0) this.stop();
+  }
+
+  start() {
+    const loop = (time) => {
+      if (!this.running) return;
+      this.animations.forEach(fn => fn(time));
+      this.frameId = requestAnimationFrame(loop);
+    };
+    this.frameId = requestAnimationFrame(loop);
+  }
+
+  stop() {
+    this.running = false;
+    if (this.frameId) cancelAnimationFrame(this.frameId);
+  }
+
+  destroy() {
+    this.stop();
+    this.animations.clear();
+  }
+}
+
+/* ========== STORY ENGINE ========== */
+class StoryEngine {
+  constructor() {
+    this.scenes = document.querySelectorAll('.scene');
+    this.progress = 0;
+    this.init();
+  }
+
+  init() {
+    document.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY || window.pageYOffset;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      this.progress = docHeight > 0 ? scrollTop / docHeight : 0;
+    }, { passive: true });
+  }
+
+  getProgress() { return this.progress; }
+}
+
+/* ========== PARTICLE SYSTEM ========== */
+class ParticleSystem {
+  constructor(canvasId) {
+    this.canvas = document.getElementById(canvasId);
+    this.ctx = this.canvas.getContext('2d');
+    this.particles = [];
+    this.mouse = { x: -1000, y: -1000 };
+    this.mouseInfluence = 0;
+    this.resize();
+    this.init();
+    this.setupMouse();
+  }
+
+  resize() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  }
+
+  init() {
+    const count = Math.min(Math.floor(window.innerWidth * 0.06), 90);
+    for (let i = 0; i < count; i++) {
+      this.particles.push({
+        x: Math.random() * this.canvas.width,
+        y: Math.random() * this.canvas.height,
+        size: Math.random() * 2 + 0.5,
+        speedX: (Math.random() - 0.5) * 0.15,
+        speedY: -(Math.random() * 0.1 + 0.02),
+        opacity: Math.random() * 0.4 + 0.1,
+        hue: Math.random() > 0.6 ? 45 : 345, // gold or wine
+        pulse: Math.random() * Math.PI * 2
+      });
+    }
+    this.trail = [];
+  }
+
+  setupMouse() {
+    document.addEventListener('mousemove', (e) => {
+      this.mouse.x = e.clientX;
+      this.mouse.y = e.clientY;
+    }, { passive: true });
+  }
+
+  draw(time) {
+    const ctx = this.ctx;
+    ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+    // Background gradient
+    const grad = ctx.createRadialGradient(this.canvas.width/2, this.canvas.height/2, 0, this.canvas.width/2, this.canvas.height/2, this.canvas.width*0.6);
+    grad.addColorStop(0, 'rgba(123,31,58,0.04)');
+    grad.addColorStop(1, 'rgba(5,5,5,0)');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    this.particles.forEach(p => {
+      p.x += p.speedX;
+      p.y += p.speedY;
+      p.pulse += 0.01;
+      const pulseFactor = 0.5 + 0.5 * Math.sin(p.pulse);
+
+      // Mouse interaction - subtle attraction
+      const dx = this.mouse.x - p.x;
+      const dy = this.mouse.y - p.y;
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < 200 && dist > 0) {
+        const force = (200 - dist) / 200 * 0.02;
+        p.x += dx / dist * force;
+        p.y += dy / dist * force;
+      }
+
+      // Wrap around
+      if (p.x < -10) p.x = this.canvas.width + 10;
+      if (p.x > this.canvas.width + 10) p.x = -10;
+      if (p.y < -10) p.y = this.canvas.height + 10;
+      if (p.y > this.canvas.height + 10) p.y = -10;
+
+      const color = p.hue > 300
+        ? `rgba(123,31,58,${p.opacity * pulseFactor})`
+        : `rgba(201,168,76,${p.opacity * pulseFactor * 0.7})`;
+
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+
+      // Glow
+      if (p.size > 1.2) {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 3, 0, Math.PI * 2);
+        ctx.fillStyle = p.hue > 300
+          ? `rgba(123,31,58,${p.opacity * 0.15 * pulseFactor})`
+          : `rgba(201,168,76,${p.opacity * 0.1 * pulseFactor})`;
+        ctx.fill();
+      }
+    });
+
+    // Connecting lines between nearby particles
+    for (let i = 0; i < this.particles.length; i++) {
+      for (let j = i + 1; j < this.particles.length; j++) {
+        const dx = this.particles[i].x - this.particles[j].x;
+        const dy = this.particles[i].y - this.particles[j].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 120) {
+          const opacity = (1 - dist / 120) * 0.08;
+          ctx.beginPath();
+          ctx.moveTo(this.particles[i].x, this.particles[i].y);
+          ctx.lineTo(this.particles[j].x, this.particles[j].y);
+          ctx.strokeStyle = `rgba(201,168,76,${opacity})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      }
+    }
+  }
+}
+
+/* ========== EXPERIENCE ENGINE ========== */
+class ExperienceEngine {
+  constructor() {
+    this.sceneEngine = new SceneEngine();
+    this.animationEngine = new AnimationEngine();
+    this.storyEngine = new StoryEngine();
+    this.particles = new ParticleSystem('particle-canvas');
+    this.form = document.getElementById('applyForm');
+    this.init();
+  }
+
+  init() {
+    // Animation loop for particles
+    this.animationEngine.register('particles', (time) => {
+      this.particles.draw(time);
+    });
+
+    // Resize handler
+    const resize = () => {
+      this.particles.resize();
+      this.particles.init();
+    };
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(resize, 200);
+    }, { passive: true });
+
+    // Form handler
+    if (this.form) {
+      this.form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const btn = this.form.querySelector('.form-btn');
+        const orig = btn.innerHTML;
+        btn.innerHTML = '✅ Solicitud enviada';
+        btn.style.pointerEvents = 'none';
+        // Analytics event simulation
+        if (window.gtag) gtag('event', 'conversion', { send_to: 'ABE_MUSIC_APPLY' });
+        setTimeout(() => {
+          btn.innerHTML = 'Te responderemos en 48 horas';
+        }, 2000);
+      });
+    }
+
+    // Scene-specific callbacks
+    window._sceneCallbacks = {};
+
+    // Scene 0 (Arrival) - hide logo initially
+    window._sceneCallbacks[0] = (scene) => {
+      document.getElementById('logoNav').classList.remove('visible');
+    };
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        const next = Math.min(this.sceneEngine.current + 1, this.sceneEngine.scenes.length - 1);
+        this.sceneEngine.scrollTo(next);
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+        e.preventDefault();
+        const prev = Math.max(this.sceneEngine.current - 1, 0);
+        this.sceneEngine.scrollTo(prev);
+      }
+    });
+
+    // Smooth scroll via keyboard only; CSS scroll-snap handles wheel natively
+  }
+
+  destroy() {
+    this.sceneEngine.destroy();
+    this.animationEngine.destroy();
+  }
+}
+
+/* ========== JARVIS AI VOICE LAYER ========== */
+class JarvisAI {
+  constructor() {
+    this.orb = document.getElementById('jarvis-orb');
+    this.responsePanel = document.getElementById('jarvis-response');
+    this.responseText = document.getElementById('jarvis-response-text');
+    this.responseClose = document.getElementById('jarvis-response-close');
+    this.statusText = document.getElementById('jarvis-status-text');
+    this.bar = document.getElementById('jarvis-bar');
+    this.recognition = null;
+    this.synthesis = window.speechSynthesis;
+    this.isListening = false;
+    this.isSpeaking = false;
+    this.utterance = null;
+    this.autoRestart = true;
+    this.pendingResponse = '';
+    this.init();
+  }
+
+  init() {
+    // Response close
+    this.responseClose.addEventListener('click', () => this.hideResponse());
+
+    // Tap orb to toggle voice
+    this.orb.addEventListener('click', () => {
+      if (this.isListening) this.stopListening();
+      else this.startListening();
+    });
+
+    // Start listening on any first interaction (scroll, click, key)
+    const firstInteraction = () => {
+      setTimeout(() => this.startListening(), 1500);
+      document.removeEventListener('click', firstInteraction);
+      document.removeEventListener('scroll', firstInteraction);
+      document.removeEventListener('keydown', firstInteraction);
+    };
+    document.addEventListener('click', firstInteraction);
+    document.addEventListener('scroll', firstInteraction);
+    document.addEventListener('keydown', firstInteraction);
+    // Also try starting immediately if browser allows
+    setTimeout(() => {
+      if (!this.isListening) this.startListening();
+    }, 3000);
+
+    // Keyboard shortcut: hold Space to talk
+    document.addEventListener('keydown', (e) => {
+      if (e.key === ' ' && !e.repeat && !this.isListening && !e.target.matches('input,textarea,select,button')) {
+        e.preventDefault();
+        this.startListening();
+      }
+    });
+    document.addEventListener('keyup', (e) => {
+      if (e.key === ' ' && this.isListening && !e.target.matches('input,textarea,select,button')) {
+        this.stopListening();
+      }
+    });
+  }
+
+  startListening() {
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      this.setStatus('Voz no disponible en este navegador');
+      return;
+    }
+
+    if (this.isListening) return;
+
+    try {
+      this.recognition = new SpeechRecognition();
+      this.recognition.continuous = true;
+      this.recognition.interimResults = true;
+      this.recognition.lang = 'es-MX';
+
+      this.recognition.onstart = () => {
+        this.isListening = true;
+        this.orb.classList.add('listening');
+        this.setStatus('Escuchando...');
+      };
+
+      this.recognition.onresult = (e) => {
+        let transcript = '';
+        let isFinal = false;
+        for (let i = e.resultIndex; i < e.results.length; i++) {
+          transcript += e.results[i][0].transcript;
+          if (e.results[i].isFinal) isFinal = true;
+        }
+        this.orb.classList.toggle('hearing', !!transcript);
+        if (isFinal && transcript.trim()) {
+          this.processCommand(transcript.trim().toLowerCase());
+        }
+      };
+
+      this.recognition.onerror = (e) => {
+        if (e.error === 'no-speech') return;
+        if (e.error === 'aborted') return;
+        this.setStatus(`Error: ${e.error}`);
+        this.isListening = false;
+        this.orb.classList.remove('listening');
+        if (this.autoRestart) setTimeout(() => this.startListening(), 2000);
+      };
+
+      this.recognition.onend = () => {
+        this.isListening = false;
+        this.orb.classList.remove('listening', 'hearing');
+        if (this.autoRestart) setTimeout(() => this.startListening(), 500);
+      };
+
+      this.recognition.start();
+    } catch(e) {
+      this.setStatus('Error al iniciar voz');
+    }
+  }
+
+  stopListening() {
+    if (this.recognition) {
+      try { this.recognition.stop(); } catch(e) {}
+    }
+    this.isListening = false;
+    this.orb.classList.remove('listening', 'hearing');
+    this.setStatus('En pausa');
+  }
+
+  processCommand(text) {
+    // Scene navigation commands
+    const sceneMap = {
+      'inicio': 0, 'llegada': 0, 'arrival': 0,
+      'realidad': 1, 'problemas': 1,
+      'evolución': 2, 'evolucion': 2, 'fases': 2,
+      'ecosistema': 3, 'pilares': 3,
+      'artistas': 4, 'testimonios': 4,
+      'infraestructura': 5, 'crecimiento': 5, 'métricas': 5, 'metricas': 5,
+      'visión': 6, 'vision': 6, 'fundador': 6,
+      'unirme': 7, 'unirse': 7, 'aplicar': 7, 'join': 7,
+    };
+
+    // Direct scene navigation
+    for (const [keyword, idx] of Object.entries(sceneMap)) {
+      if (text.includes(keyword)) {
+        const scenes = document.querySelectorAll('.scene');
+        if (scenes[idx]) {
+          scenes[idx].scrollIntoView({ behavior: 'smooth' });
+          const sceneNames = ['Arrival', 'Artist Reality', 'Artist Evolution', 'Ecosystem', 'Featured Artists', 'Growth Infrastructure', 'Founder Vision', 'Apply'];
+          this.showResponse(`Llevándote a ${sceneNames[idx]}`);
+          this.speak(`Te llevo a ${sceneNames[idx]}`);
+          return;
+        }
+      }
+    }
+
+    // Common interactions
+    if (text.includes('hola') || text.includes('buenas') || text.includes('hey')) {
+      this.showResponse('Bienvenido a ABE Music. Soy tu guía. Puedes pedirme que te lleve a cualquier sección o preguntarme sobre el ecosistema.');
+      this.speak('Bienvenido a ABE Music. Soy tu guía. Puedes pedirme que te lleve a cualquier sección.');
+      return;
+    }
+
+    // AI-powered response via API
+    this.aiResponse(text);
+  }
+
+  async aiResponse(text) {
+    this.setStatus('Pensando...');
+    this.orb.classList.add('thinking');
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'openrouter/free',
+          messages: [
+            { role: 'system', content: 'Eres JARVIS, la IA guía de ABE Music — un ecosistema musical premium para artistas. Responde en español de forma breve, elegante y útil (máximo 2 oraciones). El usuario está explorando la experiencia ABE Music OS. Ayúdale a navegar o responde sus preguntas sobre el ecosistema.' },
+            { role: 'user', content: text }
+          ]
+        })
+      });
+      const data = await res.json();
+      const reply = data?.choices?.[0]?.message?.content || 'No entendí. ¿Puedes repetirlo?';
+      this.showResponse(reply);
+      this.speak(reply);
+    } catch(e) {
+      this.showResponse('Disculpa, tengo problemas de conexión. Intenta de nuevo.');
+      this.speak('Disculpa, tengo problemas de conexión.');
+    }
+    this.orb.classList.remove('thinking');
+    this.setStatus('Escuchando...');
+  }
+
+  speak(text) {
+    if (!this.synthesis) return;
+    this.synthesis.cancel();
+    this.utterance = new SpeechSynthesisUtterance(text);
+    this.utterance.lang = 'es-MX';
+    this.utterance.rate = 1.1;
+    this.utterance.pitch = 0.9;
+    this.utterance.volume = 0.9;
+
+    // Find Spanish voice
+    const voices = this.synthesis.getVoices();
+    const esVoice = voices.find(v => v.lang.startsWith('es'));
+    if (esVoice) this.utterance.voice = esVoice;
+
+    this.isSpeaking = true;
+    this.orb.classList.add('speaking');
+    this.synthesis.speak(this.utterance);
+    this.utterance.onend = () => {
+      this.isSpeaking = false;
+      this.orb.classList.remove('speaking');
+    };
+  }
+
+  showResponse(text) {
+    this.responseText.textContent = text;
+    this.responsePanel.classList.add('visible');
+    setTimeout(() => this.responsePanel.classList.add('show'), 10);
+  }
+
+  hideResponse() {
+    this.responsePanel.classList.remove('show');
+    setTimeout(() => this.responsePanel.classList.remove('visible'), 300);
+  }
+
+  setStatus(text) {
+    this.statusText.textContent = text;
+  }
+}
+
+/* Boot */
+document.addEventListener('DOMContentLoaded', () => {
+  window.exp = new ExperienceEngine();
+  // Load voices then init JARVIS
+  if (window.speechSynthesis) {
+    speechSynthesis.getVoices(); // prime
+    setTimeout(() => { window.jarvis = new JarvisAI(); }, 1000);
+  } else {
+    window.jarvis = new JarvisAI();
+  }
+});
+})();
+</script>
+
+<!-- JARVIS AI Layer -->
+<div id="jarvis-bar">
+  <div class="jarvis-orb-wrapper" id="jarvis-orb" role="button" tabindex="0" aria-label="JARVIS asistente de voz">
+    <div class="jarvis-orb-ring"></div>
+    <div class="jarvis-orb-core"></div>
+    <svg class="jarvis-orb-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
+      <path d="M12 2a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/>
+      <path d="M19 10v2a7 7 0 0 1-14 0v-2"/>
+      <line x1="12" y1="19" x2="12" y2="22"/>
+    </svg>
+  </div>
+  <div class="jarvis-status">
+    <div class="jarvis-dot" id="jarvis-dot"></div>
+    <span id="jarvis-status-text">Iniciando...</span>
+  </div>
+  <div class="jarvis-actions">
+    <span class="jarvis-key-hint">Space</span>
+  </div>
+</div>
+
+<div id="jarvis-response" class="jarvis-response-panel" role="alert">
+  <div class="jarvis-response-inner">
+    <div class="jarvis-response-avatar">J</div>
+    <p id="jarvis-response-text"></p>
+    <button id="jarvis-response-close" aria-label="Cerrar">&times;</button>
+  </div>
+</div>
+
+<style>
+/* JARVIS Floating Bar */
+#jarvis-bar {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 20px 10px 14px;
+  background: rgba(5,5,5,0.85);
+  border: 1px solid rgba(201,168,76,0.2);
+  border-radius: 60px;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 4px 32px rgba(0,0,0,0.5), 0 0 40px rgba(123,31,58,0.08);
+  transition: opacity 0.4s, transform 0.4s;
+  user-select: none;
+}
+
+/* Orb */
+.jarvis-orb-wrapper {
+  position: relative;
+  width: 40px;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s;
+}
+.jarvis-orb-wrapper:hover { transform: scale(1.1); }
+.jarvis-orb-wrapper:active { transform: scale(0.95); }
+
+.jarvis-orb-core {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, var(--gold), var(--gold-dark));
+  position: relative;
+  z-index: 2;
+  transition: all 0.3s;
+  box-shadow: 0 0 12px rgba(201,168,76,0.3);
+}
+
+.jarvis-orb-ring {
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(201,168,76,0.2);
+  z-index: 1;
+  animation: orbPulse 3s ease-in-out infinite;
+}
+
+.jarvis-orb-icon {
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  color: var(--black);
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* States */
+.jarvis-orb-wrapper.listening .jarvis-orb-core {
+  background: radial-gradient(circle at 35% 35%, var(--wine), #4a0f1f);
+  box-shadow: 0 0 24px var(--wine-glow), 0 0 60px rgba(123,31,58,0.15);
+  width: 24px;
+  height: 24px;
+}
+.jarvis-orb-wrapper.listening .jarvis-orb-ring {
+  border-color: var(--wine);
+  animation: orbListen 1.2s ease-in-out infinite;
+  inset: -6px;
+}
+.jarvis-orb-wrapper.listening .jarvis-orb-icon { opacity: 1; color: var(--cream); }
+
+.jarvis-orb-wrapper.hearing .jarvis-orb-core {
+  background: radial-gradient(circle at 35% 35%, var(--gold-light), var(--gold));
+  box-shadow: 0 0 32px var(--gold-glow), 0 0 80px rgba(201,168,76,0.2);
+}
+
+.jarvis-orb-wrapper.thinking .jarvis-orb-core {
+  animation: orbThink 0.6s ease-in-out infinite alternate;
+}
+.jarvis-orb-wrapper.speaking .jarvis-orb-core {
+  animation: orbSpeak 0.3s ease-in-out infinite alternate;
+}
+
+@keyframes orbPulse {
+  0%, 100% { transform: scale(1); opacity: 0.4; }
+  50% { transform: scale(1.05); opacity: 0.7; }
+}
+@keyframes orbListen {
+  0%, 100% { transform: scale(1); opacity: 0.6; border-color: var(--wine); }
+  50% { transform: scale(1.15); opacity: 1; border-color: var(--gold); }
+}
+@keyframes orbThink {
+  0% { transform: scale(0.9); box-shadow: 0 0 12px var(--gold-glow); }
+  100% { transform: scale(1.1); box-shadow: 0 0 32px var(--gold-glow); }
+}
+@keyframes orbSpeak {
+  0% { transform: scaleX(0.85); }
+  100% { transform: scaleX(1.15); }
+}
+
+/* Status text */
+.jarvis-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: var(--cream-muted);
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  min-width: 90px;
+}
+.jarvis-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(201,168,76,0.3);
+  transition: all 0.3s;
+}
+.jarvis-dot.active { background: var(--gold); box-shadow: 0 0 8px var(--gold-glow); }
+
+/* Key hint */
+.jarvis-actions .jarvis-key-hint {
+  font-size: 0.6rem;
+  padding: 2px 8px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 4px;
+  color: var(--cream-dark);
+  letter-spacing: 0.05em;
+}
+
+/* Response panel */
+.jarvis-response-panel {
+  position: fixed;
+  bottom: 90px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  z-index: 999;
+  max-width: 500px;
+  width: calc(100% - 48px);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  pointer-events: none;
+}
+.jarvis-response-panel.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+.jarvis-response-inner {
+  background: rgba(10,10,10,0.92);
+  border: 1px solid rgba(201,168,76,0.15);
+  border-radius: 16px;
+  padding: 16px 48px 16px 20px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.6), 0 0 60px rgba(123,31,58,0.06);
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  position: relative;
+}
+.jarvis-response-avatar {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--black);
+  margin-top: 2px;
+}
+#jarvis-response-text {
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--cream);
+  margin: 0;
+  font-weight: 300;
+}
+#jarvis-response-close {
+  position: absolute;
+  top: 12px;
+  right: 14px;
+  background: none;
+  border: none;
+  color: var(--cream-dark);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+  transition: color 0.2s;
+}
+#jarvis-response-close:hover { color: var(--cream); }
+
+@media(max-width:600px) {
+  #jarvis-bar { padding: 8px 14px 8px 10px; gap: 10px; }
+  .jarvis-orb-wrapper { width: 32px; height: 32px; }
+  .jarvis-orb-core { width: 16px; height: 16px; }
+  .jarvis-orb-wrapper.listening .jarvis-orb-core { width: 20px; height: 20px; }
+  .jarvis-orb-icon { width: 12px; height: 12px; }
+  .jarvis-status { font-size: 0.65rem; min-width: 70px; }
+  .jarvis-response-panel { bottom: 78px; }
+  .jarvis-response-inner { padding: 14px 40px 14px 16px; }
+  #jarvis-response-text { font-size: 0.8rem; }
+}
+</style>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+  "playwright": {
+    "type": "local",
+    "command": ["npx", "-y", "@playwright/mcp"],
+    "enabled": true,
+    "env": {
+      "PLAYWRIGHT_CHROMIUM_EXECUTABLE": "/home/mystic/.cache/ms-playwright/chromium-1223/chrome-linux/chrome"
+    }
+  }
+}

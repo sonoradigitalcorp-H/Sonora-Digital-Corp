@@ -1,0 +1,7 @@
+name: agent-context
+version: 1.0.0
+description: Updates agent context after specification and planning
+scripts:
+  update: scripts/bash/update-agent-context.sh
+commands:
+  - speckit.agent-context.update

@@ -1,0 +1,161 @@
+name: Monitor — HERMES Health Check Integral
+
+on:
+  schedule:
+    - cron: '0 * * * *'     # CADA HORA — health check completo
+    - cron: '0 15 * * *'    # reporte diario 8 AM Hermosillo (UTC-7 → 15:00 UTC)
+    - cron: '30 8 * * *'    # briefing MYSTIC 8:30 AM Hermosillo
+  workflow_dispatch:
+    inputs:
+      silent:
+        description: 'Solo reportar si hay problemas'
+        required: false
+        default: 'false'
+
+jobs:
+  health-check:
+    runs-on: self-hosted
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── 1. EJECUTAR HEALTH CHECK COMPLETO ──
+      - name: 🩺 Health Check — Full Stack
+        id: health
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN_CEO }}
+          TELEGRAM_CHAT_ID: ${{ secrets.CEO_CHAT_ID }}
+        run: |
+          chmod +x scripts/automation/health-check.sh
+          chmod +x scripts/hermes_monitor.sh
+          bash scripts/automation/health-check.sh || true
+          SILENT_FLAG=""
+          [[ "${{ github.event.inputs.silent }}" == "true" ]] && SILENT_FLAG="--silent"
+          bash scripts/hermes_monitor.sh $SILENT_FLAG || true
+
+      # ── 2. VERIFICAR GIT (commits pendientes / sync) ──
+      - name: 🔄 Git — Sync y verificación
+        run: |
+          echo "=== Git Status ==="
+          cd /home/mystic/sonora-digital-corp
+          git fetch origin
+          BEHIND=$(git rev-list --count HEAD..origin/main)
+          AHEAD=$(git rev-list --count origin/main..HEAD)
+          echo "Commits behind origin: $BEHIND"
+          echo "Commits ahead (sin push): $AHEAD"
+          if [ "$BEHIND" -gt 0 ]; then
+            echo "→ Sincronizando con origin/main..."
+            git pull origin main
+          fi
+          if [ "$AHEAD" -gt 0 ]; then
+            echo "⚠️ Hay commits locales sin pushear"
+            git log --oneline origin/main..HEAD
+          fi
+
+      # ── 3. VERIFICAR CONTENEDORES DOCKER ──
+      - name: 🐳 Docker — Verificar contenedores
+        run: |
+          echo "=== Contenedores Activos ==="
+          docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}" 2>/dev/null || echo "docker no disponible"
+          echo ""
+          echo "=== Contenedores Caídos ==="
+          docker ps -a --filter "status=exited" --format "{{.Names}}" 2>/dev/null
+          
+          # Auto-fix: levantar contenedores caídos
+          for COMPOSE_FILE in /home/mystic/sonora-digital-corp/docker-compose.yml /home/mystic/sonora-digital-corp/infra/docker-compose.vps.yml; do
+            if [ -f "$COMPOSE_FILE" ]; then
+              DOWN=$(docker ps -a --filter "status=exited" --format "{{.Names}}" 2>/dev/null | head -1)
+              if [ -n "$DOWN" ]; then
+                echo "→ Levantando contenedores caídos..."
+                cd "$(dirname "$COMPOSE_FILE")"
+                docker compose up -d --remove-orphans 2>/dev/null || true
+              fi
+            fi
+          done
+
+      # ── 4. VERIFICAR SERVICIOS CRÍTICOS ──
+      - name: 🌐 Servicios — Health checks
+        run: |
+          echo "=== Health Checks ==="
+          SERVICES=(
+            "Frontend:http://localhost:3000/api/health"
+            "OpenClaw:http://127.0.0.1:18789/health"
+            "Postgres:pg_isready"
+            "Redis:redis-cli ping"
+            "OpenRouter:openclaw agent --agent main --message ping"
+          )
+          for svc in "${SERVICES[@]}"; do
+            NAME="${svc%%:*}"
+            CHECK="${svc#*:}"
+            case "$CHECK" in
+              pg_isready) pg_isready >/dev/null 2>&1 && echo "✅ $NAME: OK" || echo "❌ $NAME: DOWN" ;;
+              redis*) redis-cli ping >/dev/null 2>&1 && echo "✅ $NAME: OK" || echo "❌ $NAME: DOWN" ;;
+              http*) curl -sf "$CHECK" >/dev/null 2>&1 && echo "✅ $NAME: OK ($CHECK)" || echo "❌ $NAME: DOWN ($CHECK)" ;;
+              *) echo "➖ $NAME: sin check" ;;
+            esac
+          done
+
+      # ── 5. VERIFICAR CONTENIDO GENERADO ──
+      - name: 📁 Contenido — Verificar almacenamiento
+        run: |
+          echo "=== Almacenamiento de Contenido ==="
+          for dir in \
+            "/home/mystic/sonora-digital-corp/soulclone/storage/images" \
+            "/home/mystic/sonora-digital-corp/soulclone/storage/audio" \
+            "/root/sonora-digital-corp/output_nsfw"; do
+            if [ -d "$dir" ]; then
+              COUNT=$(find "$dir" -type f 2>/dev/null | wc -l)
+              SIZE=$(du -sh "$dir" 2>/dev/null | cut -f1)
+              echo "📂 $dir → $COUNT archivos ($SIZE)"
+            else
+              echo "⚠️ $dir → NO EXISTE"
+            fi
+          done
+
+      # ── 6. VERIFICAR VPS Y DOMINIOS ──
+      - name: 🌍 Dominios — Resolución y acceso
+        run: |
+          echo "=== Dominios ==="
+          DOMAINS=(
+            "sonoradigitalcorp.com"
+            "app.sonoradigitalcorp.com"
+            "api.sonoradigitalcorp.com"
+            "music.sonoradigitalcorp.com"
+            "soulclone.sonoradigitalcorp.com"
+          )
+          for d in "${DOMAINS[@]}"; do
+            IP=$(dig +short "$d" 2>/dev/null | head -1)
+            if [ -n "$IP" ]; then
+              HTTP_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 "https://$d" 2>/dev/null || echo "000")
+              echo "🌐 $d → $IP (HTTP $HTTP_CODE)"
+            else
+              echo "❌ $d → NO RESUELVE"
+            fi
+          done
+
+      # ── 7. VERIFICAR PIPELINE GPU ──
+      - name: 🎨 GPU — Pipeline de generación
+        run: |
+          echo "=== GPU Pipeline ==="
+          # Revisar si hay servicios GPU corriendo
+          docker ps --format "{{.Names}}" 2>/dev/null | grep -i "gpu\|runpod\|flux\|stable" && echo "✅ GPU services running" || echo "ℹ️ No GPU containers local (pueden estar en RunPod)"
+          # Revisar workers SoulClone
+          echo "Workers activos:"
+          ps aux | grep -i "worker\|celery\|rq" | grep -v grep || echo "(ninguno local)"
+
+      # ── 8. REPORTE COMPACTO A TELEGRAM (solo problemas) ──
+      - name: 📲 Telegram — Alerta si hay problemas
+        if: failure()
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN_CEO }}
+          TELEGRAM_CHAT_ID: ${{ secrets.CEO_CHAT_ID }}
+        run: |
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+            -d "chat_id=${TELEGRAM_CHAT_ID}" \
+            -d "text=🔴 *ALERTA HERMES* — Problemas detectados en health check
+          Repo: sonora-digital-corp
+          Hora: $(date '+%Y-%m-%d %H:%M UTC')
+          Revisa: https://github.com/perrykingla69-cyber/sonora-digital-corp/actions" \
+            -d "parse_mode=Markdown" 2>/dev/null || true

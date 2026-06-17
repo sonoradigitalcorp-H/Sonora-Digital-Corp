@@ -1,0 +1,58 @@
+{
+  "name": "Error Log Sentinel (Zero Token)",
+  "nodes": [
+    {
+      "parameters": { "rule": { "interval": 30 } },
+      "name": "Every 30 min",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "command": "tail -50 /home/mystic/jarvis/logs/error-correction.log 2>/dev/null | grep -c 'FAIL\\|ERROR\\|BROKEN\\|Cannot' || echo 0",
+        "options": {}
+      },
+      "name": "Scan Error Log",
+      "type": "n8n-nodes-base.execCommand",
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "command": "journalctl -u jarvis-* --since '30 min ago' --no-pager 2>/dev/null | grep -c 'Failed\\|error\\|Error' || echo 0",
+        "options": {}
+      },
+      "name": "Scan Journal",
+      "type": "n8n-nodes-base.execCommand",
+      "position": [450, 500]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            { "value1": "={{$json[\"stdout\"]}}", "value2": 0, "operation": "larger" }
+          ]
+        }
+      },
+      "name": "Errors Found?",
+      "type": "n8n-nodes-base.if",
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "command": "echo \"[$(date)] ERROR: system detected $(tail -50 /home/mystic/jarvis/logs/error-correction.log | grep -c 'FAIL\\|ERROR' 2>/dev/null) errors\" >> /home/mystic/jarvis/logs/alerts.log",
+        "options": {}
+      },
+      "name": "Log Alert",
+      "type": "n8n-nodes-base.execCommand",
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "Every 30 min": { "main": [[ { "node": "Scan Error Log" }, { "node": "Scan Journal" } ]] },
+    "Scan Error Log": { "main": [[ { "node": "Errors Found?" } ]] },
+    "Errors Found?": { "main": [[ { "node": "Log Alert" } ], [ ]] }
+  },
+  "active": true,
+  "settings": {},
+  "tags": ["zero-token", "monitoring", "errors"]
+}

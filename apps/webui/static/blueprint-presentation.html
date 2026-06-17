@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS — Blueprint Presentation</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #0a0a0f;
+  --surface: #12121a;
+  --surface2: #1a1a28;
+  --border: #2a2a3e;
+  --text: #e8e8f0;
+  --text2: #8888aa;
+  --accent: #6c5ce7;
+  --accent2: #00d4aa;
+  --accent3: #ff6b6b;
+  --gold: #ffd700;
+  --orange: #ff8c42;
+  --pink: #ff6bcb;
+  --cyan: #00d4ff;
+  --slide-w: min(100vw, 1200px);
+}
+html { scroll-behavior: smooth; scroll-snap-type: y mandatory; }
+body {
+  font-family: 'Inter', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  overflow-x: hidden;
+}
+.slide {
+  min-height: 100vh;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  position: relative;
+  border-bottom: 1px solid var(--border);
+}
+.slide-inner {
+  width: var(--slide-w);
+  max-width: 1100px;
+}
+h1 { font-size: clamp(2rem, 5vw, 4rem); font-weight: 900; letter-spacing: -0.03em; line-height: 1.1; }
+h2 { font-size: clamp(1.5rem, 3vw, 2.5rem); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 1.5rem; }
+h3 { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.8rem; }
+.subtitle { color: var(--text2); font-size: 1.1rem; margin-top: 0.5rem; }
+.tag {
+  display: inline-block; padding: 0.2rem 0.8rem; border-radius: 20px; font-size: 0.75rem;
+  font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em;
+}
+.tag-accent { background: rgba(108,92,231,0.2); color: var(--accent); border: 1px solid var(--accent); }
+.tag-gold { background: rgba(255,215,0,0.15); color: var(--gold); border: 1px solid var(--gold); }
+.tag-cyan { background: rgba(0,212,255,0.15); color: var(--cyan); border: 1px solid var(--cyan); }
+.tag-green { background: rgba(0,212,170,0.15); color: var(--accent2); border: 1px solid var(--accent2); }
+.tag-red { background: rgba(255,107,107,0.15); color: var(--accent3); border: 1px solid var(--accent3); }
+.tag-orange { background: rgba(255,140,66,0.15); color: var(--orange); border: 1px solid var(--orange); }
+.tag-pink { background: rgba(255,107,203,0.15); color: var(--pink); border: 1px solid var(--pink); }
+
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
+.card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+  padding: 1.5rem; transition: all 0.2s;
+}
+.card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(108,92,231,0.1); }
+.card .value { font-size: 2rem; font-weight: 800; color: var(--accent); }
+.card .label { font-size: 0.85rem; color: var(--text2); margin-top: 0.3rem; }
+.card .desc { font-size: 0.9rem; color: var(--text2); margin-top: 0.5rem; }
+
+.timeline { position: relative; padding-left: 2rem; }
+.timeline::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 2px; background: var(--border); }
+.timeline-item { position: relative; padding: 0.8rem 0; }
+.timeline-item::before {
+  content: ''; position: absolute; left: -2rem; top: 1rem;
+  width: 12px; height: 12px; border-radius: 50%; background: var(--accent);
+  border: 2px solid var(--bg);
+}
+.timeline-item .date { font-size: 0.8rem; color: var(--text2); font-family: 'JetBrains Mono', monospace; }
+.timeline-item .msg { font-size: 0.95rem; margin-top: 0.2rem; }
+.timeline-item .hash { font-size: 0.7rem; color: var(--text2); font-family: 'JetBrains Mono', monospace; }
+
+.system-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+.system-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+  overflow: hidden; position: relative;
+}
+.system-card .head { padding: 1.2rem 1.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+.system-card .body { padding: 1.2rem 1.5rem; }
+.system-card .stat { display: flex; justify-content: space-between; padding: 0.3rem 0; font-size: 0.85rem; }
+.system-card .stat .v { color: var(--text); font-weight: 600; }
+.system-card .stat .l { color: var(--text2); }
+
+.arch-diagram {
+  display: flex; flex-direction: column; align-items: center; gap: 0.5rem; padding: 2rem 0;
+}
+.arch-layer {
+  display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+}
+.arch-box {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  padding: 0.6rem 1.2rem; font-size: 0.8rem; text-align: center; min-width: 100px;
+  font-weight: 500;
+}
+.arch-box.accent { border-color: var(--accent); background: rgba(108,92,231,0.1); }
+.arch-box.green { border-color: var(--accent2); background: rgba(0,212,170,0.1); }
+.arch-box.cyan { border-color: var(--cyan); background: rgba(0,212,255,0.1); }
+.arch-box.gold { border-color: var(--gold); background: rgba(255,215,0,0.1); }
+.arch-box.pink { border-color: var(--pink); background: rgba(255,107,203,0.1); }
+.arch-arrow { color: var(--text2); font-size: 1.2rem; }
+
+.metric-row { display: flex; flex-wrap: wrap; gap: 1rem; margin: 1rem 0; }
+.metric {
+  background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+  padding: 1rem 1.5rem; flex: 1; min-width: 150px; text-align: center;
+}
+.metric .n { font-size: 1.8rem; font-weight: 800; }
+.metric .l { font-size: 0.8rem; color: var(--text2); margin-top: 0.2rem; }
+
+.client-table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.client-table th { text-align: left; padding: 0.6rem 0.8rem; color: var(--text2); font-weight: 600; border-bottom: 1px solid var(--border); text-transform: uppercase; font-size: 0.7rem; letter-spacing: 0.05em; }
+.client-table td { padding: 0.6rem 0.8rem; border-bottom: 1px solid var(--border); }
+
+.nav {
+  position: fixed; bottom: 2rem; right: 2rem; z-index: 100;
+  display: flex; gap: 0.5rem; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 30px; padding: 0.5rem;
+}
+.nav a {
+  width: 10px; height: 10px; border-radius: 50%; background: var(--border);
+  display: block; transition: all 0.2s;
+}
+.nav a:hover, .nav a.active { background: var(--accent); transform: scale(1.3); }
+
+.fade-in { opacity: 0; transform: translateY(20px); animation: fadeIn 0.6s ease forwards; }
+@keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+
+.glow-text { background: linear-gradient(135deg, var(--accent), var(--accent2)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.code { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+.badge { display: inline-block; padding: 0.1rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: 600; }
+.badge-red { background: rgba(255,107,107,0.2); color: var(--accent3); }
+.badge-green { background: rgba(0,212,170,0.2); color: var(--accent2); }
+.badge-gold { background: rgba(255,215,0,0.2); color: var(--gold); }
+
+@media (max-width: 768px) {
+  .slide { padding: 1.5rem; }
+  .system-grid { grid-template-columns: 1fr; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .nav { bottom: 1rem; right: 1rem; }
+  .metric { min-width: 100px; }
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" id="slideNav"></nav>
+
+<!-- SLIDE 1: TITLE -->
+<section class="slide" data-slide="0">
+  <div class="slide-inner fade-in">
+    <div style="text-align:center;">
+      <span class="tag tag-accent" style="margin-bottom:1rem;display:inline-block;">v3.26.0 → v5.0</span>
+      <h1 class="glow-text">JARVIS</h1>
+      <h1 style="font-size:clamp(1.5rem,3vw,2.2rem);font-weight:600;">AI Agency OS</h1>
+      <p class="subtitle" style="font-size:1.3rem;margin-top:1rem;">Blueprint & Presentación</p>
+      <p style="color:var(--text2);margin-top:0.5rem;">Jun 9 — Jun 14, 2026 · 105 commits · 17,932 LOC Python · 5 client systems</p>
+      <div style="margin-top:2rem;display:flex;gap:0.5rem;justify-content:center;flex-wrap:wrap;">
+        <span class="tag tag-green">● Live API</span>
+        <span class="tag tag-cyan">● Full-Stack</span>
+        <span class="tag tag-gold">● Multi-Tenant</span>
+        <span class="tag tag-pink">● AI-Powered</span>
+        <span class="tag tag-red">● 3.2GB RAM</span>
+      </div>
+      <p style="margin-top:3rem;color:var(--text2);font-size:0.85rem;">↓ Scroll for the full story</p>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 2: THE NUMBERS -->
+<section class="slide" data-slide="1">
+  <div class="slide-inner fade-in delay-1">
+    <h2>El Ecosistema en Números</h2>
+    <div class="metric-row">
+      <div class="metric"><div class="n" style="color:var(--accent);">105</div><div class="l">Commits</div></div>
+      <div class="metric"><div class="n" style="color:var(--accent2);">72</div><div class="l">v3.x Tags</div></div>
+      <div class="metric"><div class="n" style="color:var(--cyan);">5,702</div><div class="l">Archivos .py</div></div>
+      <div class="metric"><div class="n" style="color:var(--gold);">17,932</div><div class="l">LOC Python</div></div>
+      <div class="metric"><div class="n" style="color:var(--pink);">137</div><div class="l">Shell Scripts</div></div>
+      <div class="metric"><div class="n" style="color:var(--orange);">307</div><div class="l">MB Total (MB)</div></div>
+    </div>
+    <div class="metric-row">
+      <div class="metric"><div class="n" style="color:var(--accent);">60+</div><div class="l">API Endpoints</div></div>
+      <div class="metric"><div class="n" style="color:var(--accent2);">26</div><div class="l">HTML Pages</div></div>
+      <div class="metric"><div class="n" style="color:var(--cyan);">11</div><div class="l">Systemd Services</div></div>
+      <div class="metric"><div class="n" style="color:var(--gold);">3</div><div class="l">Systemd Timers</div></div>
+      <div class="metric"><div class="n" style="color:var(--pink);">20</div><div class="l">Route Files</div></div>
+      <div class="metric"><div class="n" style="color:var(--orange);">44</div><div class="l">Core Source Files</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 3: ARCHITECTURE -->
+<section class="slide" data-slide="2">
+  <div class="slide-inner fade-in delay-2">
+    <h2>Arquitectura del Sistema</h2>
+    <div class="arch-diagram">
+      <div class="arch-layer">
+        <div class="arch-box accent">Chrome Kiosk<br><span style="font-size:0.7rem;color:var(--text2);">HDMI :0</span></div>
+        <div class="arch-box accent">Telegram Bot<br><span style="font-size:0.7rem;color:var(--text2);">@Gucci_ortega_bot</span></div>
+        <div class="arch-box accent">WhatsApp API<br><span style="font-size:0.7rem;color:var(--text2);">Port 3001</span></div>
+      </div>
+      <div class="arch-arrow">⬇</div>
+      <div class="arch-layer">
+        <div class="arch-box gold" style="min-width:180px;">FastAPI Web UI<br><span style="font-size:0.7rem;color:var(--text2);">Port 5174 · 20 Routers</span></div>
+      </div>
+      <div class="arch-arrow">⬇</div>
+      <div class="arch-layer">
+        <div class="arch-box cyan">MCP Server<br><span style="font-size:0.7rem;color:var(--text2);">Port 8000 · 10 Tools</span></div>
+        <div class="arch-box green">Thumbnails<br><span style="font-size:0.7rem;color:var(--text2);">Port 8765</span></div>
+        <div class="arch-box green">Publisher<br><span style="font-size:0.7rem;color:var(--text2);">Port 8766</span></div>
+      </div>
+      <div class="arch-arrow">⬇</div>
+      <div class="arch-layer">
+        <div class="arch-box pink">Neo4j<br><span style="font-size:0.7rem;color:var(--text2);">Graph DB · 7474/7687</span></div>
+        <div class="arch-box pink">Qdrant<br><span style="font-size:0.7rem;color:var(--text2);">Vector DB · 6333/6334</span></div>
+      </div>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:0.8rem;justify-content:center;margin-top:1.5rem;">
+      <span class="tag tag-accent">FastAPI</span>
+      <span class="tag tag-cyan">FastMCP</span>
+      <span class="tag tag-green">Neo4j</span>
+      <span class="tag tag-gold">Qdrant</span>
+      <span class="tag tag-pink">Docker</span>
+      <span class="tag tag-red">Systemd</span>
+      <span class="tag tag-orange">OpenRouter</span>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 4: CLIENTS -->
+<section class="slide" data-slide="3">
+  <div class="slide-inner fade-in delay-1">
+    <h2>Los 5 Sistemas Cliente</h2>
+    <p class="subtitle" style="margin-bottom:1.5rem;">6,886 LOC total · Cada uno = 1 HTML con datos de API en vivo</p>
+    <div class="system-grid">
+      <div class="system-card">
+        <div class="head"><span style="font-weight:700;">ABE MUSIC</span><span class="tag tag-gold">790 LOC</span></div>
+        <div class="body">
+          <div class="stat"><span class="l">CRM</span><span class="v">Artistas + Releases</span></div>
+          <div class="stat"><span class="l">Royalties</span><span class="v">70/20/10 split</span></div>
+          <div class="stat"><span class="l">AI Chat</span><span class="v">OpenRouter integrado</span></div>
+          <div class="stat"><span class="l">KPIs</span><span class="v">Streams · Revenue · Label Share</span></div>
+          <div style="margin-top:0.8rem;"><span class="tag tag-green">● Live</span> <span class="tag tag-cyan">abe-system.html</span></div>
+        </div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span style="font-weight:700;">Agency Control</span><span class="tag tag-gold">682 LOC</span></div>
+        <div class="body">
+          <div class="stat"><span class="l">Master Hub</span><span class="v">5 client cards</span></div>
+          <div class="stat"><span class="l">Health</span><span class="v">System bar + status</span></div>
+          <div class="stat"><span class="l">Quick Actions</span><span class="v">Deploy · Restart · Report</span></div>
+          <div class="stat"><span class="l">Activity Feed</span><span class="v">Live SSE stream</span></div>
+          <div style="margin-top:0.8rem;"><span class="tag tag-green">● Live</span> <span class="tag tag-cyan">agency-control.html</span></div>
+        </div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span style="font-weight:700;">SDC Portal</span><span class="tag tag-gold">1,309 LOC</span></div>
+        <div class="body">
+          <div class="stat"><span class="l">Plans</span><span class="v">4 tiers · $97–$997/mo</span></div>
+          <div class="stat"><span class="l">Niches</span><span class="v">7 selectors · adult = 2x</span></div>
+          <div class="stat"><span class="l">Onboarding</span><span class="v">4-step wizard</span></div>
+          <div class="stat"><span class="l">Payments</span><span class="v">Mercado Pago · Bitso · SPEI</span></div>
+          <div style="margin-top:0.8rem;"><span class="tag tag-green">● Live</span> <span class="tag tag-cyan">sdc-portal.html</span></div>
+        </div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span style="font-weight:700;">Zamora Studio</span><span class="tag tag-gold">733 LOC</span></div>
+        <div class="body">
+          <div class="stat"><span class="l">Services</span><span class="v">Grid + pricing</span></div>
+          <div class="stat"><span class="l">Portfolio</span><span class="v">Masonry + category filter</span></div>
+          <div class="stat"><span class="l">Booking</span><span class="v">Form + testimonials</span></div>
+          <div class="stat"><span class="l">Theme</span><span class="v">Apple glassmorphism</span></div>
+          <div style="margin-top:0.8rem;"><span class="tag tag-green">● Live</span> <span class="tag tag-cyan">zamora-system.html</span></div>
+        </div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span style="font-weight:700;">MysticVerse</span><span class="tag tag-gold">1,204 LOC</span></div>
+        <div class="body">
+          <div class="stat"><span class="l">Gaming</span><span class="v">XP bar · 12 levels</span></div>
+          <div class="stat"><span class="l">Leaderboard</span><span class="v">Top 10 players</span></div>
+          <div class="stat"><span class="l">Badges</span><span class="v">12-badge grid</span></div>
+          <div class="stat"><span class="l">KYC</span><span class="v">Age · Identity · Consent</span></div>
+          <div style="margin-top:0.8rem;"><span class="tag tag-green">● Live</span> <span class="tag tag-cyan">mysticverse-hub.html</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:1.5rem;text-align:center;">
+      <span class="tag tag-accent">+ wakeup.html</span>
+      <span class="tag tag-cyan">jarvis-abe.html</span>
+      <span class="tag tag-green">brain-dashboard.html</span>
+      <span class="tag tag-gold">+ 18 more HTML pages</span>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 5: API ENDPOINTS -->
+<section class="slide" data-slide="4">
+  <div class="slide-inner fade-in delay-2">
+    <h2>API Layer — 60+ Endpoints</h2>
+    <p class="subtitle" style="margin-bottom:1.5rem;">FastAPI on Port 5174 · 20 route files · 2,859 LOC</p>
+    <div class="grid-2">
+      <div class="card"><div class="value" style="color:var(--accent);">/api/abe/*</div><div class="desc">Artists · Releases · Streams · Revenue · CEO Dashboard</div></div>
+      <div class="card"><div class="value" style="color:var(--accent2);">/api/sdc/*</div><div class="desc">Plans · Niches · Onboarding · Mystic flow</div></div>
+      <div class="card"><div class="value" style="color:var(--cyan);">/api/mysticverse/*</div><div class="desc">Gamification · Twins · KYC · Badges · Leaderboard</div></div>
+      <div class="card"><div class="value" style="color:var(--gold);">/api/zamora/*</div><div class="desc">Services · Pricing · Portfolio</div></div>
+      <div class="card"><div class="value" style="color:var(--pink);">/api/payments/*</div><div class="desc">SPEI · Crypto · Plans · Webhooks · Verify</div></div>
+      <div class="card"><div class="value" style="color:var(--orange);">/api/store/*</div><div class="desc">Products · Orders · Content Gen · Video Gen</div></div>
+      <div class="card"><div class="value" style="color:var(--accent);">/api/voice/*</div><div class="desc">STT · TTS · Wake Word · Status</div></div>
+      <div class="card"><div class="value" style="color:var(--accent2);">/api/brain/*</div><div class="desc">Knowledge Graph · Activity Stream · Dashboard</div></div>
+      <div class="card"><div class="value" style="color:var(--cyan);">/api/webhook/*</div><div class="desc">n8n backup/healthcheck/restore</div></div>
+      <div class="card"><div class="value" style="color:var(--gold);">/api/unified/status</div><div class="desc">System health · All services</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 6: TIMELINE -->
+<section class="slide" data-slide="5">
+  <div class="slide-inner fade-in delay-3">
+    <h2>Línea de Tiempo — 105 Commits en 5 Días</h2>
+    <p class="subtitle" style="margin-bottom:1rem;">Jun 9 → Jun 14, 2026</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+      <div>
+        <h3 style="color:var(--accent);font-size:1rem;">Jun 9 — Foundation</h3>
+        <div class="timeline">
+          <div class="timeline-item"><div class="date">Jun 09 17:27</div><div class="msg">v3.9.1: JARVIS now controls your computer</div><div class="hash">a25a468c</div></div>
+          <div class="timeline-item"><div class="date">Jun 09 17:35</div><div class="msg">v3.9.2: Voice fixed — continuous audio, concise TTS</div><div class="hash">02b565c6</div></div>
+          <div class="timeline-item"><div class="date">Jun 09 17:39</div><div class="msg">v3.10.0: New Mystic UI 2026 + Voice + Context</div><div class="hash">f5ec6d9f</div></div>
+          <div class="timeline-item"><div class="date">Jun 09 17:43</div><div class="msg">v3.11.0: WhatsApp bridge + PWA + Mystic main UI</div><div class="hash">1cf0d661</div></div>
+          <div class="timeline-item"><div class="date">Jun 09 17:46</div><div class="msg">v3.12.0: OpenClaw 40/57 skills + ABE onboarding</div><div class="hash">81ce7a8a</div></div>
+          <div class="timeline-item"><div class="date">Jun 09 17:51</div><div class="msg">v3.13.0: OpenCode config + /skills + Telegram test</div><div class="hash">f58f3472</div></div>
+          <div class="timeline-item"><div class="date">Jun 09 18:04</div><div class="msg">v3.14.0: CLIs/SDKs/MCPs verified + fal.ai working</div><div class="hash">f3361401</div></div>
+          <div class="timeline-item"><div class="date">Jun 09 19:14</div><div class="msg">v3.16.0: 50 skills + Hermes config + Spec 013</div><div class="hash">537d5815</div></div>
+          <div class="timeline-item"><div class="date">Jun 09 19:44</div><div class="msg">v3.17.0: Branding SDC + presentation + Playwright</div><div class="hash">6ff026d3</div></div>
+          <div class="timeline-item"><div class="date">Jun 09 20:16</div><div class="msg">v3.17.2: 330 tests, 50 skills, SDD 100%</div><div class="hash">5ab6f30d</div></div>
+        </div>
+      </div>
+      <div>
+        <h3 style="color:var(--cyan);font-size:1rem;">Jun 10 — Modularization</h3>
+        <div class="timeline">
+          <div class="timeline-item"><div class="date">Jun 10 06:26</div><div class="msg">v3.18.0: Web UI routes (14 files) + modularized core</div><div class="hash">0f8143c0</div></div>
+          <div class="timeline-item"><div class="date">Jun 10 10:25</div><div class="msg">v3.19.0–3.21.0: SDD Harness + Brain Graph + Store</div><div class="hash">512fd501</div></div>
+          <div class="timeline-item"><div class="date">Jun 10 11:45</div><div class="msg">v3.22.0: Autonomous 24/7 + self-verification + ideas protocol</div><div class="hash">f0ad9248</div></div>
+          <div class="timeline-item"><div class="date">Jun 10 12:02</div><div class="msg">v3.22.1: Security + Firewall + Anti-Prompt Injection</div><div class="hash">122dbdf1</div></div>
+          <div class="timeline-item"><div class="date">Jun 10 12:32</div><div class="msg">v3.23.0: SDC Official Website — Three.js 3D</div><div class="hash">8b170797</div></div>
+          <div class="timeline-item"><div class="date">Jun 10 12:39</div><div class="msg">v3.24.0: Design System & UI Standards</div><div class="hash">be708a77</div></div>
+          <div class="timeline-item"><div class="date">Jun 10 12:47</div><div class="msg">v3.25.0: Content Pipeline — Daily video/podcast/article</div><div class="hash">4fbd5495</div></div>
+          <div class="timeline-item"><div class="date">Jun 10 13:18</div><div class="msg">v3.26.0: SDC Business — Landing + gamification + affiliates</div><div class="hash">ab326574</div></div>
+        </div>
+      </div>
+    </div>
+    <p style="margin-top:1rem;text-align:center;"><span class="tag tag-accent">14 commits on Jun 9</span> <span class="tag tag-cyan">20+ commits on Jun 10</span></p>
+  </div>
+</section>
+
+<!-- SLIDE 7: TIMELINE CONTINUED -->
+<section class="slide" data-slide="6">
+  <div class="slide-inner fade-in delay-1">
+    <h2>Línea de Tiempo — Jun 11 → Jun 14</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:2rem;">
+      <div>
+        <h3 style="color:var(--accent2);font-size:1rem;">Jun 11 — Hardening</h3>
+        <div class="timeline">
+          <div class="timeline-item"><div class="date">Jun 11 01:07</div><div class="msg">v3.27.0: Command Center + Brain activity stream</div><div class="hash">00ccedb2</div></div>
+          <div class="timeline-item"><div class="date">Jun 11 01:18</div><div class="msg">v3.27.1: Session close-loop + memory injection</div><div class="hash">e90972b1</div></div>
+          <div class="timeline-item"><div class="date">Jun 11 01:27</div><div class="msg">Resource management plan + Docker cleanup</div><div class="hash">2bd2a008</div></div>
+          <div class="timeline-item"><div class="date">Jun 11 01:45</div><div class="msg">Spec 005 — Hermes Potencial Máximo</div><div class="hash">eee168c5</div></div>
+          <div class="timeline-item"><div class="date">Jun 11 17:41</div><div class="msg">Cleanup specs, secrets, and configs</div><div class="hash">8035a4c5</div></div>
+          <div class="timeline-item"><div class="date">Jun 11 17:45</div><div class="msg">Content pipeline — generate, format, publish</div><div class="hash">2656d015</div></div>
+        </div>
+        <h3 style="color:var(--gold);font-size:1rem;margin-top:1rem;">Jun 12 — Platform Build</h3>
+        <div class="timeline">
+          <div class="timeline-item"><div class="date">Jun 12 12:47</div><div class="msg">[006] System hardening: +33 tests, 69% coverage, auto-save</div><div class="hash">3f0056a6</div></div>
+          <div class="timeline-item"><div class="date">Jun 12 14:45</div><div class="msg">[007] Session close-loop: 3 Telegram bots, CRM Neo4j, WA</div><div class="hash">a9043ea1</div></div>
+          <div class="timeline-item"><div class="date">Jun 12 19:17</div><div class="msg">feat[002-007]: AzREC project + content pipeline + masterclass</div><div class="hash">f24fdf11</div></div>
+          <div class="timeline-item"><div class="date">Jun 12 19:46</div><div class="msg">Fix portaudio19-dev, CI, engram paths, verify.py</div><div class="hash">9a4d660f</div></div>
+        </div>
+      </div>
+      <div>
+        <h3 style="color:var(--pink);font-size:1rem;">Jun 12 — Full Stack Launch</h3>
+        <div class="timeline">
+          <div class="timeline-item"><div class="date">Jun 12 22:25</div><div class="msg">v3.28.0: SDC App full-stack + landings ABE/Zamora/SDC</div><div class="hash">863fb6ae</div></div>
+          <div class="timeline-item"><div class="date">Jun 12 22:28</div><div class="msg">v3.28.1: Design systems + status report HTML</div><div class="hash">0243695b</div></div>
+          <div class="timeline-item"><div class="date">Jun 12 23:03</div><div class="msg">v3.29.0: Playwright E2E automation + 7/7 tests passing</div><div class="hash">d3c99b27</div></div>
+          <div class="timeline-item"><div class="date">Jun 12 23:13</div><div class="msg">v3.30.0: Spec 010 Daily Error Correction + systemd timer</div><div class="hash">d336fa4b</div></div>
+          <div class="timeline-item"><div class="date">Jun 12 23:34</div><div class="msg">v3.31.0: Master Content Correction Prompts System</div><div class="hash">092d0567</div></div>
+        </div>
+        <h3 style="color:var(--orange);font-size:1rem;margin-top:1rem;">Jun 13–14 — Acceleration</h3>
+        <div class="timeline">
+          <div class="timeline-item"><div class="date">Jun 13 00:04</div><div class="msg">v3.31.2: Night ops final — scripts + report pages</div><div class="hash">6cda4c92</div></div>
+          <div class="timeline-item"><div class="date">Jun 14 04:02</div><div class="msg">v3.31.3: Pre-v4.0 snapshot — ABE data, store, CRM</div><div class="hash">d0081afd</div></div>
+          <div class="timeline-item"><div class="date">Jun 14 04:07</div><div class="msg">v4.0: AGENCY OS v4.0 Turbo — daemon, turbo-loop, 24 tests</div><div class="hash">9205c0e0</div></div>
+          <div class="timeline-item"><div class="date">Jun 14 04:14</div><div class="msg">v4.1: JARVIS for Abraham — AI chat, voice, HDMI monitor</div><div class="hash">db7f1f0d</div></div>
+          <div class="timeline-item"><div class="date">Jun 14 14:00</div><div class="msg">auto: night ops progress 14:00 (latest)</div><div class="hash">cfbb0e71</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 8: BUSINESS & CLIENTS -->
+<section class="slide" data-slide="7">
+  <div class="slide-inner fade-in delay-2">
+    <h2>Modelo de Negocio & Clientes</h2>
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:2rem;">
+      <div>
+        <h3 style="color:var(--gold);font-size:1rem;">Pricing Tiers</h3>
+        <table class="client-table">
+          <tr><th>Plan</th><th>Precio</th><th>Clientes</th><th>AI</th><th>Stack</th></tr>
+          <tr><td>Explorador</td><td>$97/mo</td><td>1</td><td>—</td><td>Basic</td></tr>
+          <tr><td>Conquistador</td><td>$297/mo</td><td>3</td><td>—</td><td>Advanced</td></tr>
+          <tr><td>Agente IA</td><td>$497/mo</td><td>10</td><td>✓</td><td>Full stack</td></tr>
+          <tr><td>Imperio</td><td>$997/mo</td><td>∞</td><td>✓</td><td>Unlimited</td></tr>
+        </table>
+        <h3 style="color:var(--accent);font-size:1rem;margin-top:1.5rem;">Live Artist Data (ABE MUSIC)</h3>
+        <table class="client-table">
+          <tr><th>Artista</th><th>Streams</th><th>Revenue</th><th>Label Share</th></tr>
+          <tr><td>Jesus Urquijo</td><td>245K</td><td>$12,110</td><td>$2,422</td></tr>
+          <tr><td>Hector Rubio</td><td>193K</td><td>$9,660</td><td>$1,932</td></tr>
+          <tr><td>Javier Arvayo</td><td>101K</td><td>$5,110</td><td>$1,022</td></tr>
+          <tr style="border-top:2px solid var(--border);"><td><strong>Total</strong></td><td><strong>539K</strong></td><td><strong>$26,880</strong></td><td><strong>$5,376</strong></td></tr>
+        </table>
+      </div>
+      <div>
+        <h3 style="color:var(--cyan);font-size:1rem;">Key People</h3>
+        <div class="card" style="margin-bottom:0.8rem;">
+          <div style="font-weight:700;">Danny Guerrero</div>
+          <div style="font-size:0.8rem;color:var(--text2);">Founder — Sonora Digital Corp</div>
+          <div style="font-size:0.8rem;color:var(--text2);">Telegram: @Gucci_ortega_bot</div>
+        </div>
+        <div class="card" style="margin-bottom:0.8rem;">
+          <div style="font-weight:700;">Abraham</div>
+          <div style="font-size:0.8rem;color:var(--text2);">Paying client — ABE MUSIC label</div>
+        </div>
+        <div class="card" style="margin-bottom:0.8rem;">
+          <div style="font-weight:700;">Héctor Rubio</div>
+          <div style="font-size:0.8rem;color:var(--text2);">Real artist — Sinaloa composer</div>
+          <div style="font-size:0.8rem;color:var(--text2);">Collaborated with Peso Pluma</div>
+        </div>
+        <div class="card">
+          <div style="font-weight:700;">7 Niches</div>
+          <div style="font-size:0.8rem;color:var(--text2);">Adult (2x) · Fitness · Music ·<br>Real Estate · E-commerce ·<br>Education · Health</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 9: INFRASTRUCTURE -->
+<section class="slide" data-slide="8">
+  <div class="slide-inner fade-in delay-1">
+    <h2>Infraestructura & Automatización</h2>
+    <div class="grid-2">
+      <div class="card">
+        <div class="value" style="color:var(--accent);font-size:1.5rem;">11 Systemd Services</div>
+        <div class="desc" style="margin-top:0.5rem;">
+          abe-daemon · cicd · hermes-gateway · hermes-wake-word · jarvis-voice<br>
+          openclaw-gateway · paperclip · playwright-mcp · turbo-loop · wakeup · aionui-web
+        </div>
+      </div>
+      <div class="card">
+        <div class="value" style="color:var(--accent2);font-size:1.5rem;">3 Systemd Timers</div>
+        <div class="desc" style="margin-top:0.5rem;">
+          <b>cicd.timer</b> — cada 6h (00/06/12/18) · test + commit + push + Telegram<br>
+          <b>turbo-loop.timer</b> — cada 10min · healthcheck + auto-optimize<br>
+          <b>wakeup.timer</b> — 9:00 AM · Chrome kiosk + Telegram
+        </div>
+      </div>
+      <div class="card">
+        <div class="value" style="color:var(--cyan);font-size:1.5rem;">Docker Compose</div>
+        <div class="desc" style="margin-top:0.5rem;">
+          Neo4j (256M heap) · Qdrant · MCP Server · Thumbnails · Publisher<br>
+          2 compose files · 4 volumes · 1 internal network
+        </div>
+      </div>
+      <div class="card">
+        <div class="value" style="color:var(--gold);font-size:1.5rem;">Telegram Bot</div>
+        <div class="desc" style="margin-top:0.5rem;">
+          @Gucci_ortega_bot (id 8665900402) — ACTIVE<br>
+          Token: 8665900402:AAG0PW36xvlXybG7Heyu-TK9CUFeiVhAa0U<br>
+          Chat: 5738935134 (Danny Guerrero)
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 10: ERRORS FIXED -->
+<section class="slide" data-slide="9">
+  <div class="slide-inner fade-in delay-3">
+    <h2>Errores Críticos Corregidos</h2>
+    <div class="system-grid">
+      <div class="system-card">
+        <div class="head"><span>Daemon Healthcheck</span><span class="tag tag-red">CRITICAL</span></div>
+        <div class="body">
+          <div class="stat"><span class="l">Antes</span><span class="v" style="color:var(--accent3);">GET /health → 404</span></div>
+          <div class="stat"><span class="l">Después</span><span class="v" style="color:var(--accent2);">GET /api/status → 200</span></div>
+          <div class="desc" style="margin-top:0.5rem;font-size:0.85rem;color:var(--text2);">
+            ABE daemon reported JARVIS: ❌ for 49 cycles. Healthcheck was hitting a non-existent endpoint. Fixed URL and restarted — now ✅.
+          </div>
+        </div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span>Turbo-Loop Broken</span><span class="tag tag-red">CRITICAL</span></div>
+        <div class="body">
+          <div class="stat"><span class="l">Antes</span><span class="v" style="color:var(--accent3);">/health → 404</span></div>
+          <div class="stat"><span class="l">Después</span><span class="v" style="color:var(--accent2);">/api/status → 200</span></div>
+          <div class="desc" style="margin-top:0.5rem;font-size:0.85rem;color:var(--text2);">
+            Same issue — both daemon and turbo-loop had the wrong healthcheck URL. Fixed both in same session.
+          </div>
+        </div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span>warp-svc RAM Leak</span><span class="tag tag-orange">HIGH</span></div>
+        <div class="body">
+          <div class="stat"><span class="l">Antes</span><span class="v" style="color:var(--accent3);">86MB wasted</span></div>
+          <div class="stat"><span class="l">Después</span><span class="v" style="color:var(--accent2);">Process killed</span></div>
+          <div class="desc" style="margin-top:0.5rem;font-size:0.85rem;color:var(--text2);">
+            Cloudflare warp-svc was using 86MB RAM unnecessarily on a laptop with only 3.2GB total. Killed it.
+          </div>
+        </div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span>references/ 343MB</span><span class="tag tag-orange">HIGH</span></div>
+        <div class="body">
+          <div class="stat"><span class="l">Antes</span><span class="v" style="color:var(--accent3);">343MB tracked in git</span></div>
+          <div class="stat"><span class="l">Después</span><span class="v" style="color:var(--accent2);">.gitignore + rm -rf</span></div>
+          <div class="desc" style="margin-top:0.5rem;font-size:0.85rem;color:var(--text2);">
+            External reference repos committed to git, bloating the repo. Added to .gitignore and deleted, recovering 343MB disk.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 11: KEY IDEAS -->
+<section class="slide" data-slide="10">
+  <div class="slide-inner fade-in delay-2">
+    <h2>Las Ideas Clave</h2>
+    <div class="system-grid">
+      <div class="system-card">
+        <div class="head"><span style="font-weight:700;">RoboAdvisor</span><span class="tag tag-gold">Vision</span></div>
+        <div class="body">
+          <div class="desc">Acquire → onboard 24h → deliver weekly → auto-charge → scale without humans. The entire system is designed around this loop.</div>
+          <div style="margin-top:0.8rem;">
+            <span class="tag tag-cyan">100-preguntas.html</span>
+            <span class="tag tag-green">Mayeutic framework</span>
+          </div>
+        </div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span style="font-weight:700;">Joaquin Ruiz Lite</span><span class="tag tag-cyan">Methodology</span></div>
+        <div class="body">
+          <div class="desc">Spec-minimal, feature-branch, homologation: spec → test → code → client sees. 23 specs archived → 4 active specs.</div>
+          <div style="margin-top:0.8rem;">
+            <span class="tag tag-accent">SDD</span>
+            <span class="tag tag-pink">Spec-driven dev</span>
+          </div>
+        </div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span style="font-weight:700;">CAVE MAN WISDOM</span><span class="tag tag-orange">Survival</span></div>
+        <div class="body">
+          <div class="desc">12 errores documentados, 10 mandamientos de sistema, daily error correction at 4AM via systemd timer. Spec 010.</div>
+          <div style="margin-top:0.8rem;">
+            <span class="tag tag-red">DOCUMENTO_DE_ERRORES</span>
+          </div>
+        </div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span style="font-weight:700;">Self-Improvement Loop</span><span class="tag tag-green">Autonomous</span></div>
+        <div class="body">
+          <div class="desc">behavior-analyzer.py analyzes work patterns → proposes automations. learning-loop.py captures lessons from debugging. Token optimization integrated.</div>
+          <div style="margin-top:0.8rem;">
+            <span class="tag tag-gold">memory/behavior-log.md</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 12: HANDOFF TO Z.AI -->
+<section class="slide" data-slide="11">
+  <div class="slide-inner fade-in delay-1">
+    <h2>Handoff a z.ai — El Plan</h2>
+    <p class="subtitle" style="margin-bottom:1.5rem;">8 prioridades para convertir JARVIS en producto vendible</p>
+    <div class="system-grid">
+      <div class="system-card">
+        <div class="head"><span>1. Auth</span><span class="tag tag-red">CRITICAL</span></div>
+        <div class="body"><div class="desc">JWT + registro/login + magic link. Sin esto no se vende.</div></div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span>2. Multi-Tenant</span><span class="tag tag-red">CRITICAL</span></div>
+        <div class="body"><div class="desc">Aislar datos por cliente en Neo4j con tenant_id.</div></div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span>3. White-Label</span><span class="tag tag-accent">HIGH</span></div>
+        <div class="body"><div class="desc">CSS variables: color, logo, brand configurables por tenant.</div></div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span>4. Responsive</span><span class="tag tag-accent">HIGH</span></div>
+        <div class="body"><div class="desc">Latinoamérica es mobile-first. 375px → 1440px.</div></div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span>5. Pagos</span><span class="tag tag-gold">HIGH</span></div>
+        <div class="body"><div class="desc">Stripe + mantener SPEI/crypto existentes.</div></div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span>6. SPA Unificado</span><span class="tag tag-gold">MEDIUM</span></div>
+        <div class="body"><div class="desc">Hash routing, sin frameworks, lazy-load módulos.</div></div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span>7. 1-Command Deploy</span><span class="tag tag-cyan">MEDIUM</span></div>
+        <div class="body"><div class="desc">curl url | bash. Auto-SSL con Caddy.</div></div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span>8. Notifications</span><span class="tag tag-cyan">MEDIUM</span></div>
+        <div class="body"><div class="desc">WhatsApp + email + in-app (SSE ya existe).</div></div>
+      </div>
+    </div>
+    <p style="margin-top:1.5rem;text-align:center;">
+      <span class="tag tag-accent">Ver: ZAI-HANDOFF.md</span>
+      <span class="tag tag-green">3.2GB RAM constraint</span>
+      <span class="tag tag-pink">No frameworks</span>
+      <span class="tag tag-gold">60+ endpoints to keep</span>
+    </p>
+  </div>
+</section>
+
+<!-- SLIDE 13: SYSTEM HEALTH -->
+<section class="slide" data-slide="12">
+  <div class="slide-inner fade-in delay-2">
+    <h2>Estado del Sistema</h2>
+    <div class="metric-row">
+      <div class="metric"><div class="n" style="color:var(--accent2);">71%</div><div class="l">RAM Used (2.3/3.3GB)</div></div>
+      <div class="metric"><div class="n" style="color:var(--accent3);">98.7%</div><div class="l">Swap Used (4.4/4.5GB)</div></div>
+      <div class="metric"><div class="n" style="color:var(--orange);">9.3</div><div class="l">Load Average (4 cores)</div></div>
+      <div class="metric"><div class="n" style="color:var(--accent);">592</div><div class="l">MB opencode (largest proc)</div></div>
+    </div>
+    <div style="margin-top:1.5rem;">
+      <h3>API Endpoints Verificados (todos 200 + JSON válido)</h3>
+      <div class="grid-2" style="margin-top:0.5rem;">
+        <div class="card"><span class="tag tag-green">✓</span> /api/status</div>
+        <div class="card"><span class="tag tag-green">✓</span> /api/unified/status</div>
+        <div class="card"><span class="tag tag-green">✓</span> /api/abe/dashboard/ceo</div>
+        <div class="card"><span class="tag tag-green">✓</span> /api/abe/artists</div>
+        <div class="card"><span class="tag tag-green">✓</span> /api/sdc/plans</div>
+        <div class="card"><span class="tag tag-green">✓</span> /api/zamora/services</div>
+        <div class="card"><span class="tag tag-green">✓</span> /api/zamora/portfolio</div>
+        <div class="card"><span class="tag tag-green">✓</span> /api/mysticverse/gamification/leaderboard</div>
+        <div class="card"><span class="tag tag-green">✓</span> /api/store/products</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 14: v4 → v5 -->
+<section class="slide" data-slide="13">
+  <div class="slide-inner fade-in delay-1">
+    <h2>v4.0 → v5.0: La Aceleración</h2>
+    <p class="subtitle" style="margin-bottom:1.5rem;">7 commits en esta sesión · +16,273 LOC · -1,467 LOC</p>
+    <div class="system-grid">
+      <div class="system-card">
+        <div class="head"><span>5 New Systems</span><span class="tag tag-green">6,886 LOC</span></div>
+        <div class="body"><div class="desc">abe-system, agency-control, sdc-portal, zamora-system, mysticverse-hub — all with live API data</div></div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span>Wake-Up System</span><span class="tag tag-cyan">NEW</span></div>
+        <div class="body"><div class="desc">wakeup.html + wakeup.sh + systemd timer 9AM. Web Speech API es-MX.</div></div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span>CI/CD Pipeline</span><span class="tag tag-gold">NEW</span></div>
+        <div class="body"><div class="desc">338 tests cada 6h, auto-commit+push, Telegram report.</div></div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span>HDMI Deploy</span><span class="tag tag-pink">NEW</span></div>
+        <div class="body"><div class="desc">deploy-all.sh opens all 5 systems in Chrome kiosk on :0.</div></div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span>Screenshots</span><span class="tag tag-orange">5 Captures</span></div>
+        <div class="body"><div class="desc">Playwright screenshots of all systems at 1920×1080.</div></div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span>Comprehensive Audit</span><span class="tag tag-accent">4 Agents</span></div>
+        <div class="body"><div class="desc">logs + git history (40 commits) + HTML/API e2e + services/timers.</div></div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span>3 Critical Fixes</span><span class="tag tag-red">BUGS</span></div>
+        <div class="body"><div class="desc">Daemon healthcheck, turbo-loop healthcheck, warp-svc killed (86MB RAM freed).</div></div>
+      </div>
+      <div class="system-card">
+        <div class="head"><span>references/ Cleanup</span><span class="tag tag-red">343MB</span></div>
+        <div class="body"><div class="desc">23K files removed from git tracking, .gitignore updated, disk recovered.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 15: FINAL -->
+<section class="slide" data-slide="14">
+  <div class="slide-inner fade-in delay-2">
+    <div style="text-align:center;">
+      <h1 class="glow-text">JARVIS</h1>
+      <h2>AI Agency OS</h2>
+      <p style="font-size:1.2rem;color:var(--text2);margin:2rem 0;">
+        De una laptop con 3.2GB RAM a un ecosistema de 5 clientes,<br>
+        60+ APIs, CI/CD autónomo, y un agente AI 24/7.
+      </p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin:2rem 0;">
+        <span class="tag tag-green">● 5 client systems</span>
+        <span class="tag tag-cyan">● 105 commits</span>
+        <span class="tag tag-gold">● 17,932 LOC</span>
+        <span class="tag tag-pink">● 60+ endpoints</span>
+        <span class="tag tag-accent">● 11 services</span>
+      </div>
+      <p style="color:var(--text2);font-size:0.9rem;margin-top:3rem;">
+        v3.26.0 → v5.0 · Jun 9–14, 2026<br>
+        Sonora Digital Corp · Danny Guerrero
+      </p>
+      <p style="margin-top:2rem;font-size:0.85rem;color:var(--text2);">
+        Next: z.ai builds the sellable product → <span style="color:var(--accent);">ZAI-HANDOFF.md</span>
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+// Build navigation dots
+const slides = document.querySelectorAll('[data-slide]');
+const nav = document.getElementById('slideNav');
+slides.forEach(s => {
+  const a = document.createElement('a');
+  a.href = '#' + s.id;
+  a.title = 'Slide ' + (parseInt(s.dataset.slide) + 1);
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    s.scrollIntoView({ behavior: 'smooth' });
+  });
+  nav.appendChild(a);
+});
+
+// Highlight active dot
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const idx = entry.target.dataset.slide;
+      nav.querySelectorAll('a').forEach((a, i) => {
+        a.style.background = i == idx ? 'var(--accent)' : 'var(--border)';
+      });
+    }
+  });
+}, { threshold: 0.5 });
+slides.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

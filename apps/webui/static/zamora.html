@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Alejandro Zamora — Brand Studio</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a1a;color:#e8e8e8;font-family:'Playfair Display','Inter',serif;line-height:1.6}
+.hero{min-height:80vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:60px 20px;background:radial-gradient(ellipse at top,rgba(201,162,39,0.1) 0%,#0a0a1a 60%)}
+.hero h1{font-size:clamp(2.5rem,6vw,5rem);font-weight:700;background:linear-gradient(135deg,#c9a227,#ff4757);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:16px}
+.hero .subtitle{font-size:1.4rem;color:rgba(255,255,255,0.6);font-style:italic;max-width:600px}
+.hero .cta{margin-top:40px;display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.btn{padding:16px 32px;border-radius:12px;font-size:1rem;font-weight:600;cursor:pointer;border:none;transition:all 0.3s;font-family:'Inter',sans-serif}
+.btn-primary{background:linear-gradient(135deg,#c9a227,#ff4757);color:#fff}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(201,162,39,0.3)}
+.btn-secondary{background:transparent;border:1px solid rgba(201,162,39,0.3);color:#c9a227}
+.btn-secondary:hover{background:rgba(201,162,39,0.1)}
+section{padding:80px 20px;max-width:1200px;margin:0 auto}
+h2{font-size:2.2rem;font-weight:700;margin-bottom:40px;text-align:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px}
+.card{background:rgba(201,162,39,0.05);border:1px solid rgba(201,162,39,0.2);border-radius:16px;padding:32px;transition:all 0.3s}
+.card:hover{border-color:rgba(201,162,39,0.5);transform:translateY(-4px);box-shadow:0 12px 40px rgba(201,162,39,0.1)}
+.card h3{font-size:1.3rem;margin-bottom:12px;color:#c9a227;font-family:'Inter',sans-serif}
+.card p{color:rgba(255,255,255,0.6);font-family:'Inter',sans-serif}
+.services{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px}
+.service{text-align:center;padding:40px 24px}
+.service .icon{font-size:3rem;margin-bottom:16px}
+.service h3{color:#c9a227;margin-bottom:8px;font-family:'Inter',sans-serif}
+.service p{color:rgba(255,255,255,0.5);font-family:'Inter',sans-serif;font-size:0.95rem}
+.testimonial{background:rgba(201,162,39,0.03);border-left:3px solid #c9a227;padding:24px 32px;margin:24px 0;border-radius:0 12px 12px 0;font-style:italic;color:rgba(255,255,255,0.7)}
+.pricing{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px}
+.price-card{background:rgba(201,162,39,0.03);border:1px solid rgba(201,162,39,0.15);border-radius:16px;padding:40px;text-align:center}
+.price-card.featured{border-color:#c9a227;background:rgba(201,162,39,0.08)}
+.price-card .price{font-size:2.5rem;font-weight:800;color:#c9a227;margin:16px 0;font-family:'Inter',sans-serif}
+.price-card ul{list-style:none;text-align:left;margin:24px 0;font-family:'Inter',sans-serif}
+.price-card li{padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.05);color:rgba(255,255,255,0.7)}
+.price-card li::before{content:"✓ ";color:#c9a227;font-weight:bold}
+footer{text-align:center;padding:40px;border-top:1px solid rgba(255,255,255,0.05);color:rgba(255,255,255,0.3);font-family:'Inter',sans-serif}
+</style>
+</head>
+<body>
+<div class="hero">
+  <h1>Alejandro Zamora</h1>
+  <p class="subtitle">Brand Studio — Tu marca personal, potenciada con tecnología de élite</p>
+  <div class="cta">
+    <button class="btn btn-primary" onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">Servicios</button>
+    <button class="btn btn-secondary" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Planes</button>
+  </div>
+</div>
+
+<section id="services">
+  <h2>Servicios</h2>
+  <div class="services">
+    <div class="service"><div class="icon">🎨</div><h3>Identidad de Marca</h3><p>Logo, paleta de colores, tipografía, guía de marca completa</p></div>
+    <div class="service"><div class="icon">🌐</div><h3>Landing Page</h3><p>Tu sitio web profesional con diseño premium y dominio propio</p></div>
+    <div class="service"><div class="icon">📸</div><h3>Contenido Visual</h3><p>Fotos, videos y gráficos generados con IA para tus redes</p></div>
+    <div class="service"><div class="icon">🤖</div><h3>Asistente Personal</h3><p>Un asistente inteligente que trabaja 24/7 para tu marca</p></div>
+    <div class="service"><div class="icon">📊</div><h3>Analytics</h3><p>Métricas de engagement, crecimiento y ROI de tu contenido</p></div>
+    <div class="service"><div class="icon">🛒</div><h3>Tienda Online</h3><p>Merch y productos digitales con pago SPEI y crypto</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="testimonial">
+    "La mejor inversión que hice para mi marca. En 3 meses triplicé mi engagement y ahora tengo una tienda que genera ingresos pasivos."
+    <br><br><strong style="color:#c9a227">— Cliente SDC, Plan Conquistador</strong>
+  </div>
+</section>
+
+<section id="pricing">
+  <h2>Planes</h2>
+  <div class="pricing">
+    <div class="price-card">
+      <h3 style="font-family:'Inter',sans-serif">Conquistador</h3>
+      <div class="price">$780<span style="font-size:1rem"> MXN/mes</span></div>
+      <ul>
+        <li>Asistente 24/7</li>
+        <li>150 fotos + 50 videos</li>
+        <li>3 páginas web</li>
+        <li>Tienda online</li>
+        <li>5 automatizaciones</li>
+        <li>Analytics básico</li>
+      </ul>
+      <button class="btn btn-primary" style="width:100%">Elegir Plan</button>
+    </div>
+    <div class="price-card featured">
+      <h3 style="font-family:'Inter',sans-serif">Agente IA</h3>
+      <div class="price">$1,380<span style="font-size:1rem"> MXN/mes</span></div>
+      <ul>
+        <li>Asistente prioritario</li>
+        <li>750 fotos + 250 videos</li>
+        <li>10 páginas web</li>
+        <li>Tienda + Printful</li>
+        <li>Clon de voz y video</li>
+        <li>30 automatizaciones</li>
+        <li>CRM + KPIs</li>
+        <li>7% comisión afiliado</li>
+      </ul>
+      <button class="btn btn-primary" style="width:100%">Elegir Plan</button>
+    </div>
+    <div class="price-card">
+      <h3 style="font-family:'Inter',sans-serif">Imperio</h3>
+      <div class="price">$2,980<span style="font-size:1rem"> MXN/mes</span></div>
+      <ul>
+        <li>Asistente dedicado</li>
+        <li>Todo ilimitado</li>
+        <li>Marketplace</li>
+        <li>White-label completo</li>
+        <li>API pública</li>
+        <li>15% comisión afiliado</li>
+        <li>Acceso beta features</li>
+      </ul>
+      <button class="btn btn-secondary" style="width:100%">Contactar</button>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>Alejandro Zamora — Brand Studio &copy; 2026 · Powered by Sonora Digital Corp</p>
+</footer>
+</body>
+</html>

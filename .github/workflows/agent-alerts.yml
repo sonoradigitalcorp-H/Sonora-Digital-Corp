@@ -1,0 +1,34 @@
+name: 🤖 Agent Alerts Bridge
+
+on:
+  workflow_run:
+    workflows:
+      - '🔬 CI - SoulClone v6.1'
+      - '🚀 Deploy Backend - SoulClone'
+      - '🎨 Deploy Frontend - SoulClone'
+      - '🎮 Deploy GPU Pipeline - SoulClone'
+      - '☸️ Deploy to Kubernetes - SoulClone'
+    types:
+      - completed
+
+jobs:
+  bridge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Forward to Agent Webhook
+        env:
+          AGENT_WEBHOOK: ${{ secrets.AGENT_WEBHOOK_URL }}
+          WORKFLOW: ${{ github.event.workflow_run.name }}
+          CONCLUSION: ${{ github.event.workflow_run.conclusion }}
+        run: |
+          [ -z "$AGENT_WEBHOOK" ] && exit 0
+          curl -s -X POST "$AGENT_WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"source\": \"github-actions\",
+              \"workflow\": \"$WORKFLOW\",
+              \"conclusion\": \"$CONCLUSION\",
+              \"repo\": \"${{ github.repository }}\",
+              \"run_id\": ${{ github.event.workflow_run.id }},
+              \"timestamp\": \"$(date -u +%Y-%m-%dT%H:%M:%SZ)\"
+            }" || true

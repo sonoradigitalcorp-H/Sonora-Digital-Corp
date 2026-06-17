@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonora Digital Corp — Productos</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;700&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',sans-serif; background:#faf8f5; color:#1a1a1a; }
+header { background:linear-gradient(135deg, #1a1410, #2a2018); color:#fff; padding:4rem 2rem; text-align:center; }
+header h1 { font-family:'Playfair Display',serif; font-size:3rem; margin-bottom:0.5rem; }
+header p { color:#aaa; font-size:1.1rem; max-width:600px; margin:0 auto; }
+.container { max-width:1100px; margin:0 auto; padding:3rem 2rem; }
+.products { display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:2rem; }
+.product { background:#fff; border:1px solid #e5e5e5; border-radius:16px; padding:2rem; transition:all 0.3s; }
+.product:hover { transform:translateY(-3px); box-shadow:0 10px 40px rgba(0,0,0,0.06); border-color:#c8a87c; }
+.product .icon { font-size:2.5rem; margin-bottom:1rem; }
+.product h3 { font-size:1.3rem; margin-bottom:0.5rem; }
+.product p { color:#666; font-size:0.95rem; line-height:1.6; }
+.product .price { font-size:1.6rem; font-weight:700; color:#c8a87c; margin:1rem 0; }
+.product .tag { display:inline-block; padding:0.2rem 0.8rem; border-radius:20px; font-size:0.75rem; font-weight:600; text-transform:uppercase; background:rgba(200,168,124,0.1); color:#c8a87c; }
+.product .btn { display:inline-block; margin-top:1rem; padding:0.6rem 1.5rem; border-radius:50px; background:#c8a87c; color:#1a1a1a; text-decoration:none; font-weight:600; font-size:0.9rem; transition:all 0.3s; }
+.product .btn:hover { background:#d4b896; transform:translateY(-1px); }
+footer { text-align:center; padding:2rem; color:#888; font-size:0.85rem; border-top:1px solid #e5e5e5; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Sonora Digital Corp</h1>
+  <p>Productos digitales automatizados para artistas, músicos y negocios locales</p>
+</header>
+<div class="container">
+  <div class="products">
+    <div class="product">
+      <div class="icon">🏢</div>
+      <h3>ABE Music Inc — Sitio Web</h3>
+      <p>Sitio profesional para sello discográfico con roster de artistas, servicios, booking y contacto. Diseño oscuro/elegante.</p>
+      <div class="price">Proyecto</div>
+      <a href="abe-music/" class="btn">Ver sitio →</a>
+    </div>
+    <div class="product">
+      <div class="icon">🎵</div>
+      <h3>Landing Page para Artistas</h3>
+      <p>Página profesional con biografía, galería, música, redes sociales y enlace de booking. Hosteada en GitHub Pages.</p>
+      <div class="price">$299 MXN</div>
+      <a href="landing-artista/" class="btn">Ver demo →</a>
+    </div>
+    <div class="product">
+      <div class="icon">📅</div>
+      <h3>Sistema de Booking</h3>
+      <p>Calendario + formulario + notificación WhatsApp/Telegram al artista. Confirmación con un clic.</p>
+      <div class="price">$999 MXN</div>
+      <a href="booking/" class="btn">Ver demo →</a>
+    </div>
+    <div class="product">
+      <div class="icon">💬</div>
+      <h3>Chatbot WhatsApp</h3>
+      <p>Bot para recibir pedidos, cotizaciones y agendar citas. Responde automático 24/7.</p>
+      <div class="price">$499 MXN/mes</div>
+      <a href="chatbot/" class="btn">Ver demo →</a>
+    </div>
+    <div class="product">
+      <div class="icon">🎵📅💬</div>
+      <h3>Bundle Completo</h3>
+      <p>Landing + Booking + Chatbot WhatsApp. El paquete completo para que cualquier artista venda su música y fechas.</p>
+      <div class="price">$1,999 MXN</div>
+      <a href="https://wa.me/526621234567?text=Quiero%20el%20bundle%20completo" class="btn">Contratar →</a>
+    </div>
+    <div class="product">
+      <div class="icon">📊</div>
+      <h3>Reportes Automáticos</h3>
+      <p>Reporte diario/semanal de leads, clientes y ventas enviado a tu WhatsApp o Telegram.</p>
+      <div class="price">$799 MXN/mes</div>
+      <a href="https://wa.me/526621234567?text=Quiero%20reportes%20automaticos" class="btn">Contratar →</a>
+    </div>
+    <div class="product">
+      <div class="icon">🚀</div>
+      <h3>Producto Personalizado</h3>
+      <p>¿Tienes otra idea? Te construimos el producto que necesites con entrega en 48 horas.</p>
+      <div class="price">Desde $499 MXN</div>
+      <a href="https://wa.me/526621234567?text=Quiero%20un%20producto%20personalizado" class="btn">Cotizar →</a>
+    </div>
+  </div>
+</div>
+<footer>
+  <p>© 2026 Sonora Digital Corp — hecha en Hermosillo, Sonora</p>
+  <p style="margin-top:0.3rem">WhatsApp: <a href="https://wa.me/526621234567" style="color:#c8a87c">+52 662 123 4567</a></p>
+</footer>
+</body>
+</html>
