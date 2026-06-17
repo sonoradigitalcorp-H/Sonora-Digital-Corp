@@ -8,8 +8,8 @@
   "instructions": [
     "sonora-enterprise-os/constitution/MASTER-SYSTEM-PROMPT.md",
     "AGENTS.md",
-    "docs/ARQUITECTURA-MENTAL.md",
-    "docs/INVENTARIO-FINAL.md"
+    "sonora-enterprise-os/constitution/ECOSYSTEM-IDENTITY.md",
+    "sonora-enterprise-os/observability/INVENTARIO-FINAL.md"
   ],
   "agent": {
     "mystic": {
@@ -170,7 +170,7 @@
   },
   "commands": {
     "status": { "description": "Estado completo del sistema — healthcheck de todos los servicios", "prompt": "Run full healthcheck and show status of JARVIS, Hermes, OpenClaw, Neo4j, Qdrant, n8n, Docker, Systemd" },
-    "backup": { "description": "Ejecuta backup completo del sistema", "prompt": "Execute the backup script: copy specs/ apps/ config/ to /home/mystic/backups/sdc/ with timestamp, verify integrity" },
+    "backup": { "description": "Ejecuta backup completo del sistema", "prompt": "Execute the backup script: copy sonora-enterprise-os/ apps/ config/ platforms/ to /home/mystic/backups/sdc/ with timestamp, verify integrity" },
     "brain": { "description": "Abre el brain graph (dashboard en vivo)", "prompt": "Ejecuta el script open-brain-monitor.sh para abrir el Command Center con brain graph" },
     "gsd": { "description": "Get Shit Done — flujo completo (discutir→planificar→ejecutar→verificar)", "prompt": "Ejecuta el flujo GSD: 1) Analiza estado actual 2) Discute qué necesita hacerse 3) Crea plan de acción 4) Ejecuta 5) Verifica 6) Documenta", "agent": "builder" },
     "sdd-new": { "description": "Inicia nueva spec SDD con todo el pipeline", "prompt": "Ejecuta el flujo SDD completo: Research→Spec→Design→Tasks→Apply→Verify→Archive para una nueva feature", "agent": "sdd" },
