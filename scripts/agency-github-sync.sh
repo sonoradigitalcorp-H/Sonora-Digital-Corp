@@ -4,7 +4,7 @@
 # Frecuencia: Cada sesión de trabajo
 set -euo pipefail
 
-cd /home/mystic/jarvis
+cd /home/mystic/sonora-digital-corp
 
 echo "=== AGENCY OS — GitHub Sync ==="
 
@@ -13,7 +13,7 @@ REMOTE=$(git remote -v 2>/dev/null | head -1 || echo "")
 if [ -z "$REMOTE" ]; then
     echo "⚠️  No GitHub remote configurado."
     echo "   Para configurar:"
-    echo "   gh repo create jarvis --private --source=/home/mystic/jarvis --remote=origin --push"
+    echo "   gh repo create jarvis --private --source=/home/mystic/sonora-digital-corp --remote=origin --push"
     echo "   O manual: git remote add origin git@github.com:TU_USER/jarvis.git"
     exit 1
 fi

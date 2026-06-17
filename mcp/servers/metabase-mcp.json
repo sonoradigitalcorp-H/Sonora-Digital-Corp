@@ -1,0 +1,42 @@
+{
+  "server": {
+    "name": "metabase-mcp",
+    "version": "1.0.0",
+    "description": "MCP Server para Metabase — Dashboards SQL y métricas"
+  },
+  "transport": {
+    "type": "http",
+    "endpoint": "http://127.0.0.1:3002",
+    "healthEndpoint": "/api/health"
+  },
+  "tools": [
+    {
+      "name": "metabase_questions_list",
+      "description": "Lista las preguntas guardadas",
+      "endpoint": "/api/question",
+      "method": "GET"
+    },
+    {
+      "name": "metabase_dashboards",
+      "description": "Lista los dashboards",
+      "endpoint": "/api/dashboard",
+      "method": "GET"
+    },
+    {
+      "name": "metabase_question_get",
+      "description": "Ejecuta una pregunta por ID",
+      "endpoint": "/api/question/:id/results",
+      "method": "POST"
+    },
+    {
+      "name": "metabase_query_sql",
+      "description": "Ejecuta una consulta SQL nativa (requiere permisos)",
+      "endpoint": "/api/dataset",
+      "method": "POST"
+    }
+  ],
+  "resources": [
+    { "uri": "mcp://metabase/status", "name": "Estado de Metabase" },
+    { "uri": "mcp://metabase/dashboards", "name": "Dashboards disponibles" }
+  ]
+}

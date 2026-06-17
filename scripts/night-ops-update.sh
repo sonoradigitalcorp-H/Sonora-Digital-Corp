@@ -1,6 +1,6 @@
 #!/bin/bash
 # Update night-ops dashboard and commit progress
-cd /home/mystic/jarvis
+cd /home/mystic/sonora-digital-corp
 LOG_FILE="logs/night-ops.log"
 
 echo "[$(date)] === Night Ops Progress Update ===" >> "$LOG_FILE"

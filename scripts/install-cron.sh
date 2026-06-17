@@ -6,12 +6,12 @@ CRON_FILE="/tmp/jarvis-cron"
 cat > "$CRON_FILE" << 'EOF'
 # ── JARVIS Autonomous System ──────────────────────
 # Healthcheck + tareas menores cada 15 minutos
-*/15 * * * * /home/mystic/jarvis/scripts/autonomous.sh > /dev/null 2>&1
+*/15 * * * * /home/mystic/sonora-digital-corp/scripts/autonomous.sh > /dev/null 2>&1
 
 # Protocolo de ideas (cada hora)
-0 * * * * cd /home/mystic/jarvis && python3 -c "
+0 * * * * cd /home/mystic/sonora-digital-corp && python3 -c "
 import sqlite3
-conn = sqlite3.connect('engram.db')
+conn = sqlite3.connect('state/engram.db')
 c = conn.cursor()
 c.execute(\"SELECT id, summary FROM memories WHERE tag='idea:pending' LIMIT 3\")
 for id, summary in c.fetchall():
@@ -19,16 +19,16 @@ for id, summary in c.fetchall():
     c.execute(\"UPDATE memories SET tag='idea:scheduled' WHERE id=?\", (id,))
 conn.commit()
 conn.close()
-" >> /home/mystic/jarvis/logs/ideas.log 2>&1
+" >> /home/mystic/sonora-digital-corp/state/logs/ideas.log 2>&1
 
 # Backup diario a las 3 AM
-0 3 * * * bash /home/mystic/jarvis/scripts/backup.sh > /dev/null 2>&1
+0 3 * * * bash /home/mystic/sonora-digital-corp/scripts/backup.sh > /dev/null 2>&1
 
 # Reporte semanal los lunes 9 AM
-0 9 * * 1 cd /home/mystic/jarvis && python3 scripts/weekly-report.py >> logs/report.log 2>&1
+0 9 * * 1 cd /home/mystic/sonora-digital-corp && python3 scripts/weekly-report.py >> state/logs/report.log 2>&1
 
 # Cleanup logs viejos cada noche
-0 2 * * * find /home/mystic/jarvis/logs -name "*.log" -mtime +14 -delete
+0 2 * * * find /home/mystic/sonora-digital-corp/state/logs -name "*.log" -mtime +14 -delete
 EOF
 
 crontab "$CRON_FILE"

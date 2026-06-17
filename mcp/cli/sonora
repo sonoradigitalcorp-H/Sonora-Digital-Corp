@@ -1,0 +1,219 @@
+#!/usr/bin/env node
+/**
+ * ═══════════════════════════════════════════════════════════════
+ * SONORA CLI — Interfaz unificada de línea de comandos v1.0
+ * ═══════════════════════════════════════════════════════════════
+ * Comando unificado para gestionar todo el ecosistema:
+ *   sonora status          — Estado de todos los servicios
+ *   sonora health          — Health check completo
+ *   sonora logs <servicio> — Logs de un servicio
+ *   sonora restart <svc>   — Reiniciar un servicio
+ *   sonora mcp             — Iniciar servidor MCP
+ *   sonora ps              — Listar procesos
+ *   sonora dns             — Estado DNS
+ *   sonora ssl             — Info SSL
+ *   sonora help            — Ayuda completa
+ * ═══════════════════════════════════════════════════════════════
+ */
+
+const { execSync } = require('child_process');
+const http = require('http');
+
+const COMMANDS = {
+  status: 'Ver estado de todos los servicios',
+  health: 'Health check completo del ecosistema',
+  logs: 'Ver logs de un servicio (usar: sonora logs <servicio>)',
+  restart: 'Reiniciar un servicio docker (usar: sonora restart <servicio>)',
+  mcp: 'Iniciar servidor MCP gateway',
+  ps: 'Listar todos los procesos docker',
+  dns: 'Ver estado DNS de los subdominios',
+  ssl: 'Ver info del certificado SSL',
+  help: 'Mostrar esta ayuda'
+};
+
+const DOCKER_SERVICES = ['n8n', 'dashy', 'uptime-kuma', 'metabase'];
+const DOMAINS = ['n8n', 'metabase', 'dashy', 'status', 'analytics', 'coolify', 'promo'];
+
+function httpGet(host, port, path) {
+  return new Promise((resolve) => {
+    const req = http.get({ host, port, path, timeout: 5000 }, (res) => {
+      let data = '';
+      res.on('data', chunk => data += chunk);
+      res.on('end', () => resolve({ status: res.statusCode, data }));
+    });
+    req.on('error', () => resolve({ status: 0, data: null }));
+    req.on('timeout', () => { req.destroy(); resolve({ status: 0, data: null }); });
+  });
+}
+
+async function cmdStatus() {
+  console.log('\n🔮 SONORA DIGITAL CORP — ESTADO DEL ECOSISTEMA\n');
+  console.log(' Servicio       | Puerto | Estado  | URL');
+  console.log('────────────────┼────────┼─────────┼──────────────────────────────');
+  
+  const checks = [
+    ['Paperclip', 3100, 'localhost'],
+    ['n8n', 5678, 'n8n.sonoradigitalcorp.com'],
+    ['Metabase', 3002, 'metabase.sonoradigitalcorp.com'],
+    ['UptimeKuma', 3003, 'status.sonoradigitalcorp.com'],
+    ['Dashy', 3004, 'dashy.sonoradigitalcorp.com'],
+    ['Plausible', 3006, 'analytics.sonoradigitalcorp.com'],
+  ];
+  
+  for (const [name, port, domain] of checks) {
+    const r = await httpGet('127.0.0.1', port, '/');
+    const status = r.status >= 200 && r.status < 500 ? '🟢 Online' : '🔴 Offline';
+    const statusCode = r.status ? `:${r.status}` : ':---';
+    console.log(` ${name.padEnd(14)} | ${String(port).padEnd(5)} | ${status}${statusCode.padEnd(8)} | http://${domain}`);
+  }
+  
+  console.log('\n⚙️  Procesos Docker:');
+  try {
+    const out = execSync('docker ps --format "table {{.Names}}\\t{{.Status}}"', { timeout: 5000 }).toString();
+    console.log(out);
+  } catch (e) {
+    console.log('  (no se pudo obtener)');
+  }
+}
+
+async function cmdHealth() {
+  console.log('\n🩺 HEALTH CHECK — SONORA ECOSYSTEM\n');
+  
+  const services = {
+    '🧠 Paperclip': 3100,
+    '⚡ n8n': 5678,
+    '📊 Metabase': 3002,
+    '🔍 UptimeKuma': 3003,
+    '🚀 Dashy': 3004,
+    '📈 Plausible': 3006,
+  };
+  
+  let allOk = true;
+  for (const [name, port] of Object.entries(services)) {
+    const paths = ['/api/health', '/healthz', '/'];
+    let r = null;
+    for (const p of paths) {
+      r = await httpGet('127.0.0.1', port, p);
+      if (r.status >= 200 && r.status < 500) break;
+    }
+    const ok = r && r.status >= 200 && r.status < 500;
+    if (!ok) allOk = false;
+    console.log(` ${ok ? '✅' : '❌'} ${name.padEnd(18)} → ${r ? r.status : 'No responde'}`);
+  }
+  
+  console.log(`\n ${allOk ? '✅ TODOS LOS SERVICIOS OK' : '⚠️ HAY SERVICIOS CAÍDOS'}`);
+  console.log(` 📅 ${new Date().toISOString()}`);
+}
+
+function cmdLogs(args) {
+  const svc = args[0];
+  if (!svc) { console.log('❌ Usar: sonora logs <servicio>'); console.log('   Servicios: ' + DOCKER_SERVICES.join(', ')); return; }
+  try {
+    const out = execSync(`docker logs --tail 30 ${svc}`, { timeout: 5000 }).toString();
+    console.log(`📋 Logs de ${svc}:\n`);
+    console.log(out);
+  } catch (e) {
+    console.log(`❌ Error: ${e.message}`);
+  }
+}
+
+function cmdRestart(args) {
+  const svc = args[0];
+  if (!svc) { console.log('❌ Usar: sonora restart <servicio>'); console.log('   Servicios: ' + DOCKER_SERVICES.join(', ')); return; }
+  try {
+    execSync(`docker restart ${svc}`, { timeout: 10000 });
+    console.log(`✅ ${svc} reiniciado`);
+  } catch (e) {
+    console.log(`❌ Error: ${e.message}`);
+  }
+}
+
+function cmdPs() {
+  try {
+    const out = execSync('docker ps --format "table {{.Names}}\\t{{.Status}}\\t{{.Ports}}"', { timeout: 5000 }).toString();
+    console.log('📦 CONTENEDORES DOCKER:\n');
+    console.log(out);
+  } catch (e) {
+    console.log('❌ Error:', e.message);
+  }
+}
+
+async function cmdDns() {
+  console.log('\n🌐 DNS — Subdominios sonoradigitalcorp.com\n');
+  for (const d of DOMAINS) {
+    try {
+      const out = execSync(`host ${d}.sonoradigitalcorp.com 2>/dev/null | grep "has address"`, { timeout: 3000 }).toString().trim();
+      console.log(` ${d.padEnd(12)} → ${out || '⏳ propagando...'}`);
+    } catch {
+      console.log(` ${d.padEnd(12)} → ⏳ propagando...`);
+    }
+  }
+}
+
+function cmdSsl() {
+  try {
+    const out = execSync('openssl x509 -in /etc/letsencrypt/live/sonoradigitalcorp.com/fullchain.pem -text -noout 2>/dev/null | grep -o "DNS:[^,]*"', { timeout: 3000 }).toString();
+    const dates = execSync('openssl x509 -in /etc/letsencrypt/live/sonoradigitalcorp.com/fullchain.pem -noout -dates 2>/dev/null', { timeout: 3000 }).toString();
+    console.log('\n🔒 CERTIFICADO SSL — Let\'s Encrypt\n');
+    console.log(' Subdominios incluidos:');
+    out.split('\n').forEach(l => console.log(`   • ${l.replace('DNS:', '')}`));
+    console.log(`\n ${dates.trim().replace('notBefore=', ' Válido desde: ').replace('notAfter=', ' Hasta:        ')}`);
+  } catch {
+    console.log('❌ No se pudo leer el certificado');
+  }
+}
+
+function cmdHelp() {
+  console.log('\n🔮 SONORA CLI — Comandos\n');
+  console.log(' Uso: sonora <comando> [argumentos]\n');
+  for (const [cmd, desc] of Object.entries(COMMANDS)) {
+    console.log(`   ${cmd.padEnd(18)} ${desc}`);
+  }
+  console.log('\n Ejemplos:');
+  console.log('   sonora status                # Estado general');
+  console.log('   sonora logs n8n              # Ver logs de n8n');
+  console.log('   sonora restart metabase      # Reiniciar Metabase');
+  console.log('   sonora mcp                   # Iniciar MCP gateway');
+  console.log('');
+}
+
+// ─── MAIN ────────────────────────────────────────────────────────
+
+async function main() {
+  const cmd = process.argv[2] || 'help';
+  const args = process.argv.slice(3);
+  
+  switch (cmd) {
+    case 'status': await cmdStatus(); break;
+    case 'health': await cmdHealth(); break;
+    case 'logs': cmdLogs(args); break;
+    case 'restart': cmdRestart(args); break;
+    case 'mcp': 
+      console.log('🔮 Iniciando MCP Gateway...');
+      require('../gateway/mcp-gateway.js');
+      break;
+    case 'ps': cmdPs(); break;
+    case 'dns': await cmdDns(); break;
+    case 'ssl': cmdSsl(); break;
+    case 'help': default: cmdHelp(); break;
+  }
+}
+
+main().catch(e => console.error('❌ Error:', e.message));
+
+async function cmdEcosystem() {
+  const r = await httpGet('127.0.0.1', 18989, '/api/status');
+  if (r.status === 200) {
+    const data = JSON.parse(r.data);
+    console.log('\n🔮 ECOSISTEMA — Sonora Digital Corp\n');
+    console.log(` 📅 ${data.timestamp}`);
+    console.log(` 🟢 Online:  ${data.summary.online}`);
+    console.log(` 🔴 Offline: ${data.summary.offline}`);
+    console.log(` 📊 Total:   ${data.summary.total}\n`);
+    for (const [svc, alive] of Object.entries(data.services)) {
+      console.log(` ${alive ? '🟢' : '🔴'} ${svc.padEnd(12)} ${alive ? 'Online' : 'Offline'}`);
+    }
+  } else {
+    console.log('❌ MCP Gateway no responde en :18989');
+  }
+}

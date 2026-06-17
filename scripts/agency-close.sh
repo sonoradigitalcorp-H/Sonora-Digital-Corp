@@ -4,7 +4,7 @@
 # Automatiza: close-loop + git + memory + report
 set -euo pipefail
 
-cd /home/mystic/jarvis
+cd /home/mystic/sonora-digital-corp
 SESSION_DATE=$(date '+%Y-%m-%d')
 LOG="logs/session-close-$SESSION_DATE.log"
 

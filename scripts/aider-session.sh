@@ -5,7 +5,7 @@
 
 set -euo pipefail
 
-cd /home/mystic/jarvis
+cd /home/mystic/sonora-digital-corp
 source .env 2>/dev/null || true
 
 export OPENROUTER_API_KEY

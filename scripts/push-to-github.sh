@@ -9,7 +9,7 @@ echo "=========================="
 # 1. Configurar SSH
 export GIT_SSH_COMMAND='ssh -i /home/mystic/.ssh/id_ed25519'
 
-cd /home/mystic/jarvis
+cd /home/mystic/sonora-digital-corp
 
 # 2. Verificar que exista el repo en GitHub
 if ! git ls-remote git@github.com:perrykingla69-cyber/jarvis.git &>/dev/null; then
@@ -26,7 +26,7 @@ if ! git ls-remote git@github.com:perrykingla69-cyber/jarvis.git &>/dev/null; th
     echo "Luego ejecuta este script de nuevo."
     echo ""
     echo "O crealo desde CLI con:"
-    echo "  gh repo create jarvis --public --source=/home/mystic/jarvis --remote=origin --push"
+    echo "  gh repo create jarvis --public --source=/home/mystic/sonora-digital-corp --remote=origin --push"
     exit 1
 fi
 

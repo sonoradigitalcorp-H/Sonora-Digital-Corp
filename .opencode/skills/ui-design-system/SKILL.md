@@ -10,7 +10,7 @@ version: 1.0.0
 
 ## Design Tokens
 
-Cargar desde `/home/mystic/jarvis/config/design-tokens.json`
+Cargar desde `/home/mystic/sonora-digital-corp/config/design-tokens.json`
 
 ### Uso obligatorio
 

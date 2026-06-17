@@ -1,14 +1,14 @@
 #!/bin/bash
 # JARVIS 24/7 Autonomous Agent System
 # Ejecuta tareas de forma autónoma: ideas, tests, mejoras, reportes
-# Correr vía cron: */15 * * * * /home/mystic/jarvis/scripts/autonomous.sh
+# Correr vía cron: */15 * * * * /home/mystic/sonora-digital-corp/scripts/autonomous.sh
 
 set -euo pipefail
 
-LOG="/home/mystic/jarvis/logs/autonomous.log"
+LOG="/home/mystic/sonora-digital-corp/state/logs/autonomous.log"
 LOCK="/tmp/jarvis-autonomous.lock"
-JARVIS_HOME="/home/mystic/jarvis"
-ENGAM_DB="/home/mystic/jarvis/engram.db"
+JARVIS_HOME="/home/mystic/sonora-digital-corp"
+ENGAM_DB="${JARVIS_HOME}/state/engram.db"
 NOW=$(date '+%Y-%m-%d %H:%M:%S')
 
 # Evitar ejecución simultánea
@@ -60,8 +60,8 @@ conn.close()
 fi
 
 # ── Tarea 3: Cleanup de logs antiguos ─────
-find "$JARVIS_HOME/logs" -name "*.log" -mtime +7 -delete 2>/dev/null
-find "$JARVIS_HOME/backups" -maxdepth 1 -type d -ctime +30 -exec rm -rf {} \; 2>/dev/null || true
+find "$JARVIS_HOME/state/logs" -name "*.log" -mtime +7 -delete 2>/dev/null
+find "$JARVIS_HOME/state/backups" -maxdepth 1 -type d -ctime +30 -exec rm -rf {} \; 2>/dev/null || true
 
 # ── Tarea 4: Backup automático (diario) ────
 HOUR=$(date +%H)

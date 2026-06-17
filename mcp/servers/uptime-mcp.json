@@ -1,0 +1,36 @@
+{
+  "server": {
+    "name": "uptime-mcp",
+    "version": "1.0.0",
+    "description": "MCP Server para Uptime Kuma — Monitor de estado"
+  },
+  "transport": {
+    "type": "http",
+    "endpoint": "http://127.0.0.1:3003",
+    "healthEndpoint": "/"
+  },
+  "tools": [
+    {
+      "name": "uptime_monitors",
+      "description": "Lista todos los monitores",
+      "endpoint": "/api/monitors",
+      "method": "GET"
+    },
+    {
+      "name": "uptime_monitor_detail",
+      "description": "Obtiene detalle de un monitor",
+      "endpoint": "/api/monitors/:id",
+      "method": "GET"
+    },
+    {
+      "name": "uptime_heartbeats",
+      "description": "Obtiene heartbeats de un monitor",
+      "endpoint": "/api/monitors/:id/heartbeats",
+      "method": "GET"
+    }
+  ],
+  "resources": [
+    { "uri": "mcp://uptime/status", "name": "Estado de monitoreo" },
+    { "uri": "mcp://uptime/monitors", "name": "Monitores activos" }
+  ]
+}

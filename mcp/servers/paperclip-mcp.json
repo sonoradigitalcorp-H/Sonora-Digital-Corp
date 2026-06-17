@@ -1,0 +1,39 @@
+{
+  "server": {
+    "name": "paperclip-mcp",
+    "version": "1.0.0",
+    "description": "MCP Server para Paperclip — Gestión de agentes IA"
+  },
+  "transport": {
+    "type": "http",
+    "endpoint": "http://127.0.0.1:3100",
+    "healthEndpoint": "/api/health"
+  },
+  "tools": [
+    {
+      "name": "paperclip_company_info",
+      "description": "Obtiene info de la empresa configurada en Paperclip",
+      "endpoint": "/api/company"
+    },
+    {
+      "name": "paperclip_agents",
+      "description": "Lista los agentes registrados en Paperclip",
+      "endpoint": "/api/agents"
+    },
+    {
+      "name": "paperclip_health",
+      "description": "Verifica que Paperclip esté funcionando",
+      "endpoint": "/api/health"
+    }
+  ],
+  "resources": [
+    {
+      "uri": "mcp://paperclip/status",
+      "name": "Estado de Paperclip"
+    },
+    {
+      "uri": "mcp://paperclip/agents",
+      "name": "Lista de agentes"
+    }
+  ]
+}

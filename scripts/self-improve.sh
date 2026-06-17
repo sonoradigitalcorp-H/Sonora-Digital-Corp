@@ -4,7 +4,7 @@
 # bash scripts/self-improve.sh
 set -euo pipefail
 
-cd /home/mystic/jarvis
+cd /home/mystic/sonora-digital-corp
 LOG="logs/self-improve.log"
 mkdir -p logs
 

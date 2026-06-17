@@ -4,7 +4,7 @@ Opens social media tabs in Chrome and keeps them alive.
 Run in background: python3 open_tabs.py &
 """
 import asyncio, logging, sys
-sys.path.insert(0, '/home/mystic/jarvis/sdcorp/content-pipeline')
+sys.path.insert(0, '/home/mystic/sonora-digital-corp/sonora-enterprise-os/digital_twins/business/content-pipeline')
 from playwright.async_api import async_playwright
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(message)s")
