@@ -6,6 +6,7 @@
   "shell": "/bin/zsh",
   "logLevel": "INFO",
   "instructions": [
+    "sonora-enterprise-os/constitution/MASTER-SYSTEM-PROMPT.md",
     "AGENTS.md",
     "docs/ARQUITECTURA-MENTAL.md",
     "docs/INVENTARIO-FINAL.md"

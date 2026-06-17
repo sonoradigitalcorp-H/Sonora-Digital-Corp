@@ -1,37 +1,67 @@
-# Sonora Digital Corp
+# Sonora Digital Corp — Enterprise OS
 
-UN proyecto. Tres agentes base: **JARVIS** (cerebro), **Hermes** (voz/canales), **OpenClaw** (skills). Sub-agentes: builder, reviewer, sdd, code, research, memory.
+**Supreme governing document**: `sonora-enterprise-os/constitution/MASTER-SYSTEM-PROMPT.md`
 
-## Estructura
+Every action follows: **VDD → EDD → PDD → SDD → BDD → TDD → Implementation**
+
+Value leads. Technology follows.
+
+---
+
+## Enterprise OS Structure
+
+`sonora-enterprise-os/` contains the full operating system:
+
+| Directory | Purpose |
+|-----------|---------|
+| `constitution/` | Supreme governance: master prompt, constitution |
+| `adr/` | Architectural Decision Records |
+| `capabilities/` | Business capability registry & maturity model |
+| `policies/` | Policy engine rules (event→action) |
+| `events/` | Standard event catalog (all ops start here) |
+| `skills/` | Skill registry with inputs/outputs/metrics |
+| `harnesses/` | Agent harness registry per domain |
+| `digital_twins/` | Customer & corporate digital twins |
+| `initiatives/` | Initiative registry with kill criteria |
+| `metrics/` | Score systems, KPIs, FinOps |
+| `observability/` | Monitoring, BI, executive reports |
+| `prompts/` | Prompt evolution engine (evidence-based) |
+| `playbooks/` | Reusable playbooks |
+| `roadmap/` | Autonomous roadmap output |
+
+---
+
+## Repo Structure
 
 | Ruta | Qué es |
 |------|--------|
-| `apps/jarvis/` | Orquestador central: 18 agentes, RAG, Neo4j, Qdrant, harness SDD |
-| `apps/webui/` | FastAPI frontend: 20 routers + HTML templates + WebSocket |
-| `apps/voice/` | Whisper STT + edge-tts/gTTS engine |
-| `apps/hermes/` | MCP bridge + servicios (publisher, thumbnails, youtube) |
-| `platforms/telegram/` | Bot runtime (Node.js) + 97 skills JSON de negocio |
-| `platforms/whatsapp/` | WhatsApp bridge |
-| `packages/` | agent-runtime, sdd-harness, memory (esqueletos, populate as needed) |
-| `infra/` | Docker (neo4j/qdrant/mcp), compose, monitoreo, nginx, n8n workflows |
-| `specs/` | SDD specs: 000-constitucion a 010 + 23 históricos en archive/ |
-| `config/` | Prompts, knowledge, MCP configs, n8n workflows, design tokens |
-| `skills/` | 5 skills verticales (creativo, ecommerce, educacion, fitness, musica) |
-| `products/` | Clientes: ABE Music, AZREC, Telegram Masterclass, booking |
-| `tests/` | Unit (22 tests), integration (3), Playwright E2E (1), mocks |
-| `scripts/` | 50+ DevOps, automation, utilities |
-| `docs/` | ARQUITECTURA-MENTAL, systems OS (COMPANY-OS, SALES-OS, etc.), business layer |
+| `apps/jarvis/` | Orquestador central: 18 agentes, RAG, Neo4j, Qdrant |
+| `apps/webui/` | FastAPI frontend: 20 routers + HTML + WebSocket |
+| `apps/voice/` | Whisper STT + TTS engine |
+| `apps/hermes/` | MCP bridge + servicios |
+| `platforms/telegram/` | Bot runtime + 97 skills JSON |
+| `platforms/whatsapp/` | Bridge |
+| `packages/` | agent-runtime, sdd-harness, memory |
+| `infra/` | Docker, compose, monitoreo, nginx, n8n |
+| `specs/` | SDD specs activos (000-010) + 23 archive |
+| `config/` | Prompts, knowledge, MCP, n8n, design tokens |
+| `skills/` | 5 skills verticales |
+| `products/` | Clientes: ABE Music, AZREC, Masterclass |
+| `tests/` | 22 unit + 3 integration + 1 Playwright |
+| `scripts/` | 50+ DevOps |
+| `docs/` | ARQUITECTURA-MENTAL, systems OS |
+
+---
 
 ## Comandos
 
 ```bash
 pytest tests/unit/                           # unit tests
 pytest tests/integration/                    # integration tests
-npx playwright test                          # Playwright E2E
+npx playwright test                          # E2E
 ruff check apps/                             # lint
-flake8 apps/                                 # flake8 lint (max-line-length=100)
-docker compose -f infra/docker-compose.yml up -d  # levantar servicios
-cd platforms/telegram && node server.js      # Telegram bot
+flake8 apps/                                 # flake8
+docker compose -f infra/docker-compose.yml up -d
 python apps/jarvis/main.py                   # JARVIS core
 ```
 
@@ -39,57 +69,42 @@ python apps/jarvis/main.py                   # JARVIS core
 
 | Puerto | Servicio |
 |--------|----------|
-| 5174 | Web UI (uvicorn) |
-| 8000 | Hermes Agent MCP |
+| 5174 | Web UI |
+| 8000 | Hermes MCP |
 | 18789 | OpenClaw Gateway |
-| 6333 | Qdrant (vectores) |
-| 7687 | Neo4j (grafos Bolt) |
-| 7474 | Neo4j (HTTP) |
-| 5678 | n8n workflows |
+| 6333 | Qdrant |
+| 7687 | Neo4j Bolt |
+| 5678 | n8n |
+
+---
+
+## Agentes
+
+Primary: **mystic**. Sub-agents: explore, builder, reviewer, hermes, openclaw, sdd (+spec/design/apply/verify/archive), memory, research, code.
+
+## Custom commands
+
+- `/status` — healthcheck completo
+- `/backup` — backup a /home/mystic/backups/sdc/
+- `/brain` — brain graph dashboard
+- `/gsd` — Get Shit Done
+- `/sdd-new` — nueva spec SDD
+- `/build` — construir feature
+
+---
+
+## Enterprise Score
+
+Every proposal must score ≥60 total across: Revenue, Automation, Scalability, Reusability, Maintainability, Founder Independence, Customer Value, Operational Simplicity (0-10 each).
 
 ## SDD Workflow
 
 Revenue Gate → Discovery → Spec → BDD/ATDD → ADR → Plan → Tasks → Code → Verify → Delivery Gate → Archive
 
-Cada spec en `specs/` sigue: `spec.md` → `plan.md` → `tasks.md` → `checklist.md`. Constitution en `specs/000-constitucion/constitution.md`.
+Read: `specs/000-constitucion/constitution.md`
 
-## Agentes (opencode.json)
-
-- **mystic**: primary — asistente con identidad SDC
-- **explore**: subagent — investiga código y arquitectura
-- **builder**: subagent — implementa features
-- **reviewer**: subagent — code review y seguridad
-- **hermes**: subagent — gateway multi-canal
-- **openclaw**: subagent — skills gateway
-- **sdd** (+spec/design/apply/verify/archive): subagents — pipeline SDD completo
-- **memory**: subagent — contexto persistente (Engram + Neo4j + Qdrant)
-- **research**: subagent — búsqueda y síntesis
-- **code**: subagent — análisis y generación de código
-
-## Skills paths
-
-- `.opencode/skills` y `.opencode/agents` (repo-local)
-- `/home/mystic/.openclaw/workspace/skills` (42 skills: browser-use, stripe, fal-ai, supabase, etc.)
-- `/home/mystic/.hermes/skills` (skills de Hermes: TDD, SDD, plan, etc.)
-- `/home/mystic/.config/opencode/skills`
-
-## Custom commands (opencode.json)
-
-- `/status` — healthcheck completo del ecosistema
-- `/backup` — backup con timestamp a /home/mystic/backups/sdc/
-- `/brain` — brain graph dashboard
-- `/gsd` — Get Shit Done (discutir→planificar→ejecutar→verificar)
-- `/sdd-new` — nueva spec SDD con pipeline completo
-- `/build` — construir feature completo siguiendo SDD
-
-## Testing quirks
-
-- `pytest-asyncio` con `asyncio_mode = auto`
-- Cobertura mínima 60% (`fail_under = 60`)
-- Conftest fuerza fake `MERCADO_PAGO_ACCESS_TOKEN=TEST-fake`
-- Playwright en headless=false, viewport 1350x700, baseURL :5174
-- Ruff select: E, F, I, UP, B (ignore B008)
+---
 
 ## Origen
 
-Consolidado desde `jarvis/` (código activo, backup preservado), `archive-sonora-digital-corp-git/` (referencia histórica), `sdcorp/` (agentes opencode), y `products/` (clientes). Repo GitHub: `github.com/sonoradigitalcorp-H/Sonora-Digital-Corp`.
+Consolidado en `github.com/sonoradigitalcorp-H/Sonora-Digital-Corp`.
