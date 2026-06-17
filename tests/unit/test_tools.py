@@ -7,7 +7,6 @@ import sys
 import tempfile
 from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 import pytest
 from src.core.tools import (
@@ -57,7 +56,7 @@ class TestExecuteCommand:
 
 class TestReadFile:
     def test_read_existing(self):
-        result = read_file("src/core/tools/router.py", max_lines=5)
+        result = read_file("apps/jarvis/src/core/tools/router.py", max_lines=5)
         assert result["status"] == "success"
         assert result["total_lines"] > 0
 
@@ -66,7 +65,7 @@ class TestReadFile:
         assert result["status"] == "error"
 
     def test_read_respects_max_lines(self):
-        result = read_file("src/core/tools/router.py", max_lines=3)
+        result = read_file("apps/jarvis/src/core/tools/router.py", max_lines=3)
         assert result["status"] == "success"
         assert result["lines_shown"] <= 3
 

@@ -1,0 +1,128 @@
+{
+  "seed_001": {
+    "id": "seed_001",
+    "title": "Consultoría IA para Negocios",
+    "description": "Diagnóstico y estrategia personalizada de inteligencia artificial para optimizar tus procesos de negocio. Incluye reporte ejecutivo y roadmap de implementación.",
+    "price": 780,
+    "currency": "MXN",
+    "type": "bundle",
+    "prompt": "Consultoría IA - diagnóstico estratégico",
+    "style": "professional",
+    "format": "pdf",
+    "preview_url": "",
+    "tags": [
+      "ia",
+      "consultoria",
+      "negocios",
+      "automatizacion"
+    ],
+    "featured": true,
+    "created_at": "2026-01-01T00:00:00",
+    "nicho": "general"
+  },
+  "seed_002": {
+    "id": "seed_002",
+    "title": "Landing Page Profesional",
+    "description": "Diseño y desarrollo de landing page optimizada para conversión. Hosting incluido, dominio personalizado, formulario de captura y analytics.",
+    "price": 1380,
+    "currency": "MXN",
+    "type": "bundle",
+    "prompt": "Landing page profesional con diseño moderno",
+    "style": "modern",
+    "format": "html",
+    "preview_url": "",
+    "tags": [
+      "landing",
+      "pagina-web",
+      "diseno",
+      "conversion"
+    ],
+    "featured": true,
+    "created_at": "2026-01-01T00:00:00",
+    "nicho": "creativo"
+  },
+  "seed_003": {
+    "id": "seed_003",
+    "title": "Embudo de Ventas Automatizado",
+    "description": "Embudo completo con captura de leads, secuencia de emails automatizada, integración con pasarela de pago y dashboard de conversiones.",
+    "price": 2980,
+    "currency": "MXN",
+    "type": "bundle",
+    "prompt": "Embudo de ventas automatizado multicanal",
+    "style": "professional",
+    "format": "html",
+    "preview_url": "",
+    "tags": [
+      "embudo",
+      "ventas",
+      "automatizacion",
+      "email-marketing"
+    ],
+    "featured": true,
+    "created_at": "2026-01-01T00:00:00",
+    "nicho": "ecommerce"
+  },
+  "seed_004": {
+    "id": "seed_004",
+    "title": "Plan de Marketing Digital",
+    "description": "Estrategia completa de marketing digital: análisis de competencia, buyer persona, calendario editorial, presupuesto y KPIs medibles.",
+    "price": 1380,
+    "currency": "MXN",
+    "type": "bundle",
+    "prompt": "Plan de marketing digital personalizado",
+    "style": "professional",
+    "format": "pdf",
+    "preview_url": "",
+    "tags": [
+      "marketing",
+      "estrategia",
+      "social-media",
+      "crecimiento"
+    ],
+    "featured": true,
+    "created_at": "2026-01-01T00:00:00",
+    "nicho": "ecommerce"
+  },
+  "seed_005": {
+    "id": "seed_005",
+    "title": "Rutina de Ejercicios Personalizada",
+    "description": "Plan de entrenamiento diseñado por IA según tu nivel, equipo disponible, objetivos y horario. Incluye videos demostrativos y seguimiento semanal.",
+    "price": 780,
+    "currency": "MXN",
+    "type": "bundle",
+    "prompt": "Rutina de ejercicios personalizada con IA",
+    "style": "realistic",
+    "format": "pdf",
+    "preview_url": "",
+    "tags": [
+      "fitness",
+      "ejercicio",
+      "salud",
+      "entrenamiento"
+    ],
+    "featured": true,
+    "created_at": "2026-01-01T00:00:00",
+    "nicho": "fitness"
+  },
+  "seed_006": {
+    "id": "seed_006",
+    "title": "Curso de Educación Digital",
+    "description": "Programa educativo completo con módulos interactivos, evaluaciones automatizadas, certificación digital y comunidad de aprendizaje.",
+    "price": 1380,
+    "currency": "MXN",
+    "type": "bundle",
+    "prompt": "Curso de educación digital con IA",
+    "style": "educational",
+    "format": "html",
+    "preview_url": "",
+    "tags": [
+      "educacion",
+      "curso",
+      "e-learning",
+      "certificacion"
+    ],
+    "featured": true,
+    "created_at": "2026-01-01T00:00:00",
+    "nicho": "educacion"
+  }
+}

@@ -6,11 +6,15 @@ import sys
 import os
 import json
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", ".."))
 
 import pytest
 from fastapi.testclient import TestClient
 from webui.fastapp import app
+
+pytestmark = pytest.mark.skipif(
+    not os.environ.get("OPENAI_API_KEY") and not os.environ.get("OPENROUTER_API_KEY") and not os.environ.get("OPENCODE_API_KEY"),
+    reason="Integration tests requieren API key de LLM"
+)
 from voice.wake_word import get_detector
 
 client = TestClient(app)

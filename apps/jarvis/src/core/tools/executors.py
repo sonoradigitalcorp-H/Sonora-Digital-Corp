@@ -13,7 +13,7 @@ from typing import Any, Dict, Optional
 from src.core.tools.definitions import ALLOWED_COMMANDS
 
 log = logging.getLogger("jarvis.tools.executors")
-PROJECT_DIR = Path(__file__).parent.parent.parent.parent
+PROJECT_DIR = Path(__file__).parent.parent.parent.parent.parent.parent
 
 _rate_limits: Dict[str, list] = {}
 

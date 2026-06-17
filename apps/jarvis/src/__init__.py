@@ -1,1 +1,1 @@
-"""JARVIS Core Package - Lógica determinista de orquestación."""
+"""JARVIS — Core AI Engine for Sonora Digital Corp"""

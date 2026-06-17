@@ -4,7 +4,6 @@ Tests para src/core/verify.py — SDD structure verification.
 import sys, os
 from pathlib import Path
 from unittest.mock import patch
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 import pytest
 from src.core.verify import Verifier, ConstraintViolation, main

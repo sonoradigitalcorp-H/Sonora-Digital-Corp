@@ -1,0 +1,88 @@
+{
+  "services": [
+    {
+      "name": "Identidad de Marca",
+      "description": "Logo, paleta de colores, tipografía, guía de marca completa",
+      "icon": "🎨",
+      "price_mxn": "Consultar"
+    },
+    {
+      "name": "Landing Page",
+      "description": "Tu sitio web profesional con diseño premium y dominio propio",
+      "icon": "🌐",
+      "price_mxn": "Consultar"
+    },
+    {
+      "name": "Contenido Visual",
+      "description": "Fotos, videos y gráficos generados con IA para tus redes",
+      "icon": "📸",
+      "price_mxn": "Consultar"
+    },
+    {
+      "name": "Asistente Personal",
+      "description": "Un asistente inteligente que trabaja 24/7 para tu marca",
+      "icon": "🤖",
+      "price_mxn": "Consultar"
+    },
+    {
+      "name": "Analytics",
+      "description": "Métricas de engagement, crecimiento y ROI de tu contenido",
+      "icon": "📊",
+      "price_mxn": "Consultar"
+    },
+    {
+      "name": "Tienda Online",
+      "description": "Merch y productos digitales con pago SPEI y crypto",
+      "icon": "🛒",
+      "price_mxn": "Consultar"
+    }
+  ],
+  "portfolio": [],
+  "pricing": [
+    {
+      "name": "Conquistador",
+      "price": 780,
+      "currency": "MXN",
+      "period": "mes",
+      "features": [
+        "Asistente 24/7",
+        "150 fotos + 50 videos",
+        "3 páginas web",
+        "Tienda online",
+        "5 automatizaciones",
+        "Analytics básico"
+      ]
+    },
+    {
+      "name": "Agente IA",
+      "price": 1380,
+      "currency": "MXN",
+      "period": "mes",
+      "features": [
+        "Asistente prioritario",
+        "750 fotos + 250 videos",
+        "10 páginas web",
+        "Tienda + Printful",
+        "Clon de voz y video",
+        "30 automatizaciones",
+        "CRM + KPIs",
+        "7% comisión afiliado"
+      ]
+    },
+    {
+      "name": "Imperio",
+      "price": 2980,
+      "currency": "MXN",
+      "period": "mes",
+      "features": [
+        "Asistente dedicado",
+        "Todo ilimitado",
+        "Marketplace",
+        "White-label completo",
+        "API pública",
+        "15% comisión afiliado",
+        "Acceso beta features"
+      ]
+    }
+  ]
+}

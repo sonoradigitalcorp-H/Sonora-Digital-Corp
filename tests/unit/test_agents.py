@@ -3,7 +3,6 @@ import pytest
 import sys
 import os
 
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", "src"))
 
 from core.orchestrator import (
     MemoryAgent,
@@ -165,7 +164,7 @@ class TestReviewAgent:
     @pytest.mark.asyncio
     async def test_review_file(self):
         agent = ReviewAgent()
-        result = await agent.run("revisá el archivo setup.sh")
+        result = await agent.run("revisá el archivo AGENTS.md")
         assert result["status"] == "success"
         assert "metrics" in result
         assert "score" in result
@@ -186,6 +185,6 @@ class TestReviewAgent:
     @pytest.mark.asyncio
     async def test_suggest_fixes(self):
         agent = ReviewAgent()
-        result = await agent.run("sugerí mejoras para setup.sh")
+        result = await agent.run("sugerí mejoras para AGENTS.md")
         assert result["status"] == "success"
         assert "suggestions" in result
