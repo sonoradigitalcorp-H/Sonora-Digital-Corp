@@ -44,7 +44,7 @@ class Verifier:
                 raise ConstraintViolation(f"Checklist incomplete in {spec_dir}")
 
     def verify_tdd_compliance(self, spec_dir):
-        VERIFY_DIR = Path(__file__).resolve().parent.parent.parent
+        VERIFY_DIR = Path(__file__).resolve().parent.parent.parent.parent.parent
         global_tests_dir = VERIFY_DIR / "tests"
         if not global_tests_dir.exists():
             raise ConstraintViolation(

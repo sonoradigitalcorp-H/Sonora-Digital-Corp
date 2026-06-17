@@ -3,7 +3,6 @@ Tests para src/core/engram.py — SQLite FTS5 persistent memory.
 """
 import sys, os, tempfile
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 import pytest
 from src.core.engram import Engram

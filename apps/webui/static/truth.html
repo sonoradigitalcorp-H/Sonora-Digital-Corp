@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonora Digital Corp — The Truth</title>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background:#020617; color:#e2e8f0;
+  font-family:'JetBrains Mono',monospace;
+  min-height:100vh;
+  display:flex; flex-direction:column; align-items:center;
+  padding:40px 20px;
+}
+.container { max-width:960px; width:100%; }
+
+/* header */
+.header { text-align:center; margin-bottom:48px; }
+.logo {
+  display:flex; align-items:center; justify-content:center; gap:12px;
+  margin-bottom:8px;
+}
+.dot {
+  width:12px; height:12px; border-radius:50%;
+  animation:pulse 2s infinite;
+}
+.dot.green { background:#34d399; box-shadow:0 0 12px #34d39966; }
+@keyframes pulse {
+  0%,100%{ opacity:1; transform:scale(1); }
+  50%{ opacity:.5; transform:scale(.85); }
+}
+h1 { font-size:28px; font-weight:700; color:#f8fafc; letter-spacing:-.5px; }
+.sub { font-size:13px; color:#64748b; margin-top:4px; }
+.sub span { color:#34d399; }
+
+/* cards */
+.grid { display:grid; gap:16px; margin-bottom:24px; }
+.cols-2 { grid-template-columns:1fr 1fr; }
+.cols-3 { grid-template-columns:1fr 1fr 1fr; }
+.card {
+  background:#0f172a; border:1px solid #1e293b; border-radius:12px;
+  padding:20px; position:relative; overflow:hidden;
+}
+.card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+}
+.card.cyan::before { background:linear-gradient(90deg,#22d3ee,#0891b2); }
+.card.emerald::before { background:linear-gradient(90deg,#34d399,#059669); }
+.card.violet::before { background:linear-gradient(90deg,#a78bfa,#7c3aed); }
+.card.amber::before { background:linear-gradient(90deg,#fbbf24,#d97706); }
+.card.rose::before { background:linear-gradient(90deg,#fb7185,#e11d48); }
+.card.slate::before { background:linear-gradient(90deg,#94a3b8,#475569); }
+.card-title {
+  font-size:11px; font-weight:600; text-transform:uppercase;
+  letter-spacing:1px; margin-bottom:12px;
+}
+.cyan .card-title { color:#22d3ee; }
+.emerald .card-title { color:#34d399; }
+.violet .card-title { color:#a78bfa; }
+.amber .card-title { color:#fbbf24; }
+.rose .card-title { color:#fb7185; }
+.slate .card-title { color:#94a3b8; }
+.card ul { list-style:none; }
+.card li {
+  font-size:12px; padding:4px 0; color:#cbd5e1;
+  display:flex; align-items:center; gap:8px;
+}
+.card li::before {
+  content:'◆'; font-size:7px; color:#475569;
+}
+.card li .tag {
+  font-size:10px; padding:1px 6px; border-radius:4px;
+  margin-left:auto; flex-shrink:0;
+}
+.tag.green { background:#064e3b33; color:#34d399; }
+.tag.amber { background:#78350f33; color:#fbbf24; }
+.tag.violet { background:#3b076433; color:#a78bfa; }
+.tag.rose { background:#4c051933; color:#fb7185; }
+.tag.slate { background:#1e293b; color:#94a3b8; }
+
+/* big number */
+.stat {
+  text-align:center; padding:16px;
+}
+.stat-num { font-size:36px; font-weight:700; }
+.stat-label { font-size:10px; color:#64748b; text-transform:uppercase; letter-spacing:1px; margin-top:4px; }
+.cyan .stat-num { color:#22d3ee; }
+.emerald .stat-num { color:#34d399; }
+.violet .stat-num { color:#a78bfa; }
+
+/* tree */
+.tree { margin-top:8px; }
+.tree-item {
+  font-size:12px; padding:3px 0; color:#94a3b8;
+  display:flex; align-items:center; gap:6px;
+}
+.tree-item .icon { color:#22d3ee; font-size:10px; }
+.tree-item .path { color:#64748b; font-size:10px; }
+.tree-item.active { color:#e2e8f0; }
+.tree-item.active .path { color:#34d399; }
+.indent-1 { padding-left:16px; }
+.indent-2 { padding-left:32px; }
+.indent-3 { padding-left:48px; }
+
+/* footer */
+.footer {
+  text-align:center; margin-top:48px; padding:20px;
+  border-top:1px solid #1e293b; font-size:11px; color:#475569;
+}
+.footer span { color:#34d399; }
+
+.break { border:none; border-top:1px solid #1e293b; margin:24px 0; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <div class="logo">
+      <div class="dot green"></div>
+      <h1>SONORA DIGITAL CORP</h1>
+      <div class="dot green"></div>
+    </div>
+    <div class="sub">Enterprise Operating System <span>v3.0</span> — Unified Monorepo</div>
+  </div>
+
+  <!-- stats -->
+  <div class="grid cols-3">
+    <div class="card cyan stat">
+      <div class="stat-num">1</div>
+      <div class="stat-label">Monorepo</div>
+    </div>
+    <div class="card emerald stat">
+      <div class="stat-num">287</div>
+      <div class="stat-label">Files Migrated</div>
+    </div>
+    <div class="card violet stat">
+      <div class="stat-num">0</div>
+      <div class="stat-label">Old Paths (Operational)</div>
+    </div>
+  </div>
+
+  <!-- truth -->
+  <div class="grid cols-2">
+    <div class="card cyan">
+      <div class="card-title">The One Truth</div>
+      <ul>
+        <li><span class="tag green">constitution/</span> MASTER-SYSTEM-PROMPT.md</li>
+        <li><span class="tag green">adr/</span> 10 active specs (001-010)</li>
+        <li><span class="tag green">capabilities/</span> REGISTRY + 8 system-OS</li>
+        <li><span class="tag green">digital_twins/</span> business layer + products</li>
+        <li><span class="tag green">prompts/</span> 30+ agent/client/ops prompts</li>
+        <li><span class="tag green">skills/</span> 5 vertical skills</li>
+        <li><span class="tag green">roadmap/</span> 23 archived specs</li>
+        <li><span class="tag green">events/</span> standard event catalog</li>
+        <li><span class="tag green">metrics/</span> score system (gate ≥60)</li>
+        <li><span class="tag green">policies/</span> company operating system</li>
+        <li><span class="tag green">observability/</span> ecosystem inventory</li>
+      </ul>
+    </div>
+
+    <div class="card emerald">
+      <div class="card-title">Running Services</div>
+      <ul>
+        <li><span class="tag green">5174</span> Web UI</li>
+        <li><span class="tag green">8000</span> Hermes API</li>
+        <li><span class="tag green">18789</span> OpenClaw Gateway</li>
+        <li><span class="tag green">6333</span> Qdrant (vector DB)</li>
+        <li><span class="tag green">7687</span> Neo4j (graph DB)</li>
+        <li><span class="tag green">5678</span> n8n automation</li>
+        <li><span class="tag amber">18990</span> Playwright MCP</li>
+        <li><span class="tag violet">9222</span> Chrome CDP</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- agents -->
+  <div class="grid cols-2">
+    <div class="card violet">
+      <div class="card-title">15 Agents on opencode.json</div>
+      <ul>
+        <li><span class="tag">mystic</span> primary — soul of SDC</li>
+        <li><span class="tag">explore</span> codebase explorer</li>
+        <li><span class="tag">builder</span> implementation</li>
+        <li><span class="tag">reviewer</span> code quality</li>
+        <li><span class="tag">hermes</span> multi-channel gateway</li>
+        <li><span class="tag">openclaw</span> 55 external skills</li>
+        <li><span class="tag slate">sdd/*</span> 6 SDD pipeline agents</li>
+        <li><span class="tag">memory</span> engram + Neo4j + Qdrant</li>
+        <li><span class="tag">research</span> search & synthesis</li>
+        <li><span class="tag">code</span> analysis & generation</li>
+      </ul>
+    </div>
+
+    <div class="card amber">
+      <div class="card-title">MCP Ecosystem</div>
+      <ul>
+        <li><span class="tag green">jarvis-bridge</span> local — 4 tools</li>
+        <li><span class="tag green">hermes-api</span> http://localhost:8000</li>
+        <li><span class="tag green">openclaw</span> http://localhost:18789</li>
+        <li><span class="tag green">qdrant</span> http://localhost:6333</li>
+        <li><span class="tag green">neo4j</span> http://localhost:7474</li>
+        <li><span class="tag green">n8n</span> http://localhost:5678</li>
+        <li><span class="tag amber">playwright</span> systemd — browser automation</li>
+        <li><span class="tag amber">google-mcp</span> Gmail access (local)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- tree -->
+  <div class="card slate">
+    <div class="card-title">Filesystem Tree</div>
+    <div class="tree">
+      <div class="tree-item active"><span class="icon">📁</span> sonora-digital-corp/ <span class="path">— the one repo</span></div>
+      <div class="tree-item indent-1"><span class="icon">📁</span> apps/ <span class="path">— jarvis, webui, voice, hermes</span></div>
+      <div class="tree-item indent-1"><span class="icon">📁</span> platforms/ <span class="path">— telegram, whatsapp</span></div>
+      <div class="tree-item indent-1"><span class="icon">📁</span> infra/ <span class="path">— docker, n8n, nginx, monitoring</span></div>
+      <div class="tree-item indent-1"><span class="icon">📁</span> products/ <span class="path">— ABE Music, AZREC, Masterclass</span></div>
+      <div class="tree-item indent-1"><span class="icon">📁</span> scripts/ <span class="path">— 50+ DevOps scripts</span></div>
+      <div class="tree-item indent-1"><span class="icon">📁</span> tests/ <span class="path">— 26 unit + integration tests</span></div>
+      <div class="tree-item indent-1 active"><span class="icon">📁</span> sonora-enterprise-os/ <span class="path">★ THE TRUTH</span></div>
+      <div class="tree-item indent-2"><span class="icon">📄</span> constitution/MASTER-SYSTEM-PROMPT.md</div>
+      <div class="tree-item indent-2"><span class="icon">📄</span> adr/001-010 <span class="path">— active specs</span></div>
+      <div class="tree-item indent-2"><span class="icon">📄</span> capabilities/REGISTRY.md</div>
+      <div class="tree-item indent-2"><span class="icon">📄</span> events/CATALOG.md</div>
+      <div class="tree-item indent-2"><span class="icon">📄</span> initiatives/REGISTRY.md</div>
+      <div class="tree-item indent-2"><span class="icon">📄</span> metrics/SCORE-SYSTEM.md</div>
+      <div class="tree-item indent-2"><span class="icon">📄</span> prompts/ <span class="path">— 30+ prompts</span></div>
+      <div class="tree-item indent-1"><span class="icon">📁</span> mcp/ <span class="path">— gateway + 5 servers</span></div>
+      <div class="tree-item indent-1"><span class="icon">📁</span> config/ <span class="path">— n8n, mcp, design tokens</span></div>
+      <div class="tree-item indent-1"><span class="icon">📁</span> state/ <span class="path">— engram.db, logs, backups</span></div>
+      <div class="tree-item indent-1"><span class="icon">📄</span> AGENTS.md <span class="path">— quick reference</span></div>
+      <div class="tree-item indent-1"><span class="icon">📄</span> opencode.json <span class="path">— 15 agents, 8 MCPs, 6 commands</span></div>
+    </div>
+  </div>
+
+  <hr class="break">
+
+  <!-- governance -->
+  <div class="grid cols-2">
+    <div class="card rose">
+      <div class="card-title">Governance (VDD→TDD)</div>
+      <ul>
+        <li>VDD — Vision Driven Development</li>
+        <li>EDD — Event Driven Development</li>
+        <li>PDD — Policy Driven Development</li>
+        <li>SDD — Spec Driven Development</li>
+        <li>BDD — Behavior Driven Development</li>
+        <li>TDD — Test Driven Development</li>
+        <li>Score gate: <span class="tag green">≥60</span> to approve</li>
+      </ul>
+    </div>
+    <div class="card slate">
+      <div class="card-title">Zero Friction Checklist</div>
+      <ul>
+        <li>✅ 0 old /home/mystic/jarvis paths in ops</li>
+        <li>✅ 0 old /root/sonora-digital-corp paths</li>
+        <li>✅ MCP infra restored from archive</li>
+        <li>✅ All systemd logs → state/logs/</li>
+        <li>✅ engram.db → state/engram.db</li>
+        <li>✅ AGENTS.md = quick reference only</li>
+        <li>✅ Constitution loaded as instruction #1</li>
+        <li>✅ 5 commits on main (pushed)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>cd /home/mystic/sonora-digital-corp && opencode</span> — la unica verdad
+  </div>
+
+</div>
+</body>
+</html>

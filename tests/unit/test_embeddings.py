@@ -3,7 +3,6 @@ import sys
 from pathlib import Path
 from unittest.mock import patch, MagicMock
 
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 import pytest
 from src.core.embeddings import embed_text, embed_batch, chunk_text, EMBED_DIM

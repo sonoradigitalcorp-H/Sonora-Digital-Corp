@@ -3,7 +3,6 @@ import sys
 from pathlib import Path
 from unittest.mock import patch, MagicMock, PropertyMock
 
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 import pytest
 from src.core.rag import RagEngine, rag

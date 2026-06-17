@@ -3,7 +3,6 @@ Tests para src/core/security_guard.py — prompt injection protection.
 """
 import sys
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 import pytest
 from src.core.security_guard import SecurityGuard, guard

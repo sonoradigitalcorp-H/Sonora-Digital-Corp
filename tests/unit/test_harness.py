@@ -3,7 +3,6 @@ Tests para src/core/harness.py — SDD pipeline executor.
 """
 import sys, asyncio
 from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 import pytest
 from src.core.harness import Harness
