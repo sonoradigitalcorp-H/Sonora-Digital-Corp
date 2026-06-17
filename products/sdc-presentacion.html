@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonora Digital Corp — Fundación</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',sans-serif; background:#07070d; color:#e8e8f0; }
+.slide { min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:60px 24px; position:relative; }
+.bg-glow { position:absolute; inset:0; pointer-events:none; background: radial-gradient(ellipse 60% 40% at 50% 0%, rgba(108,92,231,0.08) 0%, transparent 60%); }
+h1 { font-size:clamp(40px,8vw,80px); font-weight:900; background:linear-gradient(135deg,#6c5ce7,#ff6b9d,#00d4aa); -webkit-background-clip:text; -webkit-text-fill-color:transparent; letter-spacing:-0.03em; }
+h2 { font-size:28px; font-weight:700; margin-bottom:16px; }
+.sub { color:#7a7a9a; font-size:18px; max-width:600px; text-align:center; line-height:1.6; }
+.card { background:rgba(30,33,50,0.6); border:1px solid rgba(42,45,74,0.4); border-radius:16px; padding:32px; max-width:800px; margin:16px; backdrop-filter:blur(12px); }
+.grid2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; max-width:900px; width:100%; }
+.mystic-glow { width:120px; height:120px; border-radius:50%; background:linear-gradient(135deg,#6c5ce7,#ff6b9d); display:flex; align-items:center; justify-content:center; font-size:56px; margin-bottom:24px; box-shadow:0 0 60px rgba(108,92,231,0.3); }
+.tag { display:inline-block; padding:4px 12px; border-radius:6px; font-size:12px; font-weight:600; margin:4px; }
+.tag-purple { background:rgba(108,92,231,0.15); color:#c084fc; border:1px solid rgba(108,92,231,0.3); }
+.tag-pink { background:rgba(255,107,157,0.15); color:#ff6b9d; border:1px solid rgba(255,107,157,0.3); }
+.tag-green { background:rgba(0,212,170,0.15); color:#00d4aa; border:1px solid rgba(0,212,170,0.3); }
+.tag-gold { background:rgba(251,191,36,0.15); color:#fbbf24; border:1px solid rgba(251,191,36,0.3); }
+nav { position:fixed; top:0; width:100%; z-index:100; background:rgba(7,7,13,0.8); backdrop-filter:blur(20px); border-bottom:1px solid rgba(42,45,74,0.3); padding:12px 24px; display:flex; justify-content:space-between; align-items:center; }
+nav .logo { font-weight:700; font-size:16px; display:flex; align-items:center; gap:8px; }
+nav .logo span:first-child { color:#ff6b9d; }
+nav .logo span:last-child { color:#7a7a9a; font-weight:400; font-size:12px; }
+nav a { color:#7a7a9a; text-decoration:none; font-size:13px; padding:6px 14px; border-radius:6px; transition:all 0.2s; }
+nav a:hover { color:#e8e8f0; background:rgba(255,255,255,0.05); }
+footer { border-top:1px solid rgba(42,45,74,0.3); padding:32px 24px; text-align:center; font-size:12px; color:#5a5a7a; }
+@media (max-width:640px) { nav a { display:none; } }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><span>✦</span> SONORA DIGITAL CORP <span>— Fundación</span></div>
+  <div>
+    <a href="#brand">Marca</a>
+    <a href="#services">Servicios</a>
+    <a href="#tech">Tecnología</a>
+    <a href="#plans">Planes</a>
+  </div>
+</nav>
+
+<div class="slide" id="hero">
+  <div class="bg-glow"></div>
+  <div class="mystic-glow">🔮</div>
+  <h1>Sonora Digital Corp</h1>
+  <p class="sub" style="margin-top:16px">"Recordamos a las personas quiénes son. Les mostramos su mejor versión.<br>Y les damos el poder de convertirla en real."</p>
+</div>
+
+<div class="slide" id="brand">
+  <div class="bg-glow"></div>
+  <h2>Identidad de Marca</h2>
+  <p class="sub">La marca que empodera imperios digitales</p>
+  <div style="display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin:24px 0">
+    <span class="tag tag-purple">Elegancia</span>
+    <span class="tag tag-pink">Poder</span>
+    <span class="tag tag-green">Transformación</span>
+    <span class="tag tag-gold">Abundancia</span>
+  </div>
+  <div class="grid2">
+    <div class="card"><h3>🎯 Misión</h3><p style="color:#7a7a9a;font-size:14px;line-height:1.6">Democratizar el poder de la inteligencia artificial para que cualquier persona, sin importar su conocimiento técnico, pueda construir, automatizar y escalar su imperio digital.</p></div>
+    <div class="card"><h3>👁️ Visión</h3><p style="color:#7a7a9a;font-size:14px;line-height:1.6">Ser la plataforma líder de imperios digitales autónomos, donde cada persona tenga un asistente IA que multiplique su capacidad de crear, vender y crecer.</p></div>
+    <div class="card"><h3>💎 Valores</h3><p style="color:#7a7a9a;font-size:14px;line-height:1.6">• Empoderamiento real • Tecnología con alma • Libertad digital • Transformación constante • Gratitud como base</p></div>
+    <div class="card"><h3>🔮 Slogan</h3><p style="color:#7a7a9a;font-size:14px;line-height:1.6">"Tu imperio. Tu asistente. Tu momento."</p></div>
+  </div>
+</div>
+
+<div class="slide" id="services" style="background:radial-gradient(ellipse 60% 40% at 50% 100%, rgba(255,107,157,0.05) 0%, transparent 60%)">
+  <h2>Línea de Productos</h2>
+  <p class="sub">Todo sobre la misma infraestructura. Todo funcionando. Todo testeado.</p>
+  <div class="grid2" style="margin-top:32px">
+    <div class="card"><h3>🔮 Mystic</h3><p style="color:#7a7a9a;font-size:13px">Asistente personal IA. Tu puerta de entrada al ecosistema SDC.</p></div>
+    <div class="card"><h3>🔄 Crea Tu Clon</h3><p style="color:#7a7a9a;font-size:13px">Tu imagen, tu voz, tu personalidad. Vendiendo por ti 24/7.</p></div>
+    <div class="card"><h3>🛍️ SDC Shop</h3><p style="color:#7a7a9a;font-size:13px">Tienda + POD + tokens. Diseña, vende, cobra. Sin mover un dedo.</p></div>
+    <div class="card"><h3>🎵 ABE MUSIC</h3><p style="color:#7a7a9a;font-size:13px">CRM artistas + dashboard CEO + revenue split 70/20/10.</p></div>
+    <div class="card"><h3>📚 SDC Courses</h3><p style="color:#7a7a9a;font-size:13px">Crea cursos con AI. Vénde洛斯. Escala.</p></div>
+    <div class="card"><h3>🏢 SDC Consulting</h3><p style="color:#7a7a9a;font-size:13px">Automatización IA para empresas. CRM, KPIs, workflows.</p></div>
+  </div>
+</div>
+
+<div class="slide" id="tech">
+  <h2>Infraestructura Tecnológica</h2>
+  <p class="sub">50 skills · 10 agentes · 330 tests · 12 specs · 0 pendientes</p>
+  <div class="card" style="width:100%;max-width:900px;font-size:13px;line-height:1.8">
+    <pre style="color:#7a7a9a;font-family:'Inter',monospace;white-space:pre-wrap">
+    ⚡ JARVIS Core — 10 agentes · Orquestador · Voz · Memoria
+    🔌 OpenClaw Gateway — 50 skills · 5,000+ disponibles
+    💬 Hermes Agent — Telegram · WhatsApp · 86 tools
+    🐳 Docker — Neo4j · Qdrant · MCP · n8n (36 workflows)
+    💳 Mercado Pago — Pagos México · SPEI · Bitso
+    🎨 Fal.ai — Imágenes · Video · $340 MXN cargados
+    🌐 Playwright — Browser automation · Chrome control
+    🖥️ Linux Desktop — Mouse · Teclado · Terminal
+    📱 PWA — Mystic instalable en tu celular
+    </pre>
+  </div>
+</div>
+
+<div class="slide" id="plans">
+  <h2>Planes SDC</h2>
+  <p class="sub">Del explorador al imperio. Un viaje, no una suscripción.</p>
+  <div class="grid2" style="margin-top:32px;max-width:1100px">
+    <div class="card" style="border-color:rgba(34,211,238,0.3)"><h3>🌘 Explorador</h3><p style="font-size:32px;font-weight:800;color:#22d3ee">$0</p><p style="color:#7a7a9a;font-size:13px">Mystic básico · 5 fotos · 2 videos · 1 web</p></div>
+    <div class="card" style="border-color:rgba(251,146,60,0.3)"><h3>⚔️ Conquistador</h3><p style="font-size:32px;font-weight:800;color:#fb923c">$39</p><p style="color:#7a7a9a;font-size:13px">Mystic 24/7 · 150 fotos · 50 videos · 3 webs · Tienda</p></div>
+    <div class="card" style="border-color:rgba(167,139,250,0.3)"><h3>🛡️ Agente IA</h3><p style="font-size:32px;font-weight:800;color:#a78bfa">$69</p><p style="color:#7a7a9a;font-size:13px">750 fotos · 250 videos · CRM · KPIs · Afiliados 7%</p></div>
+    <div class="card" style="border-color:rgba(251,191,36,0.3)"><h3>🏆 Imperio</h3><p style="font-size:32px;font-weight:800;color:#fbbf24">$149</p><p style="color:#7a7a9a;font-size:13px">Ilimitado · White label · API · KYC · Legal · Afiliados 15%</p></div>
+  </div>
+  <p style="color:#5a5a7a;font-size:13px;margin-top:24px">Nicho adulto: multiplicador x2 · 330 tests · 12 specs · 0 pendientes</p>
+</div>
+
+<footer>
+  <p style="font-size:14px;color:#e8e8f0;margin-bottom:8px">✦ Sonora Digital Corp</p>
+  <p>Construido con metodología SDD + GSD + Self-Improve · JARVIS v3.16.1</p>
+  <p style="margin-top:4px">330 tests · 50 skills · 10 agentes · 12 specs · 0 pendientes</p>
+</footer>
+
+</body>
+</html>

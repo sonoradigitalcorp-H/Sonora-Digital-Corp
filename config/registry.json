@@ -1,0 +1,71 @@
+{
+  "version": "1.0.0",
+  "skills": {
+    "research": {
+      "description": "Búsqueda y síntesis de información",
+      "category": "core",
+      "mcp_server": null,
+      "command": "/research"
+    },
+    "code": {
+      "description": "Análisis y generación de código",
+      "category": "core",
+      "mcp_server": null,
+      "command": "/code"
+    },
+    "explore": {
+      "description": "Navegación de sistema de archivos y exploratorio",
+      "category": "core",
+      "mcp_server": null,
+      "command": "/explore"
+    },
+    "memory": {
+      "description": "Gestión de memoria y contexto",
+      "category": "core",
+      "mcp_server": null,
+      "command": "/memory"
+    },
+    "skill": {
+      "description": "Ejecución de habilidades MCP",
+      "category": "core",
+      "mcp_server": null,
+      "command": "/skill"
+    },
+    "voice": {
+      "description": "Procesamiento de voz",
+      "category": "core",
+      "mcp_server": null,
+      "command": "/voice"
+    },
+    "review": {
+      "description": "Revisión de código y verificación",
+      "category": "core",
+      "mcp_server": null,
+      "command": "/review"
+    },
+    "hermes": {
+      "description": "Integración con Hermes para mensajería",
+      "category": "external",
+      "mcp_server": "hermes",
+      "command": "/hermes"
+    },
+    "openclaw": {
+      "description": "Gateway de agentes OpenClaw",
+      "category": "external",
+      "mcp_server": "openclaw",
+      "command": "/openclaw"
+    },
+    "gbrain": {
+      "description": "Motor de razonamiento y síntesis",
+      "category": "core",
+      "mcp_server": null,
+      "command": "/gbrain"
+    },
+    "engram": {
+      "description": "Memoria contextual persistente",
+      "category": "core",
+      "mcp_server": null,
+      "command": "/engram"
+    }
+  }
+}

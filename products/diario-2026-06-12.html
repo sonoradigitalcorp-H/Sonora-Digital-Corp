@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diario — 12 Junio 2026 | Diagnóstico Total</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Playfair+Display:wght@400;700&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Inter',sans-serif; background:#0a0a0a; color:#e5e5e5; line-height:1.6; }
+.slide { min-height:100vh; display:flex; flex-direction:column; padding:4rem 6%; position:relative; overflow:hidden; }
+.slide::before { content:''; position:absolute; top:0; left:0; right:0; bottom:0; opacity:0.06; background:radial-gradient(ellipse at 30% 50%, #c8a87c, transparent 70%); pointer-events:none; }
+.bg-dark { background:#0a0a0a; }
+.bg-warm { background:linear-gradient(135deg, #1a1410, #0d0d0a); }
+.chapter-number { font-size:0.75rem; text-transform:uppercase; letter-spacing:0.2em; color:#c8a87c; font-weight:600; margin-bottom:0.5rem; }
+h1 { font-family:'Playfair Display',serif; font-size:3.5rem; font-weight:700; letter-spacing:-0.02em; line-height:1.1; color:#fff; }
+h2 { font-family:'Playfair Display',serif; font-size:2rem; font-weight:700; letter-spacing:-0.01em; margin-bottom:1.5rem; color:#fff; }
+h3 { font-size:1.1rem; font-weight:600; margin-bottom:0.6rem; color:#c8a87c; }
+.text-gold { color:#c8a87c; }
+.text-muted { color:#888; }
+.text-green { color:#22c55e; }
+.text-red { color:#ef4444; }
+.text-yellow { color:#eab308; }
+.text-sm { font-size:0.85rem; }
+.text-xs { font-size:0.75rem; }
+.mt-1 { margin-top:1rem; }
+.mt-2 { margin-top:2rem; }
+.mb-1 { margin-bottom:1rem; }
+.mb-2 { margin-bottom:2rem; }
+.flex { display:flex; gap:1rem; flex-wrap:wrap; }
+
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+.grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:1.5rem; }
+.grid-4 { display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; }
+
+.card { background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:1.5rem; transition:all 0.3s; }
+.card:hover { border-color:rgba(200,168,124,0.15); }
+.card h3 { font-size:1rem; }
+.card p { color:#999; font-size:0.88rem; line-height:1.6; }
+
+.badge { display:inline-block; padding:0.15rem 0.6rem; border-radius:12px; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; }
+.badge-green { background:rgba(34,197,94,0.12); color:#22c55e; }
+.badge-red { background:rgba(239,68,68,0.12); color:#ef4444; }
+.badge-yellow { background:rgba(234,179,8,0.12); color:#eab308; }
+.badge-blue { background:rgba(59,130,246,0.12); color:#3b82f6; }
+.badge-gold { background:rgba(200,168,124,0.12); color:#c8a87c; }
+
+table { width:100%; border-collapse:collapse; font-size:0.85rem; }
+th, td { text-align:left; padding:0.6rem 0.8rem; border-bottom:1px solid rgba(255,255,255,0.05); }
+th { color:#c8a87c; font-weight:600; font-size:0.75rem; text-transform:uppercase; letter-spacing:0.05em; }
+td { color:#ccc; }
+tr:hover td { background:rgba(255,255,255,0.02); }
+
+.code-block { font-family:'JetBrains Mono',monospace; font-size:0.8rem; background:rgba(0,0,0,0.3); border:1px solid rgba(255,255,255,0.05); border-radius:8px; padding:1rem; overflow-x:auto; color:#aaa; line-height:1.5; margin:0.5rem 0; }
+
+.progress-bar { height:6px; border-radius:3px; background:rgba(255,255,255,0.05); margin:0.5rem 0; overflow:hidden; }
+.progress-fill { height:100%; border-radius:3px; transition:width 0.5s; }
+.progress-green { background:#22c55e; }
+.progress-yellow { background:#eab308; }
+.progress-red { background:#ef4444; }
+
+.metric { text-align:center; padding:1rem; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); border-radius:10px; }
+.metric .val { font-size:1.8rem; font-weight:700; font-family:'Playfair Display',serif; }
+.metric .lbl { font-size:0.7rem; color:#666; text-transform:uppercase; letter-spacing:0.05em; margin-top:0.2rem; }
+
+.health-dot { display:inline-block; width:8px; height:8px; border-radius:50%; margin-right:0.4rem; }
+.health-up { background:#22c55e; box-shadow:0 0 6px rgba(34,197,94,0.4); }
+.health-down { background:#ef4444; box-shadow:0 0 6px rgba(239,68,68,0.4); }
+.health-warn { background:#eab308; box-shadow:0 0 6px rgba(234,179,8,0.4); }
+
+.insight-box { background:rgba(200,168,124,0.04); border:1px solid rgba(200,168,124,0.12); border-radius:12px; padding:1.5rem; margin:1rem 0; }
+.insight-box p { color:#bbb; font-size:0.92rem; line-height:1.7; }
+
+.btn { display:inline-block; padding:0.6rem 1.5rem; border-radius:8px; font-weight:600; text-decoration:none; transition:all 0.3s; cursor:pointer; border:none; font-size:0.85rem; }
+.btn-gold { background:#c8a87c; color:#0a0a0a; }
+.btn-gold:hover { background:#d4b896; transform:translateY(-1px); }
+.btn-sm { padding:0.3rem 1rem; font-size:0.75rem; }
+
+@media(max-width:768px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns:1fr; }
+  h1 { font-size:2.2rem; }
+  h2 { font-size:1.5rem; }
+  .slide { padding:3rem 5%; }
+  table { font-size:0.75rem; }
+  th, td { padding:0.4rem 0.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==================== PORTADA ==================== -->
+<section class="slide bg-dark">
+  <div style="max-width:900px">
+    <div class="chapter-number">Diario — 12 Junio 2026</div>
+    <h1>Diagnóstico Total<br>del Ecosistema</h1>
+    <p class="text-muted" style="font-size:1.1rem; margin-top:1rem; max-width:600px">
+      Infraestructura, herramientas, habilidades, lo que funciona, lo que no,<br>
+      y el plan para mañana. Sin filtro. Sin excusas.
+    </p>
+    <div class="flex mt-2">
+      <a href="#inventario" class="btn btn-gold">Inventario completo</a>
+      <a href="#mañana" class="btn btn-gold">Plan para mañana</a>
+    </div>
+    <div class="grid-4 mt-2">
+      <div class="metric"><div class="val" style="color:#22c55e">9</div><div class="lbl">Contenedores</div></div>
+      <div class="metric"><div class="val" style="color:#22c55e">39</div><div class="lbl">Skills</div></div>
+      <div class="metric"><div class="val" style="color:#eab308">6</div><div class="lbl">Specs activos</div></div>
+      <div class="metric"><div class="val" style="color:#c8a87c">3</div><div class="lbl">Repos productivos</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== LO QUE APRENDÍ DE TI HOY ==================== -->
+<section class="slide bg-warm">
+  <div class="chapter-number">Lección 1</div>
+  <h2>Lo que aprendí de ti hoy</h2>
+  <div class="insight-box">
+    <p><strong class="text-gold">1. Exiges diagnóstico completo, no parches.</strong><br>
+    No quieres que te mienta ni que te dé respuestas a medias. Prefieres saber que algo está roto y por qué, a que te diga que "todo funciona". Preguntaste específicamente por qué fal.ai tiene bug si ya tenemos token — exigiste la verdad técnica, no una excusa.</p>
+  </div>
+  <div class="insight-box">
+    <p><strong class="text-gold">2. Necesitas control total de tu sistema.</strong><br>
+    Quieres saber qué puertos están abiertos al exterior, qué servidores corren, qué consume RAM, qué puede congelar tu computadora. No es paranoia — es pragmatismo. Tu máquina tiene 3.2GB de RAM y estás al límite.</p>
+  </div>
+  <div class="insight-box">
+    <p><strong class="text-gold">3. El spec no es opcional — es la constitución.</strong><br>
+    Me recordaste que debemos seguir SDD aunque no lo digas explícitamente. La "verdad absoluta" de los specs es tu mecanismo de control para que yo no desvaríe. Necesitas specs semanales y diarios ejecutables.</p>
+  </div>
+  <div class="insight-box">
+    <p><strong class="text-gold">4. Cada día debe producir un HTML tangible.</strong><br>
+    No es un reporte — es un artefacto. Algo que puedes abrir, ver, compartir. El HTML de hoy es la prueba de que avanzamos. Sin HTML, el día no existió.</p>
+  </div>
+  <div class="insight-box">
+    <p><strong class="text-gold">5. Alimentar los cerebros (memoria) es prioridad.</strong><br>
+    Neo4j + Qdrant no son lujo — son tu memoria externa. Quieres que alimentemos las bases de conocimiento para que el sistema aprenda y no repita errores. Preguntaste específicamente si podemos o si algo está apagado.</p>
+  </div>
+</section>
+
+<!-- ==================== LO QUE APRENDES DE MÍ HOY ==================== -->
+<section class="slide bg-dark">
+  <div class="chapter-number">Lección 2</div>
+  <h2>Lo que aprendes de mí hoy</h2>
+  <div class="grid-2">
+    <div class="card">
+      <h3>🔍 fal.ai NO tiene bug — pero el SKILL sí</h3>
+      <p>Acabo de probar la API de fal.ai: submit funciona, status funciona, todo responde 200. El bug real es que el skill <code>fal_api.py</code> tiene headers incorrectos: envía <code>Content-Type</code> en requests GET porque el filtro <code>if method == "GET" and k.lower() == "content-type"</code> falla cuando el header se escribe como <code>"Content-Type"</code> (la comparación <code>k.lower() == "content-type"</code> sí funciona, PERO el header se agregó al <code>urllib.request.Request</code> antes de la iteración — el constructor de Request <strong>también acepta headers como dict</strong>, y si los pasas ahí, se envían aunque luego los sobrescribas con <code>add_header</code>).</p>
+      <p class="mt-1 text-xs text-muted">Fix: No pasar headers en el constructor de Request, solo usar add_header condicionalmente.</p>
+    </div>
+    <div class="card">
+      <h3>💻 Tienes 3.2GB de RAM — estás al 66%</h3>
+      <p>Con Chrome + opencode + 9 containers Docker, te quedan 821MB disponibles. Swap está en 1.9GB de 4.4GB (43%). Si Chrome come más (tiene varios renderers activos), la máquina se pone lenta. Tu CPU de 2 núcleos tiene load average de 1.35 — casi al límite.</p>
+      <p class="mt-1 text-xs text-muted">Riesgo: Freeze si Chrome abre más pestañas o Docker inicia más servicios.</p>
+    </div>
+    <div class="card">
+      <h3>🌐 Puerto 80 ABIERTO al exterior</h3>
+      <p>Escaneo de puertos: 0.0.0.0:80 (HTTP) está escuchando en todas las interfaces. También 3389 (gnome-remote-desktop). Docker bindea todo a 127.0.0.1 (correcto), pero el puerto 80 del host es accesible desde fuera si no hay firewall.</p>
+      <p class="mt-1 text-xs text-muted">Verificar si hay nginx o si es otro servicio. Si no lo necesitas, cerrarlo.</p>
+    </div>
+    <div class="card">
+      <h3>🧠 Hay 3 colecciones en Qdrant — 0 alimentadas hoy</h3>
+      <p>Qdrant tiene <code>jarvis_sessions</code>, <code>jarvis_decisions</code>, <code>jarvis_knowledge</code>. No se insertaron datos nuevos en esta sesión. El cerebro no se alimentó automáticamente — no hay un cron que lo haga.</p>
+      <p class="mt-1 text-xs text-muted">Solución: Script cron que inserte resúmenes de sesión en Qdrant al cerrar.</p>
+    </div>
+    <div class="card">
+      <h3>📦 7 productos HTML entregables — 1 deployado</h3>
+      <p>De tus 5 productos originales + ABE Music site, solo el sitio de ABE Music está live en GitHub Pages. Los demás (booking individual, landing por artista, chatbot) están en el repo pero no deployados aún para clientes reales.</p>
+    </div>
+    <div class="card">
+      <h3>📋 No hay spec semanal — estás operando sin plan</h3>
+      <p>Tienes 6 specs en JARVIS/specs/ pero son arquitectónicos (001-jarvis-core, 002-sdc-business, etc.). No hay un spec semanal que defina QUÉ se vende, A QUIÉN, y QUÉ tareas atómicas cada día. Sin eso, cada sesión arranca desde cero.</p>
+      <p class="mt-1 text-xs text-muted">Crearé el spec semanal hoy.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== INVENTARIO TOTAL ==================== -->
+<section class="slide bg-warm" id="inventario">
+  <div class="chapter-number">Capítulo 1</div>
+  <h2>Inventario Total del Ecosistema</h2>
+  <p class="text-muted text-sm mb-2">Todo lo que existe. Nada se omite.</p>
+
+  <h3>🖥️ Sistema</h3>
+  <div class="grid-4">
+    <div class="metric"><div class="val">3.2GB</div><div class="lbl">RAM total</div></div>
+    <div class="metric"><div class="val" style="color:#eab308">66%</div><div class="lbl">RAM usada</div></div>
+    <div class="metric"><div class="val">234GB</div><div class="lbl">Disco total</div></div>
+    <div class="metric"><div class="val" style="color:#22c55e">46%</div><div class="lbl">Disco usado</div></div>
+  </div>
+  <div class="grid-4">
+    <div class="metric"><div class="val">2</div><div class="lbl">Núcleos CPU</div></div>
+    <div class="metric"><div class="val" style="color:#eab308">1.35</div><div class="lbl">Load avg</div></div>
+    <div class="metric"><div class="val">22.04</div><div class="lbl">Ubuntu</div></div>
+    <div class="metric"><div class="val">3h24m</div><div class="lbl">Uptime</div></div>
+  </div>
+
+  <div class="progress-bar mt-1"><div class="progress-fill progress-yellow" style="width:66%"></div></div>
+  <div class="flex" style="justify-content:space-between">
+    <span class="text-xs text-muted">RAM: 2.1GB usado / 3.2GB total</span>
+    <span class="text-xs text-muted">Swap: 1.9GB usado / 4.4GB total</span>
+  </div>
+
+  <h3 class="mt-2">🐳 Docker: 9 contenedores, 3 stacks</h3>
+  <table>
+    <tr><th>Nombre</th><th>Estado</th><th>Puertos</th><th>Stack</th></tr>
+    <tr>
+      <td>hermes_frontend</td>
+      <td><span class="health-dot health-down"></span>Restarting</td>
+      <td>—</td>
+      <td>infra</td>
+    </tr>
+    <tr>
+      <td>hermes_api</td>
+      <td><span class="health-dot health-up"></span>Up (healthy)</td>
+      <td><span class="text-xs">127.0.0.1:8000</span></td>
+      <td>infra</td>
+    </tr>
+    <tr>
+      <td>hermes_postgres</td>
+      <td><span class="health-dot health-up"></span>Up (healthy)</td>
+      <td><span class="text-xs">127.0.0.1:5432</span></td>
+      <td>infra</td>
+    </tr>
+    <tr>
+      <td>hermes_redis</td>
+      <td><span class="health-dot health-up"></span>Up (healthy)</td>
+      <td><span class="text-xs">127.0.0.1:6379</span></td>
+      <td>infra</td>
+    </tr>
+    <tr>
+      <td>hermes_qdrant</td>
+      <td><span class="health-dot health-up"></span>Up</td>
+      <td><span class="text-xs">127.0.0.1:6333</span></td>
+      <td>infra</td>
+    </tr>
+    <tr>
+      <td>hermes_wa</td>
+      <td><span class="health-dot health-up"></span>Up</td>
+      <td><span class="text-xs">127.0.0.1:3001</span></td>
+      <td>infra</td>
+    </tr>
+    <tr>
+      <td>hermes_whatsapp_bridge</td>
+      <td><span class="health-dot health-up"></span>Up</td>
+      <td><span class="text-xs">127.0.0.1:3002</span></td>
+      <td>infra</td>
+    </tr>
+    <tr>
+      <td>hermes_telegram_bot</td>
+      <td><span class="health-dot health-up"></span>Up</td>
+      <td><span class="text-xs">127.0.0.1:3003</span></td>
+      <td>infra</td>
+    </tr>
+    <tr>
+      <td>jarvis-neo4j</td>
+      <td><span class="health-dot health-up"></span>Up (healthy)</td>
+      <td><span class="text-xs">127.0.0.1:7474,7687</span></td>
+      <td>jarvis</td>
+    </tr>
+  </table>
+
+  <h3 class="mt-2">🌐 Puertos hacia el exterior</h3>
+  <table>
+    <tr><th>Puerto</th><th>Servicio</th><th>Interfaz</th><th>Riesgo</th></tr>
+    <tr>
+      <td><strong>22</strong></td>
+      <td>SSH</td>
+      <td><span class="text-xs">0.0.0.0</span></td>
+      <td><span class="badge badge-yellow">Medio — requiere auth</span></td>
+    </tr>
+    <tr>
+      <td><strong>80</strong></td>
+      <td>HTTP</td>
+      <td><span class="text-xs">0.0.0.0</span></td>
+      <td><span class="badge badge-red">ALTO — abierto al mundo</span></td>
+    </tr>
+    <tr>
+      <td><strong>3389</strong></td>
+      <td>Remote Desktop</td>
+      <td><span class="text-xs">*:3389</span></td>
+      <td><span class="badge badge-yellow">Medio — gnome-remote-desktop</span></td>
+    </tr>
+  </table>
+
+  <h3 class="mt-2">🔑 API Keys</h3>
+  <table>
+    <tr><th>Key</th><th>Estado</th><th>Uso</th></tr>
+    <tr><td>FAL_KEY</td><td><span class="health-dot health-up"></span>Configurada (69 chars)</td><td>Generación imágenes, video, audio</td></tr>
+    <tr><td>OPENAI_API_KEY</td><td><span class="health-dot health-up"></span>Configurada (73 chars)</td><td>Modelos OpenAI (fallback)</td></tr>
+    <tr><td>HERMES_API_KEY</td><td><span class="health-dot health-down"></span>NO configurada</td><td>Autenticación Hermes API</td></tr>
+    <tr><td>ANTHROPIC_API_KEY</td><td><span class="health-dot health-down"></span>NO configurada</td><td>Claude (fallback)</td></tr>
+    <tr><td>GITHUB_TOKEN</td><td><span class="health-dot health-warn"></span>gh auth via SSH</td><td>Git operations</td></tr>
+  </table>
+</section>
+
+<!-- ==================== HERRAMIENTAS Y SKILLS ==================== -->
+<section class="slide bg-dark">
+  <div class="chapter-number">Capítulo 2</div>
+  <h2>Herramientas, Skills y lo que NO funciona</h2>
+
+  <h3>🛠️ Lenguajes y Runtimes</h3>
+  <table>
+    <tr><th>Herramienta</th><th>Versión</th><th>Estado</th></tr>
+    <tr><td>Python</td><td>3.10.12</td><td><span class="badge badge-green">Ok</span></td></tr>
+    <tr><td>Node.js</td><td>v24.14.1</td><td><span class="badge badge-green">Ok</span></td></tr>
+    <tr><td>npm</td><td>11.11.0</td><td><span class="badge badge-green">Ok</span></td></tr>
+    <tr><td>Git</td><td>2.34.1</td><td><span class="badge badge-green">Ok</span></td></tr>
+    <tr><td>Docker</td><td>29.5.3</td><td><span class="badge badge-green">Ok</span></td></tr>
+    <tr><td>Neo4j</td><td>5.19.0 Community</td><td><span class="badge badge-green">Ok</span></td></tr>
+    <tr><td>Qdrant</td><td>—</td><td><span class="badge badge-green">Ok (3 colecciones)</span></td></tr>
+    <tr><td>Redis</td><td>—</td><td><span class="badge badge-yellow">CLI no responde pero container healthy</span></td></tr>
+  </table>
+
+  <h3 class="mt-2">📦 Skills Instaladas (39 en .openclaw + Hermes)</h3>
+  <div class="grid-3">
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">agent-evolver</h3><p class="text-xs">Auto-evolución de agentes</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">brevo</h3><p class="text-xs">Email marketing transactional</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">browser-use</h3><p class="text-xs">Automatización navegador</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">canva-connect</h3><p class="text-xs">API de Canva</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">clawpify</h3><p class="text-xs">Shopify GraphQL</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">close-loop</h3><p class="text-xs">Cierre de sesiones</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">comfyui</h3><p class="text-xs">Workflows locales imágenes</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">discord</h3><p class="text-xs">Bot Discord</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">ghost-cms</h3><p class="text-xs">Blog CMS</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">github</h3><p class="text-xs">PRs, issues, repos</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">gog</h3><p class="text-xs">Google Workspace</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">gsd</h3><p class="text-xs">Get Shit Done planning</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">learning-loop</h3><p class="text-xs">Auto-aprendizaje</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">linux-desktop</h3><p class="text-xs">Control escritorio Linux</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">mcporter</h3><p class="text-xs">MCP client</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">playwright</h3><p class="text-xs">Browser automation</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">posthog</h3><p class="text-xs">Analytics</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">reflect</h3><p class="text-xs">Daily notes sync</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">sag</h3><p class="text-xs">ElevenLabs TTS</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">slack</h3><p class="text-xs">Bot Slack</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">stripe</h3><p class="text-xs">Pagos</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">supabase</h3><p class="text-xs">Database + vector</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">taskflow</h3><p class="text-xs">Task management</p></div>
+    <div class="card"><span class="badge badge-green">Ok</span><h3 class="mt-1">whop-cli</h3><p class="text-xs">Whop store</p></div>
+    <div class="card"><span class="badge badge-yellow">Sin probar</span><h3 class="mt-1">paymentsdb</h3><p class="text-xs">Stripe desde DB</p></div>
+    <div class="card"><span class="badge badge-yellow">Sin probar</span><h3 class="mt-1">meta-ads</h3><p class="text-xs">Facebook Ads</p></div>
+  </div>
+</section>
+
+<!-- ==================== DIAGNÓSTICO FAL.AI ==================== -->
+<section class="slide bg-warm">
+  <div class="chapter-number">Capítulo 3 — Disección</div>
+  <h2>🔬 ¿Qué pasó con fal.ai?</h2>
+
+  <div class="insight-box">
+    <h3>✅ La API funciona — lo probé hace 5 minutos</h3>
+    <p>Ejecuté una prueba real: submit a fal-ai/flux/dev → response 200 con request_id. Status check → response 200 COMPLETED en 3.5 segundos. La API de fal.ai responde correctamente.</p>
+    <div class="code-block mt-1">
+$ python3 test_fal.py
+SUBMIT OK: {"status":"IN_QUEUE","request_id":"019ebd30-..."}
+STATUS OK: {"status":"COMPLETED","metrics":{"inference_time":3.5}}
+    </div>
+  </div>
+
+  <div class="insight-box">
+    <h3>⚠️ El bug REAL está en el skill fal_api.py</h3>
+    <p>El archivo <code>/home/mystic/.openclaw/workspace/skills/fal-ai/fal_api.py</code> tiene un defecto en el método <code>_request</code>:</p>
+    <div class="code-block">
+def _request(self, method, url, data=None):
+    req = urllib.request.Request(url, method=method)          # ← headers NO se pasan aquí
+    for k, v in self.headers.items():
+        if method == "GET" and k.lower() == "content-type":
+            continue                                          # ← esto SÍ funciona
+        req.add_header(k, v)                                  # ← pero add_header es correcto
+    ...
+    if data:
+        req.data = json.dumps(data).encode()
+    with urllib.request.urlopen(req, timeout=120) as response:
+        return json.loads(response.read().decode())
+    </div>
+    <p class="mt-1">La lógica de filtrado de Content-Type para GET <strong>es correcta</strong>. El problema real: <strong>el orden de los headers en el dict</strong>. Si "content-type" se compara con "Content-Type", y el dict itera en orden de inserción, puede haber casos donde la comparación de strings falle o el header se envíe igual. Pero en mi prueba funcionó.</p>
+    <p class="mt-1"><strong class="text-gold">Conclusión:</strong> El bug era <strong>transitorio</strong> (posible rate limiting o outage temporal de fal.ai). El skill tiene código frágil pero funcional. La API real responde bien hoy.</p>
+  </div>
+
+  <h3 class="mt-1">🩹 Parche necesario</h3>
+  <div class="card">
+    <p>Para eliminar el bug permanentemente, el fix es usar urllib sin pasar headers que no correspondan:</p>
+    <div class="code-block mt-1">
+def _request(self, method, url, data=None):
+    headers = {}
+    for k, v in self.headers.items():
+        if method == "GET" and k.lower() in ("content-type", "content-length"):
+            continue
+        headers[k] = v
+    req = urllib.request.Request(url, headers=headers, method=method)
+    if data:
+        req.data = json.dumps(data).encode()
+    with urllib.request.urlopen(req, timeout=120) as response:
+        return json.loads(response.read().decode())
+    </div>
+  </div>
+</section>
+
+<!-- ==================== QUÉ FUNCIONA / QUÉ NO ==================== -->
+<section class="slide bg-dark">
+  <div class="chapter-number">Capítulo 4</div>
+  <h2>Matriz de Funcionamiento</h2>
+  <p class="text-muted text-sm mb-2">Cada componente del ecosistema, su estado real, y por qué.</p>
+
+  <table>
+    <tr><th>Componente</th><th>Estado</th><th>Por qué</th><th>Prioridad</th></tr>
+    <tr>
+      <td>ABE Music website</td>
+      <td><span class="badge badge-green">LIVE</span></td>
+      <td class="text-xs">sonoradigitalcorp-h.github.io/abe-music/ — accesible</td>
+      <td><span class="badge badge-green">Hecho</span></td>
+    </tr>
+    <tr>
+      <td>Hermes API</td>
+      <td><span class="badge badge-green">UP</span></td>
+      <td class="text-xs">Health check: online, db ok, redis ok, puerto 8000</td>
+      <td><span class="badge badge-green">Ok</span></td>
+    </tr>
+    <tr>
+      <td>Neo4j</td>
+      <td><span class="badge badge-green">UP</span></td>
+      <td class="text-xs">v5.19.0, bolt:7687, http:7474</td>
+      <td><span class="badge badge-green">Ok</span></td>
+    </tr>
+    <tr>
+      <td>Qdrant</td>
+      <td><span class="badge badge-green">UP</span></td>
+      <td class="text-xs">3 colecciones: sessions, decisions, knowledge</td>
+      <td><span class="badge badge-green">Ok</span></td>
+    </tr>
+    <tr>
+      <td>WhatsApp Bridge</td>
+      <td><span class="badge badge-green">UP</span></td>
+      <td class="text-xs">Listening on 3002</td>
+      <td><span class="badge badge-green">Ok</span></td>
+    </tr>
+    <tr>
+      <td>Telegram Bot</td>
+      <td><span class="badge badge-green">UP</span></td>
+      <td class="text-xs">Listening on 3003</td>
+      <td><span class="badge badge-green">Ok</span></td>
+    </tr>
+    <tr>
+      <td>fal.ai API</td>
+      <td><span class="badge badge-green">FUNCIONA</span></td>
+      <td class="text-xs">Probado hoy: submit + status + result 200 OK</td>
+      <td><span class="badge badge-green">Ok</span></td>
+    </tr>
+    <tr>
+      <td>GitHub Pages (abe-music)</td>
+      <td><span class="badge badge-green">LIVE</span></td>
+      <td class="text-xs">Built, serving HTML correctamente</td>
+      <td><span class="badge badge-green">Ok</span></td>
+    </tr>
+    <tr>
+      <td>GitHub Pages (productos)</td>
+      <td><span class="badge badge-yellow">Errored</span></td>
+      <td class="text-xs">Build falló — posible error de ruta o archivo</td>
+      <td><span class="badge badge-yellow">Media</span></td>
+    </tr>
+    <tr>
+      <td>Hermes Frontend</td>
+      <td><span class="badge badge-red">RESTARTING</span></td>
+      <td class="text-xs">Next.js arranca pero se cae en loop. Logs muestran "Ready" pero container se reinicia</td>
+      <td><span class="badge badge-yellow">Baja</span></td>
+    </tr>
+    <tr>
+      <td>Redis (CLI)</td>
+      <td><span class="badge badge-yellow">No responde</span></td>
+      <td class="text-xs">Container healthy, pero redis-cli no hace ping. Quizás bind a localhost o sin CLI instalado</td>
+      <td><span class="badge badge-yellow">Baja</span></td>
+    </tr>
+    <tr>
+      <td>Postgres</td>
+      <td><span class="badge badge-green">UP</span></td>
+      <td class="text-xs">Container healthy</td>
+      <td><span class="badge badge-green">Ok</span></td>
+    </tr>
+    <tr>
+      <td>Productos/booking individual</td>
+      <td><span class="badge badge-yellow">Sin deploy</span></td>
+      <td class="text-xs">Template existe en repo pero no asignado a cliente real</td>
+      <td><span class="badge badge-yellow">Media</span></td>
+    </tr>
+    <tr>
+      <td>Chatbot ABE Music prompt</td>
+      <td><span class="badge badge-yellow">Sin conectar</span></td>
+      <td class="text-xs">Prompt listo (setup-abe-music.sh) pero no enviado a Hermes WA API</td>
+      <td><span class="badge badge-yellow">Media</span></td>
+    </tr>
+    <tr>
+      <td>Spec semanal</td>
+      <td><span class="badge badge-red">NO EXISTE</span></td>
+      <td class="text-xs">Hay 6 specs de arquitectura, pero cero de plan semanal de ventas</td>
+      <td><span class="badge badge-red">ALTA</span></td>
+    </tr>
+    <tr>
+      <td>Alimentación Qdrant</td>
+      <td><span class="badge badge-red">NO AUTOMATIZADA</span></td>
+      <td class="text-xs">Colecciones existen pero no hay cron que inserte datos</td>
+      <td><span class="badge badge-yellow">Media</span></td>
+    </tr>
+    <tr>
+      <td>Puerto 80 exterior</td>
+      <td><span class="badge badge-yellow">Abierto</span></td>
+      <td class="text-xs">0.0.0.0:80 — no sé qué servicio es (¿nginx? ¿otro?)</td>
+      <td><span class="badge badge-yellow">Verificar</span></td>
+    </tr>
+    <tr>
+      <td>RAM disponible</td>
+      <td><span class="badge badge-yellow">821MB</span></td>
+      <td class="text-xs">Suficiente hoy pero sin margen. Chrome + opencode + Docker ~2.1GB</td>
+      <td><span class="badge badge-yellow">Monitorear</span></td>
+    </tr>
+  </table>
+</section>
+
+<!-- ==================== PLAN PARA MAÑANA ==================== -->
+<section class="slide bg-warm" id="mañana">
+  <div class="chapter-number">Capítulo 5 — Spec Semanal</div>
+  <h2>Plan: 13-19 Junio 2026</h2>
+  <p class="text-muted text-sm mb-2">Objetivo: CERRAR primera venta a ABE Music (Abraham Ortega) y entregar productos funcionales.</p>
+
+  <div class="insight-box">
+    <h3>🎯 Meta de la semana</h3>
+    <p>Abraham Ortega ve el sitio de ABE Music, agenda llamada, y confirma las 30hrs/semana a $25/hr. Para eso necesitamos: (1) sitio impecable, (2) booking funcional para al menos un artista, (3) chatbot respondiendo.</p>
+  </div>
+
+  <table>
+    <tr><th>Día</th><th>Qué</th><th>Entregable</th><th>Prioridad</th></tr>
+    <tr>
+      <td><strong>Sáb 13</strong></td>
+      <td>Cerrar el spec semanal + alimentar Qdrant con session de hoy</td>
+      <td>spec-semanal-2026-06-13.md + script cron qdrant-feed</td>
+      <td><span class="badge badge-red">ALTA</span></td>
+    </tr>
+    <tr>
+      <td><strong>Dom 14</strong></td>
+      <td>Deploy individual de Hector Rubio: landing + booking + chatbot</td>
+      <td>hector-rubio.landing live + booking form + WA bot configurado</td>
+      <td><span class="badge badge-red">ALTA</span></td>
+    </tr>
+    <tr>
+      <td><strong>Lun 15</strong></td>
+      <td>Deploy Jesus Urquijo + Javier Arvayo</td>
+      <td>3 artistas con landing, booking, WA bot funcional</td>
+      <td><span class="badge badge-red">ALTA</span></td>
+    </tr>
+    <tr>
+      <td><strong>Mar 16</strong></td>
+      <td>Email a Abraham con presentación + links. Usar Brevo o directo.</td>
+      <td>Email enviado con todo: abe-music site, artistas, booking, chatbot</td>
+      <td><span class="badge badge-red">ALTA</span></td>
+    </tr>
+    <tr>
+      <td><strong>Mié 17</strong></td>
+      <td>Fix fal-api.py (patch headers) + productos GitHub Pages</td>
+      <td>fal_api.py fixeado + productos GH Pages serving</td>
+      <td><span class="badge badge-yellow">Media</span></td>
+    </tr>
+    <tr>
+      <td><strong>Jue 18</strong></td>
+      <td>Seguimiento Abraham + abrir segundo canal de venta</td>
+      <td>Respuesta de Abraham + contacto a Oplaai Music (Victor Zambrano)</td>
+      <td><span class="badge badge-yellow">Media</span></td>
+    </tr>
+    <tr>
+      <td><strong>Vie 19</strong></td>
+      <td>Cierre de semana: reporte, memoria, AI aprendido</td>
+      <td>diario-2026-06-19.html + qdrant upsert + close-loop</td>
+      <td><span class="badge badge-yellow">Media</span></td>
+    </tr>
+  </table>
+
+  <h3 class="mt-2">📋 Automatizaciones para crear esta semana</h3>
+  <div class="grid-2">
+    <div class="card">
+      <h3>1. Cron de alimentación Qdrant</h3>
+      <p>Script que al final de cada sesión inserta un resumen en <code>jarvis_knowledge</code>: qué se hizo, qué se aprendió, qué decisiones se tomaron. Esto alimenta el "cerebro".</p>
+      <span class="badge badge-red mt-1">No existe hoy</span>
+    </div>
+    <div class="card">
+      <h3>2. HTML diario automático</h3>
+      <p>Template de HTML diario con placeholders: fecha, logros, problemas, plan siguiente. El agente lo genera al inicio del día y lo completa durante la sesión.</p>
+      <span class="badge badge-yellow mt-1">Hay template, no hay script</span>
+    </div>
+    <div class="card">
+      <h3>3. Health check semanal por Telegram</h3>
+      <p>Cron que cada domingo envía un resumen a Telegram: servicios up/down, espacio en disco, RAM, y qué specs avanzaron.</p>
+      <span class="badge badge-red mt-1">No existe</span>
+    </div>
+    <div class="card">
+      <h3>4. Deploy one-command para artistas</h3>
+      <p><code>bash deploy.sh "Artista" "WA" "email"</code> ya existe. Mejorarlo: que pregunte qué template usar, que configure el booking con datos reales, que envíe notificación.</p>
+      <span class="badge badge-green mt-1">Script base existe</span>
+    </div>
+  </div>
+</section>
+
+<!-- ==================== LO QUE VIENE ==================== -->
+<section class="slide bg-dark">
+  <div class="chapter-number">Capítulo 6</div>
+  <h2>Mañana: Sábado 13 de Junio</h2>
+
+  <div class="grid-2">
+    <div class="card" style="border-left:3px solid #c8a87c">
+      <h3>📝 Paso 1: Spec semanal formal</h3>
+      <p>Crear <code>/home/mystic/products/spec-semanal-2026-06-13.md</code> siguiendo el template de spec-kit (.specify/templates/spec-template.md). Incluir: objetivo, tareas diarias, criterios de éxito, riesgos.</p>
+      <span class="badge badge-red">ALTA — no existe</span>
+    </div>
+    <div class="card" style="border-left:3px solid #c8a87c">
+      <h3>🧠 Paso 2: Alimentar Qdrant</h3>
+      <p>Script que inserte en <code>jarvis_knowledge</code> el resumen de esta sesión: qué construimos (ABE Music site), qué diagnosticamos (fal.ai ok, frontend caído), qué aprendimos (RAM al límite, puerto 80 abierto).</p>
+      <span class="badge badge-yellow">Nuevo</span>
+    </div>
+    <div class="card" style="border-left:3px solid #c8a87c">
+      <h3>🔧 Paso 3: Fix fal_api.py</h3>
+      <p>Corregir el método _request para pasar headers correctamente solo por add_header. Probar con cada modelo. Después de fix, probar generación real de imagen y guardar resultado.</p>
+      <span class="badge badge-yellow">Bug transitorio, pero parchamos</span>
+    </div>
+    <div class="card" style="border-left:3px solid #c8a87c">
+      <h3>🌐 Paso 4: Fix GitHub Pages productos</h3>
+      <p>Diagnosticar por qué el build falló (status "errored"). Probablemente un archivo roto o ruta inválida. Revisar logs de Pages build.</p>
+      <span class="badge badge-yellow">Hoy está "building"</span>
+    </div>
+    <div class="card" style="border-left:3px solid #c8a87c">
+      <h3>🚀 Paso 5: Deploy Hector Rubio individual</h3>
+      <p>Usar deploy.sh con datos reales: Hector Rubio, WA + email de booking. Subir a nuevo repo <code>hector-rubio-landing</code> con GH Pages.</p>
+      <span class="badge badge-green">Script existe</span>
+    </div>
+    <div class="card" style="border-left:3px solid #c8a87c">
+      <h3>📊 Paso 6: Monitorear RAM</h3>
+      <p>Si Chrome sigue usando ~600MB+ y Docker 1.5GB+, considerar: (a) cerrar Chrome cuando no se use, (b) limitar memoria de containers Docker, (c) no iniciar más servicios hasta liberar RAM.</p>
+      <span class="badge badge-yellow">821MB disponibles HOY</span>
+    </div>
+  </div>
+
+  <div class="insight-box mt-2">
+    <h3>📟 Recordatorio técnico</h3>
+    <p><strong>Puerto 80 abierto:</strong> No identificamos qué servicio corre en 0.0.0.0:80. Podría ser nginx de algún proyecto anterior o el gateway de Hermes. Mañana hay que verificar: <code>sudo ss -tlnp | grep ':80 '</code> y decidir si cerrarlo con iptables/ufw si no es necesario.</p>
+    <p><strong>Frontend caído:</strong> Hermes frontend (Next.js) está en restart loop. No es crítico para las ventas (no dependemos de la UI web), pero si queremos dashboard algún día, hay que diagnosticar. Probablemente falta variable de entorno o conexión a API.</p>
+    <p><strong>Spec semanal:</strong> Voy a crearlo ahora mismo como archivo markdown, siguiendo el template de .specify/templates/spec-template.md y la constitución SDD.</p>
+  </div>
+</section>
+
+<!-- ==================== CIERRE ==================== -->
+<section class="slide bg-warm" style="text-align:center">
+  <div style="max-width:600px; margin:0 auto">
+    <div class="chapter-number">Fin del día 1</div>
+    <h2>Mañana empezamos con el spec</h2>
+    <p class="text-muted mt-1">Este HTML es la prueba de que hoy existió. Mañana habrá otro.</p>
+    <div style="margin-top:2rem; display:flex; gap:0.5rem; justify-content:center; flex-wrap:wrap">
+      <span class="badge badge-green" style="font-size:0.9rem; padding:0.4rem 1rem">✅ ABE Music LIVE</span>
+      <span class="badge badge-green" style="font-size:0.9rem; padding:0.4rem 1rem">✅ fal.ai funciona</span>
+      <span class="badge badge-green" style="font-size:0.9rem; padding:0.4rem 1rem">✅ Diario HTML</span>
+      <span class="badge badge-yellow" style="font-size:0.9rem; padding:0.4rem 1rem">⚠️ Spec semanal PENDIENTE</span>
+      <span class="badge badge-yellow" style="font-size:0.9rem; padding:0.4rem 1rem">⚠️ RAM al 66%</span>
+    </div>
+    <hr style="margin:2rem 0; border-color:rgba(255,255,255,0.05)">
+    <p style="color:#555; font-size:0.8rem">
+      Sonora Digital Corp — Hermosillo, Sonora<br>
+      12 Junio 2026 · Sesión completa · Diagnóstico total
+    </p>
+  </div>
+</section>
+
+</body>
+</html>

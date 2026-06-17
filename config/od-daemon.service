@@ -1,0 +1,16 @@
+[Unit]
+Description=Open Design Daemon — Design generation service
+After=network.target
+
+[Service]
+Type=simple
+User=mystic
+WorkingDirectory=/home/mystic/open-design
+ExecStart=/home/mystic/open-design/apps/daemon/bin/od.mjs daemon --port 7456
+Restart=on-failure
+RestartSec=5
+Environment=PATH=/home/mystic/open-design/node_modules/.bin:/usr/bin:/usr/local/bin
+Environment=NODE_ENV=production
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,58 @@
+name: 🔄 Auto-Sync — Auto Commit & PR
+
+on:
+  schedule:
+    - cron: '0 6 * * *'     # 6 AM Hermosillo (daily commit/PR)
+    - cron: '0 18 * * *'    # 6 PM Hermosillo (evening commit/PR)
+  workflow_dispatch:
+
+jobs:
+  auto-sync:
+    runs-on: self-hosted
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: 🔄 Auto commit & create PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd /home/mystic/sonora-digital-corp
+          
+          # Fetch latest
+          git fetch origin
+          
+          # Si hay cambios sin commit
+          if [[ -n "$(git status --porcelain)" ]]; then
+            BRANCH="auto-sync-$(date '+%Y%m%d-%H%M%S')"
+            echo "==> Cambios detectados, creando rama $BRANCH..."
+            
+            # Create branch and commit
+            git checkout -b "$BRANCH"
+            git add -A
+            git commit -m "auto: sync $(date '+%Y-%m-%d %H:%M UTC')
+
+            Commit automático — HERMES Auto-Sync
+            Contenido: logs, reportes, generated content manifests"
+            
+            # Push branch
+            git push origin "$BRANCH" -u
+            echo "✅ Branch $BRANCH pushed"
+            
+            # Create PR
+            echo "==> Creando Pull Request..."
+            PR_URL=$(gh pr create \
+              --title "auto: sync $(date '+%Y-%m-%d')" \
+              --body "Sync automático de HERMES — $(date '+%Y-%m-%d %H:%M UTC')
+
+            Contenido: logs, reportes, generated content manifests, cambios automáticos.
+
+            > PR creado por HERMES Auto-Sync" \
+              --base main \
+              --head "$BRANCH" 2>&1)
+            echo "$PR_URL"
+            echo "✅ PR creado desde auto-sync"
+          else
+            echo "✅ No hay cambios pendientes"
+          fi

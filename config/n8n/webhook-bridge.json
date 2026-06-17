@@ -1,0 +1,63 @@
+{
+  "name": "JARVIS — Webhook Bridge (Incoming)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "jarvis-webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-in",
+      "name": "JARVIS Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:5174/api/webhook/n8n-incoming",
+        "sendBody": true,
+        "options": {}
+      },
+      "id": "forward-to-jarvis",
+      "name": "Forward to JARVIS",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://host.docker.internal:5174/api/webhook/n8n-response",
+        "sendBody": true,
+        "options": {}
+      },
+      "id": "get-response",
+      "name": "Get Response",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "respond-to-webhook",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [850, 300]
+    }
+  ],
+  "connections": {
+    "JARVIS Webhook": {
+      "main": [[{ "node": "Forward to JARVIS", "type": "main", "index": 0 }]]
+    },
+    "Forward to JARVIS": {
+      "main": [[{ "node": "Get Response", "type": "main", "index": 0 }]]
+    },
+    "Get Response": {
+      "main": [[{ "node": "Respond to Webhook", "type": "main", "index": 0 }]]
+    }
+  }
+}

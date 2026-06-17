@@ -1,0 +1,88 @@
+{
+  "version": "1.0.0",
+  "name": "Sonora Digital Corp Design System",
+  "colors": {
+    "primary": "#00d4ff",
+    "secondary": "#7b2ff7",
+    "accent": "#ff6b35",
+    "success": "#4ade80",
+    "warning": "#facc15",
+    "error": "#f87171",
+    "background": "#0a0a1a",
+    "surface": "rgba(255,255,255,0.03)",
+    "surface-hover": "rgba(255,255,255,0.06)",
+    "text": "#e0e0e0",
+    "text-muted": "rgba(255,255,255,0.5)",
+    "text-dim": "rgba(255,255,255,0.3)",
+    "border": "rgba(255,255,255,0.08)",
+    "border-hover": "rgba(0,212,255,0.3)"
+  },
+  "typography": {
+    "font-family": "'Segoe UI', system-ui, -apple-system, sans-serif",
+    "font-mono": "'Fira Code', 'JetBrains Mono', monospace",
+    "weights": { "light": 300, "regular": 400, "medium": 500, "semibold": 600, "bold": 700, "extrabold": 800 },
+    "scale": [1, 1.25, 1.563, 1.953, 2.441, 3.052, 3.815],
+    "line-height": 1.6
+  },
+  "spacing": {
+    "base": 8,
+    "scale": [0, 4, 8, 12, 16, 24, 32, 48, 64, 96, 128]
+  },
+  "border-radius": {
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 20,
+    "full": 9999
+  },
+  "shadows": {
+    "sm": "0 2px 8px rgba(0,0,0,0.3)",
+    "md": "0 4px 16px rgba(0,0,0,0.4)",
+    "lg": "0 8px 32px rgba(0,0,0,0.5)",
+    "glow-primary": "0 0 20px rgba(0,212,255,0.3)",
+    "glow-secondary": "0 0 20px rgba(123,47,247,0.3)"
+  },
+  "transitions": {
+    "fast": "0.15s ease",
+    "normal": "0.3s ease",
+    "slow": "0.5s ease"
+  },
+  "z-index": {
+    "base": 1,
+    "dropdown": 10,
+    "sticky": 50,
+    "fixed": 100,
+    "modal": 200,
+    "toast": 300
+  },
+  "breakpoints": {
+    "sm": 640,
+    "md": 768,
+    "lg": 1024,
+    "xl": 1280,
+    "2xl": 1536
+  },
+  "components": {
+    "card": {
+      "background": "rgba(255,255,255,0.03)",
+      "border": "1px solid rgba(255,255,255,0.08)",
+      "border-radius": 16,
+      "padding": 24,
+      "hover": { "border-color": "rgba(0,212,255,0.3)", "transform": "translateY(-4px)" }
+    },
+    "button": {
+      "primary": { "background": "linear-gradient(135deg, #00d4ff, #7b2ff7)", "color": "#fff" },
+      "secondary": { "background": "rgba(255,255,255,0.05)", "border": "1px solid rgba(255,255,255,0.1)", "color": "#fff" },
+      "border-radius": 12,
+      "padding": "16px 32px",
+      "font-weight": 600
+    },
+    "input": {
+      "background": "rgba(255,255,255,0.05)",
+      "border": "1px solid rgba(255,255,255,0.1)",
+      "border-radius": 8,
+      "padding": "12px 16px",
+      "color": "#e0e0e0"
+    }
+  }
+}

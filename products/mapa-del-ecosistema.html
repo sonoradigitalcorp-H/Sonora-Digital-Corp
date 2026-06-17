@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mapa del Ecosistema — Sonora Digital Corp</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Inter',sans-serif; background:#0a0a0a; color:#e0e0e0; line-height:1.6; }
+.hero { min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:6rem 8%; position:relative; }
+.hero::before { content:''; position:absolute; top:0; left:0; right:0; bottom:0; opacity:0.06; background:radial-gradient(ellipse at 30% 50%, #c8a87c, transparent 70%); pointer-events:none; }
+.hero h1 { font-size:3.5rem; font-weight:800; letter-spacing:-0.02em; line-height:1.1; }
+.hero h1 span { color:#c8a87c; }
+.hero .subtitle { font-size:1.2rem; color:#888; max-width:700px; margin-top:1.5rem; font-weight:300; }
+.hero .stats { display:flex; gap:2rem; margin-top:3rem; flex-wrap:wrap; }
+.stat { text-align:center; }
+.stat .num { font-size:2.5rem; font-weight:800; color:#c8a87c; }
+.stat .label { font-size:0.75rem; color:#666; text-transform:uppercase; letter-spacing:0.05em; margin-top:0.3rem; }
+nav { position:fixed; top:0; left:0; right:0; z-index:100; padding:1rem 8%; display:flex; gap:0.5rem; flex-wrap:wrap; background:rgba(10,10,10,0.85); backdrop-filter:blur(20px); border-bottom:1px solid rgba(200,168,124,0.1); }
+nav a { color:#888; text-decoration:none; font-size:0.8rem; padding:0.3rem 0.8rem; border-radius:6px; transition:all 0.2s; }
+nav a:hover { color:#c8a87c; background:rgba(200,168,124,0.1); }
+.content { max-width:1100px; margin:0 auto; padding:4rem 8%; }
+section { margin-bottom:5rem; }
+h2 { font-size:2rem; font-weight:700; margin-bottom:1.5rem; letter-spacing:-0.01em; }
+h2 .badge { font-size:0.7rem; font-weight:600; padding:0.15rem 0.6rem; border-radius:12px; vertical-align:middle; margin-left:0.5rem; }
+h3 { font-size:1.2rem; font-weight:600; margin-bottom:0.8rem; color:#c8a87c; }
+h4 { font-size:1rem; font-weight:600; margin-bottom:0.5rem; color:#aaa; }
+.intro-card { background:rgba(200,168,124,0.05); border:1px solid rgba(200,168,124,0.15); border-radius:16px; padding:2rem; margin-bottom:2rem; }
+.intro-card p { color:#aaa; font-size:0.95rem; margin-bottom:0.5rem; }
+
+.layer { background:rgba(255,255,255,0.02); border:1px solid rgba(200,168,124,0.1); border-radius:16px; padding:2rem; margin-bottom:2rem; position:relative; }
+.layer::before { content:attr(data-layer); position:absolute; top:-0.7rem; left:1.5rem; background:#0a0a0a; padding:0 0.8rem; font-size:0.7rem; font-weight:600; color:#c8a87c; text-transform:uppercase; letter-spacing:0.08em; }
+.layer-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.5rem; }
+@media(max-width:768px) { .layer-grid { grid-template-columns:1fr; } }
+.component { background:rgba(255,255,255,0.03); border-radius:12px; padding:1.2rem; border-left:3px solid #333; }
+.component h4 { margin-bottom:0.3rem; }
+.component p { font-size:0.85rem; color:#999; }
+.component .tag { display:inline-block; padding:0.1rem 0.5rem; border-radius:10px; font-size:0.65rem; font-weight:600; text-transform:uppercase; letter-spacing:0.04em; margin-top:0.5rem; }
+.tag-green { background:rgba(34,197,94,0.12); color:#22c55e; }
+.tag-yellow { background:rgba(234,179,8,0.12); color:#eab308; }
+.tag-red { background:rgba(239,68,68,0.12); color:#ef4444; }
+.tag-blue { background:rgba(59,130,246,0.12); color:#3b82f6; }
+.tag-purple { background:rgba(168,85,247,0.12); color:#a855f7; }
+
+.diff-table { width:100%; border-collapse:collapse; margin:1rem 0 2rem; font-size:0.85rem; }
+.diff-table th { background:rgba(200,168,124,0.1); color:#c8a87c; padding:0.7rem 1rem; text-align:left; font-weight:600; border-bottom:1px solid rgba(200,168,124,0.2); }
+.diff-table td { padding:0.7rem 1rem; border-bottom:1px solid rgba(255,255,255,0.04); color:#bbb; }
+.diff-table tr:hover td { background:rgba(255,255,255,0.02); }
+.diff-table .col-icon { width:40px; text-align:center; font-size:1.2rem; }
+
+.qa-box { background:rgba(59,130,246,0.05); border:1px solid rgba(59,130,246,0.15); border-radius:16px; padding:2rem; margin-bottom:1.5rem; }
+.qa-box h3 { color:#3b82f6; }
+.qa-box p { color:#aaa; font-size:0.95rem; }
+.qa-box .answer { color:#e0e0e0; margin-top:0.8rem; padding:1rem; background:rgba(0,0,0,0.3); border-radius:8px; font-size:0.9rem; }
+
+.model-compare { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:1rem; margin:1rem 0; }
+.model-card { background:rgba(255,255,255,0.02); border:1px solid rgba(200,168,124,0.1); border-radius:12px; padding:1.2rem; text-align:center; }
+.model-card .name { font-weight:600; font-size:0.95rem; }
+.model-card .price { color:#888; font-size:0.8rem; margin:0.3rem 0; }
+.model-card .score { font-size:1.5rem; font-weight:800; color:#c8a87c; }
+.model-card .desc { font-size:0.75rem; color:#666; margin-top:0.3rem; }
+.model-card.recommended { border-color:#c8a87c; background:rgba(200,168,124,0.05); }
+.model-card.recommended::after { content:'RECOMENDADO'; display:block; font-size:0.6rem; font-weight:700; color:#c8a87c; margin-top:0.5rem; letter-spacing:0.1em; }
+
+.timeline-compact { position:relative; padding-left:2rem; }
+.timeline-compact::before { content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:rgba(200,168,124,0.2); }
+.timeline-item { position:relative; margin-bottom:1.5rem; }
+.timeline-item::before { content:''; position:absolute; left:-2rem; top:0.4rem; width:10px; height:10px; border-radius:50%; background:#c8a87c; }
+.timeline-item .date { font-size:0.75rem; color:#888; }
+.timeline-item .title { font-weight:600; color:#e0e0e0; }
+.timeline-item .desc { font-size:0.85rem; color:#999; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="#mental">Mental Model</a>
+  <a href="#capas">7 Capas</a>
+  <a href="#diferencias">Diferencias Clave</a>
+  <a href="#preguntas">FAQ</a>
+  <a href="#modelos">Modelos</a>
+  <a href="#timeline">Progreso</a>
+</nav>
+
+<section class="hero">
+  <h1>Mapa del <span>Ecosistema</span></h1>
+  <p class="subtitle">Todo lo que hemos construido, organizado por capas. Para que sepas qué es cada cosa, dónde encaja, y por qué a veces se rompe algo cuando arreglas otra cosa.</p>
+  <div class="stats">
+    <div class="stat"><div class="num">25</div><div class="label">Automatizaciones</div></div>
+    <div class="stat"><div class="num">9</div><div class="label">Containers</div></div>
+    <div class="stat"><div class="num">21</div><div class="label">Confiables</div></div>
+    <div class="stat"><div class="num">4</div><div class="label">Rotos/Paraciales</div></div>
+    <div class="stat"><div class="num">29</div><div class="label">API Keys</div></div>
+    <div class="stat"><div class="num">376</div><div class="label">Tests</div></div>
+  </div>
+</section>
+
+<div class="content">
+
+<!-- INTRO: THE BIG PICTURE -->
+<section id="mental">
+  <h2>El Modelo Mental <span class="badge tag-blue">IMPORTANTE</span></h2>
+  <div class="intro-card">
+    <p>Este sistema no es una aplicacion. Es un <strong>ecosistema de 7 capas</strong> apiladas. Cada capa depende de la de abajo. Cuando tocas algo en la capa 2 (infraestructura), puede romper algo en la capa 6 (automation). Eso NO es culpa del modelo LLM — es arquitectura de software normal.</p>
+    <p style="margin-top:1rem; color:#c8a87c;"><strong>La regla de oro:</strong> si arreglas algo y se rompe otra cosa, es porque las capas estan acopladas. La solucion no es un modelo mas grande — es modularizar.</p>
+  </div>
+
+  <div class="layer" data-layer="CAPA 7 — DEV TOOLS">
+    <div class="layer-grid">
+      <div class="component" style="border-left-color:#a855f7"><h4>SDD (Spec-Driven Dev)</h4><p>Metodologia: Constitution → Spec → Plan → Tasks → Code → PR. 8 specs activas.</p><span class="tag tag-purple">metodologia</span></div>
+      <div class="component" style="border-left-color:#a855f7"><h4>CLIs</h4><p>openclaw (gateway CLI), hermes (agente CLI), gh (GitHub CLI), docker CLI</p><span class="tag tag-purple">interfaz</span></div>
+      <div class="component" style="border-left-color:#a855f7"><h4>MCP (Model Context Protocol)</h4><p>Protocolo para que el LLM use herramientas del sistema. Servidor MCP en Docker.</p><span class="tag tag-purple">protocolo</span></div>
+      <div class="component" style="border-left-color:#a855f7"><h4>Skills OpenClaw</h4><p>97 skills taggeadas por dominio (ceo, abe, fiscal, public). Plugins de conocimiento.</p><span class="tag tag-purple">plugins</span></div>
+    </div>
+  </div>
+
+  <div class="layer" data-layer="CAPA 6 — AUTOMATION">
+    <div class="layer-grid">
+      <div class="component" style="border-left-color:#3b82f6"><h4>Cron Jobs (10)</h4><p>git-sync, backups, healthcheck, self-improve, memory-save, social_automation</p><span class="tag tag-blue">schedule</span></div>
+      <div class="component" style="border-left-color:#3b82f6"><h4>GitHub Actions (2)</h4><p>CI (tests+lint en cada push), Deploy (auto-deploy a produccion)</p><span class="tag tag-blue">CI/CD</span></div>
+      <div class="component" style="border-left-color:#3b82f6"><h4>n8n</h4><p>Automation visual. Recuperado hoy con 512MB limit. Sin workflows activos aun.</p><span class="tag tag-yellow">recuperado</span></div>
+      <div class="component" style="border-left-color:#3b82f6"><h4>GitHub Runner</h4><p>Runner auto-hosted para CI/CD. 6h activo, normal.</p><span class="tag tag-green">OK</span></div>
+    </div>
+  </div>
+
+  <div class="layer" data-layer="CAPA 5 — COMMUNICATION">
+    <div class="layer-grid">
+      <div class="component" style="border-left-color:#22c55e"><h4>WhatsApp Bridge</h4><p>hermes_wa (3001): Bot WhatsApp auto-reply. Webhook conectado.</p><span class="tag tag-green">OK</span></div>
+      <div class="component" style="border-left-color:#22c55e"><h4>WhatsApp API</h4><p>hermes_whatsapp_bridge (3002): Bridge oficial Meta API.</p><span class="tag tag-green">OK</span></div>
+      <div class="component" style="border-left-color:#22c55e"><h4>Telegram 3 Bots</h4><p>hermes_telegram_bot (3003): mystic, admin, abraham. 97 skills.</p><span class="tag tag-green">OK</span></div>
+      <div class="component" style="border-left-color:#22c55e"><h4>Web UI</h4><p>Frontend (3000): Next.js. Arreglado hoy (DNS fix).</p><span class="tag tag-green">OK</span></div>
+    </div>
+  </div>
+
+  <div class="layer" data-layer="CAPA 4 — CORE SERVICES">
+    <div class="layer-grid">
+      <div class="component" style="border-left-color:#eab308"><h4>JARVIS Core (Python)</h4><p>11 agentes, orchestrator, tools, RAG pipeline, Neo4j+Qdrant bridge.</p><span class="tag tag-yellow">69% coverage</span></div>
+      <div class="component" style="border-left-color:#eab308"><h4>API REST</h4><p>hermes_api (8000): FastAPI. Health OK.</p><span class="tag tag-green">OK</span></div>
+      <div class="component" style="border-left-color:#eab308"><h4>CRM Neo4j</h4><p>Contact + WaMessage nodes. create_contact, log_wa_message, etc.</p><span class="tag tag-green">nuevo</span></div>
+      <div class="component" style="border-left-color:#eab308"><h4>Scripts</h4><p>21 scripts: wa.py, crm.py, memory-save, healthcheck, backup...</p><span class="tag tag-green">OK</span></div>
+    </div>
+  </div>
+
+  <div class="layer" data-layer="CAPA 3 — AI & MODELS">
+    <div class="layer-grid">
+      <div class="component" style="border-left-color:#ef4444"><h4>DeepSeek V4 Flash</h4><p>Modelo principal via OpenRouter. ~$0.14/1M tokens. Excelente para coding.</p><span class="tag tag-green">OK</span></div>
+      <div class="component" style="border-left-color:#ef4444"><h4>Ollama (Local)</h4><p>nomic-embed-text: 274MB. Embeddings para RAG semantico. enabled at boot.</p><span class="tag tag-green">OK</span></div>
+      <div class="component" style="border-left-color:#ef4444"><h4>RAG Pipeline</h4><p>Qdrant (171 pts) + embeddings (768d) + busqueda semantica.</p><span class="tag tag-green">OK</span></div>
+      <div class="component" style="border-left-color:#ef4444"><h4>OpenRouter</h4><p>Gateway a 200+ modelos. 2 API keys (una primaria, una en backup).</p><span class="tag tag-red">key expuesta</span></div>
+    </div>
+  </div>
+
+  <div class="layer" data-layer="CAPA 2 — INFRASTRUCTURE">
+    <div class="layer-grid">
+      <div class="component" style="border-left-color:#666"><h4>Docker Engine</h4><p>9 containers, 17 images, 11.45GB en discos. Runtime principal.</p><span class="tag tag-green">OK</span></div>
+      <div class="component" style="border-left-color:#666"><h4>Systemd</h4><p>Ollama, nginx, docker, postgresql, github-runner, fail2ban, warp.</p><span class="tag tag-green">OK</span></div>
+      <div class="component" style="border-left-color:#666"><h4>Neo4j</h4><p>Grafo de conocimiento. Heap 1G + pagecache 512M (reducido hoy).</p><span class="tag tag-green">optimizado</span></div>
+      <div class="component" style="border-left-color:#666"><h4>Postgres + Redis</h4><p>Datos estructurados + cache. Ambos healthy.</p><span class="tag tag-green">OK</span></div>
+    </div>
+  </div>
+
+  <div class="layer" data-layer="CAPA 1 — HARDWARE">
+    <div class="layer-grid">
+      <div class="component" style="border-left-color:#444"><h4>VPS Hostinger</h4><p>4 cores, 3.2GB RAM, 234GB SSD. Ubuntu 22.04.</p><span class="tag tag-yellow">RAM justa</span></div>
+      <div class="component" style="border-left-color:#444"><h4>Swap</h4><p>4.4GB swap file. 1.4GB usado (mejorando, antes 1.7G).</p><span class="tag tag-yellow">mejorando</span></div>
+      <div class="component" style="border-left-color:#444"><h4>Cloudflare WARP</h4><p>Conectividad Zero Trust. warp-svc activo.</p><span class="tag tag-green">OK</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- DIFFERENCES -->
+<section id="diferencias">
+  <h2>Diferencias Clave (Que Debes Saber)</h2>
+
+  <h3>CLI vs Docker vs Systemd vs Cron</h3>
+  <table class="diff-table">
+    <tr><th class="col-icon"></th><th>Que es</th><th>Cuando usarlo</th><th>Ventaja</th><th>Problema tipico</th></tr>
+    <tr><td>🐚</td><td><strong>CLI</strong><br>openclaw, hermes, gh</td><td>Comandos manuales, debugging, one-off tasks</td><td>Interactivo, rapido, sin overhead</td><td>No corre solo. Necesitas terminal.</td></tr>
+    <tr><td>🐳</td><td><strong>Docker</strong><br>9 containers</td><td>Servicios 24/7 (bases de datos, bots, APIs)</td><td>Aislado, reproducible, auto-restart</td><td>Consume RAM aunque no lo uses. OOM si no limitas.</td></tr>
+    <tr><td>⚙️</td><td><strong>Systemd</strong><br>Ollama, nginx, runner</td><td>Servicios del sistema operativo</td><td>Arranca en boot, logging integrado</td><td>Config mas rigida, menos flexible que Docker.</td></tr>
+    <tr><td>⏰</td><td><strong>Cron</strong><br>10 jobs</td><td>Tareas programadas (backups, healthcheck)</td><td>Ligero, simple, no consume RAM</td><td>No tiene logging fancy. Si falla, a veces no te enteras.</td></tr>
+  </table>
+
+  <h3>Modelo LLM vs RAG vs MCP vs Skills</h3>
+  <table class="diff-table">
+    <tr><th class="col-icon"></th><th>Que es</th><th>Donde vive</th><th>Para que sirve</th><th>Cuando falla</th></tr>
+    <tr><td>🧠</td><td><strong>LLM (DeepSeek)</strong><br>Modelo de lenguaje</td><td>OpenRouter cloud</td><td>Generar respuestas, razonar, code</td><td>Si la API key expira o OpenRouter cae.</td></tr>
+    <tr><td>📚</td><td><strong>RAG</strong><br>Busqueda semantica</td><td>Qdrant (docker) + Ollama (local)</td><td>Buscar en memoria con significado, no con palabras exactas</td><td>Si Ollama cae (no hay embeddings) o Qdrant esta vacio.</td></tr>
+    <tr><td>🔌</td><td><strong>MCP</strong><br>Model Context Protocol</td><td>Servidor en Docker (8000)</td><td>El LLM usa herramientas: leer archivos, ejecutar comandos</td><td>Si el servidor MCP no responde o las tools no estan registradas.</td></tr>
+    <tr><td>📋</td><td><strong>Skills</strong><br>97 archivos JSON</td><td>Disco (telegram-bot/skills/)</td><td>Instrucciones especializadas para el bot segun el dominio</td><td>Si el tag no matchea con el bot que las consulta.</td></tr>
+  </table>
+
+  <h3>SDD vs Spec vs Plan vs Tasks vs Checklist</h3>
+  <table class="diff-table">
+    <tr><th>Concepto</th><th>Que contiene</th><th>Quien lo escribe</th><th>Cuando se usa</th></tr>
+    <tr><td><strong>Constitucion</strong> (000)</td><td>Principios: privacidad, modularidad, tests primero</td><td>Arquitecto</td><td>Antes de cualquier spec. Es la "constitucion" del proyecto.</td></tr>
+    <tr><td><strong>Spec</strong> (001-007)</td><td>Que vamos a construir y por que</td><td>Product Manager / Dev</td><td>Antes de codificar. Responde al QUE.</td></tr>
+    <tr><td><strong>Plan</strong> (dentro de spec)</td><td>Como lo vamos a construir, en que orden</td><td>Dev</td><td>Despues de la spec. Responde al COMO.</td></tr>
+    <tr><td><strong>Tasks</strong> (dentro de spec)</td><td>Unidades de trabajo individuales</td><td>Dev</td><td>Para ejecutar. Cada task = 1 PR.</td></tr>
+    <tr><td><strong>Checklist</strong> (dentro de spec)</td><td>Verificacion de que funciona</td><td>QA / Dev</td><td>Antes de cerrar la spec.</td></tr>
+  </table>
+
+  <h3>API Keys: Donde va cada una</h3>
+  <table class="diff-table">
+    <tr><th>Key</th><th>Donde se usa</th><th>Deberia estar en</th><th>Riesgo si se filtra</th></tr>
+    <tr><td>OPENROUTER_API_KEY</td><td>src/core/llm.py</td><td>.env o keys.env</td><td>🔥 Usan tu cuenta de LLM sin limite</td></tr>
+    <tr><td>WHATSAPP_API_KEY</td><td>webui/routes/__init__.py</td><td>.env</td><td>🔥 Envian mensajes como tu negocio</td></tr>
+    <tr><td>TELEGRAM_BOT_TOKEN</td><td>server.js (en container)</td><td>env vars del container</td><td>🔥 Controlan tus bots</td></tr>
+    <tr><td>MERCADO_PAGO_TOKEN</td><td>src/core/payments.py</td><td>.env</td><td>💀 PROCESAN PAGOS EN PROD</td></tr>
+    <tr><td>GH_TOKEN</td><td>mcp_connectors.py</td><td>.env</td><td>🔥 Acceso total a todos tus repos</td></tr>
+    <tr><td>NEO4J_PASSWORD (jarvis2026)</td><td>docker-compose.yml + 5 archivos</td><td>SOLO .env</td><td>⚠️ Acceso a toda la base de conocimiento</td></tr>
+    <tr><td>JWT_SECRET</td><td>varios</td><td>.env</td><td>💀 Forjan tokens de autenticacion</td></tr>
+  </table>
+</section>
+
+<!-- FAQ -->
+<section id="preguntas">
+  <h2>Preguntas Frecuentes</h2>
+
+  <div class="qa-box">
+    <h3>Por que cuando arreglo algo se rompe otra cosa?</h3>
+    <p>Por las <strong>dependencias entre capas</strong>. Ejemplo real de hoy:</p>
+    <div class="answer">
+      1. Neo4j estaba configurado con HEAP=2G + CACHE=1G = 3GB<br>
+      2. La maquina tiene 3.2GB RAM total<br>
+      3. n8n intentaba arrancar pero el OOM killer lo mataba (exit 137)<br>
+      4. El frontend tambien fallaba por falta de recursos DNS (timeout por swap)<br>
+      5. Solucion: reducir Neo4j a 1.5GB -> n8n arranca, frontend arranca, swap baja<br>
+      <strong>Moraleja:</strong> No es que "todo este desarreglado". Es que un bottleneck (RAM) cascada a todos los servicios de arriba.
+    </div>
+  </div>
+
+  <div class="qa-box">
+    <h3>Por que el contexto no se ve completo cuando pido ayuda?</h3>
+    <p>Porque el sistema tiene <strong>11,735 lineas de Python</strong> + configs + scripts + 97 skills + 9 containers. Ningun modelo LLM puede procesar TODO eso en una sola llamada.</p>
+    <div class="answer">
+      <strong>La solucion no es un modelo mas grande.</strong> DeepSeek V4 Flash tiene contexto de 128K tokens — eso son ~90,000 palabras, suficiente para unos 3,000-4,000 lineas de codigo. El problema es que nuestro sistema es 3x mas grande que eso.<br><br>
+      <strong>Que hacer:</strong> En vez de pedir "mira todo el contexto", hay que:<br>
+      1. Especificar QUÉ capa/componente necesitas revisar<br>
+      2. Usar las skills (workflow-enforcer, ceo-workflow) que ya tienen el contexto precargado<br>
+      3. Aceptar que un sistema complejo se arregla por partes, no todo a la vez
+    </div>
+  </div>
+
+  <div class="qa-box">
+    <h3>Que es RAG exactamente? Donde esta?</h3>
+    <p><strong>RAG</strong> = Retrieval Augmented Generation. Busca informacion relevante ANTES de que el LLM responda.</p>
+    <div class="answer">
+      El pipeline es:<br>
+      <strong>Texto</strong> → Ollama (nomic-embed-text) → <strong>Vector (768 numeros)</strong> → Qdrant (almacena) → Busqueda semantica → LLM responde<br><br>
+      <strong>Donde esta:</strong> src/core/rag.py (191 lines) + src/core/embeddings.py + Qdrant container + Ollama service<br>
+      <strong>Estado actual:</strong> 171 puntos con embeddings reales. Busqueda semantica funcionando.<br>
+      <strong>Cuando falla:</strong> Si Ollama no corre (no hay embeddings) o Qdrant esta caido (no hay donde buscar).
+    </div>
+  </div>
+
+  <div class="qa-box">
+    <h3>Que es MCP? Para que sirve?</h3>
+    <p><strong>MCP</strong> = Model Context Protocol. Es un standard abierto (como USB para LLMs) para que el modelo pueda usar herramientas.</p>
+    <div class="answer">
+      Sin MCP: el LLM solo puede generar texto.<br>
+      Con MCP: el LLM puede leer archivos, ejecutar comandos, consultar bases de datos, etc.<br><br>
+      <strong>Donde esta:</strong> Servidor MCP en Docker (puerto 8000), definido en docker/mcp-server/<br>
+      <strong>Tools disponibles:</strong> 10 tools (read_file, write_file, search_code, run_command, query_neo4j, etc.)<br>
+      <strong>Diferencia con RAG:</strong> RAG es para BUSCAR informacion. MCP es para EJECUTAR acciones.
+    </div>
+  </div>
+
+  <div class="qa-box">
+    <h3>Que es el Agent Harness?</h3>
+    <p>El <strong>orquestador</strong> (src/core/orchestrator.py) que decide QUE agente debe manejar cada peticion.</p>
+    <div class="answer">
+      Tiene <strong>11 agentes</strong>: hermes, research, code, memory, gbrain, openclaw, pr, y mas.<br>
+      Cada agente es un archivo en src/core/agents/. Heredan de AgentBase.<br>
+      El orquestador recibe un mensaje, evalua que agente es el mejor, y le pasa el control.<br>
+      <strong>Estado:</strong> 166 lines, funciona bien, pero los 17 archivos de agentes son casi identicos (boilerplate).
+    </div>
+  </div>
+</section>
+
+<!-- MODELS -->
+<section id="modelos">
+  <h2>Modelos LLM: Que Usar y Por Que</h2>
+
+  <div class="intro-card">
+    <p>Respuesta corta: <strong>DeepSeek V4 Flash es suficiente para TODO lo que hacemos.</strong> El bottleneck no es el modelo, es la arquitectura del sistema (god modules, 29 keys expuestas, 4/10 modularizacion). Un modelo mas grande ayuda MARGINALMENTE con orquestacion pero no arregla deuda tecnica.</p>
+  </div>
+
+  <div class="model-compare">
+    <div class="model-card recommended">
+      <div class="name">DeepSeek V4 Flash</div>
+      <div class="price">$0.14/1M in | $0.28/1M out</div>
+      <div class="score">8.5/10</div>
+      <div class="desc">Actual. Excelente relacion calidad/precio. 128K contexto. Suficiente para coding, debugging, arquitectura.</div>
+    </div>
+    <div class="model-card">
+      <div class="name">DeepSeek V4 Pro</div>
+      <div class="price">~$2-4/1M tokens</div>
+      <div class="score">9.0/10</div>
+      <div class="desc">Mas razonamiento, mejor en tareas complejas. 10-20x mas caro. Ayudaria en orquestacion multi-paso.</div>
+    </div>
+    <div class="model-card">
+      <div class="name">Kimi K2.5</div>
+      <div class="price">~$1-2/1M tokens</div>
+      <div class="score">8.8/10</div>
+      <div class="desc">Excelente en coding, contexto largo. Buena alternativa si OpenRouter tiene promos.</div>
+    </div>
+    <div class="model-card">
+      <div class="name">GLM-4-Plus</div>
+      <div class="price">~$0.50/1M tokens</div>
+      <div class="score">8.0/10</div>
+      <div class="desc">Solido pero no notablemente mejor que Flash para nuestro caso de uso.</div>
+    </div>
+  </div>
+
+  <div class="qa-box">
+    <h3>Te parece si pongo Kimi 2.7 o DeepSeek Pro para orquestar?</h3>
+    <div class="answer">
+      <strong>Si, pero con estas condiciones:</strong><br><br>
+      1. Usalo SOLO para sesiones de orquestacion/arquitectura/planificacion — NO para el dia a dia (coding, debugging)<br>
+      2. El costo es 10-20x mayor. DeepSeek Flash nos cuesta ~$0.14/1M. Pro seria ~$2-4/1M. Para una sesion de 2 horas hablando con el asistente, serian ~$0.50 con Flash vs ~$5-10 con Pro.<br>
+      3. El verdadero cuello de botella sigue siendo la modularizacion (4/10), no el modelo.<br>
+      4. Modelo recomendado para orquestacion: <strong>DeepSeek V4 Pro</strong> (mejor relacion calidad-precio para tareas complejas). Kimi K2.5 es segunda opcion.<br>
+      5. NO es necesario para arreglar los problemas actuales (API keys, modularizacion, cobertura de tests).
+    </div>
+  </div>
+
+  <div class="qa-box" style="border-color:rgba(200,168,124,0.3); background:rgba(200,168,124,0.03);">
+    <h3 style="color:#c8a87c;">Conclusion sobre el modelo</h3>
+    <div class="answer" style="border-color:rgba(200,168,124,0.2);">
+      <strong>DeepSeek V4 Flash es suficiente.</strong> Si quieres experimentar con Pro o Kimi para orquestacion pesada, adelante — pero no esperes que eso arregle los problemas estructurales. Lo que realmente necesita el sistema es:<br><br>
+      ✅ Rotar 29 API keys (seguridad)<br>
+      ✅ Refactorizar god modules (modularizacion)<br>
+      ✅ Subir cobertura a 80% (calidad)<br>
+      ✅ Deployar landing pages y vender (negocio)<br><br>
+      <strong>Ningun modelo LLM hace eso por si solo.</strong> Se necesita ingenieria de software classica.
+    </div>
+  </div>
+</section>
+
+<!-- PROGRESS -->
+<section id="timeline">
+  <h2>Progreso Real del Proyecto</h2>
+
+  <div class="timeline-compact">
+    <div class="timeline-item">
+      <div class="date">Spec 000 (Jun 9)</div>
+      <div class="title">Constitucion ratificada</div>
+      <div class="desc">Principios: privacidad, modularidad, tests, SDD. La "constitucion" del proyecto.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="date">Spec 001 (Jun 8-9)</div>
+      <div class="title">JARVIS Core</div>
+      <div class="desc">11 agentes, Neo4j+Qdrant, orchestrator, tools. La base del sistema.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="date">Spec 002 (Jun 9-10)</div>
+      <div class="title">SDC Business</div>
+      <div class="desc">Planes, pricing, payments (Mercado Pago + Bitso), onboarding.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="date">Spec 004 (Jun 10-11)</div>
+      <div class="title">Omnichannel</div>
+      <div class="desc">WhatsApp + Telegram + Web. Canales de comunicacion unificados.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="date">Spec 005 (Jun 11)</div>
+      <div class="title">Hermes Potencial Maximo</div>
+      <div class="desc">Ollama, embeddings, skills OpenClaw, pipeline RAG completo.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="date">Spec 006 — HOY</div>
+      <div class="title">System Hardening</div>
+      <div class="desc">Memory fix, keys→env, +33 tests, Qdrant wiring, auto-save 24/7, modularization analysis.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="date">Spec 007 — HOY</div>
+      <div class="title">Telegram + CRM</div>
+      <div class="desc">3 bots, 97 skills, CRM Neo4j, WA inbox, CEO workflow skill, PDF report.</div>
+    </div>
+    <div class="timeline-item" style="opacity:0.5">
+      <div class="date">Spec 003 — PENDIENTE</div>
+      <div class="title">Content Engine</div>
+      <div class="desc">No implementado. Generacion automatica de contenido para redes sociales.</div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<div style="text-align:center; padding:3rem 0; border-top:1px solid rgba(200,168,124,0.1); margin-top:3rem;">
+  <p style="color:#666; font-size:0.85rem;">
+    Sonora Digital Corp — Mapa del Ecosistema v1.0<br>
+    Generado el 12 Junio 2026 | 25 automatizaciones, 9 containers, 376 tests
+  </p>
+</div>
+
+</div>
+</body>
+</html>

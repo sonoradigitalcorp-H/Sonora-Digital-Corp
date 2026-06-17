@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ecosistema SDC — Reporte Completo</title>
+<style>
+:root{--bg:#0a0a0f;--surface:#12121a;--card:#1a1a2e;--border:#2a2a3e;--gold:#c8a87c;--gold-dim:#a08050;--accent:#00d4ff;--text:#e0e0e0;--text-dim:#8888aa;--green:#4ade80;--yellow:#fbbf24;--red:#ef4444;--orange:#fb923c}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Inter','Segoe UI',system-ui,sans-serif;line-height:1.7;padding:0}
+.container{max-width:960px;margin:0 auto;padding:2rem 1.5rem}
+h1{font-size:2rem;color:var(--gold);margin-bottom:.25rem;letter-spacing:-.02em}
+h2{font-size:1.4rem;color:var(--gold);margin:2.5rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+h3{font-size:1.1rem;color:var(--accent);margin:1.5rem 0 .75rem}
+p{margin:.5rem 0;color:var(--text-dim)}
+.meta{color:var(--text-dim);font-size:.85rem;margin-bottom:2rem}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+th,td{text-align:left;padding:.5rem .75rem;border:1px solid var(--border);vertical-align:top}
+th{background:var(--card);color:var(--gold);font-weight:600}
+td{color:var(--text-dim)}
+tr:nth-child(even){background:rgba(255,255,255,.02)}
+.badge{display:inline-block;padding:.15rem .5rem;border-radius:4px;font-size:.75rem;font-weight:600}
+.badge-green{background:rgba(74,222,128,.15);color:var(--green)}
+.badge-yellow{background:rgba(251,191,36,.15);color:var(--yellow)}
+.badge-red{background:rgba(239,68,68,.15);color:var(--red)}
+.badge-orange{background:rgba(251,146,60,.15);color:var(--orange)}
+.section{background:var(--surface);border-radius:12px;padding:1.5rem;margin:1rem 0;border:1px solid var(--border)}
+pre{background:var(--card);padding:1rem;border-radius:8px;overflow-x:auto;font-size:.8rem;color:var(--text-dim);border:1px solid var(--border);margin:1rem 0;line-height:1.5}
+code{font-family:'JetBrains Mono','Fira Code',monospace}
+.status-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:.75rem;margin:1rem 0}
+.status-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem}
+.status-card .label{font-size:.75rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:.05em}
+.status-card .value{font-size:1rem;margin-top:.25rem}
+.truth{background:var(--card);border-left:3px solid var(--gold);padding:1rem;margin:.75rem 0;border-radius:0 8px 8px 0}
+.truth.good{border-left-color:var(--green)}
+.truth.warn{border-left-color:var(--yellow)}
+.truth.bad{border-left-color:var(--red)}
+.diagram{font-family:'JetBrains Mono',monospace;font-size:.7rem;line-height:1.3;white-space:pre;background:var(--card);padding:1rem;border-radius:8px;border:1px solid var(--border);overflow-x:auto;color:var(--text-dim)}
+.header{background:linear-gradient(135deg,#0a0a1a,#1a0a2e);padding:3rem 1.5rem;text-align:center;border-bottom:1px solid var(--border)}
+.header h1{font-size:2.2rem;margin-bottom:.5rem}
+.header p{color:var(--text-dim);font-size:.9rem}
+.header .subtitle{color:var(--gold-dim);font-size:1rem}
+nav{position:sticky;top:0;background:rgba(10,10,15,.95);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);z-index:100;padding:.5rem 0;overflow-x:auto}
+nav ul{list-style:none;display:flex;gap:.25rem;padding:0 1rem;max-width:960px;margin:0 auto}
+nav ul li a{display:block;padding:.35rem .65rem;font-size:.75rem;color:var(--text-dim);text-decoration:none;border-radius:4px;white-space:nowrap;transition:.2s}
+nav ul li a:hover{background:var(--card);color:var(--gold)}
+@media(max-width:640px){.container{padding:1rem}.status-grid{grid-template-columns:1fr}h1{font-size:1.5rem}nav ul li a{font-size:.65rem;padding:.25rem .4rem}}
+</style>
+</head>
+<body>
+
+<nav>
+<ul>
+<li><a href="#s1">Executive Summary</a></li>
+<li><a href="#s2">Repository Inventory</a></li>
+<li><a href="#s3">Frontend Audit</a></li>
+<li><a href="#s4">Backend Audit</a></li>
+<li><a href="#s5">AI Layer Audit</a></li>
+<li><a href="#s6">Agent Ecosystem</a></li>
+<li><a href="#s7">MCP Ecosystem</a></li>
+<li><a href="#s8">Automation Layer</a></li>
+<li><a href="#s9">Docker Infrastructure</a></li>
+<li><a href="#s10">Data Layer</a></li>
+<li><a href="#s11">Business Capability Map</a></li>
+<li><a href="#s12">UX Vision Analysis</a></li>
+<li><a href="#s13">Technical Debt</a></li>
+<li><a href="#s14">Productization Readiness</a></li>
+<li><a href="#s15">Future Architecture</a></li>
+<li><a href="#s16">System Diagram</a></li>
+<li><a href="#s17">Truth Report</a></li>
+</ul>
+</nav>
+
+<div class="header">
+<h1>SONORA DIGITAL CORP</h1>
+<p class="subtitle">Full Ecosystem Intelligence Report</p>
+<p>Date: 2026-06-15 &middot; Methodology: 100% code-audited</p>
+</div>
+
+<div class="container">
+
+<!-- ============ S1 ============ -->
+<h2 id="s1">1 &mdash; Executive Summary</h2>
+
+<div class="section">
+<h3>What is actually being built</h3>
+<p>A <strong>multi-agent AI platform</strong> for selling digital services &mdash; AI clones, automation, content, CRM &mdash; targeted at musicians, businesses, and creators in Mexico/LatAm. The system wraps an LLM orchestration layer (Hermes/JARVIS/OpenClaw) around business logic (SDC plans, ABE Music label CRM, Mysticverse digital twins) and delivers it through Telegram, WhatsApp, Web UI, and an in-progress Desktop app.</p>
+</div>
+
+<div class="section">
+<h3>Inferred objective</h3>
+<p><strong>"Digital agency as a product."</strong> Instead of running a traditional agency, the system aims to be the agency &mdash; automating sales, onboarding, content generation, CRM, and delivery through AI agents. The business model is SaaS subscriptions ($0&ndash;$149/mo) + white-label services ($5K setup + $500/mo for labels).</p>
+</div>
+
+<div class="section">
+<h3>Maturity level</h3>
+<table>
+<tr><th>Layer</th><th>Maturity</th></tr>
+<tr><td>AI/Agent Core</td><td><span class="badge badge-orange">Alpha</span> (works locally, fragile)</td></tr>
+<tr><td>Web UI</td><td><span class="badge badge-red">Pre-alpha</span> (26 pages, no auth, no multi-tenant)</td></tr>
+<tr><td>Backend APIs</td><td><span class="badge badge-orange">Alpha</span> (60+ endpoints, no auth)</td></tr>
+<tr><td>Messaging (Telegram)</td><td><span class="badge badge-green">Beta</span> (3 bots working)</td></tr>
+<tr><td>Messaging (WhatsApp)</td><td><span class="badge badge-orange">Alpha</span> (bridge exists, intermittent)</td></tr>
+<tr><td>Docker infrastructure</td><td><span class="badge badge-green">Beta</span> (5 of 12 containers running)</td></tr>
+<tr><td>n8n automations</td><td><span class="badge badge-green">Beta</span> (47 workflows defined)</td></tr>
+<tr><td>Memories (Neo4j/Qdrant)</td><td><span class="badge badge-orange">Alpha</span> (178 nodes, 1059 vectors)</td></tr>
+<tr><td>Payments (MP/Bitso/SPEI)</td><td><span class="badge badge-red">Pre-alpha</span> (code exists, no real payments)</td></tr>
+<tr><td>Products/landing pages</td><td><span class="badge badge-green">Beta</span> (3 artist pages deployed)</td></tr>
+<tr><td>SDC Migration to Hermes-native</td><td><span class="badge badge-yellow">Phase 0 done, Phase 1 blocked</span></td></tr>
+</table>
+<p><strong>Overall: Pre-alpha / Internal MVP</strong></p>
+</div>
+
+<div class="section">
+<h3>Principal risks</h3>
+<ol style="padding-left:1.2rem;color:var(--text-dim)">
+<li><strong>ZERO authentication</strong> on all 60+ API endpoints. Anyone on the LAN can read/write all data.</li>
+<li><strong>Hardcoded API keys</strong> in configuration files &mdash; already leaked if repo ever was public.</li>
+<li><strong>12 containers defined, 5 running</strong> &mdash; the MCP server (core AI memory bridge) has never been started.</li>
+<li><strong>No database migrations</strong> &mdash; Neo4j schema is imperative, SQLite is implicit, state is in-memory dicts.</li>
+<li><strong>26 standalone HTML pages</strong> instead of an SPA &mdash; inconsistent UX, no client-side routing.</li>
+<li><strong>Dual Qdrant instances</strong> &mdash; same ports, two stacks.</li>
+<li><strong>health-api build directory missing</strong> &mdash; compose references code that does not exist.</li>
+<li><strong>Prometheus/Grafana exited</strong> with code 127 &mdash; config files are empty directories.</li>
+<li><strong>Single LLM provider dependency</strong> &mdash; if deepseek-v4-flash-free goes down, the entire system is blind.</li>
+<li><strong>SSL/TLS not actually configured</strong> &mdash; Caddy defined but never deployed.</li>
+</ol>
+</div>
+
+<div class="section">
+<h3>Principal opportunities</h3>
+<ol style="padding-left:1.2rem;color:var(--text-dim)">
+<li><strong>Depth of implementation is remarkable</strong> &mdash; 44 Python modules, 60+ API endpoints, 47 n8n workflows, 150+ skills, 17 SDD specs, 383 tests.</li>
+<li><strong>ABE Music is a real client</strong> with deployed artist pages getting traffic.</li>
+<li><strong>Hermes agent migration</strong> is the right architectural move &mdash; consolidating everything into a single orchestration layer.</li>
+<li><strong>Telegram bots work</strong> and have real users (3 bots, 97 skill files for fiscal MX, music, sales).</li>
+<li><strong>SDD methodology is genuinely followed</strong> &mdash; 17 specs, constitution, verification gates.</li>
+<li><strong>47 n8n workflows</strong> is a genuine asset &mdash; most startups have 0 automations.</li>
+<li><strong>Mexico/LatAm market targeting</strong> is smart &mdash; gap in Spanish-language AI business tools.</li>
+<li><strong>MCP ecosystem is already bridged</strong> &mdash; Hermes, OpenClaw, JARVIS, Qdrant, Neo4j, n8n all connected.</li>
+</ol>
+</div>
+
+<!-- ============ S2 ============ -->
+<h2 id="s2">2 &mdash; Repository Inventory</h2>
+
+<div class="section">
+<h3>Active repositories</h3>
+<table>
+<tr><th>Repository</th><th>Location</th><th>Purpose</th><th>Status</th><th>LOC</th></tr>
+<tr><td><strong>JARVIS</strong></td><td><code>/home/mystic/jarvis/</code></td><td>Multi-agent AI platform, core engine</td><td><span class="badge badge-green">Active</span></td><td>~6,800 Python</td></tr>
+<tr><td><strong>SDCorp</strong></td><td><code>/home/mystic/sdcorp/</code></td><td>Business layer: agents, social uploader, Telegram bot, web</td><td><span class="badge badge-green">Active</span></td><td>~3,000</td></tr>
+<tr><td><strong>Sonora Digital Corp</strong></td><td><code>/home/mystic/sonora-digital-corp/</code></td><td>Infra + Telegram bot skills</td><td><span class="badge badge-yellow">Stale</span></td><td>~97 JSON skill files</td></tr>
+<tr><td><strong>Products</strong></td><td><code>/home/mystic/products/</code></td><td>Landing pages, presentations, deploy system</td><td><span class="badge badge-green">Active</span></td><td>~15 HTML pages</td></tr>
+<tr><td><strong>ABE-MUSIC-HUB</strong></td><td><code>/home/mystic/projects/ABE-MUSIC-HUB/</code></td><td>Physical + digital musicians hub (Next.js 15)</td><td><span class="badge badge-yellow">In dev</span></td><td>~1,000+</td></tr>
+<tr><td><strong>MDS Corp</strong></td><td><code>/home/mystic/projects/mds-corp/</code></td><td>Client project (Next.js monorepo)</td><td><span class="badge badge-yellow">Early</span></td><td>~500+</td></tr>
+<tr><td><strong>Open Design</strong></td><td><code>/home/mystic/open-design/</code></td><td>Design systems framework</td><td><span class="badge badge-green">Active</span></td><td>~11 packages</td></tr>
+<tr><td><strong>Hermes Agent</strong></td><td><code>/home/mystic/.hermes/hermes-agent/</code></td><td>NousResearch agent platform</td><td><span class="badge badge-green">Running</span></td><td>Full platform</td></tr>
+<tr><td><strong>Archive (monorepo)</strong></td><td><code>/home/mystic/archive-*/</code></td><td>Legacy hermes-os monorepo</td><td><span class="badge badge-red">Archived</span></td><td>144 entries</td></tr>
+</table>
+</div>
+
+<!-- ============ S3 ============ -->
+<h2 id="s3">3 &mdash; Frontend Audit</h2>
+
+<div class="section">
+<h3>What exists</h3>
+<table>
+<tr><th>UI</th><th>Framework</th><th>Lines</th><th>State</th></tr>
+<tr><td><strong>new-ui.html</strong></td><td>Vanilla + PWA</td><td>166</td><td><span class="badge badge-green">Functional</span></td></tr>
+<tr><td><strong>Legacy index.html</strong></td><td>Jinja2 + Vanilla JS</td><td>185</td><td><span class="badge badge-green">Functional</span></td></tr>
+<tr><td><strong>SDC App</strong></td><td>FastAPI inline</td><td>~240</td><td><span class="badge badge-red">Pre-alpha</span></td></tr>
+<tr><td><strong>ABE System</strong></td><td>Vanilla</td><td>790</td><td><span class="badge badge-yellow">Demo</span></td></tr>
+<tr><td><strong>SDC Portal</strong></td><td>Vanilla</td><td>1,309</td><td><span class="badge badge-yellow">Demo</span></td></tr>
+<tr><td><strong>MysticVerse Hub</strong></td><td>Vanilla</td><td>1,204</td><td><span class="badge badge-yellow">Demo</span></td></tr>
+<tr><td><strong>Agency Control</strong></td><td>Vanilla</td><td>682</td><td><span class="badge badge-yellow">Demo</span></td></tr>
+<tr><td><strong>Brain Dashboard</strong></td><td>D3.js + SSE</td><td>386</td><td><span class="badge badge-green">Functional</span></td></tr>
+<tr><td><strong>Brain Graph</strong></td><td>D3.js v7</td><td>159</td><td><span class="badge badge-green">Functional</span></td></tr>
+<tr><td><strong>Wakeup Page</strong></td><td>Three.js + Web Speech</td><td>1,073</td><td><span class="badge badge-green">Functional</span></td></tr>
+<tr><td><strong>SDCorp Web</strong></td><td>Vanilla + Vercel</td><td>447</td><td><span class="badge badge-green">Functional</span></td></tr>
+</table>
+<p><strong>Architecture quality: 3/10.</strong> The frontend is the weakest layer. No SPA framework, no auth UI, no state management, no component system. Works for a demo; needs rewrite for production.</p>
+</div>
+
+<!-- ============ S4 ============ -->
+<h2 id="s4">4 &mdash; Backend Audit</h2>
+
+<div class="section">
+<h3>Services</h3>
+<table>
+<tr><th>Service</th><th>Framework</th><th>Port</th><th>Status</th><th>Purpose</th></tr>
+<tr><td>JARVIS Web UI</td><td>FastAPI + Uvicorn</td><td>5174</td><td><span class="badge badge-green">Running</span></td><td>Main API gateway</td></tr>
+<tr><td>Hermes API</td><td>FastAPI</td><td>8000</td><td><span class="badge badge-green">Running</span></td><td>Multi-channel bridge</td></tr>
+<tr><td>Thumbnail Generator</td><td>FastAPI + Pillow</td><td>8765</td><td><span class="badge badge-yellow">Not running</span></td><td>YouTube thumbnail gen</td></tr>
+<tr><td>Publisher</td><td>FastAPI</td><td>8766</td><td><span class="badge badge-yellow">Not running</span></td><td>Cross-platform publish</td></tr>
+<tr><td>MCP Server</td><td>FastMCP</td><td>8000</td><td><span class="badge badge-red">Not running</span></td><td>Memory bridge</td></tr>
+<tr><td>SDC Health API</td><td><em>missing</em></td><td>3000</td><td><span class="badge badge-red">Does not exist</span></td><td>Health check</td></tr>
+</table>
+<p><strong>60+ API endpoints</strong> across 18 routers. Architecture quality: <strong>6/10</strong>. Modular routers, clean separation, proper async. Critical gaps: no middleware (auth/rate limiting), in-memory state, no health endpoint, no OpenAPI docs, no structured logging.</p>
+</div>
+
+<!-- ============ S5 ============ -->
+<h2 id="s5">5 &mdash; AI Layer Audit</h2>
+
+<div class="section">
+<h3>Model stack</h3>
+<table>
+<tr><th>Component</th><th>Model</th><th>Provider</th><th>Cost</th><th>Status</th></tr>
+<tr><td>Primary LLM</td><td>deepseek-v4-flash-free</td><td>opencode-go / OpenRouter</td><td>Free</td><td><span class="badge badge-green">Active</span></td></tr>
+<tr><td>Fallback LLM</td><td>deepseek/deepseek-v4-flash</td><td>OpenRouter</td><td>Paid</td><td><span class="badge badge-yellow">Configured</span></td></tr>
+<tr><td>Embeddings</td><td>nomic-embed-text</td><td>Ollama (local)</td><td>Free</td><td><span class="badge badge-green">Active</span></td></tr>
+<tr><td>STT</td><td>faster-whisper (base)</td><td>Local CPU</td><td>Free</td><td><span class="badge badge-green">Active</span></td></tr>
+<tr><td>TTS</td><td>edge-tts</td><td>Microsoft</td><td>Free</td><td><span class="badge badge-green">Active</span></td></tr>
+<tr><td>Image Gen</td><td>fal.ai (FLUX-Schnell)</td><td>Cloud API</td><td>Paid</td><td><span class="badge badge-yellow">Configured</span></td></tr>
+<tr><td>Voice Clone</td><td>ElevenLabs</td><td>Cloud API</td><td>Paid</td><td><span class="badge badge-yellow">Configured</span></td></tr>
+</table>
+
+<h3>What's implemented</h3>
+<ul style="padding-left:1.2rem;color:var(--text-dim)">
+<li><span class="badge badge-green">RAG</span> &mdash; Qdrant, 1059 vectors, 768-dim</li>
+<li><span class="badge badge-green">Memory graph</span> &mdash; Neo4j, 178 nodes</li>
+<li><span class="badge badge-green">Engram</span> &mdash; SQLite FTS5</li>
+<li><span class="badge badge-green">Tool calling</span> &mdash; 12 tools, router dispatches</li>
+<li><span class="badge badge-green">Multi-agent orchestration</span> &mdash; 16 agents</li>
+<li><span class="badge badge-green">Streaming</span> &mdash; SSE tokens + activity</li>
+<li><span class="badge badge-green">Prompt injection guard</span> &mdash; 30+ patterns</li>
+</ul>
+</div>
+
+<!-- ============ S6 ============ -->
+<h2 id="s6">6 &mdash; Agent Ecosystem</h2>
+
+<div class="section">
+<h3>JARVIS Core Agents (16)</h3>
+<table>
+<tr><th>Agent</th><th>Purpose</th><th>Status</th></tr>
+<tr><td>ResearchAgent</td><td>RAG search over Neo4j+Qdrant</td><td><span class="badge badge-green">Active</span></td></tr>
+<tr><td>CodeAgent</td><td>Code analysis, generation, fix</td><td><span class="badge badge-green">Active</span></td></tr>
+<tr><td>ExploreAgent</td><td>Filesystem navigation, search</td><td><span class="badge badge-green">Active</span></td></tr>
+<tr><td>MemoryAgent</td><td>Key-value CRUD on Neo4j</td><td><span class="badge badge-green">Active</span></td></tr>
+<tr><td>SkillAgent</td><td>20+ skill catalog, tool dispatch</td><td><span class="badge badge-green">Active</span></td></tr>
+<tr><td>ReviewAgent</td><td>Code review, lint checks</td><td><span class="badge badge-green">Active</span></td></tr>
+<tr><td>PRAgent</td><td>Full GitHub PR lifecycle</td><td><span class="badge badge-green">Active</span></td></tr>
+<tr><td>SpecAgent</td><td>SDD spec generation</td><td><span class="badge badge-green">Active</span></td></tr>
+<tr><td>VoiceAgent</td><td>STT/TTS session management</td><td><span class="badge badge-yellow">Partial</span></td></tr>
+<tr><td>ApplyAgent</td><td>Task execution (simulated)</td><td><span class="badge badge-yellow">Stub</span></td></tr>
+</table>
+
+<h3>OpenCode Agents (15)</h3>
+<p>mystic (primary), plus 14 subagents: explore, builder, reviewer, hermes, sdd, sdd-spec, sdd-design, sdd-apply, sdd-verify, sdd-archive, openclaw, memory, research, code.</p>
+
+<h3>SDCorp Agents (3)</h3>
+<p><strong>ATLAS</strong> (CEO), <strong>NEXUS</strong> (CTO), <strong>PULSE</strong> (COO) &mdash; defined in <code>agents/</code> with constitutions.</p>
+</div>
+
+<!-- ============ S7 ============ -->
+<h2 id="s7">7 &mdash; MCP Ecosystem</h2>
+
+<div class="section">
+<h3>MCP Servers (7)</h3>
+<table>
+<tr><th>Server</th><th>Type</th><th>Status</th><th>Tools</th></tr>
+<tr><td><strong>jarvis-bridge</strong></td><td>stdio</td><td><span class="badge badge-green">Active</span></td><td>research, memory_store, memory_recall, metrics, orchestrate</td></tr>
+<tr><td><strong>hermes-api</strong></td><td>remote</td><td><span class="badge badge-green">Active</span></td><td>Messaging bridge</td></tr>
+<tr><td><strong>openclaw</strong></td><td>remote</td><td><span class="badge badge-green">Active</span></td><td>55 skills gateway</td></tr>
+<tr><td><strong>qdrant</strong></td><td>remote</td><td><span class="badge badge-green">Active</span></td><td>Vector search</td></tr>
+<tr><td><strong>neo4j</strong></td><td>remote</td><td><span class="badge badge-green">Active</span></td><td>Graph database</td></tr>
+<tr><td><strong>n8n</strong></td><td>remote</td><td><span class="badge badge-yellow">Configured</span></td><td>Workflow automation</td></tr>
+<tr><td><strong>google-mcp</strong></td><td>stdio</td><td><span class="badge badge-yellow">Configured</span></td><td>Gmail (2 accounts)</td></tr>
+</table>
+</div>
+
+<!-- ============ S8 ============ -->
+<h2 id="s8">8 &mdash; Automation Layer</h2>
+
+<div class="section">
+<h3>n8n &mdash; 47 workflows</h3>
+<table>
+<tr><th>Category</th><th>Count</th><th>Examples</th></tr>
+<tr><td>SDC Business</td><td>12</td><td>Fiscal alerts, invoice webhooks, onboarding, reporting</td></tr>
+<tr><td>ABE Music Hub</td><td>5</td><td>Content gen, event marketing, fan CRM, artist report</td></tr>
+<tr><td>System Health</td><td>4</td><td>Health check, self-healing, backups, cache cleanup</td></tr>
+<tr><td>Zero-Token</td><td>4</td><td>No AI API calls &mdash; pure automation</td></tr>
+<tr><td>DevOps</td><td>6</td><td>Google Drive backup, Gmail auto-reply, git sync</td></tr>
+</table>
+
+<h3>Hermes Cron (4 jobs)</h3>
+<table>
+<tr><th>Job</th><th>Schedule</th><th>Status</th></tr>
+<tr><td>health-monitor</td><td>Every 30 min</td><td><span class="badge badge-green">211 completions</span></td></tr>
+<tr><td>jarvis-heartbeat</td><td>Every 15 min</td><td><span class="badge badge-green">Active</span></td></tr>
+<tr><td>sdc-daily-briefing</td><td>Daily 8am</td><td><span class="badge badge-green">2 completions</span></td></tr>
+<tr><td>sdc-billing-run</td><td>1st of month</td><td><span class="badge badge-yellow">0 completions</span></td></tr>
+</table>
+</div>
+
+<!-- ============ S9 ============ -->
+<h2 id="s9">9 &mdash; Docker Infrastructure</h2>
+
+<div class="section">
+<h3>Running (5)</h3>
+<table>
+<tr><th>Container</th><th>Image</th><th>Ports</th><th>Uptime</th></tr>
+<tr><td>hermes_api</td><td>infra-api:latest</td><td>127.0.0.1:8000</td><td>27h</td></tr>
+<tr><td>infra_postgres</td><td>postgres:15</td><td>:5432</td><td>36h</td></tr>
+<tr><td>jarvis-qdrant</td><td>jarvis-qdrant</td><td>0.0.0.0:6333-6334</td><td>36h</td></tr>
+<tr><td>infra_redis</td><td>redis:7-alpine</td><td>:6379</td><td>36h</td></tr>
+<tr><td>jarvis-neo4j</td><td>jarvis-neo4j</td><td>127.0.0.1:7474,7687</td><td>27h</td></tr>
+</table>
+
+<h3>Not running (7+)</h3>
+<p><span class="badge badge-red">jarvis-mcp-server</span> (never started) &bull;
+<span class="badge badge-red">sonora-thumbnails</span> &bull;
+<span class="badge badge-red">sonora-publisher</span> &bull;
+<span class="badge badge-red">sdcorp-* (7 containers)</span> stack never deployed &bull;
+<span class="badge badge-red">sdcorp-health</span> build dir missing &bull;
+<span class="badge badge-red">Prometheus/Grafana</span> exited code 127</p>
+</div>
+
+<!-- ============ S10 ============ -->
+<h2 id="s10">10 &mdash; Data Layer</h2>
+
+<div class="section">
+<h3>Databases</h3>
+<table>
+<tr><th>Database</th><th>Type</th><th>Purpose</th><th>Data</th><th>Status</th></tr>
+<tr><td><strong>Neo4j</strong></td><td>Graph</td><td>Memory, sessions, contacts, CRM</td><td>178 nodes</td><td><span class="badge badge-green">Running</span></td></tr>
+<tr><td><strong>Qdrant</strong></td><td>Vector</td><td>Knowledge embeddings</td><td>1,059 points</td><td><span class="badge badge-green">Running</span></td></tr>
+<tr><td><strong>PostgreSQL</strong></td><td>Relational</td><td>Hermes data</td><td>Unknown</td><td><span class="badge badge-green">Running</span></td></tr>
+<tr><td><strong>Redis</strong></td><td>KV Cache</td><td>Message broker</td><td>Append-only</td><td><span class="badge badge-green">Running</span></td></tr>
+<tr><td><strong>SQLite (Engram)</strong></td><td>Embedded FTS5</td><td>Technical lessons</td><td>Unknown</td><td><span class="badge badge-green">File</span></td></tr>
+<tr><td><strong>SQLite (Hermes)</strong></td><td>Embedded</td><td>Messages, sessions</td><td>Clean</td><td><span class="badge badge-green">File</span></td></tr>
+<tr><td><strong>SQLite (n8n)</strong></td><td>Embedded</td><td>Workflows</td><td>47 workflows</td><td><span class="badge badge-green">File</span></td></tr>
+</table>
+</div>
+
+<!-- ============ S11 ============ -->
+<h2 id="s11">11 &mdash; Business Capability Map</h2>
+
+<div class="section">
+<div class="status-grid">
+<div class="status-card"><div class="label">Telegram bots</div><div class="value"><span class="badge badge-green">Functional</span> 3 bots</div></div>
+<div class="status-card"><div class="label">WhatsApp bridge</div><div class="value"><span class="badge badge-green">Functional</span> Port 3001</div></div>
+<div class="status-card"><div class="label">AI Chat</div><div class="value"><span class="badge badge-green">Functional</span> SSE streaming</div></div>
+<div class="status-card"><div class="label">Sessions CRUD</div><div class="value"><span class="badge badge-green">Functional</span> 12 endpoints</div></div>
+<div class="status-card"><div class="label">Code gen + review</div><div class="value"><span class="badge badge-green">Functional</span> CodeAgent</div></div>
+<div class="status-card"><div class="label">RAG search</div><div class="value"><span class="badge badge-green">Functional</span> Qdrant</div></div>
+<div class="status-card"><div class="label">SDD pipeline</div><div class="value"><span class="badge badge-green">Functional</span> 6 phases</div></div>
+<div class="status-card"><div class="label">GitHub PRs</div><div class="value"><span class="badge badge-green">Functional</span> gh CLI</div></div>
+<div class="status-card"><div class="label">Voice (browser)</div><div class="value"><span class="badge badge-green">Functional</span> Web Speech</div></div>
+<div class="status-card"><div class="label">Gamification</div><div class="value"><span class="badge badge-green">Functional</span> XP/badges</div></div>
+<div class="status-card"><div class="label">ABE Music CRM</div><div class="value"><span class="badge badge-green">Functional</span> Artists KPIs</div></div>
+<div class="status-card"><div class="label">Artist pages</div><div class="value"><span class="badge badge-green">LIVE</span> GitHub Pages</div></div>
+<div class="status-card"><div class="label">Payments</div><div class="value"><span class="badge badge-yellow">Partial</span> No real money</div></div>
+<div class="status-card"><div class="label">Digital twins</div><div class="value"><span class="badge badge-yellow">Partial</span> Pipeline exists</div></div>
+<div class="status-card"><div class="label">KYC</div><div class="value"><span class="badge badge-yellow">Partial</span> 3-step coded</div></div>
+<div class="status-card"><div class="label">Social posting</div><div class="value"><span class="badge badge-yellow">Partial</span> Sessions expire</div></div>
+<div class="status-card"><div class="label">MCP Server (Docker)</div><div class="value"><span class="badge badge-red">Broken</span> Never started</div></div>
+<div class="status-card"><div class="label">SDC Docker stack</div><div class="value"><span class="badge badge-red">Broken</span> 7 containers</div></div>
+<div class="status-card"><div class="label">Prometheus/Grafana</div><div class="value"><span class="badge badge-red">Broken</span> Exited</div></div>
+<div class="status-card"><div class="label">Health API</div><div class="value"><span class="badge badge-red">Broken</span> Dir missing</div></div>
+</div>
+</div>
+
+<!-- ============ S12 ============ -->
+<h2 id="s12">12 &mdash; UX Vision Analysis</h2>
+
+<div class="section">
+<table>
+<tr><th>Component</th><th>Status</th><th>Details</th></tr>
+<tr><td>WebGPU</td><td><span class="badge badge-red">Missing</span></td><td>Not used anywhere</td></tr>
+<tr><td>Three.js</td><td><span class="badge badge-yellow">Partial</span></td><td>1 file, starfield in wakeup page</td></tr>
+<tr><td>D3.js</td><td><span class="badge badge-green">Yes</span></td><td>Brain visualization + Command Center</td></tr>
+<tr><td>Avatars</td><td><span class="badge badge-red">Missing</span></td><td>Mystic is text-only</td></tr>
+<tr><td>Digital clones in UI</td><td><span class="badge badge-red">Missing</span></td><td>Pipeline exists, never rendered</td></tr>
+<tr><td>Smart onboarding</td><td><span class="badge badge-yellow">Partial</span></td><td>4-step wizard (text only)</td></tr>
+<tr><td>Real-time streaming</td><td><span class="badge badge-green">Yes</span></td><td>SSE chat + activity</td></tr>
+<tr><td>Voice UI</td><td><span class="badge badge-green">Yes</span></td><td>Web Speech + wake word</td></tr>
+<tr><td>PWA</td><td><span class="badge badge-green">Yes</span></td><td>Manifest.json</td></tr>
+<tr><td>Mobile responsive</td><td><span class="badge badge-red">Missing</span></td><td>Desktop-only internal UIs</td></tr>
+</table>
+</div>
+
+<!-- ============ S13 ============ -->
+<h2 id="s13">13 &mdash; Technical Debt</h2>
+
+<div class="section">
+<h3>Code duplication</h3>
+<ul style="padding-left:1.2rem;color:var(--text-dim)">
+<li><strong>Design tokens</strong> in 3+ locations with different colors</li>
+<li><strong>SDC plan pricing</strong> duplicated in 4+ files with different prices</li>
+<li><strong>5 ecosystem presentations</strong> with overlapping content</li>
+<li><strong>3 onboarding flows</strong> (Python, Telegram, Web UI) &mdash; all different</li>
+<li><strong>3+ Telegram bot frameworks</strong> (python-telegram-bot, aiogram, telegraf)</li>
+</ul>
+
+<h3>Services abandoned</h3>
+<p>Prometheus, Grafana (exited 9 days ago), SDC Docker stack (never deployed), MCP Server (never started), WhatsApp standalone (container stopped).</p>
+
+<h3>Dead dependencies</h3>
+<p>20+ tree-sitter parsers, heic-decode, gbrain, aider-session.sh.</p>
+
+<h3>Data concerns</h3>
+<p>6 backup copies from 5 consecutive days. 144-entry archived monorepo taking space.</p>
+</div>
+
+<!-- ============ S14 ============ -->
+<h2 id="s14">14 &mdash; Productization Readiness</h2>
+
+<div class="section">
+<h3>Can it be sold today?</h3>
+<p style="font-size:1.2rem;color:var(--red);font-weight:700">No.</p>
+
+<h3>MVP candidates (closest to sellable)</h3>
+<ol style="padding-left:1.2rem;color:var(--text-dim)">
+<li><strong>Artist landing pages</strong> &mdash; deploy.sh works, 3 deployed. $200-500/setup.</li>
+<li><strong>Telegram bots for Mexican fiscal</strong> &mdash; 97 skill files (SAT, CFDI, RESICO, Nomina).</li>
+<li><strong>ABE Music CRM</strong> &mdash; Artist CRM, royalty splits, KPIs for labels.</li>
+<li><strong>AI chat white-label</strong> &mdash; Streaming works, needs multi-tenant isolation.</li>
+<li><strong>n8n automation templates</strong> &mdash; 47 workflows per client vertical.</li>
+</ol>
+
+<h3>What's missing per market</h3>
+<table>
+<tr><th>Market</th><th>Critical gap</th></tr>
+<tr><td>Musicians</td><td>No self-service signup, no payment, no &ldquo;play button&rdquo;</td></tr>
+<tr><td>Businesses</td><td>No auth, no multi-tenant, no white-label, no payment</td></tr>
+<tr><td>Digital clones</td><td>Pipeline never executed end-to-end</td></tr>
+<tr><td>Automations</td><td>No client dashboard</td></tr>
+</table>
+</div>
+
+<!-- ============ S15 ============ -->
+<h2 id="s15">15 &mdash; Future Architecture</h2>
+
+<div class="section">
+<div class="status-grid">
+<div class="status-card"><div class="label">Conserve</div><div class="value">Hermes, JARVIS core, n8n, MCP, SDD, gamification, ABE Music, voice, OpenClaw skills</div></div>
+<div class="status-card"><div class="label">Eliminate</div><div class="value">Archive monorepo, old backups, SDC Docker compose, Prometheus/Grafana, legacy UI, duplicate presentations</div></div>
+<div class="status-card"><div class="label">Merge</div><div class="value">3 Telegram bots &rarr; 1 bot with skill routing &bull; 3 onboarding flows &rarr; 1 unified &bull; 4 pricing sources &rarr; 1 &bull; 26 HTML pages &rarr; 1 SPA</div></div>
+<div class="status-card"><div class="label">Replace</div><div class="value">In-memory &rarr; PostgreSQL &bull; Plain-text passwords &rarr; OAuth2+JWT &bull; Scattered env vars &rarr; pydantic-settings</div></div>
+</div>
+</div>
+
+<!-- ============ S16 ============ -->
+<h2 id="s16">16 &mdash; Master System Diagram</h2>
+
+<div class="section">
+<div class="diagram">
+┌─────────────────────────────────────────────────────────────────────┐
+│                          USERS / CLIENTS                             │
+│  Telegram ──┐  WhatsApp ──┐  Web Browser ──┐  CLI/Desktop ──┐     │
+└──────────────┴─────────────┴────────────────┴───────────────┘     │
+               │              │                 │                      │
+               ▼              ▼                 ▼                      │
+┌─────────────────────────────────────────────────────────────────┐   │
+│                    HERMES (Orchestrator)                          │   │
+│                    deepseek-v4-flash-free                         │   │
+│  ┌─────────┐  ┌──────────┐  ┌──────────┐  ┌────────────────┐   │   │
+│  │   CLI   │  │ Telegram │  │WhatsApp  │  │   Cron Jobs    │   │   │
+│  │ Interface│  │ Bots (3) │  │ Bridge   │  │ (4 schedules) │   │   │
+│  └─────────┘  └──────────┘  └──────────┘  └────────────────┘   │   │
+│         └───────────┴──────┬───────┴───────────────┘              │   │
+│                            ▼                                      │   │
+│              ┌─────────────────────────────┐                      │   │
+│              │     MCP BRIDGES (7)         │                      │   │
+│              │  jarvis | openclaw | neo4j  │                      │   │
+│              │  qdrant | n8n | gmail | gh  │                      │   │
+│              └─────────────────────────────┘                      │   │
+└─────────────────────────────────────────────────────────────────┘   │
+                            │                                          │
+                            ▼                                          │
+┌─────────────────────────────────────────────────────────────────┐   │
+│                    JARVIS CORE ENGINE                             │   │
+│                    FastAPI :5174                                  │   │
+│  ┌──────────────────────────────────────────────────────────┐    │   │
+│  │              AGENT ORCHESTRATOR (16 agents)               │    │   │
+│  │  Research | Code | Explore | Memory | Skill | Review     │    │   │
+│  │  Hermes | Gbrain | OpenClaw | Spec | Design | Apply      │    │   │
+│  │  Verify | Archive | PR | Voice | SDD Pipeline            │    │   │
+│  └──────────────────────────────────────────────────────────┘    │   │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐   │   │
+│  │   Unified    │  │  Security    │  │   Activity           │   │   │
+│  │   Bridge     │  │  Guard       │  │   Broadcaster (SSE)  │   │   │
+│  └──────────────┘  └──────────────┘  └──────────────────────┘   │   │
+│  ┌──────────────────────────────────────────────────────────┐    │   │
+│  │              DOMAIN LAYER                                 │    │   │
+│  │  SDC Business | ABE Music | MysticVerse | Zamora Studio  │    │   │
+│  │  Payments (MP/Bitso/SPEI) | Gamification | Store         │    │   │
+│  └──────────────────────────────────────────────────────────┘    │   │
+└─────────────────────────────────────────────────────────────────┘   │
+                            │                                          │
+                            ▼                                          │
+┌─────────────────────────────────────────────────────────────────┐   │
+│                    DATA LAYER                                    │   │
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐  ┌────────────────┐   │   │
+│  │  Neo4j   │  │  Qdrant  │  │PostgreSQL│  │  SQLite (x5)   │   │   │
+│  │  (graph) │  │ (vector) │  │ (rel)    │  │ Engram, Hermes  │   │   │
+│  │  178     │  │  1059    │  │  infra   │  │ Kanban, n8n     │   │   │
+│  │  nodes   │  │  points  │  │          │  │ Response cache  │   │   │
+│  └──────────┘  └──────────┘  └──────────┘  └────────────────┘   │   │
+│  ┌──────────┐  ┌──────────┐                                       │   │
+│  │  Redis   │  │  Ollama  │                                       │   │
+│  │  (cache) │  │(embeddings)                                      │   │
+│  └──────────┘  └──────────┘                                       │   │
+└─────────────────────────────────────────────────────────────────┘   │
+                            │                                          │
+                            ▼                                          │
+┌─────────────────────────────────────────────────────────────────┐   │
+│                    AUTOMATION LAYER                               │   │
+│  ┌──────────────────────────────────────────────────────────┐    │   │
+│  │              n8n (47 workflows)                           │    │   │
+│  │  SDC Business(12) | ABE Music(5) | System Health(4)     │    │   │
+│  │  Content Factory(1) | DevOps(6) | Zero-Token(4)         │    │   │
+│  └──────────────────────────────────────────────────────────┘    │   │
+└─────────────────────────────────────────────────────────────────┘   │
+                            │                                          │
+                            ▼                                          │
+┌─────────────────────────────────────────────────────────────────┐   │
+│                    INTEGRATIONS                                   │   │
+│  OpenRouter | fal.ai | GitHub | OpenClaw | Mercado Pago         │   │
+│  Bitso | ElevenLabs | Open Design                                │   │
+└─────────────────────────────────────────────────────────────────┘   │
+                            │                                          │
+                            ▼                                          │
+┌─────────────────────────────────────────────────────────────────┐   │
+│                    PRODUCTS / CLIENTS                             │   │
+│  ABE Music (label) | SDC (agency) | Mysticverse (adult)        │   │
+│  Zamora Studio (brand)                                          │   │
+└─────────────────────────────────────────────────────────────────┘   │
+</div>
+</div>
+
+<!-- ============ S17 ============ -->
+<h2 id="s17">17 &mdash; Truth Report</h2>
+
+<div class="section">
+
+<h3>What actually works</h3>
+<div class="truth good">
+<p><strong>AI chat with streaming</strong> &mdash; SSE works, LLM responds, context maintained.</p>
+</div>
+<div class="truth good">
+<p><strong>Code generation and review</strong> &mdash; CodeAgent and ReviewAgent produce real output.</p>
+</div>
+<div class="truth good">
+<p><strong>RAG search (Qdrant)</strong> &mdash; 1059 vectors, queries return relevant results.</p>
+</div>
+<div class="truth good">
+<p><strong>Graph memory (Neo4j)</strong> &mdash; 178 nodes, session tracking, contact CRM.</p>
+</div>
+<div class="truth good">
+<p><strong>SDD pipeline</strong> &mdash; Research -> Spec -> Design pipeline produces real documents.</p>
+</div>
+<div class="truth good">
+<p><strong>Telegram bots</strong> &mdash; 3 bots online and responding.</p>
+</div>
+<div class="truth good">
+<p><strong>Voice CLI</strong> &mdash; Wake word -> Whisper -> LLM -> TTS loop works.</p>
+</div>
+<div class="truth good">
+<p><strong>Artist landing pages</strong> &mdash; 3 sites live on GitHub Pages, getting traffic.</p>
+</div>
+<div class="truth good">
+<p><strong>Hermes cron</strong> &mdash; 4 jobs run on schedule.</p>
+</div>
+<div class="truth good">
+<p><strong>MCP bridges</strong> &mdash; 7 bridges connected.</p>
+</div>
+
+<h3>What seems to work but actually doesn't</h3>
+<div class="truth warn">
+<p><strong>"Multi-agent orchestration"</strong> &mdash; 16 agents exist but routing only uses ~6. Rest are stubs.</p>
+</div>
+<div class="truth warn">
+<p><strong>"Payments work"</strong> &mdash; Code exists for MP/Bitso/SPEI but no webhook ever called. No real money moved.</p>
+</div>
+<div class="truth warn">
+<p><strong>"Digital twins"</strong> &mdash; Pipeline never executed end-to-end from UI.</p>
+</div>
+<div class="truth warn">
+<p><strong>"MCP server running"</strong> &mdash; Docker MCP server never started.</p>
+</div>
+<div class="truth warn">
+<p><strong>"47 n8n workflows"</strong> &mdash; Defined in JSON but never imported into running n8n.</p>
+</div>
+<div class="truth warn">
+<p><strong>"Multi-platform publishing"</strong> &mdash; Returns mock success for all platforms.</p>
+</div>
+<div class="truth warn">
+<p><strong>"Local LLM with GPU"</strong> &mdash; Container config exists, never deployed.</p>
+</div>
+
+<h3>What is smoke / vaporware</h3>
+<div class="truth bad">
+<p><strong>"God Mode"</strong> &mdash; Referenced in session summaries, no implementation found.</p>
+</div>
+<div class="truth bad">
+<p><strong>"Company operating system"</strong> &mdash; Beautiful markdown, zero code implements it.</p>
+</div>
+<div class="truth bad">
+<p><strong>"Customer onboarding <48h"</strong> &mdash; No customer ever onboarded.</p>
+</div>
+<div class="truth bad">
+<p><strong>"500+ clients"</strong> &mdash; Claim on website. Zero clients in database.</p>
+</div>
+<div class="truth bad">
+<p><strong>"Enterprise-grade security"</strong> &mdash; No auth, hardcoded keys, plain-text passwords.</p>
+</div>
+<div class="truth bad">
+<p><strong>"Stripe integration"</strong> &mdash; Code written, no Stripe account, never tested.</p>
+</div>
+<div class="truth bad">
+<p><strong>"Multi-tenant SaaS"</strong> &mdash; Every user shares the same data in memory.</p>
+</div>
+
+<h3>What is ready for clients NOW</h3>
+<div class="truth" style="border-left-color:var(--orange)">
+<p style="font-size:1.1rem;font-weight:600;color:var(--orange)">Nothing.</p>
+<p>Not a single component is ready for a paying customer who expects reliability, support, and data safety.</p>
+<p><strong>But &mdash; with 2-4 weeks of focused work on authentication, persistence, and packaging</strong>, the Telegram bot + artist pages + AI chat could become sellable MVPs.</p>
+</div>
+
+</div>
+
+<!-- ============ FOOTER ============ -->
+<div style="text-align:center;padding:3rem 0;color:var(--text-dim);font-size:.8rem;border-top:1px solid var(--border);margin-top:2rem">
+<p>Sonora Digital Corp &mdash; Ecosystem Intelligence Report &mdash; 2026-06-15</p>
+<p>All conclusions based on code audit of 44 Python modules, 60+ API endpoints, 12 Docker containers, 47 n8n workflows, 150+ skills, and 383 tests.</p>
+</div>
+
+</div>
+</body>
+</html>

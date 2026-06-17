@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catalogo — AzREC</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:"Inter",sans-serif; background:#0a0a0a; color:#e5e5e5; line-height:1.6; }
+.back-link { position:fixed; top:1.5rem; left:1.5rem; z-index:100; color:#999; text-decoration:none; font-size:0.85rem; display:flex; align-items:center; gap:0.5rem; background:rgba(10,10,10,0.8); padding:0.5rem 1rem; border-radius:8px; backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.05); }
+.back-link:hover { color:#E05A2A; }
+.container { max-width:1100px; margin:0 auto; padding:6rem 2rem 3rem; }
+h1 { font-family:"Playfair Display",serif; font-size:2.5rem; color:#fff; margin-bottom:0.5rem; }
+h1 span.az { color:#E05A2A; }
+h1 span.rec { color:#F4A261; }
+.subtitle { color:#888; margin-bottom:2.5rem; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:1.5rem; }
+.card { background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:1.5rem; text-align:center; transition:all 0.3s; }
+.card:hover { border-color:rgba(244,162,97,0.3); transform:translateY(-4px); }
+.card .img { font-size:4rem; margin-bottom:0.8rem; }
+.card h4 { color:#fff; font-size:1rem; font-weight:600; }
+.card .precio { color:#F4A261; font-weight:700; font-size:1.1rem; margin:0.5rem 0; }
+.card p { color:#777; font-size:0.85rem; margin-bottom:0.8rem; }
+.card a { display:inline-block; padding:0.5rem 1.2rem; background:#E05A2A; color:#fff; border-radius:6px; text-decoration:none; font-size:0.8rem; font-weight:600; transition:all 0.3s; }
+.card a:hover { background:#F4A261; color:#1A1A2E; }
+.telegram-cta { text-align:center; margin-top:3rem; padding:2rem; background:rgba(255,255,255,0.02); border-radius:12px; }
+.telegram-cta p { color:#999; margin-bottom:1rem; }
+.btn { display:inline-flex; align-items:center; gap:0.5rem; padding:0.9rem 2rem; border-radius:8px; font-weight:600; text-decoration:none; transition:all 0.3s; background:#E05A2A; color:#fff; }
+.btn:hover { background:#F4A261; color:#1A1A2E; }
+</style>
+</head>
+<body>
+<a href="https://sonoradigitalcorp.com/azrec" class="back-link">← AzREC</a>
+<div class="container">
+<h1><span class="az">Az</span><span class="rec">REC</span> — Catalogo</h1>
+<p class="subtitle">De la A a la Z, del desierto al mundo</p>
+<div class="grid">
+  <div class="card">
+    <div class="img"><img src="img/gorra-classic.jpg" alt="Gorra Classic" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"></div>
+    <h4>Gorra AzREC Classic</h4>
+    <div class="precio">$399 MXN</div>
+    <p>Clasica negra con logo bordado.</p>
+    <a href="gorra-classic.html">Ver</a>
+  </div>
+  <div class="card">
+    <div class="img"><img src="img/gorra-sunset.jpg" alt="Gorra Sunset" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"></div>
+    <h4>Gorra Sonora Sunset</h4>
+    <div class="precio">$449 MXN</div>
+    <p>Naranja quemado, "Sonora" en dorado.</p>
+    <a href="gorra-sunset.html">Ver</a>
+  </div>
+  <div class="card">
+    <div class="img"><img src="img/playera-classic.jpg" alt="playera-classic.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"></div>
+    <h4>layera AzREC Classic</h4>
+    <div class="precio">$349 MXN</div>
+    <p>Algodon premium, logo frontal.</p>
+    <a href="playera-classic.html">Ver</a>
+  </div>
+  <div class="card">
+    <div class="img"><img src="img/hoodie.jpg" alt="hoodie.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"></div>
+    <h4>oodie AzREC</h4>
+    <div class="precio">$699 MXN</div>
+    <p>Algodon peluche, logo bordado.</p>
+    <a href="hoodie.html">Ver</a>
+  </div>
+  <div class="card">
+    <div class="img"><img src="img/tote-bag.jpg" alt="tote-bag.jpg" style="width:100%;height:100%;object-fit:cover;border-radius:8px;"></div>
+    <h4>ote Bag "Desierto"</h4>
+    <div class="precio">$249 MXN</div>
+    <p>Lona gruesa, diseno Sonora.</p>
+    <a href="tote-bag.html">Ver</a>
+  </div>
+  <div class="card">
+    <div class="img">🎨</div>
+    <h4>Stickers Pack (5)</h4>
+    <div class="precio">$99 MXN</div>
+    <p>Vinil termico, 10x10cm c/u.</p>
+    <a href="#">Proximamente</a>
+  </div>
+</div>
+<div class="telegram-cta">
+  <p>📱 Pedidos por Telegram — atencion personalizada 24/7</p>
+  <a href="https://t.me/AzREC" class="btn">✈️ Pedir por Telegram</a>
+</div>
+</div>
+</body>
+</html>

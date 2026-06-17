@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS — Night Ops Final Report</title>
+<meta http-equiv="refresh" content="120">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a1a;color:#e0e0e0;font-family:'Segoe UI',system-ui,sans-serif;padding:30px;max-width:1200px;margin:0 auto}
+h1{font-size:2.5rem;background:linear-gradient(135deg,#00d4ff,#7b2ff7,#ff6b35);-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-align:center}
+.date{text-align:center;color:rgba(255,255,255,0.4);margin-bottom:30px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px;margin:16px 0}
+.card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px;text-align:center}
+.card .num{font-size:2.5rem;font-weight:800;background:linear-gradient(135deg,#00d4ff,#7b2ff7);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.card .lbl{color:rgba(255,255,255,0.5);font-size:0.85rem;margin-top:4px}
+.section{margin:24px 0}
+.section h2{color:#7b2ff7;font-size:1.3rem;margin-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:6px}
+ul{list-style:none}
+li{padding:6px 0;color:rgba(255,255,255,0.7);font-size:0.9rem}
+li::before{content:"▸ ";color:#00d4ff}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;margin-right:6px}
+.bg-green{background:rgba(74,222,128,0.2);color:#4ade80}
+.bg-yellow{background:rgba(251,191,36,0.2);color:#fbbf24}
+.bg-red{background:rgba(248,113,113,0.2);color:#f87171}
+.footer{text-align:center;color:rgba(255,255,255,0.3);margin-top:40px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.05);font-size:0.85rem}
+</style>
+</head>
+<body>
+<h1>🌙 JARVIS Night Ops</h1>
+<p class="date">Session v3.28.0 → v3.31.1 · 2026-06-12 · 4 commits · <span id="ts"></span></p>
+
+<div class="grid">
+  <div class="card"><div class="num">10</div><div class="lbl">Specs Activas</div></div>
+  <div class="card"><div class="num">4</div><div class="lbl">Zero-Token n8n WFs</div></div>
+  <div class="card"><div class="num">6</div><div class="lbl">Master Prompts</div></div>
+  <div class="card"><div class="num">4</div><div class="lbl">Brand Images (fal.ai)</div></div>
+  <div class="card"><div class="num">7</div><div class="lbl">Playwright Tests</div></div>
+  <div class="card"><div class="num">10</div><div class="lbl">Docker Containers</div></div>
+</div>
+
+<div class="section">
+<h2>📦 Commits</h2>
+<ul>
+  <li><span class="badge bg-green">v3.28.1</span> Design systems + Reporte HTML</li>
+  <li><span class="badge bg-green">v3.29.0</span> Spec 009 — Playwright E2E (7/7 tests)</li>
+  <li><span class="badge bg-green">v3.30.0</span> Spec 010 — Daily Error Correction + systemd timer</li>
+  <li><span class="badge bg-green">v3.31.0</span> Master Content Correction Prompts (6 archivos)</li>
+  <li><span class="badge bg-green">v3.31.1</span> DOCUMENTO_DE_ERRORES actualizado</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>🆕 Specs Creadas</h2>
+<ul>
+  <li><span class="badge bg-green">009</span> Playwright Automation System — 7 tests E2E pasando</li>
+  <li><span class="badge bg-green">010</span> Daily Error Correction — systemd timer 4AM</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>📝 Master Prompts System (6 archivos, 623 líneas)</h2>
+<ul>
+  <li><span class="badge bg-green">1</span> v1.0-master-correction.md — Framework de 4 niveles</li>
+  <li><span class="badge bg-green">3</span> Brand voices: SDC, ABE MUSIC, Zamora</li>
+  <li><span class="badge bg-green">1</span> Niche correctors: 5 nichos</li>
+  <li><span class="badge bg-green">1</span> Workflow prompts: landing, social, email, video, product</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>⚙️ n8n Zero-Token Automations</h2>
+<ul>
+  <li><span class="badge bg-green">01</span> System Health Check (cada 15 min)</li>
+  <li><span class="badge bg-green">02</span> Git Sync Automator (cada hora)</li>
+  <li><span class="badge bg-green">03</span> Disk Cleanup & Docker Prune (diario 3AM)</li>
+  <li><span class="badge bg-green">04</span> Error Sentinel Log Scanner (cada 30 min)</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>🎨 Brand Images (fal.ai FLUX Pro)</h2>
+<ul>
+  <li><span class="badge bg-green">1</span> Sonora Digital Corp — seed: 2851859914</li>
+  <li><span class="badge bg-green">2</span> ABE MUSIC — THE HUB — seed: 3372064616</li>
+  <li><span class="badge bg-green">3</span> Alejandro Zamora — seed: 1390340071</li>
+  <li><span class="badge bg-green">4</span> Sonoran Sunset (AzREC) — seed: 3567125184</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>🔧 Errores Corregidos (5 nuevos)</h2>
+<ul>
+  <li><span class="badge bg-green">12</span> Screen sleep desactivado para trabajo nocturno</li>
+  <li><span class="badge bg-green">13</span> Monitores duales: Chrome forzado a HDMI (--window-position=0,0)</li>
+  <li><span class="badge bg-green">14</span> Open Design re-clonado (2 veces perdido)</li>
+  <li><span class="badge bg-green">15</span> Cron duplicados eliminados (sort -u)</li>
+  <li><span class="badge bg-green">16</span> n8n workflows validados + 4 nuevos zero-token</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>✅ Services Running</h2>
+<ul>
+  <li>🧠 Neo4j (178 nodos) — 🟢</li>
+  <li>🔮 Qdrant (1059 knowledge points) — 🟢</li>
+  <li>⚡ n8n (47 workflows) — 🟢</li>
+  <li>🌐 JARVIS UI (98 rutas) — 🟢</li>
+  <li>🤖 Hermes API — 🟢</li>
+  <li>📱 WhatsApp Bridge — 🟢</li>
+  <li>🤖 Telegram Bot — 🟢</li>
+  <li>🗄️ Postgres + Redis — 🟢</li>
+  <li>🎨 Open Design (construyendo) — 🟡</li>
+</ul>
+</div>
+
+<p class="footer">
+JARVIS v3.31.1 · Powered by Sonora Digital Corp · "Hoy diste un paso. Mañana daremos otro."<br>
+<span style="font-size:0.8rem">🔄 Auto-refresh cada 2 min</span>
+</p>
+<script>document.getElementById('ts').textContent = new Date().toLocaleTimeString()</script>
+</body>
+</html>

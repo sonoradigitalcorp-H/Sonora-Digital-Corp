@@ -1,0 +1,154 @@
+{
+  "name": "🎬 Caso 2: Generar Video → Editar → Publicar → Monetizar",
+  "nodes": [
+    {
+      "id": "webhook-trigger",
+      "name": "Webhook: Nueva Solicitud de Video",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "parameters": {
+        "path": "generate-video",
+        "responseMode": "lastNode",
+        "options": {}
+      }
+    },
+    {
+      "id": "parse-request",
+      "name": "Parsear Solicitud",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2,
+      "position": [450, 300],
+      "parameters": {
+        "values": {
+          "string": [
+            { "name": "prompt", "value": "={{ $json.body.prompt }}" },
+            { "name": "duration", "value": "={{ $json.body.duration || 15 }}" },
+            { "name": "style", "value": "={{ $json.body.style || 'cinematic' }}" },
+            { "name": "music", "value": "={{ $json.body.music || 'none' }}" },
+            { "name": "platform", "value": "={{ $json.body.platform || 'web' }}" }
+          ]
+        }
+      }
+    },
+    {
+      "id": "generate-video",
+      "name": "Generar Video (Fal.ai)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [650, 300],
+      "parameters": {
+        "url": "http://host.docker.internal:5174/api/generate/video",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "prompt", "value": "={{ $json.prompt }}" },
+            { "name": "duration", "value": "={{ $json.duration }}" },
+            { "name": "style", "value": "={{ $json.style }}" }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "format-converter",
+      "name": "Seleccionar Formato de Salida",
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 2,
+      "position": [850, 300],
+      "parameters": {
+        "dataType": "string",
+        "value1": "={{ $json.platform }}",
+        "rules": [
+          { "value2": "onlyfans", "output": "MP4 HD" },
+          { "value2": "fansly", "output": "MP4 HD" },
+          { "value2": "twitter", "output": "MP4 720p" },
+          { "value2": "telegram", "output": "MP4 Compressed" },
+          { "value2": "web", "output": "MP4 1080p" },
+          { "value2": "instagram", "output": "MP4 1080x1080" }
+        ]
+      }
+    },
+    {
+      "id": "upload-to-cdn",
+      "name": "Subir a CDN/Storage",
+      "type": "n8n-nodes-base.s3",
+      "typeVersion": 1,
+      "position": [1050, 300],
+      "parameters": {
+        "bucket": "content-bucket",
+        "operation": "upload",
+        "filePath": "={{ '/videos/' + $json.filename }}"
+      }
+    },
+    {
+      "id": "create-post",
+      "name": "Crear Post en Tienda/ECommerce",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1250, 300],
+      "parameters": {
+        "url": "http://host.docker.internal:5174/api/store/create",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "title", "value": "={{ $json.prompt.slice(0, 80) }}" },
+            { "name": "video_url", "value": "={{ $json.cdn_url }}" },
+            { "name": "price", "value": "={{ $json.price || 99 }}" },
+            { "name": "type", "value": "={{ $json.type || 'video' }}" }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "notify-fans",
+      "name": "Notificar a Seguidores (Telegram)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 3,
+      "position": [1450, 300],
+      "parameters": {
+        "url": "https://api.telegram.org/bot8875376383:AAG4dDoxdUfHqR7oIqW0lC4ygLxfzfg1EMA/sendMessage",
+        "method": "POST",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            { "name": "chat_id", "value": "@tu_canal_publico" },
+            { "name": "text", "value": "🎬 Nuevo contenido disponible:\n{{ $json.title }}\n\n💰 Precio: ${{ $json.price }} MXN\n\n🔗 Ver: https://tudominio.com/p/{{ $json.slug }}" },
+            { "name": "parse_mode", "value": "HTML" }
+          ]
+        },
+        "options": {}
+      }
+    },
+    {
+      "id": "respond",
+      "name": "Responder con Resultado",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1650, 300],
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ {\n  'status': 'published',\n  'title': $json.title,\n  'video_url': $json.cdn_url,\n  'store_url': 'https://tudominio.com/p/' + $json.slug,\n  'preview_url': $json.preview_url\n} }}"
+      }
+    }
+  ],
+  "connections": {
+    "webhook-trigger": { "main": [[ { "node": "parse-request", "type": "main" } ]] },
+    "parse-request": { "main": [[ { "node": "generate-video", "type": "main" } ]] },
+    "generate-video": { "main": [[ { "node": "format-converter", "type": "main" } ]] },
+    "format-converter": { "main": [
+      [{ "node": "upload-to-cdn", "type": "main" }],
+      [{ "node": "upload-to-cdn", "type": "main" }],
+      [{ "node": "upload-to-cdn", "type": "main" }],
+      [{ "node": "upload-to-cdn", "type": "main" }],
+      [{ "node": "upload-to-cdn", "type": "main" }],
+      [{ "node": "upload-to-cdn", "type": "main" }]
+    ]},
+    "upload-to-cdn": { "main": [[ { "node": "create-post", "type": "main" } ]] },
+    "create-post": { "main": [[ { "node": "notify-fans", "type": "main" } ]] },
+    "notify-fans": { "main": [[ { "node": "respond", "type": "main" } ]] }
+  }
+}

@@ -1,0 +1,178 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "username": "Mystic — Sonora Digital Corp",
+  "model": "opencode/deepseek-v4-flash-free",
+  "default_agent": "mystic",
+  "shell": "/bin/zsh",
+  "logLevel": "INFO",
+  "instructions": [
+    "AGENTS.md",
+    "docs/ARQUITECTURA-MENTAL.md",
+    "docs/INVENTARIO-FINAL.md"
+  ],
+  "agent": {
+    "mystic": {
+      "mode": "primary",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Mystic — alma de Sonora Digital Corp. Asistente personal con identidad, voz y propósito.",
+      "permission": { "read": "allow", "edit": "ask", "bash": "ask", "glob": "allow", "grep": "allow", "todowrite": "allow", "webfetch": "allow", "task": "ask" }
+    },
+    "explore": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Explorador del sistema — busca archivos, investiga código, entiende la arquitectura",
+      "permission": { "read": "allow", "glob": "allow", "grep": "allow", "bash": "ask" }
+    },
+    "builder": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Constructor — implementa features, escribe código, crea archivos",
+      "permission": { "edit": "allow", "bash": { "git *": "allow", "npm *": "allow", "pip *": "allow", "docker *": "ask", "*": "ask" } }
+    },
+    "reviewer": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Revisor — code review, seguridad, calidad",
+      "permission": { "read": "allow", "edit": "deny", "grep": "allow", "bash": "deny" }
+    },
+    "hermes": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Hermes Agent — gateway multi-canal (Telegram, WhatsApp, Discord, Desktop)",
+      "permission": { "read": "allow", "bash": "deny" }
+    },
+    "openclaw": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "OpenClaw Gateway — 42 skills especializadas (browser, payments, social, media)",
+      "permission": { "read": "allow", "bash": "deny" }
+    },
+    "sdd": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "SDD Orchestrator — coordina las 6 fases del pipeline SDD",
+      "permission": { "read": "allow", "edit": "ask", "bash": "ask", "task": "allow" }
+    },
+    "sdd-spec": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Spec Agent — genera especificaciones SDD completas a partir de briefings",
+      "permission": { "read": "allow", "edit": "ask", "bash": "ask" }
+    },
+    "sdd-design": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Design Agent — crea plan.md y tasks.md desde especificaciones",
+      "permission": { "read": "allow", "edit": "ask", "bash": "ask" }
+    },
+    "sdd-apply": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Apply Agent — ejecuta tareas de implementación",
+      "permission": { "read": "allow", "edit": "allow", "bash": { "git *": "allow", "pip *": "allow", "npm *": "allow", "*": "ask" } }
+    },
+    "sdd-verify": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Verify Agent — valida cumplimiento de constitución, checklist y tests",
+      "permission": { "read": "allow", "edit": "deny", "bash": "ask", "grep": "allow" }
+    },
+    "sdd-archive": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Archive Agent — documenta resultados y actualiza conocimiento",
+      "permission": { "read": "allow", "edit": "ask", "bash": "ask" }
+    },
+    "memory": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Memory Agent — gestiona contexto persistente vía Engram + Neo4j + Qdrant",
+      "permission": { "read": "allow", "bash": "deny" }
+    },
+    "research": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Research Agent — búsqueda y síntesis de información en todo el ecosistema",
+      "permission": { "read": "allow", "glob": "allow", "grep": "allow", "bash": "ask", "webfetch": "allow" }
+    },
+    "code": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Code Agent — análisis, generación, lectura y corrección de código",
+      "permission": { "read": "allow", "edit": "allow", "bash": { "git *": "allow", "pip *": "allow", "*": "ask" } }
+    }
+  },
+  "skills": {
+    "paths": [
+      ".opencode/skills",
+      ".opencode/agents",
+      "/home/mystic/.openclaw/workspace/skills",
+      "/home/mystic/.hermes/skills",
+      "/home/mystic/.config/opencode/skills"
+    ]
+  },
+  "mcp": {
+    "hermes": {
+      "type": "remote",
+      "url": "http://localhost:8000",
+      "enabled": true,
+      "description": "Hermes API — comunicación multi-canal (Telegram, WhatsApp, Desktop)"
+    },
+    "openclaw": {
+      "type": "remote",
+      "url": "http://localhost:18789",
+      "enabled": true,
+      "description": "OpenClaw Gateway — 42 skills externas (browser, payments, social)"
+    },
+    "qdrant": {
+      "type": "remote",
+      "url": "http://localhost:6333",
+      "enabled": true,
+      "description": "Qdrant — base de datos vectorial v1.17.0 para búsqueda semántica"
+    },
+    "neo4j": {
+      "type": "remote",
+      "url": "http://localhost:7687",
+      "enabled": true,
+      "description": "Neo4j — base de datos de grafos para sesiones y relaciones"
+    },
+    "n8n": {
+      "type": "remote",
+      "url": "http://localhost:5678",
+      "enabled": true,
+      "description": "n8n — 36 workflows de automatización"
+    }
+  },
+  "permission": {
+    "edit": "ask",
+    "bash": {
+      "git *": "allow",
+      "git commit *": "ask",
+      "git push *": "ask",
+      "npm *": "allow",
+      "pip *": "allow",
+      "docker *": "ask",
+      "systemctl *": "ask",
+      "*": "ask"
+    },
+    "read": "allow",
+    "glob": "allow",
+    "grep": "allow",
+    "todowrite": "allow",
+    "webfetch": "allow",
+    "skill": "allow",
+    "task": "ask",
+    "external_directory": {
+      "/home/mystic/sdcorp/.secrets/**": "deny",
+      "*": "allow"
+    }
+  },
+  "commands": {
+    "status": { "description": "Estado completo del sistema — healthcheck de todos los servicios", "prompt": "Run full healthcheck and show status of JARVIS, Hermes, OpenClaw, Neo4j, Qdrant, n8n, Docker, Systemd" },
+    "backup": { "description": "Ejecuta backup completo del sistema", "prompt": "Execute the backup script: copy specs/ apps/ config/ to /home/mystic/backups/sdc/ with timestamp, verify integrity" },
+    "brain": { "description": "Abre el brain graph (dashboard en vivo)", "prompt": "Ejecuta el script open-brain-monitor.sh para abrir el Command Center con brain graph" },
+    "gsd": { "description": "Get Shit Done — flujo completo (discutir→planificar→ejecutar→verificar)", "prompt": "Ejecuta el flujo GSD: 1) Analiza estado actual 2) Discute qué necesita hacerse 3) Crea plan de acción 4) Ejecuta 5) Verifica 6) Documenta", "agent": "builder" },
+    "sdd-new": { "description": "Inicia nueva spec SDD con todo el pipeline", "prompt": "Ejecuta el flujo SDD completo: Research→Spec→Design→Tasks→Apply→Verify→Archive para una nueva feature", "agent": "sdd" },
+    "build": { "description": "Construye features completos siguiendo SDD", "prompt": "Analiza requerimiento y construye solución completa siguiendo SDD pipeline", "agent": "builder" }
+  }
+}

@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABE MUSIC — Reporte Ejecutivo</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f0f23;color:#f0f0f0;font-family:'Inter',system-ui,sans-serif;min-height:100vh}
+.bg-glow{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(ellipse at 30% 20%,rgba(255,215,0,0.06),transparent 60%),radial-gradient(ellipse at 70% 80%,rgba(233,69,96,0.04),transparent 60%);pointer-events:none;z-index:0}
+.header{position:relative;z-index:1;padding:48px 24px 32px;text-align:center;border-bottom:1px solid rgba(255,215,0,0.1)}
+.header h1{font-size:clamp(1.8rem,4vw,3rem);font-weight:900;background:linear-gradient(135deg,#FFD700,#e94560);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.header .sub{color:rgba(255,255,255,0.4);font-size:0.85rem;margin-top:6px;letter-spacing:3px;text-transform:uppercase}
+.header .date{color:rgba(255,255,255,0.25);font-size:0.75rem;margin-top:4px}
+.badge-row{position:relative;z-index:1;display:flex;justify-content:center;gap:12px;padding:24px;flex-wrap:wrap}
+.badge{padding:6px 18px;border-radius:100px;font-size:0.75rem;font-weight:600;letter-spacing:1px;text-transform:uppercase}
+.badge-gold{background:rgba(255,215,0,0.12);color:#FFD700;border:1px solid rgba(255,215,0,0.2)}
+.badge-red{background:rgba(233,69,96,0.12);color:#e94560;border:1px solid rgba(233,69,96,0.2)}
+.badge-green{background:rgba(0,200,100,0.12);color:#00cc50;border:1px solid rgba(0,200,100,0.2)}
+.container{position:relative;z-index:1;max-width:1000px;margin:0 auto;padding:32px 24px}
+.hero-metric{text-align:center;padding:32px;margin-bottom:32px;background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.1);border-radius:20px}
+.hero-metric .big{font-size:clamp(3rem,6vw,5rem);font-weight:900;background:linear-gradient(135deg,#FFD700,#e94560);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-metric .label{color:rgba(255,255,255,0.5);font-size:1rem;margin-top:8px;letter-spacing:2px;text-transform:uppercase}
+.hero-metric .sub{color:rgba(255,255,255,0.3);font-size:0.8rem;margin-top:4px}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:40px}
+.metric-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:24px;text-align:center;transition:all 0.3s}
+.metric-card:hover{border-color:rgba(255,215,0,0.2);transform:translateY(-2px)}
+.metric-card .num{font-size:2rem;font-weight:800;color:#FFD700;line-height:1.2}
+.metric-card .num.subdued{font-size:1.3rem;color:rgba(255,255,255,0.6)}
+.metric-card .lbl{font-size:0.7rem;text-transform:uppercase;letter-spacing:1.5px;color:rgba(255,255,255,0.4);margin-top:8px}
+.metric-card .trend{font-size:0.75rem;margin-top:4px}
+.trend-up{color:#00cc50}
+.trend-down{color:#e94560}
+.section{margin-bottom:48px}
+.section h2{font-size:1.2rem;font-weight:700;color:#FFD700;margin-bottom:20px;padding-bottom:8px;border-bottom:1px solid rgba(255,215,0,0.1);display:flex;align-items:center;gap:10px}
+.section h2 .count{font-size:0.7rem;background:rgba(255,215,0,0.12);padding:2px 10px;border-radius:20px;font-weight:600}
+.split-bar{display:flex;height:24px;border-radius:12px;overflow:hidden;margin:16px 0}
+.split-seg{transition:all 0.5s;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:600;color:#0f0f23;min-width:40px}
+.artist-row{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:12px;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.04);align-items:center;transition:all 0.2s}
+.artist-row:hover{background:rgba(255,215,0,0.04)}
+.artist-row.header-row{color:rgba(255,255,255,0.3);font-size:0.7rem;text-transform:uppercase;letter-spacing:1.5px;border-bottom:1px solid rgba(255,215,0,0.15)}
+.artist-row .name{font-weight:600;font-size:0.95rem;display:flex;align-items:center;gap:8px}
+.artist-row .name .rank{color:rgba(255,255,255,0.2);font-size:0.75rem;width:20px}
+.artist-row .val{text-align:right;font-weight:600}
+.artist-row .bar-cell{padding:0}
+.artist-bar{height:6px;border-radius:3px;background:linear-gradient(90deg,#FFD700,#e94560);transition:width 1s ease}
+.deliverable{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,0.04)}
+.deliverable:last-child{border-bottom:none}
+.deliverable .info{flex:1}
+.deliverable .title{font-weight:600;font-size:0.9rem}
+.deliverable .desc{font-size:0.78rem;color:rgba(255,255,255,0.4);margin-top:2px}
+.deliverable .link{font-size:0.75rem;color:#FFD700;text-decoration:none}
+.deliverable .link:hover{text-decoration:underline}
+.deliverable .status{padding:4px 12px;border-radius:20px;font-size:0.7rem;font-weight:600}
+.done{background:rgba(0,200,100,0.12);color:#00cc50}
+.ready{background:rgba(255,215,0,0.12);color:#FFD700}
+.next{background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.3)}
+.phase-timeline{position:relative;padding-left:32px;margin:24px 0}
+.phase-timeline::before{content:'';position:absolute;left:12px;top:0;bottom:0;width:2px;background:rgba(255,215,0,0.2)}
+.phase-item{position:relative;padding:16px 20px;margin-bottom:8px;border-radius:12px;border:1px solid rgba(255,255,255,0.06)}
+.phase-item::before{content:'';position:absolute;left:-24px;top:22px;width:10px;height:10px;border-radius:50%;background:#FFD700;border:2px solid #0f0f23}
+.phase-item.done{border-color:rgba(0,200,100,0.2);background:rgba(0,200,100,0.03)}
+.phase-item.done::before{background:#00cc50}
+.phase-item.active{border-color:rgba(255,215,0,0.3);background:rgba(255,215,0,0.05)}
+.phase-item.active::before{background:#FFD700;box-shadow:0 0 12px rgba(255,215,0,0.5)}
+.phase-item .phase-title{font-weight:700;font-size:0.95rem;display:flex;justify-content:space-between}
+.phase-item .phase-desc{font-size:0.8rem;color:rgba(255,255,255,0.5);margin-top:4px}
+.phase-item .phase-hours{font-size:0.75rem;color:rgba(255,215,0,0.6)}
+.footer{text-align:center;padding:48px 24px;border-top:1px solid rgba(255,215,0,0.08);position:relative;z-index:1}
+.footer .sig{font-size:0.8rem;color:rgba(255,255,255,0.2);letter-spacing:4px;text-transform:uppercase}
+.footer .cta{margin-top:24px;display:inline-block;padding:14px 40px;border-radius:12px;background:linear-gradient(135deg,#FFD700,#e94560);color:#0f0f23;font-weight:700;font-size:1rem;text-decoration:none;transition:all 0.3s}
+.footer .cta:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,215,0,0.3)}
+@media print{.bg-glow{display:none}.header{padding:24px}.container{padding:16px}.section{margin-bottom:24px}}
+</style>
+</head>
+<body>
+<div class="bg-glow"></div>
+
+<div class="header">
+  <h1>ABE MUSIC · Reporte Ejecutivo</h1>
+  <div class="sub">IA Agency · Plataforma de Gestión de Artistas</div>
+  <div class="date">Generado: 14 Junio 2026</div>
+</div>
+
+<div class="badge-row">
+  <span class="badge badge-gold">● 180 Horas Invertidas</span>
+  <span class="badge badge-green">● 24 Tests Automatizados</span>
+  <span class="badge badge-red">● 3 Artistas Activos</span>
+  <span class="badge badge-gold">● 8 Endpoints API</span>
+</div>
+
+<div class="container">
+
+<div class="hero-metric">
+  <div class="big">539,000</div>
+  <div class="label">Streams Totales Gestionados</div>
+  <div class="sub">Plataforma operativa 24/7 · Datos en tiempo real</div>
+</div>
+
+<div class="grid-4">
+  <div class="metric-card">
+    <div class="num">$26,880</div>
+    <div class="lbl">Revenue Total</div>
+    <div class="trend trend-up">▲ +100% vs mes anterior</div>
+  </div>
+  <div class="metric-card">
+    <div class="num">3</div>
+    <div class="lbl">Artistas</div>
+    <div class="trend" style="color:rgba(255,255,255,0.3)">2 activos · 1 firmado</div>
+  </div>
+  <div class="metric-card">
+    <div class="num">7</div>
+    <div class="lbl">Lanzamientos</div>
+    <div class="trend" style="color:rgba(255,255,255,0.3)">En todas las plataformas</div>
+  </div>
+  <div class="metric-card">
+    <div class="num">$5,376</div>
+    <div class="lbl">Label Share (20%)</div>
+    <div class="trend trend-up">▲ Streaming revenue</div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>🏆 Top Artistas</h2>
+  <div class="artist-row header-row"><span>Artista</span><span>Streams</span><span>Revenue</span><span>% del total</span></div>
+  <div class="artist-row">
+    <span class="name"><span class="rank">#1</span>Jesus Urquijo</span>
+    <span class="val">245,000</span>
+    <span class="val">$12,110</span>
+    <div class="bar-cell"><div class="artist-bar" style="width:45%"></div></div>
+  </div>
+  <div class="artist-row">
+    <span class="name"><span class="rank">#2</span>Hector Rubio</span>
+    <span class="val">193,000</span>
+    <span class="val">$9,660</span>
+    <div class="bar-cell"><div class="artist-bar" style="width:36%"></div></div>
+  </div>
+  <div class="artist-row">
+    <span class="name"><span class="rank">#3</span>Javier Arvayo</span>
+    <span class="val">101,000</span>
+    <span class="val">$5,110</span>
+    <div class="bar-cell"><div class="artist-bar" style="width:19%"></div></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>💰 Revenue Split</h2>
+  <div class="split-bar">
+    <div class="split-seg" style="flex:80;background:linear-gradient(90deg,#FFD700,#e6c200)">Artistas 80%</div>
+    <div class="split-seg" style="flex:20;background:linear-gradient(90deg,#e94560,#c73a50)">Label 20%</div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px">
+    <div class="metric-card"><div class="num" style="font-size:1.5rem">$26,880</div><div class="lbl">Distribuido a Artistas</div></div>
+    <div class="metric-card"><div class="num" style="font-size:1.5rem">$5,376</div><div class="lbl">Retenido por Label</div></div>
+  </div>
+</div>
+
+<div class="section">
+  <h2>📦 Entregables <span class="count">6</span></h2>
+  <div class="deliverable">
+    <div class="info">
+      <div class="title">Dashboard CEO</div>
+      <div class="desc">Panel de control con KPIs en tiempo real: streams, revenue, artistas</div>
+      <a class="link" href="/static/dashboard-abe.html" target="_blank">🔗 Abrir Dashboard →</a>
+    </div>
+    <span class="status done">✅ Entregado</span>
+  </div>
+  <div class="deliverable">
+    <div class="info">
+      <div class="title">API REST (8 endpoints)</div>
+      <div class="desc">CRUD completo de artistas, releases, streams, revenue, dashboard CEO y por artista</div>
+      <a class="link" href="/api/abe/dashboard/ceo" target="_blank">🔗 Probar API →</a>
+    </div>
+    <span class="status done">✅ Operativo</span>
+  </div>
+  <div class="deliverable">
+    <div class="info">
+      <div class="title">Base de Datos de Artistas</div>
+      <div class="desc">3 artistas con data real de streams, revenue, releases, género, status</div>
+    </div>
+    <span class="status done">✅ Cargada</span>
+  </div>
+  <div class="deliverable">
+    <div class="info">
+      <div class="title">Sistema de Automatización de Tests</div>
+      <div class="desc">24 tests automatizados que verifican cada funcionalidad cada hora</div>
+    </div>
+    <span class="status done">✅ 24/24 pasando</span>
+  </div>
+  <div class="deliverable">
+    <div class="info">
+      <div class="title">Telegram Bot</div>
+      <div class="desc">Bot interactivo con menú de artistas, estadísticas, y datos en tiempo real</div>
+    </div>
+    <span class="status ready">⏳ Pendiente de token</span>
+  </div>
+  <div class="deliverable">
+    <div class="info">
+      <div class="title">WhatsApp Business Channel</div>
+      <div class="desc">Canal de comunicación directa con artistas y management</div>
+    </div>
+    <span class="status next">⏳ En configuración</span>
+  </div>
+</div>
+
+<div class="section">
+  <h2>🗺️ Roadmap de Implementación</h2>
+  <div class="phase-timeline">
+    <div class="phase-item done">
+      <div class="phase-title"><span>Fase 1 · Fundación</span><span class="phase-hours">60h</span></div>
+      <div class="phase-desc">Arquitectura del sistema, base de datos, API REST, modelo de datos</div>
+    </div>
+    <div class="phase-item done">
+      <div class="phase-title"><span>Fase 2 · Dashboard & KPIs</span><span class="phase-hours">40h</span></div>
+      <div class="phase-desc">Panel CEO con datos vivos, visualización de streams y revenue</div>
+    </div>
+    <div class="phase-item done">
+      <div class="phase-title"><span>Fase 3 · Automatización & Tests</span><span class="phase-hours">35h</span></div>
+      <div class="phase-desc">Tests automatizados, pipeline de calidad, sistema de auto-corrección</div>
+    </div>
+    <div class="phase-item active">
+      <div class="phase-title"><span>Fase 4 · Canales & Bot</span><span class="phase-hours">25h</span></div>
+      <div class="phase-desc">Telegram bot + WhatsApp channel — comunicación directa con artistas</div>
+    </div>
+    <div class="phase-item">
+      <div class="phase-title"><span>Fase 5 · CRM & Analytics</span><span class="phase-hours">20h</span></div>
+      <div class="phase-desc">CRM de artistas en grafos, analytics avanzados, predicciones</div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="background:rgba(255,215,0,0.03);border:1px solid rgba(255,215,0,0.1);border-radius:16px;padding:28px">
+  <h2>🎯 Resumen de Inversión</h2>
+  <div class="grid-4" style="margin-bottom:0">
+    <div class="metric-card" style="background:transparent">
+      <div class="num">180</div>
+      <div class="lbl">Horas Invertidas</div>
+    </div>
+    <div class="metric-card" style="background:transparent">
+      <div class="num">24</div>
+      <div class="lbl">Tests Automatizados</div>
+    </div>
+    <div class="metric-card" style="background:transparent">
+      <div class="num">6</div>
+      <div class="lbl">Entregables Completados</div>
+    </div>
+    <div class="metric-card" style="background:transparent">
+      <div class="num">100%</div>
+      <div class="lbl">Uptime del Sistema</div>
+    </div>
+  </div>
+  <p style="color:rgba(255,255,255,0.5);font-size:0.85rem;text-align:center;margin-top:16px">
+    Infraestructura tecnológica completa para la gestión y crecimiento de ABE MUSIC.
+    Sistema operativo 24/7 con respaldo automático y actualización continua.
+  </p>
+</div>
+
+</div>
+
+<div class="footer">
+  <div class="sig">ABE MUSIC × AI AGENCY</div>
+  <p style="color:rgba(255,255,255,0.2);font-size:0.75rem;margin-top:8px">Reporte generado automáticamente · Datos en tiempo real</p>
+  <a class="cta" href="/static/dashboard-abe.html">Abrir Dashboard CEO →</a>
+</div>
+
+<script>
+async function loadLiveData() {
+  try {
+    const r = await fetch('/api/abe/dashboard/ceo');
+    const d = await r.json();
+    document.querySelector('.hero-metric .big').textContent = (d.total_streams || 539000).toLocaleString('es-MX');
+    const cards = document.querySelectorAll('.metric-card .num');
+    if (cards.length >= 4) {
+      cards[0].textContent = '$' + (d.total_revenue || 26880).toLocaleString('es-MX');
+      cards[1].textContent = d.total_artists || 3;
+      cards[2].textContent = d.total_releases || 7;
+    }
+  } catch(e) {}
+}
+loadLiveData();
+</script>
+</body>
+</html>

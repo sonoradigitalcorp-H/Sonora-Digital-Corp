@@ -1,0 +1,23 @@
+PRIORIDADES ABSOLUTAS — Sonora Digital Corp
+=============================================
+
+SEMANA 1 (INMEDIATO):
+1. sonoradigitalcorp.com LIVE → Actualizar DNS A record a 201.175.210.106
+   (dominio apunta a 187.124.85.191 actualmente)
+2. nginx ya configurado, certbot instalado, SSL listo para correr
+3. Una vez apunte DNS: sudo certbot --nginx -d sonoradigitalcorp.com -d www.sonoradigitalcorp.com
+
+SEMANA 2:
+4. Rotar 29 API keys (prioridad: Mercado Pago, AWS S3, OpenRouter, Telegram)
+5. Backup cifrado diario a S3
+
+SEMANA 3:
+6. Deployar landing pages artistas via GitHub Pages
+   (deploy.sh en products/ ya funciona)
+7. Conectar WhatsApp en la pagina web
+
+SIEMPRE:
+- No aprender herramientas nuevas
+- Un solo objetivo por sesion
+- Preguntar antes de asumir
+- Verificar con grep antes de afirmar

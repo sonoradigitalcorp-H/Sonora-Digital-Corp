@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100 PREGUNTAS — MAYÉUTICA | JARVIS → AI AGENCY</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0f;color:#e0e0e0;font-family:'Inter',system-ui,sans-serif;overflow-x:hidden}
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;background:radial-gradient(circle at 20% 50%,rgba(0,255,200,0.03),transparent 50%),radial-gradient(circle at 80% 50%,rgba(255,215,0,0.03),transparent 50%)}
+header{position:relative;z-index:1;padding:60px 20px 40px;text-align:center;border-bottom:1px solid rgba(0,255,200,0.1);background:linear-gradient(180deg,rgba(0,255,200,0.05),transparent)}
+header h1{font-size:clamp(2rem,5vw,4rem);font-weight:900;background:linear-gradient(135deg,#00ffc8,#FFD700,#00ffc8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+header .sub{color:rgba(255,255,255,0.5);font-size:1.1rem;font-weight:300;letter-spacing:4px;text-transform:uppercase}
+header .count{display:inline-block;margin-top:20px;padding:8px 24px;border-radius:100px;background:rgba(0,255,200,0.1);border:1px solid rgba(0,255,200,0.2);color:#00ffc8;font-size:0.9rem;font-weight:600}
+.stats-bar{position:relative;z-index:1;display:flex;justify-content:center;gap:40px;padding:30px 20px;flex-wrap:wrap;border-bottom:1px solid rgba(255,215,0,0.05)}
+.stat{text-align:center}
+.stat .num{font-size:2rem;font-weight:800;color:#FFD700}
+.stat .label{font-size:0.75rem;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:2px;margin-top:4px}
+.container{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:40px 20px 100px}
+.section{margin-bottom:60px}
+.section h2{font-size:1.4rem;font-weight:800;color:#00ffc8;margin-bottom:20px;padding-bottom:8px;border-bottom:1px solid rgba(0,255,200,0.15);display:flex;align-items:center;gap:12px}
+.section h2 .badge{font-size:0.7rem;background:rgba(0,255,200,0.15);padding:2px 10px;border-radius:20px;color:#00ffc8;font-weight:600}
+.q{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:16px 20px;margin-bottom:8px;cursor:pointer;transition:all 0.3s}
+.q:hover{background:rgba(0,255,200,0.04);border-color:rgba(0,255,200,0.15);transform:translateX(4px)}
+.q .num{color:#00ffc8;font-weight:700;font-size:0.85rem;margin-right:12px;opacity:0.6}
+.q .question{font-weight:500;font-size:0.95rem;line-height:1.5}
+.q .answer{display:none;margin-top:12px;padding:14px 16px;background:rgba(0,255,200,0.05);border-radius:8px;border-left:3px solid #00ffc8;font-size:0.9rem;line-height:1.6;color:rgba(255,255,255,0.8)}
+.q.open .answer{display:block}
+.q.open{border-color:rgba(0,255,200,0.2)}
+.categories{position:relative;z-index:1;display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:0 20px 30px;border-bottom:1px solid rgba(255,215,0,0.05)}
+.cat{font-size:0.7rem;padding:4px 12px;border-radius:20px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);color:rgba(255,255,255,0.5);cursor:pointer;transition:all 0.3s;text-transform:uppercase;letter-spacing:1px}
+.cat:hover,.cat.active{background:rgba(0,255,200,0.1);border-color:rgba(0,255,200,0.3);color:#00ffc8}
+.cat[data-cat="abe"]{border-color:rgba(255,215,0,0.2);color:#FFD700}
+.cat[data-cat="abe"]:hover,.cat[data-cat="abe"].active{background:rgba(255,215,0,0.1);border-color:#FFD700;color:#FFD700}
+footer{position:relative;z-index:1;text-align:center;padding:40px;border-top:1px solid rgba(0,255,200,0.1);color:rgba(255,255,255,0.2);font-size:0.8rem}
+footer .sig{color:#00ffc8;font-weight:600}
+</style>
+</head>
+<body>
+<div class="particles"></div>
+
+<header>
+  <h1>⫷ 100 PREGUNTAS ⫸</h1>
+  <div class="sub">Mayéutica Aplicada · JARVIS → AI AGENCY v3</div>
+  <div class="count">✦ 100 verdades que no puedes evitar ✦</div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat"><div class="num">47</div><div class="label">Archivos ABE</div></div>
+  <div class="stat"><div class="num">376</div><div class="label">Tests Pasando</div></div>
+  <div class="stat"><div class="num">22</div><div class="label">Tests ABE</div></div>
+  <div class="stat"><div class="num">$750</div><div class="label">/semana ABE</div></div>
+  <div class="stat"><div class="num">539K</div><div class="label">Streams</div></div>
+  <div class="stat"><div class="num">3.2GB</div><div class="label">RAM total</div></div>
+</div>
+
+<div class="categories">
+  <span class="cat active" data-filter="all">Todas</span>
+  <span class="cat" data-cat="abe" data-filter="abe">ABE Music</span>
+  <span class="cat" data-filter="stack">Stack</span>
+  <span class="cat" data-filter="method">Metodología</span>
+  <span class="cat" data-filter="strategy">Estrategia</span>
+  <span class="cat" data-filter="errors">Errores</span>
+  <span class="cat" data-filter="tech">Técnicas</span>
+  <span class="cat" data-filter="hard">Incómodas</span>
+</div>
+
+<div class="container" id="questions">
+</div>
+
+<footer>
+  <div class="sig">JARVIS → AI AGENCY v3 · 14 Jun 2026</div>
+  <div style="margin-top:8px">Cada pregunta tiene una respuesta que ya sabes. La mayéutica solo te obliga a verla.</div>
+</footer>
+
+<script>
+const data = [
+  {n:1,cat:"abe",q:"¿Cuánto paga ABE por semana?",a:"$750. $25/hora × 30h/semana. Son $3,000/mes."},
+  {n:2,cat:"abe",q:"¿Cuánto llevas sin entregar visible?",a:"1 mes. ~$3,000 facturados y Abraham no ha visto nada que pueda abrir en su navegador."},
+  {n:3,cat:"abe",q:"¿Cuántos artistas tiene ABE?",a:"3: Hector Rubio, Jesus Urquijo, Javier Arvayo."},
+  {n:4,cat:"abe",q:"¿Cuántos streams totales?",a:"539,000. Jesus Urquijo lidera con 245K."},
+  {n:5,cat:"abe",q:"¿Cuánto revenue total?",a:"$26,880. Del label: $5,376 (20% de streaming)."},
+  {n:6,cat:"abe",q:"¿Cuál es el split de streaming?",a:"70/20/10: artista, label, distribución."},
+  {n:7,cat:"abe",q:"¿Dónde vive la data de ABE?",a:"data/abe-music.json. 90 entradas, 3 reales."},
+  {n:8,cat:"abe",q:"¿Cuántos tests de ABE pasan?",a:"22. 18 unit + 3 integ + 1 E2E. Todos verdes."},
+  {n:9,cat:"abe",q:"¿En cuánto tiempo pasan los tests ABE?",a:"0.67s unit + 2.13s integ. Casi instantáneo."},
+  {n:10,cat:"abe",q:"¿Qué bloquea el bot de Telegram de ABE?",a:"Un token de BotFather. El script está escrito (127 líneas), solo falta el token."},
+  {n:11,cat:"abe",q:"¿Qué bloquea el WhatsApp de ABE?",a:"Un número business. El script setup-abe-music.sh está listo."},
+  {n:12,cat:"abe",q:"¿Cuál es el split de merch?",a:"60/30/10: artista, label, Printful."},
+  {n:13,cat:"abe",q:"¿Cuál es el split de sync license?",a:"50/40/10: artista, label, manager."},
+  {n:14,cat:"abe",q:"¿Qué endpoints de ABE existen?",a:"8: CRUD artistas, releases, streams, revenue, dashboard CEO, dashboard artista."},
+  {n:15,cat:"abe",q:"¿Qué es lo MÍNIMO que ABE necesita VER hoy?",a:"Una URL donde vea sus 539K streams y $26,880 revenue. Eso existe en la API. Solo falta HTML."},
+  {n:16,cat:"stack",q:"¿Cuánta RAM tiene tu laptop?",a:"3.2GB. No es mucho. Es lo que hay."},
+  {n:17,cat:"stack",q:"¿Cuánta RAM estás usando ahora?",a:"~2.3GB. opencode consume 790MB solo."},
+  {n:18,cat:"stack",q:"¿Cuánta RAM libre?",a:"~655MB. Crítico pero manejable."},
+  {n:19,cat:"stack",q:"¿Cuánto swap usas?",a:"2.9GB de 4.5GB. Swap activo = lentitud."},
+  {n:20,cat:"stack",q:"¿Cuántos contenedores tenías?",a:"12. Ahora solo 2 esenciales (neo4j + hermes_api)."},
+  {n:21,cat:"stack",q:"¿Cuántos contenedores necesitas para BUILD?",a:"Cero. Solo opencode + git + python."},
+  {n:22,cat:"stack",q:"¿Cuántos para TEST unit?",a:"Cero. Los tests de ABE pasan en 0.67s sin Docker."},
+  {n:23,cat:"stack",q:"¿Cuántos para TEST integración?",a:"2: hermes_api (8000) + neo4j (7687)."},
+  {n:24,cat:"stack",q:"¿Cuántos para E2E?",a:"Todos. Playwright necesita el stack completo."},
+  {n:25,cat:"stack",q:"¿Cuál es tu API key de OpenRouter?",a:"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"},
+  {n:26,cat:"stack",q:"¿Cuál es tu FAL_KEY?",a:"f8be3dbb-ae16-4562-8f4d-6ae8aa3215ac:f1b8ddaff0bbdda7361ab6a400de27c4"},
+  {n:27,cat:"stack",q:"¿Por qué el token de Telegram no funciona?",a:"401 rejected. Hay que regenerarlo en BotFather."},
+  {n:28,cat:"stack",q:"¿Cuántos bots de Telegram tienes?",a:"3 configurados en Hermes: default, admin, abraham. Todos caídos."},
+  {n:29,cat:"stack",q:"¿En qué puerto está Hermes API?",a:"8000."},
+  {n:30,cat:"stack",q:"¿En qué puerto está JARVIS web?",a:"5174."},
+  {n:31,cat:"stack",q:"¿En qué puerto está OpenClaw?",a:"18789."},
+  {n:32,cat:"stack",q:"¿En qué puerto está Neo4j?",a:"7687."},
+  {n:33,cat:"stack",q:"¿En qué puerto está Qdrant?",a:"6333."},
+  {n:34,cat:"stack",q:"¿En qué puerto está n8n?",a:"5678."},
+  {n:35,cat:"stack",q:"¿En qué puerto está el Telegram bot manager?",a:"3003."},
+  {n:36,cat:"method",q:"¿SDD o TDD primero si solo puedes elegir UNO?",a:"TDD. El test te obliga a definir el contrato. SDD sin TDD es filosofía."},
+  {n:37,cat:"method",q:"¿Qué libro necesitas leer?",a:"Working Effectively with Legacy Code (Feathers). Para poner tests a código que no los tiene."},
+  {n:38,cat:"method",q:"¿Cuántas tasks reales necesita ABE?",a:"~40. No 400. El número grande era perfeccionismo."},
+  {n:39,cat:"method",q:"¿Scrum o Kanban para 1 persona?",a:"Kanban. Scrum es para equipos."},
+  {n:40,cat:"method",q:"¿Qué es más importante: spec perfecto o test que pase?",a:"Test que pase. El spec se corrige. El test que pasa es verdad."},
+  {n:41,cat:"method",q:"¿Cuándo sacrificas calidad?",a:"Cuando el cliente necesita algo URGENTE y acepta el riesgo."},
+  {n:42,cat:"method",q:"¿Qué haces DESPUÉS de sacrificar calidad?",a:"Inmediatamente: test para cubrir ese camino. Nunca dejes la deuda sin pagar."},
+  {n:43,cat:"method",q:"¿Qué framework de agente usas?",a:"Propio. 200 líneas. Ciclo: receive → plan → execute → verify → deliver → reflect."},
+  {n:44,cat:"method",q:"¿Por qué NO LangGraph?",a:"Porque es una dependencia. Tu harness es una fachada de 200 líneas que puedes migrar a lo que sea."},
+  {n:45,cat:"method",q:"¿Cuándo MATAS el harness?",a:"Cuando te da más problemas de los que resuelve. Si en 3 meses no te ahorró tiempo, sobra."},
+  {n:46,cat:"method",q:"¿Qué prompt de Fabric (42K★) incorporas?",a:"extract_wisdom (aprendizaje) + improve_prompt (auto-mejora)."},
+  {n:47,cat:"method",q:"¿Qué técnica de DAIR.AI (75K★) es obligatoria?",a:"Tree of Thoughts. BFS de soluciones evita casarte con tu primera idea."},
+  {n:48,cat:"method",q:"¿Quién escribe los tests?",a:"El agente que implementa. Auto-tests. Tú revisas."},
+  {n:49,cat:"method",q:"¿Cómo mides calidad de prompts?",a:"Tasa de éxito (%), tokens promedio, tiempo de ejecución. Si baja de 80%, se regenera."},
+  {n:50,cat:"method",q:"¿Documentas en markdown o en código?",a:"Ambos. Spec es markdown. Test es código. Contrato es YAML."},
+  {n:51,cat:"strategy",q:"¿Cuál es tu negocio?",a:"Agencia IA que vende automatizaciones a humanos que no saben programar."},
+  {n:52,cat:"strategy",q:"¿Quién es tu primer cliente?",a:"ABE MUSIC Inc. Paga $750/semana."},
+  {n:53,cat:"strategy",q:"¿Qué vendes exactamente?",a:"Bots, workflows, landings, CRMs, dashboards. Todo automatizado."},
+  {n:54,cat:"strategy",q:"¿Cuánto cobras?",a:"$25/hora o paquetes: bots $200-500, workflows $500-2000, retainers $50-300/mes."},
+  {n:55,cat:"strategy",q:"¿Cuál es tu costo operativo mensual?",a:"$17-82/mes. VPS + APIs + dominio."},
+  {n:56,cat:"strategy",q:"¿Cuántos clientes necesitas para ser rentable?",a:"3. 1 paga el VPS. 3 paga todo. 10 es negocio real."},
+  {n:57,cat:"strategy",q:"¿Cuál es tu ventaja sobre un dev freelance?",a:"Automatización continua. El freelance entrega y se va. Tú entregas y sigues optimizando."},
+  {n:58,cat:"strategy",q:"¿Cómo llegas a clientes?",a:"Contenido automatizado + referidos + comunidades de emprendedores."},
+  {n:59,cat:"strategy",q:"¿Qué impide que ABE te reemplace?",a:"Nada. Por eso entregas valor continuo, no un proyecto único."},
+  {n:60,cat:"strategy",q:"¿Cuál es el producto mínimo que ABE necesita VER?",a:"Dashboard con sus 539K streams y $26,880 revenue. 3-4h de trabajo."},
+  {n:61,cat:"strategy",q:"¿En cuánto tiempo construyes ese dashboard?",a:"3-4 horas. HTML plano con fetch() a la API que ya funciona."},
+  {n:62,cat:"strategy",q:"¿Qué pasa si ABE ve el dashboard y dice 'es poco'?",a:"Perfecto. Sabes exactamente qué mejorar. El feedback concreto es oro."},
+  {n:63,cat:"strategy",q:"¿Qué pasa si ABE AMA el dashboard?",a:"Pides más presupuesto para más features. El cliente feliz paga más."},
+  {n:64,cat:"strategy",q:"¿Cuál es tu plan si ABE cancela?",a:"Tienes el sistema funcionando para conseguir el siguiente cliente."},
+  {n:65,cat:"strategy",q:"¿Cuándo contratas a alguien?",a:"20+ clientes o soporte >20h/semana."},
+  {n:66,cat:"errors",q:"¿Cuál fue tu error más costoso?",a:"Construir antes de especificar. 6,794 LOC donde 90% es ruido."},
+  {n:67,cat:"errors",q:"¿Cuántas LOC escribiste que no valen?",a:"~6,000 de 6,794. El 90% reimplementa herramientas que ya existen."},
+  {n:68,cat:"errors",q:"¿Qué aprendiste de JARVIS v1?",a:"Sin SDD+TDD construyes castillos de naipes. Las herramientas existen para no reimplementarlas."},
+  {n:69,cat:"errors",q:"¿Qué SALVAS de JARVIS v1?",a:"Tests (1,500 LOC de valor real). Specs 000-010. Integraciones con Neo4j/Qdrant."},
+  {n:70,cat:"errors",q:"¿Qué QUEMAS?",a:"webui/ (2,500 LOC de HTML estático). orchestrator.py (430 LOC). voice/ (500 LOC)."},
+  {n:71,cat:"errors",q:"¿Cuál fue el error #1 de Telegram?",a:"No regenerar el token cuando expiró. Lleva semanas muerto y nadie lo notó."},
+  {n:72,cat:"errors",q:"¿Cuál fue el error #1 de RAM?",a:"Tener 12 contenedores + opencode en 3.2GB. Arquitectura sin considerar recursos."},
+  {n:73,cat:"errors",q:"¿Cuál fue el error #1 con ABE?",a:"1 mes sin entregar nada visible. $3,000 facturados, 0 URLs que Abraham pueda abrir."},
+  {n:74,cat:"errors",q:"¿Cuál fue el error #1 metodológico?",a:"Perfeccionismo > entrega. Preferir arquitectura perfecta a cliente feliz."},
+  {n:75,cat:"errors",q:"¿Cómo evitas el síndrome del constructor?",a:"Regla fija: si no tiene cliente, no lo construyas."},
+  {n:76,cat:"errors",q:"¿Cómo combates la procrastinación?",a:"Entregar algo CADA DÍA. No importa qué tan pequeño."},
+  {n:77,cat:"errors",q:"¿Cómo sabes que estás mejorando?",a:"Menos código nuevo, más entregas, clientes felices que pagan."},
+  {n:78,cat:"errors",q:"¿Qué haces cuando un test falla?",a:"El agente no entrega. Reintenta 3 veces. Si sigue fallando, escala a humano (tú)."},
+  {n:79,cat:"errors",q:"¿Qué haces cuando TODO falla?",a:"Revisión de causas. Test para cubrir el error. Documentar en DOCUMENTO_DE_ERRORES."},
+  {n:80,cat:"errors",q:"¿Cómo celebras un éxito?",a:"Cliente feliz que paga y refiere. Todo lo demás es ruido."},
+  {n:81,cat:"tech",q:"¿Python o TypeScript?",a:"Python. Ecosistema IA. Ya lo tienes. Cambiar ahora sería estúpido."},
+  {n:82,cat:"tech",q:"¿FastAPI o Flask?",a:"FastAPI. Async. Docs automáticas. Validación con Pydantic. Ya lo tienes."},
+  {n:83,cat:"tech",q:"¿SQLite o PostgreSQL?",a:"SQLite para agente (checkpoints). PG para clientes (10+)."},
+  {n:84,cat:"tech",q:"¿Redis para qué?",a:"Cache + Pub/Sub entre agentes. Ya funciona."},
+  {n:85,cat:"tech",q:"¿Neo4j para qué?",a:"Grafos de conocimiento. Cuando tengas 1000+ entidades."},
+  {n:86,cat:"tech",q:"¿Qdrant para qué?",a:"Memoria semántica. RAG. Búsqueda vectorial."},
+  {n:87,cat:"tech",q:"¿Playwright para qué?",a:"E2E tests + browser automation en HDMI."},
+  {n:88,cat:"tech",q:"¿n8n para qué?",a:"Workflows de negocio. NO orquestación de agentes."},
+  {n:89,cat:"tech",q:"¿Hermes para qué?",a:"Gateway multi-platform, cron jobs, kanban."},
+  {n:90,cat:"tech",q:"¿OpenClaw para qué?",a:"Gateway + skills + multi-channel. 379K estrellas."},
+  {n:91,cat:"tech",q:"¿Cuándo usas Ollama?",a:"Cuando tengas VPS con 16GB+. DeepSeek Coder 16B Q4 necesita ~9GB."},
+  {n:92,cat:"tech",q:"¿Cuándo pagas API externa?",a:"Cuando VPS se sature (>80% CPU) o latencia >5s."},
+  {n:93,cat:"tech",q:"¿Merece la pena VPS de 32GB?",a:"$15/mes más. Si puedes, sí. Te deja respirar con Mistral 24B."},
+  {n:94,cat:"tech",q:"¿Cómo versionas agentes?",a:"Cada agente tiene version en su spec. El harness verifica compatibilidad."},
+  {n:95,cat:"tech",q:"¿Cómo debuggeas un agente?",a:"Checkpoints JSON. cat .checkpoints/agent-042-step-3.json. Cada paso guarda estado."},
+  {n:96,cat:"hard",q:"¿Esto es diferente a JARVIS v1 o es lo mismo?",a:"Es diferente si SIGUES EL MÉTODO. Si vuelves a 'especular y codificar', es lo mismo. La diferencia no es el plan. Eres tú."},
+  {n:97,cat:"hard",q:"¿Probabilidad de abandonar el plan en 3 días?",a:"40%. Por eso el día 1 entregas algo. La motivación es ver progreso REAL."},
+  {n:98,cat:"hard",q:"¿Tu mayor debilidad en este plan?",a:"Estás solo. Nadie te exige calidad. Puedes saltarte pasos. Los tests automáticos son tu único jefe."},
+  {n:99,cat:"hard",q:"¿Qué pasa si lees esto en 1 mes y no empezaste?",a:"El plan era bueno. La ejecución falló. Empieza con 1 task: 'define qué vende ABE'. Toma 10 minutos."},
+  {n:100,cat:"hard",q:"(Última) ¿Cuál es la verdad más dura de todo esto?",a:"El código es lo de menos. La arquitectura, tests, prompts, harness: todo es ejecución. Lo difícil no es construir la agencia. Es conseguir el primer cliente que pague. ABE ya paga. No lo pierdas por planear demasiado."}
+];
+
+const container = document.getElementById('questions');
+const sections = {
+  abe:{title:'🎵 ABE MUSIC',desc:'El cliente que paga'},
+  stack:{title:'🖥️ Stack y Hardware',desc:'Lo que tienes'},
+  method:{title:'📐 Metodología',desc:'Cómo construyes'},
+  strategy:{title:'🎯 Estrategia',desc:'El negocio'},
+  errors:{title:'💀 Errores',desc:'Lo que aprendiste'},
+  tech:{title:'🔧 Decisiones Técnicas',desc:'Por qué cada cosa'},
+  hard:{title:'🔥 Incómodas',desc:'Las que duelen'}
+};
+
+let currentFilter = 'all';
+
+function render(filter){
+  currentFilter = filter;
+  container.innerHTML = '';
+  const cats = Object.keys(sections);
+  cats.forEach(cat => {
+    const items = data.filter(d => d.cat === cat && (filter === 'all' || d.cat === filter));
+    if(items.length === 0) return;
+    const sec = document.createElement('div');
+    sec.className = 'section';
+    sec.innerHTML = `<h2>${sections[cat].title} <span class="badge">${sections[cat].desc}</span></h2>`;
+    items.forEach(d => {
+      const el = document.createElement('div');
+      el.className = 'q';
+      el.innerHTML = `<div class="q-inner"><span class="num">#${String(d.n).padStart(3,'0')}</span><span class="question">${d.q}</span></div><div class="answer">${d.a}</div>`;
+      el.addEventListener('click', () => el.classList.toggle('open'));
+      sec.appendChild(el);
+    });
+    container.appendChild(sec);
+  });
+}
+
+document.querySelectorAll('.cat').forEach(el => {
+  el.addEventListener('click', () => {
+    document.querySelectorAll('.cat').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    render(el.dataset.filter);
+  });
+});
+
+render('all');
+</script>
+</body>
+</html>

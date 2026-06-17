@@ -1,0 +1,59 @@
+{
+  "ecosystem": "Sonora Digital Corp — MCP Ecosystem v1.0",
+  "gateway": {
+    "name": "sonora-mcp-gateway",
+    "type": "stdio",
+    "command": "node",
+    "args": ["/root/sonora-digital-corp/mcp/gateway/mcp-gateway.js"],
+    "port": 0,
+    "tools": 14,
+    "resources": 9
+  },
+  "servers": [
+    {
+      "id": "paperclip",
+      "name": "Paperclip MCP",
+      "type": "http",
+      "endpoint": "http://127.0.0.1:3100/mcp",
+      "config": "/root/sonora-digital-corp/mcp/servers/paperclip-mcp.json"
+    },
+    {
+      "id": "n8n",
+      "name": "n8n MCP",
+      "type": "http",
+      "endpoint": "http://127.0.0.1:5678/mcp",
+      "config": "/root/sonora-digital-corp/mcp/servers/n8n-mcp.json"
+    },
+    {
+      "id": "metabase",
+      "name": "Metabase MCP",
+      "type": "http",
+      "endpoint": "http://127.0.0.1:3002/mcp",
+      "config": "/root/sonora-digital-corp/mcp/servers/metabase-mcp.json"
+    },
+    {
+      "id": "uptime",
+      "name": "Uptime Kuma MCP",
+      "type": "http",
+      "endpoint": "http://127.0.0.1:3003/mcp",
+      "config": "/root/sonora-digital-corp/mcp/servers/uptime-mcp.json"
+    },
+    {
+      "id": "dashy",
+      "name": "Dashy MCP",
+      "type": "http",
+      "endpoint": "http://127.0.0.1:3004/mcp"
+    },
+    {
+      "id": "plausible",
+      "name": "Plausible MCP",
+      "type": "http",
+      "endpoint": "http://127.0.0.1:3006/mcp"
+    }
+  ],
+  "bindings": {
+    "hermes": ["sonora-mcp-gateway"],
+    "openclaw": ["paperclip", "n8n", "metabase", "uptime", "dashy"],
+    "mystic": ["sonora-mcp-gateway"]
+  }
+}

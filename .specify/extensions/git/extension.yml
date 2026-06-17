@@ -1,0 +1,13 @@
+name: git
+version: 1.0.0
+description: Git automation for SDD workflow
+scripts:
+  initialize: scripts/bash/initialize-repo.sh
+  feature: scripts/bash/create-new-feature.sh
+  commit: scripts/bash/auto-commit.sh
+  validate: scripts/bash/git-common.sh
+commands:
+  - speckit.git.initialize
+  - speckit.git.feature
+  - speckit.git.commit
+  - speckit.git.validate

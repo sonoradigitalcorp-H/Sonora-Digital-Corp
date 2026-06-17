@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS — Night Ops: 00:30 Report</title>
+<meta http-equiv="refresh" content="300">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a1a;color:#e0e0e0;font-family:'Segoe UI',system-ui,sans-serif;padding:20px;max-width:1200px;margin:0 auto}
+h1{font-size:2rem;background:linear-gradient(135deg,#00d4ff,#7b2ff7,#ff6b35);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+h2{color:#7b2ff7;margin:20px 0 12px;font-size:1.2rem;border-bottom:1px solid rgba(255,255,255,0.1);padding-bottom:6px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+.card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:16px}
+.card .label{color:rgba(255,255,255,0.5);font-size:0.8rem}
+.card .value{font-size:1.3rem;font-weight:700;margin-top:4px}
+.val-green{color:#4ade80}
+.val-yellow{color:#fbbf24}
+.val-cyan{color:#00d4ff}
+.log-box{background:rgba(0,0,0,0.3);border-radius:8px;padding:12px;font-family:monospace;font-size:0.8rem;max-height:250px;overflow-y:auto}
+.log-line{color:rgba(255,255,255,0.7);padding:2px 0}
+.log-time{color:rgba(255,255,255,0.3)}
+</style>
+</head>
+<body>
+<h1>🌙 Night Ops — Progress Report 00:30</h1>
+<p style="color:rgba(255,255,255,0.5)">Auto-refresh cada 5 min · Última actualización: <span id="ts">cargando...</span></p>
+
+<h2>📊 Progress Summary</h2>
+<div class="grid">
+  <div class="card"><div class="label">Fase 1: Dashboard + Copilot</div><div class="value val-green">✅ DONE</div></div>
+  <div class="card"><div class="label">Fase 2: MCP + Open Design</div><div class="value val-yellow">⏳ Installing</div></div>
+  <div class="card"><div class="label">Fase 3: n8n Zero-Token WFs</div><div class="value val-green">✅ 4/4</div></div>
+  <div class="card"><div class="label">Fase 4: fal.ai Brand Images</div><div class="value val-green">✅ 4/4</div></div>
+  <div class="card"><div class="label">Fase 5: Open Design Pres</div><div class="value val-yellow">⏳ Waiting OD</div></div>
+  <div class="card"><div class="label">Fase 6: Brain + Docs</div><div class="value val-yellow">⏳ In progress</div></div>
+</div>
+
+<h2>🎨 Brand Images Generated</h2>
+<div class="grid">
+  <div class="card" style="border-color:rgba(0,212,255,0.3)">
+    <div class="label" style="color:#00d4ff">Sonora Digital Corp</div>
+    <div class="value" style="font-size:0.9rem">seed: 2851859914</div>
+  </div>
+  <div class="card" style="border-color:rgba(255,215,0,0.3)">
+    <div class="label" style="color:#FFD700">ABE MUSIC — THE HUB</div>
+    <div class="value" style="font-size:0.9rem">seed: 3372064616</div>
+  </div>
+  <div class="card" style="border-color:rgba(201,162,39,0.3)">
+    <div class="label" style="color:#c9a227">Alejandro Zamora</div>
+    <div class="value" style="font-size:0.9rem">seed: 1390340071</div>
+  </div>
+  <div class="card" style="border-color:rgba(255,107,53,0.3)">
+    <div class="label" style="color:#ff6b35">Sonoran Sunset</div>
+    <div class="value" style="font-size:0.9rem">seed: 3567125184</div>
+  </div>
+</div>
+
+<h2>⚙️ n8n Zero-Token Automations</h2>
+<div class="grid">
+  <div class="card"><div class="label">01: System Health Check</div><div class="value val-green">✅ Every 15 min</div></div>
+  <div class="card"><div class="label">02: Git Sync Automator</div><div class="value val-green">✅ Every hour</div></div>
+  <div class="card"><div class="label">03: Disk Cleanup</div><div class="value val-green">✅ Daily 3AM</div></div>
+  <div class="card"><div class="label">04: Error Sentinel</div><div class="value val-green">✅ Every 30 min</div></div>
+</div>
+
+<h2>📜 Activity Log</h2>
+<div class="log-box" id="log">
+  <div class="log-line"><span class="log-time">23:24</span> 🟢 4 n8n zero-token workflows imported</div>
+  <div class="log-line"><span class="log-time">23:24</span> 🟢 4 brand images generated (fal.ai FLUX Pro)</div>
+  <div class="log-line"><span class="log-time">23:24</span> 🟢 Brand presentation page opened on HDMI</div>
+  <div class="log-line"><span class="log-time">23:20</span> 🟢 Open Design install started (background)</div>
+  <div class="log-line"><span class="log-time">23:15</span> 🟢 Night ops 15-min cron installed</div>
+  <div class="log-line"><span class="log-time">23:11</span> 🟢 Spec 010 created + systemd timer 4AM</div>
+  <div class="log-line"><span class="log-time">23:10</span> 🟢 Cron duplicates cleaned (22 unique)</div>
+  <div class="log-line"><span class="log-time">23:04</span> 🟢 7/7 Playwright tests passed on HDMI</div>
+  <div class="log-line"><span class="log-time">22:46</span> 🟢 Open Design cloned (8031 files)</div>
+  <div class="log-line"><span class="log-time">22:27</span> 🟢 3 Design systems created</div>
+  <div class="log-line"><span class="log-time">22:00</span> 🟢 Session v3.28.0 started</div>
+</div>
+<p style="text-align:center;color:rgba(255,255,255,0.3);margin-top:30px;font-size:0.85rem">Night Ops v3.30.0 · JARVIS running autonomously</p>
+<script>document.getElementById('ts').textContent=new Date().toLocaleTimeString()</script>
+</body>
+</html>

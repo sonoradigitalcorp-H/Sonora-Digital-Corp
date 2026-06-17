@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🧠 JARVIS Brain — Mapa de Conexiones</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0a0a1a; color: #e0e0e0; font-family: 'Segoe UI', system-ui, sans-serif; overflow: hidden; height: 100vh; }
+#header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 12px 24px; background: rgba(10,10,26,0.85); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 16px; }
+#header h1 { font-size: 18px; font-weight: 600; background: linear-gradient(135deg, #00d4ff, #7b2ff7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+#header .stats { font-size: 12px; color: #888; }
+#header .stats span { color: #00d4ff; font-weight: 600; }
+#legend { position: fixed; bottom: 24px; right: 24px; z-index: 100; background: rgba(10,10,26,0.9); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 16px; font-size: 12px; min-width: 160px; }
+#legend .item { display: flex; align-items: center; gap: 8px; margin: 4px 0; cursor: pointer; padding: 2px 4px; border-radius: 4px; }
+#legend .item:hover { background: rgba(255,255,255,0.05); }
+#legend .dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+#tooltip { position: fixed; z-index: 200; background: rgba(10,10,26,0.95); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; padding: 8px 12px; font-size: 12px; max-width: 300px; pointer-events: none; opacity: 0; transition: opacity 0.15s; }
+#tooltip.visible { opacity: 1; }
+#tooltip .title { font-weight: 600; color: #fff; }
+#tooltip .desc { color: #aaa; margin-top: 4px; font-size: 11px; }
+#tooltip .type { display: inline-block; font-size: 10px; padding: 2px 6px; border-radius: 4px; margin-top: 6px; background: rgba(255,255,255,0.1); color: #888; }
+svg { width: 100vw; height: 100vh; }
+.node circle { stroke: rgba(255,255,255,0.3); stroke-width: 1.5px; cursor: pointer; transition: r 0.2s; }
+.node circle:hover { stroke: #fff; stroke-width: 2px; }
+.node text { font-size: 10px; fill: #aaa; pointer-events: none; text-anchor: middle; }
+.node.highlight text { fill: #fff; font-weight: 600; font-size: 11px; }
+.link { stroke-opacity: 0.4; }
+.link.highlight { stroke-opacity: 0.8; }
+@keyframes pulse { 0%, 100% { opacity: 0.4; } 50% { opacity: 1; } }
+.node.mcp circle { animation: pulse 2s infinite; }
+</style>
+</head>
+<body>
+<div id="header">
+  <h1>🧠 JARVIS — Cerebro de Conexiones</h1>
+  <div class="stats" id="stats">Cargando...</div>
+</div>
+<div id="legend"></div>
+<div id="tooltip"></div>
+<svg id="graph"></svg>
+<script>
+const COLORS = {
+  jarvis: "#00d4ff", hermes: "#7b2ff7", openclaw: "#ff6b35",
+  mcp: "#ffd700", infra: "#4ade80", user: "#ff4757",
+  external: "#888"
+};
+const GROUP_NAMES = {
+  jarvis: "JARVIS Core", hermes: "Hermes", openclaw: "OpenClaw",
+  mcp: "MCP", infra: "Infraestructura", user: "Usuario",
+  external: "Externo"
+};
+
+fetch('/api/brain/graph')
+  .then(r => r.json())
+  .then(data => {
+    const width = window.innerWidth, height = window.innerHeight;
+    const svg = d3.select('#graph');
+    const g = svg.append('g');
+    const zoom = d3.zoom().scaleExtent([0.1, 4]).on('zoom', (e) => g.attr('transform', e.transform));
+    svg.call(zoom).call(zoom.transform, d3.zoomIdentity.translate(width/2, height/2).scale(0.7));
+
+    const linkGroup = g.append('g').attr('class', 'links');
+    const nodeGroup = g.append('g').attr('class', 'nodes');
+
+    const simulation = d3.forceSimulation(data.nodes)
+      .force('link', d3.forceLink(data.links).id(d => d.id).distance(120).strength(l => l.source === 'user' ? 0.3 : 0.5))
+      .force('charge', d3.forceManyBody().strength(-300))
+      .force('center', d3.forceCenter(0, 0))
+      .force('collision', d3.forceCollide(25));
+
+    const link = linkGroup.selectAll('line')
+      .data(data.links).join('line')
+      .attr('stroke', l => COLORS[l.type] || '#555')
+      .attr('stroke-width', 0.8)
+      .attr('class', l => `link type-${l.type}`)
+      .append('title').text(l => `${l.label}`);
+
+    const node = nodeGroup.selectAll('.node')
+      .data(data.nodes).join('g')
+      .attr('class', d => `node group-${d.group}`)
+      .call(d3.drag()
+        .on('start', (e, d) => { if (!e.active) simulation.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+        .on('drag', (e, d) => { d.fx = e.x; d.fy = e.y; })
+        .on('end', (e, d) => { if (!e.active) simulation.alphaTarget(0); d.fx = null; d.fy = null; })
+      );
+
+    const nodeRadius = d => {
+      if (d.group === 'user') return 18;
+      if (d.type === 'orchestrator') return 14;
+      if (d.type === 'agent') return 10;
+      return 8;
+    };
+
+    node.append('circle')
+      .attr('r', nodeRadius)
+      .attr('fill', d => COLORS[d.group] || '#666')
+      .attr('stroke', d => d3.color(COLORS[d.group] || '#666').brighter(0.5))
+      .on('mouseover', (e, d) => {
+        const tt = d3.select('#tooltip');
+        tt.html(`<div class="title">${d.label}</div><div class="desc">${d.desc}</div><div class="type">${d.group.toUpperCase()} · ${d.type}</div>`)
+          .classed('visible', true);
+        node.classed('highlight', n => n.id === d.id || data.links.some(l => (l.source.id||l.source) === d.id && (l.target.id||l.target) === n.id) || data.links.some(l => (l.target.id||l.target) === d.id && (l.source.id||l.source) === n.id));
+        link.classed('highlight', l => (l.source.id||l.source) === d.id || (l.target.id||l.target) === d.id);
+      })
+      .on('mousemove', (e) => { d3.select('#tooltip').style('left', (e.pageX + 15) + 'px').style('top', (e.pageY - 10) + 'px'); })
+      .on('mouseout', () => { d3.select('#tooltip').classed('visible', false); node.classed('highlight', false); link.classed('highlight', false); })
+      .on('click', (e, d) => {
+        const radius = 200;
+        simulation.force('center', d3.forceCenter(d.x, d.y)).alpha(1).restart();
+      });
+
+    node.append('text')
+      .text(d => d.label.length > 20 ? d.label.slice(0, 18) + '…' : d.label)
+      .attr('dy', d => nodeRadius(d) + 12)
+      .attr('font-size', d => d.group === 'user' ? '12px' : '10px')
+      .attr('fill', d => COLORS[d.group] || '#888');
+
+    // Legend
+    const legend = d3.select('#legend');
+    Object.entries(GROUP_NAMES).forEach(([key, name]) => {
+      const item = legend.append('div').attr('class', 'item');
+      item.append('div').attr('class', 'dot').style('background', COLORS[key]);
+      item.append('span').text(name);
+      item.on('click', () => {
+        const show = COLORS[key] ? true : false;
+        node.classed('hidden', n => n.group !== key).style('opacity', n => n.group === key ? 1 : 0.1);
+        link.style('opacity', l => {
+          const s = l.source.id || l.source;
+          const t = l.target.id || l.target;
+          const sn = data.nodes.find(n => n.id === s);
+          const tn = data.nodes.find(n => n.id === t);
+          return (sn?.group === key || tn?.group === key) ? 0.6 : 0.05;
+        });
+      });
+    });
+    // Reset legend click (double click)
+    legend.on('dblclick', () => {
+      node.style('opacity', 1).classed('hidden', false);
+      link.style('opacity', null);
+    });
+
+    // Stats
+    const groups = d3.group(data.nodes, d => d.group);
+    document.getElementById('stats').innerHTML =
+      `Nodos: <span>${data.nodes.length}</span> · ` +
+      `Conexiones: <span>${data.links.length}</span> · ` +
+      `Grupos: <span>${groups.size}</span>`;
+
+    simulation.on('tick', () => {
+      link.attr('x1', l => l.source.x).attr('y1', l => l.source.y)
+          .attr('x2', l => l.target.x).attr('y2', l => l.target.y);
+      node.attr('transform', d => `translate(${d.x},${d.y})`);
+    });
+  });
+</script>
+</body>
+</html>
