@@ -7,7 +7,7 @@ set -euo pipefail
 
 BRIEF="${1:-}"
 DESIGN_SYSTEM="${2:-sonoran-sunset}"
-OUTPUT_DIR="${3:-/home/mystic/jarvis/webui/static/generated}"
+OUTPUT_DIR="${3:-/home/mystic/sonora-digital-corp/webui/static/generated}"
 OD_BIN="/home/mystic/open-design/apps/daemon/bin/od.mjs"
 
 if [ ! -f "$OD_BIN" ]; then

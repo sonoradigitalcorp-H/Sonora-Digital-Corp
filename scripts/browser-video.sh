@@ -6,7 +6,7 @@ set -euo pipefail
 
 PLATFORM="${1:-seedance}"
 PROMPT="${2:-Epic cinematic coming soon video for Sonora Digital Corp}"
-OUTPUT_DIR="/home/mystic/jarvis/webui/static/videos"
+OUTPUT_DIR="/home/mystic/sonora-digital-corp/webui/static/videos"
 
 mkdir -p "$OUTPUT_DIR"
 

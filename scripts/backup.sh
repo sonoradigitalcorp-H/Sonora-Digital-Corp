@@ -2,20 +2,20 @@
 # JARVIS Backup Script — v2.0
 # Crea backups con timestamp, comprime en .tar.gz, verifica integridad
 
-SOURCE_DIR="/home/mystic/jarvis"
+SOURCE_DIR="/home/mystic/sonora-digital-corp"
 BACKUP_DIR="${SOURCE_DIR}/backups"
 TIMESTAMP=$(date '+%Y%m%d_%H%M%S')
 BACKUP_PATH="${BACKUP_DIR}/${TIMESTAMP}"
 LOG_FILE="${BACKUP_DIR}/backup-cron.log"
 ERROR_LOG="${BACKUP_DIR}/errors.log"
-TARBALL="${BACKUP_DIR}/jarvis-${TIMESTAMP}.tar.gz"
+TARBALL="${BACKUP_DIR}/sdc-${TIMESTAMP}.tar.gz"
 KEEP_DAYS=7
 
 mkdir -p "${BACKUP_PATH}"
 
 {
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] ========================================"
-  echo "[$(date '+%Y-%m-%d %H:%M:%S')] JARVIS Backup — ${TIMESTAMP}"
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] SDC Backup — ${TIMESTAMP}"
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] Target: ${BACKUP_PATH}"
   echo ""
 } >> "${LOG_FILE}"
@@ -50,24 +50,22 @@ backup_file() {
 }
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Backing up directories..." >> "${LOG_FILE}"
-backup_dir "${SOURCE_DIR}/specs"
-backup_dir "${SOURCE_DIR}/src"
+backup_dir "${SOURCE_DIR}/sonora-enterprise-os"
+backup_dir "${SOURCE_DIR}/apps"
 backup_dir "${SOURCE_DIR}/config"
-backup_dir "${SOURCE_DIR}/docs"
-backup_dir "${SOURCE_DIR}/error-log"
-backup_dir "${SOURCE_DIR}/voice"
-backup_dir "${SOURCE_DIR}/webui"
+backup_dir "${SOURCE_DIR}/platforms"
+backup_dir "${SOURCE_DIR}/products"
+backup_dir "${SOURCE_DIR}/infra"
 backup_dir "${SOURCE_DIR}/tests"
 backup_dir "${SOURCE_DIR}/scripts"
-backup_dir "${SOURCE_DIR}/prompts"
-backup_dir "${SOURCE_DIR}/docker"
+backup_dir "${SOURCE_DIR}/state"
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Backing up key files..." >> "${LOG_FILE}"
-backup_file "${SOURCE_DIR}/engram.db"
-backup_file "${SOURCE_DIR}/main.py"
 backup_file "${SOURCE_DIR}/opencode.json"
-backup_file "${SOURCE_DIR}/docker-compose.yml"
+backup_file "${SOURCE_DIR}/apps/jarvis/main.py"
+backup_file "${SOURCE_DIR}/infra/docker-compose.yml"
 backup_file "${SOURCE_DIR}/CLAUDE.md"
+backup_file "${SOURCE_DIR}/AGENTS.md"
 
 # .opencode is a hidden dir, handle separately
 if [ -d "${SOURCE_DIR}/.opencode" ]; then

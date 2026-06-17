@@ -16,8 +16,8 @@ logging.basicConfig(
 )
 log = logging.getLogger("auto-save")
 
-STORE_FILE = Path("/home/mystic/jarvis/state/last-session.json")
-STATE_DIR = Path("/home/mystic/jarvis/state")
+STORE_FILE = Path("/home/mystic/sonora-digital-corp/state/last-session.json")
+STATE_DIR = Path("/home/mystic/sonora-digital-corp/state")
 STATE_DIR.mkdir(exist_ok=True)
 
 

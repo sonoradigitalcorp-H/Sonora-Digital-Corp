@@ -3,7 +3,7 @@
 # bash scripts/setup-github.sh
 set -euo pipefail
 
-JARVIS_DIR="/home/mystic/jarvis"
+JARVIS_DIR="/home/mystic/sonora-digital-corp"
 cd "$JARVIS_DIR"
 
 echo "⚡ JARVIS — GitHub Auto-Setup"

@@ -9,7 +9,7 @@ from typing import Optional, List
 sys.path.insert(0, '/home/mystic/.openclaw/workspace/skills/fal-ai')
 from fal_api import FalAPI
 
-OUTPUT_DIR = "/home/mystic/jarvis/data/generated"
+OUTPUT_DIR = "/home/mystic/sonora-digital-corp/data/generated"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 os.makedirs(f"{OUTPUT_DIR}/products", exist_ok=True)
 os.makedirs(f"{OUTPUT_DIR}/social", exist_ok=True)

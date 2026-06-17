@@ -6,7 +6,7 @@ set -euo pipefail
 
 echo "=== AGENCY OS — Instalando Pipelines ==="
 
-SCRIPTS="/home/mystic/jarvis/scripts"
+SCRIPTS="/home/mystic/sonora-digital-corp/scripts"
 SYSTEMD="/etc/systemd/system"
 
 # === 1. AGENCY PIPELINE (diario 4AM) ===
@@ -18,11 +18,11 @@ After=network.target docker.service
 
 [Service]
 Type=oneshot
-ExecStart=/home/mystic/jarvis/scripts/agency-pipeline.sh
+ExecStart=/home/mystic/sonora-digital-corp/scripts/agency-pipeline.sh
 User=mystic
-WorkingDirectory=/home/mystic/jarvis
-StandardOutput=append:/home/mystic/jarvis/logs/agency-pipeline.log
-StandardError=append:/home/mystic/jarvis/logs/agency-pipeline.log
+WorkingDirectory=/home/mystic/sonora-digital-corp
+StandardOutput=append:/home/mystic/sonora-digital-corp/state/logs/agency-pipeline.log
+StandardError=append:/home/mystic/sonora-digital-corp/state/logs/agency-pipeline.log
 EOF
 
 cat << 'EOF' | sudo tee "$SYSTEMD/agency-pipeline.timer" > /dev/null
@@ -46,11 +46,11 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/home/mystic/jarvis/scripts/agency-github-sync.sh
+ExecStart=/home/mystic/sonora-digital-corp/scripts/agency-github-sync.sh
 User=mystic
-WorkingDirectory=/home/mystic/jarvis
-StandardOutput=append:/home/mystic/jarvis/logs/git-sync.log
-StandardError=append:/home/mystic/jarvis/logs/git-sync.log
+WorkingDirectory=/home/mystic/sonora-digital-corp
+StandardOutput=append:/home/mystic/sonora-digital-corp/state/logs/git-sync.log
+StandardError=append:/home/mystic/sonora-digital-corp/state/logs/git-sync.log
 EOF
 
 cat << 'EOF' | sudo tee "$SYSTEMD/agency-git-sync.timer" > /dev/null
@@ -74,12 +74,12 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/home/mystic/jarvis/scripts/agency-e2e-simulate.sh
+ExecStart=/home/mystic/sonora-digital-corp/scripts/agency-e2e-simulate.sh
 User=mystic
-WorkingDirectory=/home/mystic/jarvis
+WorkingDirectory=/home/mystic/sonora-digital-corp
 Environment=DISPLAY=:0
-StandardOutput=append:/home/mystic/jarvis/logs/e2e-nightly.log
-StandardError=append:/home/mystic/jarvis/logs/e2e-nightly.log
+StandardOutput=append:/home/mystic/sonora-digital-corp/state/logs/e2e-nightly.log
+StandardError=append:/home/mystic/sonora-digital-corp/state/logs/e2e-nightly.log
 EOF
 
 cat << 'EOF' | sudo tee "$SYSTEMD/agency-e2e-nightly.timer" > /dev/null

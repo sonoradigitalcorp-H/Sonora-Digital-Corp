@@ -18,7 +18,7 @@ TEMPLATES = {
     "tech": {"bg": "#0d1117", "accent": "#58a6ff", "gradient": True},
 }
 
-OUTPUT_DIR = "/home/mystic/jarvis/data/thumbnails"
+OUTPUT_DIR = "/home/mystic/sonora-digital-corp/data/thumbnails"
 os.makedirs(OUTPUT_DIR, exist_ok=True)
 
 class ThumbnailRequest(BaseModel):

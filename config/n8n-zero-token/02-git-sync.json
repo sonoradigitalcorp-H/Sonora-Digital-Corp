@@ -9,7 +9,7 @@
     },
     {
       "parameters": {
-        "command": "cd /home/mystic/jarvis && git fetch origin 2>&1 && BEHIND=$(git rev-list HEAD..origin/main --count 2>/dev/null) && echo \"Behind by $BEHIND\" && if [ \"$BEHIND\" -gt 0 ]; then git pull origin main 2>&1; else echo 'Up to date'; fi",
+        "command": "cd /home/mystic/sonora-digital-corp && git fetch origin 2>&1 && BEHIND=$(git rev-list HEAD..origin/main --count 2>/dev/null) && echo \"Behind by $BEHIND\" && if [ \"$BEHIND\" -gt 0 ]; then git pull origin main 2>&1; else echo 'Up to date'; fi",
         "options": {}
       },
       "name": "Git Sync",
@@ -18,7 +18,7 @@
     },
     {
       "parameters": {
-        "command": "cd /home/mystic/jarvis && git add -A && git diff --cached --quiet || (git commit -m \"auto: nightly sync $(date +%Y-%m-%d)\" && git push origin main)",
+        "command": "cd /home/mystic/sonora-digital-corp && git add -A && git diff --cached --quiet || (git commit -m \"auto: nightly sync $(date +%Y-%m-%d)\" && git push origin main)",
         "options": {}
       },
       "name": "Commit & Push if changes",

@@ -3,7 +3,7 @@
 # Creates systemd services for all JARVIS components
 set -euo pipefail
 
-JARVIS_DIR="${JARVIS_DIR:-/home/mystic/jarvis}"
+JARVIS_DIR="${JARVIS_DIR:-/home/mystic/sonora-digital-corp}"
 SERVICES_DIR="${SERVICES_DIR:-/etc/systemd/system}"
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"; }
@@ -25,13 +25,13 @@ Requires=docker.service
 [Service]
 Type=simple
 User=mystic
-WorkingDirectory=/home/mystic/jarvis
-ExecStart=/home/mystic/jarvis/venv/bin/python main.py
+WorkingDirectory=/home/mystic/sonora-digital-corp
+ExecStart=/home/mystic/sonora-digital-corp/venv/bin/python main.py
 Restart=always
 RestartSec=10
 Environment="PYTHONUNBUFFERED=1"
-StandardOutput=append:/home/mystic/jarvis/logs/core.log
-StandardError=append:/home/mystic/jarvis/logs/core.log
+StandardOutput=append:/home/mystic/sonora-digital-corp/state/logs/core.log
+StandardError=append:/home/mystic/sonora-digital-corp/state/logs/core.log
 
 [Install]
 WantedBy=multi-user.target
@@ -47,13 +47,13 @@ Wants=jarvis-core.service
 [Service]
 Type=simple
 User=mystic
-WorkingDirectory=/home/mystic/jarvis
-ExecStart=/home/mystic/jarvis/venv/bin/python webui/fastapp.py
+WorkingDirectory=/home/mystic/sonora-digital-corp
+ExecStart=/home/mystic/sonora-digital-corp/venv/bin/python webui/fastapp.py
 Restart=always
 RestartSec=10
 Environment="PYTHONUNBUFFERED=1"
-StandardOutput=append:/home/mystic/jarvis/logs/webui.log
-StandardError=append:/home/mystic/jarvis/logs/webui.log
+StandardOutput=append:/home/mystic/sonora-digital-corp/state/logs/webui.log
+StandardError=append:/home/mystic/sonora-digital-corp/state/logs/webui.log
 
 [Install]
 WantedBy=multi-user.target
@@ -67,9 +67,9 @@ Description=JARVIS Health Check
 [Service]
 Type=oneshot
 User=mystic
-ExecStart=/home/mystic/jarvis/scripts/healthcheck.sh
-StandardOutput=append:/home/mystic/jarvis/logs/healthcheck.log
-StandardError=append:/home/mystic/jarvis/logs/healthcheck.log
+ExecStart=/home/mystic/sonora-digital-corp/scripts/healthcheck.sh
+StandardOutput=append:/home/mystic/sonora-digital-corp/state/logs/healthcheck.log
+StandardError=append:/home/mystic/sonora-digital-corp/state/logs/healthcheck.log
 EOF
 
 cat > "${SERVICES_DIR}/jarvis-healthcheck.timer" << 'EOF'
@@ -93,9 +93,9 @@ Description=JARVIS Daily Backup
 [Service]
 Type=oneshot
 User=mystic
-ExecStart=/home/mystic/jarvis/scripts/backup.sh
-StandardOutput=append:/home/mystic/jarvis/logs/backup.log
-StandardError=append:/home/mystic/jarvis/logs/backup.log
+ExecStart=/home/mystic/sonora-digital-corp/scripts/backup.sh
+StandardOutput=append:/home/mystic/sonora-digital-corp/state/logs/backup.log
+StandardError=append:/home/mystic/sonora-digital-corp/state/logs/backup.log
 EOF
 
 cat > "${SERVICES_DIR}/jarvis-backup.timer" << 'EOF'

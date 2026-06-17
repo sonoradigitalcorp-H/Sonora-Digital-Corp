@@ -9,7 +9,7 @@
     },
     {
       "parameters": {
-        "command": "tail -50 /home/mystic/jarvis/logs/error-correction.log 2>/dev/null | grep -c 'FAIL\\|ERROR\\|BROKEN\\|Cannot' || echo 0",
+        "command": "tail -50 /home/mystic/sonora-digital-corp/logs/error-correction.log 2>/dev/null | grep -c 'FAIL\\|ERROR\\|BROKEN\\|Cannot' || echo 0",
         "options": {}
       },
       "name": "Scan Error Log",
@@ -39,7 +39,7 @@
     },
     {
       "parameters": {
-        "command": "echo \"[$(date)] ERROR: system detected $(tail -50 /home/mystic/jarvis/logs/error-correction.log | grep -c 'FAIL\\|ERROR' 2>/dev/null) errors\" >> /home/mystic/jarvis/logs/alerts.log",
+        "command": "echo \"[$(date)] ERROR: system detected $(tail -50 /home/mystic/sonora-digital-corp/logs/error-correction.log | grep -c 'FAIL\\|ERROR' 2>/dev/null) errors\" >> /home/mystic/sonora-digital-corp/logs/alerts.log",
         "options": {}
       },
       "name": "Log Alert",

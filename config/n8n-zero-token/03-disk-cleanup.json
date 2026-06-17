@@ -39,7 +39,7 @@
     },
     {
       "parameters": {
-        "command": "find /tmp -type f -atime +7 -delete 2>/dev/null; find /home/mystic/jarvis/logs -type f -name '*.log' -mtime +7 -delete 2>/dev/null; echo 'Cleanup done'",
+        "command": "find /tmp -type f -atime +7 -delete 2>/dev/null; find /home/mystic/sonora-digital-corp/logs -type f -name '*.log' -mtime +7 -delete 2>/dev/null; echo 'Cleanup done'",
         "options": {}
       },
       "name": "Temp Cleanup",
