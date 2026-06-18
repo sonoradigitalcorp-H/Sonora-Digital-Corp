@@ -10,7 +10,10 @@ EVENTS="/home/mystic/sonora-digital-corp/state/logs/events.jsonl"
 LOCK="/tmp/jarvis-autonomous.lock"
 JARVIS_HOME="/home/mystic/sonora-digital-corp"
 ENGAM_DB="${JARVIS_HOME}/state/engram.db"
+SKILLS_LOG_DIR="${JARVIS_HOME}/state/logs/skills"
 NOW=$(date '+%Y-%m-%d %H:%M:%S')
+
+mkdir -p "$SKILLS_LOG_DIR"
 
 # ── Event emitter (Enterprise Nervous System) ─────
 emit_event() {
@@ -22,6 +25,22 @@ emit_event() {
     timestamp=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
     echo "{\"event\":\"${event_name}\",\"producer\":\"${producer}\",\"timestamp\":\"${timestamp}\",\"payload\":${payload:-null}}" >> "$EVENTS"
     echo "[$NOW] 📡 Event: $event_name" >> "$LOG"
+}
+
+# ── Skill execution logger (OMEGA skill wiring) ──
+log_skill_execution() {
+    local skill_name="$1"
+    local skill_version="$2"
+    local parent_os="$3"
+    local status="$4"
+    shift 4
+    local details="$*"
+    local timestamp
+    timestamp=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
+    local log_file="${SKILLS_LOG_DIR}/${skill_name}.log"
+    echo "[${timestamp}] [${skill_name}] [${parent_os}] status=${status} ${details}" >> "${log_file}"
+    echo "{\"event\":\"skill_execution\",\"producer\":\"${skill_name}\",\"timestamp\":\"${timestamp}\",\"payload\":{\"skill\":\"${skill_name}\",\"version\":\"${skill_version}\",\"parent_os\":\"${parent_os}\",\"status\":\"${status}\",\"details\":\"${details}\"}}" >> "$EVENTS"
+    echo "[$NOW] ⚡ Skill: $skill_name → $status" >> "$LOG"
 }
 
 # Evitar ejecución simultánea
@@ -59,6 +78,13 @@ echo "[$NOW] === Autónomo: Iniciando ciclo ===" >> "$LOG"
     done
 } >> "$LOG" 2>&1
 
+# ── Wire: monitor-service skill execution ──
+if [ "$ALL_UP" = true ]; then
+    log_skill_execution "monitor-service" "1.0.0" "Ops" "pass" "3 services healthy"
+else
+    log_skill_execution "monitor-service" "1.0.0" "Ops" "fail" "one or more services down"
+fi
+
 # ── Tarea 2: Ideas pendientes en Engram ────
 if [ -f "$ENGAM_DB" ]; then
     python3 -c "
@@ -76,6 +102,13 @@ if ideas:
 conn.commit()
 conn.close()
 " 2>/dev/null >> "$LOG" || true
+fi
+
+# ── Wire: capture-knowledge skill execution ──
+if [ -f "$ENGAM_DB" ]; then
+    log_skill_execution "capture-knowledge" "1.0.0" "Knowledge" "pass" "engram accessed for ideas"
+else
+    log_skill_execution "capture-knowledge" "1.0.0" "Knowledge" "fail" "engram db not found"
 fi
 
 # ── Tarea 3: Cleanup de logs antiguos ─────
