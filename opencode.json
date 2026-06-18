@@ -6,6 +6,7 @@
   "shell": "/bin/zsh",
   "logLevel": "INFO",
   "instructions": [
+    "sonora-enterprise-os/constitution/TRUTH.md",
     "sonora-enterprise-os/constitution/MASTER-SYSTEM-PROMPT.md",
     "AGENTS.md",
     "sonora-enterprise-os/constitution/ECOSYSTEM-IDENTITY.md",
@@ -123,25 +124,25 @@
       "type": "remote",
       "url": "http://localhost:18789",
       "enabled": true,
-      "description": "OpenClaw Gateway — 42 skills externas (browser, payments, social)"
+      "description": "OpenClaw Gateway — 55 skills (browser, payments, social, media, MCP)"
     },
     "qdrant": {
       "type": "remote",
       "url": "http://localhost:6333",
       "enabled": true,
-      "description": "Qdrant — base de datos vectorial v1.17.0 para búsqueda semántica"
+      "description": "Qdrant — vector DB for semantic search"
     },
     "neo4j": {
       "type": "remote",
       "url": "http://localhost:7687",
       "enabled": true,
-      "description": "Neo4j — base de datos de grafos para sesiones y relaciones"
+      "description": "Neo4j — graph DB for sessions, relationships, CRM"
     },
     "n8n": {
       "type": "remote",
       "url": "http://localhost:5678",
       "enabled": true,
-      "description": "n8n — 36 workflows de automatización"
+      "description": "n8n — workflow automation"
     }
   },
   "permission": {
@@ -164,7 +165,7 @@
     "skill": "allow",
     "task": "ask",
     "external_directory": {
-      "/home/mystic/sdcorp/.secrets/**": "deny",
+      "/home/mystic/sonora-digital-corp/config/.secrets/**": "deny",
       "*": "allow"
     }
   },

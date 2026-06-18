@@ -9,7 +9,7 @@ REPORT_DIR="$BASE_DIR/webui/static/reports"
 REPORT_FILE="abe-reporte-ejecutivo.html"
 REPORT_PATH="$BASE_DIR/webui/static/$REPORT_FILE"
 TIMESTAMP=$(date '+%Y%m%d-%H%M%S')
-LOG="$BASE_DIR/logs/abe-report-push.log"
+LOG="$BASE_DIR/state/logs/abe-report-push.log"
 
 mkdir -p "$REPORT_DIR" "$BASE_DIR/logs"
 

@@ -9,8 +9,9 @@ import logging
 from pathlib import Path
 
 _project_root = Path(__file__).parent.parent
-if str(_project_root) not in sys.path:
-    sys.path.insert(0, str(_project_root))
+_jarvis_root = _project_root / "jarvis"
+sys.path.insert(0, str(_project_root))
+sys.path.insert(0, str(_jarvis_root))
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s %(message)s"

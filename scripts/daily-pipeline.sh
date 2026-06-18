@@ -48,7 +48,7 @@ UNIT_RESULT=$?
 # ── 3. Healthcheck ───────────────────────────
 SERVICES_UP=0
 SERVICES_DOWN=0
-for svc in "http://localhost:5174/health" "http://localhost:8000/health" "http://localhost:18789/health"; do
+for svc in "http://localhost:5174/api/status" "http://localhost:8000/health" "http://localhost:18789/health"; do
     if curl -sf --max-time 5 "$svc" > /dev/null 2>&1; then
         SERVICES_UP=$((SERVICES_UP + 1))
     else

@@ -35,14 +35,14 @@ python apps/jarvis/main.py      # JARVIS core
 
 ## Servicios
 
-| Puerto | Servicio |
-|--------|----------|
-| 5174 | Web UI |
-| 8000 | Hermes MCP |
-| 18789 | OpenClaw Gateway |
-| 6333 | Qdrant |
-| 7687 | Neo4j |
-| 5678 | n8n |
+| Puerto | Servicio | Systemd |
+|--------|----------|---------|
+| 5174 | Web UI | `jarvis-webui.service` --user |
+| 8000 | Hermes MCP | `hermes-gateway.service` --user |
+| 18789 | OpenClaw Gateway | `openclaw-gateway.service` |
+| 6333 | Qdrant | Docker |
+| 7687 | Neo4j | Docker |
+| 5678 | n8n | Docker (not deployed) |
 
 ## Agentes
 

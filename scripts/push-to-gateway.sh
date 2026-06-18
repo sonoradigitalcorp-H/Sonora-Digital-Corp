@@ -5,8 +5,8 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 BASE_DIR="$(dirname "$SCRIPT_DIR")"
-LOG="$BASE_DIR/logs/gateway-push.log"
-mkdir -p "$BASE_DIR/logs"
+LOG="$BASE_DIR/state/logs/gateway-push.log"
+mkdir -p "$BASE_DIR/state/logs"
 
 MESSAGE="${1:-$(cat /dev/stdin)}"
 if [ -z "$MESSAGE" ]; then
@@ -61,7 +61,7 @@ else
 fi
 
 # Save to outbox
-echo "$MESSAGE" >> "$BASE_DIR/logs/gateway-outbox.log"
+echo "$MESSAGE" >> "$BASE_DIR/state/logs/gateway-outbox.log"
 
 log "=== Result: $SUCCESS sent, $FAIL failed ==="
 echo "✅ $SUCCESS gateway(s) delivered, $FAIL failed"

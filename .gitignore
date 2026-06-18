@@ -17,3 +17,4 @@ state/
 __pycache__/
 cache/
 data/generated/
+apps/webui/data/
