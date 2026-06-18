@@ -5,14 +5,14 @@
 
 ---
 
-Every initiative must score ≥ 60 to be approved. Score is calculated from 9 metrics, each weighted equally (max 10 points each).
+Every initiative must score ≥ 60 to be approved. Score is calculated from 10 metrics, each weighted equally (max 10 points each).
 
 ---
 
 ## Score Formula
 
 ```
-Enterprise Score = SUM(metric_score for all 9 metrics) / 9
+Enterprise Score = SUM(metric_score for all 10 metrics) (max 100)
 ```
 
 Each metric scored 0–10:
@@ -105,6 +105,15 @@ Each metric scored 0–10:
 | Weight | 10/100 |
 | Source | Support OS — `satisfaction_recorded` event |
 | Target | > 4.5 / 5.0 |
+
+### 10. FinOps Efficiency
+
+| Dimension | Value |
+|-----------|-------|
+| Gherkin | Given initiative When operating for 30d Then score = 10 - (cost_per_call / budget_per_call * 10) |
+| Weight | 10/100 |
+| Source | Finance OS — `finops_snapshot` event |
+| Target | Cost per call < $0.001, budget variance < 10% |
 
 ---
 
