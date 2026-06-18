@@ -127,6 +127,8 @@ fi
     echo "  Brain: $(curl -s http://localhost:5174/api/brain/graph | python3 -c 'import sys,json;d=json.load(sys.stdin);print(len(d[\"nodes\"]))' 2>/dev/null || echo '?') nodos"
     echo "  Productos en tienda: $(curl -s http://localhost:5174/api/store/products | python3 -c 'import sys,json;d=json.load(sys.stdin);print(len(d[\"products\"]))' 2>/dev/null || echo '?')"
     echo "  GitHub commits hoy: $(git -C $JARVIS_HOME log --oneline --since=midnight 2>/dev/null | wc -l)"
+    # FinOps snapshot
+    bash "$JARVIS_HOME/scripts/finops.sh snapshot" 2>/dev/null || echo "  ⚠️ FinOps snapshot failed"
 } >> "$LOG" 2>&1
 
 echo "[$NOW] ✅ Ciclo completado" >> "$LOG"

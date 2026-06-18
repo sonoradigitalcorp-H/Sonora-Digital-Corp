@@ -95,8 +95,9 @@ Parent OS: Ops
 | Founder Independence | 8 | Founder no longer manually checks services |
 | Operational Simplicity | 7 | Consolidates 5 scripts into 1 harness |
 | Customer Value | 5 | Indirect — fewer outages means happier customers |
+| FinOps Efficiency | 3 | No FinOps tracking yet — baseline being established this session |
 
-**Total Score: 61/100** ✅ (passes ≥ 60 threshold)
+**Total Score: 64/100** ✅ (passes ≥ 60 threshold)
 
 ---
 
@@ -114,7 +115,7 @@ Parent OS: Ops
 ## Approval
 
 ```
-Score: 61/100
+Score: 64/100
 Verdict: Approved
 Approved by: Strategy OS
 Date: 2026-06-17

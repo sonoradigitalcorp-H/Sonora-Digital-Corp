@@ -97,7 +97,11 @@ except: print(0)
 " 2>/dev/null || echo 0)
 log "  Pending ideas: $PENDING_IDEAS"
 
-# ── 8. Generate and push summary ─────────────
+# ── 8. FinOps snapshot ──────────────────────
+FIN_OPS_SNAPSHOT=$(bash "$BASE_DIR/scripts/finops.sh snapshot" 2>/dev/null || echo "FinOps: unknown")
+log "  $FIN_OPS_SNAPSHOT"
+
+# ── 9. Generate and push summary ─────────────
 DURATION=$(( $(date +%s) - START_EPOCH ))
 SUMMARY="🤖 SDC Daily Pipeline · $(date '+%d %b %Y')
 ✅ ${SUCCESSES} checks passed
@@ -107,7 +111,8 @@ SUMMARY="🤖 SDC Daily Pipeline · $(date '+%d %b %Y')
 🔧 Services: ${SERVICES_UP} up, ${SERVICES_DOWN} down
 💾 Disk: ${DISK_USAGE}%
 🎵 ABE: ${STREAMS} streams, \$${REVENUE}
-💡 Ideas pendientes: ${PENDING_IDEAS}"
+💡 Ideas pendientes: ${PENDING_IDEAS}
+💰 ${FIN_OPS_SNAPSHOT}"
 
 log "$SUMMARY"
 
