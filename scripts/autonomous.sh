@@ -6,10 +6,23 @@
 set -euo pipefail
 
 LOG="/home/mystic/sonora-digital-corp/state/logs/autonomous.log"
+EVENTS="/home/mystic/sonora-digital-corp/state/logs/events.jsonl"
 LOCK="/tmp/jarvis-autonomous.lock"
 JARVIS_HOME="/home/mystic/sonora-digital-corp"
 ENGAM_DB="${JARVIS_HOME}/state/engram.db"
 NOW=$(date '+%Y-%m-%d %H:%M:%S')
+
+# ── Event emitter (Enterprise Nervous System) ─────
+emit_event() {
+    local event_name="$1"
+    local producer="$2"
+    shift 2
+    local payload="$*"
+    local timestamp
+    timestamp=$(date -u '+%Y-%m-%dT%H:%M:%SZ')
+    echo "{\"event\":\"${event_name}\",\"producer\":\"${producer}\",\"timestamp\":\"${timestamp}\",\"payload\":${payload:-null}}" >> "$EVENTS"
+    echo "[$NOW] 📡 Event: $event_name" >> "$LOG"
+}
 
 # Evitar ejecución simultánea
 if [ -f "$LOCK" ] && [ -n "$(find "$LOCK" -mmin -5 2>/dev/null)" ]; then
@@ -25,14 +38,20 @@ echo "[$NOW] === Autónomo: Iniciando ciclo ===" >> "$LOG"
 # ── Tarea 1: Healthcheck automático ────────
 {
     echo "=== Healthcheck ==="
-    # Probar servicios clave
-    for svc in "http://localhost:5174/health" "http://localhost:8000/health" "http://localhost:18789/health"; do
+    ALL_UP=true
+    for svc in "http://localhost:5174/api/status" "http://localhost:8000/health" "http://localhost:18789/health"; do
         code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 "$svc" 2>/dev/null || echo "000")
         echo "  $svc → $code"
-        if [ "$code" = "000" ] || [ "$code" = "000" ]; then
+        svc_name=$(echo "$svc" | sed 's|http://localhost:||' | sed 's|/.*||')
+        if [ "$code" = "000" ]; then
+            ALL_UP=false
             echo "  ⚠️  Servicio caído: $svc"
+            emit_event "service_down" "ops" "{\"service\":\"${svc_name}\",\"port\":\"${svc_name}\",\"detected_by\":\"autonomous.sh\"}"
         fi
     done
+    if [ "$ALL_UP" = true ]; then
+        emit_event "service_healthy" "ops" "{\"checks\":3,\"all_up\":true}"
+    fi
     
     # Verificar Docker
     docker ps --format "{{.Names}} {{.Status}}" 2>/dev/null | while read line; do
