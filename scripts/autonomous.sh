@@ -143,7 +143,16 @@ fi
     bash "$JARVIS_HOME/scripts/finops.sh snapshot" 2>/dev/null || echo "  ⚠️ FinOps snapshot failed"
 } >> "$LOG" 2>&1
 
+# ── Tarea 6: Trigger all OMEGA skills ──────
+bash "$JARVIS_HOME/scripts/skill-triggers.sh" >> "$LOG" 2>&1 || log_skill_execution "skill-triggers" "1.0.0" "Agent" "fail" "skill-triggers.sh failed"
+
 # ── Enterprise Score snapshot ──────────────
 bash "$JARVIS_HOME/scripts/enterprise-score.sh" >> "$LOG" 2>&1 || true
+
+# ── Weekly review (Sundays only) ──────────
+DOW=$(date +%u)
+if [ "$DOW" = "7" ]; then
+    bash "$JARVIS_HOME/scripts/weekly-review.sh" >> "$LOG" 2>&1 || true
+fi
 
 echo "[$NOW] ✅ Ciclo completado" >> "$LOG"
