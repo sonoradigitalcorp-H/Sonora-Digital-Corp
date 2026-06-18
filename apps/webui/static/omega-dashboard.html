@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Omega Dashboard — Sonora Digital Corp</title>
+<style>
+:root {
+  --bg: #0a0a0a;
+  --card: #111;
+  --border: #1a1a2e;
+  --text: #c8d6e5;
+  --muted: #576574;
+  --green: #00ff88;
+  --green-dim: rgba(0,255,136,0.15);
+  --cyan: #00d4ff;
+  --cyan-dim: rgba(0,212,255,0.12);
+  --red: #ff4757;
+  --red-dim: rgba(255,71,87,0.15);
+  --yellow: #ffa502;
+  --bar-bg: #1a1a2e;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Courier New', 'Fira Code', monospace;
+  padding: 20px;
+  min-height: 100vh;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.header h1 { color: var(--green); font-size: 1.5em; letter-spacing: 2px; text-transform: uppercase; }
+.header .sub { color: var(--muted); font-size: 0.85em; }
+.header .status-badge { color: var(--muted); font-size: 0.8em; }
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 20px;
+}
+.card h2 {
+  color: var(--cyan);
+  font-size: 0.95em;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+.card.full { grid-column: 1 / -1; }
+.big-score {
+  font-size: 4em;
+  font-weight: bold;
+  color: var(--green);
+  text-align: center;
+  padding: 10px 0;
+}
+.big-score .max { font-size: 0.35em; color: var(--muted); }
+.metric-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+  font-size: 0.82em;
+}
+.metric-bar .label { width: 160px; flex-shrink: 0; text-align: right; color: var(--text); }
+.metric-bar .track { flex:1; height: 14px; background: var(--bar-bg); border-radius: 7px; overflow: hidden; }
+.metric-bar .fill { height: 100%; border-radius: 7px; transition: width 0.6s ease; }
+.metric-bar .fill.green { background: var(--green); }
+.metric-bar .fill.cyan { background: var(--cyan); }
+.metric-bar .fill.yellow { background: var(--yellow); }
+.metric-bar .fill.red { background: var(--red); }
+.metric-bar .val { width: 30px; flex-shrink: 0; text-align: right; font-weight: bold; color: var(--green); }
+.service-row, .docker-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 8px 0;
+}
+.service-dot, .docker-dot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82em;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: var(--bar-bg);
+}
+.dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.dot.green { background: var(--green); box-shadow: 0 0 8px var(--green-dim); }
+.dot.red { background: var(--red); box-shadow: 0 0 8px var(--red-dim); }
+.dot.yellow { background: var(--yellow); }
+.finops-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin: 12px 0;
+}
+.finops-stat { text-align: center; }
+.finops-stat .num { font-size: 1.8em; font-weight: bold; color: var(--cyan); }
+.finops-stat .lbl { font-size: 0.75em; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+.finops-stat .num.green { color: var(--green); }
+.cost-bar-track { height: 20px; background: var(--bar-bg); border-radius: 10px; margin: 12px 0; overflow: hidden; }
+.cost-bar-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--green), var(--cyan)); transition: width 0.6s ease; }
+.init-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+.init-item:last-child { border-bottom: none; }
+.init-item .init-name { color: var(--cyan); font-size: 0.88em; flex:1; }
+.init-item .init-obj { color: var(--muted); font-size: 0.78em; flex:2; }
+.init-item .init-score { color: var(--green); font-weight: bold; font-size: 0.9em; flex-shrink: 0; }
+.empty-state { color: var(--muted); font-style: italic; text-align: center; padding: 20px; }
+.error-state { color: var(--red); text-align: center; padding: 20px; }
+@media (max-width: 900px) {
+  .grid { grid-template-columns: 1fr; }
+  .metric-bar .label { width: 110px; font-size: 0.75em; }
+  .init-item { flex-direction: column; align-items: flex-start; gap: 4px; }
+  .header h1 { font-size: 1.2em; }
+  .big-score { font-size: 3em; }
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <h1>Ω Omega Dashboard</h1>
+    <div class="sub">Sonora Digital Corp — Enterprise Command Center</div>
+  </div>
+  <div>
+    <div id="lastUpdate" class="status-badge">—</div>
+    <div class="status-badge">auto-refresh 30s</div>
+  </div>
+</div>
+<div class="grid" id="app">
+  <div class="card">
+    <h2>Enterprise Score</h2>
+    <div id="scoreContainer">
+      <div class="big-score">--<span class="max"> /100</span></div>
+      <div id="metricsBars"></div>
+    </div>
+  </div>
+  <div class="card">
+    <h2>Service Health</h2>
+    <div id="healthContainer">
+      <div class="service-row" id="serviceDots"></div>
+      <div style="margin-top:12px;font-size:0.8em;color:var(--muted);text-transform:uppercase;letter-spacing:1px;">Docker Containers</div>
+      <div class="docker-row" id="dockerDots"></div>
+    </div>
+  </div>
+  <div class="card full">
+    <h2>FinOps</h2>
+    <div id="finopsContainer">
+      <div class="finops-row" id="finopsStats"></div>
+      <div class="cost-bar-track"><div class="cost-bar-fill" id="costBar" style="width:0%"></div></div>
+      <div id="modelBreakdown" style="margin-top:10px;font-size:0.8em;"></div>
+    </div>
+  </div>
+  <div class="card full">
+    <h2>Active Initiatives</h2>
+    <div id="initiativesContainer"></div>
+  </div>
+</div>
+<script>
+const API = window.location.origin;
+let refreshTimer = null;
+
+function dotHtml(status, label) {
+  const cls = status === 'healthy' || status === true ? 'green' : (status === 'offline' || status === false ? 'red' : 'yellow');
+  return `<div class="docker-dot"><span class="dot ${cls}"></span>${label}</div>`;
+}
+
+async function fetchScore() {
+  try {
+    const r = await fetch(API + '/api/enterprise-score');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    document.getElementById('scoreContainer').innerHTML = `
+      <div class="big-score">${d.total}<span class="max"> /${d.max}</span></div>
+      <div id="metricsBars">${Object.entries(d.metrics).map(([k,v]) => {
+        const pct = (v/10)*100;
+        const cls = v >= 7 ? 'green' : v >= 4 ? 'yellow' : 'red';
+        return `<div class="metric-bar"><span class="label">${k}</span><div class="track"><div class="fill ${cls}" style="width:${pct}%"></div></div><span class="val">${v}</span></div>`;
+      }).join('')}</div>
+    `;
+  } catch(e) {
+    document.getElementById('scoreContainer').innerHTML = `<div class="error-state">Failed to load score: ${e.message}</div>`;
+  }
+}
+
+async function fetchHealth() {
+  try {
+    const r = await fetch(API + '/api/health');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    const serviceLabels = { webui: 'Web UI', hermes: 'Hermes', openclaw: 'OpenClaw' };
+    document.getElementById('serviceDots').innerHTML = Object.entries(d.services).map(([k,v]) =>
+      dotHtml(v.status, serviceLabels[k] || k)
+    ).join('');
+    const dockerLabels = { 'jarvis-neo4j': 'Neo4j', 'jarvis-qdrant': 'Qdrant', 'hermes_api': 'Hermes API', 'infra_postgres': 'Postgres', 'infra_redis': 'Redis' };
+    document.getElementById('dockerDots').innerHTML = Object.entries(d.docker_containers).map(([k,v]) =>
+      dotHtml(v.running, dockerLabels[k] || k)
+    ).join('');
+  } catch(e) {
+    document.getElementById('serviceDots').innerHTML = `<div class="error-state">Health check failed: ${e.message}</div>`;
+  }
+}
+
+async function fetchFinops() {
+  try {
+    const r = await fetch(API + '/api/finops');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    const maxCost = Math.max(1, d.total_cost);
+    document.getElementById('finopsStats').innerHTML = `
+      <div class="finops-stat"><div class="num">${d.total_calls}</div><div class="lbl">AI Calls</div></div>
+      <div class="finops-stat"><div class="num green">$${d.total_cost.toFixed(4)}</div><div class="lbl">Total Cost</div></div>
+      <div class="finops-stat"><div class="num">${(d.total_tokens/1000).toFixed(1)}K</div><div class="lbl">Total Tokens</div></div>
+      <div class="finops-stat"><div class="num">$${d.avg_cost_per_call.toFixed(6)}</div><div class="lbl">Avg/Call</div></div>
+    `;
+    const pct = Math.min(100, (d.total_cost / 0.05) * 100);
+    document.getElementById('costBar').style.width = Math.min(100, pct) + '%';
+    const models = Object.entries(d.model_breakdown || {});
+    if (models.length) {
+      document.getElementById('modelBreakdown').innerHTML = '<div style="color:var(--muted);margin-bottom:6px;">MODEL BREAKDOWN</div>' +
+        models.map(([name, data]) =>
+          `<div class="metric-bar"><span class="label">${name}</span><div class="track"><div class="fill cyan" style="width:${(data.cost/maxCost*100).toFixed(0)}%"></div></div><span class="val">${data.calls}</span></div>`
+        ).join('');
+    }
+  } catch(e) {
+    document.getElementById('finopsStats').innerHTML = `<div class="error-state">FinOps failed: ${e.message}</div>`;
+  }
+}
+
+async function fetchInitiatives() {
+  try {
+    const r = await fetch(API + '/api/initiatives');
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    const d = await r.json();
+    if (!d.length) {
+      document.getElementById('initiativesContainer').innerHTML = '<div class="empty-state">No active initiatives</div>';
+      return;
+    }
+    document.getElementById('initiativesContainer').innerHTML = d.map(i =>
+      `<div class="init-item"><span class="init-name">${i.name}</span><span class="init-obj">${i.objective.slice(0,120)}${i.objective.length > 120 ? '…' : ''}</span><span class="init-score">${i.score || '—'}</span></div>`
+    ).join('');
+  } catch(e) {
+    document.getElementById('initiativesContainer').innerHTML = `<div class="error-state">Initiatives failed: ${e.message}</div>`;
+  }
+}
+
+function updateTimestamp() {
+  document.getElementById('lastUpdate').textContent = 'updated ' + new Date().toLocaleTimeString();
+}
+
+async function refreshAll() {
+  await Promise.all([fetchScore(), fetchHealth(), fetchFinops(), fetchInitiatives()]);
+  updateTimestamp();
+}
+
+refreshAll();
+if (refreshTimer) clearInterval(refreshTimer);
+refreshTimer = setInterval(refreshAll, 30000);
+</script>
+</body>
+</html>
