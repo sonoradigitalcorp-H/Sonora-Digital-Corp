@@ -66,6 +66,18 @@ echo "[$NOW] === Autónomo: Iniciando ciclo ===" >> "$LOG"
             ALL_UP=false
             echo "  ⚠️  Servicio caído: $svc"
             emit_event "service_down" "ops" "{\"service\":\"${svc_name}\",\"port\":\"${svc_name}\",\"detected_by\":\"autonomous.sh\"}"
+            # ── Auto-recovery (event-driven trigger) ──
+            case "$svc_name" in
+                5174) systemctl --user restart jarvis-webui.service 2>/dev/null && echo "  🔄 Restarted webui" || echo "  ⚠️ WebUI restart failed" ;;
+                8000) systemctl --user restart hermes-gateway.service 2>/dev/null && echo "  🔄 Restarted hermes" || echo "  ⚠️ Hermes restart failed" ;;
+                18789) systemctl restart openclaw-gateway.service 2>/dev/null && echo "  🔄 Restarted openclaw" || echo "  ⚠️ OpenClaw restart failed" ;;
+            esac
+            sleep 5
+            retry_code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 "$svc" 2>/dev/null || echo "000")
+            if [ "$retry_code" != "000" ]; then
+                echo "  ✅ Auto-recovery successful for $svc_name"
+                emit_event "service_recovered" "ops" "{\"service\":\"${svc_name}\",\"recovered_by\":\"autonomous.sh\"}"
+            fi
         fi
     done
     if [ "$ALL_UP" = true ]; then
@@ -130,5 +142,8 @@ fi
     # FinOps snapshot
     bash "$JARVIS_HOME/scripts/finops.sh snapshot" 2>/dev/null || echo "  ⚠️ FinOps snapshot failed"
 } >> "$LOG" 2>&1
+
+# ── Enterprise Score snapshot ──────────────
+bash "$JARVIS_HOME/scripts/enterprise-score.sh" >> "$LOG" 2>&1 || true
 
 echo "[$NOW] ✅ Ciclo completado" >> "$LOG"
