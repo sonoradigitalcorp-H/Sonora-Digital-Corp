@@ -18,7 +18,7 @@ All agents (OpenClaw, Hermes, Mystic, JARVIS) MUST follow these rules.
 |------|-------|
 | Monorepo root | `/home/mystic/sonora-digital-corp/` |
 | Enterprise OS | `/home/mystic/sonora-digital-corp/sonora-enterprise-os/` |
-| Constitution | `sonora-enterprise-os/constitution/MASTER-SYSTEM-PROMPT.md` |
+| Constitution | `sonora-enterprise-os/constitution/OMEGA-PROMPT-v10.0.md` |
 | State (logs, engram, backups) | `state/` |
 | JARVIS core engine | `apps/jarvis/` |
 | Hermes bridge | `apps/hermes/hermes_bridge.py` |
@@ -42,9 +42,18 @@ All agents (OpenClaw, Hermes, Mystic, JARVIS) MUST follow these rules.
 - `pytest tests/unit/ -q` → 338 pass, 0 fail
 - `pytest -q` → 372 pass, 4 fail (integration, need API key)
 
-## Constitution (ABRIDGED)
-1. One monorepo. No exceptions.
-2. Enterprise OS is supreme. Every decision traces to it.
-3. Score gate ≥60 to approve any proposal.
-4. Deliverable every 48h minimum.
-5. ABE Music ($750/week) is primary client.
+## Constitution
+- Root: `constitution/OMEGA-PROMPT-v10.0.md`
+- Soul: `constitution/SOUL.md`
+- Governance: VDD → EDD → PDD → ODD → SDD → BDD → TDD
+- Score gate: ≥60 to approve any proposal (9 metrics)
+- 10 Sub-OS: `prompts/prompts/OS/MANIFEST.md`
+
+## Templates
+| Template | Location |
+|----------|----------|
+| Agent Harness | `harnesses/AGENT-HARNESS-TEMPLATE.md` |
+| Skill | `skills/SKILL-TEMPLATE.md` |
+| Initiative | `initiatives/initiative-TEMPLATE.md` |
+| Event Catalog | `events/CATALOG.md` |
+| Enterprise Score | `metrics/enterprise-score.md` |

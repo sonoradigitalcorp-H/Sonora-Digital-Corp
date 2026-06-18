@@ -1,7 +1,8 @@
 # Sonora Digital Corp — Quick Reference
 
-**One truth**: `sonora-enterprise-os/constitution/MASTER-SYSTEM-PROMPT.md`
-**Governance**: VDD → EDD → PDD → SDD → BDD → TDD
+**One truth**: `sonora-enterprise-os/constitution/OMEGA-PROMPT-v10.0.md`
+**Soul**: `sonora-enterprise-os/constitution/SOUL.md`
+**Governance**: VDD → EDD → PDD → ODD → SDD → BDD → TDD
 
 ---
 
@@ -44,11 +45,26 @@ python apps/jarvis/main.py      # JARVIS core
 | 7687 | Neo4j | Docker |
 | 5678 | n8n | Docker (not deployed) |
 
-## Agentes
+## Sub-OS Architecture
 
-`mystic` (primary) + explore, builder, reviewer, hermes, openclaw, sdd/*, memory, research, code.
+| OS | Domain | Prompt |
+|----|--------|--------|
+| Sales | Go-to-market | `prompts/prompts/OS/Sales-OS.md` |
+| Dev | Software delivery | `prompts/prompts/OS/Dev-OS.md` |
+| Support | Client care | `prompts/prompts/OS/Support-OS.md` |
+| Agent | Agent lifecycle | `prompts/prompts/OS/Agent-OS.md` |
+| Knowledge | Memory & docs | `prompts/prompts/OS/Knowledge-OS.md` |
+| Finance | FinOps & revenue | `prompts/prompts/OS/Finance-OS.md` |
+| Security | Trust & compliance | `prompts/prompts/OS/Security-OS.md` |
+| Ops | Infrastructure | `prompts/prompts/OS/Ops-OS.md` |
+| Quality | Testing & evaluation | `prompts/prompts/OS/Quality-OS.md` |
+| Strategy | Direction & growth | `prompts/prompts/OS/Strategy-OS.md` |
 
-## Comandos rápidos opencode
+## Agentes opencode
+
+`mystic` (primary) + explore, builder, reviewer, hermes, openclaw, sdd/*, memory, research, code, sales, dev, support, agent, knowledge, finance, security, ops, quality, strategy.
+
+## Comandos rápidos
 
 - `/status` — healthcheck
 - `/backup` — backup
@@ -56,5 +72,25 @@ python apps/jarvis/main.py      # JARVIS core
 - `/gsd` — Get Shit Done
 - `/sdd-new` — nueva spec
 - `/build` — construir feature
+- `/sales` — Sales OS
+- `/dev` — Dev OS
+- `/support` — Support OS
+- `/agent` — Agent OS
+- `/knowledge` — Knowledge OS
+- `/finance` — Finance OS
+- `/security` — Security OS
+- `/ops` — Ops OS
+- `/quality` — Quality OS
+- `/strategy` — Strategy OS
 
-Enterprise Score: ≥60 para aprobar (8 metrics × 10).
+## Templates
+
+| Template | Location |
+|----------|----------|
+| Agent Harness | `harnesses/AGENT-HARNESS-TEMPLATE.md` |
+| Skill | `skills/SKILL-TEMPLATE.md` |
+| Initiative | `initiatives/initiative-TEMPLATE.md` |
+| Event Catalog | `events/CATALOG.md` |
+| Enterprise Score | `metrics/enterprise-score.md` |
+
+Enterprise Score: ≥60 para aprobar (9 metrics × 10).

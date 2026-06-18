@@ -6,8 +6,9 @@
   "shell": "/bin/zsh",
   "logLevel": "INFO",
   "instructions": [
+    "sonora-enterprise-os/constitution/OMEGA-PROMPT-v10.0.md",
+    "sonora-enterprise-os/constitution/SOUL.md",
     "sonora-enterprise-os/constitution/TRUTH.md",
-    "sonora-enterprise-os/constitution/MASTER-SYSTEM-PROMPT.md",
     "AGENTS.md",
     "sonora-enterprise-os/constitution/ECOSYSTEM-IDENTITY.md",
     "sonora-enterprise-os/observability/INVENTARIO-FINAL.md"
@@ -102,6 +103,76 @@
       "model": "opencode/deepseek-v4-flash-free",
       "description": "Code Agent — análisis, generación, lectura y corrección de código",
       "permission": { "read": "allow", "edit": "allow", "bash": { "git *": "allow", "pip *": "allow", "*": "ask" } }
+    },
+    "sales": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Sales OS — lead gen, qualification, proposals, pipeline",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Sales-OS.md"],
+      "permission": { "read": "allow", "edit": "ask", "bash": "ask" }
+    },
+    "dev": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Dev OS — software delivery, CI/CD, architecture, tests",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Dev-OS.md"],
+      "permission": { "read": "allow", "edit": "allow", "bash": { "git *": "allow", "pip *": "allow", "npm *": "allow", "*": "ask" } }
+    },
+    "support": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Support OS — tickets, SLAs, client satisfaction",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Support-OS.md"],
+      "permission": { "read": "allow", "edit": "deny", "bash": "ask" }
+    },
+    "agent-os": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Agent OS — harness lifecycle, skill registry, MCP governance",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Agent-OS.md"],
+      "permission": { "read": "allow", "edit": "ask", "bash": "deny" }
+    },
+    "knowledge": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Knowledge OS — 7-layer memory, ADRs, knowledge capture",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Knowledge-OS.md"],
+      "permission": { "read": "allow", "edit": "ask", "bash": "ask" }
+    },
+    "finance": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Finance OS — FinOps, revenue tracking, ROI, invoicing",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Finance-OS.md"],
+      "permission": { "read": "allow", "edit": "deny", "bash": "ask" }
+    },
+    "security": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Security OS — secrets, audit, incident response, compliance",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Security-OS.md"],
+      "permission": { "read": "allow", "edit": "deny", "bash": "ask" }
+    },
+    "ops": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Ops OS — infrastructure, monitoring, recovery, scaling",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Ops-OS.md"],
+      "permission": { "read": "allow", "edit": "ask", "bash": { "docker *": "allow", "systemctl *": "allow", "*": "ask" } }
+    },
+    "quality": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Quality OS — test frameworks, process audits, evaluations",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Quality-OS.md"],
+      "permission": { "read": "allow", "edit": "deny", "bash": "ask", "grep": "allow" }
+    },
+    "strategy": {
+      "mode": "subagent",
+      "model": "opencode/deepseek-v4-flash-free",
+      "description": "Strategy OS — initiatives, enterprise score, quarterly planning",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Strategy-OS.md"],
+      "permission": { "read": "allow", "edit": "ask", "bash": "ask", "task": "allow" }
     }
   },
   "skills": {
@@ -175,6 +246,16 @@
     "brain": { "description": "Abre el brain graph (dashboard en vivo)", "prompt": "Ejecuta el script open-brain-monitor.sh para abrir el Command Center con brain graph" },
     "gsd": { "description": "Get Shit Done — flujo completo (discutir→planificar→ejecutar→verificar)", "prompt": "Ejecuta el flujo GSD: 1) Analiza estado actual 2) Discute qué necesita hacerse 3) Crea plan de acción 4) Ejecuta 5) Verifica 6) Documenta", "agent": "builder" },
     "sdd-new": { "description": "Inicia nueva spec SDD con todo el pipeline", "prompt": "Ejecuta el flujo SDD completo: Research→Spec→Design→Tasks→Apply→Verify→Archive para una nueva feature", "agent": "sdd" },
-    "build": { "description": "Construye features completos siguiendo SDD", "prompt": "Analiza requerimiento y construye solución completa siguiendo SDD pipeline", "agent": "builder" }
+    "build": { "description": "Construye features completos siguiendo SDD", "prompt": "Analiza requerimiento y construye solución completa siguiendo SDD pipeline", "agent": "builder" },
+    "sales": { "description": "Sales OS — pipeline de ventas, leads, propuestas", "prompt": "Carga Sales OS y ejecuta el pipeline de ventas: revisa leads activos, genera reporte de pipeline", "agent": "sales" },
+    "dev": { "description": "Dev OS — entrega de software, CI/CD, deploys", "prompt": "Carga Dev OS y ejecuta: revisa estado de builds, deployments pendientes, issues activos", "agent": "dev" },
+    "support": { "description": "Support OS — tickets, SLAs, satisfacción", "prompt": "Carga Support OS y ejecuta: revisa tickets abiertos, SLAs próximos a vencer, satisfacción", "agent": "support" },
+    "agent": { "description": "Agent OS — harnesses, skills, agentes", "prompt": "Carga Agent OS y ejecuta: revisa estado de harnesses, skills registrados, salud de agentes", "agent": "agent-os" },
+    "knowledge": { "description": "Knowledge OS — memoria, ADRs, conocimiento", "prompt": "Carga Knowledge OS y ejecuta: revisa ADRs pendientes, captura conocimiento reciente, verifica memoria", "agent": "knowledge" },
+    "finance": { "description": "Finance OS — FinOps, ingresos, ROI", "prompt": "Carga Finance OS y ejecuta: revisa costos de ejecución, ingresos del período, ROI de iniciativas", "agent": "finance" },
+    "security": { "description": "Security OS — auditoría, incidentes, compliance", "prompt": "Carga Security OS y ejecuta: revisa estado de secrets, alertas activas, última auditoría", "agent": "security" },
+    "ops": { "description": "Ops OS — infraestructura, monitoreo, recuperación", "prompt": "Carga Ops OS y ejecuta: revisa salud de servicios, uso de disco, containers, últimas recuperaciones", "agent": "ops" },
+    "quality": { "description": "Quality OS — tests, auditorías, evaluaciones", "prompt": "Carga Quality OS y ejecuta: revisa pass rate de tests, scores de iniciativa, últimas auditorías", "agent": "quality" },
+    "strategy": { "description": "Strategy OS — iniciativas, score, planificación", "prompt": "Carga Strategy OS y ejecuta: revisa enterprise score, iniciativas activas, salud de todos los OS", "agent": "strategy" }
   }
 }
