@@ -52,6 +52,44 @@ Sales ──contract_signed──→ Finance ──payment_received──→ Kno
 
 ---
 
+## Skills Catalog
+
+| # | OS | Skill | ID | Version |
+|---|----|-------|----|---------|
+| 1 | Sales | qualify-lead | SKILL-SLS-001 | 1.0.0 |
+| 2 | Dev | deploy-code | SKILL-DEV-001 | 1.0.0 |
+| 3 | Support | resolve-ticket | SKILL-SUP-001 | 1.0.0 |
+| 4 | Agent | spawn-agent | SKILL-AGT-001 | 1.0.0 |
+| 5 | Knowledge | capture-knowledge | SKILL-CK-001 | 1.0.0 |
+| 6 | Finance | track-finance | SKILL-FIN-001 | 1.0.0 |
+| 7 | Security | audit-security | SKILL-SEC-001 | 1.0.0 |
+| 8 | Ops | monitor-service | SKILL-MS-001 | 1.0.0 |
+| 9 | Quality | validate-quality | SKILL-QTY-001 | 1.0.0 |
+| 10 | Strategy | plan-strategy | SKILL-STR-001 | 1.0.0 |
+
+## Harnesses Catalog
+
+| # | OS | Harness | ID | Status |
+|---|----|---------|----|--------|
+| 1 | Sales | sales-harness | HARNESS-SLS-001 | Active |
+| 2 | Dev | dev-harness | HARNESS-DEV-001 | Active |
+| 3 | Support | support-harness | HARNESS-SUP-001 | Active |
+| 4 | Agent | agent-harness | HARNESS-AGT-001 | Active |
+| 5 | Knowledge | knowledge-harness | HARNESS-KNW-001 | Active |
+| 6 | Finance | finance-harness | HARNESS-FIN-001 | Active |
+| 7 | Security | security-harness | HARNESS-SEC-001 | Active |
+| 8 | Ops | ops-harness | HARNESS-OPS-001 | Active |
+| 9 | Quality | quality-harness | HARNESS-QTY-001 | Active |
+| 10 | Strategy | strategy-harness | HARNESS-STR-001 | Active |
+
+## Initiatives Catalog
+
+| # | Initiative | OS | Score | Status |
+|---|-----------|----|-------|--------|
+| 1 | improve-automation-coverage | Ops | 64/100 | Active |
+| 2 | finops-baseline | Finance | 67/100 | Active |
+| 3 | knowledge-immortality | Knowledge | 71/100 | Active |
+
 ## Enterprise Score Contribution
 
 | OS | Metrics Contributed to Score |
@@ -61,7 +99,7 @@ Sales ──contract_signed──→ Finance ──payment_received──→ Kno
 | Support | Customer Value |
 | Agent | Automation Impact, Scalability |
 | Knowledge | Knowledge Impact |
-| Finance | Revenue Impact |
+| Finance | Revenue Impact, FinOps Efficiency |
 | Security | Reliability |
 | Ops | Operational Simplicity |
 | Quality | Reliability |
