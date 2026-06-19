@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonora Digital Corp — Blueprint del Ecosistema</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{font-family:'Inter',-apple-system,sans-serif;background:#060612;color:#c8d6e5;line-height:1.6;overflow-x:hidden}
+  ::-webkit-scrollbar{width:6px}
+  ::-webkit-scrollbar-track{background:#0a0a1a}
+  ::-webkit-scrollbar-thumb{background:#00d4ff33;border-radius:3px}
+  ::-webkit-scrollbar-thumb:hover{background:#00d4ff66}
+
+  /* Slide layout */
+  .slide{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:60px 40px;position:relative;border-bottom:1px solid #00d4ff11}
+  .slide-content{max-width:1100px;margin:0 auto;width:100%}
+  .slide-number{position:absolute;bottom:24px;right:40px;font-size:12px;color:#00d4ff44;font-family:'JetBrains Mono',monospace;letter-spacing:2px}
+
+  /* Typography */
+  h1{font-size:clamp(2.5rem,5vw,4.5rem);font-weight:800;background:linear-gradient(135deg,#00d4ff,#7b2ff7,#ff6b35);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.1;margin-bottom:16px}
+  h2{font-size:clamp(1.5rem,3vw,2.5rem);font-weight:700;color:#fff;margin-bottom:24px;display:flex;align-items:center;gap:12px}
+  h2 .tag{font-size:12px;background:#00d4ff22;color:#00d4ff;padding:4px 12px;border-radius:20px;font-weight:500;letter-spacing:1px;border:1px solid #00d4ff33}
+  h3{font-size:1.2rem;font-weight:600;color:#fff;margin-bottom:12px}
+  p{font-size:1.05rem;color:#8899aa;margin-bottom:16px;max-width:720px}
+  .subtitle{font-size:1.2rem;color:#7b8ba0;margin-bottom:32px;font-weight:300}
+  code{font-family:'JetBrains Mono',monospace;font-size:.85rem;background:#0d0d24;color:#00d4ff;padding:2px 8px;border-radius:4px;border:1px solid #00d4ff22}
+
+  /* Grid cards */
+  .grid{display:grid;gap:16px}
+  .grid-2{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+  .grid-3{grid-template-columns:repeat(auto-fit,minmax(240px,1fr))}
+  .grid-4{grid-template-columns:repeat(auto-fit,minmax(200px,1fr))}
+  .card{background:linear-gradient(135deg,#0d0d24,#151533);border:1px solid #00d4ff15;border-radius:16px;padding:24px;transition:all .3s ease}
+  .card:hover{border-color:#00d4ff33;transform:translateY(-2px);box-shadow:0 8px 32px #00d4ff0d}
+  .card .icon{font-size:1.8rem;margin-bottom:12px;display:block}
+  .card h4{color:#fff;font-weight:600;margin-bottom:6px;font-size:1rem}
+  .card p{font-size:.88rem;color:#7b8ba0;margin:0;line-height:1.5}
+  .card .badge{display:inline-block;font-size:.7rem;padding:2px 10px;border-radius:12px;font-weight:500;margin-top:8px;letter-spacing:.5px}
+  .badge-green{background:#00d4ff15;color:#00d4ff;border:1px solid #00d4ff33}
+  .badge-purple{background:#7b2ff715;color:#7b2ff7;border:1px solid #7b2ff733}
+  .badge-orange{background:#ff6b3515;color:#ff6b35;border:1px solid #ff6b3533}
+  .badge-gray{background:#ffffff08;color:#8899aa;border:1px solid #ffffff15}
+
+  /* Stats */
+  .stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:16px;margin:32px 0}
+  .stat{text-align:center;padding:20px;background:#0d0d24;border-radius:12px;border:1px solid #00d4ff11}
+  .stat .num{font-size:2rem;font-weight:800;color:#fff;line-height:1}
+  .stat .num.cyan{color:#00d4ff}
+  .stat .num.purple{color:#7b2ff7}
+  .stat .num.orange{color:#ff6b35}
+  .stat .label{font-size:.8rem;color:#7b8ba0;margin-top:6px;text-transform:uppercase;letter-spacing:1px}
+
+  /* Architecture flow */
+  .arch{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;align-items:center;margin:32px 0}
+  .arch-node{padding:16px 24px;border-radius:12px;font-weight:500;font-size:.9rem;text-align:center;min-width:100px}
+  .arch-arrow{color:#00d4ff55;font-size:1.4rem;font-weight:300}
+  .arch-node.layer-1{background:linear-gradient(135deg,#00d4ff22,#00d4ff11);border:1px solid #00d4ff44;color:#00d4ff}
+  .arch-node.layer-2{background:linear-gradient(135deg,#7b2ff722,#7b2ff711);border:1px solid #7b2ff744;color:#7b2ff7}
+  .arch-node.layer-3{background:linear-gradient(135deg,#ff6b3522,#ff6b3511);border:1px solid #ff6b3544;color:#ff6b35}
+  .arch-node.layer-4{background:linear-gradient(135deg,#ffffff11,#ffffff08);border:1px solid #ffffff33;color:#fff}
+  .arch-node.layer-5{background:linear-gradient(135deg,#00ff8822,#00ff8811);border:1px solid #00ff8844;color:#00ff88}
+
+  /* Timeline */
+  .timeline{position:relative;padding-left:32px;margin:24px 0}
+  .timeline::before{content:'';position:absolute;left:8px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,#00d4ff,#7b2ff7,#ff6b35)}
+  .tl-item{position:relative;margin-bottom:24px;padding-left:20px}
+  .tl-item::before{content:'';position:absolute;left:-28px;top:6px;width:12px;height:12px;border-radius:50%;background:#00d4ff;border:2px solid #060612}
+  .tl-item:nth-child(2)::before{background:#7b2ff7}
+  .tl-item:nth-child(3)::before{background:#ff6b35}
+  .tl-item:nth-child(4)::before{background:#00ff88}
+  .tl-item h4{color:#fff;font-weight:600}
+  .tl-item p{font-size:.9rem;color:#7b8ba0;margin:4px 0 0 0}
+
+  /* Table */
+  table{width:100%;border-collapse:collapse;font-size:.9rem;margin:16px 0}
+  th{text-align:left;padding:12px 16px;color:#00d4ff;font-weight:600;border-bottom:1px solid #00d4ff22;text-transform:uppercase;letter-spacing:1px;font-size:.75rem}
+  td{padding:10px 16px;border-bottom:1px solid #ffffff08;color:#99aabb}
+  tr:hover td{background:#ffffff08}
+
+  /* Agent list */
+  .agent-list{display:grid;gap:8px}
+  .agent-item{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#0d0d24;border-radius:8px;border:1px solid #ffffff08}
+  .agent-item .name{color:#fff;font-weight:500;font-size:.9rem}
+  .agent-item .role{color:#7b8ba0;font-size:.8rem}
+  .agent-item .model{font-family:'JetBrains Mono',monospace;font-size:.75rem;color:#00d4ff}
+
+  /* Services grid */
+  .service{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#0d0d24;border-radius:8px;border:1px solid #ffffff08;margin-bottom:8px}
+  .service .name{color:#fff;font-weight:500;font-size:.9rem}
+  .service .port{font-family:'JetBrains Mono',monospace;font-size:.8rem;color:#7b8ba0}
+  .service .status{font-size:.75rem;padding:4px 12px;border-radius:12px;font-weight:500}
+  .status-active{background:#00ff8815;color:#00ff88;border:1px solid #00ff8833}
+  .status-inactive{background:#ff6b3515;color:#ff6b35;border:1px solid #ff6b3533}
+
+  /* Hero */
+  .hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative;overflow:hidden}
+  .hero::before{content:'';position:absolute;width:100%;height:100%;background:radial-gradient(circle at 50% 50%,#00d4ff08 0%,transparent 60%),radial-gradient(circle at 30% 70%,#7b2ff708 0%,transparent 50%),radial-gradient(circle at 70% 30%,#ff6b3508 0%,transparent 50%);pointer-events:none}
+  .hero h1{font-size:clamp(2.8rem,6vw,5rem)}
+  .hero .tagline{font-size:1.3rem;color:#7b8ba0;margin-top:16px;font-weight:300}
+  .hero .meta{margin-top:40px;font-size:.85rem;color:#556677;font-family:'JetBrains Mono',monospace}
+  .hero .nav-links{display:flex;gap:16px;flex-wrap:wrap;justify-content:center;margin-top:40px}
+  .hero .nav-links a{color:#00d4ff;text-decoration:none;font-size:.85rem;padding:8px 20px;border:1px solid #00d4ff33;border-radius:8px;transition:all .3s}
+  .hero .nav-links a:hover{background:#00d4ff11;border-color:#00d4ff66}
+
+  /* Section layout */
+  .section-title{margin-bottom:40px}
+  .section-title .count{font-family:'JetBrains Mono',monospace;font-size:.85rem;color:#00d4ff66}
+
+  /* Divider */
+  .divider{height:1px;background:linear-gradient(90deg,transparent,#00d4ff22,transparent);margin:16px 0 24px 0}
+
+  /* Footer */
+  .slide-footer{text-align:center;padding:60px 40px;background:#060612}
+  .slide-footer h2{-webkit-text-fill-color:#fff;background:none}
+  .slide-footer .links{display:flex;gap:24px;justify-content:center;flex-wrap:wrap;margin-top:24px}
+  .slide-footer .links a{color:#00d4ff;text-decoration:none;font-size:.9rem;transition:color .3s}
+  .slide-footer .links a:hover{color:#7b2ff7}
+
+  @media(max-width:768px){
+    .slide{padding:40px 20px}
+    .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+    .arch{flex-direction:column}
+    .arch-arrow{transform:rotate(90deg)}
+    .agent-item{flex-direction:column;align-items:flex-start;gap:4px}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<section class="hero slide">
+  <div class="slide-content">
+    <h1>Sonora Digital Corp</h1>
+    <p class="tagline">Blueprint del Ecosistema — Fábrica de Trabajadores Digitales Escalables</p>
+    <p class="meta">v2.0 · OMEGA Architecture v10.0 · Luis Daniel Guerrero Enciso («Mystic»)</p>
+    <div class="nav-links">
+      <a href="#vision">Visi&oacute;n</a>
+      <a href="#arquitectura">Arquitectura</a>
+      <a href="#agentes">Agentes</a>
+      <a href="#servicios">Servicios</a>
+      <a href="#datos">Datos</a>
+      <a href="#productos">Productos</a>
+      <a href="#enterprise-os">Enterprise OS</a>
+      <a href="#metricas">M&eacute;tricas</a>
+    </div>
+  </div>
+  <div class="slide-number">01</div>
+</section>
+
+<!-- ===== VISIÓN ===== -->
+<section class="slide" id="vision">
+  <div class="slide-content">
+    <div class="section-title">
+      <span class="count">01</span>
+      <h2>Visión & Filosofía</h2>
+    </div>
+    <div class="grid grid-2">
+      <div class="card">
+        <span class="icon">🎯</span>
+        <h4>Misión</h4>
+        <p>Construir una fábrica de trabajadores digitales autónomos, escalables y especializados que ejecuten operaciones de negocio 24/7 sin supervisión humana.</p>
+      </div>
+      <div class="card">
+        <span class="icon">🧠</span>
+        <h4>5 Elementos del Alma</h4>
+        <p>Identidad · Visión · Estrategia · Ejecución · Evolución — cada agente encarna uno de estos principios fundamentales.</p>
+      </div>
+      <div class="card">
+        <span class="icon">⚡</span>
+        <h4>Jerarquía de Gobierno</h4>
+        <p>VDD → EDD → PDD → ODD → SDD → BDD → TDD<br><span style="color:#7b8ba0;font-size:.8rem;">Valor → Evidencia → Política → Spec → Comportamiento → Test → Código</span></p>
+      </div>
+      <div class="card">
+        <span class="icon">♾️</span>
+        <h4>Single Source of Truth</h4>
+        <p>OMEGA PROMPT v10.0 como constitución suprema. Toda decisión, toda ejecución, todo agente responde a este marco.</p>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat"><div class="num cyan">25+</div><div class="label">Agentes</div></div>
+      <div class="stat"><div class="num purple">376+</div><div class="label">Tests</div></div>
+      <div class="stat"><div class="num orange">57</div><div class="label">Skills</div></div>
+      <div class="stat"><div class="num" style="color:#00ff88">15</div><div class="label">Cron Jobs</div></div>
+      <div class="stat"><div class="num cyan">7</div><div class="label">Servicios</div></div>
+    </div>
+  </div>
+  <div class="slide-number">02</div>
+</section>
+
+<!-- ===== ARQUITECTURA ===== -->
+<section class="slide" id="arquitectura">
+  <div class="slide-content">
+    <div class="section-title">
+      <span class="count">02</span>
+      <h2>Arquitectura del Sistema</h2>
+    </div>
+    <p class="subtitle">5 capas que conforman el ecosistema — desde la orquestación hasta la entrega al usuario final.</p>
+
+    <div class="arch">
+      <div class="arch-node layer-1">OpenCode CLI</div>
+      <span class="arch-arrow">→</span>
+      <div class="arch-node layer-2">JARVIS Core</div>
+      <span class="arch-arrow">→</span>
+      <div class="arch-node layer-3">Hermes Gateway</div>
+      <span class="arch-arrow">→</span>
+      <div class="arch-node layer-4">OpenClaw Skills</div>
+      <span class="arch-arrow">→</span>
+      <div class="arch-node layer-5">Canales</div>
+    </div>
+
+    <div class="grid grid-3" style="margin-top:32px">
+      <div class="card">
+        <h4>🔷 Capa 1 · OpenCode</h4>
+        <p><code>deepseek-v4-flash-free</code> — Modelo base. CLI de código abierto que ejecuta agentes, MCP servidores y herramientas. Punto de entrada único.</p>
+        <span class="badge badge-green">Core Runtime</span>
+      </div>
+      <div class="card">
+        <h4>🟣 Capa 2 · JARVIS</h4>
+        <p>Orquestador multi-agente en <code>Python/FastAPI</code>. Coordina 18 agentes internos + Neo4j + Qdrant + Engram. Puerto <code>5174</code>.</p>
+        <span class="badge badge-purple">Orquestador</span>
+      </div>
+      <div class="card">
+        <h4>🟠 Capa 3 · Hermes</h4>
+        <p>Gateway multi-canal. Enruta tareas a Telegram, WhatsApp, Discord, Desktop. Bridge MCP expone 4+ herramientas. Puerto <code>8000</code>.</p>
+        <span class="badge badge-orange">Gateway</span>
+      </div>
+      <div class="card">
+        <h4>⚪ Capa 4 · OpenClaw</h4>
+        <p>57 skills especializados — desde CRM hasta generación de música. Motor de habilidades conectado vía MCP. Puerto <code>18789</code>.</p>
+        <span class="badge badge-gray">Skill Engine</span>
+      </div>
+      <div class="card">
+        <h4>🟢 Capa 5 · Canales</h4>
+        <p>Telegram bot (97 skills), WhatsApp bridge, web UI, voz (STT/TTS). La interfaz con el mundo exterior.</p>
+        <span class="badge" style="background:#00ff8815;color:#00ff88;border:1px solid #00ff8833">Delivery</span>
+      </div>
+      <div class="card">
+        <h4>🗄️ Infraestructura</h4>
+        <p>Docker Compose · Neo4j (<code>7687</code>) · Qdrant (<code>6333</code>) · n8n (<code>5678</code>) · PostgreSQL · Redis · systemd · 15 cron jobs</p>
+        <span class="badge badge-gray">Infrastructure</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+    <h3 style="margin-top:24px">Flujo de Ejecución</h3>
+    <div class="timeline">
+      <div class="tl-item"><h4>1. Entrada</h4><p>Usuario → canal (Telegram/Web/CLI/Voz) → Hermes Gateway</p></div>
+      <div class="tl-item"><h4>2. Orquestación</h4><p>Hermes → JARVIS Core → agente especializado según intención</p></div>
+      <div class="tl-item"><h4>3. Ejecución</h4><p>Agente → herramientas MCP → Neo4j/Qdrant/Engram → skills OpenClaw</p></div>
+      <div class="tl-item"><h4>4. Respuesta</h4><p>Resultado → verificación → canal original → usuario</p></div>
+    </div>
+  </div>
+  <div class="slide-number">03</div>
+</section>
+
+<!-- ===== AGENTES ===== -->
+<section class="slide" id="agentes">
+  <div class="slide-content">
+    <div class="section-title">
+      <span class="count">03</span>
+      <h2>Ecosistema de Agentes</h2>
+    </div>
+    <p class="subtitle">25+ agentes definidos en <code>opencode.json</code> + 18 agentes JARVIS internos. Todos sobre <code>deepseek-v4-flash-free</code>.</p>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <div class="agent-item"><span class="name">mystic</span><span class="role">Alma / Identity</span><span class="model">flash-free</span></div>
+        <div class="agent-item"><span class="name">explore</span><span class="role">Filesystem</span><span class="model">flash-free</span></div>
+        <div class="agent-item"><span class="name">builder</span><span class="role">Features</span><span class="model">flash-free</span></div>
+        <div class="agent-item"><span class="name">reviewer</span><span class="role">Code Review</span><span class="model">flash-free</span></div>
+        <div class="agent-item"><span class="name">hermes</span><span class="role">Gateway</span><span class="model">flash-free</span></div>
+        <div class="agent-item"><span class="name">openclaw</span><span class="role">Skills</span><span class="model">flash-free</span></div>
+      </div>
+      <div class="card">
+        <div class="agent-item"><span class="name">sdd</span><span class="role">Pipeline OS</span><span class="model">flash-free</span></div>
+        <div class="agent-item"><span class="name">sdd-spec</span><span class="role">Specs</span><span class="model">flash-free</span></div>
+        <div class="agent-item"><span class="name">sdd-design</span><span class="role">Planes</span><span class="model">flash-free</span></div>
+        <div class="agent-item"><span class="name">sdd-apply</span><span class="role">Implementación</span><span class="model">flash-free</span></div>
+        <div class="agent-item"><span class="name">sdd-verify</span><span class="role">Validación</span><span class="model">flash-free</span></div>
+        <div class="agent-item"><span class="name">sdd-archive</span><span class="role">Documentación</span><span class="model">flash-free</span></div>
+      </div>
+      <div class="card">
+        <div class="agent-item"><span class="name">memory</span><span class="role">Memoria</span><span class="model">flash-free</span></div>
+        <div class="agent-item"><span class="name">research</span><span class="role">Investigación</span><span class="model">flash-free</span></div>
+        <div class="agent-item"><span class="name">code</span><span class="role">Código</span><span class="model">flash-free</span></div>
+        <div class="agent-item"><span class="name">sales</span><span class="role">Sales OS</span><span class="model">flash-free</span></div>
+        <div class="agent-item"><span class="name">dev</span><span class="role">Dev OS</span><span class="model">flash-free</span></div>
+        <div class="agent-item"><span class="name">support</span><span class="role">Support OS</span><span class="model">flash-free</span></div>
+      </div>
+    </div>
+
+    <div class="grid grid-2" style="margin-top:16px">
+      <div class="card">
+        <h4>10 Sub-Operating Systems</h4>
+        <p>Cada OS es un agente con harness, prompts y políticas dedicadas:</p>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px">
+          <span class="badge badge-green">Sales</span>
+          <span class="badge badge-purple">Dev</span>
+          <span class="badge badge-orange">Support</span>
+          <span class="badge badge-gray">Agent</span>
+          <span class="badge badge-green">Knowledge</span>
+          <span class="badge badge-purple">Finance</span>
+          <span class="badge badge-orange">Security</span>
+          <span class="badge badge-gray">Ops</span>
+          <span class="badge badge-green">Quality</span>
+          <span class="badge badge-purple">Strategy</span>
+        </div>
+      </div>
+      <div class="card">
+        <h4>18 Agentes JARVIS Internos</h4>
+        <p style="font-size:.82rem;color:#7b8ba0">
+          HermesAgent · OpenClawAgent · CodeAgent · ExploreAgent · ResearchAgent · MemoryAgent · SkillAgent · VoiceAgent · ReviewAgent · PRAgent · GbrainAgent · VerifyAgent · SpecAgent · DesignAgent · ApplyAgent · ArchiveAgent · BaseAgent + Orchestrator
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number">04</div>
+</section>
+
+<!-- ===== SERVICIOS ===== -->
+<section class="slide" id="servicios">
+  <div class="slide-content">
+    <div class="section-title">
+      <span class="count">04</span>
+      <h2>Servicios & Infraestructura</h2>
+    </div>
+    <p class="subtitle">9 servicios orquestados entre Docker, systemd y cron — 7 activos, 2 inactivos.</p>
+
+    <h3>🟢 Servicios Activos</h3>
+    <div class="service"><span class="name">JARVIS Web UI</span><span class="port">FastAPI · 5174</span><span class="status status-active">● systemd</span></div>
+    <div class="service"><span class="name">Hermes API</span><span class="port">FastAPI · 8000</span><span class="status status-active">● systemd</span></div>
+    <div class="service"><span class="name">OpenClaw Gateway</span><span class="port">port 18789</span><span class="status status-active">● systemd</span></div>
+    <div class="service"><span class="name">Qdrant</span><span class="port">6333 · Docker</span><span class="status status-active">● container</span></div>
+    <div class="service"><span class="name">Neo4j</span><span class="port">7687 · Docker</span><span class="status status-active">● container</span></div>
+    <div class="service"><span class="name">PostgreSQL</span><span class="port">Docker</span><span class="status status-active">● container</span></div>
+    <div class="service"><span class="name">Redis</span><span class="port">Docker</span><span class="status status-active">● container</span></div>
+
+    <h3 style="margin-top:20px">🔴 Inactivos</h3>
+    <div class="service"><span class="name">n8n</span><span class="port">5678 · Docker</span><span class="status status-inactive">● stopped</span></div>
+    <div class="service"><span class="name">Playwright MCP</span><span class="port">18990</span><span class="status status-inactive">● stopped</span></div>
+
+    <div class="divider"></div>
+    <h3 style="margin-top:24px">Cron Jobs (15)</h3>
+    <div class="grid grid-2">
+      <div style="font-size:.82rem;color:#7b8ba0">
+        ⏱ Cada 15 min: healthcheck · night-ops-update<br>
+        ⏱ Cada hora: memory-save<br>
+        ⏱ Cada 6h: self-improve · behavior-analyzer<br>
+        ⏱ Cada 4h: social automation
+      </div>
+      <div style="font-size:.82rem;color:#7b8ba0">
+        ⏱ 3 AM: backup<br>
+        ⏱ Lunes 9 AM: ABE report push<br>
+        ⏱ Lunes 9:30 AM: ABE delivery gate<br>
+        ⏱ Cada 8h: sync VPS (sin VPS actualmente)
+      </div>
+    </div>
+  </div>
+  <div class="slide-number">05</div>
+</section>
+
+<!-- ===== DATOS & MEMORIA ===== -->
+<section class="slide" id="datos">
+  <div class="slide-content">
+    <div class="section-title">
+      <span class="count">05</span>
+      <h2>Datos & Memoria</h2>
+    </div>
+    <p class="subtitle">Arquitectura de 3 capas de memoria + almacenamiento tradicional.</p>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <span class="icon">🧠</span>
+        <h4>Engram (SQLite + FTS5)</h4>
+        <p>Memoria efímera episódica. Almacena sesiones, decisiones recientes y contexto inmediato del agente. Búsqueda por texto completo.</p>
+        <span class="badge badge-green">Episódica</span>
+      </div>
+      <div class="card">
+        <span class="icon">🔮</span>
+        <h4>Qdrant (Vectores)</h4>
+        <p>Memoria semántica. Embeddings de documentos, conversaciones y conocimientos. Búsqueda por similitud vectorial. Puerto <code>6333</code>.</p>
+        <span class="badge badge-purple">Semántica</span>
+      </div>
+      <div class="card">
+        <span class="icon">🕸️</span>
+        <h4>Neo4j (Grafo)</h4>
+        <p>Memoria relacional. Knowledge graph con entidades, relaciones, agentes, proyectos. Consultas Cypher. Puerto <code>7687</code>.</p>
+        <span class="badge badge-orange">Relacional</span>
+      </div>
+    </div>
+
+    <div class="grid grid-3" style="margin-top:16px">
+      <div class="card">
+        <h4>🗄️ PostgreSQL</h4>
+        <p>Datos estructurados de negocio: clientes, suscripciones, pagos, productos.</p>
+      </div>
+      <div class="card">
+        <h4>📁 File System</h4>
+        <p>Logs, transcripts, respaldos, assets multimedia, exports de datos.</p>
+      </div>
+      <div class="card">
+        <h4>📊 FinOps</h4>
+        <p>Cada llamada a API registrada en <code>finops.jsonl</code> con costo, tokens, modelo.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;padding:16px;background:#0d0d24;border-radius:12px;border:1px solid #00d4ff15">
+      <h4 style="color:#00d4ff;margin-bottom:8px">MCP Bridge — Conexiones</h4>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <span class="badge badge-green">jarvis-bridge</span>
+        <span class="badge badge-purple">hermes-api</span>
+        <span class="badge badge-orange">openclaw</span>
+        <span class="badge badge-gray">qdrant</span>
+        <span class="badge badge-green">neo4j</span>
+        <span class="badge badge-purple">n8n</span>
+        <span class="badge badge-orange">google-mcp</span>
+      </div>
+    </div>
+  </div>
+  <div class="slide-number">06</div>
+</section>
+
+<!-- ===== PRODUCTOS ===== -->
+<section class="slide" id="productos">
+  <div class="slide-content">
+    <div class="section-title">
+      <span class="count">06</span>
+      <h2>Productos & Clientes</h2>
+    </div>
+
+    <div class="grid grid-2">
+      <div class="card" style="border-color:#00d4ff33">
+        <span class="icon">🎵</span>
+        <h4>ABE Music</h4>
+        <p>3 artistas activos (Héctor Rubio, Jesús Urquijo, Javier Arvayo). Daemon cada 10 min. Datos JSON con <code>~$27K</code> revenue combinado. Telegram integrado.</p>
+        <span class="badge badge-green">Experimental</span>
+      </div>
+      <div class="card" style="border-color:#7b2ff733">
+        <span class="icon">🏷️</span>
+        <h4>AZREC</h4>
+        <p>Branding, budget, landing page, Shopify, Telegram — estructura completa pero inactiva.</p>
+        <span class="badge badge-gray">Inactivo</span>
+      </div>
+      <div class="card" style="border-color:#ff6b3533">
+        <span class="icon">🤖</span>
+        <h4>Mysticverse</h4>
+        <p>Pipeline de gemelos digitales: foto → personalidad → voz → agente 24/7. Código completo, nunca ejecutado.</p>
+        <span class="badge badge-orange">Code Only</span>
+      </div>
+      <div class="card" style="border-color:#00ff8833">
+        <span class="icon">🛒</span>
+        <h4>SDC Shop / Booking / Chatbot</h4>
+        <p>Tienda estática (0 órdenes), booking prototipo (webhook + HTML), chatbot setup scripts.</p>
+        <span class="badge badge-gray">Prototipo</span>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;padding:16px;background:#0d0d24;border-radius:12px;border:1px solid #ffffff15">
+      <h4 style="color:#fff;margin-bottom:8px">52 Scripts de Automatización</h4>
+      <p style="font-size:.85rem;color:#7b8ba0;margin:0">
+        backup.sh · deploy-all.sh · enterprise-score.sh · turbo-loop.sh · self-improve.sh · push-to-github.sh · cicd-pipeline.sh · social_automation.py · od-generate.sh · gateway-healthcheck.sh · memory-save.py · pipeline.py · 40+ más
+      </p>
+    </div>
+  </div>
+  <div class="slide-number">07</div>
+</section>
+
+<!-- ===== ENTERPRISE OS ===== -->
+<section class="slide" id="enterprise-os">
+  <div class="slide-content">
+    <div class="section-title">
+      <span class="count">07</span>
+      <h2>Sonora Enterprise OS</h2>
+    </div>
+    <p class="subtitle">Sistema operativo constitucional que gobierna todo el ecosistema — 15 capabilities, 10 sub-OS, 11 ADRs.</p>
+
+    <div class="grid grid-3">
+      <div class="card">
+        <h4>📜 Constitución</h4>
+        <p><code>OMEGA-PROMPT-v10.0.md</code> como fuente única de verdad. <code>SOUL.md</code>, <code>TRUTH.md</code>, <code>constitution.md</code> (482 líneas).</p>
+      </div>
+      <div class="card">
+        <h4>🏛️ 11 ADRs</h4>
+        <p>Decisiones arquitectónicas registradas: desde JARVIS Core hasta Omega Architecture. Trazabilidad completa.</p>
+      </div>
+      <div class="card">
+        <h4>📋 10 Harnesses</h4>
+        <p>Plantillas de agente: Agent, Dev, Sales, Finance, Knowledge, Ops, Quality, Security, Strategy, Support.</p>
+      </div>
+      <div class="card">
+        <h4>🎯 15 Capabilities</h4>
+        <p>Registro de capacidades del sistema con niveles de madurez (1-5). Mapa de evolución del ecosistema.</p>
+      </div>
+      <div class="card">
+        <h4>📈 Enterprise Score</h4>
+        <p>9 métricas × 10 puntos = score mínimo 60 para aprobar. Scoring automático desde eventos reales.</p>
+      </div>
+      <div class="card">
+        <h4>📁 Prompt Engine</h4>
+        <p>Biblioteca completa de prompts: OS, AGENTS, CLIENTS, CODE, CONTENT, IDENTITY, STRATEGY, TOOLS, OPERATIONS, META.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:24px;padding:16px;background:#0d0d24;border-radius:12px;border:1px solid #7b2ff722">
+      <h4 style="color:#7b2ff7;margin-bottom:8px">Design System</h4>
+      <p style="font-size:.85rem;color:#7b8ba0;margin:0">
+        <span style="color:#00d4ff">● #00d4ff</span> Primary ·
+        <span style="color:#7b2ff7">● #7b2ff7</span> Secondary ·
+        <span style="color:#ff6b35">● #ff6b35</span> Accent ·
+        <span style="color:#0a0a1a">■ #0a0a1a</span> Background ·
+        <span style="color:#fff">Inter · JetBrains Mono</span>
+      </p>
+    </div>
+  </div>
+  <div class="slide-number">08</div>
+</section>
+
+<!-- ===== MÉTRICAS ===== -->
+<section class="slide" id="metricas">
+  <div class="slide-content">
+    <div class="section-title">
+      <span class="count">08</span>
+      <h2>Métricas del Ecosistema</h2>
+    </div>
+
+    <table>
+      <tr><th>Dimensión</th><th>Valor</th><th>Detalle</th></tr>
+      <tr><td>Agentes</td><td>25+</td><td>7 principales + 6 SDD + 10 sub-OS + 18 JARVIS internos</td></tr>
+      <tr><td>Skills</td><td>57</td><td>42 OpenClaw + 26 Hermes + 10 Enterprise OS</td></tr>
+      <tr><td>Tests</td><td>376+</td><td>24 unit · 3 integration · Playwright E2E</td></tr>
+      <tr><td>Cron Jobs</td><td>15</td><td>healthcheck, backup, memory-save, self-improve, ABE, social, sync</td></tr>
+      <tr><td>Servicios</td><td>9</td><td>7 activos (3 systemd + 4 Docker) · 2 inactivos</td></tr>
+      <tr><td>Workflows GH</td><td>12</td><td>CI, test, deploy, backup, security, monitor, auto-maintenance</td></tr>
+      <tr><td>n8n Workflows</td><td>37+</td><td>agenda, content, social, watchdog, hermes-briefing, music-hub</td></tr>
+      <tr><td>Repositorios</td><td>4</td><td>sonora-digital-corp · archive · hermes-agent · openclaw-workspace</td></tr>
+      <tr><td>Telégrafo Bot</td><td>97 skills</td><td>Módulos de skill para Telegram</td></tr>
+      <tr><td>Contenedores</td><td>5 activos</td><td>hermes_api · postgres · qdrant · redis · neo4j</td></tr>
+    </table>
+
+    <div style="margin-top:24px;text-align:center;padding:24px;background:linear-gradient(135deg,#00d4ff08,#7b2ff708);border-radius:16px;border:1px solid #00d4ff22">
+      <p style="font-size:1rem;color:#8899aa;margin:0">
+        <span style="color:#00d4ff;font-weight:600">OMEGA v10.0</span> — Todos los 5 niveles desplegados y en ejecución en vivo
+      </p>
+    </div>
+  </div>
+  <div class="slide-number">09</div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<section class="slide-footer">
+  <div class="slide-content">
+    <h2 style="font-size:2rem;margin-bottom:8px;background:linear-gradient(135deg,#00d4ff,#7b2ff7,#ff6b35);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Sonora Digital Corp</h2>
+    <p style="color:#556677;font-size:.9rem">Fábrica de Trabajadores Digitales Escalables · v2.0</p>
+    <div class="links">
+      <a href="https://github.com/sonoradigitalcorp-H/Sonora-Digital-Corp" target="_blank">GitHub</a>
+      <a href="mailto:sonoradigitalcorp@gmail.com">Email</a>
+      <a href="#">JARVIS Web UI :5174</a>
+      <a href="#">Hermes :8000</a>
+      <a href="#">OpenClaw :18789</a>
+    </div>
+    <p style="margin-top:32px;font-size:.75rem;color:#445566">
+      Blueprint generado el 18 de junio de 2026 · Arquitectura OMEGA v10.0
+    </p>
+  </div>
+</section>
+
+</body>
+</html>
