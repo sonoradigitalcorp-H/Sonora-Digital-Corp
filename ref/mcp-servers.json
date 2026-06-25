@@ -1,0 +1,84 @@
+{
+  "description": "Unified MCP Server Registry for Sonora Digital Corp",
+  "version": "1.0",
+  "updated": "2026-06-24",
+  "servers": {
+    "qdrant": {
+      "url": "http://127.0.0.1:6333",
+      "type": "vector-db",
+      "description": "Vector database for embeddings. Collection: jarvis_knowledge (768-dim, Cosine)",
+      "collections": ["jarvis_knowledge"],
+      "enabled": true
+    },
+    "neo4j": {
+      "url": "http://127.0.0.1:7474",
+      "bolt_url": "bolt://127.0.0.1:7687",
+      "type": "graph-db",
+      "description": "Graph database for ontologies (artists, clients, services, workflows)",
+      "enabled": true
+    },
+    "postgres": {
+      "url": "http://127.0.0.1:5432",
+      "type": "relational-db",
+      "description": "PostgreSQL for structured data",
+      "enabled": true
+    },
+    "redis": {
+      "url": "http://127.0.0.1:6379",
+      "type": "cache",
+      "description": "Redis cache and message broker",
+      "enabled": true
+    },
+    "ollama": {
+      "url": "http://127.0.0.1:11434",
+      "type": "llm-inference",
+      "description": "Local LLM inference. Models: nomic-embed-text (embedding), qwen2.5:1.5b (chat)",
+      "models": ["nomic-embed-text:latest", "qwen2.5:1.5b"],
+      "enabled": true
+    },
+    "n8n": {
+      "url": "http://127.0.0.1:5678",
+      "type": "workflow-automation",
+      "description": "n8n workflow automation platform",
+      "auth_required": true,
+      "enabled": true
+    },
+    "abe-api": {
+      "url": "http://127.0.0.1:8080",
+      "type": "rest-api",
+      "description": "ABE Music FastAPI server. Artists: Hector Rubio, Jesus Urquijo, Javier Arvayo",
+      "endpoints": ["/api/artists", "/api/stats", "/api/health"],
+      "enabled": true
+    },
+    "openclaw-gateway": {
+      "url": "http://127.0.0.1:18789",
+      "type": "agent-gateway",
+      "description": "OpenClaw gateway for AI agent coordination",
+      "enabled": true
+    }
+  },
+  "remote_servers": {
+    "opencode-go": {
+      "url": "https://opencode.ai/zen/go/v1",
+      "type": "llm-api",
+      "description": "Cloud fallback LLM API. Model: deepseek-v4-flash",
+      "models": ["deepseek-v4-flash"],
+      "enabled": true,
+      "fallback_only": true
+    },
+    "openrouter": {
+      "url": "https://openrouter.ai/api/v1",
+      "type": "llm-api",
+      "description": "Alternative cloud LLM provider",
+      "enabled": false,
+      "fallback_only": true
+    }
+  },
+  "rules": {
+    "primary_model": "local",
+    "fallback_trigger": "response_time > 5s || context > 32K || complex_reasoning_needed",
+    "embedding_model": "nomic-embed-text",
+    "chat_model": "qwen2.5:1.5b",
+    "fallback_model": "deepseek-v4-flash"
+  }
+}

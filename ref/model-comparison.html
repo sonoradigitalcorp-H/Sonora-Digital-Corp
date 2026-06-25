@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMEGA Model Comparison | Sonora Digital Corp</title>
+<style>
+:root{--bg:#0a0a0f;--card:#12121a;--border:#1e1e2e;--text:#e0e0e8;--dim:#6b7280;--accent:#8b5cf6;--accent2:#06b6d4;--green:#22c55e;--yellow:#eab308;--red:#ef4444;--blue:#3b82f6;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',system-ui,-apple-system,sans-serif;line-height:1.6;padding:20px;}
+.container{max-width:1200px;margin:0 auto;}
+h1{font-size:2.2rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px;}
+.subtitle{color:var(--dim);font-size:0.9rem;margin-bottom:30px;}
+.section{margin-bottom:50px;}
+.section-title{font-size:1.4rem;color:var(--accent2);border-bottom:2px solid var(--border);padding-bottom:8px;margin-bottom:20px;display:flex;align-items:center;gap:10px;}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:0.7rem;font-weight:600;text-transform:uppercase;}
+.badge-green{background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.3);}
+.badge-yellow{background:rgba(234,179,8,0.15);color:var(--yellow);border:1px solid rgba(234,179,8,0.3);}
+.badge-red{background:rgba(239,68,68,0.15);color:var(--red);border:1px solid rgba(239,68,68,0.3);}
+.badge-blue{background:rgba(59,130,246,0.15);color:var(--blue);border:1px solid rgba(59,130,246,0.3);}
+table{width:100%;border-collapse:collapse;font-size:0.85rem;}
+th{background:var(--card);color:var(--accent);text-align:left;padding:12px;border:1px solid var(--border);position:sticky;top:0;z-index:10;}
+td{padding:10px 12px;border:1px solid var(--border);vertical-align:top;}
+tr:hover{background:rgba(139,92,246,0.05);}
+.recommendation{font-weight:600;}
+.rec-yes{color:var(--green);}
+.rec-maybe{color:var(--yellow);}
+.rec-no{color:var(--red);}
+.card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px;}
+.card-title{font-size:1.1rem;margin-bottom:12px;color:var(--accent);}
+.formula{background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2);border-radius:8px;padding:15px;margin:15px 0;font-family:'Fira Code',monospace;font-size:0.9rem;color:var(--accent2);text-align:center;}
+.quantum{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(6,182,212,0.1));border:1px solid rgba(139,92,246,0.2);border-radius:12px;padding:25px;margin:20px 0;}
+.quantum h3{color:var(--accent);margin-bottom:15px;font-size:1.2rem;}
+.pipeline{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0;}
+.pipeline-step{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:8px 14px;font-size:0.8rem;font-weight:600;color:var(--accent2);position:relative;}
+.pipeline-step.active{border-color:var(--accent);background:rgba(139,92,246,0.15);}
+.pipeline-arrow{color:var(--dim);font-size:1.2rem;align-self:center;}
+@media(max-width:768px){table{font-size:0.75rem;}th,td{padding:6px 8px;}}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>OMEGA Model & Methodology Comparison</h1>
+<p class="subtitle">Sonora Digital Corp | Last updated: 2026-06-24 | Pipeline: VDD &rarr; EDD &rarr; PDD &rarr; ODD &rarr; SDD &rarr; BDD &rarr; TDD</p>
+
+<div class="section">
+<h2 class="section-title">&#x1F916; OMEGA Pipeline &mdash; Methodology Flow</h2>
+<div class="pipeline">
+<div class="pipeline-step active">VDD<br><small>Value</small></div><div class="pipeline-arrow">&rarr;</div>
+<div class="pipeline-step active">EDD<br><small>Event</small></div><div class="pipeline-arrow">&rarr;</div>
+<div class="pipeline-step active">PDD<br><small>Plan</small></div><div class="pipeline-arrow">&rarr;</div>
+<div class="pipeline-step active">ODD<br><small>Ontology</small></div><div class="pipeline-arrow">&rarr;</div>
+<div class="pipeline-step active">SDD<br><small>Spec</small></div><div class="pipeline-arrow">&rarr;</div>
+<div class="pipeline-step active">BDD<br><small>Behavior</small></div><div class="pipeline-arrow">&rarr;</div>
+<div class="pipeline-step active">TDD<br><small>Test</small></div>
+</div>
+</div>
+
+<div class="section">
+<h2 class="section-title">&#x1F4CA; Top 10 Embedding Models</h2>
+<div style="overflow-x:auto;">
+<table>
+<thead>
+<tr><th>#</th><th>Model</th><th>Params</th><th>RAM (Q4)</th><th>Dims</th><th>MTEB</th><th>Multilingual</th><th>License</th><th>VPS Ready</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td><strong>all-MiniLM-L6-v2</strong></td><td>22M</td><td>~46MB</td><td>384</td><td>59.98</td><td>No (EN)</td><td>Apache 2.0</td><td class="rec-yes recommendation">&#10003; Ideal</td></tr>
+<tr><td>2</td><td><strong>bge-small-en-v1.5</strong></td><td>33M</td><td>~67MB</td><td>384</td><td>62.17</td><td>No (EN)</td><td>MIT</td><td class="rec-yes recommendation">&#10003; Ideal</td></tr>
+<tr><td>3</td><td><strong>nomic-embed-text v1.5</strong> &#x1F7E2;</td><td>137M</td><td>274MB</td><td>768</td><td>62.28</td><td>No (EN)</td><td>Apache 2.0</td><td class="rec-yes recommendation">&#10003; ACTIVE</td></tr>
+<tr><td>4</td><td><strong>mxbai-embed-large v1</strong></td><td>335M</td><td>~670MB</td><td>1024</td><td>64.68</td><td>No (EN)</td><td>Apache 2.0</td><td class="rec-yes recommendation">&#10003; Good</td></tr>
+<tr><td>5</td><td><strong>BGE-M3</strong></td><td>569M</td><td>~1.2GB</td><td>1024</td><td>63.2</td><td>100+ langs</td><td>MIT</td><td class="rec-maybe recommendation">&#9888; Borderline</td></tr>
+<tr><td>6</td><td><strong>EmbeddingGemma</strong></td><td>300M</td><td>~622MB</td><td>768</td><td>61.15</td><td>No (EN)</td><td>Apache 2.0</td><td class="rec-yes recommendation">&#10003; Good</td></tr>
+<tr><td>7</td><td><strong>Snowflake arctic-embed-l v2</strong></td><td>568M</td><td>~1.1GB</td><td>1024</td><td>65.43</td><td>No (EN)</td><td>Apache 2.0</td><td class="rec-maybe recommendation">&#9888; Borderline</td></tr>
+<tr><td>8</td><td><strong>gte-Qwen3-8B</strong></td><td>8B</td><td>~4.7GB</td><td>4096</td><td>68.1</td><td>Multilingual</td><td>Apache 2.0</td><td class="rec-no recommendation">&#10007; Too heavy</td></tr>
+<tr><td>9</td><td><strong>Qwen3-Embedding-8B</strong></td><td>8B</td><td>~4.7GB</td><td>4096</td><td>70.6</td><td>Multilingual</td><td>Apache 2.0</td><td class="rec-no recommendation">&#10007; Too heavy</td></tr>
+<tr><td>10</td><td><strong>NV-Embed-v2</strong></td><td>7B</td><td>~4.0GB</td><td>4096</td><td>72.31</td><td>Multilingual</td><td>NVIDIA</td><td class="rec-no recommendation">&#10007; Too heavy</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section">
+<h2 class="section-title">&#x1F4BB; Top 5 Small LLMs for VPS (CPU, 11GB RAM)</h2>
+<div style="overflow-x:auto;">
+<table>
+<thead>
+<tr><th>#</th><th>Model</th><th>Params</th><th>RAM (Q4)</th><th>Context</th><th>Reasoning</th><th>Coding</th><th>Espanol</th><th>License</th><th>VPS Ready</th></tr>
+</thead>
+<tbody>
+<tr><td>1</td><td><strong>Qwen2.5 1.5B</strong> &#x1F7E2;</td><td>1.5B</td><td>~1.1GB</td><td>32K</td><td>Good</td><td>Good</td><td>Excellent</td><td>Apache 2.0</td><td class="rec-yes recommendation">&#10003; ACTIVE</td></tr>
+<tr><td>2</td><td><strong>Phi-4-mini</strong></td><td>3.8B</td><td>~2.5GB</td><td>128K</td><td>Excellent</td><td>Excellent</td><td>Good</td><td>MIT</td><td class="rec-yes recommendation">&#10003; Best Reasoning</td></tr>
+<tr><td>3</td><td><strong>Gemma 4 E4B</strong></td><td>4B</td><td>~3.0GB</td><td>32K</td><td>Very Good</td><td>Very Good</td><td>Good</td><td>Apache 2.0</td><td class="rec-maybe recommendation">&#9888; Higher RAM</td></tr>
+<tr><td>4</td><td><strong>Llama 3.2 3B</strong></td><td>3B</td><td>~2.0GB</td><td>128K</td><td>Good</td><td>Good</td><td>Good</td><td>Llama Community</td><td class="rec-yes recommendation">&#10003; Good</td></tr>
+<tr><td>5</td><td><strong>SmolLM3-3B</strong></td><td>3B</td><td>~1.8GB</td><td>128K</td><td>Good</td><td>Good</td><td>Fair</td><td>Apache 2.0</td><td class="rec-maybe recommendation">&#9888; EN only</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section">
+<h2 class="section-title">&#x2699;&#xFE0F; Methodology Comparison</h2>
+<div style="overflow-x:auto;">
+<table>
+<thead>
+<tr><th>Method</th><th>Full Name</th><th>First Writes</th><th>Who Defines</th><th>Main Output</th><th>Iterative?</th><th>Maturity</th><th>SDC Example</th></tr>
+</thead>
+<tbody>
+<tr><td><strong>VDD</strong></td><td>Value-Driven Design</td><td>Business value proposition</td><td>Product Owner / CEO</td><td>Feature prioritization, ROI matrix</td><td>S&iacute;</td><td>&#11088;&#11088;&#11088;&#11088;</td><td>"Este workflow ahorra 10h/sem"</td></tr>
+<tr><td><strong>EDD</strong></td><td>Event-Driven Development</td><td>Events (triggers)</td><td>System / Events</td><td>Webhook endpoints, event catalog</td><td>En tiempo real</td><td>&#11088;&#11088;&#11088;</td><td>n8n webhooks, schedule triggers</td></tr>
+<tr><td><strong>PDD</strong></td><td>Plan-Driven Development</td><td>Architecture plan / ADR</td><td>Arquitecto</td><td>ARCHITECTURE.md, RECOVERY.md</td><td>No (plan &rarr; ejec)</td><td>&#11088;&#11088;&#11088;&#11088;</td><td>Plan de migracion VPS</td></tr>
+<tr><td><strong>ODD</strong></td><td>Ontology-Driven Development</td><td>Domain model (ontology)</td><td>Domain Expert</td><td>Neo4j knowledge graph</td><td>S&iacute; (evolucion)</td><td>&#11088;&#11088;</td><td>Neo4j: Artista &rarr; Sello &rarr; Stream</td></tr>
+<tr><td><strong>SDD</strong></td><td>Specification-Driven Dev</td><td>Spec file (SpecKit)</td><td>Dev + Stakeholder</td><td>specifications/*.md (executable)</td><td>S&iacute;</td><td>&#11088;&#11088;&#11088;&#11088;</td><td>/specify &rarr; /plan &rarr; /tasks</td></tr>
+<tr><td><strong>BDD</strong></td><td>Behavior-Driven Development</td><td>Gherkin scenarios</td><td>Dev + Business</td><td>Feature files, acceptance tests</td><td>S&iacute;</td><td>&#11088;&#11088;&#11088;&#11088;</td><td>"Dado que artista tiene >1M streams..."</td></tr>
+<tr><td><strong>TDD</strong></td><td>Test-Driven Development</td><td>Failing test</td><td>Developer</td><td>Unit tests (pytest, Jest)</td><td>S&iacute; (Red-Green-Refactor)</td><td>&#11088;&#11088;&#11088;&#11088;&#11088;</td><td>pytest en abe_server.py</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section">
+<h2 class="section-title">&#x1F4A1; Model Routing Matrix</h2>
+<div style="overflow-x:auto;">
+<table>
+<thead>
+<tr><th>Task</th><th>Primary Model</th><th>Why</th><th>Fallback</th></tr>
+</thead>
+<tbody>
+<tr><td>Embeddings (Qdrant)</td><td>nomic-embed-text</td><td>768-dim, 274MB, no GPU</td><td>bge-m3 (100+ langs)</td></tr>
+<tr><td>Local Chat</td><td>qwen2.5:1.5b</td><td>Spanish, fast, 1.1GB</td><td>phi4-mini:3.8b</td></tr>
+<tr><td>Code/Reasoning</td><td>phi4-mini:3.8b</td><td>128K ctx, MIT license</td><td>qwen2.5-coder:1.5b</td></tr>
+<tr><td>n8n AI workflows</td><td>qwen2.5:1.5b</td><td>Local, fast</td><td>OpenCode Go API</td></tr>
+<tr><td>Quantum Class</td><td>qwen2.5:1.5b</td><td>Creative text, zero cost</td><td>phi4-mini:3.8b</td></tr>
+<tr><td>Healthcheck/Watchdog</td><td>Rule-based</td><td>HTTP status, no LLM needed</td><td>nomic-embed-text</td></tr>
+<tr><td>Fallback Global</td><td>deepseek-v4-flash</td><td>OpenCode Go cloud</td><td>offline-only</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div class="section quantum">
+<h3>&#x269B;&#xFE0F; Quantum Class of the Day &mdash; Superposition &amp; Agile Decisions</h3>
+<p><strong>Principle:</strong> A quantum system exists in all possible states until observed &mdash; like your code before the first <code>git push</code>.</p>
+
+<div class="formula">
+|psi&gt; = &alpha;|working&gt; + &beta;|broken&gt;<br>
+<br>
+Deploying collapses the wavefunction.<br>
+TDD minimizes &beta;(|broken&gt;) &mdash; tests first.
+</div>
+
+<p><strong>Applied to SDC:</strong></p>
+<ul style="margin:10px 0 10px 20px;color:var(--dim);">
+<li>Your VPS exists in a superposition of states: functioning, crashed, being updated. Each <code>docker ps</code> is a quantum measurement.</li>
+<li>The OMEGA pipeline is the Hamiltonian: H = VDD + EDD + PDD + ODD + SDD + BDD + TDD. If H is well-constructed, |psi&gt; evolves toward a self-sustaining system.</li>
+<li><strong>Quantum entanglement:</strong> When you update <code>nomic-embed-text</code> in Ollama, it instantaneously affects search quality in Qdrant &mdash; regardless of distance between processes.</li>
+<li><strong>Observer effect:</strong> The healthcheck (monitoring) is your observer. Without it, the system state is undefined.</li>
+<li><strong>Uncertainty principle:</strong> You cannot simultaneously know the exact latency and exact throughput of your system. More precise measurement of one introduces uncertainty in the other.</li>
+</ul>
+
+<div class="formula">
+H|psi&gt; = E|psi&gt;<br>
+<br>
+Where H = OMEGA pipeline (VDD+EDD+PDD+ODD+SDD+BDD+TDD)<br>
+E = eigenvalue = production-ready state<br>
+|psi&gt; = your system state vector<br>
+<br>
+"Solve the eigenvalue. Ship the eigenvector."
+</div>
+
+<p style="margin-top:15px;color:var(--dim);font-style:italic;">References: Feynman, R. P. et al. (1965). The Feynman Lectures on Physics, Vol. III. | Dirac, P. A. M. (1930). The Principles of Quantum Mechanics.</p>
+</div>
+
+<div class="section">
+<h2 class="section-title">&#x1F5FA;&#xFE0F; RAM Budget &mdash; VPS 11GB</h2>
+<div style="overflow-x:auto;">
+<table>
+<thead>
+<tr><th>Service</th><th>RAM</th><th>Notes</th></tr>
+</thead>
+<tbody>
+<tr><td>Ubuntu 26.04 (OS)</td><td>~1.6GB</td><td>Base system</td></tr>
+<tr><td>Docker (Neo4j, Qdrant, PG, Redis, n8n)</td><td>~2.5GB</td><td>5 containers</td></tr>
+<tr><td>Ollama (1 model loaded at a time)</td><td>~1.4GB</td><td>nomic-embed OR qwen2.5</td></tr>
+<tr><td>nginx + system services</td><td>~300MB</td><td></td></tr>
+<tr><td><strong>Subtotal</strong></td><td><strong>~5.8GB</strong></td><td></td></tr>
+<tr style="background:rgba(34,197,94,0.1)"><td><strong>Available for growth</strong></td><td><strong>~5.2GB</strong></td><td>Headroom for spikes</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<div style="text-align:center;padding:30px;color:var(--dim);font-size:0.8rem;border-top:1px solid var(--border);margin-top:40px;">
+<p>OMEGA v10 | Sonora Digital Corp | Pipeline: VDD &rarr; EDD &rarr; PDD &rarr; ODD &rarr; SDD &rarr; BDD &rarr; TDD</p>
+<p style="margin-top:5px;">"Colapsa la funcion de onda. Envia a produccion."</p>
+</div>
+</div>
+</body>
+</html>

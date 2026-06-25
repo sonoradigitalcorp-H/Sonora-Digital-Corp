@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚡ Mystic Academy — Tu Escuela de Agentes</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-deep: #010102;
+  --bg-page: #08090a;
+  --bg-panel: #0f1011;
+  --bg-surface: #191a1b;
+  --bg-hover: #28282c;
+  --text-primary: #f7f8f8;
+  --text-secondary: #d0d6e0;
+  --text-tertiary: #8a8f98;
+  --text-quaternary: #62666d;
+  --accent: #7170ff;
+  --accent-bg: #5e6ad2;
+  --accent-hover: #828fff;
+  --green: #27a644;
+  --emerald: #10b981;
+  --gold: #f0b429;
+  --gold-dim: rgba(240,180,41,0.15);
+  --border-subtle: rgba(255,255,255,0.05);
+  --border-standard: rgba(255,255,255,0.08);
+  --shadow-card: 0 0 0 1px rgba(255,255,255,0.05), 0 2px 8px rgba(0,0,0,0.4);
+  --shadow-elevated: 0 0 0 1px rgba(255,255,255,0.08), 0 8px 32px rgba(0,0,0,0.6);
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; scrollbar-width:thin; scrollbar-color:var(--bg-hover) transparent; }
+body {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  background: var(--bg-page);
+  color: var(--text-primary);
+  line-height:1.6;
+  min-height:100vh;
+}
+::selection { background:var(--accent); color:#fff; }
+
+/* ── NAV ── */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:100;
+  background:rgba(8,9,10,0.85); backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--border-subtle);
+  padding:0 24px; height:56px; display:flex; align-items:center; justify-content:space-between;
+}
+nav .logo { font-weight:600; font-size:15px; letter-spacing:-0.2px; display:flex; align-items:center; gap:10px; }
+nav .logo span { color:var(--accent); }
+nav .logo small { font-weight:400; color:var(--text-tertiary); font-size:12px; }
+nav .nav-links { display:flex; gap:4px; }
+nav .nav-links a {
+  color:var(--text-tertiary); text-decoration:none; font-size:13px; font-weight:500;
+  padding:6px 12px; border-radius:var(--radius-sm); transition:all 0.15s;
+}
+nav .nav-links a:hover { color:var(--text-primary); background:var(--bg-surface); }
+
+/* ── HERO ── */
+.hero {
+  min-height:100vh; display:flex; flex-direction:column; justify-content:center;
+  align-items:center; text-align:center; padding:120px 24px 80px;
+  background: radial-gradient(ellipse 80% 60% at 50% 40%, rgba(113,112,255,0.08) 0%, transparent 70%),
+              radial-gradient(ellipse 60% 40% at 70% 60%, rgba(240,180,41,0.04) 0%, transparent 60%),
+              var(--bg-page);
+}
+.hero .badge {
+  display:inline-flex; align-items:center; gap:6px;
+  background:var(--gold-dim); color:var(--gold); font-size:12px; font-weight:600;
+  padding:6px 14px; border-radius:100px; margin-bottom:24px;
+  border:1px solid rgba(240,180,41,0.2);
+}
+.hero h1 { font-size:clamp(42px,8vw,80px); font-weight:700; letter-spacing:-2.5px; line-height:1.05; margin-bottom:20px; }
+.hero h1 .gradient { background:linear-gradient(135deg,var(--accent),#a78bfa,var(--gold)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.hero p { font-size:18px; color:var(--text-secondary); max-width:600px; margin-bottom:40px; }
+.hero .cta-group { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+.hero .btn {
+  display:inline-flex; align-items:center; gap:8px; padding:12px 28px; border-radius:var(--radius-md);
+  font-size:15px; font-weight:600; text-decoration:none; transition:all 0.2s; cursor:pointer;
+}
+.hero .btn-primary { background:var(--accent-bg); color:#fff; border:1px solid rgba(255,255,255,0.1); }
+.hero .btn-primary:hover { background:var(--accent-hover); transform:translateY(-1px); box-shadow:0 4px 20px rgba(113,112,255,0.3); }
+.hero .btn-secondary { background:rgba(255,255,255,0.05); color:var(--text-primary); border:1px solid var(--border-standard); }
+.hero .btn-secondary:hover { background:rgba(255,255,255,0.1); }
+.hero .stats { display:flex; gap:40px; margin-top:60px; }
+.hero .stats div { text-align:center; }
+.hero .stats strong { display:block; font-size:28px; font-weight:700; letter-spacing:-0.5px; }
+.hero .stats span { font-size:13px; color:var(--text-tertiary); }
+
+.section { padding:100px 24px; max-width:1100px; margin:0 auto; }
+.section-header { text-align:center; margin-bottom:60px; }
+.section-header .tag {
+  display:inline-block; font-size:12px; font-weight:600; color:var(--accent);
+  text-transform:uppercase; letter-spacing:1.5px; margin-bottom:12px;
+}
+.section-header h2 { font-size:36px; font-weight:600; letter-spacing:-1px; margin-bottom:12px; }
+.section-header p { color:var(--text-secondary); max-width:500px; margin:0 auto; font-size:15px; }
+.section-divider { height:1px; background:var(--border-standard); max-width:1100px; margin:0 auto; }
+
+/* ── CARDS GRID ── */
+.grid-3 { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
+.grid-2 { display:grid; grid-template-columns:repeat(auto-fit,minmax(400px,1fr)); gap:16px; }
+.card {
+  background:var(--bg-panel); border:1px solid var(--border-standard); border-radius:var(--radius-lg);
+  padding:28px; transition:all 0.2s; position:relative; overflow:hidden;
+}
+.card:hover { border-color:rgba(255,255,255,0.12); box-shadow:var(--shadow-card); transform:translateY(-2px); }
+.card .icon { font-size:28px; margin-bottom:16px; }
+.card h3 { font-size:17px; font-weight:600; letter-spacing:-0.3px; margin-bottom:8px; }
+.card p { font-size:14px; color:var(--text-secondary); line-height:1.6; }
+.card .tag-list { display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; }
+.card .tag-sm {
+  font-size:11px; font-weight:500; padding:3px 10px; border-radius:100px;
+  background:rgba(255,255,255,0.05); color:var(--text-tertiary);
+  border:1px solid var(--border-subtle);
+}
+
+/* ── COMMAND TABLE ── */
+.cmd-table { width:100%; border-collapse:collapse; font-size:14px; }
+.cmd-table th { text-align:left; padding:12px 16px; font-size:12px; font-weight:600; text-transform:uppercase; letter-spacing:0.5px; color:var(--text-tertiary); border-bottom:1px solid var(--border-standard); }
+.cmd-table td { padding:14px 16px; border-bottom:1px solid var(--border-subtle); vertical-align:top; }
+.cmd-table tr:last-child td { border-bottom:none; }
+.cmd-table code {
+  font-family:'JetBrains Mono',monospace; font-size:13px;
+  background:rgba(255,255,255,0.05); padding:2px 8px; border-radius:4px;
+  color:var(--accent); white-space:nowrap;
+}
+.cmd-table .cmd-desc { color:var(--text-secondary); font-size:13px; }
+.cmd-table .cmd-tag {
+  display:inline-block; font-size:10px; font-weight:600; padding:2px 8px; border-radius:100px;
+  text-transform:uppercase; letter-spacing:0.5px;
+}
+.cmd-tag-hermes { background:rgba(113,112,255,0.15); color:var(--accent); }
+.cmd-tag-jarvis { background:rgba(16,185,129,0.15); color:var(--emerald); }
+.cmd-tag-openclaw { background:rgba(240,180,41,0.15); color:var(--gold); }
+
+/* ── TIMELINE ── */
+.timeline { position:relative; padding-left:40px; }
+.timeline::before { content:''; position:absolute; left:15px; top:0; bottom:0; width:1px; background:var(--border-standard); }
+.timeline-item { position:relative; margin-bottom:40px; }
+.timeline-item::before {
+  content:''; position:absolute; left:-33px; top:6px; width:12px; height:12px;
+  border-radius:50%; background:var(--bg-deep); border:2px solid var(--accent);
+}
+.timeline-item h3 { font-size:17px; font-weight:600; margin-bottom:4px; }
+.timeline-item p { font-size:14px; color:var(--text-secondary); }
+
+/* ── ARCH DIAGRAM ── */
+.arch { display:flex; flex-direction:column; align-items:center; gap:16px; padding:40px 0; }
+.arch-row { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+.arch-node {
+  background:var(--bg-panel); border:1px solid var(--border-standard);
+  border-radius:var(--radius-md); padding:14px 24px; text-align:center; min-width:120px;
+  font-size:13px; font-weight:500; transition:all 0.2s;
+}
+.arch-node:hover { border-color:var(--accent); transform:scale(1.04); }
+.arch-node .sub { display:block; font-size:11px; color:var(--text-tertiary); font-weight:400; margin-top:2px; }
+.arch-node.hero-node { border-color:var(--accent); background:rgba(113,112,255,0.08); }
+.arch-node.gold-node { border-color:rgba(240,180,41,0.3); background:rgba(240,180,41,0.06); }
+.arch-node.green-node { border-color:rgba(16,185,129,0.3); background:rgba(16,185,129,0.06); }
+.arch-arrow { color:var(--text-quaternary); font-size:20px; }
+
+/* ── CASE STUDIES ── */
+.case { background:var(--bg-panel); border:1px solid var(--border-standard); border-radius:var(--radius-lg); padding:28px; margin-bottom:16px; }
+.case .q { font-size:18px; font-weight:600; margin-bottom:8px; display:flex; gap:12px; align-items:flex-start; }
+.case .q .num { color:var(--accent); font-size:14px; min-width:28px; }
+.case .a { font-size:14px; color:var(--text-secondary); line-height:1.7; }
+.case .a code {
+  font-family:'JetBrains Mono',monospace; font-size:12px;
+  background:var(--bg-deep); padding:2px 6px; border-radius:4px; color:var(--gold);
+}
+
+/* ── FOOTER ── */
+footer { text-align:center; padding:40px 24px; border-top:1px solid var(--border-subtle); color:var(--text-quaternary); font-size:13px; margin-top:60px; }
+
+/* ── ANIMATIONS ── */
+.fade-in { opacity:0; transform:translateY(20px); transition:opacity 0.6s ease, transform 0.6s ease; }
+.fade-in.visible { opacity:1; transform:translateY(0); }
+
+@media(max-width:640px) {
+  nav .nav-links { display:none; }
+  .grid-2 { grid-template-columns:1fr; }
+  .hero .stats { gap:20px; flex-wrap:wrap; }
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">⚡ <span>Mystic Academy</span> <small>v1.0</small></div>
+  <div class="nav-links">
+    <a href="#pilares">Pilares</a>
+    <a href="#arsenal">Arsenal</a>
+    <a href="#comandos">Comandos</a>
+    <a href="#casos">Casos</a>
+    <a href="#ruta">Ruta</a>
+    <a href="#arquitectura">Arq</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="badge">🔮 Estás aquí · mysticPC · 22 Jun 2026</div>
+  <h1>Tu <span class="gradient">Imperio Digital</span><br>Empieza Hoy</h1>
+  <p>No tenés 10 herramientas. Tenés un solo sistema con 3 cerebros. Esta es la escuela que te enseña a usarlos como uno solo.</p>
+  <div class="cta-group">
+    <a href="#pilares" class="btn btn-primary">📖 Empezar la escuela</a>
+    <a href="#casos" class="btn btn-secondary">🎯 Casos prácticos</a>
+  </div>
+  <div class="stats">
+    <div><strong>3</strong><span>Agentes</span></div>
+    <div><strong>5</strong><span>Servicios</span></div>
+    <div><strong>1</strong><span>Comando</span></div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══ PILARES ═══ -->
+<section class="section" id="pilares">
+  <div class="section-header fade-in">
+    <div class="tag">Lección 1</div>
+    <h2>Los 3 Pilares de tu Sistema</h2>
+    <p>Olvidate de 20 servicios. Tu imperio tiene 3 cerebros. Aprendé a usarlos.</p>
+  </div>
+  <div class="grid-3">
+    <div class="card fade-in">
+      <div class="icon">☀️</div>
+      <h3>HERMES · El Orquestador</h3>
+      <p>El que recibe tus órdenes. Habla con vos por Telegram, entiende el contexto, decide qué hacer y delega. Tiene acceso a herramientas, memoria y agentes especializados.</p>
+      <div class="tag-list">
+        <span class="tag-sm">🤖 Conversación</span>
+        <span class="tag-sm">🎯 Orquestación</span>
+        <span class="tag-sm">🔧 Herramientas</span>
+      </div>
+    </div>
+    <div class="card fade-in">
+      <div class="icon">🔮</div>
+      <h3>JARVIS · La Memoria Viva</h3>
+      <p>No olvida nada. Cada conversación, cada tarea, cada decisión — todo queda en Neo4j (grafos) y Qdrant (vectores). Cuando necesitás contexto del pasado, JARVIS lo encuentra.</p>
+      <div class="tag-list">
+        <span class="tag-sm">🧠 Memoria larga</span>
+        <span class="tag-sm">🔍 RAG</span>
+        <span class="tag-sm">📊 Grafos</span>
+      </div>
+    </div>
+    <div class="card fade-in">
+      <div class="icon">⚡</div>
+      <h3>OpenClaw · El Ejecutor</h3>
+      <p>El que hace. Skills, código, automatización, deploys. Cuando HERMES decide que hay que ejecutar algo, OpenClaw lo corre en la PC.</p>
+      <div class="tag-list">
+        <span class="tag-sm">⚙️ Skills</span>
+        <span class="tag-sm">🚀 Ejecución</span>
+        <span class="tag-sm">🛠️ Herramientas</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══ ARSENAL ═══ -->
+<section class="section" id="arsenal">
+  <div class="section-header fade-in">
+    <div class="tag">Lección 2 · Tu Arsenal</div>
+    <h2>Todo lo que tenés y cómo usarlo</h2>
+    <p>Cada servicio tiene un puerto, un propósito y una forma de acceder.</p>
+  </div>
+  <div class="grid-2">
+    <div class="card fade-in">
+      <div class="icon">📱</div>
+      <h3>Telegram · @Gucci_ortega_bot</h3>
+      <p><strong>La puerta de entrada.</strong> Le hablás a este bot desde el celular y HERMES te responde. Ahí podés pedirle cualquier cosa: investigar, ejecutar, recordar.</p>
+      <div class="tag-list">
+        <span class="tag-sm">📱 Chat móvil</span>
+        <span class="tag-sm">🌐 Donde sea</span>
+      </div>
+    </div>
+    <div class="card fade-in">
+      <div class="icon">🌐</div>
+      <h3>Web UI · localhost:5174</h3>
+      <p>El panel visual. Ahí están todos los dashboards, HTMLs generados, reportes. Andá a <code>http://localhost:5174</code> en tu navegador.</p>
+      <div class="tag-list">
+        <span class="tag-sm">📊 Dashboards</span>
+        <span class="tag-sm">🎨 Visual</span>
+      </div>
+    </div>
+    <div class="card fade-in">
+      <div class="icon">📟</div>
+      <h3>Terminal · Tu PC</h3>
+      <p>Donde corre todo. Docker, procesos, scripts. Si sabés usar la terminal, tenés poder absoluto. Si no, HERMES lo hace por vos.</p>
+      <div class="tag-list">
+        <span class="tag-sm">🐧 Linux</span>
+        <span class="tag-sm">🐳 Docker</span>
+      </div>
+    </div>
+    <div class="card fade-in">
+      <div class="icon">🤖</div>
+      <h3>OpenClaw · localhost:18789</h3>
+      <p>El gestor de agentes. Skills, herramientas, configuración. Andá a <code>http://localhost:18789</code> para ver su panel.</p>
+      <div class="tag-list">
+        <span class="tag-sm">⚙️ Control</span>
+        <span class="tag-sm">📋 Skills</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══ COMANDOS ═══ -->
+<section class="section" id="comandos">
+  <div class="section-header fade-in">
+    <div class="tag">Lección 3 · Los Comandos Mágicos</div>
+    <h2>Esto es todo lo que necesitás saber</h2>
+    <p>No hay 100 comandos. Hay 10 patrones. Aprendé estos y podés hacer TODO.</p>
+  </div>
+  <table class="cmd-table fade-in">
+    <thead><tr><th>Quiero...</th><th>Hago esto</th><th>Pasa esto</th></tr></thead>
+    <tbody>
+      <tr>
+        <td>Hablar con el sistema</td>
+        <td><code>Mensaje directo a @Gucci_ortega_bot</code></td>
+        <td class="cmd-desc">HERMES recibe, entiende, orquesta y responde. Fin.</td>
+      </tr>
+      <tr>
+        <td>Que investigue algo</td>
+        <td><code>"investigá X"</code></td>
+        <td class="cmd-desc">Delega a JARVIS → busca en memoria + web → responde con fuentes</td>
+      </tr>
+      <tr>
+        <td>Que ejecute código/tarea</td>
+        <td><code>"hacé X"</code></td>
+        <td class="cmd-desc">HERMES delega a OpenClaw → ejecuta en PC → devuelve resultado</td>
+      </tr>
+      <tr>
+        <td>Que recuerde algo</td>
+        <td><code>"acordate que X"</code></td>
+        <td class="cmd-desc">JARVIS lo guarda en Neo4j. Cuando preguntes después, lo encuentra.</td>
+      </tr>
+      <tr>
+        <td>Estado del sistema</td>
+        <td><code>"estado del sistema"</code></td>
+        <td class="cmd-desc">Revisa containers, procesos, servicios. Te dice qué está bien y qué no.</td>
+      </tr>
+      <tr>
+        <td>Generar un HTML / dashboard</td>
+        <td><code>"creá un dashboard de X"</code></td>
+        <td class="cmd-desc">OpenClaw genera HTML → lo deja en static/ → lo ves en <code>:5174/static/</code></td>
+      </tr>
+      <tr>
+        <td>Arreglar algo roto</td>
+        <td><code>"arreglá X que no funciona"</code></td>
+        <td class="cmd-desc">Diagnostica → propone solución → con tu permiso, ejecuta y verifica</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══ CASOS ═══ -->
+<section class="section" id="casos">
+  <div class="section-header fade-in">
+    <div class="tag">Lección 4 · Casos Reales</div>
+    <h2>Escenarios del día a día</h2>
+    <p>Así se usa el sistema en la vida real.</p>
+  </div>
+  <div class="case fade-in">
+    <div class="q"><span class="num">🎯</span> "Che, me llegó un mail de un cliente, qué le respondo?"</div>
+    <div class="a">Se lo pasás al bot de Telegram. HERMES analiza el contexto, busca en JARVIS si ya hablaron antes, y te redacta una respuesta. Decís "dale" y la manda.</div>
+  </div>
+  <div class="case fade-in">
+    <div class="q"><span class="num">🎯</span> "Necesito saber cuánta RAM está usando cada cosa"</div>
+    <div class="a">Decís <code>"cómo está la PC?"</code>. HERMES ejecuta <code>ps aux</code>, <code>free -h</code>, <code>docker stats</code> y te muestra todo ordenado.</div>
+  </div>
+  <div class="case fade-in">
+    <div class="q"><span class="num">🎯</span> "Créame una landing para un producto nuevo"</div>
+    <div class="a">Decís <code>"creá una landing para [nombre]"</code>. Genera HTML completo con diseño premium y te da el link para verlo.</div>
+  </div>
+  <div class="case fade-in">
+    <div class="q"><span class="num">🎯</span> "No me acuerdo qué hicimos la semana pasada con ABE"</div>
+    <div class="a">Decís <code>"qué hicimos con ABE la semana pasada?"</code>. JARVIS busca en memoria de largo plazo y te da el resumen.</div>
+  </div>
+  <div class="case fade-in">
+    <div class="q"><span class="num">🎯</span> "Algo está mal, no funciona X"</div>
+    <div class="a">Decís <code>"arreglá [lo que sea]"</code>. HERMES diagnostica (logs, procesos, configs), te explica qué pasó, pregunta si querés que lo arregle, y lo hace.</div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══ RUTA ═══ -->
+<section class="section" id="ruta">
+  <div class="section-header fade-in">
+    <div class="tag">Lección 5 · Tu Ruta de Aprendizaje</div>
+    <h2>De 0 a Master en 4 pasos</h2>
+    <p>No leas documentación. Usá el sistema para aprender el sistema.</p>
+  </div>
+  <div class="timeline">
+    <div class="timeline-item fade-in">
+      <h3>🚀 Nivel 1 — Hablale al bot</h3>
+      <p>Mandale mensaje a @Gucci_ortega_bot. Pedile cosas simples. "Cómo está la PC?", "Quién sos?", "Acordate que..."</p>
+    </div>
+    <div class="timeline-item fade-in">
+      <h3>🧠 Nivel 2 — Pedile que haga tareas</h3>
+      <p>"Investigá X", "Creá un dashboard de Y", "Arreglá Z". Empezá a delegar sin miedo. Si se equivoca, decile "no, así no" y se corrige.</p>
+    </div>
+    <div class="timeline-item fade-in">
+      <h3>⚡ Nivel 3 — Combiná agentes</h3>
+      <p>Pedile a HERMES que coordine cosas multi-paso. "Investigá el mercado de X, creá un plan, y generá una presentación".</p>
+    </div>
+    <div class="timeline-item fade-in">
+      <h3>👑 Nivel 4 — Enseñale al sistema</h3>
+      <p>Cuando notes patrones, creale skills. Decile "cada vez que pase X, hacé Y". El sistema aprende y se vuelve más autónomo.</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ═══ ARQUITECTURA ═══ -->
+<section class="section" id="arquitectura">
+  <div class="section-header fade-in">
+    <div class="tag">Bonus · Mapa del Reino</div>
+    <h2>Arquitectura completa</h2>
+    <p>Así se conecta todo. Poné el mouse sobre cada nodo.</p>
+  </div>
+  <div class="arch fade-in">
+    <div class="arch-row" style="margin-bottom:8px">
+      <div class="arch-node hero-node">📱 Telegram<br><span class="sub">@Gucci_ortega_bot</span></div>
+      <div class="arch-arrow">→</div>
+      <div class="arch-node hero-node">☀️ HERMES Gateway<br><span class="sub">:8643</span></div>
+    </div>
+    <div class="arch-arrow">⬇</div>
+    <div class="arch-row">
+      <div class="arch-node gold-node">⚡ OpenClaw<br><span class="sub">:18789</span></div>
+      <div class="arch-node green-node">🔮 JARVIS<br><span class="sub">:5174</span></div>
+      <div class="arch-node">🤖 Hermes API<br><span class="sub">:8000</span></div>
+    </div>
+    <div class="arch-arrow">⬇</div>
+    <div class="arch-row">
+      <div class="arch-node">🐳 Neo4j<br><span class="sub">:7687</span></div>
+      <div class="arch-node">🐘 Postgres<br><span class="sub">:5432</span></div>
+      <div class="arch-node">📐 Qdrant<br><span class="sub">:6333</span></div>
+      <div class="arch-node">⚡ Redis<br><span class="sub">:6379</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ REGLA DE ORO ═══ -->
+<section class="section" style="text-align:center; padding-bottom:60px;">
+  <div class="fade-in" style="max-width:700px;margin:0 auto;">
+    <div style="font-size:48px;margin-bottom:20px;">👑</div>
+    <h2 style="font-size:28px;font-weight:600;margin-bottom:12px;">La Regla de Oro</h2>
+    <p style="color:var(--text-secondary);font-size:16px;line-height:1.7;">
+      <strong style="color:var(--text-primary);">No hay herramienta incorrecta.</strong><br>
+      Siempre hablale al bot de Telegram. HERMES decide qué hacer.<br>
+      Si no puede, te dice. Si puede, lo hace. Si se equivoca, se corrige.<br><br>
+      <span style="color:var(--accent);font-weight:600;">El sistema es tu empleado. No al revés.</span>
+    </p>
+  </div>
+</section>
+
+<footer>
+  ⚡ Mystic Academy · Sonora Digital Corp · 22 Junio 2026<br>
+  <span style="font-size:11px;">Hecho con odio al manual de usuario tradicional</span>
+</footer>
+
+<script>
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('visible') });
+}, { threshold:0.1 });
+document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

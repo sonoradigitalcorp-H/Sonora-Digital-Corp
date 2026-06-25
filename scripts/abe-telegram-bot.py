@@ -34,7 +34,7 @@ def load_env():
 
 def fetch_kpis():
     try:
-        r = requests.get('http://localhost:5174/api/abe/dashboard/ceo', timeout=5)
+        r = requests.get('http://localhost:8080/api/abe/dashboard/ceo', timeout=5)
         r.raise_for_status()
         return r.json()
     except Exception as e:
@@ -42,12 +42,12 @@ def fetch_kpis():
         return {
             "total_artists": 3,
             "total_releases": 7,
-            "total_streams": 539000,
-            "total_revenue": 26880,
+            "total_streams": 119743009,
+            "total_revenue": 478972.0,
             "top_artists": [
-                {"nombre": "Jesus Urquijo", "streams": 245000, "revenue": 12110.0},
-                {"nombre": "Hector Rubio", "streams": 193000, "revenue": 9660.0},
-                {"nombre": "Javier Arvayo", "streams": 101000, "revenue": 5110.0}
+                {"nombre": "Hector Rubio", "streams": 115093009, "revenue": 460372.0},
+                {"nombre": "Jesus Urquijo", "streams": 4600000, "revenue": 18400.0},
+                {"nombre": "Javier Arvayo", "streams": 50000, "revenue": 200.0}
             ]
         }
 
@@ -65,7 +65,7 @@ def format_message(kpis, detail=False):
         for a in kpis['top_artists']:
             lines.append(f"  • {a['nombre']}: {a['streams']:,} / ${a['revenue']:,.0f}")
     lines.append("")
-    lines.append("[Dashboard](http://localhost:5174/static/dashboard-abe.html)")
+    lines.append("[Dashboard](https://sonoradigitalcorp.com/)")
     return "\n".join(lines)
 
 def send_telegram(token, chat_id, text):
@@ -113,7 +113,7 @@ def handle_update(token, update):
             lines.append("")
         reply = "\n".join(lines)
     elif text == '/dashboard':
-        reply = "Abre tu dashboard aquí:\nhttp://localhost:5174/static/dashboard-abe.html"
+        reply = "Abre tu dashboard aquí:\nhttps://sonoradigitalcorp.com/"
     else:
         reply = (
             f"No reconozco ese comando. Prueba:\n"
