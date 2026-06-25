@@ -1,68 +1,110 @@
-# AGENTS.md — OpenClaw Agent Configuration
-## Sonora Digital Corp System Description
+# OMEGA System — AGENTS.md
+## Sonora Digital Corp — Boot Configuration
+## Auto-loaded every session
 
-This file is consumed by OpenClaw (`~/.openclaw/`) and describes the entire system architecture for AI agents.
+---
 
-## System Overview
+## Boot Sequence (Every Session — MUST follow)
 
-This is a VPS-hosted AI infrastructure for Sonora Digital Corp running on OVH (149.56.46.173). All services are containerized via Docker Compose. Local AI inference via Ollama. Cloud fallback via OpenCode Go.
+1. **Read rules** → `/home/mystic/sonora-digital-corp/memory/learning/rules.json`
+2. **Read BOOT** → `/home/mystic/sonora-digital-corp/memory/learning/BOOT.md`
+3. **Check 6x manifesto** → `/home/mystic/sonora-digital-corp/ref/6X-BETTER-MANIFESTO.md`
+4. **Load methodology** → `/home/mystic/sonora-digital-corp/ref/METHODOLOGY.md`
 
-## Connection
+## System Identity
 
-```bash
-ssh -i ~/.ssh/id_ed25519_sdc ubuntu@149.56.46.173
-```
+- **Name**: OMEGA (Operational Methodology for Engineered Growth and Autonomy)
+- **Version**: v10.3
+- **Pipeline**: VDD → EDD → PDD → ODD → SDD → BDD → TDD
+- **Client**: Sonora Digital Corp
+- **Models**: nomic-embed-text (local) + qwen2.5:1.5b (local) + deepseek-v4-flash (fallback)
 
-## Infrastructure Map
+## Infrastructure
 
-- nginx + certbot SSL: sonoradigitalcorp.com, n8n.sonoradigitalcorp.com
-- Docker: Neo4j (7474/7687), Qdrant (6333/6334), PostgreSQL (5432), Redis (6379), n8n (5678)
-- Ollama: nomic-embed-text (274MB, 768-dim), qwen2.5:1.5b (~1.1GB)
-- Systemd: abe-server.service (8080), abe-telegram-bot.service
-- n8n API: https://n8n.sonoradigitalcorp.com (JWT auth)
+- **VPS**: 149.56.46.173 (OVH, 11GB RAM, 96GB SSD, Ubuntu 26.04)
+- **SSH**: `ssh -i ~/.ssh/id_ed25519_sdc ubuntu@149.56.46.173`
+- **Docker**: Neo4j (7474/7687), Qdrant (6333, 768-dim Cosine), PostgreSQL (5432), Redis (6379), n8n (5678)
+- **Services**: abe-server (8080), abe-telegram-bot, ollama (11434), openclaw-gateway (18789)
+- **SSL**: sonoradigitalcorp.com + n8n.sonoradigitalcorp.com
 
-## MCP Servers
+## Key Paths
 
-MCP servers are defined in `mcp-servers.json` at root. All servers connect to local Docker containers on 127.0.0.1.
+| What | Path |
+|---|---|
+| Production | `~/sdc/` (VPS) |
+| Source | `~/sonora-digital-corp/` (local git) |
+| Reference library | `~/sonora-digital-corp/ref/` |
+| Learning loop | `~/sonora-digital-corp/memory/learning/` |
+| n8n workflows | `~/sonora-digital-corp/config/n8n-sdc/` |
+| Static web | `~/sdc/static/` (VPS) |
+
+## Hard Rules (14 active)
+
+- **R-001**: Apple design for public pages. Never dark unpolished.
+- **R-002**: Speed mode on URGENTE/RAPIDO/FABOR.
+- **R-003**: ONE recommendation, never multiple options.
+- **R-004**: Load skills BEFORE writing code.
+- **R-005**: End every task with what's done/pending/next.
+- **R-006**: APA citations always.
+- **R-007**: OMEGA pipeline never skipped.
+- **R-008**: TailwindCSS + Apple for public, dark for internal.
+- **R-009**: Local models first, OpenCode Go fallback.
+- **R-010**: Capture learning events post-session.
+- **R-011**: Real data only.
+- **R-012**: Never explain code without being asked.
+- **R-014**: Keep ref library updated.
+- **R-015**: Test 1 item before batch API ops.
+- **R-016**: Search system before asking user for keys.
+- **R-017**: Load design skill before ANY visual output.
+- **R-018**: Temp files for credentials with special chars.
+- **R-019**: Output minimal. One line per result.
+
+## Available Skills (67 total, 51 active)
+
+**Key skills for daily use:**
+- `popular-web-designs` — 54 design systems (load before any HTML)
+- `open-design` — 129 design systems + 31 composable skills
+- `fal-ai` — 600+ image/video/audio models
+- `meta-ads` — Facebook/Instagram Ads API
+- `learning-loop` — Self-improvement engine
+- `skill-creator` — Create new skills from workflows
+- `playwright` — Browser automation
+- `browser-use` — Web testing
+- `comfyui` — Local image/video generation
+- `canva-connect` — Canva design automation
+- `ghost-cms` — Content management
+- `stripe` — Payment processing
+- `supabase` — Database + auth
+- `posthog` — Product analytics
+- `mcporter` — MCP server management
+- `linux-desktop` — Desktop control
+- `agent-evolver` — Self-evolution
+- `close-loop` — Session close workflow
 
 ## Models
 
-- **Embeddings**: nomic-embed-text (local Ollama, 768-dim)
-- **Chat**: qwen2.5:1.5b (local Ollama) or deepseek-v4-flash (OpenCode Go fallback)
-- **Always prefer local models**. Use cloud fallback only when local response >5s.
+| Task | Model | Type |
+|---|---|---|
+| Chat/reasoning | qwen2.5:1.5b | Local (Ollama, 1.1GB) |
+| Embeddings | nomic-embed-text | Local (Ollama, 274MB, 768-dim) |
+| Fallback | deepseek-v4-flash | OpenCode Go (cloud) |
+| Images | flux-dev | fal.ai (cloud API) |
 
-## Directory Structure
+## Crisis Protocol
 
-- `~/sdc/`: All production files
-- `~/sdc/ref/`: Bibliography, Methodology, Glossary
-- `~/sdc/config/`: Unified MCP and workflow configs
-- `~/sdc/scripts/`: Automation scripts
-- `~/sdc/mcp/`: MCP ecosystem (gateway, CLI, SDK, servers)
-- `~/sdc/data/`: Data files (abe-music.json)
-- `~/sdc/static/`: Static HTML/JS for nginx
-- `~/sdc/n8n-workflows/`: All n8n workflow JSONs
+1. `ssh vps` → `docker ps` → `systemctl status ollama`
+2. If service down: `sudo systemctl restart <service>`
+3. If Docker down: `docker compose -f ~/sdc/docker-compose.yml restart`
+4. If VPS dead: provision new → run `setup.sh` (not yet created)
 
-## Methodology
+## Quick Commands
 
-Pipeline: VDD -> EDD -> PDD -> ODD -> SDD -> BDD -> TDD
-Every feature starts with a spec (SpecKit SDD), not with code.
-
-## Secrets
-
-Secrets are environment variables only. Never hardcode. Key ones:
-- TELEGRAM_BOT_TOKEN
-- N8N_API_KEY
-- Any API keys
-
-## Self-Improvement (Learning Loop)
-
-Every session:
-1. Read `memory/learning/rules.json` — 14 hard behavioral rules
-2. Read `memory/learning/BOOT.md` — quick reference
-3. Check `pre-action-checklist.md` before risky operations
-4. After mistakes/feedback: append to `memory/learning/events.jsonl`
-5. See `ref/6X-BETTER-MANIFESTO.md` — the 6 dimensions of improvement
-
-## Crisis
-
-If system fails: check Docker, check nginx/SSL, check Ollama, run recovery from RECOVERY.md.
+| Say | Does |
+|---|---|
+| `status` | Show VPS health + Docker + Ollama state |
+| `deploy` | rsync static files + nginx reload |
+| `learn` | Run learning loop extraction |
+| `push` | git add + commit + push |
+| `n8n:import` | Import workflow JSONs to n8n API |
+| `logs:abe` | tail -50 abe-server logs |
+| `logs:n8n` | docker logs sdc-n8n -n 30 |

@@ -8,10 +8,10 @@
     "created": "2026-06-24",
     "source_lesson": "L-001",
     "violations": 1,
-    "last_checked": "2026-06-24",
-    "last_validated": "2026-06-24",
-    "validation_count": 0,
-    "confidence_score": 0.95
+    "last_checked": "2026-06-25",
+    "last_validated": "2026-06-25",
+    "validation_count": 1,
+    "confidence_score": 0.98
   },
   {
     "id": "R-002",
@@ -22,10 +22,10 @@
     "created": "2026-06-24",
     "source_lesson": "L-002",
     "violations": 0,
-    "last_checked": "2026-06-24",
-    "last_validated": "2026-06-24",
-    "validation_count": 1,
-    "confidence_score": 0.95
+    "last_checked": "2026-06-25",
+    "last_validated": "2026-06-25",
+    "validation_count": 2,
+    "confidence_score": 0.97
   },
   {
     "id": "R-003",
@@ -36,24 +36,24 @@
     "created": "2026-06-24",
     "source_lesson": "L-003",
     "violations": 0,
-    "last_checked": "2026-06-24",
-    "last_validated": "2026-06-24",
-    "validation_count": 1,
-    "confidence_score": 0.9
+    "last_checked": "2026-06-25",
+    "last_validated": "2026-06-25",
+    "validation_count": 2,
+    "confidence_score": 0.92
   },
   {
     "id": "R-004",
     "type": "MUST",
     "category": "tools",
-    "rule": "When user says 'skills' or 'opendesign', first check if the skill is already loaded. If not, load it via the skill tool. Always prefer using existing skills over writing raw code.",
-    "reason": "OpenDesign and popular-web-designs have 183 design systems that are better than anything I can write from scratch.",
+    "rule": "Before writing ANY code, check if a skill exists. Load popular-web-designs, open-design, or fal-api before writing raw HTML or calling APIs directly.",
+    "reason": "Landing page took 3 attempts because I didn't load Apple design system first. Skills save time and quality.",
     "created": "2026-06-24",
     "source_lesson": "L-004",
-    "violations": 1,
-    "last_checked": "2026-06-24",
-    "last_validated": "2026-06-24",
-    "validation_count": 0,
-    "confidence_score": 0.85
+    "violations": 2,
+    "last_checked": "2026-06-25",
+    "last_validated": "2026-06-25",
+    "validation_count": 1,
+    "confidence_score": 0.95
   },
   {
     "id": "R-005",
@@ -64,10 +64,10 @@
     "created": "2026-06-24",
     "source_lesson": "L-005",
     "violations": 0,
-    "last_checked": "2026-06-24",
-    "last_validated": "2026-06-24",
-    "validation_count": 1,
-    "confidence_score": 0.9
+    "last_checked": "2026-06-25",
+    "last_validated": "2026-06-25",
+    "validation_count": 2,
+    "confidence_score": 0.92
   },
   {
     "id": "R-006",
@@ -78,10 +78,10 @@
     "created": "2026-06-24",
     "source_lesson": "L-006",
     "violations": 0,
-    "last_checked": "2026-06-24",
-    "last_validated": "2026-06-24",
-    "validation_count": 1,
-    "confidence_score": 0.95
+    "last_checked": "2026-06-25",
+    "last_validated": "2026-06-25",
+    "validation_count": 2,
+    "confidence_score": 0.97
   },
   {
     "id": "R-007",
@@ -92,10 +92,10 @@
     "created": "2026-06-24",
     "source_lesson": "L-007",
     "violations": 0,
-    "last_checked": "2026-06-24",
-    "last_validated": "2026-06-24",
-    "validation_count": 1,
-    "confidence_score": 0.95
+    "last_checked": "2026-06-25",
+    "last_validated": "2026-06-25",
+    "validation_count": 2,
+    "confidence_score": 0.97
   },
   {
     "id": "R-008",
@@ -106,10 +106,10 @@
     "created": "2026-06-24",
     "source_lesson": "L-008",
     "violations": 1,
-    "last_checked": "2026-06-24",
-    "last_validated": "2026-06-24",
-    "validation_count": 0,
-    "confidence_score": 0.9
+    "last_checked": "2026-06-25",
+    "last_validated": "2026-06-25",
+    "validation_count": 1,
+    "confidence_score": 0.93
   },
   {
     "id": "R-009",
@@ -120,10 +120,10 @@
     "created": "2026-06-24",
     "source_lesson": "L-009",
     "violations": 0,
-    "last_checked": "2026-06-24",
-    "last_validated": "2026-06-24",
-    "validation_count": 1,
-    "confidence_score": 0.95
+    "last_checked": "2026-06-25",
+    "last_validated": "2026-06-25",
+    "validation_count": 2,
+    "confidence_score": 0.97
   },
   {
     "id": "R-010",
@@ -134,65 +134,121 @@
     "created": "2026-06-24",
     "source_lesson": "L-010",
     "violations": 0,
-    "last_checked": "2026-06-24",
-    "last_validated": "2026-06-24",
-    "validation_count": 1,
-    "confidence_score": 0.9
+    "last_checked": "2026-06-25",
+    "last_validated": "2026-06-25",
+    "validation_count": 2,
+    "confidence_score": 0.92
   },
   {
     "id": "R-011",
     "type": "MUST",
     "category": "data",
-    "rule": "Never use fake or simulated data. Every stream count, revenue number, and metric must be researched and verified from real sources.",
-    "reason": "User's core value: 'Truth. No fake data. Every number is researched, verified, and sourced.'",
+    "rule": "Never use fake or simulated data. Every number must be researched and verified from real sources.",
+    "reason": "User's core value: Truth. Credibility is everything.",
     "created": "2026-06-24",
     "source_lesson": "L-011",
     "violations": 0,
-    "last_checked": "2026-06-24",
-    "last_validated": "2026-06-24",
-    "validation_count": 1,
-    "confidence_score": 0.95
+    "last_checked": "2026-06-25",
+    "last_validated": "2026-06-25",
+    "validation_count": 2,
+    "confidence_score": 0.97
   },
   {
     "id": "R-012",
     "type": "NEVER",
     "category": "communication",
-    "rule": "Never explain code after writing it unless asked. The user hates preamble. Deliver the result, not the process.",
-    "reason": "User said: 'No add code explanation summary unless requested. After working on a file, just stop.'",
+    "rule": "Never explain code after writing it unless asked. Deliver the result, not the process.",
+    "reason": "User hates preamble. Concise output respects their time.",
     "created": "2026-06-24",
     "source_lesson": "L-012",
     "violations": 0,
-    "last_checked": "2026-06-24",
-    "last_validated": "2026-06-24",
-    "validation_count": 1,
-    "confidence_score": 0.9
-  },
-  {
-    "id": "R-013",
-    "type": "PREFER",
-    "category": "workflow",
-    "rule": "When user mentions 'plan mode' or 'read-only', stop executing. Only read and search until user explicitly says 'adelante', 'go', or 'exit plan mode'.",
-    "reason": "Plan mode is a safety constraint. Violating it wastes trust.",
-    "created": "2026-06-24",
-    "source_lesson": "L-013",
-    "violations": 0,
-    "last_checked": "2026-06-24",
-    "last_validated": "2026-06-24",
-    "validation_count": 1,
-    "confidence_score": 0.95
+    "last_checked": "2026-06-25",
+    "last_validated": "2026-06-25",
+    "validation_count": 2,
+    "confidence_score": 0.93
   },
   {
     "id": "R-014",
     "type": "MUST",
     "category": "knowledge",
-    "rule": "Maintain the OMEGA Reference Library (~/sdc/ref/). Keep BIBLIOGRAPHY.md, MODEL-MAP.md, METHODOLOGY.md, and GLOSSARY.md updated with every new concept or tool introduced.",
-    "reason": "The ref library is the system's self-description. Stale refs = broken self-awareness.",
+    "rule": "Maintain the OMEGA Reference Library. Keep BIBLIOGRAPHY.md, MODEL-MAP.md, METHODOLOGY.md, and GLOSSARY.md updated.",
+    "reason": "The ref library is the system's self-description. Stale refs = broken awareness.",
     "created": "2026-06-24",
     "source_lesson": "L-014",
     "violations": 0,
-    "last_checked": "2026-06-24",
-    "last_validated": "2026-06-24",
-    "validation_count": 1,
+    "last_checked": "2026-06-25",
+    "last_validated": "2026-06-25",
+    "validation_count": 2,
+    "confidence_score": 0.97
+  },
+  {
+    "id": "R-015",
+    "type": "MUST",
+    "category": "infrastructure",
+    "rule": "Before batch API operations (imports, migrations), first test with 1 item to validate schema compatibility. Never batch-blind.",
+    "reason": "n8n import took 3 attempts because I didn't verify schema first. A single test workflow would have revealed the format mismatch immediately.",
+    "created": "2026-06-25",
+    "source_lesson": "L-015",
+    "violations": 1,
+    "last_checked": "2026-06-25",
+    "last_validated": "2026-06-25",
+    "validation_count": 0,
     "confidence_score": 0.95
+  },
+  {
+    "id": "R-016",
+    "type": "MUST",
+    "category": "infrastructure",
+    "rule": "When user says 'I already configured X' or 'check the system', search ALL config files and databases before asking them for keys. Use explore agent for bulk search.",
+    "reason": "User had n8n API key in PostgreSQL all along. I spent time guessing credentials when the database had the answer.",
+    "created": "2026-06-25",
+    "source_lesson": "L-016",
+    "violations": 1,
+    "last_checked": "2026-06-25",
+    "last_validated": "2026-06-25",
+    "validation_count": 0,
+    "confidence_score": 0.95
+  },
+  {
+    "id": "R-017",
+    "type": "MUST",
+    "category": "tools",
+    "rule": "Before any visual output (HTML, CSS, design), load the relevant design system skill first. popular-web-designs has 54 templates. Use them.",
+    "reason": "Apple landing page was made 3x faster after loading Apple design tokens. Skills exist for a reason.",
+    "created": "2026-06-25",
+    "source_lesson": "L-017",
+    "violations": 1,
+    "last_checked": "2026-06-25",
+    "last_validated": "2026-06-25",
+    "validation_count": 0,
+    "confidence_score": 0.95
+  },
+  {
+    "id": "R-018",
+    "type": "PREFER",
+    "category": "code",
+    "rule": "For credentials with special characters ($, !, etc.), write to a temp file and pass via file, not via command line or environment interpolation.",
+    "reason": "JWT with $ signs broke bash string interpolation. Temp files avoid this entirely.",
+    "created": "2026-06-25",
+    "source_lesson": "L-018",
+    "violations": 1,
+    "last_checked": "2026-06-25",
+    "last_validated": "2026-06-25",
+    "validation_count": 0,
+    "confidence_score": 0.9
+  },
+  {
+    "id": "R-019",
+    "type": "PREFER",
+    "category": "communication",
+    "rule": "Output should be minimum: one line for each success, one line for each failure. No commentary. User reads diagonally.",
+    "reason": "User processes information fast. Verbose output loses attention.",
+    "created": "2026-06-25",
+    "source_lesson": "L-019",
+    "violations": 0,
+    "last_checked": "2026-06-25",
+    "last_validated": "2026-06-25",
+    "validation_count": 0,
+    "confidence_score": 0.85
   }
 ]
