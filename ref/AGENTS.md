@@ -54,6 +54,15 @@ Secrets are environment variables only. Never hardcode. Key ones:
 - N8N_API_KEY
 - Any API keys
 
+## Self-Improvement (Learning Loop)
+
+Every session:
+1. Read `memory/learning/rules.json` — 14 hard behavioral rules
+2. Read `memory/learning/BOOT.md` — quick reference
+3. Check `pre-action-checklist.md` before risky operations
+4. After mistakes/feedback: append to `memory/learning/events.jsonl`
+5. See `ref/6X-BETTER-MANIFESTO.md` — the 6 dimensions of improvement
+
 ## Crisis
 
 If system fails: check Docker, check nginx/SSL, check Ollama, run recovery from RECOVERY.md.
