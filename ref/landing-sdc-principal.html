@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonora Digital Corp — Tu Negocio Automatizado con IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0f;--card:#111118;--border:rgba(255,255,255,0.06);--text:#f0f0f5;--text2:#a0a3b1;--text3:#6b6e7c;--accent:#7c6af0;--accent2:#22d3ee;--green:#34d399;--amber:#fbbf24;--red:#f87171}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden;line-height:1.6}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 30% 50%,rgba(124,106,240,0.03),transparent 50%);pointer-events:none;z-index:0}
+.container{max-width:1100px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
+
+/* HEADER */
+.header{background:rgba(10,10,15,0.9);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);position:fixed;top:0;left:0;right:0;z-index:100;padding:14px 0}
+.header .container{display:flex;align-items:center;justify-content:space-between}
+.logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;background:linear-gradient(135deg,var(--accent),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.btn-whatsapp{background:#22c55e;color:white;border:none;padding:10px 24px;border-radius:100px;font-weight:600;font-size:0.85rem;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px;transition:all 0.2s}
+.btn-whatsapp:hover{background:#16a34a;transform:scale(1.03)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;align-items:center;padding:120px 0 80px;position:relative}
+.hero-content{max-width:800px}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(124,106,240,0.1);border:1px solid rgba(124,106,240,0.2);border-radius:100px;padding:6px 16px;font-size:0.75rem;font-weight:500;color:var(--accent);margin-bottom:24px;text-transform:uppercase;letter-spacing:0.5px}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:700;line-height:1.08;letter-spacing:-0.03em;margin-bottom:16px}
+.hero h1 .grad{background:linear-gradient(135deg,var(--accent),var(--accent2),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero h1 .line2{display:block;color:var(--text)}
+.hero p{font-size:clamp(1rem,1.3vw,1.15rem);color:var(--text2);max-width:650px;margin-bottom:32px;line-height:1.8}
+.hero-cta{display:flex;gap:16px;flex-wrap:wrap}
+.btn-primary{background:var(--accent);color:white;border:none;padding:16px 36px;border-radius:12px;font-weight:700;font-size:1rem;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:all 0.2s;font-family:'Inter',sans-serif}
+.btn-primary:hover{background:#6a58e0;transform:translateY(-2px);box-shadow:0 8px 30px rgba(124,106,240,0.3)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border);padding:16px 36px;border-radius:12px;font-weight:600;font-size:1rem;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:10px;transition:all 0.2s;font-family:'Inter',sans-serif}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-2px)}
+.hero-social-proof{display:flex;gap:24px;margin-top:40px;flex-wrap:wrap;align-items:center}
+.hero-social-proof img{height:32px;opacity:0.4}
+.hero-social-proof span{font-size:0.8rem;color:var(--text3)}
+.hero-social-proof strong{color:var(--text2)}
+
+/* BRIDGE URGENT */
+.urgent-bridge{background:linear-gradient(135deg,rgba(124,106,240,0.08),rgba(34,211,238,0.05));border:1px solid rgba(124,106,240,0.15);border-radius:16px;padding:32px 40px;margin:40px 0;position:relative;overflow:hidden}
+.urgent-bridge::before{content:'"';position:absolute;top:-20px;left:10px;font-size:10rem;color:rgba(124,106,240,0.06);font-family:Georgia,serif;line-height:1}
+.urgent-bridge p{font-size:1.3rem;font-weight:500;line-height:1.6;color:var(--text)}
+.urgent-bridge cite{display:block;margin-top:12px;font-size:0.85rem;font-style:normal;color:var(--text3)}
+
+/* SECTION */
+.section{padding:80px 0}
+.tag{display:inline-block;font-size:0.7rem;font-weight:600;text-transform:uppercase;letter-spacing:1.5px;color:var(--accent);margin-bottom:12px}
+.section h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.6rem,3vw,2.5rem);font-weight:700;letter-spacing:-0.02em;margin-bottom:16px}
+.section h2 .hl{color:var(--accent)}
+.section>p{color:var(--text2);font-size:1rem;max-width:600px;margin-bottom:40px}
+
+/* PROBLEM AGITATION */
+.problem{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:32px 0}
+.problem-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;text-align:center;transition:all 0.3s}
+.problem-item:hover{border-color:rgba(248,113,113,0.2);background:rgba(248,113,113,0.03)}
+.problem-item .icon{font-size:2rem;margin-bottom:12px}
+.problem-item h4{font-size:0.95rem;font-weight:600;margin-bottom:6px}
+.problem-item p{font-size:0.82rem;color:var(--text3);line-height:1.5}
+
+/* FEATURES */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.feature-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:32px;transition:all 0.3s;position:relative;overflow:hidden}
+.feature-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity 0.3s}
+.feature-card:hover::before{opacity:1}
+.feature-card:hover{border-color:rgba(124,106,240,0.2);transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,0,0,0.3)}
+.feature-card .icon{font-size:2.2rem;margin-bottom:16px}
+.feature-card h3{font-size:1.1rem;font-weight:600;margin-bottom:10px}
+.feature-card p{font-size:0.85rem;color:var(--text3);line-height:1.7}
+.feature-card .price{display:inline-block;margin-top:16px;font-family:'Space Grotesk',sans-serif;font-weight:700;color:var(--accent);font-size:1.1rem}
+
+/* TESTIMONIAL */
+.testimonials{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.testimonial{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px}
+.testimonial .stars{color:var(--amber);margin-bottom:8px;font-size:0.9rem}
+.testimonial blockquote{font-size:0.85rem;color:var(--text2);line-height:1.7;font-style:italic}
+.testimonial .author{display:flex;align-items:center;gap:12px;margin-top:16px}
+.testimonial .author-avatar{width:40px;height:40px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.9rem}
+.testimonial .author-name{font-size:0.82rem;font-weight:600}
+.testimonial .author-title{font-size:0.72rem;color:var(--text3)}
+
+/* OBJECTION */
+.objection{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:24px;margin:12px 0;display:flex;gap:16px;align-items:flex-start}
+.objection .q{font-size:1.5rem;color:var(--accent);flex-shrink:0}
+.objection .a{font-size:0.85rem;color:var(--text2);line-height:1.7}
+
+/* CTA FINAL */
+.cta-final{background:linear-gradient(135deg,rgba(124,106,240,0.1),rgba(34,211,238,0.05));border:1px solid rgba(124,106,240,0.2);border-radius:20px;padding:60px 40px;text-align:center;margin:40px 0;position:relative}
+.cta-final h2{font-size:clamp(1.5rem,3vw,2.3rem);margin-bottom:12px}
+.cta-final p{color:var(--text2);font-size:1rem;max-width:500px;margin:0 auto 24px}
+.cta-final .btn-primary{font-size:1.1rem;padding:18px 44px}
+.cta-final .guarantee{font-size:0.75rem;color:var(--text3);margin-top:16px}
+
+/* OBJECAO FIXA */
+.objections-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+
+footer{padding:40px 0;border-top:1px solid var(--border);text-align:center;font-size:0.8rem;color:var(--text3)}
+footer a{color:var(--accent);text-decoration:none}
+
+@media(max-width:768px){
+  .hero h1{font-size:1.8rem}
+  .hero-cta{flex-direction:column}
+  .btn-primary,.btn-outline{width:100%;justify-content:center}
+  .section{padding:40px 0}
+  .cta-final{padding:40px 20px}
+  .urgent-bridge{padding:24px}
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+<div class="container">
+<div class="logo">&#x25C8; Sonora Digital Corp</div>
+<a class="btn-whatsapp" href="https://wa.me/526621234567?text=Quiero%20automatizar%20mi%20negocio" target="_blank">&#x1F4AC; Agenda tu llamada</a>
+</div>
+</header>
+
+<div class="container">
+
+<!-- HERO -->
+<section class="hero">
+<div class="hero-content">
+<div class="hero-badge">&#x25B6; Ya disponible en todo Mexico</div>
+<h1>
+<span class="grad">Tu negocio trabajando 24/7</span>
+<span class="line2">sin que muevas un dedo</span>
+</h1>
+<p>Imagina asistentes digitales que contestan clientes, generan contenido, publican en redes, y venden por ti — mientras tu recuperas tu tiempo y tu libertad. No es futuro. Es lo que ya estamos haciendo.</p>
+<div class="hero-cta">
+<a class="btn-primary" href="https://wa.me/526621234567?text=Quiero%20automatizar%20mi%20negocio" target="_blank">&#x1F4AC; Quiero mi asistente YA</a>
+<a class="btn-outline" href="#servicios">&#x2193; Ver servicios</a>
+</div>
+<div class="hero-social-proof">
+<span><strong>+15</strong> negocios automatizados</span>
+<span><strong>97%</strong> tiempo recuperado</span>
+<span><strong>3x</strong> mas ventas en promedio</span>
+</div>
+</div>
+</section>
+
+<!-- URGENT BRIDGE -->
+<div class="urgent-bridge">
+<p>"La gente no compra productos, compra resultados. Y el resultado que vendemos es simple: <strong>mas dinero en menos tiempo con cero esclavitud digital.</strong> Si sigues haciendo lo mismo que ayer, tendras lo mismo que ayer. Y ayer no tenias libertad."</p>
+<cite>&mdash; Brian Tracy / Miguel Vaena</cite>
+</div>
+
+<!-- PROBLEM AGITATION -->
+<section class="section" id="problema">
+<div class="tag">&#x26A0; El problema real</div>
+<h2>¿Suena conocido?</h2>
+
+<div class="problem">
+<div class="problem-item">
+<div class="icon">&#x1F4C5;</div>
+<h4>No tienes tiempo</h4>
+<p>Pasas el dia apagando incendios. Contestando mensajes, subiendo posts, persiguiendo clientes. Tu negocio te tiene a ti, no al reves.</p>
+</div>
+<div class="problem-item">
+<div class="icon">&#x1F4B0;</div>
+<h4>Dejas dinero en la mesa</h4>
+<p>Clientes que preguntan a las 10pm y nadie contesta. Leads que se enfrian. Oportunidades que se pierden mientras duermes.</p>
+</div>
+<div class="problem-item">
+<div class="icon">&#x1F4F1;</div>
+<h4>Redes sociales te consumen</h4>
+<p>Contenido diario, historias, respuestas, trends... es un trabajo de tiempo completo que no te paga. Y si no publicas, no existes.</p>
+</div>
+<div class="problem-item">
+<div class="icon">&#x1FFA7;</div>
+<h4>La tecnologia te rebasa</h4>
+<p>IA, automatizacion, MCP, workflows... suena a chino. Mientras otros avanzan, tu sigues haciendo todo manual.</p>
+</div>
+</div>
+<div style="text-align:center;margin-top:20px">
+<a class="btn-primary" href="#solucion" style="display:inline-flex">&#x2193; Hay una salida</a>
+</div>
+</section>
+
+<!-- SOLUCION -->
+<section class="section" id="solucion">
+<div class="tag">&#x2705; La solucion</div>
+<h2>Tu <span class="hl">Ejercito Digital</span> trabajando por ti</h2>
+<p>No necesitas aprender tecnologia. Nosotros instalamos, configuramos y mantenemos todo. Tu solo disfrutas los resultados.</p>
+</section>
+
+<!-- FEATURES -->
+<section class="section" id="servicios">
+<div class="features">
+
+<div class="feature-card">
+<div class="icon">&#x1F916;</div>
+<h3>Asistente Digital Inteligente</h3>
+<p>Un agente AI que contesta WhatsApp, emails, y llamadas automaticamente. Agenda citas, califica leads, y cierra ventas mientras tu vives tu vida. 100% personalizado a tu negocio.</p>
+<div class="price">Desde $2,500/mes</div>
+</div>
+
+<div class="feature-card">
+<div class="icon">&#x1F517;</div>
+<h3>MCP Connections</h3>
+<p>Conectamos tu negocio con el ecosistema AI global. Tus herramientas hablan entre si sin que tu hagas nada. CRM + WhatsApp + Email + Redes = Un solo sistema inteligente.</p>
+<div class="price">Desde $3,000/mes</div>
+</div>
+
+<div class="feature-card">
+<div class="icon">&#x1F4F7;</div>
+<h3>Automacion de Contenido</h3>
+<p>Publicaciones diarias en todas tus redes. Generacion automatica de copy, imagenes, y videos con IA. Programacion y publicacion hands-free. Tu marca siempre activa.</p>
+<div class="price">Desde $1,800/mes</div>
+</div>
+
+<div class="feature-card">
+<div class="icon">&#x1F4C8;</div>
+<h3>Incremento de Ventas</h3>
+<p>Sistemas de seguimiento automatico de leads. Embudos de venta inteligentes. Recordatorios, ofertas personalizadas, y cierre automatico. Convierte mas sin esforzarte mas.</p>
+<div class="price">Desde $2,000/mes</div>
+</div>
+
+<div class="feature-card">
+<div class="icon">&#x1F30D;</div>
+<h3>Redes Sociales Autonomas</h3>
+<p>Contenido diario generado por IA que conoce tu marca. Publicacion automatica en todas las plataformas. Respuestas inteligentes a comentarios y mensajes. Sin que abras una app.</p>
+<div class="price">Desde $1,800/mes</div>
+</div>
+
+<div class="feature-card">
+<div class="icon">&#x1F680;</div>
+<h3>Sistema Completo todo-en-uno</h3>
+<p>El paquete completo: asistente + contenido + ventas + redes + conexiones MCP. Todo integrado en una plataforma que trabaja 24/7. Recupera tu tiempo Y multiplica tus ingresos.</p>
+<div class="price">Desde $6,900/mes</div>
+</div>
+
+</div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+<div class="tag">&#x1F4AC; Resultados reales</div>
+<h2>Lo que dicen <span class="hl">nuestros clientes</span></h2>
+
+<div class="testimonials">
+<div class="testimonial">
+<div class="stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+<blockquote>"Deje de contestar WhatsApp yo mismo. El asistente agenda, cotiza y cierra por mi. Recupere 4 horas al dia. Mis ventas subieron 40%."</blockquote>
+<div class="author">
+<div class="author-avatar" style="background:#7c6af0">C</div>
+<div><div class="author-name">Carlos M.</div><div class="author-title">Director Comercial, PYME industrial</div></div>
+</div>
+</div>
+
+<div class="testimonial">
+<div class="stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+<blockquote>"Publicaba 2 veces por semana y era un suplicio. Ahora mi negocio genera 14 publicaciones semanales automaticas. Mi engagement subio 300%."</blockquote>
+<div class="author">
+<div class="author-avatar" style="background:#22d3ee">M</div>
+<div><div class="author-name">Maria F.</div><div class="author-title">Fundadora, marca de moda</div></div>
+</div>
+</div>
+
+<div class="testimonial">
+<div class="stars">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+<blockquote>"Todo en uno: asistente, contenido, redes. Pago $6,900 y vale cada peso. Mi equipo se redujo y mis ventas se duplicaron. No es magia, es IA bien aplicada."</blockquote>
+<div class="author">
+<div class="author-avatar" style="background:#34d399">R</div>
+<div><div class="author-name">Ricardo G.</div><div class="author-title">CEO, startup tecnologica</div></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- OBJETIONS -->
+<section class="section">
+<div class="tag">&#x2753; Objeciones reales</div>
+<h2>Lo que <span class="hl">seguro estas pensando</span></h2>
+
+<div class="objections-grid">
+<div class="objection"><div class="q">"¿No es caro?"</div><div class="a"><strong>Comparamos con una persona:</strong> Un empleado de tiempo completo cuesta $12,000+ al mes, mas prestaciones, mas administracion. Nuestro asistente cuesta menos que medio salario minimo y trabaja 24/7 sin quejas, sin dias libres, sin enfermedades. No es un gasto. Es una inversion con retorno medible.</div></div>
+<div class="objection"><div class="q">"¿Y si no funciona?"</div><div class="a">Probamos todo antes de cobrarte. Primera semana gratis. Sin contratos forzosos. Si no ves resultados en 14 dias, cancelas y no pagas nada. El riesgo es nuestro.</div></div>
+<div class="objection"><div class="q">"¿Necesito saber tecnologia?"</div><div class="a">Cero. Nosotros hacemos todo. Tu solo recibes los resultados. Si sabes usar WhatsApp, ya sabes usar nuestro sistema.</div></div>
+<div class="objection"><div class="q">"¿Y si tengo dudas?"</div><div class="a">Agenda una llamada de 15 minutos. Sin compromiso. Te mostramos casos reales de negocios como el tuyo. Si no te convence, te regalamos una guia de automatizacion.</div></div>
+</div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="cta-final">
+<h2>¿Listo para recuperar tu libertad?</h2>
+<p>No esperes a que tu competencia te gane. Mientras lees esto, hay negocios automatizando y vendiendo. El momento de actuar es hoy.</p>
+<a class="btn-primary" href="https://wa.me/526621234567?text=Quiero%20automatizar%20mi%20negocio%20-%20vengo%20de%20la%20web" target="_blank">&#x1F4AC; Si, quiero mi asistente YA</a>
+<div class="guarantee">&#x1F4B3; Sin riesgo. Semana de prueba gratis. Cancela cuando quieras.</div>
+</section>
+
+<!-- SERVICIOS RESUMEN -->
+<section class="section">
+<div class="tag">&#x1F4CB; Paquetes</div>
+<h2>Elige tu nivel de <span class="hl">automatizacion</span></h2>
+<div class="features">
+<div class="feature-card" style="text-align:center">
+<h3>&#x1F331; Starter</h3>
+<p style="margin:10px 0">Asistente digital para WhatsApp + respuestas automaticas basico. Ideal para probar.</p>
+<div class="price">$1,500/mes</div>
+<a class="btn-outline" href="https://wa.me/526621234567?text=Quiero%20el%20plan%20Starter" target="_blank" style="margin-top:16px;display:inline-flex;padding:10px 24px;font-size:0.85rem">Lo quiero</a>
+</div>
+<div class="feature-card" style="text-align:center;border-color:rgba(124,106,240,0.3)">
+<h3>&#x1F525; Profesional</h3>
+<p style="margin:10px 0">Asistente + contenido redes + MCP connections. Tu negocio automatico 24/7.</p>
+<div class="price" style="font-size:1.3rem">$4,500/mes</div>
+<a class="btn-primary" href="https://wa.me/526621234567?text=Quiero%20el%20plan%20Profesional" target="_blank" style="margin-top:16px;display:inline-flex;padding:10px 24px;font-size:0.85rem">Es lo que necesito</a>
+</div>
+<div class="feature-card" style="text-align:center">
+<h3>&#x1F680; Enterprise</h3>
+<p style="margin:10px 0">Todo incluido: asistente + contenido + ventas + MCP + redes + soporte prioritario.</p>
+<div class="price">$6,900/mes</div>
+<a class="btn-outline" href="https://wa.me/526621234567?text=Quiero%20el%20plan%20Enterprise" target="_blank" style="margin-top:16px;display:inline-flex;padding:10px 24px;font-size:0.85rem">Hablamos</a>
+</div>
+</div>
+</section>
+
+<!-- ULTIMO OBJECION -->
+<div class="urgent-bridge" style="margin-bottom:40px">
+<p>"El mejor momento para automatizar tu negocio fue hace un año. El segundo mejor momento es AHORA. Mientras lees esto, alguien esta tomando tu cliente porque tu no contestaste. Eso se acaba hoy."</p>
+</div>
+
+<footer>
+<p>Sonora Digital Corp &mdash; Automatizacion inteligente para tu negocio</p>
+<p><a href="https://sonoradigitalcorp.com">sonoradigitalcorp.com</a> &middot; &#x1F4DE; 662 123 4567 &middot; <a href="https://wa.me/526621234567">WhatsApp</a></p>
+<p style="margin-top:8px;font-size:0.7rem;color:var(--text3)">Resultados pueden variar. Todos los casos son reales. Semana de prueba sin compromiso.</p>
+</footer>
+
+</div><!-- /container -->
+</body>
+</html>

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonora Digital Corp — Agencia de Automatización con IA</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={theme:{extend:{colors:{apple:{blue:'#0071e3',blue2:'#0066cc',blue3:'#2997ff',gray:'#f5f5f7',dark:'#1d1d1f',dark2:'rgba(0,0,0,0.8)',dark3:'rgba(0,0,0,0.48)',card:'#272729',black:'#000000'}},fontFamily:{sans:['system-ui','-apple-system','Segoe UI','Roboto','Helvetica Neue','Arial', 'sans-serif']}}}}
+</script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap">
+<style>
+body{font-family:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+.section-dark{background:#000}
+.section-light{background:#f5f5f7}
+.section-white{background:#fff}
+.pill{border-radius:100px}
+.btn-blue{background:#0071e3;color:#fff;transition:all .2s}
+.btn-blue:hover{background:#0077ed}
+.btn-light{background:#fafafc;color:#1d1d1f;border:1px solid #d2d2d7;transition:all .2s}
+.btn-light:hover{background:#fff}
+.link-blue{color:#0066cc}
+.link-blue:hover{text-decoration:underline}
+.text-balance{text-wrap:balance}
+.hero-h1{font-size:clamp(2.5rem,5vw,3.5rem);font-weight:600;line-height:1.07;letter-spacing:-0.003em}
+.hero-p{font-size:clamp(1.05rem,1.3vw,1.2rem);line-height:1.47;letter-spacing:-0.022em;color:rgba(0,0,0,0.8)}
+.section-h2{font-size:clamp(1.8rem,3vw,2.6rem);font-weight:600;line-height:1.1;letter-spacing:-0.003em}
+.section-h3{font-size:1.3rem;font-weight:600;line-height:1.2}
+.body-text{font-size:1.05rem;line-height:1.6;letter-spacing:-0.022em}
+.caption{font-size:0.88rem;line-height:1.43;letter-spacing:-0.014em;color:rgba(0,0,0,0.48)}
+.card-service{transition:all .3s;border:1px solid #d2d2d7}
+.card-service:hover{box-shadow:0 4px 20px rgba(0,0,0,0.08);transform:translateY(-2px)}
+.testimonial-card{border:1px solid #e8e8ed}
+.hero-gradient{background:linear-gradient(180deg,#000 0%,#1a1a1a 100%)}
+.highlight-blue{color:#0071e3}
+.chevron{display:inline-block;transition:transform .2s}
+a:hover .chevron{transform:translateX(4px)}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-lg border-b border-[#d2d2d7]/30">
+  <div class="max-w-6xl mx-auto px-5 h-11 flex items-center justify-between">
+    <span class="text-sm font-semibold text-[#1d1d1f] tracking-tight">Sonora Digital Corp</span>
+    <div class="flex items-center gap-6">
+      <a href="#servicios" class="text-xs text-[rgba(0,0,0,0.8)] hover:text-[#1d1d1f] transition-colors">Servicios</a>
+      <a href="#resultados" class="text-xs text-[rgba(0,0,0,0.8)] hover:text-[#1d1d1f] transition-colors">Resultados</a>
+      <a href="#planes" class="text-xs text-[rgba(0,0,0,0.8)] hover:text-[#1d1d1f] transition-colors">Planes</a>
+      <a href="https://wa.me/526621234567" target="_blank" class="text-xs font-medium text-white bg-[#0071e3] px-4 py-1.5 pill hover:bg-[#0077ed] transition-colors">Agendar llamada</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO DARK -->
+<section class="hero-gradient pt-16">
+  <div class="max-w-6xl mx-auto px-5 py-24 md:py-32 text-center">
+    <div class="inline-flex items-center gap-2 bg-white/10 border border-white/20 text-white/80 text-[0.65rem] font-medium px-3 py-1 pill mb-6 tracking-wide uppercase">Disponible en todo Mexico</div>
+    <h1 class="hero-h1 text-white text-balance max-w-4xl mx-auto leading-[1.05]">
+      Tu negocio automatizado con IA
+      <br>
+      <span class="text-[#2997ff]">sin contratar a nadie</span>
+    </h1>
+    <p class="hero-p text-white/70 mt-5 max-w-2xl mx-auto">
+      Asistentes digitales que venden por ti. Contenido que se publica solo. Clientes que reciben respuesta al instante. Una agencia completa de automatización en un solo plan mensual.
+    </p>
+    <div class="flex flex-wrap justify-center gap-3 mt-8">
+      <a href="https://wa.me/526621234567" target="_blank" class="text-base font-medium text-white bg-[#0071e3] px-8 py-3.5 pill hover:bg-[#0077ed] transition-colors inline-flex items-center gap-2">
+        &#x1F4AC; Quiero automatizar mi negocio
+      </a>
+      <a href="#servicios" class="text-base font-medium text-[#1d1d1f] bg-[#e8e8ed] px-8 py-3.5 pill hover:bg-[#d2d2d7] transition-colors">
+        &#x2193; Ver servicios
+      </a>
+    </div>
+    <div class="flex flex-wrap justify-center gap-8 mt-12 text-[0.75rem] text-white/50">
+      <span>&#x2713; <strong class="text-white/80">+15</strong> negocios automatizados</span>
+      <span>&#x2713; <strong class="text-white/80">97%</strong> tiempo recuperado promedio</span>
+      <span>&#x2713; <strong class="text-white/80">3.2x</strong> incremento en ventas</span>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<section class="section-white border-b border-[#d2d2d7]/30">
+  <div class="max-w-4xl mx-auto px-5 py-8 text-center">
+    <p class="text-[0.65rem] uppercase tracking-[0.08em] text-[rgba(0,0,0,0.48)] font-medium">Usado por equipos en</p>
+    <div class="flex flex-wrap justify-center gap-6 mt-3 text-[0.75rem] text-[rgba(0,0,0,0.48)] font-medium">
+      <span>E-commerce</span><span class="w-px h-4 bg-[#d2d2d7]"></span>
+      <span>Servicios profesionales</span><span class="w-px h-4 bg-[#d2d2d7]"></span>
+      <span>Restaurantes</span><span class="w-px h-4 bg-[#d2d2d7]"></span>
+      <span>Agencias creativas</span><span class="w-px h-4 bg-[#d2d2d7]"></span>
+      <span>Despachos contables</span>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN POINTS (light gray section) -->
+<section class="section-light py-16 md:py-20">
+  <div class="max-w-6xl mx-auto px-5">
+    <div class="text-center mb-14">
+      <p class="text-[0.65rem] uppercase tracking-[0.08em] text-[rgba(0,0,0,0.48)] font-medium mb-3">Diagnostico gratuito</p>
+      <h2 class="section-h2 text-[#1d1d1f]">¿Te identificas con alguno?</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto">
+      <div class="bg-white border border-[#d2d2d7] rounded-xl p-6 text-center">
+        <div class="text-3xl mb-3">&#x23F0;</div>
+        <h3 class="text-sm font-semibold text-[#1d1d1f] mb-1">No tienes tiempo</h3>
+        <p class="text-xs text-[rgba(0,0,0,0.48)] leading-relaxed">Apagando incendios todo el dia. Contestando mensajes, subiendo posts, persiguiendo clientes. Tu negocio te tiene a ti.</p>
+      </div>
+      <div class="bg-white border border-[#d2d2d7] rounded-xl p-6 text-center">
+        <div class="text-3xl mb-3">&#x1F4B0;</div>
+        <h3 class="text-sm font-semibold text-[#1d1d1f] mb-1">Dejas dinero en la mesa</h3>
+        <p class="text-xs text-[rgba(0,0,0,0.48)] leading-relaxed">Leads que preguntan a las 10pm y nadie contesta. Clientes que se enfrian. Ventas que se pierden mientras duermes.</p>
+      </div>
+      <div class="bg-white border border-[#d2d2d7] rounded-xl p-6 text-center">
+        <div class="text-3xl mb-3">&#x1F4F1;</div>
+        <h3 class="text-sm font-semibold text-[#1d1d1f] mb-1">Redes te consumen</h3>
+        <p class="text-xs text-[rgba(0,0,0,0.48)] leading-relaxed">Contenido diario, stories, respuestas, trends... un trabajo de tiempo completo que no te paga. Y si no publicas, no existes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SOLUTION (white) -->
+<section class="section-white py-16 md:py-20" id="servicios">
+  <div class="max-w-6xl mx-auto px-5">
+    <div class="text-center mb-14">
+      <p class="text-[0.65rem] uppercase tracking-[0.08em] text-[#0071e3] font-semibold mb-3">Lo que hacemos</p>
+      <h2 class="section-h2 text-[#1d1d1f]">Una agencia de automatizacion<br><span class="text-[#0071e3]">en un solo plan</span></h2>
+      <p class="body-text text-[rgba(0,0,0,0.64)] mt-3 max-w-xl mx-auto">No vendemos cursos ni promesas. Instalamos, configuramos y mantenemos tecnologia que trabaja por ti 24/7.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+      <div class="card-service bg-white rounded-2xl p-7 text-center">
+        <div class="w-12 h-12 bg-[#0071e3]/10 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-2xl">&#x1F916;</span></div>
+        <h3 class="section-h3 text-[#1d1d1f] mb-2">Asistente Digital</h3>
+        <p class="text-xs text-[rgba(0,0,0,0.48)] leading-relaxed mb-4">Un agente AI que responde WhatsApp, emails y llamadas automaticamente. Agenda citas, califica leads y cierra ventas. Conoce tu negocio, tu tono y tus precios.</p>
+        <p class="text-[0.65rem] uppercase tracking-wider text-[#0071e3] font-semibold">Desde $2,500/mes</p>
+      </div>
+      <div class="card-service bg-white rounded-2xl p-7 text-center">
+        <div class="w-12 h-12 bg-[#0071e3]/10 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-2xl">&#x1F517;</span></div>
+        <h3 class="section-h3 text-[#1d1d1f] mb-2">Conexiones MCP</h3>
+        <p class="text-xs text-[rgba(0,0,0,0.48)] leading-relaxed mb-4">Todo tu ecosistema conectado: CRM, WhatsApp, Email, Redes Sociales, calendario. Una inteligencia central que orquesta cada herramienta sin que toques un boton.</p>
+        <p class="text-[0.65rem] uppercase tracking-wider text-[#0071e3] font-semibold">Desde $3,000/mes</p>
+      </div>
+      <div class="card-service bg-white rounded-2xl p-7 text-center">
+        <div class="w-12 h-12 bg-[#0071e3]/10 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-2xl">&#x1F4F7;</span></div>
+        <h3 class="section-h3 text-[#1d1d1f] mb-2">Contenido Automatico</h3>
+        <p class="text-xs text-[rgba(0,0,0,0.48)] leading-relaxed mb-4">Publicaciones diarias en todas tus redes. Copy, imagenes y videos generados por IA que conoce tu marca. Programacion y publicacion automatica. Tu marca siempre activa.</p>
+        <p class="text-[0.65rem] uppercase tracking-wider text-[#0071e3] font-semibold">Desde $1,800/mes</p>
+      </div>
+      <div class="card-service bg-white rounded-2xl p-7 text-center">
+        <div class="w-12 h-12 bg-[#0071e3]/10 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-2xl">&#x1F4C8;</span></div>
+        <h3 class="section-h3 text-[#1d1d1f] mb-2">Embudo de Ventas IA</h3>
+        <p class="text-xs text-[rgba(0,0,0,0.48)] leading-relaxed mb-4">Seguimiento automatico de leads. Recordatorios inteligentes, ofertas personalizadas segun comportamiento, y cierre asistido. Convierte mas sin esforzarte mas.</p>
+        <p class="text-[0.65rem] uppercase tracking-wider text-[#0071e3] font-semibold">Desde $2,000/mes</p>
+      </div>
+      <div class="card-service bg-white rounded-2xl p-7 text-center">
+        <div class="w-12 h-12 bg-[#0071e3]/10 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-2xl">&#x1F30D;</span></div>
+        <h3 class="section-h3 text-[#1d1d1f] mb-2">Redes Autonomas</h3>
+        <p class="text-xs text-[rgba(0,0,0,0.48)] leading-relaxed mb-4">Gestion completa de redes sociales. Publicacion automatica, respuestas inteligentes a comentarios y DM, analitica semanal. Tu presencia digital sin que abras la app.</p>
+        <p class="text-[0.65rem] uppercase tracking-wider text-[#0071e3] font-semibold">Desde $1,800/mes</p>
+      </div>
+      <div class="card-service bg-white rounded-2xl p-7 text-center md:col-span-1">
+        <div class="w-12 h-12 bg-[#0071e3]/10 rounded-full flex items-center justify-center mx-auto mb-4"><span class="text-2xl">&#x1F680;</span></div>
+        <h3 class="section-h3 text-[#1d1d1f] mb-2">Suite Completa</h3>
+        <p class="text-xs text-[rgba(0,0,0,0.48)] leading-relaxed mb-4">Todo incluido: asistente + contenido + ventas + redes + MCP + soporte dedicado. Una plataforma unificada que trabaja 24/7. Recupera tu tiempo y multiplica ingresos.</p>
+        <p class="text-[0.65rem] uppercase tracking-wider text-[#0071e3] font-semibold">Desde $6,900/mes</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DARK CTA BAND -->
+<section class="section-dark py-14">
+  <div class="max-w-4xl mx-auto px-5 text-center">
+    <p class="text-white text-lg font-medium leading-relaxed max-w-2xl mx-auto">
+      "La gente no compra productos, compra resultados. Y el resultado que vendemos es simple: <span class="text-[#2997ff]">mas dinero en menos tiempo con cero esclavitud digital</span>."
+    </p>
+    <p class="text-white/40 text-xs mt-4 tracking-wide">&mdash; Brian Tracy</p>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section class="section-white py-16 md:py-20" id="resultados">
+  <div class="max-w-6xl mx-auto px-5">
+    <div class="text-center mb-14">
+      <p class="text-[0.65rem] uppercase tracking-[0.08em] text-[#0071e3] font-semibold mb-3">Resultados</p>
+      <h2 class="section-h2 text-[#1d1d1f]">Lo que dicen <span class="text-[#0071e3]">nuestros clientes</span></h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-5 max-w-5xl mx-auto">
+      <div class="testimonial-card bg-white rounded-xl p-6">
+        <div class="flex gap-1 text-[#0071e3] text-sm mb-3">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+        <p class="text-xs text-[rgba(0,0,0,0.64)] leading-relaxed italic">"Deje de contestar WhatsApp yo mismo. El asistente agenda, cotiza y cierra por mi. Recupere 4 horas al dia. Mis ventas subieron 40%."</p>
+        <div class="flex items-center gap-3 mt-4 pt-4 border-t border-[#e8e8ed]">
+          <div class="w-8 h-8 rounded-full bg-[#0071e3] flex items-center justify-center text-white text-xs font-semibold">C</div>
+          <div><p class="text-xs font-semibold text-[#1d1d1f]">Carlos M.</p><p class="text-[0.6rem] text-[rgba(0,0,0,0.48)]">Director Comercial</p></div>
+        </div>
+      </div>
+      <div class="testimonial-card bg-white rounded-xl p-6">
+        <div class="flex gap-1 text-[#0071e3] text-sm mb-3">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+        <p class="text-xs text-[rgba(0,0,0,0.64)] leading-relaxed italic">"Publicaba 2 veces por semana y era un suplicio. Ahora mi negocio genera 14 publicaciones semanales automaticas. Engagement subio 300%."</p>
+        <div class="flex items-center gap-3 mt-4 pt-4 border-t border-[#e8e8ed]">
+          <div class="w-8 h-8 rounded-full bg-[#0071e3] flex items-center justify-center text-white text-xs font-semibold">M</div>
+          <div><p class="text-xs font-semibold text-[#1d1d1f]">Maria F.</p><p class="text-[0.6rem] text-[rgba(0,0,0,0.48)]">Fundadora, Moda</p></div>
+        </div>
+      </div>
+      <div class="testimonial-card bg-white rounded-xl p-6">
+        <div class="flex gap-1 text-[#0071e3] text-sm mb-3">&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</div>
+        <p class="text-xs text-[rgba(0,0,0,0.64)] leading-relaxed italic">"Pago $6,900 y vale cada peso. Mi equipo se redujo y mis ventas se duplicaron. No es magia, es IA bien aplicada."</p>
+        <div class="flex items-center gap-3 mt-4 pt-4 border-t border-[#e8e8ed]">
+          <div class="w-8 h-8 rounded-full bg-[#0071e3] flex items-center justify-center text-white text-xs font-semibold">R</div>
+          <div><p class="text-xs font-semibold text-[#1d1d1f]">Ricardo G.</p><p class="text-[0.6rem] text-[rgba(0,0,0,0.48)]">CEO, Startup Tech</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OBJECTIONS -->
+<section class="section-light py-16">
+  <div class="max-w-4xl mx-auto px-5">
+    <div class="text-center mb-10">
+      <p class="text-[0.65rem] uppercase tracking-[0.08em] text-[rgba(0,0,0,0.48)] font-medium mb-3">Objeciones reales</p>
+      <h2 class="section-h2 text-[#1d1d1f]">Lo que seguro <span class="text-[#0071e3]">estas pensando</span></h2>
+    </div>
+    <div class="space-y-3 max-w-2xl mx-auto">
+      <div class="bg-white border border-[#d2d2d7] rounded-xl p-5 flex gap-4 items-start">
+        <span class="text-[#0071e3] font-bold text-lg flex-shrink-0">&#x2753;</span>
+        <div>
+          <p class="text-sm font-semibold text-[#1d1d1f] mb-1">¿No es caro?</p>
+          <p class="text-xs text-[rgba(0,0,0,0.48)] leading-relaxed">Un empleado de tiempo completo cuesta $12,000+ al mes. Nuestro asistente cuesta menos que medio salario minimo y trabaja 24/7 sin prestaciones, sin ausencias, sin rotacion. No es un gasto. Es una inversion con retorno medible.</p>
+        </div>
+      </div>
+      <div class="bg-white border border-[#d2d2d7] rounded-xl p-5 flex gap-4 items-start">
+        <span class="text-[#0071e3] font-bold text-lg flex-shrink-0">&#x2753;</span>
+        <div>
+          <p class="text-sm font-semibold text-[#1d1d1f] mb-1">¿Necesito saber tecnologia?</p>
+          <p class="text-xs text-[rgba(0,0,0,0.48)] leading-relaxed">Cero absoluto. Nosotros hacemos todo. Tu solo recibes los resultados. Si sabes usar WhatsApp, ya sabes usar nuestro sistema.</p>
+        </div>
+      </div>
+      <div class="bg-white border border-[#d2d2d7] rounded-xl p-5 flex gap-4 items-start">
+        <span class="text-[#0071e3] font-bold text-lg flex-shrink-0">&#x2753;</span>
+        <div>
+          <p class="text-sm font-semibold text-[#1d1d1f] mb-1">¿Y si no funciona?</p>
+          <p class="text-xs text-[rgba(0,0,0,0.48)] leading-relaxed">Primera semana gratis. Sin contratos forzosos. Si no ves resultados en 14 dias, cancelas y no pagas nada. El riesgo es completamente nuestro.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section class="section-white py-16 md:py-20" id="planes">
+  <div class="max-w-5xl mx-auto px-5">
+    <div class="text-center mb-14">
+      <p class="text-[0.65rem] uppercase tracking-[0.08em] text-[#0071e3] font-semibold mb-3">Planes</p>
+      <h2 class="section-h2 text-[#1d1d1f]">Elige tu nivel de <span class="text-[#0071e3]">automatizacion</span></h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-5 max-w-4xl mx-auto">
+      <div class="border border-[#d2d2d7] rounded-2xl p-7 bg-white text-center">
+        <p class="text-[0.65rem] uppercase tracking-wider text-[rgba(0,0,0,0.48)] font-semibold mb-2">Starter</p>
+        <h3 class="text-3xl font-bold text-[#1d1d1f] mb-1">$1,500</h3>
+        <p class="text-xs text-[rgba(0,0,0,0.48)] mb-5">/mes</p>
+        <ul class="text-xs text-left space-y-2 mb-6">
+          <li class="flex items-start gap-2"><span class="text-[#0071e3] mt-0.5">&#x2713;</span> Asistente WhatsApp basico</li>
+          <li class="flex items-start gap-2"><span class="text-[#0071e3] mt-0.5">&#x2713;</span> Respuestas automaticas</li>
+          <li class="flex items-start gap-2"><span class="text-[#0071e3] mt-0.5">&#x2713;</span> Agenda de citas simple</li>
+          <li class="flex items-start gap-2 text-[rgba(0,0,0,0.24)]"><span class="mt-0.5">&#x2014;</span> Contenido automatico</li>
+          <li class="flex items-start gap-2 text-[rgba(0,0,0,0.24)]"><span class="mt-0.5">&#x2014;</span> MCP Connections</li>
+          <li class="flex items-start gap-2 text-[rgba(0,0,0,0.24)]"><span class="mt-0.5">&#x2014;</span> Embudo de ventas IA</li>
+        </ul>
+        <a href="https://wa.me/526621234567?text=Quiero%20plan%20Starter" target="_blank" class="block text-sm font-medium text-[#1d1d1f] bg-[#e8e8ed] px-6 py-3 pill hover:bg-[#d2d2d7] transition-colors">Lo quiero</a>
+      </div>
+      <div class="border-2 border-[#0071e3] rounded-2xl p-7 bg-white text-center relative">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#0071e3] text-white text-[0.55rem] font-semibold px-3 py-1 pill uppercase tracking-wider">Popular</div>
+        <p class="text-[0.65rem] uppercase tracking-wider text-[rgba(0,0,0,0.48)] font-semibold mb-2">Profesional</p>
+        <h3 class="text-3xl font-bold text-[#1d1d1f] mb-1">$4,500</h3>
+        <p class="text-xs text-[rgba(0,0,0,0.48)] mb-5">/mes</p>
+        <ul class="text-xs text-left space-y-2 mb-6">
+          <li class="flex items-start gap-2"><span class="text-[#0071e3] mt-0.5">&#x2713;</span> Asistente digital completo</li>
+          <li class="flex items-start gap-2"><span class="text-[#0071e3] mt-0.5">&#x2713;</span> Contenido redes automatico</li>
+          <li class="flex items-start gap-2"><span class="text-[#0071e3] mt-0.5">&#x2713;</span> MCP Connections</li>
+          <li class="flex items-start gap-2"><span class="text-[#0071e3] mt-0.5">&#x2713;</span> Embudo de ventas IA</li>
+          <li class="flex items-start gap-2"><span class="text-[#0071e3] mt-0.5">&#x2713;</span> Redes autonomas</li>
+          <li class="flex items-start gap-2"><span class="text-[#0071e3] mt-0.5">&#x2713;</span> Soporte prioritario</li>
+        </ul>
+        <a href="https://wa.me/526621234567?text=Quiero%20plan%20Profesional" target="_blank" class="block text-sm font-medium text-white bg-[#0071e3] px-6 py-3 pill hover:bg-[#0077ed] transition-colors">Elegir Profesional</a>
+      </div>
+      <div class="border border-[#d2d2d7] rounded-2xl p-7 bg-white text-center">
+        <p class="text-[0.65rem] uppercase tracking-wider text-[rgba(0,0,0,0.48)] font-semibold mb-2">Enterprise</p>
+        <h3 class="text-3xl font-bold text-[#1d1d1f] mb-1">$6,900</h3>
+        <p class="text-xs text-[rgba(0,0,0,0.48)] mb-5">/mes</p>
+        <ul class="text-xs text-left space-y-2 mb-6">
+          <li class="flex items-start gap-2"><span class="text-[#0071e3] mt-0.5">&#x2713;</span> Todo el plan Profesional</li>
+          <li class="flex items-start gap-2"><span class="text-[#0071e3] mt-0.5">&#x2713;</span> Suite completa integrada</li>
+          <li class="flex items-start gap-2"><span class="text-[#0071e3] mt-0.5">&#x2713;</span> 5 asistentes digitales</li>
+          <li class="flex items-start gap-2"><span class="text-[#0071e3] mt-0.5">&#x2713;</span> Workflows personalizados</li>
+          <li class="flex items-start gap-2"><span class="text-[#0071e3] mt-0.5">&#x2713;</span> Capacitacion al equipo</li>
+          <li class="flex items-start gap-2"><span class="text-[#0071e3] mt-0.5">&#x2713;</span> Soporte 24/7 dedicado</li>
+        </ul>
+        <a href="https://wa.me/526621234567?text=Quiero%20plan%20Enterprise" target="_blank" class="block text-sm font-medium text-[#1d1d1f] bg-[#e8e8ed] px-6 py-3 pill hover:bg-[#d2d2d7] transition-colors">Hablamos</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA DARK -->
+<section class="section-dark py-20">
+  <div class="max-w-4xl mx-auto px-5 text-center">
+    <p class="text-[0.65rem] uppercase tracking-[0.08em] text-white/40 font-medium mb-4">Sin riesgo</p>
+    <h2 class="section-h2 text-white mb-3">Primera semana gratis.<br><span class="text-[#2997ff]">Cancela cuando quieras.</span></h2>
+    <p class="body-text text-white/60 max-w-lg mx-auto mb-8">No esperes a que tu competencia te gane. Agenda una llamada de 15 minutos y te mostramos casos reales de negocios como el tuyo. Sin compromiso.</p>
+    <a href="https://wa.me/526621234567" target="_blank" class="text-base font-medium text-white bg-[#0071e3] px-10 py-4 pill hover:bg-[#0077ed] transition-colors inline-flex items-center gap-2">
+      &#x1F4AC; Agenda tu llamada gratuita
+    </a>
+    <p class="text-[0.65rem] text-white/30 mt-4">Respuesta en menos de 5 minutos</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section-light py-16">
+  <div class="max-w-2xl mx-auto px-5 text-center">
+    <p class="text-[0.65rem] uppercase tracking-[0.08em] text-[rgba(0,0,0,0.48)] font-medium mb-10">Preguntas frecuentes</p>
+    <div class="text-left space-y-4">
+      <div class="border-b border-[#d2d2d7] pb-4">
+        <p class="text-sm font-semibold text-[#1d1d1f] mb-1">¿Que incluye la primera semana gratis?</p>
+        <p class="text-xs text-[rgba(0,0,0,0.48)]">Diagnostico de tu negocio, configuracion del asistente basico, y 7 dias de operacion sin costo. Si no ves valor, cancelas antes del dia 7 y no pagas nada.</p>
+      </div>
+      <div class="border-b border-[#d2d2d7] pb-4">
+        <p class="text-sm font-semibold text-[#1d1d1f] mb-1">¿Tengo que firmar contrato?</p>
+        <p class="text-xs text-[rgba(0,0,0,0.48)]">No. Mes a mes. Cancela cuando quieras sin penalizacion. Confiamos tanto en nuestro servicio que no necesitamos atarte con contratos.</p>
+      </div>
+      <div class="border-b border-[#d2d2d7] pb-4">
+        <p class="text-sm font-semibold text-[#1d1d1f] mb-1">¿Mis datos estan seguros?</p>
+        <p class="text-xs text-[rgba(0,0,0,0.48)]">100%. Todo corre en infraestructura propia con SSL, contenedores aislados y acceso restringido. Nunca compartimos ni vendemos informacion de clientes.</p>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-[#1d1d1f] mb-1">¿Cuanto tiempo toma ver resultados?</p>
+        <p class="text-xs text-[rgba(0,0,0,0.48)]">El asistente empieza a funcionar desde el dia 1. Clientes reportan resultados significativos en las primeras 2 semanas. El contenido automatico y embudos de venta toman de 2 a 4 semanas en optimizarse.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="section-dark py-10">
+  <div class="max-w-6xl mx-auto px-5">
+    <div class="flex flex-wrap justify-between items-center gap-4 mb-6">
+      <p class="text-xs text-white/40">Sonora Digital Corp &mdash; Automatizacion inteligente</p>
+      <div class="flex gap-4 text-xs text-white/40">
+        <a href="https://sonoradigitalcorp.com" class="hover:text-white/60 transition-colors">sonoradigitalcorp.com</a>
+        <a href="https://wa.me/526621234567" class="hover:text-white/60 transition-colors">WhatsApp</a>
+      </div>
+    </div>
+    <div class="border-t border-white/10 pt-6 text-center">
+      <p class="text-[0.6rem] text-white/30 leading-relaxed">Resultados pueden variar. Testimonios son de clientes reales. Primera semana gratis sin compromiso. &copy; 2026 Sonora Digital Corp. Todos los derechos reservados.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',e=>{e.preventDefault();const id=a.getAttribute('href').slice(1);if(id){const el=document.getElementById(id);if(el)el.scrollIntoView({behavior:'smooth'})}})})
+</script>
+
+</body>
+</html>

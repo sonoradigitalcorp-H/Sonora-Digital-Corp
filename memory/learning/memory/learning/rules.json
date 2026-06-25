@@ -1,0 +1,45 @@
+{
+  "version": "1.4.0",
+  "updated": "2026-06-25",
+  "rules": [
+    {
+      "id": "R-001",
+      "type": "MUST",
+      "category": "memory",
+      "rule": "When your human tells you something important, STOP and write it to a file BEFORE continuing the conversation",
+      "reason": "Context can be lost to compaction. Files survive, memory doesn't.",
+      "created": "2026-06-25",
+      "violations": 0,
+      "last_checked": "2026-06-25",
+      "last_validated": "2026-06-25",
+      "validation_count": 0,
+      "confidence_score": 1.0
+    },
+    {
+      "id": "R-002",
+      "type": "MUST",
+      "category": "memory",
+      "rule": "Every 2 significant operations, save findings to a file. Don't accumulate context in your head.",
+      "reason": "Compaction can happen at any time. Externalize immediately.",
+      "created": "2026-06-25",
+      "violations": 0,
+      "last_checked": "2026-06-25",
+      "last_validated": "2026-06-25",
+      "validation_count": 0,
+      "confidence_score": 1.0
+    },
+    {
+      "id": "R-003",
+      "type": "MUST",
+      "category": "learning",
+      "rule": "After every debugging session or mistake, write an event to memory/learning/events.jsonl",
+      "reason": "Learning only works if events are captured. This is the foundation.",
+      "created": "2026-06-25",
+      "violations": 0,
+      "last_checked": "2026-06-25",
+      "last_validated": "2026-06-25",
+      "validation_count": 0,
+      "confidence_score": 1.0
+    }
+  ]
+}
