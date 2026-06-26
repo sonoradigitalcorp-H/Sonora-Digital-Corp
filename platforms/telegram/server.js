@@ -107,14 +107,16 @@ const botInstances = new Map(); // tenantId → Telegraf instance
 function createTelegrafInstance(tenantId, token) {
   const bot = new Telegraf(token);
 
+  const greetings = {
+    'abe-fenix': '🎵 *ABE Fenix* — Música que transforma.\n\nSoy el asistente de Abraham. Aquí puedes:\n• Saber sobre mi música\n• Ver próximos lanzamientos\n• Conectar con mi equipo\n\n_¿En qué te ayudo hoy?_',
+  };
   bot.start(async ctx => {
     try {
-      await ctx.reply(
+      const greeting = greetings[tenantId] ||
         `✨ *Hola, soy HERMES*\n\nTu asistente contable inteligente, disponible las 24 horas.\n\n` +
         `Cuéntame lo que necesitas — facturas, impuestos, nómina, importaciones o cualquier duda fiscal.\n\n` +
-        `_Solo escríbeme como le escribirías a un contador de confianza._`,
-        { parse_mode: 'Markdown' }
-      );
+        `_Solo escríbeme como le escribirías a un contador de confianza._`;
+      await ctx.reply(greeting, { parse_mode: 'Markdown' });
     } catch (err) {
       log.error('[bot.start] error:', { err: err.message });
     }
@@ -358,6 +360,12 @@ const DEEPSEEK_BOT_TOKEN = process.env.DEEPSEEK_BOT_TOKEN;
 if (DEEPSEEK_BOT_TOKEN) {
   log.info('[clawd] Bot iniciando...');
   setTimeout(() => launchBot('clawd', DEEPSEEK_BOT_TOKEN), 60000);
+}
+
+const ABE_FENIX_BOT_TOKEN = process.env.ABE_FENIX_BOT_TOKEN;
+if (ABE_FENIX_BOT_TOKEN) {
+  log.info('[abe-fenix] Bot iniciando...');
+  setTimeout(() => launchBot('abe-fenix', ABE_FENIX_BOT_TOKEN), 70000);
 }
 
 const PORT = process.env.PORT || 3003;
