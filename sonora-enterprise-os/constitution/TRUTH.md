@@ -11,8 +11,9 @@ All agents (OpenClaw, Hermes, Mystic, JARVIS) MUST follow these rules.
 | `~/jarvis/` | `/home/mystic/sonora-digital-corp/` |
 | `~/sdcorp/` | `/home/mystic/sonora-digital-corp/` |
 | `$JARVIS_HOME` | `/home/mystic/sonora-digital-corp/` |
-| `~/SonoraDigitalCorp-Yami/` | `/home/mystic/SonoraDigitalCorp-Yami/` |
-| `$YAMI_HOME` | `/home/mystic/SonoraDigitalCorp-Yami/` |
+| `~/SonoraDigitalCorp-Yami/` | `/home/mystic/sonora-digital-corp/products/yami/` |
+| `$YAMI_HOME` | `/home/mystic/sonora-digital-corp/products/yami/` |
+| Yami repo (Mystic+Noel) | `/home/mystic/sonora-digital-corp/products/yami/` |
 
 ## Key Locations
 
@@ -27,7 +28,7 @@ All agents (OpenClaw, Hermes, Mystic, JARVIS) MUST follow these rules.
 | Docker compose | `infra/docker-compose.yml` |
 | Tests | `tests/` |
 | Scripts | `scripts/` |
-| Yami repo (Mystic+Noel) | `/home/mystic/SonoraDigitalCorp-Yami/` |
+| Yami product | `products/yami/` |
 
 ## Services
 

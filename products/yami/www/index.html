@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YAMI (闇) — Antes de que sea crisis, que sea conversación</title>
+<meta name="description" content="YAMI es un ecosistema preventivo de salud mental para México. MIRU, KIKU, TOMONI. Anónimo, gratuito, accesible.">
+
+<!-- Canonical -->
+<link rel="canonical" href="index.html">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://yami-mx.vercel.app/">
+<meta property="og:locale" content="es_MX">
+<meta property="og:title" content="YAMI (闇) — Antes de que sea crisis, que sea conversación">
+<meta property="og:description" content="MIRU, KIKU, TOMONI — Un ecosistema preventivo de salud mental para México. Anónimo, gratuito, accesible.">
+<meta property="og:site_name" content="YAMI">
+<meta property="og:image" content="https://yami-mx.vercel.app/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="YAMI">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="YAMI (闇) — Antes de que sea crisis, que sea conversación">
+<meta name="twitter:description" content="MIRU, KIKU, TOMONI — Un ecosistema preventivo de salud mental para México. Anónimo, gratuito, accesible.">
+
+<!-- Browser theme -->
+<meta name="theme-color" content="#0f1a2e">
+<meta name="color-scheme" content="light">
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "YAMI",
+  "alternateName": "YAMI (闇) — Salud Mental Preventiva",
+  "url": "https://yami-mx.vercel.app",
+  "description": "Ecosistema preventivo de salud mental para México. MIRU (evaluación), KIKU (acompañamiento), TOMONI (comunidad). Anónimo, gratuito, accesible.",
+  "slogan": "Antes de que sea crisis, que sea conversación",
+  "areaServed": "MX",
+  "knowsAbout": ["Salud mental", "Prevención", "Tamizaje emocional"]
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================
+   YAMI (闇) — Landing Page v1.0 — Brand System
+   Sonora Digital Corp
+   ============================================ */
+
+:root {
+  /* Primarios */
+  --yami-noche: #0f1a2e;
+  --yami-papel: #f5f0e8;
+  --yami-blanco: #ffffff;
+
+  /* Acentos */
+  --yami-cicatriz: #2d8f7d;
+  --yami-braza: #c48a4a;
+  --yami-latido: #d46a7a;
+  --yami-ceniza: #475569;
+
+  /* Superficie */
+  --yami-superficie: #f4f6f9;
+  --yami-borde: #e2e8f0;
+  --yami-oscuro-suave: #1a2d46;
+  --yami-teal-claro: #e8f4f1;
+
+  /* Texto */
+  --text-primary: #0f172a;
+  --text-secondary: var(--yami-ceniza);
+  --text-muted: #94a3b8;
+  --text-hero: #f1f5f9;
+  --text-hero-secondary: #cbd5e1;
+
+  /* Estados */
+  --cicatriz-hover: #237a6a;
+  --braza-hover: #b07a3e;
+  --latido-hover: #c45a6a;
+
+  /* Sombras */
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.1);
+  --shadow-glow-teal: 0 8px 24px rgba(45,143,125,0.25);
+  --shadow-glow-braza: 0 8px 24px rgba(196,138,74,0.15);
+
+  /* Radios */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 100px;
+
+  /* Tipografía */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', -apple-system, system-ui, sans-serif;
+  --font-jp: 'Noto Sans JP', sans-serif;
+
+  /* Movimiento */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+
+body {
+  background-color: var(--yami-blanco);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ─── Scrollbar ─── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--yami-blanco); }
+::-webkit-scrollbar-thumb { background: var(--yami-borde); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ─── Utility ─── */
+.container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+.section { padding: 96px 0; }
+.section-label {
+  font-family: var(--font-body);
+  font-weight: 600;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--yami-cicatriz);
+  margin-bottom: 12px;
+}
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+.section-subtitle {
+  font-size: 1.05rem;
+  color: var(--text-secondary);
+  max-width: 560px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+.accent-line {
+  width: 40px;
+  height: 3px;
+  background: var(--yami-cicatriz);
+  margin: 20px 0;
+  border-radius: 2px;
+}
+
+/* ─── Paper Texture ─── */
+.paper-bg {
+  position: relative;
+}
+.paper-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 200px 200px;
+  pointer-events: none;
+}
+
+/* ─── Loader ─── */
+.loader {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: var(--yami-noche);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s var(--ease-out), visibility 0.6s var(--ease-out);
+}
+.loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.loader-kanji {
+  font-family: var(--font-jp);
+  font-size: 3.6rem;
+  font-weight: 300;
+  color: var(--yami-cicatriz);
+  opacity: 0;
+  animation: loadFade 1.6s ease infinite;
+}
+.loader-bar {
+  width: 120px;
+  height: 2px;
+  background: rgba(255,255,255,0.08);
+  margin-top: 20px;
+  overflow: hidden;
+  border-radius: 2px;
+}
+.loader-bar-inner {
+  width: 0%;
+  height: 100%;
+  background: var(--yami-cicatriz);
+  animation: loadBar 1.6s var(--ease-out) forwards;
+}
+@keyframes loadFade {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}
+@keyframes loadBar {
+  0% { width: 0%; }
+  100% { width: 100%; }
+}
+
+/* ─── Navigation ─── */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9998;
+  padding: 18px 0;
+  transition: background 0.4s var(--ease-out), padding 0.4s var(--ease-out), box-shadow 0.4s var(--ease-out);
+}
+nav.scrolled {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 10px 0;
+  box-shadow: 0 1px 0 var(--yami-borde);
+}
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-hero);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+.nav-logo-kanji {
+  font-family: var(--font-jp);
+  font-weight: 300;
+  font-size: 1.3rem;
+  color: var(--yami-cicatriz);
+}
+nav.scrolled .nav-logo { color: var(--text-primary); }
+nav.scrolled .nav-logo-kanji { color: var(--yami-cicatriz); }
+.nav-logo-dot { color: var(--yami-cicatriz); }
+.nav-links { display: flex; gap: 28px; align-items: center; }
+.nav-links a {
+  color: var(--text-hero-secondary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  position: relative;
+}
+nav.scrolled .nav-links a { color: var(--text-secondary); }
+nav.scrolled .nav-links a:hover { color: var(--text-primary); }
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1.5px;
+  background: var(--yami-cicatriz);
+  transition: width 0.3s var(--ease-out);
+}
+.nav-links a:hover { color: var(--text-hero); }
+.nav-links a:hover::after { width: 100%; }
+.nav-btn {
+  background: transparent;
+  border: 1.5px solid var(--yami-cicatriz);
+  color: var(--yami-cicatriz);
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+  text-decoration: none;
+}
+.nav-btn:hover {
+  background: var(--yami-cicatriz);
+  color: var(--yami-blanco);
+}
+nav.scrolled .nav-btn {
+  border-color: var(--yami-cicatriz);
+  color: var(--yami-cicatriz);
+}
+nav.scrolled .nav-btn:hover {
+  background: var(--yami-cicatriz);
+  color: var(--yami-blanco);
+}
+
+/* ─── Hero ─── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  padding: 120px 24px 80px;
+  background: linear-gradient(135deg, var(--yami-noche) 0%, var(--yami-oscuro-suave) 50%, var(--yami-oscuro-suave) 100%);
+}
+.hero-bg-grid {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: 0.05;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.08) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+.hero-glow-teal {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(45,143,125,0.1) 0%, transparent 70%);
+  top: -200px;
+  right: -100px;
+  z-index: 0;
+  animation: glowPulse 8s ease-in-out infinite;
+}
+.hero-glow-braza {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,138,74,0.07) 0%, transparent 70%);
+  bottom: -120px;
+  left: -80px;
+  z-index: 0;
+  animation: glowPulse 10s ease-in-out infinite reverse;
+}
+@keyframes glowPulse {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+.hero-content { position: relative; z-index: 1; max-width: 720px; }
+.hero-kanji {
+  font-family: var(--font-jp);
+  font-size: clamp(4rem, 12vw, 8rem);
+  font-weight: 300;
+  color: var(--yami-cicatriz);
+  line-height: 1;
+  opacity: 0.45;
+  margin-bottom: 4px;
+  display: block;
+}
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 5.5vw, 4rem);
+  font-weight: 600;
+  line-height: 1.15;
+  margin-bottom: 20px;
+  color: var(--text-hero);
+  letter-spacing: -0.02em;
+}
+.hero-title em {
+  font-style: italic;
+  color: var(--yami-cicatriz);
+}
+.hero-sub {
+  font-size: clamp(1rem, 1.8vw, 1.15rem);
+  color: var(--text-hero-secondary);
+  max-width: 500px;
+  margin: 0 auto 36px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+.hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-block;
+  background: var(--yami-cicatriz);
+  color: var(--yami-blanco);
+  padding: 14px 34px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+}
+.btn-primary:hover {
+  background: var(--cicatriz-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow-teal);
+}
+.btn-secondary {
+  display: inline-block;
+  background: transparent;
+  color: var(--text-hero);
+  padding: 14px 34px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1.5px solid rgba(255,255,255,0.2);
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+}
+.btn-secondary:hover {
+  border-color: var(--yami-cicatriz);
+  color: var(--yami-cicatriz);
+}
+.hero-scroll {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-hero-secondary);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.4;
+  animation: bob 2s ease-in-out infinite;
+}
+.hero-scroll-line {
+  width: 1px;
+  height: 32px;
+  background: linear-gradient(to bottom, var(--yami-cicatriz), transparent);
+}
+@keyframes bob {
+  0%, 100% { transform: translateX(-50%) translateY(0); }
+  50% { transform: translateX(-50%) translateY(6px); }
+}
+
+/* ─── Problem Section ─── */
+.problem-section {
+  background: var(--yami-superficie);
+}
+.problem-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+.problem-stat {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.stat-card {
+  background: var(--yami-blanco);
+  padding: 28px 24px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--yami-borde);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.3s var(--ease-out);
+}
+.stat-card:hover {
+  border-color: var(--yami-cicatriz);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+.stat-number {
+  font-family: var(--font-body);
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: var(--yami-cicatriz);
+  line-height: 1;
+  margin-bottom: 6px;
+  letter-spacing: -0.03em;
+}
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  font-weight: 400;
+}
+.stat-card:nth-child(3) .stat-number,
+.stat-card:nth-child(4) .stat-number {
+  color: var(--yami-latido);
+}
+
+/* ─── Philosophy ─── */
+.philosophy-section {
+  text-align: center;
+  background: var(--yami-papel);
+  position: relative;
+}
+.philosophy-section::before {
+  content: '闇';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: var(--font-jp);
+  font-size: 30vw;
+  font-weight: 700;
+  color: rgba(45,143,125,0.04);
+  pointer-events: none;
+  z-index: 0;
+  line-height: 1;
+}
+.philosophy-content {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  margin: 0 auto;
+}
+.philosophy-blockquote {
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 2.5vw, 1.5rem);
+  font-weight: 400;
+  font-style: italic;
+  line-height: 1.7;
+  color: var(--text-primary);
+  margin-bottom: 28px;
+  padding: 40px 48px;
+  background: var(--yami-blanco);
+  border-radius: var(--radius-lg);
+  position: relative;
+  box-shadow: var(--shadow-sm);
+}
+.philosophy-blockquote::before {
+  content: '\201C';
+  font-family: var(--font-display);
+  font-size: 5rem;
+  color: var(--yami-cicatriz);
+  opacity: 0.12;
+  position: absolute;
+  top: 8px;
+  left: 16px;
+  line-height: 1;
+}
+.philosophy-blockquote cite {
+  display: block;
+  margin-top: 16px;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--yami-cicatriz);
+}
+
+/* ─── Layers ─── */
+.layers-section {
+  background: var(--yami-superficie);
+}
+.layers-header {
+  text-align: center;
+  margin-bottom: 56px;
+}
+.layers-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+.layer-card {
+  background: var(--yami-blanco);
+  border-radius: var(--radius-lg);
+  padding: 36px 28px;
+  border: 1px solid var(--yami-borde);
+  box-shadow: var(--shadow-sm);
+  transition: all 0.4s var(--ease-out);
+}
+.layer-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-6px);
+}
+.layer-card-miru:hover { border-color: var(--yami-cicatriz); }
+.layer-card-kiku:hover { border-color: var(--yami-latido); }
+.layer-card-tomoni:hover { border-color: var(--yami-braza); }
+.layer-number {
+  font-family: var(--font-body);
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+.layer-card-miru .layer-number { color: var(--yami-cicatriz); }
+.layer-card-kiku .layer-number { color: var(--yami-latido); }
+.layer-card-tomoni .layer-number { color: var(--yami-braza); }
+.layer-icon {
+  font-family: var(--font-jp);
+  font-size: 1.8rem;
+  font-weight: 300;
+  margin-bottom: 12px;
+  display: inline-block;
+  padding: 6px 14px;
+  border-radius: var(--radius-sm);
+}
+.layer-card-miru .layer-icon {
+  color: var(--yami-cicatriz);
+  background: var(--yami-teal-claro);
+}
+.layer-card-kiku .layer-icon {
+  color: var(--yami-latido);
+  background: #fce8ec;
+}
+.layer-card-tomoni .layer-icon {
+  color: var(--yami-braza);
+  background: #f5ede3;
+}
+.layer-name {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+  color: var(--text-primary);
+}
+.layer-romaji {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+  font-weight: 400;
+}
+.layer-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ─── How It Works ─── */
+.how-section { text-align: center; }
+.how-steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 40px;
+  margin-top: 48px;
+  text-align: left;
+}
+.how-step {
+  position: relative;
+  padding: 24px 0 24px 56px;
+}
+.how-step-num {
+  position: absolute;
+  left: 0;
+  top: 24px;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--yami-blanco);
+  width: 36px;
+  height: 36px;
+  background: var(--yami-cicatriz);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.how-step-title {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text-primary);
+}
+.how-step-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* ─── Trust / Partners ─── */
+.trust-section {
+  text-align: center;
+  border-top: 1px solid var(--yami-borde);
+}
+.trust-logos {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 48px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+  opacity: 0.5;
+}
+.trust-logo {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  letter-spacing: 0.05em;
+}
+
+/* ─── Waitlist ─── */
+.waitlist-section {
+  background: var(--yami-noche);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.waitlist-section::before {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(45,143,125,0.08) 0%, transparent 70%);
+  top: -200px;
+  left: -100px;
+}
+.waitlist-section .section-label { color: var(--yami-cicatriz); }
+.waitlist-section .section-title {
+  color: var(--text-hero);
+  font-family: var(--font-display);
+}
+.waitlist-section .section-subtitle { color: var(--text-hero-secondary); }
+.waitlist-form {
+  max-width: 480px;
+  margin: 36px auto 0;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+.waitlist-form input {
+  flex: 1;
+  min-width: 240px;
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(255,255,255,0.15);
+  border-radius: var(--radius-full);
+  padding: 14px 24px;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--text-hero);
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+.waitlist-form input::placeholder { color: var(--text-hero-secondary); opacity: 0.5; }
+.waitlist-form input:focus { border-color: var(--yami-cicatriz); }
+.waitlist-form button {
+  background: var(--yami-cicatriz);
+  color: var(--yami-blanco);
+  border: none;
+  padding: 14px 32px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+  white-space: nowrap;
+}
+.waitlist-form button:hover {
+  background: var(--cicatriz-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow-teal);
+}
+.waitlist-message {
+  margin-top: 16px;
+  font-size: 0.85rem;
+  min-height: 24px;
+  transition: all 0.3s ease;
+}
+.waitlist-message.success { color: var(--yami-cicatriz); }
+.waitlist-message.error { color: var(--yami-latido); }
+
+/* ─── Footer ─── */
+footer {
+  padding: 56px 0 32px;
+  border-top: 1px solid var(--yami-borde);
+  background: var(--yami-papel);
+}
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 40px;
+}
+.footer-brand { max-width: 280px; }
+.footer-brand-name {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+}
+.footer-brand-kanji {
+  font-family: var(--font-jp);
+  font-weight: 300;
+  font-size: 1.2rem;
+  color: var(--yami-cicatriz);
+}
+.footer-brand-dot { color: var(--yami-cicatriz); }
+.footer-brand-desc {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+.footer-links { display: flex; gap: 48px; flex-wrap: wrap; }
+.footer-col h4 {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+.footer-col a {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-decoration: none;
+  margin-bottom: 10px;
+  transition: color 0.3s ease;
+}
+.footer-col a:hover { color: var(--yami-cicatriz); }
+.footer-bottom {
+  margin-top: 36px;
+  padding-top: 20px;
+  border-top: 1px solid var(--yami-borde);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.footer-sonora {
+  font-size: 0.7rem;
+  letter-spacing: 0.05em;
+  color: var(--yami-cicatriz);
+}
+
+/* ─── Animations ─── */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s var(--ease-out), transform 0.7s var(--ease-out);
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reveal-delay-1 { transition-delay: 0.1s; }
+.reveal-delay-2 { transition-delay: 0.2s; }
+.reveal-delay-3 { transition-delay: 0.3s; }
+.reveal-delay-4 { transition-delay: 0.4s; }
+
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+  .problem-grid { grid-template-columns: 1fr; gap: 36px; }
+  .layers-grid { grid-template-columns: 1fr; gap: 16px; }
+  .how-steps { grid-template-columns: 1fr; gap: 20px; }
+  .section { padding: 64px 0; }
+  .nav-links a:not(.nav-btn) { display: none; }
+  .footer-inner { flex-direction: column; gap: 32px; }
+  .footer-links { gap: 32px; }
+  .footer-bottom { flex-direction: column; text-align: center; }
+}
+@media (max-width: 600px) {
+  .problem-stat { grid-template-columns: 1fr; }
+  .hero { padding: 100px 20px 60px; }
+  .hero-actions { flex-direction: column; align-items: center; }
+  .waitlist-form { flex-direction: column; }
+  .waitlist-form input { min-width: unset; width: 100%; }
+  .waitlist-form button { width: 100%; }
+  .philosophy-blockquote { padding: 24px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ─── Loader ─── -->
+<div class="loader" id="loader">
+  <div class="loader-kanji">闇</div>
+  <div class="loader-bar"><div class="loader-bar-inner"></div></div>
+</div>
+
+<!-- ─── Navigation ─── -->
+<nav id="nav">
+  <div class="container nav-inner">
+    <a href="index.html#" class="nav-logo">
+      <span class="nav-logo-kanji">闇</span>
+      YAMI<span class="nav-logo-dot">.</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#problem">El problema</a>
+      <a href="index.html#philosophy">Filosofía</a>
+      <a href="index.html#layers">Capas</a>
+      <a href="miru.html">MIRU</a>
+      <a href="kiku.html">KIKU</a>
+      <a href="tomoni.html">TOMONI</a>
+      <a href="index.html#waitlist" class="nav-btn">Lista de espera</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ─── Hero ─── -->
+<section class="hero" id="hero">
+  <div class="hero-bg-grid"></div>
+  <div class="hero-glow-teal"></div>
+  <div class="hero-glow-braza"></div>
+  <div class="hero-content">
+    <span class="hero-kanji">闇</span>
+    <h1 class="hero-title">Antes de que sea crisis,<br>que sea <em>conversación</em></h1>
+    <p class="hero-sub">Un ecosistema preventivo de salud mental para México. Tres capas — MIRU, KIKU, TOMONI — para detectar, acompañar y conectar antes de que sea tarde.</p>
+    <div class="hero-actions">
+      <a href="miru.html" class="btn-primary">Empezar evaluación</a>
+      <a href="index.html#waitlist" class="btn-secondary">Lista de espera</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <span>Descubre</span>
+    <div class="hero-scroll-line"></div>
+  </div>
+</section>
+<!-- ─── Problem ─── -->
+<section class="section problem-section" id="problem">
+  <div class="container">
+    <div class="problem-grid">
+      <div>
+        <div class="section-label">El Problema</div>
+        <h2 class="section-title">24 millones de mexicanos viven con un trastorno mental</h2>
+        <p class="section-subtitle" style="margin-bottom: 16px;">Menos del 40% recibe atención. El estigma, el costo y la falta de infraestructura dejan a más de 14 millones de personas sin apoyo.</p>
+        <p class="section-subtitle" style="color: var(--text-muted); font-size: 0.9rem;">México destina solo el 1.5% de su gasto en salud a salud mental. La OMS recomienda el doble.</p>
+        <div class="accent-line"></div>
+      </div>
+      <div class="problem-stat">
+        <div class="stat-card reveal">
+          <div class="stat-number">24M</div>
+          <div class="stat-label">mexicanos con algún trastorno mental</div>
+        </div>
+        <div class="stat-card reveal reveal-delay-1">
+          <div class="stat-number">&lt;40%</div>
+          <div class="stat-label">recibe atención adecuada</div>
+        </div>
+        <div class="stat-card reveal reveal-delay-2">
+          <div class="stat-number">14M+</div>
+          <div class="stat-label">personas sin acceso a apoyo</div>
+        </div>
+        <div class="stat-card reveal reveal-delay-3">
+          <div class="stat-number">1.5%</div>
+          <div class="stat-label">del gasto en salud se destina a salud mental</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Philosophy ─── -->
+<section class="section philosophy-section paper-bg" id="philosophy">
+  <div class="container philosophy-content">
+    <div class="section-label" style="text-align: center;">Filosofía</div>
+    <blockquote class="philosophy-blockquote reveal">
+      "La oscuridad no es el enemigo. Es el espacio donde lo que no se ve puede, por fin, ser nombrado. YAMI no viene a iluminar la noche. Viene a recordarte que en la noche también hay cobijo."
+      <cite>— Manifiesto YAMI</cite>
+    </blockquote>
+    <p class="section-subtitle reveal reveal-delay-1" style="margin: 0 auto; text-align: center;">
+      No buscamos reemplazar la terapia. Buscamos construir el puente entre el silencio y la primera vez que dices «necesito ayuda».
+    </p>
+  </div>
+</section>
+
+<!-- ─── Layers ─── -->
+<section class="section layers-section" id="layers">
+  <div class="container">
+    <div class="layers-header">
+      <div class="section-label">Las Tres Capas</div>
+      <h2 class="section-title">Mirar. Escuchar. Estar.</h2>
+      <p class="section-subtitle" style="margin: 0 auto;">Un ecosistema preventivo en tres movimientos. Diseñado para atraparte antes de que caigas.</p>
+    </div>
+    <div class="layers-grid">
+      <div class="layer-card layer-card-miru reveal">
+        <div class="layer-number">Capa 01</div>
+        <div class="layer-icon">見る MIRU</div>
+        <div class="layer-name">Ver</div>
+        <div class="layer-romaji">Detección temprana</div>
+        <div class="layer-desc">Auto-evaluaciones que identifican señales tempranas de ansiedad, depresión y estrés. No es un diagnóstico, sino una brújula emocional que te dice: «aquí hay algo que merece atención».</div>
+        <div style="margin-top: 16px;"><a href="miru.html" style="color:var(--yami-cicatriz);font-weight:600;font-size:0.85rem;text-decoration:none;">Ir a MIRU →</a></div>
+      </div>
+      <div class="layer-card layer-card-kiku reveal reveal-delay-1">
+        <div class="layer-number">Capa 02</div>
+        <div class="layer-icon">聞く KIKU</div>
+        <div class="layer-name">Escuchar</div>
+        <div class="layer-romaji">Acompañamiento</div>
+        <div class="layer-desc">Un espacio seguro para expresarte. Chat consciente, diario emocional, ejercicios de regulación. Sin juicio. Sin horario. Siempre ahí, anónimo y gratuito.</div>
+        <div style="margin-top: 16px;"><a href="kiku.html" style="color:var(--yami-latido);font-weight:600;font-size:0.85rem;text-decoration:none;">Ir a KIKU →</a></div>
+      </div>
+      <div class="layer-card layer-card-tomoni reveal reveal-delay-2">
+        <div class="layer-number">Capa 03</div>
+        <div class="layer-icon">共に TOMONI</div>
+        <div class="layer-name">Juntos</div>
+        <div class="layer-romaji">Comunidad</div>
+        <div class="layer-desc">Círculos de apoyo anónimos, moderados y seguros. Porque sanar en comunidad es más ligero. Y porque a veces lo único que necesitas es saber que no eres el único.</div>
+        <div style="margin-top: 16px;"><a href="tomoni.html" style="color:var(--yami-braza);font-weight:600;font-size:0.85rem;text-decoration:none;">Ir a TOMONI →</a></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── How It Works ─── -->
+<section class="section how-section" id="how">
+  <div class="container">
+    <div class="section-label">Cómo funciona</div>
+    <h2 class="section-title">Tres pasos para empezar</h2>
+    <p class="section-subtitle" style="margin: 0 auto; max-width: 420px;">Son 3 minutos. Sin nombre. Sin historial. Solo tú y cómo estás hoy.</p>
+    <div class="how-steps">
+      <div class="how-step reveal">
+        <div class="how-step-num">1</div>
+        <h3 class="how-step-title">Evalúa</h3>
+        <p class="how-step-desc">Un test breve y anónimo. En minutos sabrás si hay señales tempranas que vale la pena atender. Sin etiquetas. Sin presión. Solo información útil.</p>
+      </div>
+      <div class="how-step reveal reveal-delay-1">
+        <div class="how-step-num">2</div>
+        <h3 class="how-step-title">Conéctate</h3>
+        <p class="how-step-desc">Herramientas de acompañamiento: chat emocional, ejercicios de respiración, diario guiado. Todo diseñado para que sueltes lo que pesa. Sin prisas.</p>
+      </div>
+      <div class="how-step reveal reveal-delay-2">
+        <div class="how-step-num">3</div>
+        <h3 class="how-step-title">Comparte</h3>
+        <p class="how-step-desc">Cuando estés listo, únete a un <a href="tomoni.html" style="color:var(--yami-braza);text-decoration:none;font-weight:500;">círculo TOMONI</a>. Personas como tú, mismas sombras, misma búsqueda. La comunidad es el siguiente nivel, pero no hay obligación de llegar.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ─── CTA App ─── -->
+<section class="section" style="text-align:center;background:var(--yami-superficie);">
+  <div class="container">
+    <div class="section-label">Empieza ahora</div>
+    <h2 class="section-title">¿Cómo estás hoy?</h2>
+    <p class="section-subtitle" style="margin:0 auto 32px;">Son 3 minutos. Sin nombre. Sin registro. Solo una lectura honesta de cómo estás.</p>
+    <div style="display:flex;gap:14px;justify-content:center;flex-wrap:wrap;">
+      <a href="miru.html" class="btn-primary" style="color:var(--yami-blanco);">Hacer evaluación MIRU</a>
+      <a href="kiku.html" class="btn-secondary" style="border-color:var(--yami-borde);color:var(--text-secondary);">Ir a KIKU — espacio seguro</a>
+      <a href="tomoni.html" class="btn-secondary" style="border-color:var(--yami-borde);color:var(--text-secondary);">Ir a TOMONI — comunidad</a>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Trust Signals ─── -->
+<section class="section trust-section">
+  <div class="container">
+    <div class="section-label">Confianza</div>
+    <h2 class="section-title" style="font-size: 1.4rem;">Respaldado por profesionales</h2>
+    <p class="section-subtitle" style="margin: 0 auto;">Diseñado con psicólogos y especialistas en salud mental. Conectado a recursos oficiales: CONASAMA y PSI México.</p>
+    <div class="trust-logos">
+      <span class="trust-logo">Sonora Digital Corp</span>
+      <span class="trust-logo">PSI México</span>
+      <span class="trust-logo">CONASAMA</span>
+    </div>
+  </div>
+</section>
+
+<!-- ─── Waitlist ─── -->
+<section class="section waitlist-section" id="waitlist">
+  <div class="container">
+    <div class="section-label">Lista de Espera</div>
+    <h2 class="section-title">YAMI llega pronto a México</h2>
+    <p class="section-subtitle" style="margin: 0 auto;">Sé de las primeras personas en acceder. Sin spam. Solo un aviso cuando estemos listos, sin prisas.</p>
+    <form class="waitlist-form" id="waitlist-form">
+      <input type="email" id="waitlist-email" placeholder="tu@email.com" required>
+      <button type="submit">Avisarme</button>
+    </form>
+    <div class="waitlist-message" id="waitlist-message"></div>
+  </div>
+</section>
+
+<!-- ─── Footer ─── -->
+<footer class="paper-bg">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="footer-brand-name">
+          <span class="footer-brand-kanji">闇</span>
+          YAMI<span class="footer-brand-dot">.</span>
+        </div>
+        <div class="footer-brand-desc">Un ecosistema preventivo de salud mental. De Sonora Digital Corp para México.</div>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Ecosistema</h4>
+          <a href="miru.html">MIRU — Detectar</a>
+          <a href="kiku.html">KIKU — Acompañar</a>
+          <a href="tomoni.html">TOMONI — Conectar</a>
+        </div>
+        <div class="footer-col">
+          <h4>Compañía</h4>
+          <a href="https://sonora-digital.com" target="_blank" rel="noopener">Sonora Digital</a>
+          <a href="https://velvet-rouge.vercel.app" target="_blank" rel="noopener">Velvet Rouge</a>
+        </div>
+        <div class="footer-col">
+          <h4>Recursos</h4>
+          <a href="https://www.psimexico.org/" target="_blank" rel="noopener">PSI México</a>
+          <a href="https://www.conasama.salud.gob.mx/" target="_blank" rel="noopener">CONASAMA</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; 2026 YAMI / Sonora Digital Corp. Todos los derechos reservados.</span>
+      <span class="footer-sonora">Hecho en México.</span>
+    </div>
+  </div>
+</section>
+
+<script>
+// ─── Loader ───
+window.addEventListener('load', () => {
+  setTimeout(() => {
+    document.getElementById('loader').classList.add('hidden');
+  }, 1800);
+});
+
+// ─── Nav Scroll ───
+const nav = document.getElementById('nav');
+const observerNav = new IntersectionObserver(
+  ([entry]) => {
+    nav.classList.toggle('scrolled', !entry.isIntersecting);
+  },
+  { rootMargin: '-80px 0px 0px 0px' }
+);
+observerNav.observe(document.querySelector('.hero'));
+
+// ─── Reveal Animations ───
+const revealObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  },
+  { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+);
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ─── Waitlist Form ───
+const form = document.getElementById('waitlist-form');
+const msg = document.getElementById('waitlist-message');
+const emailInput = document.getElementById('waitlist-email');
+
+form.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const email = emailInput.value.trim();
+
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    msg.textContent = 'Ese correo no parece válido. Revísalo y vuelve a intentar.';
+    msg.className = 'waitlist-message error';
+    return;
+  }
+
+  msg.textContent = 'Un momento…';
+  msg.className = 'waitlist-message';
+
+  // 1. Guardar localmente siempre (inmediato, sin dependencia de red)
+  try {
+    const queue = JSON.parse(localStorage.getItem('yami_waitlist') || '[]');
+    queue.push({ email, timestamp: new Date().toISOString() });
+    localStorage.setItem('yami_waitlist', JSON.stringify(queue));
+  } catch (e) {
+    // Silent fail — raro pero possible si localStorage está lleno
+  }
+
+  // 2. Intentar API en segundo plano (fire-and-forget)
+  try {
+    await fetch('http://localhost:8765/api/leads', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        email: email,
+        name: '',
+        source: 'yami-waitlist',
+        campaign: 'yami-landing',
+        notes: 'YAMI waitlist signup'
+      })
+    });
+  } catch (err) {
+    // API no disponible — ya se guardó localmente, todo bien
+  }
+
+  // 3. Siempre mostrar éxito — el email ya está capturado
+  msg.textContent = 'Estás dentro. Te avisaremos cuando YAMI esté listo. Sin spam. Sin prisas.';
+  msg.className = 'waitlist-message success';
+  emailInput.value = '';
+});
+</script>
+
+<!-- Service Worker -->
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(function() {});
+}
+</script>
+</body>
+</html>

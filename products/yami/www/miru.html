@@ -1,0 +1,1198 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MIRU — Evaluación emocional | YAMI (闇)</title>
+<meta name="description" content="Evaluación anónima de salud mental. PHQ-9 y GAD-7 adaptados para México. Tamizaje emocional gratuito, sin registro.">
+
+<!-- Canonical -->
+<link rel="canonical" href="miru.html">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://yami-mx.vercel.app/miru.html">
+<meta property="og:locale" content="es_MX">
+<meta property="og:title" content="MIRU — Evaluación emocional | YAMI (闇)">
+<meta property="og:description" content="Evaluación anónima de salud mental con PHQ-9 y GAD-7. Tamizaje gratuito, sin registro, confidencial.">
+<meta property="og:site_name" content="YAMI">
+<meta property="og:image" content="https://yami-mx.vercel.app/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MIRU — YAMI">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="MIRU — Evaluación emocional | YAMI (闇)">
+<meta name="twitter:description" content="Evaluación anónima de salud mental con PHQ-9 y GAD-7. Tamizaje gratuito, sin registro.">
+
+<!-- Browser theme -->
+<meta name="theme-color" content="#2d8f7d">
+<meta name="color-scheme" content="light">
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "MIRU — Evaluación emocional",
+  "url": "https://yami-mx.vercel.app/miru.html",
+  "description": "Evaluación anónima de salud mental usando PHQ-9 y GAD-7. Tamizaje emocional gratuito.",
+  "applicationCategory": "HealthApplication",
+  "operatingSystem": "All",
+  "browserRequirements": "JavaScript",
+  "author": {
+    "@type": "Organization",
+    "name": "YAMI",
+    "url": "https://yami-mx.vercel.app"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "MXN"
+  }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --yami-noche: #0f1a2e;
+  --yami-papel: #f5f0e8;
+  --yami-blanco: #ffffff;
+  --yami-cicatriz: #2d8f7d;
+  --yami-braza: #c48a4a;
+  --yami-latido: #d46a7a;
+  --yami-ceniza: #475569;
+  --yami-superficie: #f4f6f9;
+  --yami-borde: #e2e8f0;
+  --yami-oscuro-suave: #1a2d46;
+  --yami-teal-claro: #e8f4f1;
+  --text-primary: #0f172a;
+  --text-secondary: var(--yami-ceniza);
+  --text-muted: #94a3b8;
+  --text-hero: #f1f5f9;
+  --cicatriz-hover: #237a6a;
+  --latido-hover: #c45a6a;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.1);
+  --shadow-glow-teal: 0 8px 24px rgba(45,143,125,0.25);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 100px;
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', -apple-system, system-ui, sans-serif;
+  --font-jp: 'Noto Sans JP', sans-serif;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+body {
+  background: var(--yami-superficie);
+  color: var(--text-secondary);
+  font-family: var(--font-body);
+  font-weight: 400;
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* ─── Navigation ─── */
+nav {
+  background: var(--yami-noche);
+  padding: 14px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.nav-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-hero);
+  text-decoration: none;
+}
+.nav-logo-kanji { font-family: var(--font-jp); font-weight: 300; font-size: 1.2rem; color: var(--yami-cicatriz); }
+.nav-logo-dot { color: var(--yami-cicatriz); }
+.nav-back {
+  color: var(--text-hero-secondary);
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.nav-back:hover { color: var(--yami-cicatriz); }
+
+/* ─── Container ─── */
+.app-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+/* ─── Card ─── */
+.card {
+  background: var(--yami-blanco);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--yami-borde);
+  box-shadow: var(--shadow-sm);
+  padding: 40px 48px;
+  margin-bottom: 24px;
+}
+@media (max-width: 600px) { .card { padding: 24px 20px; } }
+
+/* ─── Welcome Screen ─── */
+.welcome { text-align: center; }
+.welcome-icon {
+  font-size: 3rem;
+  font-family: var(--font-jp);
+  font-weight: 300;
+  color: var(--yami-cicatriz);
+  display: inline-block;
+  background: var(--yami-teal-claro);
+  padding: 16px 24px;
+  border-radius: var(--radius-md);
+  margin-bottom: 20px;
+}
+.welcome h1 {
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+.welcome p {
+  color: var(--text-secondary);
+  max-width: 480px;
+  margin: 0 auto 8px;
+  font-size: 0.95rem;
+}
+.welcome-note {
+  font-size: 0.8rem !important;
+  color: var(--text-muted) !important;
+  margin-top: 16px !important;
+}
+.test-selector {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+.test-btn {
+  background: var(--yami-blanco);
+  border: 1.5px solid var(--yami-borde);
+  border-radius: var(--radius-md);
+  padding: 20px 28px;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+  text-align: left;
+  min-width: 200px;
+  flex: 1;
+  max-width: 260px;
+  font-family: var(--font-body);
+}
+.test-btn:hover {
+  border-color: var(--yami-cicatriz);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-3px);
+}
+.test-btn h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+}
+.test-btn p {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+.test-btn .time { font-size: 0.7rem; color: var(--yami-cicatriz); margin-top: 8px; display: block; }
+.test-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+/* ─── Question Screen ─── */
+.question-screen { display: none; }
+.question-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+.question-progress-text {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.question-test-name {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--yami-cicatriz);
+}
+.progress-bar {
+  width: 100%;
+  height: 4px;
+  background: var(--yami-borde);
+  border-radius: 2px;
+  margin-bottom: 32px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: var(--yami-cicatriz);
+  border-radius: 2px;
+  width: 0%;
+  transition: width 0.5s var(--ease-out);
+}
+.question-number {
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: var(--yami-cicatriz);
+  margin-bottom: 8px;
+}
+.question-text {
+  font-family: var(--font-display);
+  font-size: clamp(1.15rem, 2vw, 1.4rem);
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 28px;
+  line-height: 1.5;
+}
+.options { display: flex; flex-direction: column; gap: 10px; }
+.option {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 20px;
+  border: 1.5px solid var(--yami-borde);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+  background: var(--yami-blanco);
+}
+.option:hover {
+  border-color: var(--yami-cicatriz);
+  background: var(--yami-teal-claro);
+}
+.option.selected {
+  border-color: var(--yami-cicatriz);
+  background: var(--yami-teal-claro);
+}
+.option-radio {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--yami-borde);
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s var(--ease-out);
+}
+.option.selected .option-radio {
+  border-color: var(--yami-cicatriz);
+}
+.option.selected .option-radio::after {
+  content: '';
+  width: 10px;
+  height: 10px;
+  background: var(--yami-cicatriz);
+  border-radius: 50%;
+}
+.option-label {
+  font-size: 0.92rem;
+  color: var(--text-primary);
+  font-weight: 400;
+}
+.option-value {
+  margin-left: auto;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+.question-nav {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 28px;
+  gap: 12px;
+}
+.btn-prev, .btn-next {
+  padding: 12px 28px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+  border: none;
+}
+.btn-prev {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1.5px solid var(--yami-borde);
+}
+.btn-prev:hover { border-color: var(--text-secondary); }
+.btn-next {
+  background: var(--yami-cicatriz);
+  color: var(--yami-blanco);
+  margin-left: auto;
+}
+.btn-next:hover { background: var(--cicatriz-hover); }
+.btn-next:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+/* ─── Results Screen ─── */
+.results-screen { display: none; }
+.results-header { text-align: center; margin-bottom: 32px; }
+.results-icon {
+  font-size: 2.6rem;
+  margin-bottom: 12px;
+  display: block;
+}
+.results-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.results-header p { font-size: 0.9rem; color: var(--text-secondary); }
+.score-display {
+  text-align: center;
+  padding: 28px;
+  border-radius: var(--radius-lg);
+  margin-bottom: 24px;
+}
+.score-severity-low { background: var(--yami-teal-claro); }
+.score-severity-mild { background: #fef9e7; }
+.score-severity-moderate { background: #fde8e8; }
+.score-severity-severe { background: #fce4ec; }
+.score-number {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+.score-severity-low .score-number { color: var(--yami-cicatriz); }
+.score-severity-mild .score-number { color: var(--yami-braza); }
+.score-severity-moderate .score-number { color: #e67e22; }
+.score-severity-severe .score-number { color: var(--yami-latido); }
+.score-label {
+  font-size: 1rem;
+  font-weight: 500;
+}
+.score-severity-low .score-label { color: var(--yami-cicatriz); }
+.score-severity-mild .score-label { color: var(--yami-braza); }
+.score-severity-moderate .score-label { color: #e67e22; }
+.score-severity-severe .score-label { color: var(--yami-latido); }
+.results-interp {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 24px;
+}
+.results-recommendations h4 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+.rec-card {
+  background: var(--yami-superficie);
+  border-radius: var(--radius-md);
+  padding: 16px 20px;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.rec-icon { font-size: 1.2rem; flex-shrink: 0; }
+.rec-text { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; }
+.crisis-box {
+  background: #fce4ec;
+  border: 1.5px solid var(--yami-latido);
+  border-radius: var(--radius-md);
+  padding: 20px 24px;
+  margin-bottom: 20px;
+}
+.crisis-box .crisis-alert {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.crisis-box .crisis-icon {
+  font-size: 1.3rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.crisis-box .crisis-alert strong {
+  color: var(--yami-latido);
+}
+.crisis-box h4 {
+  color: var(--yami-latido);
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.crisis-box p, .crisis-box a {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.crisis-box .crisis-number {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--yami-latido);
+  display: block;
+  margin: 8px 0;
+}
+.results-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 24px;
+}
+.disclaimer-box {
+  background: var(--yami-noche);
+  color: #cbd5e1;
+  padding: 20px 24px;
+  border-radius: var(--radius-md);
+  margin-top: 24px;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  border: 1px solid var(--yami-braza);
+}
+.disclaimer-icon { font-size: 1.1rem; margin-right: 8px; }
+.results-actions .btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.results-actions .btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* ─── Shared ─── */
+.btn-primary {
+  background: var(--yami-cicatriz);
+  color: var(--yami-blanco);
+  padding: 14px 34px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+}
+.btn-primary:hover {
+  background: var(--cicatriz-hover);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-glow-teal);
+}
+.btn-secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  padding: 14px 34px;
+  border-radius: var(--radius-full);
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  border: 1.5px solid var(--yami-borde);
+  cursor: pointer;
+  transition: all 0.3s var(--ease-out);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.btn-secondary:hover {
+  border-color: var(--yami-cicatriz);
+  color: var(--yami-cicatriz);
+}
+.btn-sm {
+  padding: 10px 20px;
+  font-size: 0.82rem;
+}
+
+/* ─── History ─── */
+.history-list { margin-top: 16px; }
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  border: 1px solid var(--yami-borde);
+  border-radius: var(--radius-sm);
+  margin-bottom: 8px;
+  transition: background 0.3s ease;
+  cursor: pointer;
+}
+.history-item:hover { background: var(--yami-superficie); }
+.history-left { display: flex; align-items: center; gap: 12px; }
+.history-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+.history-dot-low { background: var(--yami-cicatriz); }
+.history-dot-mild { background: var(--yami-braza); }
+.history-dot-moderate { background: #e67e22; }
+.history-dot-severe { background: var(--yami-latido); }
+.history-name { font-size: 0.85rem; font-weight: 500; color: var(--text-primary); }
+.history-score { font-size: 0.8rem; color: var(--text-muted); }
+.history-date { font-size: 0.75rem; color: var(--text-muted); }
+.history-empty {
+  text-align: center;
+  padding: 32px;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+}
+
+/* ─── Footer ─── */
+.app-footer {
+  text-align: center;
+  padding: 32px 24px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+.app-footer a {
+  color: var(--yami-cicatriz);
+  text-decoration: none;
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-kanji">闇</span> YAMI<span class="nav-logo-dot">.</span>
+    </a>
+    <a href="index.html" class="nav-back">&larr; Volver</a>
+  </div>
+</nav>
+
+<div class="app-container">
+
+  <!-- ═══ WELCOME ═══ -->
+  <div class="card welcome" id="welcome-screen">
+    <div class="welcome-icon">見る</div>
+    <h1>¿Cómo estás hoy?</h1>
+    <p>Esto no es un diagnóstico. Es una brújula emocional: una lectura de cómo estás en este momento.</p>
+    <p style="font-size:0.88rem;color:var(--text-secondary);margin-top:4px;">Completamente anónimo. Sin registro. Sin historial en servidores.</p>
+
+    <div class="test-selector">
+      <button class="test-btn" onclick="startTest('phq9')">
+        <h3>PHQ-9</h3>
+        <p>Evaluación de estado de ánimo</p>
+        <span class="time">~3 minutos &middot; 9 preguntas</span>
+      </button>
+      <button class="test-btn" onclick="startTest('gad7')">
+        <h3>GAD-7</h3>
+        <p>Evaluación de ansiedad</p>
+        <span class="time">~2 minutos &middot; 7 preguntas</span>
+      </button>
+      <button class="test-btn" onclick="startTest('both')">
+        <h3>Completa</h3>
+        <p>PHQ-9 + GAD-7 combinados</p>
+        <span class="time">~5 minutos &middot; 16 preguntas</span>
+      </button>
+    </div>
+
+    <p class="welcome-note">Si estás en crisis ahora, llama a la Línea de la Vida: <strong>800 911 2000</strong> (disponible 24/7).</p>
+
+    <div style="margin-top:32px;padding-top:24px;border-top:1px solid var(--yami-borde)">
+      <h4 style="font-size:0.8rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px;">Tu historial</h4>
+      <div id="history-list" class="history-list"></div>
+    </div>
+  </div>
+
+  <!-- ═══ QUESTIONS ═══ -->
+  <div class="card question-screen" id="question-screen">
+    <div class="question-header">
+      <span class="question-test-name" id="test-name-label">PHQ-9</span>
+      <span class="question-progress-text" id="progress-text">1/9</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progress-fill"></div>
+    </div>
+    <div class="question-number" id="q-number">Pregunta 1</div>
+    <div class="question-text" id="q-text">Cargando...</div>
+    <div class="options" id="options-container"></div>
+    <div class="question-nav">
+      <button class="btn-prev" id="btn-prev" onclick="prevQuestion()">Anterior</button>
+      <button class="btn-next" id="btn-next" onclick="nextQuestion()">Siguiente</button>
+    </div>
+  </div>
+
+  <!-- ═══ RESULTS ═══ -->
+  <div class="card results-screen" id="results-screen">
+    <div id="results-loading" style="display:none;"></div>
+
+    <div id="results-content" style="display:none;">
+      <div class="crisis-box" id="crisis-box" style="display:none;">
+        <h4>Líneas de crisis en México</h4>
+        <p>Si estás pasando por un momento difícil, no esperes. Estos recursos son gratuitos y confidenciales:</p>
+        <span class="crisis-number">800 911 2000</span>
+        <p><strong>Línea de la Vida</strong> — CONASAMA, disponible 24/7</p>
+        <p style="margin-top:8px;"><strong>Línea SAPTEL:</strong> 55 5259 8121</p>
+      </div>
+
+      <div class="results-header">
+        <span class="results-icon" id="results-icon">○</span>
+        <h2 id="results-title">Tu lectura</h2>
+        <p id="results-subtitle">Así estás hoy. Y está bien.</p>
+      </div>
+
+      <div id="results-scores"></div>
+
+      <div class="results-interp" id="results-interp"></div>
+
+      <div class="results-recommendations" id="results-recs">
+        <h4>Recomendaciones</h4>
+        <div id="recs-list"></div>
+      </div>
+
+      <div id="results-disclaimer" style="display:none;"></div>
+
+      <div class="results-actions">
+        <a href="kiku.html" class="btn-primary btn-sm" id="chat-btn">Ir a KIKU — espacio seguro</a>
+        <button class="btn-secondary btn-sm" onclick="startTest(getLastMode())">Tomar otro test</button>
+        <a href="index.html" class="btn-secondary btn-sm">Volver a YAMI</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer class="app-footer">
+  <p>YAMI (闇) &middot; Hecho en México &middot; <a href="index.html">yami-mx.vercel.app</a></p>
+  <p style="margin-top:4px;">Esto no es un diagnóstico médico. Si necesitas ayuda profesional, contacta a un psicólogo o psiquiatra.</p>
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════
+//  YAMI MIRU — Screening Engine v1.0
+// ═══════════════════════════════════════════════
+
+const PHQ9_QUESTIONS = [
+  "Falta de interés o placer en hacer cosas",
+  "Sentirse decaído/a, deprimido/a o sin esperanza",
+  "Problemas para dormir o mantenerse dormido/a, o dormir demasiado",
+  "Sentirse cansado/a o con poca energía",
+  "Falta de apetito o comer en exceso",
+  "Sentirse mal con usted mismo/a — o que ha decepcionado a su familia o a sí mismo/a",
+  "Problemas para concentrarse en cosas como leer o ver televisión",
+  "Moverse o hablar tan lento que otras personas podrían haberlo notado — o lo contrario: estar tan inquieto/a que se mueve mucho más de lo normal",
+  "Pensamientos de que estaría mejor muerto/a o de lastimarse de alguna manera"
+];
+
+const GAD7_QUESTIONS = [
+  "Sentirse nervioso/a, ansioso/a o con los nervios de punta",
+  "No poder dejar de preocuparse o tener control sobre sus preocupaciones",
+  "Preocuparse demasiado por diferentes cosas",
+  "Tener dificultad para relajarse",
+  "Estar tan inquieto/a que le cuesta quedarse quieto/a",
+  "Molestarse o irritarse fácilmente",
+  "Sentir miedo como si algo terrible pudiera pasar"
+];
+
+const OPTIONS = [
+  { label: "Para nada", value: 0 },
+  { label: "Varios días", value: 1 },
+  { label: "Más de la mitad de los días", value: 2 },
+  { label: "Casi todos los días", value: 3 }
+];
+
+const PHQ9_TIMEFRAME = "En las últimas 2 semanas, ¿con qué frecuencia has tenido molestias por lo siguiente?";
+const GAD7_TIMEFRAME = "En las últimas 2 semanas, ¿con qué frecuencia has estado molestado/a por lo siguiente?";
+
+let state = {
+  mode: null,       // 'phq9' | 'gad7' | 'both'
+  questions: [],
+  answers: [],
+  currentQuestion: 0,
+  phq9Count: 0,
+  gad7Count: 0
+};
+
+// ─── Start Test ───
+function startTest(mode) {
+  state.mode = mode;
+  state.currentQuestion = 0;
+  state.answers = [];
+
+  let qs = [];
+  if (mode === 'phq9' || mode === 'both') {
+    PHQ9_QUESTIONS.forEach((q, i) => qs.push({ text: q, test: 'phq9', index: i }));
+  }
+  if (mode === 'gad7' || mode === 'both') {
+    GAD7_QUESTIONS.forEach((q, i) => qs.push({ text: q, test: 'gad7', index: i }));
+  }
+  state.questions = qs;
+  state.phq9Count = (mode === 'phq9' || mode === 'both') ? PHQ9_QUESTIONS.length : 0;
+  state.gad7Count = (mode === 'gad7' || mode === 'both') ? GAD7_QUESTIONS.length : 0;
+
+  document.getElementById('welcome-screen').style.display = 'none';
+  document.getElementById('question-screen').style.display = 'block';
+  document.getElementById('results-screen').style.display = 'none';
+
+  showQuestion(0);
+}
+
+// ─── Show Question ───
+function showQuestion(index) {
+  state.currentQuestion = index;
+  const q = state.questions[index];
+  const total = state.questions.length;
+
+  document.getElementById('test-name-label').textContent =
+    state.mode === 'both'
+      ? (index < state.phq9Count ? 'PHQ-9 — Estado de ánimo' : 'GAD-7 — Ansiedad')
+      : (state.mode === 'phq9' ? 'PHQ-9 — Estado de ánimo' : 'GAD-7 — Ansiedad');
+
+  document.getElementById('progress-text').textContent = `${index + 1}/${total}`;
+  document.getElementById('progress-fill').style.width = `${((index + 1) / total) * 100}%`;
+  document.getElementById('q-number').textContent = `Pregunta ${index + 1}`;
+  document.getElementById('q-text').textContent = q.text;
+
+  const container = document.getElementById('options-container');
+  container.innerHTML = '';
+
+  OPTIONS.forEach((opt, oi) => {
+    const div = document.createElement('div');
+    div.className = `option${state.answers[index] === oi ? ' selected' : ''}`;
+    div.onclick = () => selectOption(index, oi);
+    div.innerHTML = `
+      <div class="option-radio"></div>
+      <span class="option-label">${opt.label}</span>
+      <span class="option-value">(${opt.value})</span>
+    `;
+    container.appendChild(div);
+  });
+
+  document.getElementById('btn-prev').style.display = index === 0 ? 'none' : 'block';
+  const nextBtn = document.getElementById('btn-next');
+  if (index === total - 1) {
+    nextBtn.textContent = 'Ver resultados';
+    nextBtn.disabled = state.answers[index] === undefined;
+  } else {
+    nextBtn.textContent = 'Siguiente';
+    nextBtn.disabled = state.answers[index] === undefined;
+  }
+}
+
+// ─── Select Option ───
+function selectOption(qIndex, optIndex) {
+  state.answers[qIndex] = optIndex;
+  const options = document.querySelectorAll('.option');
+  options.forEach((opt, i) => {
+    opt.classList.toggle('selected', i === optIndex);
+  });
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.disabled = false;
+}
+
+// ─── Navigation ───
+function nextQuestion() {
+  if (state.answers[state.currentQuestion] === undefined) return;
+  if (state.currentQuestion === state.questions.length - 1) {
+    showResults();
+  } else {
+    showQuestion(state.currentQuestion + 1);
+  }
+}
+
+function prevQuestion() {
+  if (state.currentQuestion > 0) {
+    showQuestion(state.currentQuestion - 1);
+  }
+}
+
+// ─── Results ───
+async function showResults() {
+  document.getElementById('question-screen').style.display = 'none';
+  document.getElementById('results-screen').style.display = 'block';
+
+  // Show loading state
+  document.getElementById('results-content').style.display = 'none';
+  document.getElementById('results-loading').style.display = 'block';
+  document.getElementById('results-loading').innerHTML = '<div style="text-align:center;padding:60px 20px;"><div style="font-size:2rem;margin-bottom:12px;opacity:0.5;">\u25E0</div><p style="color:var(--text-muted);">Analizando tus respuestas...</p></div>';
+
+  // Build response array
+  const responses = [];
+  state.answers.forEach((ans, i) => {
+    const q = state.questions[i];
+    const val = OPTIONS[ans] ? OPTIONS[ans].value : 0;
+    responses.push(val);
+  });
+
+  // Try API first with timeout
+  try {
+    const controller = new AbortController();
+    const timeout = setTimeout(() => controller.abort(), 10000);
+
+    const apiRes = await fetch('/api/miru-screening.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        mode: state.mode,
+        responses: responses
+      }),
+      signal: controller.signal
+    });
+    clearTimeout(timeout);
+
+    if (apiRes.ok) {
+      const data = await apiRes.json();
+
+      // Save to history
+      saveToHistory({
+        date: data.timestamp,
+        mode: data.mode,
+        phq9: data.phq9 ? { score: data.phq9.score, max: data.phq9.max, severity: { label: data.phq9.label, level: data.phq9.level } } : null,
+        gad7: data.gad7 ? { score: data.gad7.score, max: data.gad7.max, severity: { label: data.gad7.label, level: data.gad7.level } } : null
+      });
+
+      document.getElementById('results-loading').style.display = 'none';
+      document.getElementById('results-content').style.display = 'block';
+
+      renderResultsFromAPI(data);
+      return;
+    }
+  } catch (e) {
+    // API unavailable or timeout — fall through to client-side
+  }
+
+  // ─── Client-side fallback ───
+  const phq9Answers = [];
+  const gad7Answers = [];
+  state.answers.forEach((ans, i) => {
+    const q = state.questions[i];
+    const val = OPTIONS[ans] ? OPTIONS[ans].value : 0;
+    if (q.test === 'phq9') phq9Answers.push(val);
+    else gad7Answers.push(val);
+  });
+
+  const phq9Total = phq9Answers.reduce((a, b) => a + b, 0);
+  const gad7Total = gad7Answers.reduce((a, b) => a + b, 0);
+  const phq9Severity = getPHQ9Severity(phq9Total);
+  const gad7Severity = getGAD7Severity(gad7Total);
+  const worstSeverity = getWorstSeverity(phq9Severity, gad7Severity);
+
+  saveToHistory({
+    date: new Date().toISOString(),
+    phq9: { score: phq9Total, severity: phq9Severity },
+    gad7: { score: gad7Total, severity: gad7Severity }
+  });
+
+  document.getElementById('results-loading').style.display = 'none';
+  document.getElementById('results-content').style.display = 'block';
+  renderResults(phq9Total, phq9Severity, gad7Total, gad7Severity, worstSeverity);
+}
+
+function renderResultsFromAPI(data) {
+  const hasPHQ9 = data.phq9 !== null;
+  const hasGAD7 = data.gad7 !== null;
+  const worstLevel = data.worstLevel || 'low';
+  const crisis = data.crisis || false;
+
+  // Crisis resources — show always
+  const crisisBox = document.getElementById('crisis-box');
+  crisisBox.style.display = 'block';
+  if (crisis) {
+    // Critical alert
+    crisisBox.innerHTML = '<div class="crisis-alert"><span class="crisis-icon">\u26A0\uFE0F</span><div><strong>Se\u00f1ales de crisis detectadas</strong><br>Si est\u00e1s pensando en hacerte da\u00f1o, llama ahora a la <strong>L\u00ednea de la Vida: 800 911 2000</strong> (24/7, gratuito, confidencial).</div></div>';
+  } else {
+    // Standard crisis info
+    crisisBox.innerHTML = '<h4>L\u00edneas de crisis en M\u00e9xico</h4><p>Si est\u00e1s pasando por un momento dif\u00edcil, no esperes. Estos recursos son gratuitos y confidenciales:</p><span class="crisis-number">800 911 2000</span><p><strong>L\u00ednea de la Vida</strong> \u2014 CONASAMA, disponible 24/7</p><p style="margin-top:8px;"><strong>L\u00ednea SAPTEL:</strong> 55 5259 8121</p>';
+  }
+
+  // Icon
+  const iconMap = { low: '\u25CB', mild: '\u25CB', moderate: '\u25B3', severe: '\u25C9' };
+  document.getElementById('results-icon').textContent = iconMap[worstLevel] || '\u25CB';
+
+  // Title
+  const titleMap = {
+    low: 'Est\u00e1s bien. Y est\u00e1 bien estar bien.',
+    mild: 'Hay algunas se\u00f1ales. Nada que no pueda esperar.',
+    moderate: 'Hay algo que merece atenci\u00f3n.',
+    severe: 'Estas se\u00f1ales son importantes. No las ignores.'
+  };
+  document.getElementById('results-title').textContent = titleMap[worstLevel] || 'Tu lectura';
+  document.getElementById('results-subtitle').textContent = worstLevel === 'severe'
+    ? 'No est\u00e1s solo/a. Hay recursos esperando por ti.'
+    : 'Esto es solo una lectura de c\u00f3mo est\u00e1s hoy. No es un diagn\u00f3stico.';
+
+  // Scores
+  const scoresDiv = document.getElementById('results-scores');
+  scoresDiv.innerHTML = '';
+  if (hasPHQ9 && data.phq9) {
+    scoresDiv.innerHTML += `
+      <div class="score-display score-severity-${data.phq9.level}">
+        <div class="score-number">${data.phq9.score}/${data.phq9.max}</div>
+        <div class="score-label">PHQ-9: ${data.phq9.label}</div>
+      </div>`;
+  }
+  if (hasGAD7 && data.gad7) {
+    scoresDiv.innerHTML += `
+      <div class="score-display score-severity-${data.gad7.level}">
+        <div class="score-number">${data.gad7.score}/${data.gad7.max}</div>
+        <div class="score-label">GAD-7: ${data.gad7.label}</div>
+      </div>`;
+  }
+
+  // Interpretation
+  document.getElementById('results-interp').textContent = data.interpretation || '';
+
+  // Recommendations
+  const recsDiv = document.getElementById('recs-list');
+  recsDiv.innerHTML = '';
+  if (data.recommendations && data.recommendations.length) {
+    data.recommendations.forEach(rec => {
+      recsDiv.innerHTML += `
+        <div class="rec-card">
+          <span class="rec-icon">${rec.icon}</span>
+          <span class="rec-text">${rec.text}</span>
+        </div>`;
+    });
+  }
+
+  // Disclaimer
+  const disclaimerDiv = document.getElementById('results-disclaimer');
+  if (data.disclaimer) {
+    disclaimerDiv.innerHTML = `
+      <div class="disclaimer-box">
+        <span class="disclaimer-icon">\u2695\uFE0F</span>
+        <span>${data.disclaimer.text}</span>
+        <br><br>
+        <strong>${data.disclaimer.crisisLine}</strong>
+      </div>`;
+    disclaimerDiv.style.display = 'block';
+  }
+}
+
+function getPHQ9Severity(score) {
+  if (score <= 4) return { label: 'Mínimo', level: 'low' };
+  if (score <= 9) return { label: 'Leve', level: 'mild' };
+  if (score <= 14) return { label: 'Moderado', level: 'moderate' };
+  if (score <= 19) return { label: 'Moderadamente severo', level: 'severe' };
+  return { label: 'Severo', level: 'severe' };
+}
+
+function getGAD7Severity(score) {
+  if (score <= 4) return { label: 'Mínima', level: 'low' };
+  if (score <= 9) return { label: 'Leve', level: 'mild' };
+  if (score <= 14) return { label: 'Moderada', level: 'moderate' };
+  return { label: 'Severa', level: 'severe' };
+}
+
+function getWorstSeverity(...severities) {
+  const order = { low: 0, mild: 1, moderate: 2, severe: 3 };
+  let worst = severities[0];
+  severities.forEach(s => { if (order[s.level] > order[worst.level]) worst = s; });
+  return worst;
+}
+
+function renderResults(phq9Score, phq9Sev, gad7Score, gad7Sev, worstSev) {
+  const hasPHQ9 = state.mode === 'phq9' || state.mode === 'both';
+  const hasGAD7 = state.mode === 'gad7' || state.mode === 'both';
+
+  // Crisis resources — show always
+  const crisisBox = document.getElementById('crisis-box');
+  const phq9Q9 = state.questions.findIndex(q => q.test === 'phq9' && q.index === 8);
+  const hasSuicidalThought = phq9Q9 >= 0 && state.answers[phq9Q9] !== undefined && OPTIONS[state.answers[phq9Q9]].value >= 1;
+  const isCrisis = worstSev.level === 'severe' || hasSuicidalThought;
+  crisisBox.style.display = 'block';
+  if (isCrisis) {
+    crisisBox.innerHTML = '<div class="crisis-alert"><span class="crisis-icon">\u26A0\uFE0F</span><div><strong>Se\u00f1ales de crisis detectadas</strong><br>Si est\u00e1s pensando en hacerte da\u00f1o, llama ahora a la <strong>L\u00ednea de la Vida: 800 911 2000</strong> (24/7, gratuito, confidencial).</div></div>';
+  } else {
+    crisisBox.innerHTML = '<h4>L\u00edneas de crisis en M\u00e9xico</h4><p>Si est\u00e1s pasando por un momento dif\u00edcil, no esperes. Estos recursos son gratuitos y confidenciales:</p><span class="crisis-number">800 911 2000</span><p><strong>L\u00ednea de la Vida</strong> \u2014 CONASAMA, disponible 24/7</p><p style="margin-top:8px;"><strong>L\u00ednea SAPTEL:</strong> 55 5259 8121</p>';
+  }
+
+  // Icon
+  const iconMap = { low: '○', mild: '○', moderate: '△', severe: '◉' };
+  document.getElementById('results-icon').textContent = iconMap[worstSev.level] || '○';
+
+  // Title
+  const titleMap = {
+    low: 'Estás bien. Y está bien estar bien.',
+    mild: 'Hay algunas señales. Nada que no pueda esperar.',
+    moderate: 'Hay algo que merece atención.',
+    severe: 'Estas señales son importantes. No las ignores.'
+  };
+  document.getElementById('results-title').textContent = titleMap[worstSev.level] || 'Tu lectura';
+  document.getElementById('results-subtitle').textContent =
+    worstSev.level === 'severe'
+      ? 'No estás solo/a. Hay recursos esperando por ti.'
+      : 'Esto es solo una lectura de cómo estás hoy. No es un diagnóstico.';
+
+  // Scores
+  const scoresDiv = document.getElementById('results-scores');
+  scoresDiv.innerHTML = '';
+  if (hasPHQ9) {
+    scoresDiv.innerHTML += `
+      <div class="score-display score-severity-${phq9Sev.level}">
+        <div class="score-number">${phq9Score}/27</div>
+        <div class="score-label">PHQ-9: ${phq9Sev.label}</div>
+      </div>`;
+  }
+  if (hasGAD7) {
+    scoresDiv.innerHTML += `
+      <div class="score-display score-severity-${gad7Sev.level}">
+        <div class="score-number">${gad7Score}/21</div>
+        <div class="score-label">GAD-7: ${gad7Sev.label}</div>
+      </div>`;
+  }
+
+  // Interpretation
+  const interp = document.getElementById('results-interp');
+  const interpTexts = {
+    low: 'Tus respuestas sugieren que no hay señales significativas de malestar emocional en este momento. Esto es bueno. Sigue prestando atención a cómo te sientes — la salud mental se cuida todos los días, no solo cuando hay crisis.',
+    mild: 'Hay algunas señales leves. No es motivo de alarma, pero vale la pena observar cómo evolucionan. Considera hablar con alguien de confianza o probar herramientas de autocuidado. Repetir esta evaluación en un par de semanas puede darte más claridad.',
+    moderate: 'Hay señales que merecen atención. No están en un nivel de crisis, pero sí indican que algo está pasando. Te recomendamos buscar apoyo profesional si estos síntomas persisten. Mientras tanto, las herramientas de KIKU pueden ayudarte a soltar lo que pesa.',
+    severe: 'Las señales son significativas y merecen atención profesional. No estás solo/a. Hay psicólogos y líneas de crisis gratuitas en México que pueden ayudarte. No esperes a que esto pase solo/a — busca apoyo hoy.'
+  };
+  interp.textContent = interpTexts[worstSev.level] || '';
+
+  // Recommendations
+  const recsDiv = document.getElementById('recs-list');
+  let recs = [];
+  if (worstSev.level === 'low' || worstSev.level === 'mild') {
+    recs = [
+      { icon: '📓', text: 'Lleva un registro de tu estado de ánimo. Notar patrones ayuda a identificar qué te afecta.' },
+      { icon: '🧘', text: 'Ejercicios de respiración: inhala 4 segundos, sostén 4, exhala 6. Repite 5 veces.' },
+      { icon: '☕', text: 'Reduce cafeína y pantallas antes de dormir. El descanso es la base de la salud mental.' },
+      { icon: '🗣️', text: 'Habla con alguien de confianza. A veces, decir lo que sientes en voz alta es suficiente.' }
+    ];
+  } else if (worstSev.level === 'moderate') {
+    recs = [
+      { icon: '🩺', text: 'Considera agendar una cita con un psicólogo. PSI México tiene directorio de profesionales: psimexico.org' },
+      { icon: '📓', text: 'Usa KIKU para escribir lo que sientes. Ponerlo en palabras ayuda a que el peso se distribuya.' },
+      { icon: '🧘', text: 'Respiración 4-7-8: inhala 4s, sostén 7s, exhala 8s. Ayuda a regular el sistema nervioso.' },
+      { icon: '🌙', text: 'Prioriza tu sueño esta semana. La falta de sueño amplifica la ansiedad y la depresión.' }
+    ];
+  } else {
+    recs = [
+      { icon: '🆘', text: 'Llama a la Línea de la Vida: 800 911 2000. Disponible 24/7, gratuita y confidencial.' },
+      { icon: '🩺', text: 'Busca apoyo profesional esta semana. No esperes. PSI México: psimexico.org' },
+      { icon: '🗣️', text: 'No enfrentes esto solo/a. Dile a alguien de confianza cómo estás. El silencio agrava el peso.' },
+      { icon: '📓', text: 'KIKU está aquí para ti. Un espacio donde puedes soltar sin miedo al juicio.' }
+    ];
+  }
+  recsDiv.innerHTML = recs.map(r =>
+    `<div class="rec-card"><span class="rec-icon">${r.icon}</span><span class="rec-text">${r.text}</span></div>`
+  ).join('');
+
+  // Update chat button
+  const chatBtn = document.getElementById('chat-btn');
+  chatBtn.href = `kiku.html?phq9=${phq9Score}&gad7=${gad7Score}&severity=${worstSev.level}`;
+
+  // Scroll to top
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ─── History ───
+function saveToHistory(entry) {
+  let history = JSON.parse(localStorage.getItem('yami_miru_history') || '[]');
+  history.unshift(entry);
+  if (history.length > 20) history = history.slice(0, 20);
+  localStorage.setItem('yami_miru_history', JSON.stringify(history));
+  renderHistory();
+}
+
+function renderHistory() {
+  const list = document.getElementById('history-list');
+  const history = JSON.parse(localStorage.getItem('yami_miru_history') || '[]');
+  if (history.length === 0) {
+    list.innerHTML = '<div class="history-empty">Aún no has realizado ninguna evaluación.</div>';
+    return;
+  }
+  list.innerHTML = history.slice(0, 5).map((entry, i) => {
+    const d = new Date(entry.date);
+    const dateStr = d.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' });
+    const timeStr = d.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
+    const best = entry.phq9.score !== undefined && entry.gad7.score !== undefined
+      ? (entry.phq9.score > entry.gad7.score ? entry.phq9 : entry.gad7)
+      : (entry.phq9.score !== undefined ? entry.phq9 : entry.gad7);
+    const dotClass = `history-dot-${best.severity.level}`;
+    const label = entry.phq9.score !== undefined && entry.gad7.score !== undefined
+      ? `PHQ-9: ${entry.phq9.score} / GAD-7: ${entry.gad7.score}`
+      : (entry.phq9.score !== undefined ? `PHQ-9: ${entry.phq9.score}` : `GAD-7: ${entry.gad7.score}`);
+    return `<div class="history-item">
+      <div class="history-left">
+        <div class="history-dot ${dotClass}"></div>
+        <span class="history-name">${best.severity.label}</span>
+      </div>
+      <span class="history-score">${label}</span>
+      <span class="history-date">${dateStr} ${timeStr}</span>
+    </div>`;
+  }).join('');
+}
+
+function getLastMode() { return state.mode || 'phq9'; }
+
+// ─── Keyboard navigation ───
+document.addEventListener('keydown', (e) => {
+  if (document.getElementById('question-screen').style.display !== 'block') return;
+  if (e.key === 'ArrowRight' || e.key === 'Enter') {
+    e.preventDefault();
+    nextQuestion();
+  }
+  if (e.key === 'ArrowLeft') {
+    e.preventDefault();
+    prevQuestion();
+  }
+  if (e.key >= '1' && e.key <= '4') {
+    const idx = parseInt(e.key) - 1;
+    if (idx < OPTIONS.length) {
+      selectOption(state.currentQuestion, idx);
+    }
+  }
+});
+
+// ─── Init ───
+renderHistory();
+</script>
+
+<!-- Service Worker -->
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(function() {});
+}
+</script>
+</body>
+</html>
