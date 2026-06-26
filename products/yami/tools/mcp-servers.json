@@ -1,0 +1,28 @@
+{
+  "comment": "MCP servers — infra existente consumida, NO duplicada",
+  "neo4j": {
+    "host": "localhost",
+    "port": 7687,
+    "protocol": "bolt",
+    "usage": "Graph database for CRM, artist relationships, knowledge graph"
+  },
+  "qdrant": {
+    "host": "localhost",
+    "port": 6333,
+    "protocol": "http",
+    "usage": "Vector search for memory, semantic search, embeddings"
+  },
+  "hermes": {
+    "host": "localhost",
+    "port": 8000,
+    "protocol": "http",
+    "usage": "Hermes agent API (if needed for orchestration)"
+  },
+  "openclaw": {
+    "host": "localhost",
+    "port": 18789,
+    "protocol": "http",
+    "usage": "OpenClaw agent API (legacy, referenced not duplicated)"
+  },
+  "note": "These services run on Danny's VPS. YAMI repo connects via MCP. Do NOT recreate them."
+}

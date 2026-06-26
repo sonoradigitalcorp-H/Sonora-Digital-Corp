@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TOMONI — Círculos de apoyo | YAMI (闇)</title>
+<meta name="description" content="TOMONI son círculos de apoyo anónimos para compartir en comunidad. Ansiedad, duelo, autoestima, estudiantes.">
+
+<!-- Canonical -->
+<link rel="canonical" href="tomoni.html">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://yami-mx.vercel.app/tomoni.html">
+<meta property="og:locale" content="es_MX">
+<meta property="og:title" content="TOMONI — Círculos de apoyo | YAMI (闇)">
+<meta property="og:description" content="Círculos de apoyo anónimos para compartir y encontrar comunidad. Ansiedad, duelo, autoestima, estudiantes.">
+<meta property="og:site_name" content="YAMI">
+<meta property="og:image" content="https://yami-mx.vercel.app/og-image.svg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+
+<!-- PWA -->
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="TOMONI — YAMI">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="TOMONI — Círculos de apoyo | YAMI (闇)">
+<meta name="twitter:description" content="Círculos de apoyo anónimos para compartir en comunidad. Ansiedad, duelo, autoestima, estudiantes.">
+
+<!-- Browser theme -->
+<meta name="theme-color" content="#c48a4a">
+<meta name="color-scheme" content="light">
+
+<!-- JSON-LD Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "TOMONI — Círculos de apoyo",
+  "url": "https://yami-mx.vercel.app/tomoni.html",
+  "description": "Círculos de apoyo anónimos para compartir en comunidad.",
+  "applicationCategory": "SocialNetworking",
+  "operatingSystem": "All",
+  "browserRequirements": "JavaScript",
+  "author": {
+    "@type": "Organization",
+    "name": "YAMI",
+    "url": "https://yami-mx.vercel.app"
+  },
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "MXN"
+  }
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --yami-noche: #0f1a2e;
+  --yami-papel: #f5f0e8;
+  --yami-blanco: #ffffff;
+  --yami-cicatriz: #2d8f7d;
+  --yami-braza: #c48a4a;
+  --yami-latido: #d46a7a;
+  --yami-ceniza: #475569;
+  --yami-superficie: #f4f6f9;
+  --yami-borde: #e2e8f0;
+  --yami-oscuro-suave: #1a2d46;
+  --yami-teal-claro: #e8f4f1;
+  --text-primary: #0f172a;
+  --text-secondary: var(--yami-ceniza);
+  --text-muted: #94a3b8;
+  --text-hero: #f1f5f9;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md: 0 4px 16px rgba(0,0,0,0.08);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.1);
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-full: 100px;
+  --font-d: 'Playfair Display', Georgia, serif;
+  --font-b: 'Inter', system-ui, sans-serif;
+  --font-j: 'Noto Sans JP', sans-serif;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--yami-superficie);
+  color: var(--text-secondary);
+  font-family: var(--font-b);
+  line-height: 1.7;
+  min-height: 100vh;
+}
+
+/* Nav */
+nav {
+  background: var(--yami-noche);
+  padding: 14px 0;
+  position: sticky; top: 0; z-index: 100;
+}
+.nav-inner {
+  max-width: 900px; margin: 0 auto; padding: 0 24px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 1rem; font-weight: 700; color: var(--text-hero);
+  text-decoration: none;
+}
+.nav-logo-kanji { font-family: var(--font-j); font-weight: 300; font-size: 1.2rem; color: var(--yami-braza); }
+.nav-links { display: flex; gap: 16px; }
+.nav-links a {
+  color: rgba(255,255,255,0.5); text-decoration: none;
+  font-size: 0.8rem; font-weight: 500; transition: color 0.3s ease;
+}
+.nav-links a:hover { color: var(--yami-braza); }
+
+/* Hero section */
+.hero {
+  background: linear-gradient(135deg, var(--yami-noche) 0%, var(--yami-oscuro-suave) 100%);
+  padding: 64px 24px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero-kanji {
+  font-family: var(--font-j);
+  font-size: min(30vw, 400px);
+  font-weight: 300;
+  color: rgba(196,138,74,0.04);
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.hero-content { position: relative; z-index: 1; max-width: 600px; margin: 0 auto; }
+.hero-icon {
+  font-family: var(--font-j);
+  font-size: 3rem;
+  font-weight: 300;
+  color: var(--yami-braza);
+  margin-bottom: 8px;
+  display: block;
+}
+.hero h1 {
+  font-family: var(--font-d);
+  font-size: clamp(2rem, 4.5vw, 3rem);
+  font-weight: 600;
+  color: var(--text-hero);
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+.hero p {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.6);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+/* Container */
+.container { max-width: 900px; margin: 0 auto; padding: 0 24px; }
+.section { padding: 64px 0; }
+
+/* Section headers */
+.section-label {
+  font-size: 0.65rem; font-weight: 600; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--yami-braza); margin-bottom: 8px;
+}
+.section-title {
+  font-family: var(--font-d);
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  font-weight: 600;
+  color: var(--text-primary);
+  line-height: 1.25;
+  margin-bottom: 24px;
+}
+
+/* Circle cards */
+.circles-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+@media (max-width: 700px) { .circles-grid { grid-template-columns: 1fr; } }
+
+.circle-card {
+  background: var(--yami-blanco);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--yami-borde);
+  padding: 28px;
+  transition: all 0.3s var(--ease);
+  cursor: pointer;
+}
+.circle-card:hover {
+  border-color: var(--yami-braza);
+  box-shadow: 0 8px 24px rgba(196,138,74,0.12);
+  transform: translateY(-3px);
+}
+.circle-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 12px;
+}
+.circle-topic {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: var(--radius-full);
+  font-size: 0.6rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.circle-topic-teal { background: var(--yami-teal-claro); color: var(--yami-cicatriz); }
+.circle-topic-rose { background: #fce8ec; color: var(--yami-latido); }
+.circle-topic-amber { background: #f5ede3; color: var(--yami-braza); }
+.circle-topic-slate { background: #eef0f3; color: var(--yami-ceniza); }
+
+.circle-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  display: flex;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+.circle-card h3 {
+  font-family: var(--font-d);
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.circle-card p {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: 14px;
+}
+.circle-join {
+  display: inline-block;
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+  font-size: 0.8rem;
+  font-weight: 600;
+  font-family: var(--font-b);
+  border: 1.5px solid var(--yami-braza);
+  background: transparent;
+  color: var(--yami-braza);
+  cursor: pointer;
+  transition: all 0.3s var(--ease);
+}
+.circle-join:hover {
+  background: var(--yami-braza);
+  color: var(--yami-blanco);
+}
+.circle-join.joined {
+  background: var(--yami-braza);
+  color: var(--yami-blanco);
+  border-color: var(--yami-braza);
+  opacity: 0.7;
+  cursor: default;
+}
+
+/* Info box */
+.info-box {
+  background: var(--yami-blanco);
+  border: 1px solid var(--yami-borde);
+  border-radius: var(--radius-md);
+  padding: 28px;
+  margin-bottom: 36px;
+  border-left: 3px solid var(--yami-braza);
+}
+.info-box h3 {
+  font-family: var(--font-d);
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 8px;
+}
+.info-box p {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 48px 24px;
+  color: var(--text-muted);
+}
+.empty-state .empty-icon {
+  font-family: var(--font-j);
+  font-size: 3rem;
+  font-weight: 300;
+  color: rgba(196,138,74,0.2);
+  margin-bottom: 12px;
+  display: block;
+}
+.empty-state p { font-size: 0.9rem; }
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(10,18,32,0.7);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+.modal-overlay.active { display: flex; }
+.modal {
+  background: var(--yami-blanco);
+  border-radius: var(--radius-lg);
+  max-width: 500px;
+  width: 100%;
+  padding: 36px;
+  max-height: 80vh;
+  overflow-y: auto;
+  animation: modalIn 0.3s var(--ease);
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.modal-header h2 {
+  font-family: var(--font-d);
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  line-height: 1;
+}
+.modal-close:hover { color: var(--text-primary); }
+.modal p { font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 16px; line-height: 1.7; }
+
+/* Chat inside circle */
+.circle-chat {
+  margin-top: 20px;
+}
+.chat-messages {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.chat-msg {
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  max-width: 85%;
+}
+.chat-msg-self {
+  background: #f5ede3;
+  color: var(--text-primary);
+  align-self: flex-end;
+  border-bottom-right-radius: 4px;
+}
+.chat-msg-other {
+  background: var(--yami-superficie);
+  color: var(--text-secondary);
+  align-self: flex-start;
+  border-bottom-left-radius: 4px;
+}
+.chat-msg-time {
+  font-size: 0.6rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+.chat-input-row {
+  display: flex;
+  gap: 8px;
+}
+.chat-input-row input {
+  flex: 1;
+  padding: 10px 16px;
+  border: 1.5px solid var(--yami-borde);
+  border-radius: var(--radius-full);
+  font-family: var(--font-b);
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+.chat-input-row input:focus { border-color: var(--yami-braza); }
+.chat-input-row button {
+  padding: 10px 20px;
+  background: var(--yami-braza);
+  color: var(--yami-blanco);
+  border: none;
+  border-radius: var(--radius-full);
+  font-family: var(--font-b);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+.chat-input-row button:hover { background: #b07a3e; }
+
+/* Footer */
+footer {
+  background: var(--yami-noche);
+  padding: 36px 24px;
+  text-align: center;
+}
+footer p {
+  font-size: 0.78rem;
+  color: rgba(255,255,255,0.3);
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">
+      <span class="nav-logo-kanji">闇</span> YAMI<span style="color:var(--yami-braza);">.</span>
+    </a>
+    <div class="nav-links">
+      <a href="miru.html">MIRU</a>
+      <a href="kiku.html">KIKU</a>
+      <a href="index.html">Inicio</a>
+    </div>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-kanji">共に</div>
+  <div class="hero-content">
+    <span class="hero-icon">共に</span>
+    <h1>No tienes que hacerlo solo</h1>
+    <p>TOMONI significa "juntos" en japonés. Son círculos de apoyo anónimos donde personas como tú comparten, escuchan y sanan en comunidad. Sin nombres. Sin juicio. Solo humanidad.</p>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="info-box">
+      <h3>Cómo funcionan los círculos</h3>
+      <p>Elige un círculo por tema o disponibilidad. Dentro encontrarás un espacio donde puedes compartir cómo estás, leer a otros que han sentido lo mismo, y sentir que no eres el único. No hay presión de hablar. Puedes solo escuchar. Todo es anónimo. No hay perfiles, no hay nombres reales, no hay historial permanente.</p>
+    </div>
+
+    <div class="section-label">Círculos Abiertos</div>
+    <h2 class="section-title">Encuentra tu espacio</h2>
+
+    <div class="circles-grid" id="circles-grid">
+      <!-- Generated by JS -->
+    </div>
+
+    <div class="empty-state" id="empty-state" style="display:none;">
+      <span class="empty-icon">共に</span>
+      <p>Hoy no hay círculos disponibles. Pero estás aquí, y eso es suficiente.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal-content">
+    <div class="modal-header">
+      <h2 id="modal-title">Círculo</h2>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<footer>
+  <p>TOMONI (共に) — Juntos · YAMI (闇) · Hecho en México</p>
+</footer>
+
+<script>
+// ─── API URL ───
+const API = '/api/tomoni-circles.js';
+
+// ─── Default circles (fallback if API unavailable) ───
+const DEFAULT_CIRCLES = [
+  { id: 'ansiedad', name: 'Ansiedad', topicLabel: 'Salud emocional', color: 'teal', title: 'La Tormenta en el Pecho', desc: 'Para quienes viven con ansiedad. Aqu\u00ed compartimos lo que nos pesa, lo que nos acelera, y lo que nos ayuda a respirar.', memberCount: 12 },
+  { id: 'diario-vivir', name: 'D\u00eda a d\u00eda', topicLabel: 'Cotidianidad', color: 'rose', title: 'D\u00edas de Menos Sol', desc: 'Un espacio para la tristeza que no encuentra palabras. No tienes que animarte. Solo estar con otros que tambi\u00e9n est\u00e1n.', memberCount: 8 },
+  { id: 'burnout', name: 'Burnout', topicLabel: 'Burnout', color: 'amber', title: 'Hasta Aqu\u00ed Llegu\u00e9', desc: 'Cuando el trabajo, la vida y las exigencias te vaciaron. Para quienes necesitan soltar la carga sin explicaciones.', memberCount: 15 },
+  { id: 'soledad', name: 'Soledad', topicLabel: 'Soledad', color: 'slate', title: 'Islas que se Tocan', desc: 'La soledad compartida pesa menos. Aqu\u00ed no est\u00e1s solo en sentirte solo.', memberCount: 6 },
+  { id: 'duelo', name: 'Duelo', topicLabel: 'Duelo', color: 'slate', title: 'Lo que Se Fue', desc: 'El duelo no tiene prisa. Aqu\u00ed puedes llegar con tu p\u00e9rdida, grande o peque\u00f1a.', memberCount: 9 },
+  { id: 'general', name: 'General', topicLabel: 'General', color: 'teal', title: 'Solo por Hoy', desc: 'Un c\u00edrculo abierto para cualquier cosa que necesites compartir. Sin tema fijo.', memberCount: 23 }
+];
+
+const TITLES = {
+  ansiedad: 'La Tormenta en el Pecho',
+  'diario-vivir': 'D\u00edas de Menos Sol',
+  burnout: 'Hasta Aqu\u00ed Llegu\u00e9',
+  soledad: 'Islas que se Tocan',
+  duelo: 'Lo que Se Fue',
+  general: 'Solo por Hoy'
+};
+
+const colorMap = {
+  teal: 'circle-topic-teal',
+  rose: 'circle-topic-rose',
+  amber: 'circle-topic-amber',
+  slate: 'circle-topic-slate'
+};
+
+// ─── State ───
+let circlesData = [];
+const joined = JSON.parse(localStorage.getItem('yami_tomoni_joined') || '[]');
+const userId = localStorage.getItem('yami_user_id') || 'usr_' + Date.now() + '_' + Math.random().toString(36).substring(2, 6);
+if (!localStorage.getItem('yami_user_id')) localStorage.setItem('yami_user_id', userId);
+
+// ─── Load circles from API ───
+async function loadCircles() {
+  try {
+    const res = await fetch(API);
+    if (res.ok) {
+      const data = await res.json();
+      circlesData = data.circles.map(c => ({
+        ...c,
+        title: TITLES[c.id] || c.name
+      }));
+      renderCircles();
+      return;
+    }
+  } catch (e) {}
+  // Fallback
+  circlesData = DEFAULT_CIRCLES;
+  renderCircles();
+}
+
+// ─── Messages cache ───
+const messagesCache = {};
+const userMessages = JSON.parse(localStorage.getItem('yami_tomoni_messages') || '{}');
+
+function getLocalMessages(circleId) {
+  return userMessages[circleId] || [];
+}
+
+function saveLocalMessage(circleId, msg) {
+  if (!userMessages[circleId]) userMessages[circleId] = [];
+  userMessages[circleId].push(msg);
+  localStorage.setItem('yami_tomoni_messages', JSON.stringify(userMessages));
+}
+
+// ─── Load messages for a circle ───
+async function loadMessages(circleId) {
+  try {
+    const res = await fetch(API + '/messages?id=' + encodeURIComponent(circleId));
+    if (res.ok) {
+      const data = await res.json();
+      messagesCache[circleId] = data.messages || [];
+      return messagesCache[circleId];
+    }
+  } catch (e) {}
+  return getLocalMessages(circleId);
+}
+
+// ─── Render circles ───
+function renderCircles() {
+  const grid = document.getElementById('circles-grid');
+  if (!grid) return;
+  grid.innerHTML = '';
+  circlesData.forEach(c => {
+    const isJoined = joined.includes(c.id);
+    const card = document.createElement('div');
+    card.className = 'circle-card';
+    card.innerHTML = `
+      <div class="circle-card-header">
+        <span class="circle-topic ${colorMap[c.color] || 'circle-topic-teal'}">${c.topicLabel || c.name}</span>
+      </div>
+      <div class="circle-meta">
+        <span>\u2726 ${c.memberCount || 0} miembros</span>
+      </div>
+      <h3>${c.title || c.name}</h3>
+      <p>${c.desc || c.description || ''}</p>
+      <button class="circle-join ${isJoined ? 'joined' : ''}" data-id="${c.id}">
+        ${isJoined ? 'Unido \u2713' : 'Unirme al c\u00edrculo'}
+      </button>
+    `;
+    const btn = card.querySelector('.circle-join');
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.id;
+      if (!joined.includes(id)) {
+        joined.push(id);
+        localStorage.setItem('yami_tomoni_joined', JSON.stringify(joined));
+        btn.textContent = 'Unido \u2713';
+        btn.classList.add('joined');
+        // Notify API (fire & forget)
+        try {
+          await fetch(API + '/join', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ circleId: id, userId, displayName: 'An\u00f3nimo' })
+          });
+        } catch (e) {}
+      }
+      openCircle(id);
+    });
+    grid.appendChild(card);
+  });
+}
+
+// ─── Open circle modal ───
+async function openCircle(id) {
+  const c = circlesData.find(x => x.id === id);
+  if (!c) return;
+
+  const msgs = await loadMessages(id);
+  const localMsgs = getLocalMessages(id);
+  const allMsgs = [...msgs, ...localMsgs].sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
+
+  let msgsHtml = '';
+  if (allMsgs.length === 0) {
+    msgsHtml = '<p style="text-align:center;color:#94a3b8;padding:40px 0;">Todav\u00eda no hay mensajes. S\u00e9 la primera persona en compartir.</p>';
+  } else {
+    msgsHtml = allMsgs.slice(-30).map(m => `
+      <div class="chat-msg">
+        <div class="msg-author">${m.author || 'An\u00f3nimo'}</div>
+        <div class="msg-text">${escapeHtml(m.text)}</div>
+        <div class="msg-time">${formatTime(m.timestamp)}</div>
+      </div>
+    `).join('');
+  }
+
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+  modal.innerHTML = `
+    <div class="modal-content circle-modal">
+      <button class="modal-close" id="modal-close">&times;</button>
+      <span class="circle-topic ${colorMap[c.color] || 'circle-topic-teal'}" style="margin-bottom:8px;display:inline-block;">${c.topicLabel || c.name}</span>
+      <h2 style="font-family:var(--font-d);font-size:1.3rem;color:var(--text-primary);margin-bottom:4px;">${c.title || c.name}</h2>
+      <p style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:20px;">${c.desc || c.description || ''}</p>
+      <div class="circle-chat">
+        <div class="chat-messages" id="circle-msgs">${msgsHtml}</div>
+        <div class="chat-input-bar">
+          <input type="text" id="circle-msg-input" placeholder="Comparte algo... (an\u00f3nimo)" maxlength="500">
+          <button id="circle-send-btn" class="btn-primary btn-sm">Enviar</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+  setTimeout(() => modal.classList.add('active'), 10);
+
+  modal.querySelector('.modal-close').addEventListener('click', () => closeModal(modal));
+  modal.addEventListener('click', (e) => { if (e.target === modal) closeModal(modal); });
+
+  const input = document.getElementById('circle-msg-input');
+  const sendBtn = document.getElementById('circle-send-btn');
+  const sendFn = () => sendCircleMsg(id, modal);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendFn(); });
+  sendBtn.addEventListener('click', sendFn);
+  input.focus();
+}
+
+// ─── Send message ───
+async function sendCircleMsg(circleId, modal) {
+  const input = document.getElementById('circle-msg-input');
+  const text = input.value.trim();
+  if (!text) return;
+
+  // Optimistic UI
+  const tempMsg = {
+    id: 'temp_' + Date.now(),
+    text: text,
+    author: 'An\u00f3nimo',
+    timestamp: new Date().toISOString()
+  };
+  saveLocalMessage(circleId, tempMsg);
+
+  const container = document.getElementById('circle-msgs');
+  const emptyMsg = container.querySelector('p');
+  if (emptyMsg && emptyMsg.style.textAlign === 'center') container.innerHTML = '';
+  container.innerHTML += `
+    <div class="chat-msg">
+      <div class="msg-author">An\u00f3nimo</div>
+      <div class="msg-text">${escapeHtml(text)}</div>
+      <div class="msg-time">Ahora</div>
+    </div>
+  `;
+  container.scrollTop = container.scrollHeight;
+  input.value = '';
+
+  // Send to API (fire & forget)
+  try {
+    await fetch(API + '/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ circleId, text, userId })
+    });
+  } catch (e) {}
+}
+
+// ─── Close modal ───
+function closeModal(modal) {
+  modal.classList.remove('visible');
+  setTimeout(() => modal.remove(), 300);
+}
+
+// ─── Utilities ───
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function formatTime(ts) {
+  if (!ts) return '';
+  const d = new Date(ts);
+  const now = new Date();
+  const diff = Math.floor((now - d) / 60000);
+  if (diff < 1) return 'Ahora';
+  if (diff < 60) return 'Hace ' + diff + ' min';
+  if (diff < 1440) return 'Hace ' + Math.floor(diff / 60) + 'h';
+  return d.toLocaleDateString('es-MX', { day: 'numeric', month: 'short' });
+}
+
+// ─── Init ───
+loadCircles();
+</script>
+
+<!-- Service Worker -->
+<script>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(function() {});
+}
+</script>
+
+</body>
+</html>
