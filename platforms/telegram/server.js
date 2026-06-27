@@ -67,7 +67,13 @@ function loadSkills() {
     .map(f => { try { return JSON.parse(fs.readFileSync(path.join(SKILLS_DIR, f))); } catch { return null; } })
     .filter(Boolean)
     .sort((a, b) => (b.priority || 0) - (a.priority || 0));
-  log.info(`[Skills] ${skills.length} cargados: ${skills.map(s => s.name).join(', ')}`);
+  const byTenant = {};
+  for (const s of skills) {
+    for (const t of skillTenants(s)) {
+      (byTenant[t] = byTenant[t] || []).push(s.name);
+    }
+  }
+  log.info(`[Skills] ${skills.length} cargados — default:${(byTenant.default||[]).length} abe-fenix:${(byTenant['abe-fenix']||[]).length}`);
 }
 
 function matchSkill(message, tenantId) {
