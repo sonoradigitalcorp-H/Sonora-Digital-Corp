@@ -48,6 +48,51 @@ services:
       retries: 3
       start_period: 10s
 
+  # LangFuse - Observabilidad y trazabilidad de agentes (OBS)
+  langfuse:
+    image: langfuse/langfuse:2
+    container_name: sdc-langfuse
+    ports:
+      - "3000:3000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@langfuse-db:5432/langfuse
+      - NEXTAUTH_SECRET=${LANGFUSE_SECRET:-sdc-langfuse-secret-2026}
+      - NEXTAUTH_URL=http://localhost:3000
+      - SALT=${LANGFUSE_SALT:-sdc-langfuse-salt-2026}
+      - TELEMETRY_ENABLED=false
+      - LANGFUSE_ENABLE_EXPERIMENTAL_FEATURES=true
+    depends_on:
+      langfuse-db:
+        condition: service_healthy
+    networks:
+      - jarvis-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:3000/api/public/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+
+  langfuse-db:
+    image: postgres:15
+    container_name: sdc-langfuse-db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=langfuse
+    volumes:
+      - langfuse_data:/var/lib/postgresql/data
+    networks:
+      - jarvis-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+
   # MCP Server - Model Context Protocol
   mcp-server:
     build: ./docker/mcp-server
@@ -86,3 +131,4 @@ volumes:
   neo4j_logs:
   qdrant_storage:
   qdrant_snapshots:
+  langfuse_data:
