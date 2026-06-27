@@ -49,6 +49,17 @@ const clawdHistory = new Map();
 const SKILLS_DIR = path.join(__dirname, 'skills');
 let skills = [];
 
+// Los skills ABE (abe-*) solo aplican a 'abe-fenix'.
+// Skills brain-ask y ayuda-menu aplican a todos los tenants.
+// Todo lo demas (fiscal, SAT, CEO) solo aplica a 'default'.
+function skillTenants(skill) {
+  if (skill.tenants) return skill.tenants;
+  const name = skill.name || '';
+  if (name.startsWith('abe-') || name === 'musica-derechos-info' || name === 'musica-evento-cotizar') return ['abe-fenix'];
+  if (name === 'brain-ask' || name === 'ayuda-menu') return ['default', 'abe-fenix'];
+  return ['default'];
+}
+
 function loadSkills() {
   if (!fs.existsSync(SKILLS_DIR)) return;
   skills = fs.readdirSync(SKILLS_DIR)
@@ -59,13 +70,15 @@ function loadSkills() {
   log.info(`[Skills] ${skills.length} cargados: ${skills.map(s => s.name).join(', ')}`);
 }
 
-function matchSkill(message) {
+function matchSkill(message, tenantId) {
   const lower = message.toLowerCase();
   for (const skill of skills) {
     if (!skill.triggers || skill.triggers.includes('*')) continue;
+    if (!skillTenants(skill).includes(tenantId)) continue;
     if (skill.triggers.some(t => lower.includes(t.toLowerCase()))) return skill;
   }
-  return skills.find(s => s.triggers?.includes('*')) || null;
+  const fallback = skills.find(s => s.triggers?.includes('*') && skillTenants(s).includes(tenantId)) || null;
+  return fallback;
 }
 
 async function invokeSkill(skill, message, tenantId) {
@@ -219,7 +232,7 @@ function createTelegrafInstance(tenantId, token) {
         return;
       }
 
-      const skill = matchSkill(msg);
+      const skill = matchSkill(msg, tenantId);
       let text, actions = [];
       if (skill) {
         text = await invokeSkill(skill, msg, tenantId);
