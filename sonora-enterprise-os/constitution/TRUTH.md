@@ -11,9 +11,9 @@ All agents (OpenClaw, Hermes, Mystic, JARVIS) MUST follow these rules.
 | `~/jarvis/` | `/home/mystic/sonora-digital-corp/` |
 | `~/sdcorp/` | `/home/mystic/sonora-digital-corp/` |
 | `$JARVIS_HOME` | `/home/mystic/sonora-digital-corp/` |
-| `~/SonoraDigitalCorp-Yami/` | `/home/mystic/sonora-digital-corp/products/yami/` |
-| `$YAMI_HOME` | `/home/mystic/sonora-digital-corp/products/yami/` |
-| Yami repo (Mystic+Noel) | `/home/mystic/sonora-digital-corp/products/yami/` |
+| `~/SonoraDigitalCorp-Yami/` | `🚫 OBSOLETO — movido a sonora-enterprise-os/` |
+| `$YAMI_HOME` | `🚫 OBSOLETO — movido a sonora-enterprise-os/` |
+| `archive-sonora-digital-corp-git/` | `🚫 OBSOLETO — movido a backups/repos/` |
 
 ## Key Locations
 
@@ -22,13 +22,20 @@ All agents (OpenClaw, Hermes, Mystic, JARVIS) MUST follow these rules.
 | Monorepo root | `/home/mystic/sonora-digital-corp/` |
 | Enterprise OS | `/home/mystic/sonora-digital-corp/sonora-enterprise-os/` |
 | Constitution | `sonora-enterprise-os/constitution/OMEGA-PROMPT-v10.0.md` |
+| RULES | `sonora-enterprise-os/constitution/10-RULES.md` |
+| CONTRATO | `sonora-enterprise-os/constitution/CONTRATO.md` |
+| Checksums | `sonora-enterprise-os/constitution/CHECKSUMS.sha256` |
 | State (logs, engram, backups) | `state/` |
 | JARVIS core engine | `apps/jarvis/` |
 | Hermes bridge | `apps/hermes/hermes_bridge.py` |
 | Docker compose | `infra/docker-compose.yml` |
 | Tests | `tests/` |
 | Scripts | `scripts/` |
-| Yami product | `products/yami/` |
+| Enterprise OS scripts | `sonora-enterprise-os/scripts/` |
+| Enterprise OS specs | `sonora-enterprise-os/specs/` |
+| Enterprise OS templates | `sonora-enterprise-os/templates/` |
+| Enterprise OS memory | `sonora-enterprise-os/memory/` |
+| Enterprise OS docs | `sonora-enterprise-os/docs/` |
 
 ## VPS Info
 
@@ -65,7 +72,11 @@ All agents (OpenClaw, Hermes, Mystic, JARVIS) MUST follow these rules.
 ## Constitution
 - Root: `constitution/OMEGA-PROMPT-v10.0.md`
 - Soul: `constitution/SOUL.md`
-- Governance: VDD → EDD → PDD → ODD → SDD → BDD → TDD
+- RULES: `constitution/10-RULES.md`
+- CONTRATO: `constitution/CONTRATO.md`
+- Governance: VDD → EDD → PDD → ODD → SDD → BDD → TDD → CODE → **OBS → EVA**
+  - **OBS** (Observabilidad): LangFuse — traces, cost tracking, dashboard en vivo
+  - **EVA** (Evaluación): DeepEval — eval suite, CI/CD gates, feedback loop
 - Score gate: ≥60 to approve any proposal (9 metrics)
 - 10 Sub-OS: `prompts/prompts/OS/MANIFEST.md`
 
@@ -77,3 +88,9 @@ All agents (OpenClaw, Hermes, Mystic, JARVIS) MUST follow these rules.
 | Initiative | `initiatives/initiative-TEMPLATE.md` |
 | Event Catalog | `events/CATALOG.md` |
 | Enterprise Score | `metrics/enterprise-score.md` |
+| Spec (SDD) | `sonora-enterprise-os/templates/spec-template.md` |
+| Plan | `sonora-enterprise-os/templates/plan-template.md` |
+| Tasks | `sonora-enterprise-os/templates/tasks-template.md` |
+| Feature (Gherkin) | `sonora-enterprise-os/templates/TEMPLATE.feature` |
+| Discovery | `sonora-enterprise-os/templates/DISCOVERY.md` |
+| Issue | `sonora-enterprise-os/templates/issue-template.md` |

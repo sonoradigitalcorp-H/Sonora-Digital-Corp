@@ -1,91 +1,558 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sonora Digital Corp — Productos</title>
+<title>Sonora Digital Corp — Automatización Inteligente con IA</title>
+<meta name="description" content="Tu negocio automatizado con IA 24/7. Asistentes digitales, contenido automático, ventas y más en un solo plan mensual. Sin contratar a nadie.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+tailwind.config={
+  theme:{
+    extend:{
+      colors:{
+        apple:{blue:'#0071e3',blue2:'#0066cc',blue3:'#2997ff',gray:'#f5f5f7',dark:'#1d1d1f',dark2:'rgba(0,0,0,0.8)',dark3:'rgba(0,0,0,0.48)',card:'#272729',black:'#000000'},
+        sdc:{cyan:'#00d4ff',purple:'#7b2ff7',accent:'#ff6b35'}
+      },
+      fontFamily:{sans:['Inter','system-ui','-apple-system','Segoe UI','Roboto','Helvetica Neue','Arial','sans-serif']},
+      borderRadius:{pill:'980px'},
+      boxShadow:{apple:'3px 5px 30px 0px rgba(0,0,0,0.22)'},
+      fontSize:{display:['clamp(2.5rem,5vw,3.5rem)',{line:'1.07',letterSpacing:'-0.003em',fontWeight:'600'}],'display-md':['clamp(1.8rem,3vw,2.6rem)',{line:'1.1',letterSpacing:'-0.003em',fontWeight:'600'}],'display-sm':['clamp(1.3rem,2vw,1.75rem)',{line:'1.14',fontWeight:'400'}],'body':['clamp(1rem,1.3vw,1.06rem)',{line:'1.47',letterSpacing:'-0.022em',fontWeight:'400'}],'body-sm':['0.88rem',{line:'1.43',letterSpacing:'-0.014em',fontWeight:'400'}],'caption':['0.75rem',{line:'1.33',letterSpacing:'-0.12px',fontWeight:'400'}],'micro':['0.65rem',{line:'1.47',letterSpacing:'0.08em',fontWeight:'500',textTransform:'uppercase'}]}
+    }
+  }
+}
+</script>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;700&display=swap');
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:'Inter',sans-serif; background:#faf8f5; color:#1a1a1a; }
-header { background:linear-gradient(135deg, #1a1410, #2a2018); color:#fff; padding:4rem 2rem; text-align:center; }
-header h1 { font-family:'Playfair Display',serif; font-size:3rem; margin-bottom:0.5rem; }
-header p { color:#aaa; font-size:1.1rem; max-width:600px; margin:0 auto; }
-.container { max-width:1100px; margin:0 auto; padding:3rem 2rem; }
-.products { display:grid; grid-template-columns:repeat(auto-fill, minmax(300px, 1fr)); gap:2rem; }
-.product { background:#fff; border:1px solid #e5e5e5; border-radius:16px; padding:2rem; transition:all 0.3s; }
-.product:hover { transform:translateY(-3px); box-shadow:0 10px 40px rgba(0,0,0,0.06); border-color:#c8a87c; }
-.product .icon { font-size:2.5rem; margin-bottom:1rem; }
-.product h3 { font-size:1.3rem; margin-bottom:0.5rem; }
-.product p { color:#666; font-size:0.95rem; line-height:1.6; }
-.product .price { font-size:1.6rem; font-weight:700; color:#c8a87c; margin:1rem 0; }
-.product .tag { display:inline-block; padding:0.2rem 0.8rem; border-radius:20px; font-size:0.75rem; font-weight:600; text-transform:uppercase; background:rgba(200,168,124,0.1); color:#c8a87c; }
-.product .btn { display:inline-block; margin-top:1rem; padding:0.6rem 1.5rem; border-radius:50px; background:#c8a87c; color:#1a1a1a; text-decoration:none; font-weight:600; font-size:0.9rem; transition:all 0.3s; }
-.product .btn:hover { background:#d4b896; transform:translateY(-1px); }
-footer { text-align:center; padding:2rem; color:#888; font-size:0.85rem; border-top:1px solid #e5e5e5; }
+body{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:optimizeLegibility}
+.text-balance{text-wrap:balance}
+.text-pretty{text-wrap:pretty}
+.nav-glass{background:rgba(0,0,0,0.8);-webkit-backdrop-filter:blur(20px);backdrop-filter:saturate(180%) blur(20px)}
+.card-hover{transition:all .3s cubic-bezier(.4,0,.2,1)}
+.card-hover:hover{box-shadow:3px 5px 30px 0px rgba(0,0,0,0.22);transform:translateY(-4px)}
+.pricing-card{transition:all .3s cubic-bezier(.4,0,.2,1)}
+.pricing-card:hover{transform:translateY(-8px);box-shadow:3px 5px 30px 0px rgba(0,0,0,0.22)}
+.pricing-featured{position:relative}
+.pricing-featured::before{content:'';position:absolute;inset:-2px;border-radius:18px;background:linear-gradient(135deg,#0071e3,#00d4ff);z-index:-1}
+.fade-in{animation:fadeIn .6s ease-out forwards;opacity:0}
+@keyframes fadeIn{to{opacity:1}}
+.stagger>*{animation:fadeIn .6s ease-out forwards;opacity:0}
+.stagger>*:nth-child(1){animation-delay:0ms}
+.stagger>*:nth-child(2){animation-delay:100ms}
+.stagger>*:nth-child(3){animation-delay:200ms}
+.stagger>*:nth-child(4){animation-delay:300ms}
+.stagger>*:nth-child(5){animation-delay:400ms}
+.stagger>*:nth-child(6){animation-delay:500ms}
+.scroll-reveal{transition:all .6s cubic-bezier(.4,0,.2,1);opacity:0;transform:translateY(24px)}
+.scroll-reveal.revealed{opacity:1;transform:translateY(0)}
+.chevron{display:inline-block;transition:transform .2s}
+a:hover .chevron{transform:translateX(4px)}
+.bg-hero{background:linear-gradient(180deg,#000 0%,#1a1a1a 100%)}
+@supports not (backdrop-filter:blur(20px)){
+  .nav-glass{background:rgba(0,0,0,0.95)}
+}
 </style>
 </head>
-<body>
-<header>
-  <h1>Sonora Digital Corp</h1>
-  <p>Productos digitales automatizados para artistas, músicos y negocios locales</p>
-</header>
-<div class="container">
-  <div class="products">
-    <div class="product">
-      <div class="icon">🏢</div>
-      <h3>ABE Music Inc — Sitio Web</h3>
-      <p>Sitio profesional para sello discográfico con roster de artistas, servicios, booking y contacto. Diseño oscuro/elegante.</p>
-      <div class="price">Proyecto</div>
-      <a href="abe-music/" class="btn">Ver sitio →</a>
+<body class="font-sans bg-white text-[#1d1d1f] antialiased">
+
+<!-- NAV -->
+<nav class="nav-glass fixed top-0 left-0 right-0 z-50 h-11 md:h-12">
+  <div class="max-w-6xl mx-auto px-5 h-full flex items-center justify-between">
+    <a href="#" class="text-sm md:text-[13px] font-semibold text-white tracking-tight hover:opacity-80 transition-opacity">Sonora Digital Corp</a>
+    <div class="hidden md:flex items-center gap-6">
+      <a href="#servicios" class="text-[11px] md:text-[12px] text-white/70 hover:text-white transition-colors">Servicios</a>
+      <a href="#resultados" class="text-[11px] md:text-[12px] text-white/70 hover:text-white transition-colors">Resultados</a>
+      <a href="#planes" class="text-[11px] md:text-[12px] text-white/70 hover:text-white transition-colors">Planes</a>
+      <a href="https://wa.me/526621234567" target="_blank" class="text-[11px] md:text-[12px] font-medium text-white bg-apple-blue px-4 py-1.5 rounded-pill hover:bg-[#0077ed] transition-colors">Agendar llamada</a>
     </div>
-    <div class="product">
-      <div class="icon">🎵</div>
-      <h3>Landing Page para Artistas</h3>
-      <p>Página profesional con biografía, galería, música, redes sociales y enlace de booking. Hosteada en GitHub Pages.</p>
-      <div class="price">$299 MXN</div>
-      <a href="landing-artista/" class="btn">Ver demo →</a>
-    </div>
-    <div class="product">
-      <div class="icon">📅</div>
-      <h3>Sistema de Booking</h3>
-      <p>Calendario + formulario + notificación WhatsApp/Telegram al artista. Confirmación con un clic.</p>
-      <div class="price">$999 MXN</div>
-      <a href="booking/" class="btn">Ver demo →</a>
-    </div>
-    <div class="product">
-      <div class="icon">💬</div>
-      <h3>Chatbot WhatsApp</h3>
-      <p>Bot para recibir pedidos, cotizaciones y agendar citas. Responde automático 24/7.</p>
-      <div class="price">$499 MXN/mes</div>
-      <a href="chatbot/" class="btn">Ver demo →</a>
-    </div>
-    <div class="product">
-      <div class="icon">🎵📅💬</div>
-      <h3>Bundle Completo</h3>
-      <p>Landing + Booking + Chatbot WhatsApp. El paquete completo para que cualquier artista venda su música y fechas.</p>
-      <div class="price">$1,999 MXN</div>
-      <a href="https://wa.me/526621234567?text=Quiero%20el%20bundle%20completo" class="btn">Contratar →</a>
-    </div>
-    <div class="product">
-      <div class="icon">📊</div>
-      <h3>Reportes Automáticos</h3>
-      <p>Reporte diario/semanal de leads, clientes y ventas enviado a tu WhatsApp o Telegram.</p>
-      <div class="price">$799 MXN/mes</div>
-      <a href="https://wa.me/526621234567?text=Quiero%20reportes%20automaticos" class="btn">Contratar →</a>
-    </div>
-    <div class="product">
-      <div class="icon">🚀</div>
-      <h3>Producto Personalizado</h3>
-      <p>¿Tienes otra idea? Te construimos el producto que necesites con entrega en 48 horas.</p>
-      <div class="price">Desde $499 MXN</div>
-      <a href="https://wa.me/526621234567?text=Quiero%20un%20producto%20personalizado" class="btn">Cotizar →</a>
+    <button id="mobile-menu-btn" class="md:hidden text-white/80 hover:text-white p-1" aria-label="Menú">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 5h14M3 10h14M3 15h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  <!-- Mobile menu -->
+  <div id="mobile-menu" class="md:hidden hidden absolute top-11 left-0 right-0 bg-black/95 backdrop-blur-xl border-t border-white/10">
+    <div class="px-5 py-6 space-y-4">
+      <a href="#servicios" class="block text-sm text-white/80 hover:text-white py-2">Servicios</a>
+      <a href="#resultados" class="block text-sm text-white/80 hover:text-white py-2">Resultados</a>
+      <a href="#planes" class="block text-sm text-white/80 hover:text-white py-2">Planes</a>
+      <a href="https://wa.me/526621234567" target="_blank" class="block text-center text-sm font-medium text-white bg-apple-blue px-4 py-2.5 rounded-pill">Agendar llamada</a>
     </div>
   </div>
-</div>
-<footer>
-  <p>© 2026 Sonora Digital Corp — hecha en Hermosillo, Sonora</p>
-  <p style="margin-top:0.3rem">WhatsApp: <a href="https://wa.me/526621234567" style="color:#c8a87c">+52 662 123 4567</a></p>
+</nav>
+
+<!-- HERO -->
+<section class="bg-hero pt-11 md:pt-12">
+  <div class="max-w-6xl mx-auto px-5 py-20 md:py-28 lg:py-32 text-center">
+    <div class="inline-flex items-center gap-2 bg-white/10 border border-white/10 text-white/70 text-caption px-3 py-1 rounded-pill mb-5 md:mb-6 tracking-wide uppercase fade-in">Disponible en todo México</div>
+    <h1 class="text-display text-white text-balance max-w-4xl mx-auto leading-[1.05] fade-in" style="animation-delay:100ms">
+      Tu negocio automatizado con IA
+      <br>
+      <span class="text-apple-blue3">sin contratar a nadie</span>
+    </h1>
+    <p class="text-body text-white/70 mt-4 md:mt-5 max-w-2xl mx-auto text-balance fade-in" style="animation-delay:200ms">
+      Asistentes digitales que venden por ti. Contenido que se publica solo. Clientes que reciben respuesta al instante. Una agencia completa de automatización en un solo plan mensual.
+    </p>
+    <div class="flex flex-wrap justify-center gap-3 mt-7 md:mt-8 fade-in" style="animation-delay:300ms">
+      <a href="https://wa.me/526621234567" target="_blank" class="text-[15px] md:text-[17px] font-normal text-white bg-apple-blue px-7 md:px-8 py-3 md:py-3.5 rounded-pill hover:bg-[#0077ed] transition-colors inline-flex items-center gap-2">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Quiero automatizar mi negocio
+      </a>
+      <a href="#servicios" class="text-[15px] md:text-[17px] font-normal text-[#1d1d1f] bg-[#e8e8ed] px-7 md:px-8 py-3 md:py-3.5 rounded-pill hover:bg-[#d2d2d7] transition-colors">
+        Ver servicios <span class="chevron">→</span>
+      </a>
+    </div>
+    <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 mt-10 md:mt-12 text-[11px] md:text-[12px] text-white/50 fade-in" style="animation-delay:400ms">
+      <span class="flex items-center gap-1.5"><svg class="w-3 h-3 text-[#4ade80]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> <strong class="text-white/80 font-semibold">+15</strong> negocios automatizados</span>
+      <span class="flex items-center gap-1.5"><svg class="w-3 h-3 text-[#4ade80]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> <strong class="text-white/80 font-semibold">97%</strong> tiempo recuperado promedio</span>
+      <span class="flex items-center gap-1.5"><svg class="w-3 h-3 text-[#4ade80]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> <strong class="text-white/80 font-semibold">3.2x</strong> incremento en ventas</span>
+    </div>
+  </div>
+</section>
+
+<!-- DATA STATS (YAMI-style) -->
+<section class="bg-white border-b border-[#d2d2d7]/30 py-10 md:py-14 scroll-reveal">
+  <div class="max-w-5xl mx-auto px-5">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 text-center">
+      <div>
+        <p class="text-[32px] md:text-[40px] font-bold text-[#1d1d1f] tracking-tight">+15</p>
+        <p class="text-[12px] md:text-[13px] text-[rgba(0,0,0,0.48)] leading-tight">negocios automatizados en México</p>
+      </div>
+      <div>
+        <p class="text-[32px] md:text-[40px] font-bold text-[#1d1d1f] tracking-tight">97%</p>
+        <p class="text-[12px] md:text-[13px] text-[rgba(0,0,0,0.48)] leading-tight">tiempo recuperado promedio en operaciones</p>
+      </div>
+      <div>
+        <p class="text-[32px] md:text-[40px] font-bold text-[#1d1d1f] tracking-tight">3.2x</p>
+        <p class="text-[12px] md:text-[13px] text-[rgba(0,0,0,0.48)] leading-tight">incremento en ventas con embudos IA</p>
+      </div>
+      <div>
+        <p class="text-[32px] md:text-[40px] font-bold text-[#1d1d1f] tracking-tight">4h</p>
+        <p class="text-[12px] md:text-[13px] text-[rgba(0,0,0,0.48)] leading-tight">horas/día recuperadas por cliente promedio</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<section class="bg-apple-gray border-b border-[#d2d2d7]/30">
+  <div class="max-w-4xl mx-auto px-5 py-8 md:py-10 text-center">
+    <p class="text-micro text-[rgba(0,0,0,0.48)] tracking-[0.08em]">Usado por equipos en</p>
+    <div class="flex flex-wrap justify-center items-center gap-x-6 gap-y-2 mt-3 text-[11px] md:text-[12px] text-[rgba(0,0,0,0.48)] font-medium">
+      <span>E-commerce</span><span class="hidden sm:block w-px h-3 bg-[#d2d2d7]"></span>
+      <span>Servicios Profesionales</span><span class="hidden sm:block w-px h-3 bg-[#d2d2d7]"></span>
+      <span>Restaurantes</span><span class="hidden sm:block w-px h-3 bg-[#d2d2d7]"></span>
+      <span>Agencias Creativas</span><span class="hidden sm:block w-px h-3 bg-[#d2d2d7]"></span>
+      <span>Despachos Contables</span>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN POINTS -->
+<section class="bg-apple-gray py-16 md:py-20">
+  <div class="max-w-6xl mx-auto px-5">
+    <div class="text-center mb-12 md:mb-14 scroll-reveal">
+      <p class="text-micro text-[rgba(0,0,0,0.48)] mb-3">Diagnóstico gratuito</p>
+      <h2 class="text-display-md text-[#1d1d1f]">¿Te identificas con alguno?</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-4 max-w-4xl mx-auto stagger">
+      <div class="bg-white border border-[#d2d2d7] rounded-xl p-6 md:p-7 text-center card-hover">
+        <div class="text-3xl md:text-4xl mb-3 md:mb-4">⏰</div>
+        <h3 class="text-[17px] font-semibold text-[#1d1d1f] mb-1.5">No tienes tiempo</h3>
+        <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.48)] leading-relaxed">Apagando incendios todo el día. Contestando mensajes, subiendo posts, persiguiendo clientes. Tu negocio te tiene a ti.</p>
+      </div>
+      <div class="bg-white border border-[#d2d2d7] rounded-xl p-6 md:p-7 text-center card-hover">
+        <div class="text-3xl md:text-4xl mb-3 md:mb-4">💰</div>
+        <h3 class="text-[17px] font-semibold text-[#1d1d1f] mb-1.5">Dejas dinero en la mesa</h3>
+        <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.48)] leading-relaxed">Leads que preguntan a las 10pm y nadie contesta. Clientes que se enfrían. Ventas que se pierden mientras duermes.</p>
+      </div>
+      <div class="bg-white border border-[#d2d2d7] rounded-xl p-6 md:p-7 text-center card-hover">
+        <div class="text-3xl md:text-4xl mb-3 md:mb-4">📱</div>
+        <h3 class="text-[17px] font-semibold text-[#1d1d1f] mb-1.5">Redes te consumen</h3>
+        <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.48)] leading-relaxed">Contenido diario, stories, respuestas, trends... un trabajo de tiempo completo que no te paga. Y si no publicas, no existes.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SERVICES -->
+<section class="bg-white py-16 md:py-20" id="servicios">
+  <div class="max-w-6xl mx-auto px-5">
+    <div class="text-center mb-12 md:mb-14 scroll-reveal">
+      <p class="text-micro text-apple-blue font-semibold mb-3">Lo que hacemos</p>
+      <h2 class="text-display-md text-[#1d1d1f]">Una agencia de automatización<br class="hidden sm:block"> <span class="text-apple-blue">en un solo plan</span></h2>
+      <p class="text-body text-[rgba(0,0,0,0.64)] mt-3 max-w-xl mx-auto text-balance">No vendemos cursos ni promesas. Instalamos, configuramos y mantenemos tecnología que trabaja por ti 24/7.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-4 md:gap-5 max-w-5xl mx-auto stagger">
+      <div class="border border-[#d2d2d7] rounded-2xl p-6 md:p-7 text-center card-hover bg-white">
+        <div class="w-11 h-11 md:w-12 md:h-12 bg-apple-blue/10 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4"><span class="text-2xl md:text-[28px]">🤖</span></div>
+        <h3 class="text-[17px] font-semibold text-[#1d1d1f] mb-1.5">Asistente Digital</h3>
+        <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.48)] leading-relaxed mb-3 md:mb-4">Un agente AI que responde WhatsApp, emails y llamadas automáticamente. Agenda citas, califica leads y cierra ventas. Conoce tu negocio, tu tono y tus precios.</p>
+        <span class="text-[11px] md:text-[12px] uppercase tracking-wider text-apple-blue font-semibold">Desde $2,500/mes</span>
+      </div>
+      <div class="border border-[#d2d2d7] rounded-2xl p-6 md:p-7 text-center card-hover bg-white">
+        <div class="w-11 h-11 md:w-12 md:h-12 bg-apple-blue/10 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4"><span class="text-2xl md:text-[28px]">🔗</span></div>
+        <h3 class="text-[17px] font-semibold text-[#1d1d1f] mb-1.5">Conexiones MCP</h3>
+        <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.48)] leading-relaxed mb-3 md:mb-4">Todo tu ecosistema conectado: CRM, WhatsApp, Email, Redes Sociales, calendario. Una inteligencia central que orquesta cada herramienta sin que toques un botón.</p>
+        <span class="text-[11px] md:text-[12px] uppercase tracking-wider text-apple-blue font-semibold">Desde $3,000/mes</span>
+      </div>
+      <div class="border border-[#d2d2d7] rounded-2xl p-6 md:p-7 text-center card-hover bg-white">
+        <div class="w-11 h-11 md:w-12 md:h-12 bg-apple-blue/10 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4"><span class="text-2xl md:text-[28px]">📷</span></div>
+        <h3 class="text-[17px] font-semibold text-[#1d1d1f] mb-1.5">Contenido Automático</h3>
+        <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.48)] leading-relaxed mb-3 md:mb-4">Publicaciones diarias en todas tus redes. Copy, imágenes y videos generados por IA que conoce tu marca. Programación y publicación automática. Tu marca siempre activa.</p>
+        <span class="text-[11px] md:text-[12px] uppercase tracking-wider text-apple-blue font-semibold">Desde $1,800/mes</span>
+      </div>
+      <div class="border border-[#d2d2d7] rounded-2xl p-6 md:p-7 text-center card-hover bg-white">
+        <div class="w-11 h-11 md:w-12 md:h-12 bg-apple-blue/10 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4"><span class="text-2xl md:text-[28px]">📊</span></div>
+        <h3 class="text-[17px] font-semibold text-[#1d1d1f] mb-1.5">Embudo de Ventas IA</h3>
+        <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.48)] leading-relaxed mb-3 md:mb-4">Seguimiento automático de leads. Recordatorios inteligentes, ofertas personalizadas según comportamiento, y cierre asistido. Convierte más sin esforzarte más.</p>
+        <span class="text-[11px] md:text-[12px] uppercase tracking-wider text-apple-blue font-semibold">Desde $2,000/mes</span>
+      </div>
+      <div class="border border-[#d2d2d7] rounded-2xl p-6 md:p-7 text-center card-hover bg-white">
+        <div class="w-11 h-11 md:w-12 md:h-12 bg-apple-blue/10 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4"><span class="text-2xl md:text-[28px]">🌍</span></div>
+        <h3 class="text-[17px] font-semibold text-[#1d1d1f] mb-1.5">Redes Autónomas</h3>
+        <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.48)] leading-relaxed mb-3 md:mb-4">Gestión completa de redes sociales. Publicación automática, respuestas inteligentes a comentarios y DM, analítica semanal. Tu presencia digital sin que abras la app.</p>
+        <span class="text-[11px] md:text-[12px] uppercase tracking-wider text-apple-blue font-semibold">Desde $1,800/mes</span>
+      </div>
+      <div class="border border-[#d2d2d7] rounded-2xl p-6 md:p-7 text-center card-hover bg-white">
+        <div class="w-11 h-11 md:w-12 md:h-12 bg-apple-blue/10 rounded-full flex items-center justify-center mx-auto mb-3 md:mb-4"><span class="text-2xl md:text-[28px]">🚀</span></div>
+        <h3 class="text-[17px] font-semibold text-[#1d1d1f] mb-1.5">Suite Completa</h3>
+        <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.48)] leading-relaxed mb-3 md:mb-4">Todo incluido: asistente + contenido + ventas + redes + MCP + soporte dedicado. Una plataforma unificada que trabaja 24/7. Recupera tu tiempo y multiplica ingresos.</p>
+        <span class="text-[11px] md:text-[12px] uppercase tracking-wider text-apple-blue font-semibold">Desde $6,900/mes</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRODUCT SHOWCASE: YAMI -->
+<section class="bg-[#0a0a0a] py-16 md:py-20 overflow-hidden scroll-reveal">
+  <div class="max-w-6xl mx-auto px-5">
+    <div class="text-center mb-12 md:mb-14">
+      <p class="text-micro text-[#00d4ff] font-semibold mb-3 tracking-[0.08em]">Producto estrella</p>
+      <h2 class="text-display-md text-white"><span class="text-[#c0a060]">YAMI</span> <span class="text-white/50 font-light">闇</span></h2>
+      <p class="text-body text-white/50 mt-3 max-w-xl mx-auto text-balance">Salud mental preventiva para México. Antes de que sea crisis, que sea conversación.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-4 md:gap-5 max-w-4xl mx-auto stagger">
+      <div class="border border-white/10 rounded-2xl p-6 md:p-7 text-center card-hover bg-white/5">
+        <div class="text-3xl md:text-4xl mb-3 md:mb-4 text-[#00d4ff]">👁️</div>
+        <h3 class="text-[17px] font-semibold text-white mb-1.5">MIRU <span class="text-white/30 font-light text-[13px]">見る</span></h3>
+        <p class="text-[13px] md:text-[14px] text-white/40 leading-relaxed">Detección temprana con auto-evaluaciones que identifican señales de ansiedad, depresión y estrés. Una brújula emocional anónima.</p>
+        <a href="https://yami-mx.vercel.app/miru.html" target="_blank" class="inline-block mt-4 text-[12px] uppercase tracking-wider text-[#00d4ff] font-semibold hover:underline">Explorar →</a>
+      </div>
+      <div class="border border-white/10 rounded-2xl p-6 md:p-7 text-center card-hover bg-white/5">
+        <div class="text-3xl md:text-4xl mb-3 md:mb-4 text-[#c0a060]">👂</div>
+        <h3 class="text-[17px] font-semibold text-white mb-1.5">KIKU <span class="text-white/30 font-light text-[13px]">聞く</span></h3>
+        <p class="text-[13px] md:text-[14px] text-white/40 leading-relaxed">Acompañamiento seguro: chat consciente, diario emocional, ejercicios de regulación. Sin juicio. Sin horario. Anónimo y gratuito.</p>
+        <a href="https://yami-mx.vercel.app/kiku.html" target="_blank" class="inline-block mt-4 text-[12px] uppercase tracking-wider text-[#00d4ff] font-semibold hover:underline">Explorar →</a>
+      </div>
+      <div class="border border-white/10 rounded-2xl p-6 md:p-7 text-center card-hover bg-white/5">
+        <div class="text-3xl md:text-4xl mb-3 md:mb-4 text-[#ff6b6b]">🤝</div>
+        <h3 class="text-[17px] font-semibold text-white mb-1.5">TOMONI <span class="text-white/30 font-light text-[13px]">共に</span></h3>
+        <p class="text-[13px] md:text-[14px] text-white/40 leading-relaxed">Círculos de apoyo anónimos, moderados y seguros. Sanar en comunidad es más ligero. Porque a veces solo necesitas saber que no eres el único.</p>
+        <a href="https://yami-mx.vercel.app/tomoni.html" target="_blank" class="inline-block mt-4 text-[12px] uppercase tracking-wider text-[#00d4ff] font-semibold hover:underline">Explorar →</a>
+      </div>
+    </div>
+    <div class="text-center mt-8">
+      <a href="https://yami-mx.vercel.app" target="_blank" class="inline-flex items-center gap-2 text-[14px] font-medium text-white bg-white/10 border border-white/20 px-6 py-3 rounded-pill hover:bg-white/20 transition-all">
+        <span class="text-[#c0a060]">闇</span> Conocer YAMI <span class="chevron">→</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- DARK CTA BAND -->
+<section class="bg-black py-14 md:py-16 scroll-reveal">
+  <div class="max-w-4xl mx-auto px-5 text-center">
+    <p class="text-white text-[17px] md:text-[19px] font-light leading-relaxed max-w-2xl mx-auto text-balance">
+      "La gente no compra productos, compra resultados. Y el resultado que vendemos es simple: <span class="text-apple-blue3 font-normal">más dinero en menos tiempo con cero esclavitud digital</span>."
+    </p>
+    <p class="text-white/40 text-body-sm mt-4 tracking-wide">— Brian Tracy</p>
+  </div>
+</section>
+
+<!-- RESULTS -->
+<section class="bg-white py-16 md:py-20" id="resultados">
+  <div class="max-w-6xl mx-auto px-5">
+    <div class="text-center mb-12 md:mb-14 scroll-reveal">
+      <p class="text-micro text-apple-blue font-semibold mb-3">Resultados</p>
+      <h2 class="text-display-md text-[#1d1d1f]">Lo que dicen <span class="text-apple-blue">nuestros clientes</span></h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-4 md:gap-5 max-w-5xl mx-auto stagger">
+      <div class="border border-[#e8e8ed] rounded-xl p-5 md:p-6 bg-white">
+        <div class="flex gap-0.5 text-apple-blue text-[15px] mb-3">★★★★★</div>
+        <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.64)] leading-relaxed italic">"Dejé de contestar WhatsApp yo mismo. El asistente agenda, cotiza y cierra por mí. Recuperé 4 horas al día. Mis ventas subieron 40%."</p>
+        <div class="flex items-center gap-3 mt-4 pt-4 border-t border-[#e8e8ed]">
+          <div class="w-8 h-8 rounded-full bg-apple-blue flex items-center justify-center text-white text-[11px] font-semibold">C</div>
+          <div><p class="text-[13px] font-semibold text-[#1d1d1f]">Carlos M.</p><p class="text-[11px] text-[rgba(0,0,0,0.48)]">Director Comercial</p></div>
+        </div>
+      </div>
+      <div class="border border-[#e8e8ed] rounded-xl p-5 md:p-6 bg-white">
+        <div class="flex gap-0.5 text-apple-blue text-[15px] mb-3">★★★★★</div>
+        <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.64)] leading-relaxed italic">"Publicaba 2 veces por semana y era un suplicio. Ahora mi negocio genera 14 publicaciones semanales automáticas. Engagement subió 300%."</p>
+        <div class="flex items-center gap-3 mt-4 pt-4 border-t border-[#e8e8ed]">
+          <div class="w-8 h-8 rounded-full bg-apple-blue flex items-center justify-center text-white text-[11px] font-semibold">M</div>
+          <div><p class="text-[13px] font-semibold text-[#1d1d1f]">María F.</p><p class="text-[11px] text-[rgba(0,0,0,0.48)]">Fundadora, Moda</p></div>
+        </div>
+      </div>
+      <div class="border border-[#e8e8ed] rounded-xl p-5 md:p-6 bg-white">
+        <div class="flex gap-0.5 text-apple-blue text-[15px] mb-3">★★★★★</div>
+        <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.48)] leading-relaxed italic">"Pago $6,900 y vale cada peso. Mi equipo se redujo y mis ventas se duplicaron. No es magia, es IA bien aplicada."</p>
+        <div class="flex items-center gap-3 mt-4 pt-4 border-t border-[#e8e8ed]">
+          <div class="w-8 h-8 rounded-full bg-apple-blue flex items-center justify-center text-white text-[11px] font-semibold">R</div>
+          <div><p class="text-[13px] font-semibold text-[#1d1d1f]">Ricardo G.</p><p class="text-[11px] text-[rgba(0,0,0,0.48)]">CEO, Startup Tech</p></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OBJECTIONS -->
+<section class="bg-apple-gray py-16 md:py-20">
+  <div class="max-w-4xl mx-auto px-5">
+    <div class="text-center mb-10 md:mb-12 scroll-reveal">
+      <p class="text-micro text-[rgba(0,0,0,0.48)] mb-3">Objeciones reales</p>
+      <h2 class="text-display-md text-[#1d1d1f]">Lo que seguro <span class="text-apple-blue">estás pensando</span></h2>
+    </div>
+    <div class="space-y-3 max-w-2xl mx-auto stagger">
+      <details class="group bg-white border border-[#d2d2d7] rounded-xl overflow-hidden">
+        <summary class="flex items-center justify-between p-4 md:p-5 cursor-pointer list-none">
+          <span class="text-[14px] md:text-[15px] font-semibold text-[#1d1d1f]">¿No es caro?</span>
+          <svg class="w-4 h-4 text-[rgba(0,0,0,0.48)] transition-transform duration-200 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="px-4 md:px-5 pb-4 md:pb-5">
+          <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.48)] leading-relaxed">Un empleado de tiempo completo cuesta $12,000+ al mes. Nuestro asistente cuesta menos que medio salario mínimo y trabaja 24/7 sin prestaciones, sin ausencias, sin rotación. No es un gasto. Es una inversión con retorno medible.</p>
+        </div>
+      </details>
+      <details class="group bg-white border border-[#d2d2d7] rounded-xl overflow-hidden">
+        <summary class="flex items-center justify-between p-4 md:p-5 cursor-pointer list-none">
+          <span class="text-[14px] md:text-[15px] font-semibold text-[#1d1d1f]">¿Necesito saber tecnología?</span>
+          <svg class="w-4 h-4 text-[rgba(0,0,0,0.48)] transition-transform duration-200 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="px-4 md:px-5 pb-4 md:pb-5">
+          <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.48)] leading-relaxed">Cero absoluto. Nosotros hacemos todo. Tú solo recibes los resultados. Si sabes usar WhatsApp, ya sabes usar nuestro sistema.</p>
+        </div>
+      </details>
+      <details class="group bg-white border border-[#d2d2d7] rounded-xl overflow-hidden">
+        <summary class="flex items-center justify-between p-4 md:p-5 cursor-pointer list-none">
+          <span class="text-[14px] md:text-[15px] font-semibold text-[#1d1d1f]">¿Y si no funciona?</span>
+          <svg class="w-4 h-4 text-[rgba(0,0,0,0.48)] transition-transform duration-200 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="px-4 md:px-5 pb-4 md:pb-5">
+          <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.48)] leading-relaxed">Primera semana gratis. Sin contratos forzosos. Si no ves resultados en 14 días, cancelas y no pagas nada. El riesgo es completamente nuestro.</p>
+        </div>
+      </details>
+      <details class="group bg-white border border-[#d2d2d7] rounded-xl overflow-hidden">
+        <summary class="flex items-center justify-between p-4 md:p-5 cursor-pointer list-none">
+          <span class="text-[14px] md:text-[15px] font-semibold text-[#1d1d1f]">¿Atienden mi industria?</span>
+          <svg class="w-4 h-4 text-[rgba(0,0,0,0.48)] transition-transform duration-200 group-open:rotate-180" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="px-4 md:px-5 pb-4 md:pb-5">
+          <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.48)] leading-relaxed">Trabajamos con e-commerce, servicios profesionales, restaurantes, agencias creativas, despachos contables, clínicas, talleres y más. Si tu negocio tiene clientes, WhatsApp y redes sociales, podemos automatizarlo.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="bg-white py-16 md:py-20" id="planes">
+  <div class="max-w-5xl mx-auto px-5">
+    <div class="text-center mb-12 md:mb-14 scroll-reveal">
+      <p class="text-micro text-apple-blue font-semibold mb-3">Planes</p>
+      <h2 class="text-display-md text-[#1d1d1f]">Elige tu nivel de <span class="text-apple-blue">automatización</span></h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-4 md:gap-5 max-w-4xl mx-auto stagger">
+      <!-- Starter -->
+      <div class="border border-[#d2d2d7] rounded-2xl p-6 md:p-7 bg-white text-center pricing-card">
+        <p class="text-micro text-[rgba(0,0,0,0.48)] mb-2">Starter</p>
+        <p class="text-[34px] md:text-[40px] font-bold text-[#1d1d1f] tracking-tight">$1,500</p>
+        <p class="text-[13px] text-[rgba(0,0,0,0.48)] mb-5 md:mb-6">/mes</p>
+        <ul class="text-[13px] md:text-[14px] text-left space-y-2.5 mb-6 md:mb-7">
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-apple-blue mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Asistente WhatsApp básico</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-apple-blue mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Respuestas automáticas</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-apple-blue mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Agenda de citas simple</li>
+          <li class="flex items-start gap-2 text-[rgba(0,0,0,0.24)]"><span class="w-4 h-4 flex items-center justify-center flex-shrink-0">—</span> Contenido automático</li>
+          <li class="flex items-start gap-2 text-[rgba(0,0,0,0.24)]"><span class="w-4 h-4 flex items-center justify-center flex-shrink-0">—</span> MCP Connections</li>
+          <li class="flex items-start gap-2 text-[rgba(0,0,0,0.24)]"><span class="w-4 h-4 flex items-center justify-center flex-shrink-0">—</span> Embudo de ventas IA</li>
+        </ul>
+        <a href="https://wa.me/526621234567?text=Quiero%20plan%20Starter" target="_blank" class="block text-[14px] md:text-[15px] font-medium text-[#1d1d1f] bg-[#e8e8ed] px-6 py-3 rounded-pill hover:bg-[#d2d2d7] transition-colors">Lo quiero</a>
+      </div>
+      <!-- Professional (Featured) -->
+      <div class="pricing-featured rounded-2xl p-6 md:p-7 bg-white text-center pricing-card">
+        <div class="bg-apple-blue text-white text-[10px] md:text-[11px] font-semibold px-3 py-1 rounded-pill uppercase tracking-wider mx-auto mb-2 w-fit">Popular</div>
+        <p class="text-micro text-[rgba(0,0,0,0.48)] mb-2">Profesional</p>
+        <p class="text-[34px] md:text-[40px] font-bold text-[#1d1d1f] tracking-tight">$4,500</p>
+        <p class="text-[13px] text-[rgba(0,0,0,0.48)] mb-5 md:mb-6">/mes</p>
+        <ul class="text-[13px] md:text-[14px] text-left space-y-2.5 mb-6 md:mb-7">
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-apple-blue mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Asistente digital completo</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-apple-blue mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Contenido redes automático</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-apple-blue mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> MCP Connections</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-apple-blue mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Embudo de ventas IA</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-apple-blue mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Redes autónomas</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-apple-blue mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Soporte prioritario</li>
+        </ul>
+        <a href="https://wa.me/526621234567?text=Quiero%20plan%20Profesional" target="_blank" class="block text-[14px] md:text-[15px] font-medium text-white bg-apple-blue px-6 py-3 rounded-pill hover:bg-[#0077ed] transition-colors">Elegir Profesional</a>
+      </div>
+      <!-- Enterprise -->
+      <div class="border border-[#d2d2d7] rounded-2xl p-6 md:p-7 bg-white text-center pricing-card">
+        <p class="text-micro text-[rgba(0,0,0,0.48)] mb-2">Enterprise</p>
+        <p class="text-[34px] md:text-[40px] font-bold text-[#1d1d1f] tracking-tight">$6,900</p>
+        <p class="text-[13px] text-[rgba(0,0,0,0.48)] mb-5 md:mb-6">/mes</p>
+        <ul class="text-[13px] md:text-[14px] text-left space-y-2.5 mb-6 md:mb-7">
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-apple-blue mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Todo el plan Profesional</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-apple-blue mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Suite completa integrada</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-apple-blue mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> 5 asistentes digitales</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-apple-blue mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Workflows personalizados</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-apple-blue mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Capacitación al equipo</li>
+          <li class="flex items-start gap-2"><svg class="w-4 h-4 text-apple-blue mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg> Soporte 24/7 dedicado</li>
+        </ul>
+        <a href="https://wa.me/526621234567?text=Quiero%20plan%20Enterprise" target="_blank" class="block text-[14px] md:text-[15px] font-medium text-[#1d1d1f] bg-[#e8e8ed] px-6 py-3 rounded-pill hover:bg-[#d2d2d7] transition-colors">Hablamos</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="bg-black py-16 md:py-20 scroll-reveal">
+  <div class="max-w-4xl mx-auto px-5 text-center">
+    <p class="text-micro text-white/40 mb-4">Sin riesgo</p>
+    <h2 class="text-display-md text-white mb-3">Primera semana gratis.<br><span class="text-apple-blue3">Cancela cuando quieras.</span></h2>
+    <p class="text-body text-white/60 max-w-lg mx-auto text-balance mb-7 md:mb-8">No esperes a que tu competencia te gane. Agenda una llamada de 15 minutos y te mostramos casos reales de negocios como el tuyo. Sin compromiso.</p>
+    <a href="https://wa.me/526621234567" target="_blank" class="inline-flex items-center gap-2 text-[15px] md:text-[17px] font-normal text-white bg-apple-blue px-8 md:px-10 py-3.5 md:py-4 rounded-pill hover:bg-[#0077ed] transition-colors">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Agenda tu llamada gratuita
+    </a>
+    <p class="text-caption text-white/30 mt-4">Respuesta en menos de 5 minutos</p>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="bg-apple-gray py-16 md:py-20">
+  <div class="max-w-2xl mx-auto px-5">
+    <div class="text-center mb-10 md:mb-12 scroll-reveal">
+      <p class="text-micro text-[rgba(0,0,0,0.48)]">Preguntas frecuentes</p>
+    </div>
+    <div class="space-y-3 stagger">
+      <details class="group bg-white border border-[#d2d2d7] rounded-xl overflow-hidden">
+        <summary class="flex items-center justify-between p-4 md:p-5 cursor-pointer list-none">
+          <span class="text-[14px] md:text-[15px] font-semibold text-[#1d1d1f]">¿Qué incluye la primera semana gratis?</span>
+          <svg class="w-4 h-4 text-[rgba(0,0,0,0.48)] transition-transform duration-200 group-open:rotate-180 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="px-4 md:px-5 pb-4 md:pb-5">
+          <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.48)] leading-relaxed">Diagnóstico de tu negocio, configuración del asistente básico, y 7 días de operación sin costo. Si no ves valor, cancelas antes del día 7 y no pagas nada.</p>
+        </div>
+      </details>
+      <details class="group bg-white border border-[#d2d2d7] rounded-xl overflow-hidden">
+        <summary class="flex items-center justify-between p-4 md:p-5 cursor-pointer list-none">
+          <span class="text-[14px] md:text-[15px] font-semibold text-[#1d1d1f]">¿Tengo que firmar contrato?</span>
+          <svg class="w-4 h-4 text-[rgba(0,0,0,0.48)] transition-transform duration-200 group-open:rotate-180 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="px-4 md:px-5 pb-4 md:pb-5">
+          <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.48)] leading-relaxed">No. Mes a mes. Cancela cuando quieras sin penalización. Confiamos tanto en nuestro servicio que no necesitamos atarte con contratos.</p>
+        </div>
+      </details>
+      <details class="group bg-white border border-[#d2d2d7] rounded-xl overflow-hidden">
+        <summary class="flex items-center justify-between p-4 md:p-5 cursor-pointer list-none">
+          <span class="text-[14px] md:text-[15px] font-semibold text-[#1d1d1f]">¿Mis datos están seguros?</span>
+          <svg class="w-4 h-4 text-[rgba(0,0,0,0.48)] transition-transform duration-200 group-open:rotate-180 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="px-4 md:px-5 pb-4 md:pb-5">
+          <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.48)] leading-relaxed">100%. Todo corre en infraestructura propia con SSL, contenedores aislados y acceso restringido. Nunca compartimos ni vendemos información de clientes.</p>
+        </div>
+      </details>
+      <details class="group bg-white border border-[#d2d2d7] rounded-xl overflow-hidden">
+        <summary class="flex items-center justify-between p-4 md:p-5 cursor-pointer list-none">
+          <span class="text-[14px] md:text-[15px] font-semibold text-[#1d1d1f]">¿Cuánto tiempo toma ver resultados?</span>
+          <svg class="w-4 h-4 text-[rgba(0,0,0,0.48)] transition-transform duration-200 group-open:rotate-180 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7"/></svg>
+        </summary>
+        <div class="px-4 md:px-5 pb-4 md:pb-5">
+          <p class="text-[13px] md:text-[14px] text-[rgba(0,0,0,0.48)] leading-relaxed">El asistente empieza a funcionar desde el día 1. Clientes reportan resultados significativos en las primeras 2 semanas. El contenido automático y embudos de venta toman de 2 a 4 semanas en optimizarse.</p>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="bg-black py-12 md:py-16">
+  <div class="max-w-6xl mx-auto px-5">
+    <div class="grid md:grid-cols-4 gap-8 mb-10">
+      <div class="md:col-span-1">
+        <p class="text-sm font-semibold text-white mb-2 tracking-tight">Sonora Digital Corp</p>
+        <p class="text-[13px] text-white/40 leading-relaxed">Automatización inteligente con IA para negocios mexicanos. Una agencia completa en un solo plan mensual.</p>
+      </div>
+      <div>
+        <p class="text-[11px] uppercase tracking-wider text-white/50 font-semibold mb-3">Servicios</p>
+        <ul class="space-y-2">
+          <li><a href="#servicios" class="text-[13px] text-white/40 hover:text-white/70 transition-colors">Asistente Digital</a></li>
+          <li><a href="#servicios" class="text-[13px] text-white/40 hover:text-white/70 transition-colors">Contenido Automático</a></li>
+          <li><a href="#servicios" class="text-[13px] text-white/40 hover:text-white/70 transition-colors">Redes Autónomas</a></li>
+          <li><a href="#planes" class="text-[13px] text-white/40 hover:text-white/70 transition-colors">Planes</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-[11px] uppercase tracking-wider text-white/50 font-semibold mb-3">Productos</p>
+        <ul class="space-y-2">
+          <li><a href="https://yami-mx.vercel.app" target="_blank" class="text-[13px] text-white/40 hover:text-white/70 transition-colors">YAMI 闇 — Salud mental</a></li>
+          <li><a href="https://abe-music.com" target="_blank" class="text-[13px] text-white/40 hover:text-white/70 transition-colors">ABE Music</a></li>
+          <li><a href="https://sonora-digital.com" target="_blank" class="text-[13px] text-white/40 hover:text-white/70 transition-colors">Sonora Digital</a></li>
+        </ul>
+      </div>
+      <div>
+        <p class="text-[11px] uppercase tracking-wider text-white/50 font-semibold mb-3">Contacto</p>
+        <ul class="space-y-2">
+          <li><a href="https://wa.me/526621234567" target="_blank" class="text-[13px] text-white/40 hover:text-white/70 transition-colors">WhatsApp</a></li>
+          <li><a href="https://sonoradigitalcorp.com" class="text-[13px] text-white/40 hover:text-white/70 transition-colors">sonoradigitalcorp.com</a></li>
+        </ul>
+        <div class="mt-4 pt-4 border-t border-white/10">
+          <p class="text-[11px] text-white/30">Hermosillo, Sonora, México</p>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-white/10 pt-6 text-center">
+      <p class="text-caption text-white/30 leading-relaxed">Resultados pueden variar. Testimonios son de clientes reales. Primera semana gratis sin compromiso. &copy; 2026 Sonora Digital Corp. Todos los derechos reservados. Hecho en México.</p>
+    </div>
+  </div>
 </footer>
+
+<script>
+// Mobile menu toggle
+const menuBtn = document.getElementById('mobile-menu-btn');
+const mobileMenu = document.getElementById('mobile-menu');
+if (menuBtn && mobileMenu) {
+  menuBtn.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+  });
+  mobileMenu.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+  });
+}
+
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const id = a.getAttribute('href').slice(1);
+    if (id) {
+      const el = document.getElementById(id);
+      if (el) {
+        e.preventDefault();
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }
+  });
+});
+
+// Scroll reveal
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('revealed');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.scroll-reveal').forEach(el => observer.observe(el));
+</script>
 </body>
 </html>

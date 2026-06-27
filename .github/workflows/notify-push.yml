@@ -1,0 +1,25 @@
+name: Notify — Push detectado
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notificar a Telegram
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN_CEO }}
+          TELEGRAM_CHAT_ID: ${{ secrets.CEO_CHAT_ID }}
+        run: |
+          MSG="📦 *Push en sonora-digital-corp*
+          Autor: ${{ github.actor }}
+          Branch: ${{ github.ref_name }}
+          Commit: ${{ github.event.head_commit.message }}
+          Repo: ${{ github.repository }}"
+          curl -s -X POST "https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage" \
+            -d "chat_id=${TELEGRAM_CHAT_ID}" \
+            -d "text=${MSG}" \
+            -d "parse_mode=Markdown" || true
