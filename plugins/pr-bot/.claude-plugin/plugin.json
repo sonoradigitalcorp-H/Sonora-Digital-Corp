@@ -1,0 +1,41 @@
+{
+  "name": "pr-bot",
+  "version": "1.0.0",
+  "description": "SoulClone PR Bot — automated pull request creation, review, and merge",
+  "author": "SoulClone",
+  "agents": {
+    "pr-creator": {
+      "description": "Creates structured PRs with conventional commits, auto-generates descriptions, assigns reviewers, and links to GitHub issues",
+      "file": "agents/pr-creator.sh",
+      "timeout": 60
+    },
+    "pr-merger": {
+      "description": "Merges approved PRs with correct merge strategy, verifies checks, updates branches, runs post-merge hooks",
+      "file": "agents/pr-merger.sh",
+      "timeout": 30
+    },
+    "pr-reviewer": {
+      "description": "Reviews PRs with multi-agent evaluation of code quality, security, performance, and style using confidence scoring",
+      "file": "agents/pr-reviewer.sh",
+      "timeout": 60
+    }
+  },
+  "commands": {
+    "pr:create": {
+      "description": "Create a new pull request",
+      "file": "commands/create.sh"
+    },
+    "pr:merge": {
+      "description": "Merge an approved pull request",
+      "file": "commands/merge.sh"
+    },
+    "pr:review": {
+      "description": "Review a pull request",
+      "file": "commands/review.sh"
+    },
+    "pr:list": {
+      "description": "List open pull requests",
+      "file": "commands/list.sh"
+    }
+  }
+}
