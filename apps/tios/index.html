@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIGNAL — Music Intelligence Platform | Abe Music Group</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0f;
+      color: #f0f0f5;
+      line-height: 1.6;
+    }
+    .container { max-width: 900px; margin: 0 auto; padding: 4rem 2rem; }
+    .badge {
+      display: inline-block;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.2);
+      color: #818cf8;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+    }
+    h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.1;
+      margin-bottom: 0.5rem;
+    }
+    h1 span { color: #818cf8; }
+    .subtitle {
+      font-size: 1.2rem;
+      color: #8888a0;
+      margin-bottom: 2rem;
+    }
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .stat {
+      background: #14141f;
+      padding: 1.5rem;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+      text-align: center;
+    }
+    .stat .num { font-size: 2rem; font-weight: 700; color: #818cf8; }
+    .stat .label { font-size: 0.85rem; color: #8888a0; margin-top: 0.3rem; }
+    .links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin: 2rem 0;
+    }
+    .links a {
+      padding: 0.8rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+    .links a.primary {
+      background: #6366f1;
+      color: white;
+    }
+    .links a.primary:hover { background: #4f46e5; transform: translateY(-2px); }
+    .links a.secondary {
+      background: #14141f;
+      color: #f0f0f5;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+    .links a.secondary:hover { border-color: #6366f1; transform: translateY(-2px); }
+    .services {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.8rem;
+      margin: 2rem 0;
+    }
+    .service {
+      background: #14141f;
+      padding: 1rem;
+      border-radius: 8px;
+      border: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.85rem;
+    }
+    .service .name { font-weight: 600; color: #f0f0f5; }
+    .service .detail { color: #8888a0; font-size: 0.8rem; margin-top: 0.2rem; }
+    h2 {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin: 3rem 0 1rem;
+    }
+    .pipeline {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      padding: 1.5rem;
+      background: #14141f;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.06);
+      margin: 1rem 0;
+    }
+    .pipeline .step {
+      padding: 0.5rem 1rem;
+      background: rgba(99, 102, 241, 0.1);
+      border-radius: 6px;
+      font-size: 0.8rem;
+      color: #818cf8;
+    }
+    .pipeline .arrow { color: #8888a0; font-size: 1.2rem; }
+    .status-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+    .status-card {
+      background: #14141f;
+      padding: 1.2rem;
+      border-radius: 10px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .status-card .check { color: #22c55e; }
+    .status-card .pending { color: #eab308; }
+    .status-card h3 { font-size: 0.95rem; margin-bottom: 0.3rem; }
+    .status-card p { font-size: 0.85rem; color: #8888a0; }
+    footer {
+      text-align: center;
+      padding: 3rem 2rem;
+      color: #8888a0;
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(255,255,255,0.06);
+      margin-top: 4rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="badge">Abe Music Group</div>
+    <h1>SIGNAL — <span>Music Intelligence Platform</span></h1>
+    <p class="subtitle">Plataforma de IA para descubrimiento de artistas, workflows autónomos y gestión ejecutiva de signings.</p>
+
+    <div class="links">
+      <a href="https://signal-music.vercel.app" class="primary" target="_blank">Abrir Frontend &rarr;</a>
+      <a href="pitch-deck.html" class="secondary">Ver Pitch Deck</a>
+      <a href="ARCHITECTURE.md" class="secondary">Arquitectura</a>
+    </div>
+
+    <div class="stats">
+      <div class="stat"><div class="num">31</div><div class="label">Rutas Frontend</div></div>
+      <div class="stat"><div class="num">15</div><div class="label">Servicios Docker</div></div>
+      <div class="stat"><div class="num">19</div><div class="label">Paquetes Monorepo</div></div>
+      <div class="stat"><div class="num">8</div><div class="label">Commits</div></div>
+    </div>
+
+    <h2>Estado</h2>
+    <div class="status-grid">
+      <div class="status-card">
+        <h3><span class="check">&#10003;</span> Frontend Vercel</h3>
+        <p>31 rutas, 0 errores de build. Live en signal-music.vercel.app</p>
+      </div>
+      <div class="status-card">
+        <h3><span class="check">&#10003;</span> CI/CD Pipelines</h3>
+        <p>3 workflows: CI (PR), CD Staging (push), CD Production (release)</p>
+      </div>
+      <div class="status-card">
+        <h3><span class="check">&#10003;</span> Docker Infraestructura</h3>
+        <p>4 Dockerfiles, docker-compose.prod.yml, scripts de deploy listos</p>
+      </div>
+      <div class="status-card">
+        <h3><span class="pending">&#9711;</span> VPS Backend</h3>
+        <p>Esperando provisionamiento de servidor con Docker</p>
+      </div>
+      <div class="status-card">
+        <h3><span class="pending">&#9711;</span> SSL/TLS</h3>
+        <p>Let's Encrypt configurado en scripts, pendiente de ejecutar</p>
+      </div>
+      <div class="status-card">
+        <h3><span class="pending">&#9711;</span> Org GitHub</h3>
+        <p>Abe-Music-Group por crear. Repo actual en nikkiai809/SIGNAL</p>
+      </div>
+    </div>
+
+    <h2>Pipeline de Datos</h2>
+    <div class="pipeline">
+      <span class="step">Discovery Workers</span>
+      <span class="arrow">&rarr;</span>
+      <span class="step">PostgreSQL + Vectores</span>
+      <span class="arrow">&rarr;</span>
+      <span class="step">AI Scoring</span>
+      <span class="arrow">&rarr;</span>
+      <span class="step">Label Copilot</span>
+      <span class="arrow">&rarr;</span>
+      <span class="step">Workflow Engine</span>
+    </div>
+
+    <h2>15 Servicios</h2>
+    <div class="services">
+      <div class="service"><div class="name">postgres</div><div class="detail">pgvector:pg17</div></div>
+      <div class="service"><div class="name">redis</div><div class="detail">Colas + caché</div></div>
+      <div class="service"><div class="name">api-gateway</div><div class="detail">:4000 · NestJS</div></div>
+      <div class="service"><div class="name">web</div><div class="detail">:3000 · Next.js</div></div>
+      <div class="service"><div class="name">worker-discovery</div><div class="detail">10 conectores</div></div>
+      <div class="service"><div class="name">worker-metrics</div><div class="detail">Métricas</div></div>
+      <div class="service"><div class="name">worker-ai</div><div class="detail">Scoring</div></div>
+      <div class="service"><div class="name">worker-alerts</div><div class="detail">Alertas</div></div>
+      <div class="service"><div class="name">notification-service</div><div class="detail">Email, SMS, Push</div></div>
+      <div class="service"><div class="name">label-copilot</div><div class="detail">:4002 · Multi-agente</div></div>
+      <div class="service"><div class="name">workflow-engine</div><div class="detail">:4003 · Autónomo</div></div>
+      <div class="service"><div class="name">integration</div><div class="detail">:4001 · Pipeline</div></div>
+      <div class="service"><div class="name">prometheus</div><div class="detail">:9090</div></div>
+      <div class="service"><div class="name">grafana</div><div class="detail">:3001</div></div>
+      <div class="service"><div class="name">nginx</div><div class="detail">:80/:443</div></div>
+    </div>
+
+    <footer>
+      <p>SIGNAL (Music Intelligence Platform) — Abe Music Group</p>
+      <p style="margin-top: 0.3rem;">Sonora Digital Corp</p>
+    </footer>
+  </div>
+</body>
+</html>

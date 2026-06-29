@@ -1,0 +1,32 @@
+{
+  "name": "signal",
+  "description": "SIGNAL — Music Intelligence Platform for Abe Music Group",
+  "version": "2.0.0",
+  "status": "production",
+  "frontend": "https://signal-music.vercel.app",
+  "repo": "https://github.com/perrykingla69-cyber/SonoraDigitalCorp-Yami",
+  "stack": {
+    "frontend": "Next.js 15, Tailwind CSS v3, SWR, Recharts",
+    "backend": "NestJS, Drizzle ORM, PostgreSQL/pgvector",
+    "workers": "BullMQ (AI, Discovery, Metrics, Alerts)",
+    "infra": "Docker, Prometheus, Grafana, Nginx",
+    "ci_cd": "GitHub Actions"
+  },
+  "services": [
+    { "name": "api-gateway", "port": 4000, "type": "NestJS HTTP" },
+    { "name": "integration", "port": 4001, "type": "NestJS HTTP" },
+    { "name": "label-copilot", "port": 4002, "type": "NestJS HTTP" },
+    { "name": "workflow-engine", "port": 4003, "type": "NestJS HTTP" },
+    { "name": "web", "port": 3000, "type": "Next.js" },
+    { "name": "worker-discovery", "type": "BullMQ" },
+    { "name": "worker-metrics", "type": "BullMQ" },
+    { "name": "worker-ai", "type": "BullMQ" },
+    { "name": "worker-alerts", "type": "BullMQ" },
+    { "name": "notification-service", "type": "NestJS" },
+    { "name": "postgres", "type": "pgvector/pg17" },
+    { "name": "redis", "type": "Redis 7" },
+    { "name": "prometheus", "port": 9090 },
+    { "name": "grafana", "port": 3001 },
+    { "name": "nginx", "ports": ["80", "443"] }
+  ]
+}
