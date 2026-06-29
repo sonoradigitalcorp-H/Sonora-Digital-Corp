@@ -9,6 +9,7 @@ import sys
 import os
 import json
 import logging
+import time
 
 # Add JARVIS project root to path
 sys.path.insert(0, os.path.expanduser("~/jarvis"))
@@ -17,6 +18,19 @@ from mcp.server.fastmcp import FastMCP
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [JARVIS] %(message)s")
 log = logging.getLogger("jarvis.bridge")
+
+# LangFuse tracing
+import importlib.util
+_LF_PATH = os.path.expanduser("~/sonora-digital-corp/sonora-enterprise-os/scripts/instrument-langfuse.py")
+if os.path.exists(_LF_PATH):
+    _spec = importlib.util.spec_from_file_location("instrument_langfuse", _LF_PATH)
+    _instr = importlib.util.module_from_spec(_spec)
+    _spec.loader.exec_module(_instr)
+    _tracker = _instr._tracker
+    log.info("LangFuse tracker loaded from %s", _LF_PATH)
+else:
+    _tracker = None
+    log.warning("LangFuse not found at %s", _LF_PATH)
 
 # Create FastMCP server
 mcp = FastMCP("jarvis-bridge", log_level="INFO")
@@ -77,17 +91,37 @@ def jarvis_metrics() -> str:
 @mcp.tool()
 def jarvis_orchestrate(task: str) -> str:
     """Ejecuta una tarea a través del orquestador de agentes de JARVIS."""
+    _start = time.time()
     try:
         import asyncio
         from src.core.orchestrator import get_orchestrator
         orchestrator = get_orchestrator()
         result = asyncio.run(orchestrator.execute(task))
-        return json.dumps({
+        _trace = {
             "agent": result.get("agent", "unknown"),
             "status": result.get("status", "unknown"),
             "summary": str(result.get("synthesis", result.get("message", "Done")))[:500]
-        }, indent=2)
+        }
+        if _tracker:
+            _tracker.trace(
+                name="hermes.orchestrate",
+                input={"task": task[:200]},
+                output=_trace,
+                tenant="sdc-core", agent="hermes.bridge",
+                duration_ms=(time.time() - _start) * 1000,
+                status="success" if result.get("status") == "success" else "error",
+            )
+        return json.dumps(_trace, indent=2)
     except Exception as e:
+        if _tracker:
+            _tracker.trace(
+                name="hermes.orchestrate",
+                input={"task": task[:200]},
+                output={"error": str(e)},
+                tenant="sdc-core", agent="hermes.bridge",
+                duration_ms=(time.time() - _start) * 1000,
+                status="error",
+            )
         return f"Orchestration failed: {e}"
 
 @mcp.tool()
