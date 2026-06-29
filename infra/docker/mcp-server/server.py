@@ -105,13 +105,14 @@ def _get_vector(text: str) -> list:
 
 
 @mcp.tool()
-def jarvis_search(query: str, limit: int = 10) -> dict:
+def jarvis_search(query: str, limit: int = 10, tenant_id: str = "sdc-core") -> dict:
     """
     Buscar en la memoria de JARVIS (Neo4j + Qdrant)
 
     Args:
         query: Texto a buscar
         limit: Número máximo de resultados
+        tenant_id: ID del tenant para aislamiento de datos
 
     Returns:
         Dict con resultados de búsqueda
@@ -119,6 +120,7 @@ def jarvis_search(query: str, limit: int = 10) -> dict:
     results = {
         "query": query,
         "timestamp": datetime.now().isoformat(),
+        "tenant_id": tenant_id,
         "graph_results": [],
         "vector_results": [],
     }
@@ -138,15 +140,20 @@ def jarvis_search(query: str, limit: int = 10) -> dict:
         except Exception as e:
             results["graph_error"] = str(e)
 
-    # Búsqueda en Qdrant (vectores) con embeddings reales
+    # Búsqueda en Qdrant (vectores) con tenant filter
     if qdrant_client:
         try:
             vector = _get_vector(query)
+            from qdrant_client.models import Filter, FieldCondition, MatchValue
+            search_filter = Filter(
+                must=[FieldCondition(key="tenant_id", match=MatchValue(value=tenant_id))]
+            ) if tenant_id else None
             for col in QDRANT_COLLECTIONS:
                 try:
                     hits = qdrant_client.search(
                         collection_name=col,
                         query_vector=vector,
+                        query_filter=search_filter,
                         limit=limit // len(QDRANT_COLLECTIONS) or 1,
                     )
                     for hit in hits:
@@ -168,13 +175,14 @@ def jarvis_search(query: str, limit: int = 10) -> dict:
 
 
 @mcp.tool()
-def jarvis_remember(content: str, metadata: Optional[dict] = None) -> dict:
+def jarvis_remember(content: str, metadata: Optional[dict] = None, tenant_id: str = "sdc-core") -> dict:
     """
     Guardar información en la memoria de JARVIS
 
     Args:
         content: Texto/contenido a recordar
         metadata: Metadata adicional (opcional)
+        tenant_id: ID del tenant para aislamiento de datos
 
     Returns:
         Dict con resultado de la operación
@@ -183,6 +191,7 @@ def jarvis_remember(content: str, metadata: Optional[dict] = None) -> dict:
         "status": "success",
         "timestamp": datetime.now().isoformat(),
         "stored_in": [],
+        "tenant_id": tenant_id,
     }
 
     # Guardar en Neo4j
@@ -193,17 +202,18 @@ def jarvis_remember(content: str, metadata: Optional[dict] = None) -> dict:
                 CREATE (c:Conversation {
                     text: $content,
                     timestamp: datetime(),
-                    metadata: $metadata
+                    metadata: $metadata,
+                    tenant_id: $tenant_id
                 })
                 RETURN c
                 """
-                session.run(cypher, content=content, metadata=metadata or {})
+                session.run(cypher, content=content, metadata=metadata or {}, tenant_id=tenant_id)
                 result["stored_in"].append("neo4j")
         except Exception as e:
             result["neo4j_error"] = str(e)
             result["status"] = "partial"
 
-    # Guardar en Qdrant con embeddings reales
+    # Guardar en Qdrant con embeddings reales y tenant_id
     if qdrant_client:
         try:
             vector = _get_vector(content)
@@ -218,6 +228,7 @@ def jarvis_remember(content: str, metadata: Optional[dict] = None) -> dict:
                         "text": content,
                         "metadata": metadata or {},
                         "timestamp": datetime.now().isoformat(),
+                        "tenant_id": tenant_id,
                     },
                 )
                 qdrant_client.upsert(
@@ -225,7 +236,7 @@ def jarvis_remember(content: str, metadata: Optional[dict] = None) -> dict:
                     points=[point],
                 )
                 result["stored_in"].append("qdrant")
-                log.info(f"Stored in Qdrant: {content[:60]}...")
+                log.info(f"Stored in Qdrant [{tenant_id}]: {content[:60]}...")
         except Exception as e:
             result["qdrant_error"] = str(e)
             result["status"] = "partial"

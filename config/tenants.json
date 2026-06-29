@@ -1,0 +1,40 @@
+{
+  "tenants": {
+    "sdc-core": {
+      "name": "Sonora Digital Corp",
+      "tier": "enterprise",
+      "rate_limit": 1000,
+      "period_seconds": 60,
+      "max_tokens_monthly": -1,
+      "qdrant_collection": "jarvis_knowledge",
+      "features": ["chat", "agents", "rag", "voice", "content"],
+      "status": "active"
+    },
+    "abe-fenix": {
+      "name": "ABE Fenix",
+      "tier": "pro",
+      "rate_limit": 200,
+      "period_seconds": 60,
+      "max_tokens_monthly": 500000,
+      "qdrant_collection": "jarvis_knowledge",
+      "features": ["chat", "agents", "rag", "music", "booking"],
+      "status": "active"
+    },
+    "free": {
+      "name": "Free Tier",
+      "tier": "free",
+      "rate_limit": 10,
+      "period_seconds": 60,
+      "max_tokens_monthly": 10000,
+      "qdrant_collection": "jarvis_knowledge",
+      "features": ["chat"],
+      "status": "active"
+    }
+  },
+  "defaults": {
+    "rate_limit": 10,
+    "period_seconds": 60,
+    "max_tokens_monthly": 10000,
+    "qdrant_collection": "jarvis_knowledge"
+  }
+}
