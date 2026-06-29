@@ -104,11 +104,25 @@ class RagEngine:
             return False
         try:
             c.get_collection(COLLECTION)
+            # Ensure tenant_id index exists
+            try:
+                c.create_payload_index(
+                    collection_name=COLLECTION,
+                    field_name="tenant_id",
+                    field_schema="keyword",
+                )
+            except Exception:
+                pass  # Index may already exist
             return True
         except UnexpectedResponse:
             c.create_collection(
                 collection_name=COLLECTION,
                 vectors_config={"size": EMBED_DIM, "distance": "Cosine"},
+            )
+            c.create_payload_index(
+                collection_name=COLLECTION,
+                field_name="tenant_id",
+                field_schema="keyword",
             )
             log.info(f"Colección '{COLLECTION}' creada (dims={EMBED_DIM})")
             return True
@@ -116,7 +130,7 @@ class RagEngine:
             log.error(f"Error creando colección: {e}")
             return False
 
-    def store(self, text: str, metadata: Optional[Dict] = None) -> Dict[str, Any]:
+    def store(self, text: str, metadata: Optional[Dict] = None, tenant_id: str = "sdc-core") -> Dict[str, Any]:
         c = self.client
         if c is None:
             return {"status": "error", "message": "Qdrant no disponible"}
@@ -137,18 +151,19 @@ class RagEngine:
                 "text": text[:1000],
                 "metadata": metadata or {},
                 "timestamp": datetime.now().isoformat(),
+                "tenant_id": tenant_id,
             },
         )
         try:
             c.upsert(collection_name=COLLECTION, points=[point])
-            log.info(f"Guardado en RAG: {text[:50]}...")
+            log.info(f"Guardado en RAG [{tenant_id}]: {text[:50]}...")
             return {"status": "success", "id": str(point.id)}
         except Exception as e:
             log.error(f"Error guardando en Qdrant: {e}")
             return {"status": "error", "message": str(e)}
 
     def search(
-        self, query: str, limit: int = 5, threshold: float = 0.0
+        self, query: str, limit: int = 5, threshold: float = 0.0, tenant_id: str = "sdc-core"
     ) -> Dict[str, Any]:
         c = self.client
         if c is None:
@@ -158,10 +173,18 @@ class RagEngine:
         if vector is None:
             return {"status": "error", "message": "Embedding falló", "results": []}
 
+        # Build filter for tenant isolation
+        search_filter = None
+        if tenant_id:
+            search_filter = Filter(
+                must=[FieldCondition(key="tenant_id", match=MatchValue(value=tenant_id))]
+            )
+
         try:
             results = c.search(
                 collection_name=COLLECTION,
                 query_vector=vector,
+                query_filter=search_filter,
                 limit=limit,
                 score_threshold=threshold,
             )
@@ -175,6 +198,7 @@ class RagEngine:
                         "text": r.payload.get("text", ""),
                         "metadata": r.payload.get("metadata", {}),
                         "timestamp": r.payload.get("timestamp", ""),
+                        "tenant_id": r.payload.get("tenant_id", "unknown"),
                     }
                     for r in results
                 ],
@@ -184,8 +208,8 @@ class RagEngine:
             log.error(f"Error en búsqueda RAG: {e}")
             return {"status": "error", "message": str(e), "results": []}
 
-    def get_context(self, query: str, max_chunks: int = 3) -> str:
-        result = self.search(query, limit=max_chunks)
+    def get_context(self, query: str, max_chunks: int = 3, tenant_id: str = "sdc-core") -> str:
+        result = self.search(query, limit=max_chunks, tenant_id=tenant_id)
         if result["status"] != "success" or not result["results"]:
             return ""
         parts = []
