@@ -10,6 +10,7 @@ import re
 import time
 import uuid
 from typing import Any, Dict, List, Optional, Tuple
+from pathlib import Path
 
 from src.core.agents import (
     AgentBase,
@@ -27,6 +28,17 @@ from src.core.agents import (
 )
 
 log = logging.getLogger("jarvis.orchestrator")
+
+# LangFuse tracing
+import importlib.util
+_LF_PATH = Path(__file__).resolve().parent.parent.parent.parent.parent / "sonora-enterprise-os" / "scripts" / "instrument-langfuse.py"
+if _LF_PATH.exists():
+    _spec = importlib.util.spec_from_file_location("instrument_langfuse", str(_LF_PATH))
+    _instr = importlib.util.module_from_spec(_spec)
+    _spec.loader.exec_module(_instr)
+    _tracker = _instr._tracker
+else:
+    _tracker = None
 
 
 class AgentOrchestrator:
@@ -371,6 +383,7 @@ class AgentOrchestrator:
         return "research"
 
     async def execute(self, task: str, context: dict = None) -> Dict[str, Any]:
+        _start = time.time()
         agent_name = self.route(task)
         agent = self.agents[agent_name]
         ctx = context or {}
@@ -394,6 +407,17 @@ class AgentOrchestrator:
         result["task"] = task
         result["execution_time"] = time.time()
         self.push_context(agent_name, task, result)
+        # LangFuse trace
+        if _tracker:
+            _tracker.trace(
+                name=f"orchestrator.execute.{agent_name}",
+                input={"task": task[:200]},
+                output={"status": result["status"]},
+                tenant="sdc-core", agent=agent_name,
+                duration_ms=(time.time() - _start) * 1000,
+                metadata={"agent": agent_name, "timeout": agent.timeout},
+                status="success" if result["status"] == "success" else "error",
+            )
         return result
 
     async def execute_parallel(

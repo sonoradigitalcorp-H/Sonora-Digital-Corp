@@ -1,6 +1,7 @@
 import json
 import uuid
 from datetime import datetime, timezone
+from pathlib import Path
 
 from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
@@ -9,6 +10,19 @@ import requests
 from webui.routes.app_state import sessions, get_orchestrator, log
 from src.core.llm import PROVIDERS as LLM_PROVIDERS
 from src.core.activity_broadcaster import get_broadcaster
+
+# LangFuse tracing (importado dinámicamente)
+import importlib.util
+_LF_PATH = Path(__file__).resolve().parent.parent.parent.parent / "sonora-enterprise-os" / "scripts" / "instrument-langfuse.py"
+if _LF_PATH.exists():
+    _spec = importlib.util.spec_from_file_location("instrument_langfuse", str(_LF_PATH))
+    _instr = importlib.util.module_from_spec(_spec)
+    _spec.loader.exec_module(_instr)
+    _tracker = _instr._tracker
+    log.info("LangFuse tracker loaded from %s", _LF_PATH)
+else:
+    _tracker = None
+    log.warning("LangFuse instrument-langfuse.py not found at %s", _LF_PATH)
 
 router = APIRouter()
 
@@ -39,6 +53,14 @@ async def stream_chat(session_id: str, message: str, request: Request):
                     "tokens": len(message.split()),
                     "timestamp": start_time.isoformat(),
                 }
+            )
+
+        # Trace de inicio en LangFuse
+        if _tracker:
+            _tracker.trace(
+                name=f"chat.start.{session_id}",
+                input={"message": message[:200], "session_id": session_id},
+                tenant="sdc-core", agent="webui.chat",
             )
 
         history = []
@@ -235,6 +257,22 @@ Agente: {agent_name}."""
                     "tokens": len(full_response.split()),
                     "timestamp": datetime.now(timezone.utc).isoformat(),
                 }
+            )
+
+        # Trace de fin en LangFuse
+        if _tracker:
+            _tracker.trace(
+                name=f"chat.done.{session_id}",
+                input={},
+                output={
+                    "response_length": len(full_response),
+                    "tokens": total_tokens,
+                    "agent": agent_name,
+                },
+                tenant="sdc-core", agent="webui.chat",
+                duration_ms=elapsed,
+                cost_usd=total_tokens * 0.0001 / 1000,
+                metadata={"model": "deepseek-v4-flash", "session_id": session_id},
             )
 
         yield f"event: done\ndata: {json.dumps({'usage': {'tokens': total_tokens, 'latency_ms': round(elapsed), 'model': 'deepseek-v4-flash'}})}\n\n"

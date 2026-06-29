@@ -2,10 +2,21 @@
 Content Pipeline API — Generate and deliver content across multiple formats.
 """
 
-import logging, uuid, json
+import logging, uuid, json, time
 from datetime import datetime
+from pathlib import Path
 from fastapi import APIRouter
 from pydantic import BaseModel
+
+import importlib.util
+_LF_PATH = Path(__file__).resolve().parent.parent.parent.parent / "sonora-enterprise-os" / "scripts" / "instrument-langfuse.py"
+if _LF_PATH.exists():
+    _spec = importlib.util.spec_from_file_location("instrument_langfuse", str(_LF_PATH))
+    _instr = importlib.util.module_from_spec(_spec)
+    _spec.loader.exec_module(_instr)
+    _tracker = _instr._tracker
+else:
+    _tracker = None
 
 log = logging.getLogger("jarvis.webui.content")
 router = APIRouter(prefix="/api/content", tags=["content"])
@@ -32,8 +43,16 @@ class DeliverRequest(BaseModel):
 @router.post("/generate")
 async def generate_content(req: GenerateRequest):
     """Generate content from template. Called by n8n workflows."""
+    start = time.time()
     cid = str(uuid.uuid4())[:8]
     now = datetime.now().isoformat()
+
+    if _tracker:
+        _tracker.trace(
+            name="content.generate.start",
+            input={"template": req.template, "topic": req.topic[:100], "tenant": "sdc-core"},
+            tenant="sdc-core", agent="content.pipeline",
+        )
 
     # Route to appropriate template
     if req.template == "daily-research":
@@ -92,6 +111,18 @@ async def generate_content(req: GenerateRequest):
         }
 
     content_store[cid] = content
+
+    if _tracker:
+        duration = (time.time() - start) * 1000
+        _tracker.trace(
+            name="content.generate.done",
+            input={},
+            output={"content_type": content.get("type", "unknown"), "content_id": cid},
+            tenant="sdc-core", agent="content.pipeline",
+            duration_ms=duration,
+            metadata={"template": req.template, "topic": req.topic[:100]},
+        )
+
     return {"status": "ok", "content_id": cid, **content}
 
 

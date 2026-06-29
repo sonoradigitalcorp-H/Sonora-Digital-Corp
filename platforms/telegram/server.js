@@ -13,6 +13,27 @@ const log = require('./logger');
 const API_BASE = process.env.API_BASE || 'http://api:8000';
 const DEFAULT_BOT_TOKEN = process.env.DEFAULT_BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN;
 
+// ── LangFuse tracing ──────────────────────────────────────────────────────────
+const LANGFUSE_HOST = process.env.LANGFUSE_HOST || 'http://localhost:3000';
+const LF_PUBLIC_KEY = process.env.LANGFUSE_PUBLIC_KEY || 'pk-lf-sdc-2026';
+
+async function traceLangFuse(name, input, output, metadata = {}) {
+  try {
+    await axios.post(`${LANGFUSE_HOST}/api/public/traces`, {
+      name,
+      input: typeof input === 'string' ? { text: input.slice(0, 200) } : input,
+      output: typeof output === 'string' ? { text: output.slice(0, 200) } : output,
+      metadata,
+      tags: ['sdc-core', 'telegram'],
+    }, {
+      headers: { 'Authorization': `Bearer ${LF_PUBLIC_KEY}`, 'Content-Type': 'application/json' },
+      timeout: 3000,
+    });
+  } catch (e) {
+    log.warn(`[LangFuse] trace error: ${e.message}`);
+  }
+}
+
 // ── ClawdBot (OpenRouter directo — mismo modelo que OpenClaw) ──────────────────
 const CLAWD_API_KEY = process.env.OPENROUTER_API_KEY || '';
 const CLAWD_MODEL   = process.env.CLAWD_MODEL || 'meta-llama/llama-3.3-70b-instruct:free';
@@ -22,6 +43,7 @@ Responde siempre en español, de forma directa y práctica. Sin rodeos.`;
 
 async function askClawd(message, history = []) {
   if (!CLAWD_API_KEY) throw new Error('OPENROUTER_API_KEY no configurada');
+  const startTime = Date.now();
   const messages = [
     { role: 'system', content: CLAWD_SYSTEM },
     ...history.slice(-6),
@@ -39,7 +61,15 @@ async function askClawd(message, history = []) {
     },
     timeout: 30000,
   });
-  return res.data?.choices?.[0]?.message?.content || 'Sin respuesta.';
+  const reply = res.data?.choices?.[0]?.message?.content || 'Sin respuesta.';
+  const duration = Date.now() - startTime;
+  const tokens = res.data?.usage?.total_tokens || 0;
+  // Fire-and-forget trace a LangFuse
+  traceLangFuse('telegram.askClawd', { message, history_length: history.length },
+    { reply_length: reply.length, tokens },
+    { duration_ms: duration, cost_usd: tokens * 1e-7, model: CLAWD_MODEL, agent: 'telegram.clawd', tenant: 'sdc-core' }
+  );
+  return reply;
 }
 
 // Historial de conversación por usuario (en memoria, se limpia al reiniciar)

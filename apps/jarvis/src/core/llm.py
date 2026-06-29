@@ -6,6 +6,7 @@ Soporta streaming SSE y respuestas completas.
 import json
 import logging
 import os
+import time
 from pathlib import Path
 
 import requests
@@ -17,6 +18,19 @@ load_dotenv(Path(__file__).parent.parent.parent / ".env")
 load_dotenv(Path.home() / "sdcorp" / ".secrets" / "keys.env")
 
 log = logging.getLogger("jarvis.llm")
+
+# LangFuse tracing (importado dinámicamente para evitar path issues con guiones)
+import importlib.util
+_LF_PATH = Path(__file__).resolve().parent.parent.parent.parent.parent / "sonora-enterprise-os" / "scripts" / "instrument-langfuse.py"
+if _LF_PATH.exists():
+    _spec = importlib.util.spec_from_file_location("instrument_langfuse", str(_LF_PATH))
+    _instr = importlib.util.module_from_spec(_spec)
+    _spec.loader.exec_module(_instr)
+    _tracker = _instr._tracker
+    log.info("LangFuse tracker loaded from %s", _LF_PATH)
+else:
+    _tracker = None
+    log.warning("LangFuse instrument-langfuse.py not found at %s", _LF_PATH)
 
 
 def _get_api_key(key_name: str) -> str:
@@ -82,15 +96,35 @@ def chat_completion(
         "stream": stream,
     }
 
+    _start = time.time()
+    _model = body["model"]
+
     log.info(
-        f"LLM request: {len(messages)} messages, model={body['model']}, stream={stream}"
+        f"LLM request: {len(messages)} messages, model={_model}, stream={stream}"
     )
+
+    def _trace(result: dict, status: str = "success"):
+        if not _tracker:
+            return
+        duration = (time.time() - _start) * 1000
+        tok = result.get("usage", {}).get("total_tokens", 0) if isinstance(result.get("usage"), dict) else 0
+        _tracker.trace(
+            name="llm.chat_completion",
+            input={"messages_count": len(messages), "model": _model},
+            output={"content_length": len(result.get("content", "")), "finish_reason": result.get("finish_reason", "")},
+            tenant="sdc-core", agent="llm",
+            duration_ms=duration,
+            cost_usd=tok * 0.0001 / 1000,
+            metadata={"model": _model, "tokens": tok},
+            status=status,
+        )
 
     try:
         resp = requests.post(url, headers=headers, json=body, timeout=60)
         resp.raise_for_status()
 
         if stream:
+            _trace({"content": "", "usage": {}}, "stream")
             return resp  # Return raw response for streaming
 
         data = resp.json()
@@ -106,7 +140,7 @@ def chat_completion(
                 f"{usage.get('total_tokens', '?')} tokens, cost=${cost}"
             )
 
-            return {
+            result = {
                 "content": content,
                 "reasoning": reasoning,
                 "model": data.get("model", model),
@@ -114,16 +148,24 @@ def chat_completion(
                 "cost": cost,
                 "finish_reason": data["choices"][0].get("finish_reason", "stop"),
             }
+            _trace(result)
+            return result
         else:
             log.warning(f"LLM unexpected response: {json.dumps(data)[:200]}")
-            return {"content": "", "error": "Respuesta inesperada del LLM"}
+            result = {"content": "", "error": "Respuesta inesperada del LLM"}
+            _trace(result, "error")
+            return result
 
     except requests.exceptions.Timeout:
         log.error("LLM request timed out")
-        return {"content": "", "error": "Timeout del LLM"}
+        result = {"content": "", "error": "Timeout del LLM"}
+        _trace(result, "error")
+        return result
     except requests.exceptions.RequestException as e:
         log.error(f"LLM request failed: {e}")
-        return {"content": "", "error": str(e)}
+        result = {"content": "", "error": str(e)}
+        _trace(result, "error")
+        return result
 
 
 def stream_chat_completion(
