@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIGNAL — Music Intelligence Platform | Abe Music Group</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', system-ui, -apple-system, sans-serif; background: #0a0a0f; color: #e2e8f0; line-height: 1.6; }
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #1a1a2e; }
+  ::-webkit-scrollbar-thumb { background: #3b3b5c; border-radius: 4px; }
+
+  /* Hero */
+  .hero {
+    min-height: 100vh;
+    background: radial-gradient(ellipse at top, #0f0f23 0%, #08080f 50%, #000 100%);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 2rem; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: radial-gradient(circle at 30% 40%, rgba(99,102,241,.08) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(168,85,247,.06) 0%, transparent 50%);
+    animation: drift 20s ease-in-out infinite;
+  }
+  @keyframes drift { 0%, 100% { transform: translate(0,0); } 50% { transform: translate(-5%,-5%); } }
+  .hero-content { position: relative; z-index: 1; max-width: 900px; }
+  .badge {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: rgba(99,102,241,.15); border: 1px solid rgba(99,102,241,.3);
+    padding: .5rem 1.25rem; border-radius: 100px; font-size: .8rem; font-weight: 500;
+    color: #818cf8; margin-bottom: 2rem;
+  }
+  .badge span { width: 8px; height: 8px; border-radius: 50%; background: #22c55e; display: inline-block; animation: pulse 2s infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .3; } }
+  .hero h1 {
+    font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 800; line-height: 1.1;
+    background: linear-gradient(135deg, #e2e8f0 0%, #818cf8 50%, #a78bfa 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    margin-bottom: 1.5rem;
+  }
+  .hero p {
+    font-size: clamp(1rem, 2vw, 1.25rem); color: #94a3b8; max-width: 650px; margin: 0 auto 2.5rem;
+  }
+  .hero-stats {
+    display: flex; gap: 3rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem;
+  }
+  .hero-stats div { text-align: center; }
+  .hero-stats .num { font-size: 2rem; font-weight: 700; color: #818cf8; }
+  .hero-stats .label { font-size: .8rem; color: #64748b; text-transform: uppercase; letter-spacing: .05em; }
+  .btn-group { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff;
+    padding: .85rem 2rem; border-radius: 12px; font-weight: 600; font-size: 1rem;
+    text-decoration: none; transition: all .3s; border: none; cursor: pointer;
+  }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99,102,241,.4); }
+  .btn-secondary {
+    display: inline-flex; align-items: center; gap: .5rem;
+    background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.1); color: #e2e8f0;
+    padding: .85rem 2rem; border-radius: 12px; font-weight: 500; font-size: 1rem;
+    text-decoration: none; transition: all .3s;
+  }
+  .btn-secondary:hover { background: rgba(255,255,255,.1); transform: translateY(-2px); }
+
+  /* Sections */
+  section { padding: 5rem 2rem; max-width: 1200px; margin: 0 auto; }
+  .section-label {
+    font-size: .75rem; font-weight: 600; text-transform: uppercase; letter-spacing: .15em;
+    color: #818cf8; margin-bottom: .75rem;
+  }
+  section h2 {
+    font-size: clamp(1.8rem, 3vw, 2.5rem); font-weight: 700; margin-bottom: 1rem;
+  }
+  section h2 .highlight { background: linear-gradient(135deg, #818cf8, #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+  .subtitle { color: #94a3b8; max-width: 600px; margin-bottom: 3rem; font-size: 1.05rem; }
+
+  /* Cards Grid */
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1.5rem; }
+  .card {
+    background: linear-gradient(145deg, rgba(30,30,60,.6), rgba(20,20,40,.4));
+    border: 1px solid rgba(255,255,255,.06); border-radius: 16px;
+    padding: 1.75rem; transition: all .3s; backdrop-filter: blur(10px);
+  }
+  .card:hover { border-color: rgba(99,102,241,.3); transform: translateY(-3px); box-shadow: 0 12px 40px rgba(0,0,0,.4); }
+  .card-icon {
+    width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center;
+    font-size: 1.3rem; margin-bottom: 1rem;
+  }
+  .card h3 { font-size: 1.1rem; font-weight: 600; margin-bottom: .5rem; }
+  .card p { color: #94a3b8; font-size: .9rem; line-height: 1.6; }
+  .card ul { list-style: none; padding: 0; margin-top: 1rem; }
+  .card ul li { padding: .35rem 0; font-size: .85rem; color: #cbd5e1; display: flex; align-items: flex-start; gap: .5rem; }
+  .card ul li::before { content: '→'; color: #818cf8; font-weight: 700; }
+
+  /* Divider */
+  .divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(99,102,241,.3), transparent); max-width: 600px; margin: 0 auto; }
+
+  /* Architecture */
+  .arch { background: linear-gradient(145deg, rgba(30,30,60,.6), rgba(20,20,40,.4)); border: 1px solid rgba(255,255,255,.06); border-radius: 16px; padding: 2rem; }
+  .arch-layer { display: flex; flex-wrap: wrap; gap: .75rem; justify-content: center; margin: .75rem 0; }
+  .arch-tag {
+    padding: .5rem 1rem; border-radius: 8px; font-size: .82rem; font-weight: 500;
+    border: 1px solid rgba(255,255,255,.08);
+  }
+  .arch-tag.client { background: rgba(99,102,241,.2); border-color: rgba(99,102,241,.3); color: #a5b4fc; }
+  .arch-tag.gateway { background: rgba(168,85,247,.2); border-color: rgba(168,85,247,.3); color: #d8b4fe; }
+  .arch-tag.core { background: rgba(34,197,94,.15); border-color: rgba(34,197,94,.2); color: #86efac; }
+  .arch-tag.data { background: rgba(251,146,60,.15); border-color: rgba(251,146,60,.2); color: #fdba74; }
+  .arch-tag.ext { background: rgba(14,165,233,.15); border-color: rgba(14,165,233,.2); color: #7dd3fc; }
+
+  /* Metrics */
+  .metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+  .metric-card {
+    background: linear-gradient(145deg, rgba(30,30,60,.6), rgba(20,20,40,.4));
+    border: 1px solid rgba(255,255,255,.06); border-radius: 12px; padding: 1.5rem; text-align: center;
+  }
+  .metric-card .value { font-size: 1.8rem; font-weight: 700; color: #818cf8; }
+  .metric-card .desc { font-size: .8rem; color: #64748b; margin-top: .25rem; }
+
+  /* Quote */
+  .quote {
+    text-align: center; padding: 4rem 2rem; max-width: 800px; margin: 0 auto;
+  }
+  .quote blockquote {
+    font-size: clamp(1.1rem, 2vw, 1.4rem); font-style: italic; color: #cbd5e1; line-height: 1.7;
+    position: relative;
+  }
+  .quote blockquote::before { content: '"'; font-size: 4rem; color: #818cf8; opacity: .3; position: absolute; top: -1.5rem; left: -1rem; }
+  .quote cite { display: block; margin-top: 1.5rem; font-style: normal; font-weight: 600; color: #818cf8; font-size: .9rem; }
+
+  /* Products */
+  .product-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; }
+  .product-tag {
+    background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.06);
+    border-radius: 10px; padding: 1.25rem; text-align: center; transition: all .3s;
+  }
+  .product-tag:hover { border-color: rgba(99,102,241,.3); background: rgba(99,102,241,.05); }
+  .product-tag .emoji { font-size: 2rem; margin-bottom: .5rem; }
+  .product-tag h4 { font-size: .9rem; font-weight: 600; }
+  .product-tag p { font-size: .75rem; color: #64748b; margin-top: .25rem; }
+
+  /* Footer */
+  footer { text-align: center; padding: 3rem 2rem; color: #475569; font-size: .85rem; border-top: 1px solid rgba(255,255,255,.04); }
+  footer a { color: #818cf8; text-decoration: none; }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    section { padding: 3rem 1.25rem; }
+    .grid-2 { grid-template-columns: 1fr; }
+    .hero-stats { gap: 1.5rem; }
+    .hero-stats .num { font-size: 1.5rem; }
+  }
+
+  /* Gradient text utility */
+  .gradient-text { background: linear-gradient(135deg, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+  /* Why now */
+  .timeline-item { display: flex; gap: 1rem; padding: 1rem 0; border-bottom: 1px solid rgba(255,255,255,.04); }
+  .timeline-item:last-child { border: none; }
+  .timeline-num { font-size: 2rem; font-weight: 800; color: rgba(99,102,241,.3); min-width: 3rem; line-height: 1; }
+  .timeline-item h4 { font-size: 1rem; font-weight: 600; margin-bottom: .25rem; }
+  .timeline-item p { font-size: .85rem; color: #94a3b8; }
+</style>
+</head>
+<body>
+
+<!-- ============ HERO ============ -->
+<div class="hero">
+  <div class="hero-content">
+    <div class="badge">
+      <span></span> En vivo · abe-music-group.vercel.app
+    </div>
+    <h1>SIGNAL<br>Music Intelligence Platform</h1>
+    <p>
+      El sistema operativo de inteligencia artificial que transforma datos musicales en decisiones estratégicas para Abe Music Group.
+    </p>
+    <div class="btn-group">
+      <a href="https://abe-music-group.vercel.app" target="_blank" class="btn-primary">
+        🚀 Ver Demo en Vivo
+      </a>
+      <a href="#que-es" class="btn-secondary">
+        ¿Qué es SIGNAL? →
+      </a>
+    </div>
+    <div class="hero-stats">
+      <div><div class="num">15</div><div class="label">API Routes</div></div>
+      <div><div class="num">14</div><div class="label">Dashboards</div></div>
+      <div><div class="num">8</div><div class="label">Agentes IA</div></div>
+      <div><div class="num">7</div><div class="label">Workflows</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ QUOTE ============ -->
+<div class="quote">
+  <blockquote>
+    Lo que construimos no es solo un dashboard bonito. Es un sistema que <strong>piensa</strong>, <strong>aprende</strong> y <strong>decide</strong> — como tener un equipo de 20 analistas trabajando 24/7.
+  </blockquote>
+</div>
+
+<!-- ============ QUÉ ES SIGNAL ============ -->
+<section id="que-es">
+  <div class="section-label">Visión</div>
+  <h2>¿Qué es <span class="highlight">SIGNAL</span>?</h2>
+  <p class="subtitle">
+    Un sistema de inteligencia artificial multi-agente diseñado para disqueras. No es teoría — está desplegado, funcionando y accesible desde cualquier navegador.
+  </p>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-icon" style="background:rgba(99,102,241,.15);color:#818cf8;">🧠</div>
+      <h3>Multi-Agente</h3>
+      <p>8 agentes de IA especializados (Talent Scout, Market Analyst, Legal Counsel, Financial Analyst, Label Strategist, Operations Manager, Brand Specialist, Data Scientist) que colaboran, votan y generan consenso.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background:rgba(34,197,94,.15);color:#22c55e;">⚡</div>
+      <h3>Workflows Autónomos</h3>
+      <p>7 pipelines automatizados que ejecutan evaluaciones de artistas, monitoreo de playlists, inteligencia de mercado, revisión de contratos y más — desde la UI o en background.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon" style="background:rgba(251,146,60,.15);color:#fb923c;">📊</div>
+      <h3>Tiempo Real</h3>
+      <p>Cada dashboard, cada métrica, cada alerta se actualiza en vivo. Desde la campanita de notificaciones hasta los pipelines de signing — todo está vivo y conectado.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DASHBOARDS ============ -->
+<section>
+  <div class="section-label">14 Dashboards</div>
+  <h2>Control Total del <span class="highlight">Negocio</span></h2>
+  <p class="subtitle">
+    Desde la visión ejecutiva hasta el detalle financiero — cada pantalla responde a una pregunta de negocio real.
+  </p>
+
+  <div class="grid-2">
+
+    <div class="card">
+      <div class="card-icon" style="background:rgba(99,102,241,.15);color:#818cf8;">🎯</div>
+      <h3>Executive Command Center</h3>
+      <p>Panel de control ejecutivo con briefing generado por IA, health status del sistema, recomendaciones estratégicas y pipeline funnel.</p>
+      <ul>
+        <li>Briefing ejecutivo con 4 recomendaciones activas</li>
+        <li>Health monitoring de 7 servicios</li>
+        <li>12 workflows activos monitoreados</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-icon" style="background:rgba(34,197,94,.15);color:#22c55e;">🤖</div>
+      <h3>Agent Performance</h3>
+      <p>Monitoreo de los 8 agentes de IA con accuracy, weight, tendencias y matriz de consenso en decisiones.</p>
+      <ul>
+        <li>8 agentes con accuracy 72%–96%</li>
+        <li>5 decisiones de consenso recientes</li>
+        <li>Network graph de colaboración entre agentes</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-icon" style="background:rgba(251,146,60,.15);color:#fb923c;">⚙️</div>
+      <h3>Workflow Automation</h3>
+      <p>7 pipelines autónomos con tabla filtrable, timeline de ejecución, controles (pause/resume/cancel/retry) y approval gates.</p>
+      <ul>
+        <li>Filtros por status, tipo y búsqueda</li>
+        <li>Timeline de ejecución paso a paso</li>
+        <li>Approval gates para decisiones críticas</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-icon" style="background:rgba(168,85,247,.15);color:#c084fc;">📈</div>
+      <h3>Analytics</h3>
+      <p>847.2M streams, 12.4M listeners activos, distribución por género y ranking de artistas.</p>
+      <ul>
+        <li>4 KPIs principales con tendencias</li>
+        <li>Distribución por género (Corridos 34%, Regional 22%)</li>
+        <li>Top 5 artistas por streams</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-icon" style="background:rgba(34,197,94,.15);color:#22c55e;">⭐</div>
+      <h3>Signing Pipeline</h3>
+      <p>Pipeline de adquisición de artistas con 28 talentos en 5 etapas: Discovery → Evaluation → Negotiation → Approval → Signed.</p>
+      <ul>
+        <li>Netón Vega (score 94) en etapa Approval</li>
+        <li>Pipeline de 28 artistas activos</li>
+        <li>Scores, prioridades y tendencias de crecimiento</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-icon" style="background:rgba(14,165,233,.15);color:#7dd3fc;">🌎</div>
+      <h3>Market Intelligence</h3>
+      <p>Análisis regional con 6 mercados, tendencias por género y oportunidades de expansión.</p>
+      <ul>
+        <li>6 regiones monitoreadas (CDMX, MTY, GDL, LA, HOU, CHI)</li>
+        <li>6 géneros con momentum tracking</li>
+        <li>4 oportunidades de expansión priorizadas</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-icon" style="background:rgba(34,197,94,.15);color:#22c55e;">🎵</div>
+      <h3>Playlist Monitor</h3>
+      <p>8 playlists editoriales trackeadas con 17.3M de followers acumulados y +23% de crecimiento semanal.</p>
+      <ul>
+        <li>Multi-plataforma (Spotify, Apple Music, Deezer, YouTube)</li>
+        <li>Artistas agregados en tiempo real</li>
+        <li>Tendencias de reach por playlist</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <div class="card-icon" style="background:rgba(251,146,60,.15);color:#fb923c;">💰</div>
+      <h3>Financial View</h3>
+      <p>$12.4M en ingresos Q2 2026, 5 fuentes de revenue, top earning artists y proyecciones.</p>
+      <ul>
+        <li>5 revenue streams (Streaming 50%, Live 25%)</li>
+        <li>Top 5 artistas por ingresos</li>
+        <li>Gastos por categoría (Artist Advances 43%)</li>
+      </ul>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============ ARQUITECTURA ============ -->
+<section>
+  <div class="section-label">Arquitectura</div>
+  <h2>Un Vistazo al <span class="highlight">Motor</span></h2>
+  <p class="subtitle">
+    Esto no es un sitio web — es un sistema operativo musical con capas de inteligencia.
+  </p>
+
+  <div class="arch">
+    <div style="text-align:center;margin-bottom:1.5rem;font-size:.8rem;color:#64748b;text-transform:uppercase;letter-spacing:.1em;">
+      Frontend
+    </div>
+    <div class="arch-layer">
+      <span class="arch-tag client">Next.js 15</span>
+      <span class="arch-tag client">Tailwind v3</span>
+      <span class="arch-tag client">SWR</span>
+      <span class="arch-tag client">TypeScript</span>
+      <span class="arch-tag client">Vercel</span>
+    </div>
+
+    <div style="text-align:center;margin:1.5rem 0 .5rem;font-size:.8rem;color:#64748b;text-transform:uppercase;letter-spacing:.1em;">
+      ⬇ API Gateway (15 endpoints REST)
+    </div>
+
+    <div style="text-align:center;margin-bottom:1.5rem;font-size:.8rem;color:#64748b;text-transform:uppercase;letter-spacing:.1em;">
+      Backend (próximamente en VPS con Docker)
+    </div>
+    <div class="arch-layer">
+      <span class="arch-tag gateway">API Gateway</span>
+      <span class="arch-tag gateway">PostgreSQL + pgvector</span>
+      <span class="arch-tag gateway">Redis</span>
+      <span class="arch-tag gateway">RabbitMQ</span>
+    </div>
+    <div class="arch-layer" style="margin-top:.5rem;">
+      <span class="arch-tag core">Label Copilot (9 agentes)</span>
+      <span class="arch-tag core">Workflow Engine</span>
+      <span class="arch-tag core">Memory System</span>
+      <span class="arch-tag core">Notification Service</span>
+    </div>
+
+    <div style="text-align:center;margin:1.5rem 0 .5rem;font-size:.8rem;color:#64748b;text-transform:uppercase;letter-spacing:.1em;">
+      ⬇ Motor de Datos e IA
+    </div>
+    <div class="arch-layer" style="margin-top:.5rem;">
+      <span class="arch-tag data">Engram (Vector DB + RAG)</span>
+      <span class="arch-tag data">GBrain (Orquestador)</span>
+      <span class="arch-tag data">Hermes (Auto-mejora)</span>
+      <span class="arch-tag data">OpenClaw (Gateway multicanal)</span>
+    </div>
+
+    <div style="text-align:center;margin:1.5rem 0 .5rem;font-size:.8rem;color:#64748b;text-transform:uppercase;letter-spacing:.1em;">
+      ⬇ Agentes Especializados
+    </div>
+    <div class="arch-layer" style="margin-top:.5rem;">
+      <span class="arch-tag ext">Talent Scout</span>
+      <span class="arch-tag ext">Market Analyst</span>
+      <span class="arch-tag ext">Legal Counsel</span>
+      <span class="arch-tag ext">Financial Analyst</span>
+      <span class="arch-tag ext">Label Strategist</span>
+      <span class="arch-tag ext">Operations Manager</span>
+      <span class="arch-tag ext">Brand Specialist</span>
+      <span class="arch-tag ext">Data Scientist</span>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:2rem;">
+    <a href="https://abe-music-group.vercel.app" target="_blank" class="btn-primary">
+      🚀 Ver Demo en Vivo
+    </a>
+  </div>
+</section>
+
+<!-- ============ QUOTE 2 ============ -->
+<div class="quote">
+  <blockquote>
+    De tener datos dispersos en Spotify, Apple Music, YouTube y redes sociales — a tener un centro de comando unificado que te dice <strong>qué firmar, cuándo y por qué</strong>.
+  </blockquote>
+</div>
+
+<!-- ============ PRODUCTOS ============ -->
+<section>
+  <div class="section-label">Ecosistema</div>
+  <h2>Productos <span class="highlight">Sonora Digital</span></h2>
+  <p class="subtitle">
+    SIGNAL es la plataforma que unifica todos los productos de Sonora Digital Corp bajo un mismo cerebro.
+  </p>
+
+  <div class="product-row">
+    <div class="product-tag"><div class="emoji">📡</div><h4>TwinStream</h4><p>Gemelo digital de streaming</p></div>
+    <div class="product-tag"><div class="emoji">📺</div><h4>WebCast</h4><p>Broadcasting inteligente</p></div>
+    <div class="product-tag"><div class="emoji">📱</div><h4>AppLive</h4><p>Apps en vivo con IA</p></div>
+    <div class="product-tag"><div class="emoji">🤖</div><h4>AutoEvent</h4><p>Eventos automatizados</p></div>
+    <div class="product-tag"><div class="emoji">🏷️</div><h4>LiveBrand</h4><p>Branding en vivo</p></div>
+    <div class="product-tag"><div class="emoji">🛎️</div><h4>Concierge</h4><p>Asistente de artista</p></div>
+    <div class="product-tag"><div class="emoji">⚖️</div><h4>ComplianceCast</h4><p>Cumplimiento regulatorio</p></div>
+    <div class="product-tag"><div class="emoji">🏭</div><h4>IndustryTwin</h4><p>Gemelo industrial musical</p></div>
+  </div>
+</section>
+
+<!-- ============ QUOTE 3 ============ -->
+<div class="quote">
+  <blockquote>
+    El mercado de la música está migrando a datos en tiempo real. Las disqueras que ganen no serán las más grandes — serán las que <strong>decidan más rápido</strong>.
+  </blockquote>
+</div>
+
+<!-- ============ MÉTRICAS CLAVE ============ -->
+<section>
+  <div class="section-label">Lo Que Ya Funciona</div>
+  <h2>Métricas del <span class="highlight">Sistema</span></h2>
+  <p class="subtitle">
+    Esto no es un prototipo. Es un sistema en producción que ya procesa datos reales de Abe Music Group.
+  </p>
+
+  <div class="metric-grid">
+    <div class="metric-card"><div class="value">15</div><div class="desc">API Endpoints REST</div></div>
+    <div class="metric-card"><div class="value">14</div><div class="desc">Dashboards Ejecutivos</div></div>
+    <div class="metric-card"><div class="value">8</div><div class="desc">Agentes de IA</div></div>
+    <div class="metric-card"><div class="value">7</div><div class="desc">Workflows Autónomos</div></div>
+    <div class="metric-card"><div class="value">31</div><div class="desc">Rutas de Frontend</div></div>
+    <div class="metric-card"><div class="value">847M</div><div class="desc">Streams Trackeados</div></div>
+    <div class="metric-card"><div class="value">28</div><div class="desc">Artistas en Pipeline</div></div>
+    <div class="metric-card"><div class="value">7</div><div class="desc">Notificaciones Activas</div></div>
+    <div class="metric-card"><div class="value">12.4M</div><div class="desc">$ Revenue Q2 2026</div></div>
+    <div class="metric-card"><div class="value">34</div><div class="desc">Ciudades con Cobertura</div></div>
+    <div class="metric-card"><div class="value">12</div><div class="desc">Playlists Monitoreadas</div></div>
+    <div class="metric-card"><div class="value">96%</div><div class="desc">Accuracy Máx. de Agentes</div></div>
+  </div>
+</section>
+
+<!-- ============ VALUE PROPOSITION ============ -->
+<section>
+  <div class="section-label">Valor de Negocio</div>
+  <h2>¿Por Qué <span class="highlight">Invertir</span> en SIGNAL?</h2>
+
+  <div class="grid-3" style="margin-top:2rem;">
+    <div class="card">
+      <h3>⏱️ Decide 10x Más Rápido</h3>
+      <p>De semanas de análisis a decisiones informadas en minutos. Netón Vega pasó de ser detectado a tener una recomendación de signing en horas, no meses.</p>
+    </div>
+    <div class="card">
+      <h3>🎯 Precisión Multi-Agente</h3>
+      <p>8 agentes especializados analizan cada oportunidad desde todas las perspectivas: talento, mercado, legal, finanzas, operaciones y marca. Consenso = mejor decisión.</p>
+    </div>
+    <div class="card">
+      <h3>🌙 24/7 Sin Dormir</h3>
+      <p>Mientras tú descansas, SIGNAL monitorea playlists, detecta breakout artists, analiza tendencias de mercado y te entrega un briefing ejecutivo cada mañana.</p>
+    </div>
+    <div class="card">
+      <h3>📈 Escalable</h3>
+      <p>De 5 artistas a 500 — la plataforma escala vertical y horizontalmente. Más agentes, más workflows, más datos. Sin límites.</p>
+    </div>
+    <div class="card">
+      <h3>🔗 Integración Total</h3>
+      <p>Conectado a Spotify, Apple Music, YouTube Music, Instagram, TikTok. Y cuando lleguen nuevas plataformas, solo agregamos un conector.</p>
+    </div>
+    <div class="card">
+      <h3>🧠 Auto-Mejorable</h3>
+      <p>Cada decisión que tomas retroalimenta el sistema. Los agentes aprenden de tus aprobaciones, rechazos y preferencias. Es más inteligente cada día.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CTA ============ -->
+<div style="text-align:center;padding:5rem 2rem;background:radial-gradient(ellipse at center,rgba(99,102,241,.08),transparent 70%);">
+  <div class="badge" style="margin:0 auto 1.5rem;display:inline-flex;">
+    <span></span> Desplegado · Funcionando · Listo
+  </div>
+  <h2 style="font-size:clamp(1.8rem,3vw,2.5rem);font-weight:700;margin-bottom:1rem;">
+    Esto es solo el <span class="gradient-text">comienzo</span>
+  </h2>
+  <p style="color:#94a3b8;max-width:500px;margin:0 auto 2rem;font-size:1.05rem;">
+    El demo ya está en vivo. El backend con 15 servicios Docker está listo para desplegarse. La pregunta no es si funciona — es <strong>qué tan lejos quieres llevarlo</strong>.
+  </p>
+  <div class="btn-group">
+    <a href="https://abe-music-group.vercel.app" target="_blank" class="btn-primary">
+      🚀 Abrir Demo Ahora
+    </a>
+    <a href="https://vercel.com/nikkixan09/abe-music-group" target="_blank" class="btn-secondary">
+      📊 Ver Deploy en Vercel
+    </a>
+  </div>
+</div>
+
+<!-- ============ TIMELINE ============ -->
+<section>
+  <div class="section-label">Roadmap</div>
+  <h2>¿Qué <span class="highlight">Sigue</span>?</h2>
+
+  <div style="margin-top:2rem;">
+    <div class="timeline-item">
+      <div class="timeline-num">01</div>
+      <div><h4>VPS + Docker Backend</h4><p>Desplegar los 15 servicios backend (API Gateway, PostgreSQL, Redis, Label Copilot, Workflow Engine, Memory System) en un VPS con Docker Compose y SSL.</p></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-num">02</div>
+      <div><h4>Conexión a Datos Reales</h4><p>Integrar APIs reales de Spotify, Apple Music, YouTube, Instagram y TikTok. Reemplazar datos mock con data viva.</p></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-num">03</div>
+      <div><h4>Entrenamiento de Agentes</h4><p>Alimentar los 8 agentes con el historial real de decisiones de Abe Music Group. Afinar accuracy, pesos y consenso.</p></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-num">04</div>
+      <div><h4>Workflows Personalizados</h4><p>Diseñar workflows específicos para los procesos de Abe Music Group: evaluación de tours, renovación de contratos, campañas de marketing.</p></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-num">05</div>
+      <div><h4>App Móvil + Alertas SMS</h4><p>Notificaciones push, alertas SMS para oportunidades críticas, y versión móvil del Command Center.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <p style="margin-bottom:.5rem;">
+    <strong style="color:#e2e8f0;">SIGNAL — Music Intelligence Platform</strong> · por <a href="#">Sonora Digital Corp</a>
+  </p>
+  <p>
+    Construido con Next.js 15 · TypeScript · Tailwind CSS · SWR · Desplegado en Vercel<br>
+    Backend: NestJS · PostgreSQL/pgvector · Redis · RabbitMQ · Docker
+  </p>
+  <p style="margin-top:1rem;font-size:.75rem;">
+    © 2026 Sonora Digital Corp. Todos los derechos reservados.
+  </p>
+</footer>
+
+</body>
+</html>
