@@ -4,7 +4,7 @@
 # Ejecuta: Manual o automático en pipeline nocturno
 set -euo pipefail
 
-cd /home/mystic/sonora-digital-corp
+cd "$(dirname "${BASH_SOURCE[0]}")/.."
 export DISPLAY=:0
 LOG="logs/playwright-e2e-$(date +%Y%m%d).log"
 

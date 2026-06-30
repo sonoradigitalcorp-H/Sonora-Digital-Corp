@@ -3,7 +3,7 @@
 # Creates systemd services for all JARVIS components
 set -euo pipefail
 
-JARVIS_DIR="${JARVIS_DIR:-/home/mystic/sonora-digital-corp}"
+JARVIS_DIR="${JARVIS_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 SERVICES_DIR="${SERVICES_DIR:-/etc/systemd/system}"
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"; }

@@ -3,7 +3,7 @@
 # Called by autonomous.sh every cycle. Idempotent and safe to run multiple times.
 set -euo pipefail
 
-BASE_DIR="/home/mystic/sonora-digital-corp"
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 EVENTS="${BASE_DIR}/state/logs/events.jsonl"
 ENGAM_DB="${BASE_DIR}/state/engram.db"
 SKILLS_LOG_DIR="${BASE_DIR}/state/logs/skills"

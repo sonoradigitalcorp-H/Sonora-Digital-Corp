@@ -3,8 +3,8 @@
 # Runs every morning: tests, healthcheck, ABE report, notifications
 set -euo pipefail
 
-cd /home/mystic/sonora-digital-corp
-BASE_DIR="/home/mystic/sonora-digital-corp"
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "${BASE_DIR}"
 STATE_DIR="$BASE_DIR/state"
 LOG_DIR="$STATE_DIR/logs"
 mkdir -p "$LOG_DIR" "$STATE_DIR/backups"

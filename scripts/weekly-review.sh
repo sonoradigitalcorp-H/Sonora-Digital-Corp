@@ -2,7 +2,7 @@
 # Weekly Strategic Review — Auto-generates enterprise health report
 set -euo pipefail
 
-JARVIS_HOME="/home/mystic/sonora-digital-corp"
+JARVIS_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 EVENTS="$JARVIS_HOME/state/logs/events.jsonl"
 FIN_OPS="$JARVIS_HOME/state/finops.jsonl"
 INITIATIVES_DIR="$JARVIS_HOME/sonora-enterprise-os/initiatives"
