@@ -25,6 +25,8 @@ from webui.routes import (
     content_router,
     zamora_router,
     app_router,
+    sales_router,
+    score_router,
 )
 
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
@@ -85,6 +87,8 @@ app.include_router(store_router.router)
 app.include_router(content_router.router)
 app.include_router(zamora_router.router)
 app.include_router(app_router.router)
+app.include_router(sales_router.router)
+app.include_router(score_router.router)
 
 
 __all__ = ["app"]

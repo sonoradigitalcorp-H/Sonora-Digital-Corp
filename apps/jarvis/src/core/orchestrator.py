@@ -25,6 +25,7 @@ from src.core.agents import (
     GbrainAgent,
     OpenClawAgent,
     PRAgent,
+    SalesAgent,
 )
 
 log = logging.getLogger("jarvis.orchestrator")
@@ -60,6 +61,7 @@ class AgentOrchestrator:
             "openclaw": OpenClawAgent(),
             "gbrain": GbrainAgent(),
             "pr": PRAgent(),
+            "sales": SalesAgent(),
         }
 
         self.routing_rules: List[Tuple[List[str], str]] = [
@@ -313,6 +315,25 @@ class AgentOrchestrator:
                     "agente externo",
                 ],
                 "openclaw",
+            ),
+            (
+                [
+                    "lead",
+                    "venta",
+                    "vender",
+                    "cotizar",
+                    "cotizá",
+                    "propuesta",
+                    "cliente",
+                    "deal",
+                    "pipeline",
+                    "sales",
+                    "crm",
+                    "quiero comprar",
+                    "me interesa un plan",
+                    "presupuesto",
+                ],
+                "sales",
             ),
             (
                 [

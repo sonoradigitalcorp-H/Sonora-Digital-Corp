@@ -21,6 +21,7 @@ from src.core.agents.apply import ApplyAgent
 from src.core.agents.verify import VerifyAgent
 from src.core.agents.archive import ArchiveAgent
 from src.core.agents.pr import PRAgent
+from src.core.agents.sales import SalesAgent
 
 __all__ = [
     "AgentBase",
@@ -44,4 +45,5 @@ __all__ = [
     "VerifyAgent",
     "ArchiveAgent",
     "PRAgent",
+    "SalesAgent",
 ]
