@@ -30,9 +30,12 @@ def load_agents():
 
 def start_mcp():
     """Arranca servidores MCP (HuggingFace + GitHub + MCP Server)."""
-    from mcp_connectors import start_all_mcp
-    start_all_mcp()
-    log.info("✅ MCP Connectors iniciados")
+    try:
+        from mcp_connectors import start_all_mcp
+        start_all_mcp()
+        log.info("✅ MCP Connectors iniciados")
+    except ImportError:
+        log.info("ℹ️ MCP connectors module not available (stub)")
 
 
 def start_voice():
@@ -107,8 +110,8 @@ def main():
     log.info("⚡ JARVIS Core Orchestrator v2.0")
     log.info("=" * 50)
 
-    # 1. Web UI (FastAPI)
-    start_webui()
+    # 1. Web UI (FastAPI) — disabled, run via separate jarvis-webui.service
+    # start_webui()
 
     # 2. Orchestrator
     start_orchestrator()
