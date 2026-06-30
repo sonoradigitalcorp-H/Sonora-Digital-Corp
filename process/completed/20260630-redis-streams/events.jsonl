@@ -1,0 +1,5 @@
+{"event":"spec_created","timestamp":"2026-06-30T16:30:00Z","payload":{"spec":"SPEC-20260630-004","title":"FASE 2: Redis Streams como Sistema Nervioso"}}
+{"event":"redis_stream_created","timestamp":"2026-06-30T16:30:00Z","payload":{"streams":["context:history","events:pipeline"],"module":"redis_streams.py"}}
+{"event":"orchestrator_updated","timestamp":"2026-06-30T16:30:00Z","payload":{"push_context":"Redis+list","get_context":"Redis first"}}
+{"event":"pipeline_events_dual","timestamp":"2026-06-30T16:30:00Z","payload":{"targets":["events.jsonl","Redis Streams"]}}
+{"event":"spec_completed","timestamp":"2026-06-30T16:30:00Z","payload":{"spec":"SPEC-20260630-004","tests":443}}

@@ -22,3 +22,4 @@ tiktoken>=0.7.0
 
 # Utils
 python-dateutil>=2.8.0
+redis>=5.0.0
