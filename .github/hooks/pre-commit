@@ -1,5 +1,5 @@
 #!/bin/bash
-# Pre-commit hook: Enforces spec-first for tier 2+ changes
+# Pre-commit hook: Enforces spec-first + TDD for tier 2+ changes
 set -euo pipefail
 
 BASE_DIR="$(git rev-parse --show-toplevel)"
@@ -8,16 +8,37 @@ PROCESS_DIR="$BASE_DIR/process"
 # Skip for process files, templates, docs, and non-code changes
 changed_files=$(git diff --cached --name-only)
 has_code=0
+has_new_module=0
 for f in $changed_files; do
   case "$f" in
     *.py|*.ts|*.js|*.sh|*.yml|*.yaml|*.json|*.html|*.css)
       has_code=1
       ;;
   esac
+  # Detect new Python modules in core/ or agents/ that lack tests
+  if [[ "$f" =~ ^apps/jarvis/src/core/[^/]+\.py$ ]] && [ ! -f "$BASE_DIR/tests/unit/test_$(basename ${f%.py}).py" ] && [ ! -f "$BASE_DIR/tests/unit/test_$(basename ${f%.py}).py" ]; then
+    has_new_module=1
+    new_module="$f"
+  fi
 done
 
 if [ "$has_code" -eq 0 ]; then
-  exit 0  # No code changes, skip
+  exit 0
+fi
+
+# TDD check: new modules must have test files
+if [ "$has_new_module" -eq 1 ]; then
+  echo ""
+  echo "╔══════════════════════════════════════════════════════════╗"
+  echo "║  ✗ TDD VIOLATION: No tests for new module              ║"
+  echo "║                                                        ║"
+  echo "║  New module detected: $new_module"
+  echo "║  You must write tests BEFORE committing implementation. ║"
+  echo "║  Create tests/unit/test_$(basename ${new_module%.py}).py ║"
+  echo "║                                                        ║"
+  echo "║  Or use --no-verify for Tier 1 (quick fix).            ║"
+  echo "╚══════════════════════════════════════════════════════════╝"
+  exit 1
 fi
 
 # Check if there's an active spec
