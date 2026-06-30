@@ -2,9 +2,11 @@
 YouTube Content Bot — News Scraper + Script Generator
 Julian Goldie-style: trending AI news → script in 5 min
 """
-import logging, json, httpx, re, random
+import logging
+import random
 from datetime import datetime
-from typing import Optional
+
+import httpx
 
 log = logging.getLogger("youtube-bot.scraper")
 
@@ -129,6 +131,6 @@ if __name__ == "__main__":
         print(f"\n{'='*60}")
         print(f"📰 {item['title']}")
         print(f"   Score: {item.get('score', 0)} | Source: {item['source']}")
-        print(f"\n📝 Script preview:")
+        print("\n📝 Script preview:")
         script = scraper.generate_script(item)
         print(script[:300] + "...")

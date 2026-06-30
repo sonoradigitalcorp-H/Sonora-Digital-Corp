@@ -4,8 +4,10 @@ Social Media Automation — Sonora Digital Corp
 Uses Playwright with Chrome profile (sonoradigitalcorp@gmail.com)
 Manages: Facebook, Instagram, WhatsApp Web
 """
-import asyncio, json, os, sys
+import asyncio
+import os
 from datetime import datetime
+
 from playwright.async_api import async_playwright
 
 HOME = os.path.expanduser("~")

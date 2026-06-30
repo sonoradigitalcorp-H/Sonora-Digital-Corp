@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, Query
-from src.core.sales_pipeline import pipeline, PipelineStage
+from src.core.sales_pipeline import pipeline
 
 router = APIRouter()
 

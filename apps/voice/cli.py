@@ -2,17 +2,17 @@
 JARVIS Voice CLI — Testing and debugging tool.
 """
 
-import sys
 import os
+import sys
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from voice import (
     WakeWordDetector,
-    transcribe,
-    speak,
-    play_audio,
     list_microphones,
+    play_audio,
+    speak,
+    transcribe,
 )
 
 

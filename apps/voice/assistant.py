@@ -4,14 +4,18 @@ Wake word → STT → response → TTS
 Run: python3 voice/assistant.py
 """
 
-import sys, os, time, logging
+import logging
+import os
+import sys
+import time
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s %(message)s")
 log = logging.getLogger("jarvis.assistant")
 
-from voice import WakeWordDetector, transcribe, speak, play_audio, list_microphones
-from voice.tts import TTSEngine, get_engine
+from voice import WakeWordDetector, list_microphones
+from voice.tts import get_engine
 
 
 def process_command(text: str) -> str:

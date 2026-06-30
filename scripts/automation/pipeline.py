@@ -3,9 +3,8 @@ Sonora Digital Corp — Automation Pipeline v1
 Julian Goldie-style newsjacking + multi-platform distribution
 n8n + Python hybrid
 """
-import os, json, logging, subprocess, time
-from datetime import datetime
-from typing import Optional
+import logging
+import time
 
 log = logging.getLogger("automation.pipeline")
 

@@ -1,15 +1,13 @@
 import json
 import subprocess
-from pathlib import Path
 from datetime import datetime, timezone
+from pathlib import Path
 
 import httpx
-
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
-
-from webui.routes.app_state import app, sessions, get_orchestrator
+from webui.routes.app_state import sessions
 
 router = APIRouter()
 BASE_DIR = Path(__file__).parent.parent

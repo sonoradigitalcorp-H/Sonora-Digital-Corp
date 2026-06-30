@@ -1,9 +1,7 @@
 import sqlite3
-import json
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Optional
-
+from typing import Any
 
 IMPORTANCE_LEVELS = {
     "critical": 3,
@@ -87,7 +85,7 @@ class Engram:
             )
             conn.commit()
 
-    def query_context(self, query: str, limit: int = 5) -> List[Dict[str, Any]]:
+    def query_context(self, query: str, limit: int = 5) -> list[dict[str, Any]]:
         now = datetime.now()
         with sqlite3.connect(self.db_path) as conn:
             conn.row_factory = sqlite3.Row
@@ -113,7 +111,7 @@ class Engram:
             conn.commit()
             return rows
 
-    def get_by_spec(self, spec_id: str) -> List[Dict[str, Any]]:
+    def get_by_spec(self, spec_id: str) -> list[dict[str, Any]]:
         with sqlite3.connect(self.db_path) as conn:
             conn.row_factory = sqlite3.Row
             c = conn.cursor()
@@ -161,7 +159,7 @@ class Engram:
             )
             conn.commit()
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         with sqlite3.connect(self.db_path) as conn:
             c = conn.cursor()
             c.execute("SELECT COUNT(*) FROM memories")

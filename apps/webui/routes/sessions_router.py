@@ -1,10 +1,8 @@
 import uuid
 from datetime import datetime, timezone
-from typing import Optional
 
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import JSONResponse, Response
-
 from webui.routes.app_state import sessions, store_session
 
 router = APIRouter()
@@ -16,9 +14,9 @@ def _clean(s):
 
 @router.get("/api/sessions")
 async def list_sessions(
-    pinned: Optional[bool] = None,
-    project: Optional[str] = None,
-    tag: Optional[str] = None,
+    pinned: bool | None = None,
+    project: str | None = None,
+    tag: str | None = None,
     archived: bool = False,
     limit: int = 50,
 ):

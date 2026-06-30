@@ -2,11 +2,13 @@
 Thumbnail Generator Service — FastAPI
 Generates modern, high-CTR thumbnails for YouTube/TikTok
 """
-import io, json, logging, os, random
+import logging
+import os
+import random
+
 from fastapi import FastAPI, HTTPException
+from PIL import Image, ImageDraw, ImageFont
 from pydantic import BaseModel
-from PIL import Image, ImageDraw, ImageFont, ImageFilter, ImageOps
-import httpx
 
 app = FastAPI(title="Thumbnail Generator", version="1.0")
 log = logging.getLogger("thumbnails")
@@ -51,7 +53,7 @@ async def generate_thumbnail(req: ThumbnailRequest):
         try:
             font_large = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf", 60)
             font_small = ImageFont.truetype("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf", 30)
-        except:
+        except Exception:
             font_large = ImageFont.load_default()
             font_small = ImageFont.load_default()
         
@@ -75,7 +77,7 @@ async def generate_thumbnail(req: ThumbnailRequest):
     
     except Exception as e:
         log.error(f"Thumbnail generation failed: {e}")
-        raise HTTPException(500, str(e))
+        raise HTTPException(500, str(e)) from e
 
 @app.get("/health")
 async def health():

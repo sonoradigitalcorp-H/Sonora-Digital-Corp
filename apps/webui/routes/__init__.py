@@ -1,33 +1,32 @@
 import os
-from fastapi.staticfiles import StaticFiles
-from fastapi.templating import Jinja2Templates
 
-from fastapi import HTTPException, Query, Request
 import httpx
+from fastapi import Request
+from fastapi.staticfiles import StaticFiles
 
-from webui.routes.app_state import app, STATIC_DIR, TEMPLATES_DIR
 from webui.routes import (
-    pages,
-    sessions_router,
-    chat_router,
-    files_router,
-    skills_router,
-    sdc_router,
-    mysticverse_router,
-    payments_router,
     abe_router,
-    commands_router,
-    voice_router,
-    webhooks_router,
+    app_router,
     approvals_router,
     brain_router,
-    store_router,
+    chat_router,
+    commands_router,
     content_router,
-    zamora_router,
-    app_router,
+    files_router,
+    mysticverse_router,
+    pages,
+    payments_router,
     sales_router,
     score_router,
+    sdc_router,
+    sessions_router,
+    skills_router,
+    store_router,
+    voice_router,
+    webhooks_router,
+    zamora_router,
 )
+from webui.routes.app_state import STATIC_DIR, app
 
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 

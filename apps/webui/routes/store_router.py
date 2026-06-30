@@ -3,12 +3,12 @@ Store API — Ecommerce routes for content creator platform.
 Integrates with n8n, Mercado Pago, Bitso, Fal.ai.
 """
 
+import json
 import logging
 import uuid
-import json
-from pathlib import Path
-from typing import Optional
 from datetime import datetime
+from pathlib import Path
+
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
@@ -128,10 +128,10 @@ def _load_data():
     global products, orders
     try:
         if PRODUCTS_FILE.exists():
-            with open(PRODUCTS_FILE, "r", encoding="utf-8") as f:
+            with open(PRODUCTS_FILE, encoding="utf-8") as f:
                 products = json.load(f)
         if ORDERS_FILE.exists():
-            with open(ORDERS_FILE, "r", encoding="utf-8") as f:
+            with open(ORDERS_FILE, encoding="utf-8") as f:
                 orders = json.load(f)
     except Exception as e:
         log.warning(f"Error loading store data: {e}")

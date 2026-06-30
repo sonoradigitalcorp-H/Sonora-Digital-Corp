@@ -4,21 +4,20 @@ JARVIS Tools Router — Dispatches tool calls by name.
 
 import json
 import logging
-from typing import Any, Dict
+from typing import Any
 
-from src.core.tools.definitions import TOOL_DEFINITIONS
 from src.core.tools.executors import (
-    execute_command,
-    read_file,
-    write_file,
-    list_files,
-    run_tests,
-    search_code,
+    ask_user,
     docker_build,
     docker_deploy,
-    search_semantic,
+    execute_command,
+    list_files,
     rag_store,
-    ask_user,
+    read_file,
+    run_tests,
+    search_code,
+    search_semantic,
+    write_file,
 )
 
 log = logging.getLogger("jarvis.tools.router")
@@ -38,7 +37,7 @@ AVAILABLE_TOOLS = {
 }
 
 
-def execute_tool(name: str, arguments: dict) -> Dict[str, Any]:
+def execute_tool(name: str, arguments: dict) -> dict[str, Any]:
     log.info(f"Tool call: {name}({json.dumps(arguments)[:200]})")
     if name not in AVAILABLE_TOOLS:
         return {"status": "error", "message": f"Tool not found: {name}"}

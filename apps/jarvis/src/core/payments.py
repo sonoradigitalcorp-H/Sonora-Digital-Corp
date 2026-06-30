@@ -4,25 +4,20 @@ Multi-provider payment system for Mexico/LatAm market.
 Domain types in src.core.domain (frozen dataclasses, typed enums).
 """
 
-import json
 import logging
 import os
-import uuid
 import time
-from typing import Optional, Dict, List, Any
-from datetime import datetime, timezone
+import uuid
+from typing import Any
 
 from src.core.domain import (
-    PaymentProvider,
-    PaymentCurrency,
     Plan,
     SPEIAccount,
-    PaymentResult,
 )
 
 log = logging.getLogger("jarvis.payments")
 
-PAYMENT_PROVIDERS: Dict[str, Dict[str, Any]] = {
+PAYMENT_PROVIDERS: dict[str, dict[str, Any]] = {
     "mercadopago": {
         "name": "Mercado Pago",
         "fees": 0.039,
@@ -50,7 +45,7 @@ SPEI_ACCOUNT: SPEIAccount = SPEIAccount(
     currency="MXN",
 )
 
-PLANS: Dict[str, Plan] = {
+PLANS: dict[str, Plan] = {
     "conquistador": Plan(id="conquistador", name="Conquistador", price_mxn=780, price_usd=39),
     "agente_ia": Plan(id="agente_ia", name="Agente IA", price_mxn=1380, price_usd=69),
     "imperio": Plan(id="imperio", name="Imperio", price_mxn=2980, price_usd=149),
@@ -71,14 +66,14 @@ class MercadoPagoClient:
         }
 
     def create_preference(
-        self, items: List[Dict], payer: Dict = None
-    ) -> Optional[Dict]:
+        self, items: list[dict], payer: dict = None
+    ) -> dict | None:
         if not self.access_token or self.access_token.startswith("TEST-"):
             log.info("MP test mode — returning mock preference")
             return {
                 "id": f"mock_{str(uuid.uuid4())[:8]}",
-                "init_point": f"https://www.mercadopago.com.mx/checkout/v1/redirect?pref_id=mock",
-                "sandbox_init_point": f"https://sandbox.mercadopago.com.mx/checkout/v1/test?pref_id=mock",
+                "init_point": "https://www.mercadopago.com.mx/checkout/v1/redirect?pref_id=mock",
+                "sandbox_init_point": "https://sandbox.mercadopago.com.mx/checkout/v1/test?pref_id=mock",
             }
         try:
             import requests
@@ -110,7 +105,7 @@ class MercadoPagoClient:
             log.warning(f"MP client error: {e}")
         return None
 
-    def get_payment(self, payment_id: str) -> Optional[Dict]:
+    def get_payment(self, payment_id: str) -> dict | None:
         try:
             import requests
 
@@ -125,8 +120,9 @@ class MercadoPagoClient:
             log.warning(f"MP get_payment error: {e}")
         return None
 
-    def verify_webhook_signature(self, request_data: Dict, headers: Dict) -> bool:
-        import hashlib, hmac
+    def verify_webhook_signature(self, request_data: dict, headers: dict) -> bool:
+        import hashlib
+        import hmac
 
         secret = os.environ.get("MERCADO_PAGO_WEBHOOK_SECRET", "")
         if not secret:
@@ -153,7 +149,7 @@ class MercadoPagoClient:
         ).hexdigest()
         return hmac.compare_digest(expected, hash_val)
 
-    def process_webhook(self, data: Dict) -> Dict:
+    def process_webhook(self, data: dict) -> dict:
         action = data.get("action", "")
         payment_id = data.get("data", {}).get("id")
         if action == "payment.created":
@@ -181,7 +177,7 @@ class BitsoClient:
 
     def create_charge(
         self, amount_mxn: float, concept: str = "Suscripción SDC"
-    ) -> Optional[Dict]:
+    ) -> dict | None:
         charge_id = f"bitso_{str(uuid.uuid4())[:8]}"
         log.info(f"Bitso charge created: {charge_id} — ${amount_mxn} MXN — {concept}")
         return {
@@ -199,11 +195,11 @@ class PaymentOrchestrator:
     def __init__(self):
         self.mp = MercadoPagoClient()
         self.bitso = BitsoClient()
-        self.transactions: Dict[str, Dict] = {}
+        self.transactions: dict[str, dict] = {}
 
     def create_payment(
         self, plan_id: str, provider: str = "mercadopago", niche: str = "general"
-    ) -> Dict:
+    ) -> dict:
         plan = PLANS.get(plan_id)
         if not plan:
             return {"error": f"Plan {plan_id} not found"}
@@ -238,7 +234,7 @@ class PaymentOrchestrator:
             )
         return self.transactions[tx_id]
 
-    def create_spei_charge(self, plan_id: str, niche: str = "general") -> Dict:
+    def create_spei_charge(self, plan_id: str, niche: str = "general") -> dict:
         plan = PLANS.get(plan_id)
         if not plan:
             return {"error": f"Plan {plan_id} not found"}
@@ -263,10 +259,10 @@ class PaymentOrchestrator:
         }
         return self.transactions[tx_id]
 
-    def get_transaction(self, tx_id: str) -> Optional[Dict]:
+    def get_transaction(self, tx_id: str) -> dict | None:
         return self.transactions.get(tx_id)
 
-    def handle_webhook(self, provider: str, data: Dict) -> Dict:
+    def handle_webhook(self, provider: str, data: dict) -> dict:
         if provider == "mercadopago":
             return self.mp.process_webhook(data)
         return {"status": "unknown"}

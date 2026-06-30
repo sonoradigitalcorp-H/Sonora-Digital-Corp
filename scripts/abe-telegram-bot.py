@@ -2,13 +2,13 @@
 """
 ABE MUSIC Telegram Bot — Live data from JARVIS API
 """
-import json
+import logging
 import os
 import sys
 import time
-import logging
-import requests
 from pathlib import Path
+
+import requests
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 ENV_PATH = BASE_DIR / '.env'
@@ -53,7 +53,7 @@ def fetch_kpis():
 
 def format_message(kpis, detail=False):
     lines = [
-        f"🎵 *ABE MUSIC*",
+        "🎵 *ABE MUSIC*",
         f"📊 Streams: {kpis['total_streams']:,}",
         f"💰 Revenue: ${kpis['total_revenue']:,.2f}",
         f"🎤 Artistas: {kpis['total_artists']}",
@@ -90,14 +90,14 @@ def handle_update(token, update):
 
     if text == '/start':
         reply = (
-            f"🎵 *Bienvenido a ABE MUSIC Bot*\n\n"
-            f"Soy el asistente automatizado de tu disquera.\n\n"
-            f"*Comandos:*\n"
-            f"/kpi — Resumen rápido\n"
-            f"/full — Reporte completo\n"
-            f"/artistas — Top artistas\n"
-            f"/dashboard — Abrir panel\n\n"
-            f"_Powered by JARVIS AI Agency_"
+            "🎵 *Bienvenido a ABE MUSIC Bot*\n\n"
+            "Soy el asistente automatizado de tu disquera.\n\n"
+            "*Comandos:*\n"
+            "/kpi — Resumen rápido\n"
+            "/full — Reporte completo\n"
+            "/artistas — Top artistas\n"
+            "/dashboard — Abrir panel\n\n"
+            "_Powered by JARVIS AI Agency_"
         )
     elif text == '/kpi':
         reply = format_message(kpis)
@@ -116,11 +116,11 @@ def handle_update(token, update):
         reply = "Abre tu dashboard aquí:\nhttps://sonoradigitalcorp.com/"
     else:
         reply = (
-            f"No reconozco ese comando. Prueba:\n"
-            f"/kpi — Resumen rápido\n"
-            f"/full — Reporte completo\n"
-            f"/artistas — Top artistas\n"
-            f"/dashboard — Abrir panel"
+            "No reconozco ese comando. Prueba:\n"
+            "/kpi — Resumen rápido\n"
+            "/full — Reporte completo\n"
+            "/artistas — Top artistas\n"
+            "/dashboard — Abrir panel"
         )
 
     try:

@@ -3,9 +3,9 @@ JARVIS Voice Module v2.0
 Enhanced voice interface with wake word, STT (Whisper), TTS (edge-tts + queue).
 """
 
+from .stt import list_microphones, transcribe, transcribe_bytes
+from .tts import TTSEngine, play_audio, speak
 from .wake_word import WakeWordDetector
-from .stt import transcribe, transcribe_bytes, list_microphones
-from .tts import speak, play_audio, TTSEngine
 
 __all__ = [
     "WakeWordDetector",

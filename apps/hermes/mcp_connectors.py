@@ -4,7 +4,9 @@ Conectores MCP para Hugging Face y GitHub.
 Se comunican a través del protocolo MCP (Model Context Protocol) para que
 los agentes puedan interactuar con modelos y repositorios.
 """
-import json, os, subprocess, logging
+import logging
+import os
+import subprocess
 
 log = logging.getLogger("jarvis.mcp")
 

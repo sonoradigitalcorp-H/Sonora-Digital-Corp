@@ -5,13 +5,11 @@ Behavior Analyzer — Analiza patrones de trabajo y propone automatizaciones
 Analiza: commits, logs de sesión, errores frecuentes, tareas repetitivas
 Output: Reporte de comportamiento + propuestas de automatización
 """
-import json
-import os
-import subprocess
 import re
-from pathlib import Path
-from datetime import datetime, timedelta
+import subprocess
 from collections import Counter, defaultdict
+from datetime import datetime, timedelta
+from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOG_FILE = BASE_DIR / 'memory' / 'behavior-log.md'
@@ -47,7 +45,7 @@ def run_git_log(days=7):
             cwd=BASE_DIR
         )
         return result.stdout.strip().split('\n') if result.stdout.strip() else []
-    except:
+    except Exception:
         return []
 
 def analyze_commits(commits):
@@ -84,7 +82,7 @@ def detect_repeated_tasks(patterns):
     """Detect tasks done more than 3 times"""
     repeated = []
     count = Counter()
-    for cat, items in patterns.items():
+    for _cat, items in patterns.items():
         for item in items:
             # Extract meaningful words from commit messages
             words = item.lower().split()[1:] if len(item.split()) > 1 else []
@@ -132,7 +130,7 @@ def calculate_productivity(patterns):
     # Features + tests = good, Fixes + refactors = neutral, Other = bad signal
     good = len(patterns.get('features', [])) + len(patterns.get('tests', []))
     neutral = len(patterns.get('fixes', [])) + len(patterns.get('refactors', []))
-    bad = len(patterns.get('other', []))
+    len(patterns.get('other', []))
     score = min(10, max(3, int((good * 2 + neutral) / (total + 1) * 5)))
     return score
 
@@ -143,7 +141,7 @@ def get_ram_status():
             if 'Mem:' in line:
                 parts = line.split()
                 return f"{int(parts[6])}MB libre de {int(parts[1])}MB"
-    except:
+    except Exception:
         return "desconocido"
     return "desconocido"
 
@@ -152,7 +150,7 @@ def get_docker_status():
         ps = subprocess.run(['docker', 'ps', '--format', '{{.Names}}'], capture_output=True, text=True, timeout=5)
         containers = [c for c in ps.stdout.strip().split('\n') if c]
         return f"{len(containers)} contenedores: {', '.join(containers[:5])}"
-    except:
+    except Exception:
         return "docker no disponible"
 
 def main():
@@ -222,7 +220,6 @@ def main():
 
 def gap_analysis():
     """Check what prompts might be missing"""
-    prompt_dirs = ['_META', 'IDENTITY', 'AGENTS', 'STRATEGY', 'OPERATIONS', 'CONTENT', 'CODE', 'CLIENTS']
     base = BASE_DIR / 'prompts'
     
     print("\n📋 Gap Analysis — Prompt Coverage:")

@@ -1,11 +1,11 @@
-from typing import Any, Dict
+from typing import Any
 
 from src.core.agents.agent_base import (
     AgentBase,
-    match_keywords,
-    extract_file_path,
-    success_response,
     error_response,
+    extract_file_path,
+    match_keywords,
+    success_response,
 )
 
 
@@ -14,7 +14,7 @@ class ReviewAgent(AgentBase):
     description = "Code review y validación de código"
     timeout = 30
 
-    async def run(self, task: str, context: dict = None) -> Dict[str, Any]:
+    async def run(self, task: str, context: dict = None) -> dict[str, Any]:
         self.log.info(f"Review task: {task[:100]}...")
         if match_keywords(task, ["archivo", "file", "revisa", "analiza"]):
             return self._review_file(task)
@@ -25,7 +25,7 @@ class ReviewAgent(AgentBase):
         else:
             return self._review_file(task)
 
-    def _review_file(self, task: str) -> Dict[str, Any]:
+    def _review_file(self, task: str) -> dict[str, Any]:
         path = extract_file_path(task, r"[\w/.-]+\.[a-zA-Z]+")
         if not path:
             return error_response(
@@ -110,7 +110,7 @@ class ReviewAgent(AgentBase):
             score=score,
         )
 
-    def _review_snippet(self, task: str) -> Dict[str, Any]:
+    def _review_snippet(self, task: str) -> dict[str, Any]:
         import re
 
         code_blocks = re.findall(r"```(?:\w+)?\n(.*?)```", task, re.DOTALL)
@@ -169,7 +169,7 @@ class ReviewAgent(AgentBase):
             score=round(score, 1),
         )
 
-    def _suggest_fixes(self, task: str) -> Dict[str, Any]:
+    def _suggest_fixes(self, task: str) -> dict[str, Any]:
         path = extract_file_path(task, r"[\w/.-]+\.[a-zA-Z]+")
         if not path:
             return success_response(

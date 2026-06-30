@@ -6,7 +6,8 @@ Auto-stores learning on spec completion, auto-queries context before execution.
 import json
 import logging
 import os
-from typing import Optional, List, Dict, Any
+from datetime import timezone
+from typing import Any
 
 from src.core.engram import engram
 
@@ -19,7 +20,7 @@ EVENTS_FILE = os.path.join(BASE_DIR, "state", "logs", "events.jsonl")
 
 def _emit_event(event: str, payload: dict):
     os.makedirs(os.path.dirname(EVENTS_FILE), exist_ok=True)
-    from datetime import datetime, timezone
+    from datetime import datetime
     entry = json.dumps({
         "event": event,
         "timestamp": datetime.now(timezone.utc).isoformat(),
@@ -32,7 +33,7 @@ def _emit_event(event: str, payload: dict):
         pass
 
 
-def store_spec_completion(spec_id: str, summary: str, tags: List[str] = None):
+def store_spec_completion(spec_id: str, summary: str, tags: list[str] = None):
     """Auto-store learning when a spec is completed."""
     if not spec_id:
         return False
@@ -52,7 +53,7 @@ def store_spec_completion(spec_id: str, summary: str, tags: List[str] = None):
     return True
 
 
-def query_engram_context(task_description: str, limit: int = 3) -> List[Dict[str, Any]]:
+def query_engram_context(task_description: str, limit: int = 3) -> list[dict[str, Any]]:
     """Auto-query Engram before executing a task for relevant past learnings."""
     try:
         results = engram.query_context(task_description, limit=limit)
@@ -64,7 +65,7 @@ def query_engram_context(task_description: str, limit: int = 3) -> List[Dict[str
         return []
 
 
-def format_engram_context(results: List[Dict[str, Any]]) -> str:
+def format_engram_context(results: list[dict[str, Any]]) -> str:
     """Format Engram query results into a context string for agents."""
     if not results:
         return ""

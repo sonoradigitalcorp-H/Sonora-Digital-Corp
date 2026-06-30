@@ -1,10 +1,9 @@
-from typing import Any, Dict
+from typing import Any
 
 from src.core.agents.agent_base import (
     AgentBase,
-    match_keywords,
-    success_response,
     error_response,
+    match_keywords,
 )
 
 
@@ -15,7 +14,7 @@ class GbrainAgent(AgentBase):
     )
     timeout = 60
 
-    async def run(self, task: str, context: dict = None) -> Dict[str, Any]:
+    async def run(self, task: str, context: dict = None) -> dict[str, Any]:
         self.log.info(f"GBrain task: {task[:100]}")
         from src.core.unified_bridge import GbrainBridge
 

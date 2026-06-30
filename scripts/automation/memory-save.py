@@ -4,7 +4,9 @@ Run: every 60min via cron, or at end of each session.
 Stores: system state summary, decisions made, what was built, what was fixed.
 """
 
-import os, sys, json, logging
+import json
+import logging
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -62,8 +64,8 @@ def save_session_summary(neo4j, summary: str, session_id: str = "cron-auto"):
 
 def feed_qdrant():
     try:
-        from src.core.rag import rag
         from src.core import neo4j_store
+        from src.core.rag import rag
         memories = neo4j_store.search_memory("", limit=50)
         count = 0
         for m in memories:

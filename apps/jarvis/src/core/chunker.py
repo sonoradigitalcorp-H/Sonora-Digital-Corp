@@ -3,9 +3,9 @@ JARVIS Document Chunker — Semantic chunking pipeline for long documents.
 Splits documents > 512 tokens into overlapping chunks for embedding storage.
 """
 
-import re
 import logging
-from typing import List, Dict, Any
+import re
+from typing import Any
 
 log = logging.getLogger("jarvis.chunker")
 
@@ -19,7 +19,7 @@ def estimate_tokens(text: str) -> int:
 
 def chunk_document(
     text: str, max_tokens: int = MAX_TOKENS, overlap: int = CHUNK_OVERLAP
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     if estimate_tokens(text) <= max_tokens:
         return [{"text": text, "index": 0, "total": 1}]
     paragraphs = re.split(r"\n\s*\n", text)
@@ -67,12 +67,12 @@ def chunk_document(
     return chunks
 
 
-def _finalize_chunk(parts: List[str], overlap: int = 0) -> Dict[str, Any]:
+def _finalize_chunk(parts: list[str], overlap: int = 0) -> dict[str, Any]:
     text = "\n\n".join(parts)
     return {"text": text, "tokens": estimate_tokens(text)}
 
 
-def _get_overlap_tail(text: str, overlap_tokens: int) -> List[str]:
+def _get_overlap_tail(text: str, overlap_tokens: int) -> list[str]:
     words = text.split()
     if len(words) <= overlap_tokens:
         return [" ".join(words)]
@@ -82,7 +82,7 @@ def _get_overlap_tail(text: str, overlap_tokens: int) -> List[str]:
 
 def chunk_and_store(
     document: str, source: str, rag_engine, metadata: dict = None
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     chunks = chunk_document(document)
     results = []
     for chunk in chunks:

@@ -3,12 +3,11 @@ Unified Bridge — JARVIS ↔ Hermes ↔ OpenClaw
 Single integration layer that connects all systems into one.
 """
 
-import json
 import logging
 import os
-import requests
-from typing import Optional
 from pathlib import Path
+
+import requests
 from dotenv import load_dotenv
 
 load_dotenv(Path(__file__).parent.parent.parent / ".env")
@@ -186,7 +185,7 @@ class OpenClawBridge:
         try:
             r = requests.get(f"{self.api_url}/v1/models", timeout=5)
             return r.json() if r.ok else []
-        except Exception as e:
+        except Exception:
             return []
 
     def chat(self, agent_id: str, message: str) -> dict:
@@ -220,7 +219,7 @@ class UnifiedMemory:
         self.memory_cache[key] = {"value": value, "source": source}
         return success
 
-    def recall(self, key: str) -> Optional[str]:
+    def recall(self, key: str) -> str | None:
         if key in self.memory_cache:
             return self.memory_cache[key]["value"]
         if self.neo4j:
@@ -347,6 +346,7 @@ class UnifiedSystem:
 
     def process(self, task: str, context: dict = None) -> dict:
         import asyncio
+
         from src.core.orchestrator import get_orchestrator
 
         orch = get_orchestrator()

@@ -6,7 +6,7 @@ Extracts entities from messages and links them in Neo4j knowledge graph.
 import json
 import logging
 import re
-from typing import List, Dict, Any, Optional
+from typing import Any
 
 log = logging.getLogger("jarvis.graph")
 
@@ -35,7 +35,7 @@ Si no hay entidades, devuelve {{"entities": [], "relationships": []}}.
 Texto: {text}"""
 
 
-def extract_entities_local(text: str) -> List[Dict[str, str]]:
+def extract_entities_local(text: str) -> list[dict[str, str]]:
     entities = []
     seen = set()
     for etype, pattern in ENTITY_PATTERNS.items():
@@ -56,8 +56,8 @@ def extract_entities_local(text: str) -> List[Dict[str, str]]:
 
 
 def extract_relations_local(
-    text: str, entities: List[Dict[str, str]]
-) -> List[Dict[str, str]]:
+    text: str, entities: list[dict[str, str]]
+) -> list[dict[str, str]]:
     relations = []
     ent_names = [e["name"].lower() for e in entities]
     text_lower = text.lower()
@@ -83,7 +83,7 @@ def extract_relations_local(
     return relations
 
 
-def extract_with_llm(text: str, llm_client) -> Dict[str, Any]:
+def extract_with_llm(text: str, llm_client) -> dict[str, Any]:
     try:
         from src.core.llm import ask
 
@@ -102,7 +102,7 @@ def extract_with_llm(text: str, llm_client) -> Dict[str, Any]:
 
 
 def store_in_neo4j(
-    entities: List[Dict[str, str]], relationships: List[Dict[str, str]], neo4j_store
+    entities: list[dict[str, str]], relationships: list[dict[str, str]], neo4j_store
 ):
     if not neo4j_store:
         log.warning("Neo4j not available, skipping graph storage")
@@ -144,7 +144,7 @@ def store_in_neo4j(
 
 def query_related(
     concept_name: str, neo4j_store, depth: int = 2
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     try:
         driver = neo4j_store.get_driver()
         if not driver:
@@ -169,7 +169,7 @@ def query_related(
         return []
 
 
-def process_message(message: str, neo4j_store, use_llm: bool = True) -> Dict[str, Any]:
+def process_message(message: str, neo4j_store, use_llm: bool = True) -> dict[str, Any]:
     if use_llm:
         extraction = extract_with_llm(message, None)
     else:

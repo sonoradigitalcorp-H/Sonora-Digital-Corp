@@ -3,12 +3,9 @@ SDC Business Layer — Planes, suscripciones, onboarding y CRM.
 Conecta la infraestructura JARVIS con el modelo de negocio de Sonora Digital Corp.
 """
 
-import json
 import logging
-import os
 import uuid
 from datetime import datetime, timezone
-from typing import Optional, Dict, List, Any
 
 log = logging.getLogger("jarvis.sdc")
 
@@ -117,11 +114,11 @@ NICHO_PROFILES = {
 }
 
 
-def get_plan(plan_id: str) -> Optional[Dict]:
+def get_plan(plan_id: str) -> dict | None:
     return PLANS.get(plan_id)
 
 
-def list_plans() -> List[Dict]:
+def list_plans() -> list[dict]:
     return [{"id": k, **v} for k, v in PLANS.items()]
 
 
@@ -145,7 +142,7 @@ def recommend_plan(tipo: str, necesidad: str, nicho: str = "general") -> str:
     return "explorador"
 
 
-def get_features(plan_id: str, nicho: str = "general") -> List[str]:
+def get_features(plan_id: str, nicho: str = "general") -> list[str]:
     plan = get_plan(plan_id)
     if not plan:
         return []
@@ -156,7 +153,7 @@ def get_features(plan_id: str, nicho: str = "general") -> List[str]:
     return features
 
 
-def get_nicho_profile(nicho: str) -> Dict:
+def get_nicho_profile(nicho: str) -> dict:
     return NICHO_PROFILES.get(nicho, {"skills": [], "agents": []})
 
 
@@ -164,7 +161,7 @@ class SDCCustomer:
     def __init__(self, neo4j_store=None):
         self.neo4j = neo4j_store
 
-    def create(self, data: Dict) -> Optional[Dict]:
+    def create(self, data: dict) -> dict | None:
         customer_id = str(uuid.uuid4())
         customer = {
             "id": customer_id,
@@ -194,7 +191,7 @@ class SDCCustomer:
                 log.warning(f"Neo4j customer creation failed: {e}")
         return customer
 
-    def get(self, customer_id: str) -> Optional[Dict]:
+    def get(self, customer_id: str) -> dict | None:
         if self.neo4j:
             try:
                 driver = self.neo4j.get_driver()
@@ -215,7 +212,7 @@ class SDCOnboarding:
     def __init__(self, neo4j_store=None):
         self.customers = SDCCustomer(neo4j_store)
 
-    def process(self, answers: Dict) -> Dict:
+    def process(self, answers: dict) -> dict:
         tipo = answers.get("tipo", "persona")
         nicho = answers.get("nicho", "general")
         necesidad = answers.get("necesidad", "explorar")

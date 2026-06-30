@@ -1,6 +1,6 @@
-from typing import Any, Dict
+from typing import Any
 
-from src.core.agents.agent_base import AgentBase, success_response, error_response
+from src.core.agents.agent_base import AgentBase, error_response, success_response
 
 
 class VerifyAgent(AgentBase):
@@ -8,7 +8,7 @@ class VerifyAgent(AgentBase):
     description = "Valida cumplimiento de constitución, checklist y tests"
     timeout = 60
 
-    async def run(self, task: str, context: dict = None) -> Dict[str, Any]:
+    async def run(self, task: str, context: dict = None) -> dict[str, Any]:
         self.log.info(f"Verify phase: {task[:100]}...")
 
         # In real implementation, this would:

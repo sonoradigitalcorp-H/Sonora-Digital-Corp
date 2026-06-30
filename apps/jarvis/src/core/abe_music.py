@@ -7,8 +7,6 @@ import json
 import logging
 import os
 import uuid
-import time
-from typing import Optional, Dict, List, Any
 from datetime import datetime, timezone
 
 log = logging.getLogger("jarvis.abe")
@@ -51,8 +49,8 @@ class ArtistCRM:
     def __init__(self, neo4j_store=None, data_path: str = None):
         self.neo4j = neo4j_store
         self.data_path = data_path
-        self._artists: Dict[str, Dict] = {}
-        self._releases: Dict[str, Dict] = {}
+        self._artists: dict[str, dict] = {}
+        self._releases: dict[str, dict] = {}
         if data_path:
             if os.path.exists(data_path):
                 self._load()
@@ -91,7 +89,7 @@ class ArtistCRM:
         self._save()
         log.info(f"Seeded {len(self._artists)} artists, {len(self._releases)} releases")
 
-    def create_artist(self, data: Dict, _save: bool = True) -> Dict:
+    def create_artist(self, data: dict, _save: bool = True) -> dict:
         artist_id = str(uuid.uuid4())[:8]
         artist = {
             "id": artist_id,
@@ -123,16 +121,16 @@ class ArtistCRM:
             self._save()
         return artist
 
-    def get_artist(self, artist_id: str) -> Optional[Dict]:
+    def get_artist(self, artist_id: str) -> dict | None:
         return self._artists.get(artist_id)
 
-    def list_artists(self, status: str = None) -> List[Dict]:
+    def list_artists(self, status: str = None) -> list[dict]:
         artists = list(self._artists.values())
         if status:
             artists = [a for a in artists if a["status"] == status]
         return sorted(artists, key=lambda a: a["revenue"], reverse=True)
 
-    def create_release(self, artist_id: str, data: Dict, _save: bool = True) -> Optional[Dict]:
+    def create_release(self, artist_id: str, data: dict, _save: bool = True) -> dict | None:
         artist = self._artists.get(artist_id)
         if not artist:
             return None
@@ -156,7 +154,7 @@ class ArtistCRM:
             self._save()
         return release
 
-    def record_stream(self, release_id: str, amount: int = 1, _save: bool = True) -> Optional[Dict]:
+    def record_stream(self, release_id: str, amount: int = 1, _save: bool = True) -> dict | None:
         release = self._releases.get(release_id)
         if not release:
             return None
@@ -170,7 +168,7 @@ class ArtistCRM:
 
     def record_revenue(
         self, release_id: str, amount: float, source: str = "streaming", _save: bool = True
-    ) -> Dict:
+    ) -> dict:
         release = self._releases.get(release_id)
         if not release:
             return {"error": "Release not found"}
@@ -197,7 +195,7 @@ class KPIDashboard:
     def __init__(self, crm: ArtistCRM):
         self.crm = crm
 
-    def get_ceo_dashboard(self) -> Dict:
+    def get_ceo_dashboard(self) -> dict:
         artists = self.crm.list_artists()
         releases = list(self.crm._releases.values())
 
@@ -231,7 +229,7 @@ class KPIDashboard:
             },
         }
 
-    def get_artist_kpi(self, artist_id: str) -> Optional[Dict]:
+    def get_artist_kpi(self, artist_id: str) -> dict | None:
         artist = self.crm.get_artist(artist_id)
         if not artist:
             return None

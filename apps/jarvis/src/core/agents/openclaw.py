@@ -1,4 +1,4 @@
-from typing import Any, Dict
+from typing import Any
 
 from src.core.agents.agent_base import AgentBase, success_response
 
@@ -8,7 +8,7 @@ class OpenClawAgent(AgentBase):
     description = "Agentes especializados vía OpenClaw gateway"
     timeout = 60
 
-    async def run(self, task: str, context: dict = None) -> Dict[str, Any]:
+    async def run(self, task: str, context: dict = None) -> dict[str, Any]:
         self.log.info(f"OpenClaw task: {task[:100]}")
         from src.core.unified_bridge import OpenClawBridge
 

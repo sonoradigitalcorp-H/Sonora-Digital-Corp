@@ -2,20 +2,18 @@
 JARVIS Tools Executors — Each tool's implementation.
 """
 
-import json
 import logging
-import os
 import subprocess
 import time
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Any
 
 from src.core.tools.definitions import ALLOWED_COMMANDS
 
 log = logging.getLogger("jarvis.tools.executors")
 PROJECT_DIR = Path(__file__).parent.parent.parent.parent.parent.parent
 
-_rate_limits: Dict[str, list] = {}
+_rate_limits: dict[str, list] = {}
 
 _rag = None
 
@@ -40,7 +38,7 @@ def rate_limit(key: str, max_requests: int = 10, window_seconds: int = 60) -> bo
     return True
 
 
-def execute_command(command: str, timeout: int = 30) -> Dict[str, Any]:
+def execute_command(command: str, timeout: int = 30) -> dict[str, Any]:
     base_cmd = command.split()[0] if command else ""
     allowed = any(command.startswith(cmd) for cmd in ALLOWED_COMMANDS)
     if not allowed:
@@ -70,7 +68,7 @@ def execute_command(command: str, timeout: int = 30) -> Dict[str, Any]:
         return {"status": "error", "message": str(e)}
 
 
-def read_file(path: str, max_lines: int = 100) -> Dict[str, Any]:
+def read_file(path: str, max_lines: int = 100) -> dict[str, Any]:
     full_path = PROJECT_DIR / path
     if not full_path.exists():
         return {"status": "error", "message": f"Archivo no encontrado: {path}"}
@@ -92,7 +90,7 @@ def read_file(path: str, max_lines: int = 100) -> Dict[str, Any]:
         return {"status": "error", "message": str(e)}
 
 
-def write_file(path: str, content: str) -> Dict[str, Any]:
+def write_file(path: str, content: str) -> dict[str, Any]:
     full_path = PROJECT_DIR / path
     try:
         full_path.resolve().relative_to(PROJECT_DIR.resolve())
@@ -111,13 +109,12 @@ def write_file(path: str, content: str) -> Dict[str, Any]:
         return {"status": "error", "message": str(e)}
 
 
-def list_files(path: str = ".", pattern: Optional[str] = None) -> Dict[str, Any]:
+def list_files(path: str = ".", pattern: str | None = None) -> dict[str, Any]:
     full_path = PROJECT_DIR / path
     if not full_path.exists():
         return {"status": "error", "message": f"Ruta no encontrada: {path}"}
     try:
         if pattern:
-            import glob
 
             items = [str(p.relative_to(PROJECT_DIR)) for p in PROJECT_DIR.glob(pattern)]
             return {
@@ -142,21 +139,21 @@ def list_files(path: str = ".", pattern: Optional[str] = None) -> Dict[str, Any]
         return {"status": "error", "message": str(e)}
 
 
-def run_tests(path: str = "tests/", verbose: bool = False) -> Dict[str, Any]:
+def run_tests(path: str = "tests/", verbose: bool = False) -> dict[str, Any]:
     cmd = f"python3 -m pytest {path} {'-v' if verbose else '-q'} --tb=short 2>&1 | tail -20"
     return execute_command(cmd, timeout=120)
 
 
-def search_code(pattern: str, path: str = ".", include: str = "*.py") -> Dict[str, Any]:
+def search_code(pattern: str, path: str = ".", include: str = "*.py") -> dict[str, Any]:
     cmd = f"grep -rn --include='{include}' '{pattern}' {path} 2>/dev/null | head -30"
     return execute_command(cmd)
 
 
-def docker_build(path: str = ".", tag: str = "jarvis/service:latest") -> Dict[str, Any]:
+def docker_build(path: str = ".", tag: str = "jarvis/service:latest") -> dict[str, Any]:
     return execute_command(f"docker build -t {tag} {path} 2>&1 | tail -20", timeout=300)
 
 
-def docker_deploy(path: str = ".", service: Optional[str] = None) -> Dict[str, Any]:
+def docker_deploy(path: str = ".", service: str | None = None) -> dict[str, Any]:
     cmd = (
         f"docker compose -f {path}/docker-compose.yml up -d {service} 2>&1 | tail -20"
         if service
@@ -165,17 +162,17 @@ def docker_deploy(path: str = ".", service: Optional[str] = None) -> Dict[str, A
     return execute_command(cmd, timeout=120)
 
 
-def search_semantic(query: str, limit: int = 5) -> Dict[str, Any]:
+def search_semantic(query: str, limit: int = 5) -> dict[str, Any]:
     r = _get_rag()
     return r.search(query, limit=limit)
 
 
-def rag_store(text: str, source: str = "conversación") -> Dict[str, Any]:
+def rag_store(text: str, source: str = "conversación") -> dict[str, Any]:
     r = _get_rag()
     return r.store(text, {"source": source})
 
 
-def ask_user(question: str) -> Dict[str, Any]:
+def ask_user(question: str) -> dict[str, Any]:
     log.info(f"JARVIS pregunta: {question}")
     try:
         answer = input("➤ Tu respuesta: ")

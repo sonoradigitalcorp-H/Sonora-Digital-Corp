@@ -169,3 +169,107 @@ class TestMemoryAgent:
         agent = MemoryAgent()
         result = await agent.run("recuerda esto")
         assert result["agent"] == "memory"
+
+
+class TestOrchestratorCore:
+    def test_initialization(self):
+        orch = AgentOrchestrator()
+        assert len(orch.agents) == 12
+        assert "sales" in orch.agents
+        assert "research" in orch.agents
+        assert "code" in orch.agents
+
+    def test_list_agents(self):
+        orch = AgentOrchestrator()
+        agents = orch.list_agents()
+        assert len(agents) == 12
+        sales = [a for a in agents if a["name"] == "sales"]
+        assert len(sales) == 1
+        assert "Captura" in sales[0]["description"]
+
+    def test_sales_routing(self):
+        orch = AgentOrchestrator()
+        assert orch.route("nuevo lead") == "sales"
+        assert orch.route("cotizar") == "sales"
+        assert orch.route("venta") == "sales"
+        assert orch.route("dame una propuesta") == "sales"
+        assert orch.route("cliente") == "sales"
+        assert orch.route("quiero vender") == "sales"
+
+    def test_sales_routing_priorities(self):
+        orch = AgentOrchestrator()
+        assert orch.route("abri chrome") == "explore"  # should still route to explore
+        assert orch.route("buscar informacion") == "research"
+        assert orch.route("escribe una funcion") == "code"
+
+    def test_routing_fallback_default(self):
+        orch = AgentOrchestrator()
+        assert orch.route("") == "research"  # empty string should fallback
+        assert orch.route("xyzabc123") == "research"  # unknown should fallback
+
+    def test_push_context(self):
+        orch = AgentOrchestrator()
+        orch.push_context("test_agent", "test task", {"status": "success"})
+        ctx = orch.get_context(limit=1)
+        assert len(ctx) == 1
+        assert ctx[0]["agent"] == "test_agent"
+        assert ctx[0]["task"] == "test task"
+
+    def test_get_context_limit(self):
+        orch = AgentOrchestrator()
+        for i in range(10):
+            orch.push_context(f"agent_{i}", f"task_{i}", {"status": "ok"})
+        ctx = orch.get_context(limit=3)
+        assert len(ctx) == 3
+
+    def test_search_context_found(self):
+        orch = AgentOrchestrator()
+        orch.push_context("code", "implementar funcion de login", {"status": "done"})
+        orch.push_context("research", "investigar precios", {"status": "done"})
+        results = orch.search_context("login")
+        assert len(results) >= 1
+
+    def test_search_context_not_found(self):
+        orch = AgentOrchestrator()
+        orch.push_context("code", "fix bug", {"status": "done"})
+        results = orch.search_context("nonexistent12345")
+        assert results == []
+
+    def test_clear_context(self):
+        orch = AgentOrchestrator()
+        orch.push_context("test", "task", {"ok": True})
+        orch.clear_context()
+        assert orch.get_context() == []
+
+    def test_max_context_circular_buffer(self):
+        orch = AgentOrchestrator()
+        for i in range(orch.max_context + 5):
+            orch.push_context(f"agent_{i}", f"task_{i}", {"ok": True})
+        ctx = orch.get_context(limit=100)
+        assert len(ctx) == orch.max_context
+
+    def test_context_result_summary_truncation(self):
+        orch = AgentOrchestrator()
+        long_result = {"synthesis": "x" * 500}
+        orch.push_context("test", "short task", long_result)
+        ctx = orch.get_context(limit=1)
+        assert len(ctx[0]["result_summary"]) <= 200
+
+    def test_singleton(self):
+        from core.orchestrator import get_orchestrator
+        o1 = get_orchestrator()
+        o2 = get_orchestrator()
+        assert o1 is o2
+
+    @pytest.mark.asyncio
+    async def test_sales_execute(self):
+        orch = AgentOrchestrator()
+        result = await orch.execute("quiero comprar", {"action": "capture", "name": "Test"})
+        assert result["status"] == "success"
+
+    @pytest.mark.asyncio
+    async def test_sales_execute_with_context(self):
+        orch = AgentOrchestrator()
+        result = await orch.execute("venta", {"action": "dashboard"})
+        assert isinstance(result, dict)
+        assert "status" in result

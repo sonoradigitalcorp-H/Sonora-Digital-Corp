@@ -2,12 +2,11 @@
 """
 JARVIS Core — Orquestador central integrado con voz, MCP, agentes y Web UI.
 """
-import os
 import json
-import time
 import logging
+import os
 import threading
-import subprocess
+import time
 import urllib.request
 
 logging.basicConfig(level=logging.INFO,
@@ -41,7 +40,6 @@ def start_mcp():
 def start_voice():
     """Inicia el módulo de voz en un hilo separado."""
     try:
-        from voice import transcribe, speak
         log.info("✅ Módulo de voz listo (STT + TTS v2)")
     except Exception as e:
         log.warning(f"⚠️ Voice module not available: {e}")

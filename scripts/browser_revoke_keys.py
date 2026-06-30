@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Playwright script: navigate openrouter.ai/keys, revoke old API keys."""
-import asyncio, json, os, re, sys
+import asyncio
+import os
+import re
+
 from playwright.async_api import async_playwright
 
 HOME = os.path.expanduser("~")
@@ -102,7 +105,7 @@ async def main():
                 if not btn:
                     btn = await page.query_selector(f'[data-key*="{key[:20]}"] button, tr:has-text("{key[:20]}") button')
                 if not btn:
-                    btn = await page.query_selector(f'tr:has-text("Revoke") button, button:has-text("Revoke")')
+                    btn = await page.query_selector('tr:has-text("Revoke") button, button:has-text("Revoke")')
                 if btn:
                     page.once("dialog", lambda d: asyncio.ensure_future(d.accept()))
                     await btn.click()

@@ -2,9 +2,9 @@
 JARVIS Security Guard — Prompt Injection Protection + Input Validation.
 """
 
-import re
 import logging
-from typing import Dict, Any, Optional
+import re
+from typing import Any
 
 log = logging.getLogger("jarvis.security")
 
@@ -38,7 +38,7 @@ class SecurityGuard:
     """Validates inputs and blocks injection attempts."""
 
     @staticmethod
-    def validate_input(text: str) -> Dict[str, Any]:
+    def validate_input(text: str) -> dict[str, Any]:
         """
         Returns {"safe": True/False, "reason": "..."} for a given input.
         """

@@ -7,12 +7,11 @@ import json
 import logging
 import os
 import time
+from collections.abc import Generator
 from pathlib import Path
 
 import requests
 from dotenv import load_dotenv
-from typing import Optional, Generator, AsyncGenerator
-from datetime import datetime, timezone
 
 load_dotenv(Path(__file__).parent.parent.parent / ".env")
 load_dotenv(Path.home() / "sdcorp" / ".secrets" / "keys.env")
@@ -21,6 +20,7 @@ log = logging.getLogger("jarvis.llm")
 
 # LangFuse tracing (importado dinámicamente para evitar path issues con guiones)
 import importlib.util
+
 _LF_PATH = Path(__file__).resolve().parent.parent.parent.parent.parent / "sonora-enterprise-os" / "scripts" / "instrument-langfuse.py"
 if _LF_PATH.exists():
     _spec = importlib.util.spec_from_file_location("instrument_langfuse", str(_LF_PATH))
@@ -76,7 +76,7 @@ Respondes en español. Máximo 2 oraciones. Directa y clara."""
 
 def chat_completion(
     messages: list,
-    model: Optional[str] = None,
+    model: str | None = None,
     max_tokens: int = 2000,
     temperature: float = 0.7,
     stream: bool = False,
@@ -170,7 +170,7 @@ def chat_completion(
 
 def stream_chat_completion(
     messages: list,
-    model: Optional[str] = None,
+    model: str | None = None,
     max_tokens: int = 4000,
     temperature: float = 0.7,
 ) -> Generator[str, None, dict]:
@@ -251,7 +251,7 @@ def stream_chat_completion(
         return {"error": str(e)}
 
 
-def ask(prompt: str, system: Optional[str] = None) -> str:
+def ask(prompt: str, system: str | None = None) -> str:
     """Simple convenience function: send a prompt, get text response."""
     messages = []
     if system:

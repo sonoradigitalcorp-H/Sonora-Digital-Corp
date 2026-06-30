@@ -1,15 +1,14 @@
 import json
-import logging
 import os
 import re
 import subprocess
-from typing import Any, Dict
+from typing import Any
 
 from src.core.agents.agent_base import (
     AgentBase,
+    error_response,
     match_keywords,
     success_response,
-    error_response,
 )
 
 
@@ -66,7 +65,7 @@ class PRAgent(AgentBase):
         except Exception:
             return "main"
 
-    async def run(self, task: str, context: dict = None) -> Dict[str, Any]:
+    async def run(self, task: str, context: dict = None) -> dict[str, Any]:
         self.log.info(f"PR task: {task[:100]}...")
 
         if match_keywords(
@@ -90,7 +89,7 @@ class PRAgent(AgentBase):
         else:
             return self._create_pr(task)
 
-    def _create_pr(self, task: str) -> Dict[str, Any]:
+    def _create_pr(self, task: str) -> dict[str, Any]:
         remote = self._get_remote()
         if not remote:
             return error_response(
@@ -147,7 +146,7 @@ class PRAgent(AgentBase):
             self.name, task, r.get("stderr", r.get("error", "Unknown error"))
         )
 
-    def _list_prs(self, task: str) -> Dict[str, Any]:
+    def _list_prs(self, task: str) -> dict[str, Any]:
         remote = self._get_remote()
         if not remote:
             return error_response(self.name, task, "No GitHub remote found.")
@@ -186,7 +185,7 @@ class PRAgent(AgentBase):
             )
         return error_response(self.name, task, r.get("stderr", "Failed to list PRs"))
 
-    def _view_pr(self, task: str) -> Dict[str, Any]:
+    def _view_pr(self, task: str) -> dict[str, Any]:
         remote = self._get_remote()
         if not remote:
             return error_response(self.name, task, "No GitHub remote found.")
@@ -222,7 +221,7 @@ class PRAgent(AgentBase):
             self.name, task, r.get("stderr", f"PR #{pr_num} not found")
         )
 
-    def _merge_pr(self, task: str) -> Dict[str, Any]:
+    def _merge_pr(self, task: str) -> dict[str, Any]:
         remote = self._get_remote()
         if not remote:
             return error_response(self.name, task, "No GitHub remote found.")
@@ -257,7 +256,7 @@ class PRAgent(AgentBase):
             error=r.get("stderr", "") if status == "failed" else "",
         )
 
-    def _review_pr(self, task: str) -> Dict[str, Any]:
+    def _review_pr(self, task: str) -> dict[str, Any]:
         remote = self._get_remote()
         if not remote:
             return error_response(self.name, task, "No GitHub remote found.")

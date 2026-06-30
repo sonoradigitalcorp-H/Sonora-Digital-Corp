@@ -6,14 +6,14 @@ Includes sanitization against prompt injection and hidden instructions.
 import logging
 import os
 import re
-from typing import List, Dict, Any, Optional
 from datetime import datetime
+from typing import Any
 
 from qdrant_client import QdrantClient
-from qdrant_client.models import PointStruct, Filter, FieldCondition, MatchValue
 from qdrant_client.http.exceptions import UnexpectedResponse
+from qdrant_client.models import FieldCondition, Filter, MatchValue, PointStruct
 
-from src.core.embeddings import embed_text, chunk_text, EMBED_DIM
+from src.core.embeddings import EMBED_DIM, embed_text
 
 log = logging.getLogger("jarvis.rag")
 
@@ -88,7 +88,7 @@ class RagEngine:
         self._client = None
 
     @property
-    def client(self) -> Optional[QdrantClient]:
+    def client(self) -> QdrantClient | None:
         if self._client is None:
             try:
                 self._client = QdrantClient(host=QDRANT_HOST, port=QDRANT_PORT)
@@ -130,7 +130,7 @@ class RagEngine:
             log.error(f"Error creando colección: {e}")
             return False
 
-    def store(self, text: str, metadata: Optional[Dict] = None, tenant_id: str = "sdc-core") -> Dict[str, Any]:
+    def store(self, text: str, metadata: dict | None = None, tenant_id: str = "sdc-core") -> dict[str, Any]:
         c = self.client
         if c is None:
             return {"status": "error", "message": "Qdrant no disponible"}
@@ -164,7 +164,7 @@ class RagEngine:
 
     def search(
         self, query: str, limit: int = 5, threshold: float = 0.0, tenant_id: str = "sdc-core"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         c = self.client
         if c is None:
             return {"status": "error", "message": "Qdrant no disponible", "results": []}

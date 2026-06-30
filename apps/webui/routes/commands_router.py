@@ -1,5 +1,4 @@
 from fastapi import APIRouter
-
 from webui.routes.app_state import sessions
 
 router = APIRouter()

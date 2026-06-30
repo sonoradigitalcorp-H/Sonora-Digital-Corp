@@ -7,11 +7,11 @@ import asyncio
 import json
 import logging
 from pathlib import Path
-from fastapi import APIRouter, Request
-from fastapi.responses import JSONResponse, HTMLResponse, StreamingResponse
 
-from src.core.brain_graph import SYSTEM_GRAPH
+from fastapi import APIRouter, Request
+from fastapi.responses import HTMLResponse, JSONResponse, StreamingResponse
 from src.core.activity_broadcaster import get_broadcaster
+from src.core.brain_graph import SYSTEM_GRAPH
 
 log = logging.getLogger("jarvis.webui.brain")
 router = APIRouter(prefix="/api/brain", tags=["brain"])
@@ -72,7 +72,7 @@ async def stream_activity(request: Request):
                 try:
                     event = await asyncio.wait_for(q.get(), timeout=15)
                     yield f"data: {json.dumps(event)}\n\n"
-                except asyncio.TimeoutError:
+                except TimeoutError:
                     yield ": keepalive\n\n"
         finally:
             broadcaster.unsubscribe(q)

@@ -3,7 +3,6 @@
 import logging
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional
 
 from fastapi import FastAPI
 
@@ -40,14 +39,26 @@ def get_neo4j_store():
     if _neo4j_store is None:
         try:
             from src.core.neo4j_store import (
-                get_driver,
-                create_session as neo_create,
-                get_session as neo_get,
-                list_sessions as neo_list,
                 add_message as neo_msg,
-                toggle_pin as neo_pin,
+            )
+            from src.core.neo4j_store import (
+                create_session as neo_create,
+            )
+            from src.core.neo4j_store import (
                 delete_session as neo_del,
+            )
+            from src.core.neo4j_store import (
+                get_driver,
                 init_schema,
+            )
+            from src.core.neo4j_store import (
+                get_session as neo_get,
+            )
+            from src.core.neo4j_store import (
+                list_sessions as neo_list,
+            )
+            from src.core.neo4j_store import (
+                toggle_pin as neo_pin,
             )
 
             driver = get_driver()

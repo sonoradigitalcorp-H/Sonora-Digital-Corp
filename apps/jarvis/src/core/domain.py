@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
 from enum import Enum
-from typing import Optional
 
 
 class RiskProfile(str, Enum):
@@ -67,7 +66,7 @@ class PaymentResult:
     plan: str
     provider: str
     niche: str
-    reference: Optional[str] = None
+    reference: str | None = None
     created_at: str = ""
 
 

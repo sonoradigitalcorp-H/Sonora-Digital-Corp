@@ -2,13 +2,17 @@
 Content Pipeline API — Generate and deliver content across multiple formats.
 """
 
-import logging, uuid, json, time
+import importlib.util
+import json
+import logging
+import time
+import uuid
 from datetime import datetime
 from pathlib import Path
+
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-import importlib.util
 _LF_PATH = Path(__file__).resolve().parent.parent.parent.parent / "sonora-enterprise-os" / "scripts" / "instrument-langfuse.py"
 if _LF_PATH.exists():
     _spec = importlib.util.spec_from_file_location("instrument_langfuse", str(_LF_PATH))
@@ -129,7 +133,7 @@ async def generate_content(req: GenerateRequest):
 @router.post("/deliver")
 async def deliver_content(req: DeliverRequest):
     """Deliver content to a channel. Called by n8n workflows."""
-    content = content_store.get(
+    content_store.get(
         req.content_id, {"id": req.content_id, "fallback": True}
     )
 
