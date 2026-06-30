@@ -21,7 +21,7 @@ def orchestrator():
 
 class TestAgentOrchestrator:
     def test_initialization(self, orchestrator):
-        assert len(orchestrator.agents) == 11
+        assert len(orchestrator.agents) == 12
         agent_names = [a.name for a in orchestrator.agents.values()]
         assert "research" in agent_names
         assert "code" in agent_names
@@ -90,7 +90,7 @@ class TestAgentOrchestrator:
 
     def test_list_agents(self, orchestrator):
         agents = orchestrator.list_agents()
-        assert len(agents) == 11
+        assert len(agents) == 12
         for a in agents:
             assert "name" in a
             assert "description" in a

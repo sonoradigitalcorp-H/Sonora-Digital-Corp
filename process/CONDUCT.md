@@ -16,7 +16,7 @@ Every change to this repo follows a tiered pipeline. The tier determines how muc
 
 ```
 Tier 1:  Execute → Lección
-Tier 2:  Spec → Score → Gherkin → Tests → Code → Events → ADR → Lección
+Tier 2:  Spec → Score → Gherkin → Tests-First → Code → Tests-Green → Events → ADR → Lección
 Tier 3:  VDD → EDD → PDD → ODD → SDD → BDD → TDD → ADR → Events → Lección
 ```
 
@@ -24,10 +24,12 @@ Tier 3:  VDD → EDD → PDD → ODD → SDD → BDD → TDD → ADR → Events 
 
 1. **Spec First**: No code without an approved spec (except tier 1)
 2. **Score Gate**: Score ≥60 required for tier 2+
-3. **Tests Green**: All tests pass
-4. **Events Emitted**: Events logged for all key actions
-5. **ADR Filed**: Decisions documented
-6. **Lección Saved**: Learning stored in Engram
+3. **TDD**: Tests must be written BEFORE code. `tests/` directory MUST have test files for every new module before any implementation commit.
+4. **Tests Green**: All tests must pass before merge. CI enforces this.
+5. **Coverage Gate**: Overall coverage ≥60% (enforced by pytest-cov). New modules must have ≥70% coverage.
+6. **Events Emitted**: Events logged for all key actions
+7. **ADR Filed**: Decisions documented
+8. **Lección Saved**: Learning stored in Engram
 
 ## Joaquin Ruiz Lite — 15-Point Compliance
 
