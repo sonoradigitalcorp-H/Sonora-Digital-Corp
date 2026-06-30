@@ -43,6 +43,22 @@ def get_redis():
         _client.ping()
         log.info(f"Redis connected: {REDIS_HOST}:{REDIS_PORT}")
         return _client
+    except redis.AuthenticationError:
+        log.warning("Redis auth failed, trying without password")
+        try:
+            _client = redis.Redis(
+                host=REDIS_HOST,
+                port=REDIS_PORT,
+                socket_connect_timeout=2,
+                socket_timeout=2,
+                decode_responses=True,
+            )
+            _client.ping()
+            log.info(f"Redis connected (no auth): {REDIS_HOST}:{REDIS_PORT}")
+            return _client
+        except Exception:
+            _fallback = True
+            return None
     except ImportError:
         log.warning("redis-py not installed, Redis streams disabled")
         _fallback = True
