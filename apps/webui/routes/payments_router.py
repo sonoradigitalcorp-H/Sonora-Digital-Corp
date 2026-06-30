@@ -1,4 +1,6 @@
 import logging
+import uuid
+from datetime import datetime, timedelta
 
 from fastapi import APIRouter, Request
 from src.core.payments import (
@@ -100,9 +102,6 @@ async def payments_webhook(provider: str, request: Request):
 
 
 # ── Store Payment Endpoints (for n8n workflows) ────────────────────────────
-
-import uuid
-from datetime import datetime, timedelta
 
 
 def _gen_ref():

@@ -5,7 +5,7 @@ description = "JARVIS — Multi-agent AI Platform"
 requires-python = ">=3.11"
 
 [tool.ruff]
-line-length = 100
+line-length = 120
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]

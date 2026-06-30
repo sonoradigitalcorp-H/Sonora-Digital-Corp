@@ -1,7 +1,4 @@
 from fastapi import APIRouter, HTTPException
-
-router = APIRouter()
-
 from src.core.sdc_business import (
     SDCOnboarding,
     calculate_price,
@@ -11,6 +8,8 @@ from src.core.sdc_business import (
     list_plans,
     recommend_plan,
 )
+
+router = APIRouter()
 
 _sdc_onboarding = None
 
