@@ -1,0 +1,6 @@
+{"event":"spec_created","timestamp":"2026-06-30T16:00:00Z","payload":{"spec":"SPEC-20260630-003","title":"FASE 1: Dockerización Jarvis + WebUI"}}
+{"event":"docker_build_started","timestamp":"2026-06-30T16:00:00Z","payload":{"target":"test"}}
+{"event":"docker_build_completed","timestamp":"2026-06-30T16:00:00Z","payload":{"tests":432,"failures":0}}
+{"event":"migration_systemd_shutdown","timestamp":"2026-06-30T16:00:00Z","payload":{"services":["jarvis-webui","jarvis-core"]}}
+{"event":"migration_docker_active","timestamp":"2026-06-30T16:00:00Z","payload":{"containers":11,"healthy":8}}
+{"event":"spec_completed","timestamp":"2026-06-30T16:00:00Z","payload":{"spec":"SPEC-20260630-003","score":82}}
