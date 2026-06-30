@@ -236,6 +236,7 @@ services:
       - NEO4J_PASSWORD=${NEO4J_PASSWORD:-jarvis2026}
       - QDRANT_HOST=sdc-qdrant
       - REDIS_HOST=sdc-redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-sdc2026prod}
       - POSTGRES_HOST=sdc-postgres
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
       - MERCADO_PAGO_ACCESS_TOKEN=${MERCADO_PAGO_ACCESS_TOKEN}
@@ -268,6 +269,7 @@ services:
       - NEO4J_PASSWORD=${NEO4J_PASSWORD:-jarvis2026}
       - QDRANT_HOST=sdc-qdrant
       - REDIS_HOST=sdc-redis
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-sdc2026prod}
       - POSTGRES_HOST=sdc-postgres
       - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
       - MERCADO_PAGO_ACCESS_TOKEN=${MERCADO_PAGO_ACCESS_TOKEN}
