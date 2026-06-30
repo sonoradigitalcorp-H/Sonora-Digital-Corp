@@ -3,13 +3,13 @@ JARVIS Text-to-Speech Module
 Multi-engine TTS with priority queue, async playback, and interruption support.
 """
 
-import os
 import asyncio
 import logging
+import os
 import subprocess
 import threading
+from collections.abc import Callable
 from queue import Queue
-from typing import Optional, Callable
 
 log = logging.getLogger("jarvis.voice.tts")
 
@@ -19,7 +19,7 @@ os.makedirs(AUDIO_DIR, exist_ok=True)
 # ---------- TTS Functions ----------
 
 
-def speak(text: str, lang: str = "es", voice: Optional[str] = None) -> Optional[str]:
+def speak(text: str, lang: str = "es", voice: str | None = None) -> str | None:
     """
     Synthesize speech from text, return path to generated audio file.
     
@@ -57,7 +57,7 @@ def speak(text: str, lang: str = "es", voice: Optional[str] = None) -> Optional[
     return None
 
 
-def _try_edge_tts(text: str, lang: str, voice: Optional[str], out: str) -> Optional[str]:
+def _try_edge_tts(text: str, lang: str, voice: str | None, out: str) -> str | None:
     """Try edge-tts (Microsoft Edge TTS, online, high quality)."""
     try:
         import edge_tts
@@ -91,7 +91,7 @@ def _try_edge_tts(text: str, lang: str, voice: Optional[str], out: str) -> Optio
     return None
 
 
-def _try_gtts(text: str, lang: str, out: str) -> Optional[str]:
+def _try_gtts(text: str, lang: str, out: str) -> str | None:
     """Try gTTS (Google Text-to-Speech, online, lightweight)."""
     try:
         from gtts import gTTS
@@ -110,7 +110,7 @@ def _try_gtts(text: str, lang: str, out: str) -> Optional[str]:
     return None
 
 
-def _try_espeak(text: str, lang: str, out: str) -> Optional[str]:
+def _try_espeak(text: str, lang: str, out: str) -> str | None:
     """Try espeak (offline, basic quality)."""
     try:
         lang_code = lang[:2] if len(lang) >= 2 else "es"
@@ -200,9 +200,9 @@ class TTSEngine:
         self._queue: Queue = Queue()
         self._playing = False
         self._interrupted = False
-        self._thread: Optional[threading.Thread] = None
-        self._on_start: Optional[Callable] = None
-        self._on_end: Optional[Callable] = None
+        self._thread: threading.Thread | None = None
+        self._on_start: Callable | None = None
+        self._on_end: Callable | None = None
         self._running = False
 
     def on_start(self, callback: Callable):
@@ -311,7 +311,7 @@ class TTSEngine:
 
 
 # Singleton instance
-_engine: Optional[TTSEngine] = None
+_engine: TTSEngine | None = None
 
 
 def get_engine() -> TTSEngine:

@@ -1,6 +1,6 @@
-from typing import Any, Dict
+from typing import Any
 
-from src.core.agents.agent_base import AgentBase, success_response, error_response
+from src.core.agents.agent_base import AgentBase, error_response, success_response
 
 
 class ApplyAgent(AgentBase):
@@ -8,7 +8,7 @@ class ApplyAgent(AgentBase):
     description = "Ejecuta tareas de implementación usando habilidades del registro"
     timeout = 120
 
-    async def run(self, task: str, context: dict = None) -> Dict[str, Any]:
+    async def run(self, task: str, context: dict = None) -> dict[str, Any]:
         self.log.info(f"Apply phase: {task[:100]}...")
 
         # Extract tasks from context

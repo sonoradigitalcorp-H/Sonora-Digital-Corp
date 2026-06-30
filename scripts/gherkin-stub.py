@@ -3,6 +3,7 @@
 import sys
 from pathlib import Path
 
+
 def parse_feature(path: Path):
     scenarios = []
     current = None

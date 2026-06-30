@@ -1,23 +1,23 @@
 import logging
 import re
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 
-def match_keywords(task: str, keywords: List[str]) -> bool:
+def match_keywords(task: str, keywords: list[str]) -> bool:
     task_lower = task.lower()
     return any(w in task_lower for w in keywords)
 
 
-def extract_file_path(task: str, pattern: str = r"[\w/.-]+\.\w+") -> Optional[str]:
+def extract_file_path(task: str, pattern: str = r"[\w/.-]+\.\w+") -> str | None:
     match = re.search(pattern, task)
     return match.group(0) if match else None
 
 
-def success_response(agent_name: str, task: str, **extra) -> Dict[str, Any]:
+def success_response(agent_name: str, task: str, **extra) -> dict[str, Any]:
     return {"agent": agent_name, "task": task, "status": "success", **extra}
 
 
-def error_response(agent_name: str, task: str, error: str, **extra) -> Dict[str, Any]:
+def error_response(agent_name: str, task: str, error: str, **extra) -> dict[str, Any]:
     return {
         "agent": agent_name,
         "task": task,
@@ -35,7 +35,7 @@ class AgentBase:
     def __init__(self):
         self.log = logging.getLogger(f"jarvis.agent.{self.name}")
 
-    async def run(self, task: str, context: dict = None) -> Dict[str, Any]:
+    async def run(self, task: str, context: dict = None) -> dict[str, Any]:
         raise NotImplementedError
 
     def __repr__(self) -> str:

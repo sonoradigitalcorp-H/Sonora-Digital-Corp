@@ -1,6 +1,6 @@
 """Sales Agent — handles lead capture, qualification, proposals, and deal closure."""
 
-from src.core.agents.agent_base import AgentBase, success_response, error_response
+from src.core.agents.agent_base import AgentBase, error_response, success_response
 from src.core.sales_pipeline import pipeline
 
 

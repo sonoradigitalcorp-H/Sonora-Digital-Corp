@@ -3,9 +3,14 @@
 ABE DAEMON 24/7 — Monitoreo, auto-fix, reportes, y entrega continua
 Corre como systemd service. Consume ~30MB RAM. Nunca duerme.
 """
-import os, sys, json, time, logging, subprocess, requests
-from pathlib import Path
+import logging
+import os
+import subprocess
+import time
 from datetime import datetime
+from pathlib import Path
+
+import requests
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOG_DIR = BASE_DIR / 'logs'
@@ -59,7 +64,7 @@ class AbeDaemon:
         try:
             r = requests.get(f'{JARVIS_URL}/api/status', timeout=5)
             results['jarvis'] = r.status_code == 200
-        except:
+        except Exception:
             results['jarvis'] = False
 
         # Docker containers
@@ -68,7 +73,7 @@ class AbeDaemon:
                              capture_output=True, text=True, timeout=10)
             results['containers'] = [c for c in r.stdout.strip().split('\n') if c]
             results['container_count'] = len(results['containers'])
-        except:
+        except Exception:
             results['containers'] = []
             results['container_count'] = 0
 
@@ -76,7 +81,7 @@ class AbeDaemon:
         try:
             r = requests.get(f'https://api.telegram.org/bot{TOKEN}/getMe', timeout=10)
             results['bot_ok'] = r.json().get('ok', False)
-        except:
+        except Exception:
             results['bot_ok'] = False
 
         return results

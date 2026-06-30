@@ -3,8 +3,11 @@ Content Generation Pipeline — Sonora Digital Corp
 fal.ai + local storage + n8n
 Generates: product images, thumbnails, social media visuals
 """
-import os, json, time, urllib.request, sys
-from typing import Optional, List
+import json
+import os
+import sys
+import time
+import urllib.request
 
 sys.path.insert(0, '/home/mystic/.openclaw/workspace/skills/fal-ai')
 from fal_api import FalAPI

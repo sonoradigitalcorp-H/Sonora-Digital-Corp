@@ -1,18 +1,15 @@
 from fastapi import APIRouter, HTTPException
 
-from webui.routes.app_state import log
-
 router = APIRouter()
 
 from src.core.sdc_business import (
-    PLANS,
-    list_plans,
-    get_plan,
+    SDCOnboarding,
     calculate_price,
-    recommend_plan,
     get_features,
     get_nicho_profile,
-    SDCOnboarding,
+    get_plan,
+    list_plans,
+    recommend_plan,
 )
 
 _sdc_onboarding = None

@@ -1,9 +1,6 @@
 import subprocess
-from pathlib import Path
 
 from fastapi import APIRouter, HTTPException
-
-from webui.routes.app_state import app
 from webui.routes.app_state import PROJECT_DIR
 
 router = APIRouter()
@@ -45,7 +42,7 @@ async def list_files(path: str = "."):
     except HTTPException:
         raise
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail=str(e)) from e
 
 
 @router.get("/api/files/git")

@@ -5,9 +5,8 @@ Zamora Brand Studio — API router.
 import logging
 
 from fastapi import APIRouter
-from starlette.responses import JSONResponse
-
 from src.core.zamora import ZamoraStudio
+from starlette.responses import JSONResponse
 
 log = logging.getLogger("jarvis.zamora_router")
 router = APIRouter(prefix="/api/zamora", tags=["zamora"])

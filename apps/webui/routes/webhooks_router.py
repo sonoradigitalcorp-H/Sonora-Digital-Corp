@@ -3,7 +3,6 @@ import logging
 import subprocess
 
 from fastapi import APIRouter
-
 from webui.routes.app_state import PROJECT_DIR
 
 router = APIRouter()

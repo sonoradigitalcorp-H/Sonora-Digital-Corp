@@ -1,12 +1,11 @@
 import logging
 
 from fastapi import APIRouter, Request
-
 from src.core.payments import (
-    PaymentOrchestrator,
-    PLANS,
     PAYMENT_PROVIDERS,
+    PLANS,
     SPEI_ACCOUNT,
+    PaymentOrchestrator,
 )
 
 router = APIRouter()
@@ -114,8 +113,8 @@ def _gen_ref():
 async def store_spei_create(data: dict):
     """Create SPEI payment for store order. Called by n8n workflow."""
     amount = data.get("amount", 0)
-    description = data.get("description", "Compra en tienda JARVIS")
-    email = data.get("email", "cliente@email.com")
+    data.get("description", "Compra en tienda JARVIS")
+    data.get("email", "cliente@email.com")
 
     ref = _gen_ref()
     return {
@@ -137,7 +136,7 @@ async def store_crypto_create(data: dict):
     """Create crypto payment for store order. Called by n8n workflow."""
     amount = data.get("amount", 0)
     currency = data.get("currency", "USDC")
-    description = data.get("description", "Compra en tienda JARVIS")
+    data.get("description", "Compra en tienda JARVIS")
 
     ref = _gen_ref()
     # In production: get real Bitso deposit address

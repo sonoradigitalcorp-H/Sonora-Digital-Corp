@@ -1,5 +1,4 @@
 from fastapi import APIRouter, HTTPException
-
 from src.core.abe_music import ArtistCRM, KPIDashboard
 
 router = APIRouter()

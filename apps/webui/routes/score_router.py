@@ -1,6 +1,6 @@
-from fastapi import APIRouter
 from pathlib import Path
-import os
+
+from fastapi import APIRouter
 
 router = APIRouter()
 
@@ -26,8 +26,7 @@ async def get_score_history():
 
 
 def _calc_score() -> dict:
-    import json, os
-    from datetime import datetime
+    import json
 
     events = []
     if EVENTS_FILE.exists():

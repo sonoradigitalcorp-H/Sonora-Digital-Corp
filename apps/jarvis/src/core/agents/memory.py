@@ -1,5 +1,5 @@
 import time
-from typing import Any, Dict
+from typing import Any
 
 from src.core.agents.agent_base import AgentBase, match_keywords, success_response
 
@@ -13,9 +13,9 @@ class MemoryAgent(AgentBase):
 
     def __init__(self):
         super().__init__()
-        self._mem_store: Dict[str, Dict[str, Any]] = {}
+        self._mem_store: dict[str, dict[str, Any]] = {}
 
-    async def run(self, task: str, context: dict = None) -> Dict[str, Any]:
+    async def run(self, task: str, context: dict = None) -> dict[str, Any]:
         self.log.info(f"Memory task: {task[:100]}...")
         if match_keywords(task, ["guarda", "store", "recuerda esto", "acorda"]):
             return self._store(task)
@@ -34,7 +34,7 @@ class MemoryAgent(AgentBase):
         except Exception:
             return None
 
-    def _store(self, task: str) -> Dict[str, Any]:
+    def _store(self, task: str) -> dict[str, Any]:
         import re
 
         match = re.search(r'(?:como|as|key:?|clave:?)\s*["\']?(\w[\w\s-]+)["\']?', task)
@@ -59,7 +59,7 @@ class MemoryAgent(AgentBase):
             self._mem_store[key] = entry
         return success_response(self.name, task, action="stored", key=key)
 
-    def _recall(self, task: str) -> Dict[str, Any]:
+    def _recall(self, task: str) -> dict[str, Any]:
         memories = []
         driver = self._get_neo4j()
         if driver:
@@ -92,7 +92,7 @@ class MemoryAgent(AgentBase):
             self.name, task, action="recalled", memories=memories, count=len(memories)
         )
 
-    def _forget(self, task: str) -> Dict[str, Any]:
+    def _forget(self, task: str) -> dict[str, Any]:
         import re
 
         match = re.search(r'(?:key:?|clave:?)\s*["\']?(\w[\w\s-]+)["\']?', task)
@@ -114,7 +114,7 @@ class MemoryAgent(AgentBase):
         self._mem_store.pop(key, None)
         return success_response(self.name, task, action="forgotten", key=key)
 
-    def _list(self, task: str) -> Dict[str, Any]:
+    def _list(self, task: str) -> dict[str, Any]:
         memories = []
         driver = self._get_neo4j()
         if driver:

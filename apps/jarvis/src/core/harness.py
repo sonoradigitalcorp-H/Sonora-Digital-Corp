@@ -1,6 +1,5 @@
-import asyncio
 import logging
-from typing import Dict, Any, Optional, List
+from typing import Any
 
 # Import agents from the existing AgentOrchestrator
 from .agents.agent_base import AgentBase
@@ -14,13 +13,13 @@ class Harness:
 
     def __init__(self):
         self.log = logging.getLogger("jarvis.harness")
-        self._agents: Dict[str, AgentBase] = {}
-        self._history: List[Dict[str, Any]] = []
+        self._agents: dict[str, AgentBase] = {}
+        self._history: list[dict[str, Any]] = []
         # We will populate agents on demand via get_agent method
 
     async def execute(
-        self, task: str, context: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
+        self, task: str, context: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """
         Executes a task through the SDD pipeline phases.
         Returns the result of the last phase (typically Archive).
@@ -33,7 +32,7 @@ class Harness:
 
         # Run each phase in order
         phases = ["research", "spec", "design", "apply", "verify", "archive"]
-        result: Dict[str, Any] = {"status": "pending"}
+        result: dict[str, Any] = {"status": "pending"}
 
         for phase in phases:
             self.log.info(f"Executing phase: {phase}")
@@ -66,7 +65,7 @@ class Harness:
         self.log.info(f"Harness execution completed: {result.get('status')}")
         return result
 
-    def _get_agent_for_phase(self, phase: str) -> Optional[AgentBase]:
+    def _get_agent_for_phase(self, phase: str) -> AgentBase | None:
         """
         Returns the appropriate agent instance for a given phase.
         Maps phase names to actual agent classes.
@@ -138,7 +137,7 @@ class Harness:
 
         return self._agents[agent_name]
 
-    def get_history(self) -> List[Dict[str, Any]]:
+    def get_history(self) -> list[dict[str, Any]]:
         """Returns the execution history of the harness."""
         return self._history.copy()
 

@@ -2,12 +2,10 @@
 Multi-Platform Publisher Service — FastAPI
 Julian Goldie-style cross-posting: YouTube + Instagram + TikTok + Twitter + LinkedIn
 """
-import io, json, logging, os, subprocess, tempfile, shlex
-from datetime import datetime
-from typing import Optional
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+import logging
+
+from fastapi import BackgroundTasks, FastAPI
 from pydantic import BaseModel
-import httpx
 
 app = FastAPI(title="Publisher Service", version="1.0")
 log = logging.getLogger("publisher")
@@ -24,7 +22,7 @@ class PublishRequest(BaseModel):
     video_path: str
     metadata: VideoMetadata
     platforms: list[str] = ["youtube"]
-    schedule: Optional[str] = None
+    schedule: str | None = None
 
 @app.post("/publish")
 async def publish(request: PublishRequest, background: BackgroundTasks):

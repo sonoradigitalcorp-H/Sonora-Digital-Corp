@@ -1,11 +1,14 @@
 #!/usr/bin/env python3
 """Reporte Ecosistema SDC — fullscreen WebKit window on external HDMI monitor."""
-import subprocess, sys, time
+import subprocess
+import sys
+
 sys.path.insert(0, '/usr/lib/python3/dist-packages')
 import gi
+
 gi.require_version("Gtk", "3.0")
 gi.require_version("WebKit2", "4.0")
-from gi.repository import Gtk, WebKit2, GLib
+from gi.repository import GLib, Gtk, WebKit2
 
 REPORT_URL = "http://localhost:5174/static/reporte-ecosistema.html"
 MONITOR_X = 1366
@@ -49,7 +52,7 @@ class ReporteKiosk:
                 ["xdotool", "search", "--name", "SDC", "windowsize", str(MONITOR_W), str(MONITOR_H)],
                 timeout=3, capture_output=True
             )
-        except:
+        except Exception:
             pass
         return False
 

@@ -6,8 +6,7 @@ Portfolio, services, pricing for the personal brand studio.
 import json
 import logging
 import os
-from dataclasses import dataclass, field, asdict
-from typing import List, Optional
+from dataclasses import asdict, dataclass, field
 
 log = logging.getLogger("jarvis.zamora")
 
@@ -18,7 +17,7 @@ class PortfolioItem:
     description: str
     image_url: str
     category: str
-    tags: List[str] = field(default_factory=list)
+    tags: list[str] = field(default_factory=list)
 
 
 @dataclass(frozen=True)
@@ -33,9 +32,9 @@ class ZamoraStudio:
     def __init__(self, data_dir: str = "data"):
         self.data_dir = data_dir
         self._data_file = os.path.join(data_dir, "zamora.json")
-        self._portfolio: List[PortfolioItem] = []
-        self._services: List[Service] = []
-        self._pricing: List[dict] = []
+        self._portfolio: list[PortfolioItem] = []
+        self._services: list[Service] = []
+        self._pricing: list[dict] = []
         self._load()
 
     def _load(self):
@@ -82,13 +81,13 @@ class ZamoraStudio:
         with open(self._data_file, "w", encoding="utf-8") as f:
             json.dump(data, f, ensure_ascii=False, indent=2)
 
-    def list_services(self) -> List[Service]:
+    def list_services(self) -> list[Service]:
         return self._services
 
-    def list_portfolio(self) -> List[PortfolioItem]:
+    def list_portfolio(self) -> list[PortfolioItem]:
         return self._portfolio
 
-    def get_pricing(self) -> List[dict]:
+    def get_pricing(self) -> list[dict]:
         return self._pricing
 
     def add_portfolio_item(self, item: PortfolioItem):

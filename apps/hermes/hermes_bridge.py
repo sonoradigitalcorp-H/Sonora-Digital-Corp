@@ -5,10 +5,10 @@ Exposes JARVIS core functions as MCP tools so Hermes can use them.
 Run as: python3 hermes_bridge.py
 Hermes Desktop spawns this as a subprocess (stdio transport).
 """
-import sys
-import os
 import json
 import logging
+import os
+import sys
 import time
 
 # Add JARVIS project root to path
@@ -21,6 +21,7 @@ log = logging.getLogger("jarvis.bridge")
 
 # LangFuse tracing
 import importlib.util
+
 _LF_PATH = os.path.expanduser("~/sonora-digital-corp/sonora-enterprise-os/scripts/instrument-langfuse.py")
 if os.path.exists(_LF_PATH):
     _spec = importlib.util.spec_from_file_location("instrument_langfuse", _LF_PATH)
@@ -74,7 +75,6 @@ def jarvis_memory_recall(query: str) -> str:
 def jarvis_metrics() -> str:
     """Devuelve métricas del sistema JARVIS."""
     try:
-        from src.core import engram, verify
         specs_dir = os.path.expanduser("~/jarvis/specs")
         spec_count = len([d for d in os.listdir(specs_dir) if os.path.isdir(os.path.join(specs_dir, d))])
         return json.dumps({
@@ -94,6 +94,7 @@ def jarvis_orchestrate(task: str) -> str:
     _start = time.time()
     try:
         import asyncio
+
         from src.core.orchestrator import get_orchestrator
         orchestrator = get_orchestrator()
         result = asyncio.run(orchestrator.execute(task))
@@ -138,7 +139,7 @@ def enterprise_score() -> str:
                     line = line.strip()
                     if line:
                         try: events.append(json.loads(line))
-                        except: pass
+                        except Exception: pass
         finops_calls = []
         if os.path.exists(finops_path):
             with open(finops_path) as f:
@@ -148,7 +149,7 @@ def enterprise_score() -> str:
                         try:
                             c = json.loads(line)
                             if c.get("event") == "ai_call": finops_calls.append(c)
-                        except: pass
+                        except Exception: pass
 
         revenue_events = [e for e in events if e.get("event") == "revenue_recorded"]
         revenue_score = min(10, len(revenue_events)) if revenue_events else 1
@@ -210,7 +211,7 @@ def finops_summary() -> str:
                     line = line.strip()
                     if line:
                         try: records.append(json.loads(line))
-                        except: pass
+                        except Exception: pass
         ai_calls = [r for r in records if r.get("event") == "ai_call"]
         total_calls = len(ai_calls)
         total_cost = sum(c.get("cost", 0) for c in ai_calls)

@@ -1,7 +1,6 @@
 from fastapi import APIRouter, HTTPException
-
-from src.core.mysticverse import DigitalTwinPipeline, TelegramBotManager, KYCManager
 from src.core.gamification import get_engine as get_gamification_engine
+from src.core.mysticverse import DigitalTwinPipeline, KYCManager, TelegramBotManager
 
 router = APIRouter()
 

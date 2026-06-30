@@ -1,11 +1,11 @@
-from typing import Any, Dict, Optional
+from typing import Any
 
 from src.core.agents.agent_base import (
     AgentBase,
-    match_keywords,
-    extract_file_path,
-    success_response,
     error_response,
+    extract_file_path,
+    match_keywords,
+    success_response,
 )
 
 
@@ -14,7 +14,7 @@ class CodeAgent(AgentBase):
     description = "Análisis y generación de código"
     timeout = 60
 
-    async def run(self, task: str, context: dict = None) -> Dict[str, Any]:
+    async def run(self, task: str, context: dict = None) -> dict[str, Any]:
         self.log.info(f"Code task: {task[:100]}...")
         if match_keywords(task, ["analiza", "analyze", "métrica", "complejidad"]):
             return await self._analyze(task)
@@ -27,7 +27,7 @@ class CodeAgent(AgentBase):
         else:
             return await self._analyze(task)
 
-    async def _analyze(self, task: str) -> Dict[str, Any]:
+    async def _analyze(self, task: str) -> dict[str, Any]:
         path = extract_file_path(task)
         if not path:
             return error_response(
@@ -59,7 +59,7 @@ class CodeAgent(AgentBase):
             content=content["content"][:1000],
         )
 
-    async def _generate(self, task: str) -> Dict[str, Any]:
+    async def _generate(self, task: str) -> dict[str, Any]:
         path = extract_file_path(task)
         if not path:
             return error_response(
@@ -72,12 +72,12 @@ class CodeAgent(AgentBase):
         )
         from src.core.tools import write_file
 
-        result = write_file(path, code)
+        write_file(path, code)
         return success_response(
             self.name, task, file=path, lines=len(code.splitlines()), preview=code[:500]
         )
 
-    async def _read(self, task: str) -> Dict[str, Any]:
+    async def _read(self, task: str) -> dict[str, Any]:
         import re
 
         paths = re.findall(r"[\w/.-]+\.\w+", task)
@@ -93,7 +93,7 @@ class CodeAgent(AgentBase):
             )
         return success_response(self.name, task, files=results)
 
-    async def _fix_bug(self, task: str) -> Dict[str, Any]:
+    async def _fix_bug(self, task: str) -> dict[str, Any]:
         path = extract_file_path(task)
         if not path:
             return error_response(self.name, task, "Especifica qué archivo arreglar.")
@@ -109,7 +109,7 @@ class CodeAgent(AgentBase):
             f"Bug descrito: {task}\n"
             f"Devuelve SOLO el código corregido, sin explicaciones."
         )
-        result = write_file(path, fixed_code)
+        write_file(path, fixed_code)
         return success_response(
             self.name,
             task,

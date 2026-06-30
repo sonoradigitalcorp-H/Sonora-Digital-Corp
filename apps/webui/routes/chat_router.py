@@ -1,18 +1,17 @@
+# LangFuse tracing (importado dinámicamente)
+import importlib.util
 import json
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
+import requests
 from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
-import requests
-
-from webui.routes.app_state import sessions, get_orchestrator, log
-from src.core.llm import PROVIDERS as LLM_PROVIDERS
 from src.core.activity_broadcaster import get_broadcaster
+from src.core.llm import PROVIDERS as LLM_PROVIDERS
+from webui.routes.app_state import get_orchestrator, log, sessions
 
-# LangFuse tracing (importado dinámicamente)
-import importlib.util
 _LF_PATH = Path(__file__).resolve().parent.parent.parent.parent / "sonora-enterprise-os" / "scripts" / "instrument-langfuse.py"
 if _LF_PATH.exists():
     _spec = importlib.util.spec_from_file_location("instrument_langfuse", str(_LF_PATH))

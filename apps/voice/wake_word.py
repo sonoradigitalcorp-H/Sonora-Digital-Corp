@@ -8,7 +8,7 @@ import logging
 import re
 import threading
 import time
-from typing import Callable, Optional
+from collections.abc import Callable
 
 log = logging.getLogger("jarvis.voice.wake")
 
@@ -32,8 +32,8 @@ class WakeWordDetector:
     def __init__(self, sensitivity: float = 0.5):
         self.sensitivity = sensitivity
         self._listening = False
-        self._thread: Optional[threading.Thread] = None
-        self._on_wake: Optional[Callable] = None
+        self._thread: threading.Thread | None = None
+        self._on_wake: Callable | None = None
         self._last_trigger: float = 0
         self._cooldown = 2.0  # seconds between triggers
 
@@ -84,7 +84,7 @@ class WakeWordDetector:
     def _listen_loop(self):
         """Background loop for audio capture and wake word detection."""
         try:
-            import pyaudio
+            
             import speech_recognition as sr
 
             recognizer = sr.Recognizer()
@@ -121,7 +121,7 @@ class WakeWordDetector:
 
 
 # Singleton instance
-_detector: Optional[WakeWordDetector] = None
+_detector: WakeWordDetector | None = None
 
 
 def get_detector() -> WakeWordDetector:

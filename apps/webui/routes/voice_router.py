@@ -1,5 +1,5 @@
-import os
 import logging
+import os
 
 from fastapi import APIRouter, HTTPException
 
@@ -17,7 +17,7 @@ async def voice_transcribe(data: dict):
     try:
         audio_bytes = base64.b64decode(audio_b64)
     except Exception:
-        raise HTTPException(status_code=400, detail="Invalid base64 audio")
+        raise HTTPException(status_code=400, detail="Invalid base64 audio") from None
     try:
         from voice.stt import transcribe_bytes
 
@@ -40,6 +40,7 @@ async def voice_speak(data: dict):
         path = speak(text, lang=lang)
         if path and os.path.exists(path):
             import mimetypes
+
             from fastapi.responses import FileResponse
 
             media_type, _ = mimetypes.guess_type(path)

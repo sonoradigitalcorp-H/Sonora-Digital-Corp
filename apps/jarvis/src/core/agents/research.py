@@ -1,11 +1,7 @@
-import logging
-from typing import Any, Dict, List, Optional
+from typing import Any
 
 from src.core.agents.agent_base import (
     AgentBase,
-    match_keywords,
-    success_response,
-    error_response,
 )
 
 
@@ -14,7 +10,7 @@ class ResearchAgent(AgentBase):
     description = "Búsqueda y síntesis de información"
     timeout = 60
 
-    async def run(self, task: str, context: dict = None) -> Dict[str, Any]:
+    async def run(self, task: str, context: dict = None) -> dict[str, Any]:
         self.log.info(f"Researching: {task[:100]}...")
         results = {
             "agent": self.name,
@@ -49,7 +45,7 @@ class ResearchAgent(AgentBase):
             results["error"] = str(e)
         return results
 
-    def _synthesize(self, sources: List) -> str:
+    def _synthesize(self, sources: list) -> str:
         texts = []
         for src in sources:
             for item in src.get("data", [])[:2]:
@@ -57,7 +53,7 @@ class ResearchAgent(AgentBase):
                     texts.append(str(item.get("text", ""))[:300])
         return "\n".join(filter(None, texts))[:2000]
 
-    def _calc_confidence(self, sources: List) -> float:
+    def _calc_confidence(self, sources: list) -> float:
         if not sources:
             return 0.0
         valid = sum(1 for s in sources if s.get("data"))

@@ -2,8 +2,10 @@
 Agent-to-Agent Communication Protocol
 Hermes ↔ OpenClaw ↔ JARVIS ↔ n8n ↔ Telegram
 """
-import json, logging, httpx, asyncio
+import logging
 from datetime import datetime
+
+import httpx
 
 log = logging.getLogger("agents.communicator")
 

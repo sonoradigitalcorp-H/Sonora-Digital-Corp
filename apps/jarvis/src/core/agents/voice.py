@@ -1,11 +1,11 @@
 import time
-from typing import Any, Dict
+from typing import Any
 
 from src.core.agents.agent_base import (
     AgentBase,
+    error_response,
     match_keywords,
     success_response,
-    error_response,
 )
 
 
@@ -16,9 +16,9 @@ class VoiceAgent(AgentBase):
 
     def __init__(self):
         super().__init__()
-        self._sessions: Dict[str, Dict] = {}
+        self._sessions: dict[str, dict] = {}
 
-    async def run(self, task: str, context: dict = None) -> Dict[str, Any]:
+    async def run(self, task: str, context: dict = None) -> dict[str, Any]:
         self.log.info(f"Voice task: {task[:100]}...")
         if match_keywords(task, ["transcribe", "escucha", "reconocé"]):
             return self._transcribe(task)
@@ -31,7 +31,7 @@ class VoiceAgent(AgentBase):
         else:
             return self._status()
 
-    def _transcribe(self, task: str) -> Dict[str, Any]:
+    def _transcribe(self, task: str) -> dict[str, Any]:
         import re
 
         match = re.search(r'["\']([^"\']+)["\']', task)
@@ -54,7 +54,7 @@ class VoiceAgent(AgentBase):
         except Exception as e:
             return error_response(self.name, task, str(e), action="transcribe")
 
-    def _speak(self, task: str) -> Dict[str, Any]:
+    def _speak(self, task: str) -> dict[str, Any]:
         import re
 
         match = re.search(r'(?:habla|speak|decí|di:)\s*["\']?([^"\']*)["\']?', task)
@@ -83,7 +83,7 @@ class VoiceAgent(AgentBase):
                 note=f"TTS no disponible: {e}",
             )
 
-    def _start_session(self, task: str) -> Dict[str, Any]:
+    def _start_session(self, task: str) -> dict[str, Any]:
         import uuid
 
         session_id = str(uuid.uuid4())[:8]
@@ -98,7 +98,7 @@ class VoiceAgent(AgentBase):
             self.name, task, action="session_start", session_id=session_id
         )
 
-    def _end_session(self, task: str) -> Dict[str, Any]:
+    def _end_session(self, task: str) -> dict[str, Any]:
         import re
 
         match = re.search(r"([a-f0-9]{8})", task)
@@ -118,7 +118,7 @@ class VoiceAgent(AgentBase):
             ended.append(sid)
         return success_response(self.name, task, action="session_end", ended=len(ended))
 
-    def _status(self) -> Dict[str, Any]:
+    def _status(self) -> dict[str, Any]:
         active = sum(1 for s in self._sessions.values() if s.get("active"))
         return success_response(
             self.name,

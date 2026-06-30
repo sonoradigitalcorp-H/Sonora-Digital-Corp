@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """JARVIS Command Center Kiosk — fullscreen WebKit window on external monitor."""
-import sys
 import gi
+
 gi.require_version("Gtk", "3.0")
 gi.require_version("WebKit2", "4.0")
-from gi.repository import Gtk, WebKit2, GLib
+from gi.repository import GLib, Gtk, WebKit2
 
 DASHBOARD_URL = "http://localhost:5174/api/brain/dashboard"
 MONITOR_X = 1366  # External monitor starts here

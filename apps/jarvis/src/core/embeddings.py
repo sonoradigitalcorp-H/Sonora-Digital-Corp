@@ -3,8 +3,7 @@ JARVIS Embedding Service — Genera embeddings locales con Ollama.
 """
 
 import logging
-import json
-from typing import List, Optional
+
 import requests
 
 log = logging.getLogger("jarvis.embeddings")
@@ -14,7 +13,7 @@ EMBED_DIM = 768
 OLLAMA_URL = "http://localhost:11434"
 
 
-def embed_text(text: str, model: str = EMBED_MODEL) -> Optional[List[float]]:
+def embed_text(text: str, model: str = EMBED_MODEL) -> list[float] | None:
     try:
         resp = requests.post(
             f"{OLLAMA_URL}/api/embeddings",
@@ -29,12 +28,12 @@ def embed_text(text: str, model: str = EMBED_MODEL) -> Optional[List[float]]:
 
 
 def embed_batch(
-    texts: List[str], model: str = EMBED_MODEL
-) -> List[Optional[List[float]]]:
+    texts: list[str], model: str = EMBED_MODEL
+) -> list[list[float] | None]:
     return [embed_text(t, model) for t in texts]
 
 
-def chunk_text(text: str, chunk_size: int = 512, overlap: int = 64) -> List[str]:
+def chunk_text(text: str, chunk_size: int = 512, overlap: int = 64) -> list[str]:
     words = text.split()
     chunks = []
     start = 0

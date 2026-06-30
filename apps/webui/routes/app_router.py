@@ -4,13 +4,13 @@ Each user gets personalized dashboard based on their niche.
 """
 
 import logging
-import uuid
-import secrets
 import os
+import secrets
+import uuid
 from datetime import datetime, timezone
-from typing import Optional, Dict
-from fastapi import APIRouter, HTTPException, Depends
-from fastapi.responses import HTMLResponse, FileResponse
+
+from fastapi import APIRouter, HTTPException
+from fastapi.responses import HTMLResponse
 from pydantic import BaseModel
 
 log = logging.getLogger("jarvis.app")
@@ -187,7 +187,7 @@ async def get_prompts(nicho: str):
     prompts_file = os.path.join(PROMPTS_DIR, nicho, "prompts.md")
     prompts_content = ""
     if os.path.exists(prompts_file):
-        with open(prompts_file, 'r', encoding='utf-8') as f:
+        with open(prompts_file, encoding='utf-8') as f:
             prompts_content = f.read()
     
     return {
@@ -207,7 +207,7 @@ async def get_skills(nicho: str):
     skills_file = os.path.join(SKILLS_DIR, nicho, "skills.md")
     skills_content = ""
     if os.path.exists(skills_file):
-        with open(skills_file, 'r', encoding='utf-8') as f:
+        with open(skills_file, encoding='utf-8') as f:
             skills_content = f.read()
     
     return {
@@ -218,7 +218,7 @@ async def get_skills(nicho: str):
 
 
 @router.post("/execute/{user_id}")
-async def execute_action(user_id: str, action: Dict):
+async def execute_action(user_id: str, action: dict):
     """Execute action (prompt/skill) for user."""
     user = users.get(user_id)
     if not user:

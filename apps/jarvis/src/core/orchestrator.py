@@ -9,29 +9,30 @@ import logging
 import re
 import time
 import uuid
-from typing import Any, Dict, List, Optional, Tuple
 from pathlib import Path
+from typing import Any
 
 from src.core.agents import (
     AgentBase,
-    ResearchAgent,
     CodeAgent,
     ExploreAgent,
-    MemoryAgent,
-    SkillAgent,
-    VoiceAgent,
-    ReviewAgent,
-    HermesAgent,
     GbrainAgent,
+    HermesAgent,
+    MemoryAgent,
     OpenClawAgent,
     PRAgent,
+    ResearchAgent,
+    ReviewAgent,
     SalesAgent,
+    SkillAgent,
+    VoiceAgent,
 )
 
 log = logging.getLogger("jarvis.orchestrator")
 
 # LangFuse tracing
 import importlib.util
+
 _LF_PATH = Path(__file__).resolve().parent.parent.parent.parent.parent / "sonora-enterprise-os" / "scripts" / "instrument-langfuse.py"
 if _LF_PATH.exists():
     _spec = importlib.util.spec_from_file_location("instrument_langfuse", str(_LF_PATH))
@@ -49,7 +50,7 @@ class AgentOrchestrator:
     """
 
     def __init__(self):
-        self.agents: Dict[str, AgentBase] = {
+        self.agents: dict[str, AgentBase] = {
             "research": ResearchAgent(),
             "code": CodeAgent(),
             "explore": ExploreAgent(),
@@ -64,7 +65,7 @@ class AgentOrchestrator:
             "sales": SalesAgent(),
         }
 
-        self.routing_rules: List[Tuple[List[str], str]] = [
+        self.routing_rules: list[tuple[list[str], str]] = [
             (
                 [
                     "browser",
@@ -362,10 +363,10 @@ class AgentOrchestrator:
             ),
         ]
 
-        self.context_history: List[Dict[str, Any]] = []
+        self.context_history: list[dict[str, Any]] = []
         self.max_context = 50
 
-    def push_context(self, agent: str, task: str, result: Dict[str, Any]) -> None:
+    def push_context(self, agent: str, task: str, result: dict[str, Any]) -> None:
         entry = {
             "id": str(uuid.uuid4())[:8],
             "agent": agent,
@@ -379,10 +380,10 @@ class AgentOrchestrator:
         if len(self.context_history) > self.max_context:
             self.context_history.pop(0)
 
-    def get_context(self, limit: int = 5) -> List[Dict[str, Any]]:
+    def get_context(self, limit: int = 5) -> list[dict[str, Any]]:
         return self.context_history[-limit:]
 
-    def search_context(self, query: str) -> List[Dict[str, Any]]:
+    def search_context(self, query: str) -> list[dict[str, Any]]:
         q = query.lower()
         return [
             c
@@ -395,7 +396,7 @@ class AgentOrchestrator:
 
     def route(self, task: str) -> str:
         task_lower = task.lower()
-        task_words = set(re.findall(r"\w+", task_lower))
+        set(re.findall(r"\w+", task_lower))
         for keywords, agent_name in self.routing_rules:
             if any(
                 re.search(r"\b" + re.escape(kw) + r"\b", task_lower) for kw in keywords
@@ -403,7 +404,7 @@ class AgentOrchestrator:
                 return agent_name
         return "research"
 
-    async def execute(self, task: str, context: dict = None) -> Dict[str, Any]:
+    async def execute(self, task: str, context: dict = None) -> dict[str, Any]:
         _start = time.time()
         agent_name = self.route(task)
         agent = self.agents[agent_name]
@@ -414,7 +415,7 @@ class AgentOrchestrator:
         try:
             result = await asyncio.wait_for(agent.run(task, ctx), timeout=agent.timeout)
             result["status"] = "success"
-        except asyncio.TimeoutError:
+        except TimeoutError:
             log.error(f"Agent {agent.name} timed out after {agent.timeout}s")
             result = {
                 "agent": agent_name,
@@ -442,8 +443,8 @@ class AgentOrchestrator:
         return result
 
     async def execute_parallel(
-        self, tasks: List[str], context: dict = None
-    ) -> List[Dict[str, Any]]:
+        self, tasks: list[str], context: dict = None
+    ) -> list[dict[str, Any]]:
         log.info(f"Running {len(tasks)} tasks in parallel")
         ctx = context or {}
         results = await asyncio.gather(
@@ -454,14 +455,14 @@ class AgentOrchestrator:
             for r in results
         ]
 
-    def list_agents(self) -> List[Dict[str, Any]]:
+    def list_agents(self) -> list[dict[str, Any]]:
         return [
             {"name": a.name, "description": a.description, "timeout": a.timeout}
             for a in self.agents.values()
         ]
 
 
-_orchestrator: Optional[AgentOrchestrator] = None
+_orchestrator: AgentOrchestrator | None = None
 
 
 def get_orchestrator() -> AgentOrchestrator:
@@ -471,5 +472,5 @@ def get_orchestrator() -> AgentOrchestrator:
     return _orchestrator
 
 
-async def execute_task(task: str, context: dict = None) -> Dict[str, Any]:
+async def execute_task(task: str, context: dict = None) -> dict[str, Any]:
     return await get_orchestrator().execute(task, context)

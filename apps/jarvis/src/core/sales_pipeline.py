@@ -8,15 +8,13 @@ import json
 import logging
 import os
 import uuid
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Optional, List, Dict, Any
 
-from src.core.domain import Niche, Plan, PaymentProvider
-from src.core.sdc_business import SDCCustomer, list_plans, calculate_price
-from src.core.payments import PaymentOrchestrator, PLANS
+from src.core.domain import Niche
 from src.core.gamification import GamificationEngine
+from src.core.sdc_business import SDCCustomer, calculate_price, list_plans
 
 log = logging.getLogger("jarvis.sales_pipeline")
 
@@ -187,10 +185,10 @@ class SalesPipeline:
         log.info(f"Lead captured: {lead.id} ({name}) score={lead.score}")
         return lead
 
-    def get_lead(self, lead_id: str) -> Optional[Lead]:
+    def get_lead(self, lead_id: str) -> Lead | None:
         return self._get_neo4j(lead_id)
 
-    def find_lead_by_email(self, email: str) -> Optional[Lead]:
+    def find_lead_by_email(self, email: str) -> Lead | None:
         if not self._driver or not email:
             return None
         try:
@@ -210,7 +208,7 @@ class SalesPipeline:
         lead.updated_at = _now()
         return self._save_neo4j(lead)
 
-    def qualify_lead(self, lead_id: str, threshold: int = 10) -> Optional[Lead]:
+    def qualify_lead(self, lead_id: str, threshold: int = 10) -> Lead | None:
         lead = self.get_lead(lead_id)
         if not lead:
             return None
@@ -222,7 +220,7 @@ class SalesPipeline:
             log.info(f"Lead qualified: {lead.id} score={lead.score}")
         return lead
 
-    def auto_qualify_leads(self, threshold: int = 10) -> List[Lead]:
+    def auto_qualify_leads(self, threshold: int = 10) -> list[Lead]:
         leads = self.list_leads(stage=PipelineStage.LEAD)
         qualified = []
         for lead in leads:
@@ -233,7 +231,7 @@ class SalesPipeline:
 
     # ---- Proposal ----
 
-    def generate_proposal(self, lead_id: str) -> Optional[str]:
+    def generate_proposal(self, lead_id: str) -> str | None:
         lead = self.get_lead(lead_id)
         if not lead:
             return None
@@ -246,7 +244,7 @@ class SalesPipeline:
     # ---- Deal Management ----
 
     def create_deal(self, lead_id: str, amount: float, currency: str = "MXN",
-                    provider: str = "mercadopago") -> Optional[Deal]:
+                    provider: str = "mercadopago") -> Deal | None:
         lead = self.get_lead(lead_id)
         if not lead:
             return None
@@ -272,7 +270,7 @@ class SalesPipeline:
         _emit_event("proposal_accepted", {"lead_id": lead.id})
         return True
 
-    def close_won(self, lead_id: str, payment_ref: str = "", amount: float = 0.0) -> Optional[Deal]:
+    def close_won(self, lead_id: str, payment_ref: str = "", amount: float = 0.0) -> Deal | None:
         lead = self.get_lead(lead_id)
         if not lead:
             return None
@@ -296,7 +294,7 @@ class SalesPipeline:
         log.info(f"Deal WON: {deal.id} amount={amount}")
         return deal
 
-    def close_lost(self, lead_id: str, reason: str = "") -> Optional[Deal]:
+    def close_lost(self, lead_id: str, reason: str = "") -> Deal | None:
         lead = self.get_lead(lead_id)
         if not lead:
             return None
@@ -318,7 +316,7 @@ class SalesPipeline:
 
     def _onboard_customer(self, lead: Lead, deal: Deal):
         try:
-            customer = SDCCustomer(
+            SDCCustomer(
                 id=deal.id,
                 nombre=lead.name,
                 email=lead.email,
@@ -372,7 +370,7 @@ class SalesPipeline:
             "deals_count": len(deals),
         }
 
-    def list_leads(self, stage: Optional[str] = None) -> List[Lead]:
+    def list_leads(self, stage: str | None = None) -> list[Lead]:
         leads = self._all_leads_from_neo4j()
         if stage:
             leads = [l for l in leads if l.stage == stage]
@@ -403,7 +401,7 @@ class SalesPipeline:
             log.warning(f"Neo4j save lead error: {e}")
             return False
 
-    def _get_neo4j(self, lead_id: str) -> Optional[Lead]:
+    def _get_neo4j(self, lead_id: str) -> Lead | None:
         if not self._driver:
             return None
         try:
@@ -416,7 +414,7 @@ class SalesPipeline:
             log.warning(f"Neo4j get lead error: {e}")
         return None
 
-    def _all_leads_from_neo4j(self) -> List[Lead]:
+    def _all_leads_from_neo4j(self) -> list[Lead]:
         if not self._driver:
             return []
         try:
@@ -466,7 +464,7 @@ class SalesPipeline:
             log.warning(f"Neo4j save deal error: {e}")
             return False
 
-    def _all_deals_from_neo4j(self) -> List[Deal]:
+    def _all_deals_from_neo4j(self) -> list[Deal]:
         if not self._driver:
             return []
         try:

@@ -3,12 +3,10 @@ Mysticverse — Digital twin pipeline, content generation, KYC, bots.
 Marca separada para nicho adulto sobre infraestructura JARVIS.
 """
 
-import json
 import logging
 import os
-import uuid
 import time
-from typing import Optional, Dict, List, Any
+import uuid
 
 log = logging.getLogger("jarvis.mysticverse")
 
@@ -21,9 +19,9 @@ class DigitalTwinPipeline:
     """Pipeline: fotos → clon imagen (fal.ai) + voz (ElevenLabs) + personalidad (LLM) → bot"""
 
     def __init__(self):
-        self.twins: Dict[str, Dict] = {}
+        self.twins: dict[str, dict] = {}
 
-    def create(self, creator_data: Dict) -> Dict:
+    def create(self, creator_data: dict) -> dict:
         twin_id = str(uuid.uuid4())[:8]
         twin = {
             "id": twin_id,
@@ -44,7 +42,7 @@ class DigitalTwinPipeline:
         log.info(f"Digital twin created: {twin_id} for {creator_data.get('name', '?')}")
         return twin
 
-    def get(self, twin_id: str) -> Optional[Dict]:
+    def get(self, twin_id: str) -> dict | None:
         return self.twins.get(twin_id)
 
     def update_step(self, twin_id: str, step: str, status: bool = True) -> bool:
@@ -58,10 +56,10 @@ class DigitalTwinPipeline:
             twin["status"] = "active"
         return True
 
-    def list_by_creator(self, creator_name: str) -> List[Dict]:
+    def list_by_creator(self, creator_name: str) -> list[dict]:
         return [t for t in self.twins.values() if t["creator_name"] == creator_name]
 
-    def generate_photo(self, twin_id: str, prompt: str) -> Optional[Dict]:
+    def generate_photo(self, twin_id: str, prompt: str) -> dict | None:
         twin = self.twins.get(twin_id)
         if not twin:
             return None
@@ -98,7 +96,7 @@ class DigitalTwinPipeline:
             log.warning(f"Fal.ai request failed: {e}")
         return None
 
-    def generate_video(self, twin_id: str, prompt: str) -> Optional[Dict]:
+    def generate_video(self, twin_id: str, prompt: str) -> dict | None:
         twin = self.twins.get(twin_id)
         if not twin:
             return None
@@ -133,9 +131,9 @@ class TelegramBotManager:
     """Gestión de bots de Telegram para creadoras"""
 
     def __init__(self):
-        self.bots: Dict[str, Dict] = {}
+        self.bots: dict[str, dict] = {}
 
-    def register(self, twin_id: str, bot_token: str, config: Dict) -> Dict:
+    def register(self, twin_id: str, bot_token: str, config: dict) -> dict:
         bot_id = str(uuid.uuid4())[:8]
         bot = {
             "id": bot_id,
@@ -149,7 +147,7 @@ class TelegramBotManager:
         self.bots[bot_id] = bot
         return bot
 
-    def get(self, bot_id: str) -> Optional[Dict]:
+    def get(self, bot_id: str) -> dict | None:
         return self.bots.get(bot_id)
 
 
@@ -157,9 +155,9 @@ class KYCManager:
     """KYC automático: edad + identidad + consentimiento"""
 
     def __init__(self):
-        self.records: Dict[str, Dict] = {}
+        self.records: dict[str, dict] = {}
 
-    def verify_age(self, creator_id: str, document_data: Dict) -> Dict:
+    def verify_age(self, creator_id: str, document_data: dict) -> dict:
         record_id = str(uuid.uuid4())[:8]
         record = {
             "id": record_id,
@@ -174,7 +172,7 @@ class KYCManager:
         self.records[record_id] = record
         return record
 
-    def verify_identity(self, record_id: str, selfie_data: Dict) -> Dict:
+    def verify_identity(self, record_id: str, selfie_data: dict) -> dict:
         record = self.records.get(record_id)
         if not record:
             return {"error": "Record not found"}
@@ -182,7 +180,7 @@ class KYCManager:
         record["status"] = "identity_verified"
         return record
 
-    def sign_consent(self, record_id: str, signature: str) -> Dict:
+    def sign_consent(self, record_id: str, signature: str) -> dict:
         record = self.records.get(record_id)
         if not record:
             return {"error": "Record not found"}
@@ -190,7 +188,7 @@ class KYCManager:
         record["status"] = "completed"
         return record
 
-    def get(self, record_id: str) -> Optional[Dict]:
+    def get(self, record_id: str) -> dict | None:
         return self.records.get(record_id)
 
     def is_verified(self, creator_id: str) -> bool:

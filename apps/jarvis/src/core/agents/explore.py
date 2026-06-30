@@ -1,11 +1,10 @@
 import os
-from typing import Any, Dict, List
+from typing import Any
 
 from src.core.agents.agent_base import (
     AgentBase,
     match_keywords,
     success_response,
-    error_response,
 )
 
 
@@ -14,7 +13,7 @@ class ExploreAgent(AgentBase):
     description = "Navegación de archivos y repositorios"
     timeout = 15
 
-    async def run(self, task: str, context: dict = None) -> Dict[str, Any]:
+    async def run(self, task: str, context: dict = None) -> dict[str, Any]:
         self.log.info(f"Exploring: {task[:100]}...")
         if match_keywords(task, ["busca", "search", "find", "encuentra", "grep"]):
             return self._search(task)
@@ -33,7 +32,7 @@ class ExploreAgent(AgentBase):
                 return p
         return "."
 
-    def _explore(self, task: str) -> Dict[str, Any]:
+    def _explore(self, task: str) -> dict[str, Any]:
         path = self._extract_path(task)
         from src.core.tools import list_files
 
@@ -50,7 +49,7 @@ class ExploreAgent(AgentBase):
             total=len(items),
         )
 
-    def _search(self, task: str) -> Dict[str, Any]:
+    def _search(self, task: str) -> dict[str, Any]:
         import re
 
         match = re.search(r'["\']([^"\']+)["\']', task)
@@ -66,12 +65,12 @@ class ExploreAgent(AgentBase):
             count=len(result.get("results", [])),
         )
 
-    def _structure(self, task: str) -> Dict[str, Any]:
+    def _structure(self, task: str) -> dict[str, Any]:
         path = self._extract_path(task)
         tree = self._build_tree(path, max_depth=3)
         return success_response(self.name, task, path=path, tree=tree)
 
-    def _build_tree(self, path: str, max_depth: int = 3, _depth: int = 0) -> List:
+    def _build_tree(self, path: str, max_depth: int = 3, _depth: int = 0) -> list:
         if _depth >= max_depth:
             return [{"name": "...", "type": "truncated"}]
         entries = []
@@ -92,7 +91,7 @@ class ExploreAgent(AgentBase):
             entries.append({"name": "⚠️ error", "type": "error"})
         return entries
 
-    def _read_batch(self, task: str) -> Dict[str, Any]:
+    def _read_batch(self, task: str) -> dict[str, Any]:
         import re
 
         paths = re.findall(r"[\w/.-]+\.[a-zA-Z]+", task)

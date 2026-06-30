@@ -4,10 +4,8 @@ Migrate legacy session formats to Neo4j.
 Reads session backups from JSON/Markdown and stores them via Neo4j API.
 """
 import json
-import os
-import sys
 import logging
-import glob
+import sys
 from pathlib import Path
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s %(message)s")
@@ -96,7 +94,7 @@ def migrate_session(session_data: dict, neo4j_store):
 
 
 def main():
-    from src.core.neo4j_store import get_driver, create_session, add_message, init_schema
+    from src.core.neo4j_store import add_message, create_session, get_driver, init_schema
 
     driver = get_driver()
     if not driver:

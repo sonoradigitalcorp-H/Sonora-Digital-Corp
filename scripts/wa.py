@@ -8,8 +8,6 @@ Dependencias: psycopg2-binary (installed in Hermes container, accessed via docke
 import json
 import os
 import sys
-import time
-from datetime import datetime
 from pathlib import Path
 
 PROJECT_DIR = Path(__file__).parent.parent
@@ -30,8 +28,8 @@ PG_URL = f"postgresql://{PG_USER}:{PG_PASS}@{PG_HOST}:{PG_PORT}/{PG_DB}"
 
 def _send_wa(to: str, message: str) -> dict:
     """Send WhatsApp message via hermes_wa API."""
-    import urllib.request
     import urllib.error
+    import urllib.request
     data = json.dumps({"to": to, "message": message}).encode()
     req = urllib.request.Request(
         f"{WA_BASE}/send",

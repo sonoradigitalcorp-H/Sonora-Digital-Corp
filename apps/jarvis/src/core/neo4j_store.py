@@ -3,12 +3,10 @@ JARVIS Neo4j Connector — Graph Database for persistent session storage.
 Connects to Neo4j when available, falls back to in-memory storage.
 """
 
+import logging
 import os
 import uuid
-import json
-import logging
 from datetime import datetime, timezone
-from typing import Optional, Dict, List, Any
 
 log = logging.getLogger("jarvis.neo4j")
 
@@ -88,7 +86,7 @@ def save_memory(key: str, value: str) -> bool:
         return False
 
 
-def get_memory(key: str) -> Optional[str]:
+def get_memory(key: str) -> str | None:
     """Retrieve a value by key from Neo4j Memory nodes."""
     driver = get_driver()
     if not driver:
@@ -108,7 +106,7 @@ def get_memory(key: str) -> Optional[str]:
     return None
 
 
-def search_memory(text: str, limit: int = 10) -> List[Dict]:
+def search_memory(text: str, limit: int = 10) -> list[dict]:
     """Search memories by key or value substring."""
     driver = get_driver()
     if not driver:
@@ -134,7 +132,7 @@ def search_memory(text: str, limit: int = 10) -> List[Dict]:
     return []
 
 
-def memory_stats() -> Dict:
+def memory_stats() -> dict:
     """Get memory storage statistics."""
     driver = get_driver()
     if not driver:
@@ -165,7 +163,7 @@ def create_session(
     title: str = "Nueva sesión",
     project: str = None,
     tags: list = None,
-) -> Optional[Dict]:
+) -> dict | None:
     """Create a new session in Neo4j."""
     driver = get_driver()
     if not driver:
@@ -207,7 +205,7 @@ def create_session(
     return None
 
 
-def get_session(session_id: str) -> Optional[Dict]:
+def get_session(session_id: str) -> dict | None:
     """Get a session with all messages from Neo4j."""
     driver = get_driver()
     if not driver:
@@ -241,7 +239,7 @@ def list_sessions(
     tag: str = None,
     archived: bool = False,
     limit: int = 50,
-) -> List[Dict]:
+) -> list[dict]:
     """List sessions from Neo4j with optional filters."""
     driver = get_driver()
     if not driver:
@@ -283,7 +281,7 @@ def list_sessions(
 
 def add_message(
     session_id: str, role: str, content: str, tokens: int = 0
-) -> Optional[Dict]:
+) -> dict | None:
     """Add a message to a session in Neo4j."""
     driver = get_driver()
     if not driver:
@@ -326,7 +324,7 @@ def add_message(
     return None
 
 
-def search_sessions(query: str) -> List[Dict]:
+def search_sessions(query: str) -> list[dict]:
     """Full-text search in sessions."""
     driver = get_driver()
     if not driver:
@@ -350,7 +348,7 @@ def search_sessions(query: str) -> List[Dict]:
     return []
 
 
-def toggle_pin(session_id: str) -> Optional[bool]:
+def toggle_pin(session_id: str) -> bool | None:
     """Toggle pinned status of a session."""
     driver = get_driver()
     if not driver:
@@ -445,7 +443,7 @@ def create_contact(
     source: str = "whatsapp",
     status: str = "lead",
     notes: str = "",
-) -> Optional[Dict]:
+) -> dict | None:
     """Create or update a contact in Neo4j."""
     driver = get_driver()
     if not driver:
@@ -485,7 +483,7 @@ def create_contact(
         return None
 
 
-def get_contact(phone: str) -> Optional[Dict]:
+def get_contact(phone: str) -> dict | None:
     """Get a contact by phone number."""
     driver = get_driver()
     if not driver:
@@ -514,7 +512,7 @@ def get_contact(phone: str) -> Optional[Dict]:
         return None
 
 
-def search_contacts(query: str = "", status: str = "") -> List[Dict]:
+def search_contacts(query: str = "", status: str = "") -> list[dict]:
     """Search contacts by name/phone/notes, optionally filter by status."""
     driver = get_driver()
     if not driver:
@@ -569,7 +567,7 @@ def search_contacts(query: str = "", status: str = "") -> List[Dict]:
         return []
 
 
-def update_contact(phone: str, updates: Dict) -> bool:
+def update_contact(phone: str, updates: dict) -> bool:
     """Update contact fields. Keys: name, status, notes, tags, source."""
     driver = get_driver()
     if not driver:
@@ -650,7 +648,7 @@ def log_wa_message(
         return False
 
 
-def get_contact_history(phone: str, limit: int = 50) -> Dict:
+def get_contact_history(phone: str, limit: int = 50) -> dict:
     """Get full conversation history for a contact."""
     driver = get_driver()
     if not driver:
@@ -687,7 +685,7 @@ def get_contact_history(phone: str, limit: int = 50) -> Dict:
         return {"contact": None, "messages": []}
 
 
-def contacts_summary() -> Dict:
+def contacts_summary() -> dict:
     """Get summary statistics of all contacts."""
     driver = get_driver()
     if not driver:

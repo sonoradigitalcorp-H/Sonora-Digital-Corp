@@ -3,11 +3,8 @@ JARVIS Speech-to-Text Module
 Whisper-based STT with VAD (Voice Activity Detection) and multiple fallbacks.
 """
 
-import os
-import io
 import logging
-import tempfile
-from typing import Optional
+import os
 
 log = logging.getLogger("jarvis.voice.stt")
 
@@ -37,7 +34,7 @@ def _get_whisper_model(model_size: str = "base"):
     return _whisper_model
 
 
-def transcribe(audio_path: str, language: Optional[str] = None) -> str:
+def transcribe(audio_path: str, language: str | None = None) -> str:
     """
     Transcribe audio file to text using Whisper (preferred) or fallback.
     
@@ -116,7 +113,6 @@ def transcribe_bytes(audio_bytes: bytes, sample_rate: int = 16000) -> str:
     tmp_path = os.path.join(AUDIO_DIR, "input_stream.wav")
     try:
         import wave
-        import struct
         with wave.open(tmp_path, 'wb') as wf:
             wf.setnchannels(1)
             wf.setsampwidth(2)
@@ -128,7 +124,7 @@ def transcribe_bytes(audio_bytes: bytes, sample_rate: int = 16000) -> str:
         return ""
 
 
-def transcribe_stream(audio_generator, language: Optional[str] = None):
+def transcribe_stream(audio_generator, language: str | None = None):
     """
     Transcribe a stream of audio chunks.
     Yields interim and final results.

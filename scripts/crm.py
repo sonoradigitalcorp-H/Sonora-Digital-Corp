@@ -19,12 +19,17 @@ PROJECT_DIR = Path(__file__).parent.parent
 sys.path.insert(0, str(PROJECT_DIR))
 
 import warnings
+
 warnings.filterwarnings("ignore", message=".*relationship type.*")
 warnings.filterwarnings("ignore", message=".*label in your query.*")
 
 from src.core.neo4j_store import (
-    create_contact, get_contact, search_contacts, update_contact,
-    log_wa_message, get_contact_history, contacts_summary,
+    contacts_summary,
+    get_contact,
+    get_contact_history,
+    log_wa_message,
+    search_contacts,
+    update_contact,
 )
 
 

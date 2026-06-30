@@ -3,11 +3,8 @@ SDC Gamification Engine — XP, niveles, badges, leaderboards.
 Motores de retención y pertenencia para la plataforma Mysticverse y SDC.
 """
 
-import json
 import logging
 import time
-import math
-from typing import Optional, Dict, List, Any
 
 log = logging.getLogger("jarvis.gamification")
 
@@ -88,9 +85,9 @@ XP_RULES = {
 
 class GamificationEngine:
     def __init__(self):
-        self.players: Dict[str, Dict] = {}
+        self.players: dict[str, dict] = {}
 
-    def get_or_create_player(self, player_id: str, name: str = "") -> Dict:
+    def get_or_create_player(self, player_id: str, name: str = "") -> dict:
         if player_id not in self.players:
             self.players[player_id] = {
                 "id": player_id,
@@ -104,7 +101,7 @@ class GamificationEngine:
             }
         return self.players[player_id]
 
-    def add_xp(self, player_id: str, amount: int, reason: str = "") -> Dict:
+    def add_xp(self, player_id: str, amount: int, reason: str = "") -> dict:
         player = self.get_or_create_player(player_id)
         player["xp"] += amount
         old_level = player["level"]
@@ -132,7 +129,7 @@ class GamificationEngine:
 
         return result
 
-    def award_badge(self, player_id: str, badge_id: str) -> Dict:
+    def award_badge(self, player_id: str, badge_id: str) -> dict:
         player = self.get_or_create_player(player_id)
         if badge_id not in BADGES:
             return {"error": f"Badge {badge_id} not found"}
@@ -141,7 +138,7 @@ class GamificationEngine:
 
         player["badges"].append(badge_id)
         badge = BADGES[badge_id]
-        xp_result = self.add_xp(player_id, badge["xp"], f"Badge: {badge['name']}")
+        self.add_xp(player_id, badge["xp"], f"Badge: {badge['name']}")
 
         return {
             "player_id": player_id,
@@ -150,7 +147,7 @@ class GamificationEngine:
             "total_xp": player["xp"],
         }
 
-    def daily_login(self, player_id: str) -> Dict:
+    def daily_login(self, player_id: str) -> dict:
         player = self.get_or_create_player(player_id)
         now = time.time()
         DAY_SECS = 86400
@@ -175,7 +172,7 @@ class GamificationEngine:
         result["streak"] = player["streak"]
         return result
 
-    def track_action(self, player_id: str, action: str) -> Dict:
+    def track_action(self, player_id: str, action: str) -> dict:
         if action in XP_RULES:
             return self.add_xp(player_id, XP_RULES[action], action)
 
@@ -192,10 +189,10 @@ class GamificationEngine:
 
         return {"message": f"Unknown action: {action}"}
 
-    def get_player(self, player_id: str) -> Optional[Dict]:
+    def get_player(self, player_id: str) -> dict | None:
         return self.players.get(player_id)
 
-    def get_leaderboard(self, limit: int = 10) -> List[Dict]:
+    def get_leaderboard(self, limit: int = 10) -> list[dict]:
         sorted_players = sorted(
             self.players.values(),
             key=lambda p: p["xp"],
@@ -222,13 +219,13 @@ class GamificationEngine:
                 break
         return level
 
-    def get_level_info(self, level: int) -> Optional[Dict]:
+    def get_level_info(self, level: int) -> dict | None:
         for lvl in LEVELS:
             if lvl["level"] == level:
                 return lvl
         return None
 
-    def get_all_badges(self, player_id: str) -> List[Dict]:
+    def get_all_badges(self, player_id: str) -> list[dict]:
         player = self.get_or_create_player(player_id)
         return [
             {**BADGES[bid], "id": bid, "awarded": bid in player["badges"]}
@@ -237,7 +234,7 @@ class GamificationEngine:
 
 
 # Singleton
-_engine: Optional[GamificationEngine] = None
+_engine: GamificationEngine | None = None
 
 
 def get_engine() -> GamificationEngine:

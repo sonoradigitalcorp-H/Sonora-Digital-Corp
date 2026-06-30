@@ -1,11 +1,11 @@
 import re
-from typing import Any, Dict, List
+from typing import Any
 
 from src.core.agents.agent_base import (
     AgentBase,
+    error_response,
     match_keywords,
     success_response,
-    error_response,
 )
 
 
@@ -117,7 +117,7 @@ class SkillAgent(AgentBase):
         },
     ]
 
-    async def run(self, task: str, context: dict = None) -> Dict[str, Any]:
+    async def run(self, task: str, context: dict = None) -> dict[str, Any]:
         self.log.info(f"Skill task: {task[:100]}...")
         if match_keywords(task, ["lista", "list", "catálogo", "disponibles"]):
             return self._list_skills(task)
@@ -128,7 +128,7 @@ class SkillAgent(AgentBase):
         else:
             return self._list_skills(task)
 
-    def _list_skills(self, task: str) -> Dict[str, Any]:
+    def _list_skills(self, task: str) -> dict[str, Any]:
         return success_response(
             self.name,
             task,
@@ -137,7 +137,7 @@ class SkillAgent(AgentBase):
             count=len(self.SKILL_CATALOG),
         )
 
-    async def _run_skill(self, task: str) -> Dict[str, Any]:
+    async def _run_skill(self, task: str) -> dict[str, Any]:
         match = re.search(r"(?:skill|ejecuta|run|usa)\s+(\w+)", task.lower())
         skill_name = match.group(1) if match else None
         if not skill_name:
@@ -167,7 +167,7 @@ class SkillAgent(AgentBase):
             result=result,
         )
 
-    def _skill_docs(self, task: str) -> Dict[str, Any]:
+    def _skill_docs(self, task: str) -> dict[str, Any]:
         match = re.search(r"(?:skill|docs|ayuda)\s+(\w+)", task.lower())
         skill_name = match.group(1) if match else None
         if skill_name:
