@@ -12,6 +12,9 @@ import uuid
 from pathlib import Path
 from typing import Any
 
+from src.core.redis_streams import push_agent_context, read_agent_context
+from src.core.redis_streams import clear_context as redis_clear_stream
+
 from src.core.agents import (
     AgentBase,
     CodeAgent,
@@ -379,8 +382,14 @@ class AgentOrchestrator:
         self.context_history.append(entry)
         if len(self.context_history) > self.max_context:
             self.context_history.pop(0)
+        # Also push to Redis Stream (non-blocking fallback)
+        push_agent_context(agent, task[:200], entry["result_summary"])
 
     def get_context(self, limit: int = 5) -> list[dict[str, Any]]:
+        # Try Redis first, fall back to local list
+        redis_ctx = read_agent_context(count=limit)
+        if redis_ctx:
+            return redis_ctx
         return self.context_history[-limit:]
 
     def search_context(self, query: str) -> list[dict[str, Any]]:
@@ -393,6 +402,7 @@ class AgentOrchestrator:
 
     def clear_context(self) -> None:
         self.context_history.clear()
+        redis_clear_stream()
 
     def route(self, task: str) -> str:
         task_lower = task.lower()

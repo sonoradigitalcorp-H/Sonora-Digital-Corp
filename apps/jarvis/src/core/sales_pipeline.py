@@ -15,6 +15,7 @@ from enum import Enum
 from src.core.domain import Niche
 from src.core.gamification import GamificationEngine
 from src.core.sdc_business import SDCCustomer, calculate_price, list_plans
+from src.core.redis_streams import stream_push
 
 log = logging.getLogger("jarvis.sales_pipeline")
 
@@ -84,6 +85,15 @@ def _emit_event(event: str, payload: dict):
             f.write(entry + "\n")
     except OSError:
         log.warning(f"Could not write event: {event}")
+    # Also push to Redis Stream
+    try:
+        stream_push("events:pipeline", {
+            "event": event,
+            "timestamp": _now(),
+            "payload": json.dumps(payload),
+        })
+    except Exception:
+        pass
 
 
 def _emit_score_log(stage: str, deal_id: str, amount: float):

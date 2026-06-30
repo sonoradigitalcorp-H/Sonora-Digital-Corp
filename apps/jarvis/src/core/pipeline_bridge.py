@@ -10,6 +10,7 @@ from datetime import timezone
 from typing import Any
 
 from src.core.engram import engram
+from src.core.redis_streams import stream_push
 
 log = logging.getLogger("jarvis.pipeline_bridge")
 
@@ -20,16 +21,25 @@ EVENTS_FILE = os.path.join(BASE_DIR, "state", "logs", "events.jsonl")
 
 def _emit_event(event: str, payload: dict):
     os.makedirs(os.path.dirname(EVENTS_FILE), exist_ok=True)
-    from datetime import datetime
+    from datetime import datetime, timezone
+    ts = datetime.now(timezone.utc).isoformat()
     entry = json.dumps({
         "event": event,
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": ts,
         "payload": payload,
     })
     try:
         with open(EVENTS_FILE, "a") as f:
             f.write(entry + "\n")
     except OSError:
+        pass
+    try:
+        stream_push("events:pipeline", {
+            "event": event,
+            "timestamp": ts,
+            "payload": json.dumps(payload),
+        })
+    except Exception:
         pass
 
 
