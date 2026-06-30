@@ -14,8 +14,8 @@ from enum import Enum
 
 from src.core.domain import Niche
 from src.core.gamification import GamificationEngine
-from src.core.sdc_business import SDCCustomer, calculate_price, list_plans
 from src.core.redis_streams import stream_push
+from src.core.sdc_business import SDCCustomer, calculate_price, list_plans
 
 log = logging.getLogger("jarvis.sales_pipeline")
 

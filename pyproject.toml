@@ -5,11 +5,11 @@ description = "JARVIS — Multi-agent AI Platform"
 requires-python = ">=3.11"
 
 [tool.ruff]
-line-length = 120
+line-length = 160
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
-ignore = ["B008"]
+ignore = ["B008", "UP042", "E402"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

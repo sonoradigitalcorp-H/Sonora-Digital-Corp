@@ -250,7 +250,7 @@ async def list_initiatives():
                 if stripped and not stripped.startswith("<!--"):
                     objective_parts.append(stripped)
             if "**Total Score:" in stripped or stripped.startswith("**Total Score:"):
-                score = stripped.split("**Total Score:")[-1].strip().rstrip("**").strip()
+                score = stripped.split("**Total Score:")[-1].strip().removesuffix("**").strip()
             elif "Total Score:" in stripped and not score:
                 score = stripped.split("Total Score:")[-1].strip()
         initiatives.append({
