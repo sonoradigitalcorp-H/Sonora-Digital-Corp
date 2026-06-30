@@ -12,77 +12,90 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Check for Spec
-        id: spec-check
+      - name: Detect Tier from PR
+        id: detect-tier
         run: |
           CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
-          HAS_CODE=false
+          IS_TIER1=false
+          IS_TIER2=false
           for f in $CHANGED_FILES; do
             case "$f" in
               *.py|*.ts|*.js|*.sh|*.yml|*.yaml|*.json|*.html|*.css)
-                HAS_CODE=true
+                IS_TIER2=true
                 ;;
             esac
           done
-          
-          if [ "$HAS_CODE" = true ]; then
-            ACTIVE_SPECS=$(find process/active -name "SPEC-*.md" 2>/dev/null | head -1)
-            if [ -z "$ACTIVE_SPECS" ]; then
-              echo "✗ Code changes found but no active spec in process/active/"
-              echo "  Create one with: bash scripts/process-pipeline.sh spec-new \"Title\""
-              echo "  Or mark as Tier 1 in the PR description."
-              exit 1
-            fi
-            echo "✓ Active spec found: $ACTIVE_SPECS"
-          else
-            echo "ℹ No code changes detected, skipping spec gate"
+          # If only infra/process/docs changed, it's Tier 1
+          ONLY_INFRA=true
+          for f in $CHANGED_FILES; do
+            case "$f" in
+              infra/*|process/*|docs/*|.github/*|*.md)
+                ;;
+              *)
+                ONLY_INFRA=false
+                ;;
+            esac
+          done
+          if [ "$ONLY_INFRA" = true ]; then
+            IS_TIER1=true
+            IS_TIER2=false
           fi
+          echo "tier1=$IS_TIER1" >> $GITHUB_OUTPUT
+          echo "tier2=$IS_TIER2" >> $GITHUB_OUTPUT
+          echo "Detected: tier1=$IS_TIER1 tier2=$IS_TIER2"
 
-      - name: Check JR-Lite Compliance
-        id: jr-lite-check
+      - name: Check for Spec (Tier 2+)
+        if: steps.detect-tier.outputs.tier2 == 'true'
         run: |
-          # Check if spec has required JR-Lite fields
+          ACTIVE_SPECS=$(find process/active -name "SPEC-*.md" 2>/dev/null | head -1)
+          if [ -z "$ACTIVE_SPECS" ]; then
+            echo "✗ Code changes found but no active spec in process/active/"
+            echo "  Create one with: bash scripts/process-pipeline.sh spec-new \"Title\""
+            exit 1
+          fi
+          echo "✓ Active spec found: $ACTIVE_SPECS"
+
+      - name: Check JR-Lite Compliance (Tier 2+)
+        if: steps.detect-tier.outputs.tier2 == 'true'
+        run: |
           SPEC_FILE=$(find process/active -name "SPEC-*.md" 2>/dev/null | head -1)
           if [ -z "$SPEC_FILE" ]; then
             echo "No active spec to check"
             exit 0
           fi
-          
           errors=0
-          # 15 JR-Lite checks
           for check in "Objetivo" "Value Driver" "FR#" "Success Criteria" "Gherkin" "Edge Cases" "Kill Criteria" "Scale Criteria"; do
             if ! grep -q "$check" "$SPEC_FILE"; then
               echo "✗ Missing JR-Lite field: $check"
               errors=$((errors + 1))
             fi
           done
-          
           if [ "$errors" -gt 0 ]; then
             echo "✗ JR-Lite compliance: $errors missing fields"
             exit 1
           fi
           echo "✓ JR-Lite compliance passed"
 
-      - name: Enterprise Score Check
-        id: score-check
+      - name: Enterprise Score Check (Tier 2+)
+        if: steps.detect-tier.outputs.tier2 == 'true'
         run: |
-          if [ -f "process/active/SCORE.md" ]; then
-            SCORE=$(grep -oP 'Total:.*?\K[0-9]+(?=/)' process/active/SCORE.md | head -1)
-            if [ -z "$SCORE" ]; then
-              echo "ℹ SCORE.md found but could not parse total. Skipping gate."
-              exit 0
-            fi
-            if [ "$SCORE" -lt 60 ] 2>/dev/null; then
-              echo "✗ Score $SCORE/100 is below threshold (60). Rejecting."
-              exit 1
-            fi
-            echo "✓ Score $SCORE/100 passes threshold (≥60)"
-          else
-            echo "ℹ No SCORE.md found. Score gate skipped."
+          SCORE_FILE="process/active/SCORE.md"
+          if [ ! -f "$SCORE_FILE" ]; then
+            echo "✗ Tier 2+ requires SCORE.md. Create one."
+            exit 1
           fi
+          SCORE=$(grep -oP 'Total:.*?\K[0-9]+(?=/)' "$SCORE_FILE" | head -1)
+          if [ -z "$SCORE" ]; then
+            echo "✗ SCORE.md found but could not parse total."
+            exit 1
+          fi
+          if [ "$SCORE" -lt 60 ] 2>/dev/null; then
+            echo "✗ Score $SCORE/100 is below threshold (60). Rejecting."
+            exit 1
+          fi
+          echo "✓ Score $SCORE/100 passes threshold (≥60)"
 
       - name: Event Emission Check
-        id: event-check
         run: |
           EVENTS_FILE="state/logs/events.jsonl"
           if [ -f "$EVENTS_FILE" ]; then

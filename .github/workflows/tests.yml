@@ -18,9 +18,9 @@ jobs:
         run: |
           pip install -r requirements.txt
           pip install pytest pytest-cov ruff
-      - name: Lint
+      - name: Lint — fail on any error
         run: |
-          ruff check apps/ scripts/ 2>/dev/null || true
+          ruff check apps/ scripts/
       - name: TDD Check — every new core module must have a test file
         run: |
           CHANGED=$(git diff --name-only origin/main...HEAD 2>/dev/null || git diff --name-only HEAD~1)
@@ -35,6 +35,6 @@ jobs:
             fi
           done
           echo "✓ TDD check passed"
-      - name: Test with coverage
+      - name: Test with coverage — fail below 60%
         run: |
-          python -m pytest tests/unit/ -v --cov=src.core --cov-report=term-missing --cov-fail-under=60 2>/dev/null || python -m pytest tests/ -v 2>/dev/null || echo "No tests to run"
+          python -m pytest tests/unit/ -v --cov=src.core --cov-report=term-missing --cov-fail-under=60
