@@ -657,7 +657,10 @@ def jarvis_web_fetch(
 
 
 if __name__ == "__main__":
-    print("Starting JARVIS MCP Server...")
+    import uvicorn
+    host = os.environ.get("MCP_HOST", "0.0.0.0")
+    port = int(os.environ.get("MCP_PORT", "8000"))
+    print(f"Starting JARVIS MCP Server (SSE) on {host}:{port}...")
     print(f"Neo4j available: {NEO4J_AVAILABLE}")
     print(f"Qdrant available: {QDRANT_AVAILABLE}")
-    mcp.run()
+    mcp.run(transport="sse", host=host, port=port)

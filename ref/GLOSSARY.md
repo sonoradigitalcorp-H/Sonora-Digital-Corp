@@ -83,7 +83,7 @@
 
 ### T
 - **TDD**: Test-Driven Development. Desarrollo guiado por pruebas: Red-Green-Refactor (Beck, 2002).
-- **Telegram**: Plataforma de mensajeria. Bot token: 8665900402:AAG0PW36xvlXybG7Heyu-TK9CUFeiVhAa0U.
+- **Telegram**: Plataforma de mensajeria. Bot token via `ABE_TELEGRAM_TOKEN` env var.
 
 ### U
 - **UFW**: Uncomplicated Firewall. Puertos: 22/80/443.

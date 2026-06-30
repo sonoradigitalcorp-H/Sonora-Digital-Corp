@@ -3,9 +3,9 @@ FROM neo4j:5.19-community
 # Plugins para Graph RAG
 ENV NEO4JLAB_PLUGINS='["apoc"]'
 
-# Configuración de memoria
-ENV NEO4J_dbms_memory_heap_max__size=2G
-ENV NEO4J_dbms_memory_pagecache_size=1G
+# Configuración de memoria (Neo4j 5.x format)
+ENV NEO4J_server_memory_heap_max__size=2G
+ENV NEO4J_server_memory_pagecache_size=1G
 
 # Habilitar APOC procedures
 ENV NEO4J_apoc_export_file_enabled=true

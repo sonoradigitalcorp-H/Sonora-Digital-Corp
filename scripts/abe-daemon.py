@@ -22,7 +22,7 @@ logging.basicConfig(
 log = logging.getLogger('abe-daemon')
 
 # Config
-TOKEN = os.environ.get('ABE_TELEGRAM_TOKEN') or '8665900402:AAG0PW36xvlXybG7Heyu-TK9CUFeiVhAa0U'
+TOKEN = os.environ.get('ABE_TELEGRAM_TOKEN')
 CHAT_ID = os.environ.get('ABE_TELEGRAM_CHAT') or '5738935134'
 JARVIS_URL = 'http://localhost:5174'
 CYCLE_10M = 600
