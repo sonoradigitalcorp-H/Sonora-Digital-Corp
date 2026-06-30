@@ -15,6 +15,9 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
+      - name: Create .env for CI
+        run: cp .env.ci .env 2>/dev/null || echo "NEO4J_PASSWORD=ci" > .env
+
       - name: Build test image and run tests
         uses: docker/build-push-action@v4
         with:
