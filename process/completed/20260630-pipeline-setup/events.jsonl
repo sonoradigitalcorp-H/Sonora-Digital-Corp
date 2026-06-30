@@ -1,0 +1,5 @@
+{"event":"spec_created","timestamp":"2026-06-30T13:00:00Z","payload":{"spec":"SPEC-20260630-001","title":"Pipeline System Initial Setup"}}
+{"event":"pipeline_initialized","timestamp":"2026-06-30T13:00:00Z","payload":{"templates":["SPEC","SCORE","EVENT","ADR","LECCION","GHERKIN"],"hooks":["pre-commit","post-commit"],"ci":["process-gate","tests"]}}
+{"event":"engram_upgraded","timestamp":"2026-06-30T13:00:00Z","payload":{"features":["importance_scoring","promotion","decay","stats"]}}
+{"event":"agent_manifest_created","timestamp":"2026-06-30T13:00:00Z","payload":{"agents":5,"planned":7}}
+{"event":"spec_completed","timestamp":"2026-06-30T13:00:00Z","payload":{"spec":"SPEC-20260630-001","score":null}}

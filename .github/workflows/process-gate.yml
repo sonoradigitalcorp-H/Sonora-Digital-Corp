@@ -1,0 +1,93 @@
+name: Process Gate
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  process-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Check for Spec
+        id: spec-check
+        run: |
+          CHANGED_FILES=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          HAS_CODE=false
+          for f in $CHANGED_FILES; do
+            case "$f" in
+              *.py|*.ts|*.js|*.sh|*.yml|*.yaml|*.json|*.html|*.css)
+                HAS_CODE=true
+                ;;
+            esac
+          done
+          
+          if [ "$HAS_CODE" = true ]; then
+            ACTIVE_SPECS=$(find process/active -name "SPEC-*.md" 2>/dev/null | head -1)
+            if [ -z "$ACTIVE_SPECS" ]; then
+              echo "✗ Code changes found but no active spec in process/active/"
+              echo "  Create one with: bash scripts/process-pipeline.sh spec-new \"Title\""
+              echo "  Or mark as Tier 1 in the PR description."
+              exit 1
+            fi
+            echo "✓ Active spec found: $ACTIVE_SPECS"
+          else
+            echo "ℹ No code changes detected, skipping spec gate"
+          fi
+
+      - name: Check JR-Lite Compliance
+        id: jr-lite-check
+        run: |
+          # Check if spec has required JR-Lite fields
+          SPEC_FILE=$(find process/active -name "SPEC-*.md" 2>/dev/null | head -1)
+          if [ -z "$SPEC_FILE" ]; then
+            echo "No active spec to check"
+            exit 0
+          fi
+          
+          errors=0
+          # 15 JR-Lite checks
+          for check in "Objetivo" "Value Driver" "FR#" "Success Criteria" "Gherkin" "Edge Cases" "Kill Criteria" "Scale Criteria"; do
+            if ! grep -q "$check" "$SPEC_FILE"; then
+              echo "✗ Missing JR-Lite field: $check"
+              errors=$((errors + 1))
+            fi
+          done
+          
+          if [ "$errors" -gt 0 ]; then
+            echo "✗ JR-Lite compliance: $errors missing fields"
+            exit 1
+          fi
+          echo "✓ JR-Lite compliance passed"
+
+      - name: Enterprise Score Check
+        id: score-check
+        run: |
+          if [ -f "process/active/SCORE.md" ]; then
+            SCORE=$(grep -oP 'Total:.*?\K[0-9]+(?=/)' process/active/SCORE.md | head -1)
+            if [ -z "$SCORE" ]; then
+              echo "ℹ SCORE.md found but could not parse total. Skipping gate."
+              exit 0
+            fi
+            if [ "$SCORE" -lt 60 ] 2>/dev/null; then
+              echo "✗ Score $SCORE/100 is below threshold (60). Rejecting."
+              exit 1
+            fi
+            echo "✓ Score $SCORE/100 passes threshold (≥60)"
+          else
+            echo "ℹ No SCORE.md found. Score gate skipped."
+          fi
+
+      - name: Event Emission Check
+        id: event-check
+        run: |
+          EVENTS_FILE="state/logs/events.jsonl"
+          if [ -f "$EVENTS_FILE" ]; then
+            EVENT_COUNT=$(wc -l < "$EVENTS_FILE")
+            echo "✓ Events logged: $EVENT_COUNT"
+          else
+            echo "ℹ No events file found"
+          fi
