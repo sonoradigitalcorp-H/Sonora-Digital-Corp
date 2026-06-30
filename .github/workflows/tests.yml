@@ -11,17 +11,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Build test image with cache
+        uses: docker/build-push-action@v4
         with:
-          python-version: "3.10"
-      - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
-          pip install pytest pytest-cov ruff
-      - name: Lint — fail on any error
-        run: |
-          ruff check apps/ scripts/
-      - name: TDD Check — every new core module must have a test file
+          context: .
+          file: infra/docker/jarvis/Dockerfile
+          target: test
+          load: true
+          tags: jarvis-test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Ruff lint inside container
+        run: docker run --rm jarvis-test ruff check apps/ scripts/
+
+      - name: TDD Check
         run: |
           CHANGED=$(git diff --name-only origin/main...HEAD 2>/dev/null || git diff --name-only HEAD~1)
           for f in $CHANGED; do
@@ -35,6 +43,7 @@ jobs:
             fi
           done
           echo "✓ TDD check passed"
-      - name: Test with coverage — fail below 60%
+
+      - name: Run tests with coverage
         run: |
-          python -m pytest tests/unit/ -v --cov=src.core --cov-report=term-missing --cov-fail-under=60
+          docker run --rm jarvis-test python3 -m pytest tests/unit/ -v --cov=src.core --cov-report=term-missing --cov-fail-under=60
