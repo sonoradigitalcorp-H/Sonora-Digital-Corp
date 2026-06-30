@@ -235,9 +235,11 @@ Autonomy levels: L0(Manual) → L1(Assisted) → L2(Supervised) → L3(Delegated
 | langfuse | langfuse/langfuse | 256MB | 127.0.0.1:3000 |
 | langfuse-db | postgres:15 | 256MB | — |
 
-## Test Results (local)
-- `pytest tests/unit/ -q` → 338 pass, 0 fail
-- `pytest -q` → 372 pass, 4 fail (integration, need API key)
+## Test Results
+- `pytest tests/unit/ -q` → **417 pass, 1 skip, 0 fail** 🟢
+- Coverage: new modules have ≥70% (sales_pipeline.py, engram.py extended, pipeline_bridge.py, score calculation)
+- CI enforces: TDD check (new modules need test files) + pytest-cov --cov-fail-under=60
+- Integration: 372 pass, 4 fail (need API key), same as before
 
 ## Governance
 - **Decision hierarchy**: VDD → EDD → PDD → ODD → SDD → BDD → TDD → Implementation
