@@ -29,7 +29,7 @@ async def get_lead(lead_id: str):
 @router.get("/api/sales/leads")
 async def list_leads(stage: str = Query(None)):
     leads = pipeline.list_leads(stage)
-    return {"leads": [l.__dict__ for l in leads]}
+    return {"leads": [idx.__dict__ for idx in leads]}
 
 
 @router.post("/api/sales/leads/{lead_id}/qualify")

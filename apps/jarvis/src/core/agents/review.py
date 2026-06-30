@@ -80,8 +80,8 @@ class ReviewAgent(AgentBase):
                         "message": "Debug statement left in code",
                     }
                 )
-        blank = sum(1 for l in lines if not l.strip())
-        comment = sum(1 for l in lines if l.strip().startswith(("#", "//", "/*", "*")))
+        blank = sum(1 for idx in lines if not idx.strip())
+        comment = sum(1 for idx in lines if idx.strip().startswith(("#", "//", "/*", "*")))
         score = max(
             1,
             round(

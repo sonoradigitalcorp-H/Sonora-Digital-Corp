@@ -156,7 +156,7 @@ class SalesPipeline:
             return
         try:
             with self._driver.session() as session:
-                session.run("CREATE CONSTRAINT IF NOT EXISTS FOR (l:Lead) REQUIRE l.id IS UNIQUE")
+                session.run("CREATE CONSTRAINT IF NOT EXISTS FOR (idx:Lead) REQUIRE idx.id IS UNIQUE")
                 session.run("CREATE CONSTRAINT IF NOT EXISTS FOR (d:Deal) REQUIRE d.id IS UNIQUE")
         except Exception as e:
             log.warning(f"Could not create constraints: {e}")
@@ -194,12 +194,12 @@ class SalesPipeline:
         try:
             with self._driver.session() as session:
                 result = session.run(
-                    "MATCH (l:Lead) WHERE l.email = $email RETURN l",
+                    "MATCH (idx:Lead) WHERE idx.email = $email RETURN idx",
                     email=email,
                 )
                 record = result.single()
                 if record:
-                    return self._node_to_lead(record["l"])
+                    return self._node_to_lead(record["idx"])
         except Exception as e:
             log.warning(f"find_lead_by_email error: {e}")
         return None
@@ -373,7 +373,7 @@ class SalesPipeline:
     def list_leads(self, stage: str | None = None) -> list[Lead]:
         leads = self._all_leads_from_neo4j()
         if stage:
-            leads = [l for l in leads if l.stage == stage]
+            leads = [idx for idx in leads if idx.stage == stage]
         return leads
 
     # ---- Neo4j Persistence ----
@@ -384,12 +384,12 @@ class SalesPipeline:
         try:
             with self._driver.session() as session:
                 session.run(
-                    """MERGE (l:Lead {id: $id})
-                       SET l.name = $name, l.email = $email, l.phone = $phone,
-                           l.source = $source, l.niche = $niche,
-                           l.plan_interest = $plan_interest, l.score = $score,
-                           l.stage = $stage, l.notes = $notes,
-                           l.created_at = $created_at, l.updated_at = $updated_at""",
+                    """MERGE (idx:Lead {id: $id})
+                       SET idx.name = $name, idx.email = $email, idx.phone = $phone,
+                           idx.source = $source, idx.niche = $niche,
+                           idx.plan_interest = $plan_interest, idx.score = $score,
+                           idx.stage = $stage, idx.notes = $notes,
+                           idx.created_at = $created_at, idx.updated_at = $updated_at""",
                     id=lead.id, name=lead.name, email=lead.email, phone=lead.phone,
                     source=lead.source, niche=lead.niche,
                     plan_interest=lead.plan_interest, score=lead.score,
@@ -406,10 +406,10 @@ class SalesPipeline:
             return None
         try:
             with self._driver.session() as session:
-                result = session.run("MATCH (l:Lead {id: $id}) RETURN l", id=lead_id)
+                result = session.run("MATCH (idx:Lead {id: $id}) RETURN idx", id=lead_id)
                 record = result.single()
                 if record:
-                    return self._node_to_lead(record["l"])
+                    return self._node_to_lead(record["idx"])
         except Exception as e:
             log.warning(f"Neo4j get lead error: {e}")
         return None
@@ -419,8 +419,8 @@ class SalesPipeline:
             return []
         try:
             with self._driver.session() as session:
-                result = session.run("MATCH (l:Lead) RETURN l ORDER BY l.created_at DESC")
-                return [self._node_to_lead(record["l"]) for record in result]
+                result = session.run("MATCH (idx:Lead) RETURN idx ORDER BY idx.created_at DESC")
+                return [self._node_to_lead(record["idx"]) for record in result]
         except Exception as e:
             log.warning(f"Neo4j list leads error: {e}")
             return []

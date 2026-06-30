@@ -72,7 +72,8 @@ async def main():
             print("\n📸 Screenshot de login guardado")
             await page.screenshot(path=os.path.join(SCREENSHOT_DIR, "02-login-page.png"))
             await context.close()
-            if browser: await browser.close()
+            if browser:
+                await browser.close()
             return
 
         print("   ✅ Sesión activa — dentro de openrouter.ai")
@@ -93,7 +94,8 @@ async def main():
         if not to_revoke:
             print("\n🎯 No hay keys viejas que revocar. ¡Todo limpio!")
             await context.close()
-            if browser: await browser.close()
+            if browser:
+                await browser.close()
             return
 
         # Try to click revoke buttons
@@ -121,7 +123,8 @@ async def main():
         print(f"\n📊 Revocados: {revoked}/{len(to_revoke)}")
 
         await context.close()
-        if browser: await browser.close()
+        if browser:
+                await browser.close()
 
     print("\n" + "=" * 70)
     print(f"  📸 Screenshots en: {SCREENSHOT_DIR}/")
