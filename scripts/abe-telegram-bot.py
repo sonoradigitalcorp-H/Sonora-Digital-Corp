@@ -34,7 +34,7 @@ def load_env():
 
 def fetch_kpis():
     try:
-        r = requests.get('http://localhost:8080/api/abe/dashboard/ceo', timeout=5)
+        r = requests.get('http://localhost:5174/api/abe/dashboard/ceo', timeout=5)
         r.raise_for_status()
         return r.json()
     except Exception as e:

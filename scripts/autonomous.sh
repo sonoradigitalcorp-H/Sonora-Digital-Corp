@@ -1,14 +1,15 @@
 #!/bin/bash
 # JARVIS 24/7 Autonomous Agent System
 # Ejecuta tareas de forma autónoma: ideas, tests, mejoras, reportes
-# Correr vía cron: */15 * * * * /home/mystic/sonora-digital-corp/scripts/autonomous.sh
+# Correr vía cron: */15 * * * * /home/ubuntu/sonora-digital-corp/scripts/autonomous.sh
 
 set -euo pipefail
 
-LOG="/home/mystic/sonora-digital-corp/state/logs/autonomous.log"
-EVENTS="/home/mystic/sonora-digital-corp/state/logs/events.jsonl"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+JARVIS_HOME="$(cd "${SCRIPT_DIR}/.." && pwd)"
+LOG="${JARVIS_HOME}/state/logs/autonomous.log"
+EVENTS="${JARVIS_HOME}/state/logs/events.jsonl"
 LOCK="/tmp/jarvis-autonomous.lock"
-JARVIS_HOME="/home/mystic/sonora-digital-corp"
 ENGAM_DB="${JARVIS_HOME}/state/engram.db"
 SKILLS_LOG_DIR="${JARVIS_HOME}/state/logs/skills"
 NOW=$(date '+%Y-%m-%d %H:%M:%S')

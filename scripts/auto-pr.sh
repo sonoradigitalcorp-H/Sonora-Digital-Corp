@@ -4,7 +4,7 @@
 # Usage: bash scripts/auto-pr.sh [--title "title"] [--body "body"] [--base main] [--head branch]
 set -euo pipefail
 
-PROJECT_DIR="/home/mystic/sonora-digital-corp"
+PROJECT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$PROJECT_DIR"
 
 TITLE=""

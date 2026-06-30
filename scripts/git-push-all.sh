@@ -2,7 +2,7 @@
 # git-push-all.sh — Push unificado para Sonora Digital Corp
 set -e
 
-REPO="/home/mystic/sonora-digital-corp"
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BRANCH="main"
 MSG="${1:-chore: auto-sync $(date '+%Y-%m-%d %H:%M')}"
 

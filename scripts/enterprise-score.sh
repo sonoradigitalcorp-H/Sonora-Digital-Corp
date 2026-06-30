@@ -2,7 +2,7 @@
 # Enterprise Score Calculator — Auto-calculates from event data
 set -euo pipefail
 
-BASE_DIR="/home/mystic/sonora-digital-corp"
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 EVENTS="$BASE_DIR/state/logs/events.jsonl"
 FIN_OPS="$BASE_DIR/state/finops.jsonl"
 SCORE_LOG="$BASE_DIR/state/logs/enterprise-score.log"

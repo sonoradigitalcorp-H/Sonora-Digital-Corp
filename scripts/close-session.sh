@@ -1,8 +1,9 @@
 #!/bin/bash
 # close-session.sh — Guarda TODO antes de cerrar sesion
-# Ejecutar: bash /home/mystic/sonora-digital-corp/scripts/close-session.sh
+# Ejecutar: bash scripts/close-session.sh (from project root)
 
-cd /home/mystic/sonora-digital-corp
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+cd "${BASE_DIR}"
 TIMESTAMP=$(date '+%Y%m%d_%H%M%S')
 LOG="state/logs/session-close-$TIMESTAMP.log"
 mkdir -p state/logs
@@ -57,7 +58,7 @@ free -h | tee -a "$LOG"
 
 # 6. Crear punto de restauracion
 echo "[6/6] Punto de restauracion creado" | tee -a "$LOG"
-date '+%s' > /home/mystic/sonora-digital-corp/state/last-session-epoch.txt
+date '+%s' > "${BASE_DIR}/state/last-session-epoch.txt"
 
 echo "[$(date)] === SESSION CLOSED ===" | tee -a "$LOG"
 echo "Log: $LOG"

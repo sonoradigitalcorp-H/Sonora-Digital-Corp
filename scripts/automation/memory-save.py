@@ -16,8 +16,9 @@ logging.basicConfig(
 )
 log = logging.getLogger("auto-save")
 
-STORE_FILE = Path("/home/mystic/sonora-digital-corp/state/last-session.json")
-STATE_DIR = Path("/home/mystic/sonora-digital-corp/state")
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+STORE_FILE = BASE_DIR / "state" / "last-session.json"
+STATE_DIR = BASE_DIR / "state"
 STATE_DIR.mkdir(exist_ok=True)
 
 

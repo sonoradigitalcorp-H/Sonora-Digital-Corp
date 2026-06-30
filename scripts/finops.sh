@@ -8,7 +8,7 @@
 
 set -euo pipefail
 
-BASE_DIR="/home/mystic/sonora-digital-corp"
+BASE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 FIN_OPS="$BASE_DIR/state/finops.jsonl"
 LOG="$BASE_DIR/state/logs/finops.log"
 

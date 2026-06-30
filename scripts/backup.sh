@@ -2,7 +2,7 @@
 # JARVIS Backup Script — v2.0
 # Crea backups con timestamp, comprime en .tar.gz, verifica integridad
 
-SOURCE_DIR="/home/mystic/sonora-digital-corp"
+SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 BACKUP_DIR="${SOURCE_DIR}/backups"
 TIMESTAMP=$(date '+%Y%m%d_%H%M%S')
 BACKUP_PATH="${BACKUP_DIR}/${TIMESTAMP}"
