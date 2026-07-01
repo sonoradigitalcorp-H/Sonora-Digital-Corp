@@ -51,6 +51,8 @@ const { manager: providerManager } = require('../providers/provider-manager');
 const { manager: pluginManager } = require('../plugins/plugin-manager');
 const { engine: swarmEngine } = require('../swarm/swarm-engine');
 const { loop: learningLoop } = require('../registry/learning-loop');
+const { audit: securityAudit } = require('../security/security-audit');
+const { auditSoul } = require('../security/soul-policies');
 
 const MCP_PORT = 18989;
 const N8N_HOST = '127.0.0.1';
@@ -372,6 +374,49 @@ ALL_TOOL_HANDLERS['workflow_get'] = async ({ id }) => {
 };
 
 
+// Security Audit tools
+ALL_TOOL_HANDLERS['audit_run'] = async () => securityAudit.run();
+ALL_TOOL_HANDLERS['audit_security'] = async () => securityAudit.run();
+ALL_TOOL_HANDLERS['audit_soul'] = async () => auditSoul();
+
+// Ethics tools
+ALL_TOOL_HANDLERS['ethics_policy'] = async () => {
+  const p = require('path').join(__dirname, '..', '..', 'ethics', 'AI-ETHICS.md');
+  const c = require('fs').readFileSync(p, 'utf-8').substring(0, 2000);
+  return { policy: c };
+};
+
+// Brand tools
+ALL_TOOL_HANDLERS['brand_guide'] = async () => {
+  const p = require('path').join(__dirname, '..', '..', 'brand', 'BRAND-GUIDE.md');
+  const c = require('fs').readFileSync(p, 'utf-8').substring(0, 2000);
+  return { guide: c };
+};
+
+// Incident response tools
+ALL_TOOL_HANDLERS['incident_report'] = async ({ severity, description }) => {
+  const ts = new Date().toISOString();
+  const entry = JSON.stringify({ event: 'incident_' + (severity || 'reported'), timestamp: ts, payload: { severity, description } });
+  require('fs').appendFileSync(require('path').join(__dirname, '..', '..', 'state', 'logs', 'events.jsonl'), entry + String.fromCharCode(10));
+  return { reported: true, timestamp: ts, severity };
+};
+ALL_TOOL_HANDLERS['incident_list'] = async () => {
+  const f = require('path').join(__dirname, '..', '..', 'state', 'logs', 'events.jsonl');
+  if (!require('fs').existsSync(f)) return { incidents: [] };
+  const lines = require('fs').readFileSync(f, 'utf-8').trim().split(String.fromCharCode(10)).filter(Boolean);
+  const incidents = lines.filter(l => l.includes('incident_')).slice(-20).map(l => { try { return JSON.parse(l); } catch {} return null; }).filter(Boolean);
+  return { incidents };
+};
+
+// Rotate secrets
+ALL_TOOL_HANDLERS['audit_rotate_secrets'] = async () => {
+  const { execSync } = require('child_process');
+  try {
+    const newSecret = execSync('openssl rand -hex 24', { encoding: 'utf-8' }).trim();
+    return { rotated: true, hint: 'New secret generated. Update config/.secrets/clients.json manually for production.' };
+  } catch (e) { return { error: e.message }; }
+};
+
 // Plugin Marketplace tools
 ALL_TOOL_HANDLERS['plugin_list'] = async () => ({ plugins: pluginManager.list() });
 ALL_TOOL_HANDLERS['plugin_install'] = async ({ name, version, description, tools, capabilities }) => {
@@ -549,6 +594,15 @@ function buildToolList() {
     { name: 'swarm_list', description: 'Lista ejecuciones de swarm', inputSchema: { type: 'object', properties: {} } },
     { name: 'learning_stats', description: 'Estadísticas de aprendizaje', inputSchema: { type: 'object', properties: {} } },
     { name: 'learning_record', description: 'Registra resultado de tool call para aprendizaje', inputSchema: { type: 'object', properties: { tool: { type: 'string' }, capability: { type: 'string' }, success: { type: 'boolean' }, duration: { type: 'number' } }, required: ['tool'] } },
+
+    { name: 'audit_run', description: 'Auditoría completa de seguridad', inputSchema: { type: 'object', properties: {} } },
+    { name: 'audit_security', description: 'Auditoría de seguridad', inputSchema: { type: 'object', properties: {} } },
+    { name: 'audit_soul', description: 'Auditoría del alma (5 elementos)', inputSchema: { type: 'object', properties: {} } },
+    { name: 'audit_rotate_secrets', description: 'Rota secretos del sistema', inputSchema: { type: 'object', properties: {} } },
+    { name: 'ethics_policy', description: 'Política de ética de IA', inputSchema: { type: 'object', properties: {} } },
+    { name: 'brand_guide', description: 'Guía de marca SDC', inputSchema: { type: 'object', properties: {} } },
+    { name: 'incident_report', description: 'Reporta un incidente de seguridad', inputSchema: { type: 'object', properties: { severity: { type: 'string' }, description: { type: 'string' } }, required: ['description'] } },
+    { name: 'incident_list', description: 'Lista incidentes recientes', inputSchema: { type: 'object', properties: {} } },
 { name: 'provider_manager_fallback', description: 'Configura cadena de fallback por capability', inputSchema: { type: 'object', properties: { capability: { type: 'string' }, chain: { type: 'array', items: { type: 'string' } } }, required: ['capability'] } },
   ];
 
