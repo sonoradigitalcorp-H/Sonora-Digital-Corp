@@ -15,12 +15,19 @@
 | `apps/voice/` | Whisper + TTS |
 | `apps/hermes/` | MCP bridge + servicios |
 | `apps/abe-service/` | **ABE Music OS** — canal interno PWA con voz, avatar, contratos, revenue, CRM |
+| `planner/` | Capability Registry + Decision Engine — 7 módulos, 70 tests |
+| `scrapers/` | 8 colectores (Deezer, Apple Music, YouTube, Wikipedia, TikTok, Spotify, Instagram, Facebook) |
+| `scrapers/sync.py` | Sync orchestrator migrado a decision engine |
+| `config/registry.json` | Registry v2: 3 capabilities, 10 providers |
 | `platforms/telegram/` | Bot + 97 skills |
 | `platforms/whatsapp/` | Bridge |
 | `infra/` | Docker, compose, monitoreo, n8n |
 | `products/` | ABE Music, AZREC, Masterclass |
-| `tests/` | 34 tests (26 legacy + 8 ABE Service) |
+| `tests/` | 79 tests (26 legacy + 8 ABE Service + 70 planner) |
+| `tests/planner/` | 70 tests: models, registry, health, engine, events |
 | `scripts/` | 50+ DevOps |
+| `process/completed/SPEC-20260701-004/` | Capability Registry + Decision Engine (Score 77) |
+| `process/completed/20260701-live-data-pipeline/` | Live Data Pipeline (Score 84) |
 | `sonora-enterprise-os/` | Enterprise OS completo |
 
 ## Comandos
@@ -28,13 +35,15 @@
 ```bash
 pytest tests/unit/              # unit tests
 pytest tests/integration/       # integration
+pytest tests/planner/ -v        # planner tests (70)
+pytest tests/test_abe_service.py -v  # ABE Service tests (9)
 npx playwright test             # E2E
-ruff check apps/                # lint
-flake8 apps/                    # flake8
+ruff check planner/ scrapers/ tests/ apps/  # lint all
+PYTHONPATH=. python scrapers/sync.py  # full sync cycle
+PYTHONPATH=. python -c "from planner import execute_capability; import asyncio; print(asyncio.run(execute_capability('acquire-metadata', {'artist_name':'Hector Rubio'})))"  # test engine
 docker compose -f infra/docker-compose.yml up -d
 python apps/jarvis/main.py      # JARVIS core
 python -m uvicorn apps.abe-service.main:app --host 127.0.0.1 --port 5180  # ABE Service
-pytest tests/test_abe_service.py -v  # ABE Service tests
 ```
 
 ## Servicios
@@ -48,6 +57,33 @@ pytest tests/test_abe_service.py -v  # ABE Service tests
 | 7687 | Neo4j | Docker |
 | 5678 | n8n | Docker (33 workflows) |
 | 5180 | **ABE Service** | `abe-service.service` --user |
+| 9090 | Session HTML (temporal) | python http.server |
+
+## Revenue Intelligence
+
+| Artista | Streams | Revenue | Spotify ML | Tasa |
+|---------|---------|---------|------------|------|
+| Hector Rubio | 115,093,009 | $460,372 | 1,028,288 | $0.004/stream |
+| Jesus Urquijo | 4,635,222 | $18,540 | 24,278 | $0.004/stream |
+| Javier Arvayo | 50,000 | $200 | 73,680 | $0.004/stream |
+
+**→ 100% Spotify. Oplaai no paga multi-plataforma.**
+
+## Key Learnings (SPEC-20260701-004)
+
+- Capability-first abstractions: registry fuerza todas las abstracciones
+- SDK executor bridge necesario para conectar engine con collectors multi-step
+- Fallback por weight > health-first (más robusto)
+- Browser scraping frágil pero necesario sin API keys
+- Instagram bloqueado (login wall) — Wikipedia bloqueado (datacenter 403)
+- Sync cron no instalado aún — script en `scripts/install-sync-cron.sh`
+
+## Session HTML
+
+Estado completo desplegado en:
+- `apps/abe-service/pwa/estado.html` (via ABE Service :5180/pwa/estado.html)
+- `docs/SONORA-EVOLUTION.html` (via python http.server :9090)
+- `memory/learning/session-20260701.json` (memoria de agentes)
 
 ## Sub-OS Architecture
 
