@@ -1,115 +1,89 @@
 # MAPA — Sonora Digital Corp
 
-## ⚠️ REALIDAD ACTUAL
-
-Este repositorio (`~/sdc/`) tiene **1,617 archivos** mezclando:
-- El **core** de SDC (lo que hace funcionar la empresa)
-- Los **productos** que vendés
-- Los **clientes** específicos
-- Proyectos **independientes** que no deberían estar acá
-
----
-
-## 📁 ESTRUCTURA ACTUAL (lo que hay)
+## 📁 ESTRUCTURA UNIFICADA
 
 ```
-~/sdc/                          ← EL REPOSITORIO
+~/sdc/                                      ← ÚNICA FUENTE DE VERDAD
 │
-├── CORE (lo que hace funcionar la empresa)
-│   ├── sonora-enterprise-os/   ← Constitución, prompts, skills, ADRs (352 archivos)
-│   ├── apps/                   ← Aplicaciones
-│   │   ├── jarvis/             ←   18 agentes, orquestador, engram (49 archivos)
-│   │   ├── webui/              ←   FastAPI frontend puerto :5174 (67 archivos)
-│   │   ├── hermes/             ←   MCP bridge, servicios (5 archivos)
-│   │   └── voice/              ←   STT/TTS (6 archivos)
-│   ├── infra/                  ← Docker, nginx, monitoreo (58 archivos)
-│   ├── scripts/                ← DevOps, pipeline, alertas (65 archivos)
-│   ├── process/                ← Pipeline de SPECs (34 archivos)
-│   └── config/                 ← Configuraciones varias (63 archivos)
+├── 📜 CONSTITUCIÓN
+│   ├── sonora-enterprise-os/constitution/  ← OMEGA-PROMPT, 10-RULES, TRUTH, SOUL
+│   ├── AGENTS.md                           ← Referencia rápida
+│   ├── CLAUDE.md                           ← Protocolo de operación
+│   └── opencode.json                        ← Config del agente (25 agents, 6 instrucciones)
 │
-├── PLATAFORMAS (canales de comunicación)
-│   ├── platforms/telegram/     ← Bot Telegram con 98 skills (104 archivos)
-│   └── platforms/whatsapp/     ← Bridge WhatsApp (1 archivo)
+├── 🧠 CORE (el motor de la empresa)
+│   ├── apps/jarvis/                        ← 18 agentes, orquestador, engram
+│   ├── apps/webui/                         ← FastAPI frontend (:5174)
+│   ├── apps/hermes/                        ← MCP bridge
+│   ├── apps/voice/                         ← STT/TTS
+│   ├── infra/                              ← Docker, nginx, monitoreo
+│   ├── scripts/                            ← DevOps, pipeline, alertas
+│   └── config/                             ← Configuraciones
 │
-├── PRODUCTOS (lo que vendés)
-│   ├── products/abe-music/     ← ABE Music — sellos discográficos (82 archivos)
-│   ├── products/azrec/         ← Alejandro Zamora Recording (30 archivos)
-│   ├── products/booking/       ← Sistema de reservas (2 archivos)
-│   ├── products/chatbot/       ← Chatbot setup (2 archivos)
-│   ├── products/landing-artista/ ← Landing page artista (1 archivo)
-│   ├── products/telegram-masterclass/ ← Curso Telegram (10 archivos)
-│   └── products/yami/          ← Yami — proyecto completo (29 archivos)
+├── 🤖 PLATAFORMAS (canales de comunicación)
+│   ├── platforms/telegram/                 ← Bot Telegram (98 skills)
+│   └── platforms/whatsapp/                 ← Bridge WhatsApp
 │
-├── TESTS
-│   └── tests/                  ← 442 tests (40 archivos)
+├── 📦 PRODUCTOS (lo que SDC vende)
+│   ├── products/mystika/                   ← Plataforma educación musical + NSFW
+│   ├── products/yami/                      ← Yami (Mystic + Noel)
+│   ├── products/telegram-masterclass/      ← Curso Telegram
+│   ├── products/booking/                   ← Sistema de reservas
+│   ├── products/chatbot/                   ← Chatbot setup
+│   └── products/landing-artista/           ← Landing page genérica
 │
-├── MEMORIA
-│   ├── state/                  ← Logs, eventos, engram DB (28 archivos)
-│   └── memory/                 ← Lecciones aprendidas (8 archivos)
+├── 👤 CLIENTES (implementaciones específicas)
+│   ├── clients/abe-music/                  ← ABE Music (Abraham)
+│   └── clients/azrec/                      ← Alejandro Zamora Recording
 │
-├── RAÍZ (archivos sueltos)
-│   ├── opencode.json           ← Config del agente
-│   ├── AGENTS.md               ← Referencia rápida
-│   ├── CLAUDE.md               ← Protocolo de operación
-│   ├── README.md               ← Guía rápida
-│   ├── pyproject.toml          ← Config Python
-│   ├── requirements.txt        ← Dependencias
-│   └── PLAN-OVH-MIGRATION.md   ← Plan de migración (histórico)
+├── 🧪 TESTS
+│   └── tests/                              ← 442 tests
 │
-├── 🚫 NO DEBERÍA ESTAR ACÁ
-│   ├── products/mystika/       ← Proyecto completo con Next.js (430 archivos)
-│   │                             Dueño: Noel. Tiene su propio repo.
-│   └── products/abe-music/studio/ ← ABE Music Studio (proyecto separado)
+├── 📊 MEMORIA
+│   ├── state/                              ← Logs, eventos, engram DB
+│   ├── memory/                             ← Lecciones aprendidas
+│   └── process/                            ← Pipeline de SPECs (7 completados)
 │
-└── 🚫 EXTERNO (otros repos)
-    ├── ~/projects/ABE-MUSIC-HUB/ ← Frontend + bot ABE (repo separado)
-    └── ~/projects/mds-corp/      ← Otro proyecto
+├── 📚 DOCUMENTACIÓN
+│   ├── README.md                           ← Guía rápida
+│   ├── MAPA-SDC.md                         ← Este archivo
+│   ├── mission-control.html                ← Dashboard vivo
+│   └── presentations/                      ← Presentaciones HTML
+│
+└── ⚙️  RAÍZ (solo archivos esenciales)
+    ├── opencode.json
+    ├── AGENTS.md
+    ├── CLAUDE.md
+    ├── README.md
+    ├── pyproject.toml
+    └── requirements.txt
 ```
 
----
+## 🧠 CÓMO TRABAJA EL AGENTE
 
-## 🧠 LO QUE YO (OpenCode) LEO CUANDO HABLAMOS
-
-```
-CUANDO VOS DECÍS ALGO → YO LEO:
-                        1️⃣ opencode.json (25 agents, 6 instrucciones)
-                        2️⃣ OMEGA-PROMPT-v10.0.md (651 líneas)
-                        3️⃣ 10-RULES.md (41 líneas)
-                        4️⃣ TRUTH.md (253 líneas)
-                        5️⃣ SOUL.md (144 líneas)
-                        6️⃣ AGENTS.md (96 líneas)
-                        7️⃣ CLAUDE.md (22 líneas)
-                        8️⃣ Engram DB (240 sesiones anteriores)
-                        9️⃣ Archivos que necesite para la tarea
-                        🔟 VPS via SSH si hace falta
-```
-
----
-
-## 🔴 PROBLEMAS QUE CAUSAN DESORDEN
-
-| Problema | Dónde | Solución |
-|----------|-------|----------|
-| `products/mystika/` tiene **430 archivos** (Next.js completo) | ~/sdc/products/mystika/ | Mudar a su propio repo |
-| `products/abe-music/studio/` tiene su propio docker-compose | ~/sdc/products/abe-music/studio/ | Separar de products/ |
-| 3 repos sueltos fuera de ~/sdc/ | ABE-MUSIC-HUB, mds-corp, yt-dlp | Decidir si van adentro o afuera |
-| Archivos en raíz mezclan configs, planes, y presentaciones | PLAN-OVH-MIGRATION.md, presentacion-dia.html, mission-control.html | Mover a docs/ |
-| `products/` mezcla PRODUCTOS con CLIENTES | abe-music (cliente?), yami (producto?), mystika (proyecto ajeno?) | Definir categorías claras |
-
----
-
-## ✅ CÓMO DEBERÍA SER (propuesta de orden)
+Cuando hablás conmigo, yo LEO estas fuentes EN ESTE ORDEN:
 
 ```
-~/sdc/
-├── constitution/              ← Reglas, prompts, AGENTS.md
-├── core/                      ← apps, infra, scripts (el motor)
-├── platforms/                 ← Telegram, WhatsApp (canales)
-├── products/                  ← Lo que vendés (abe-music, azrec, etc.)
-├── clients/                   ← Proyectos de clientes específicos
-├── tests/                     ← Tests
-├── memory/                    ← Logs, estado, engram
-└── docs/                      ← README, mapas, presentaciones
+1️⃣ opencode.json           → 25 agents, permisos, comandos
+2️⃣ OMEGA-PROMPT-v10.0.md   → Constitución operativa (VDD→TDD)
+3️⃣ 10-RULES.md             → 10 reglas absolutas
+4️⃣ TRUTH.md                → Paths, VPS, servicios
+5️⃣ SOUL.md                 → 5 elementos
+6️⃣ AGENTS.md               → Referencia rápida
+7️⃣ CLAUDE.md               → Protocolo (siempre desde ~/sdc/)
+8️⃣ MAPA-SDC.md             → Este mapa de estructura
+9️⃣ Engram                  → Memoria de sesiones anteriores (240+)
+🔟 Archivos que necesite    → Código, configs, logs
 ```
 
-Sin archivos sueltos en la raíz. Sin node_modules de 37,000 archivos. Sin proyectos ajenos.
+## ✅ REGLAS DE ORO
+
+1. **Siempre trabajamos desde `~/sdc/`** — el alias `sdc` te lleva ahí
+2. **Tres categorías**: CORE (lo que hace funcionar SDC) + PRODUCTS (lo que vendés) + CLIENTS (implementaciones para clientes)
+3. **Cero archivos sueltos en la raíz** — solo `opencode.json`, `AGENTS.md`, `CLAUDE.md`, `README.md`, `pyproject.toml`, `requirements.txt`
+4. **Cero proyectos ajenos** — lo que no es de SDC, no está acá
+5. **Cada cosa en su lugar** — si no sabés dónde va, preguntame
+
+## 🔄 ÚLTIMA ACTUALIZACIÓN
+
+2026-06-30 — Reestructuración completa. Todo unificado bajo ~/sdc/.
