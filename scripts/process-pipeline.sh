@@ -152,6 +152,15 @@ print('✓ Engram: stored completion for $spec_name')
     "$BASE_DIR/scripts/enterprise-score.sh" 2>/dev/null | head -1 || echo "  Score: N/A"
     ;;
 
+  session-status)
+    bash "$BASE_DIR/scripts/session-status.sh"
+    ;;
+
+  close-session)
+    summary="${2:-no summary provided}"
+    SESSION_SUMMARY="$summary" bash "$BASE_DIR/scripts/close-session.sh"
+    ;;
+
   help|*)
     echo "Pipeline Commands:"
     echo "  spec-new <title>         — Create a new spec from template"
@@ -161,6 +170,8 @@ print('✓ Engram: stored completion for $spec_name')
     echo "  adr-new <title> <spec>   — Create a new ADR from template"
     echo "  leccion-new <spec>       — Create lecciones template"
     echo "  gherkin-new <spec>       — Create Gherkin feature file"
+    echo "  session-status           — Show session dashboard"
+    echo "  close-session <summary>  — Save session summary and close"
     echo "  status                   — Show pipeline state"
     ;;
 esac
