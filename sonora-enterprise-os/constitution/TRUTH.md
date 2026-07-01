@@ -14,7 +14,7 @@ All agents (OpenClaw, Hermes, Mystic, JARVIS, ABE) MUST follow these rules.
 | `~/SonoraDigitalCorp-Yami/` | `🚫 OBSOLETO — movido a sonora-enterprise-os/` |
 | `$YAMI_HOME` | `🚫 OBSOLETO — movido a sonora-enterprise-os/` |
 | `archive-sonora-digital-corp-git/` | `🚫 OBSOLETO — movido a backups/repos/` |
-| `/home/ubuntu/sdc/` | `🚫 OBSOLETO — systemd usa /home/ubuntu/sonora-digital-corp/` |
+| `/home/ubuntu/sdc/` | `🚫 OBSOLETO — usar ~/sdc (symlink unificado)` |
 
 ## Latest Commit
 
@@ -23,10 +23,14 @@ All agents (OpenClaw, Hermes, Mystic, JARVIS, ABE) MUST follow these rules.
 
 ## Key Locations
 
+**UNIFIED PATH: `~/sdc`** — funciona en local y VPS.
+
 | What | Where |
 |------|-------|
-| Monorepo root (local) | `/home/mystic/sonora-digital-corp/` |
-| Monorepo root (VPS) | `/home/ubuntu/sonora-digital-corp/` |
+| Monorepo root (any machine) | `~/sdc` |
+| Monorepo root (local real) | `/home/mystic/sonora-digital-corp/` |
+| Monorepo root (VPS real) | `/home/ubuntu/sonora-digital-corp/` |
+| Abrir terminal | `sdc` (alias: `cd ~/sdc && opencode`) |
 | Enterprise OS | `sonora-enterprise-os/` |
 | Constitution | `sonora-enterprise-os/constitution/OMEGA-PROMPT-v10.0.md` |
 | RULES | `sonora-enterprise-os/constitution/10-RULES.md` |
