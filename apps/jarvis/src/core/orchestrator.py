@@ -5,12 +5,16 @@ Now modular — each agent lives in src/core/agents/<name>.py
 """
 
 import asyncio
+import json
 import logging
+import os
 import re
 import time
 import uuid
 from pathlib import Path
 from typing import Any
+
+import httpx
 
 from src.core.agents import (
     AgentBase,
@@ -405,13 +409,62 @@ class AgentOrchestrator:
 
     def route(self, task: str) -> str:
         task_lower = task.lower()
-        set(re.findall(r"\w+", task_lower))
+
+        # Try CapabilityRegistry first (MCP Gateway)
+        try:
+            gateway_url = os.getenv("MCP_GATEWAY_URL", "http://127.0.0.1:18989")
+            token = os.getenv("SONORA_CLIENT_SECRET", "sdc_secret_ent3rpr1s3_k3y_2026")
+            auth_resp = httpx.post(
+                f"{gateway_url}/api/auth/token",
+                json={"client_id": "sdc-core", "client_secret": token},
+                timeout=3,
+            )
+            if auth_resp.status_code == 200:
+                access_token = auth_resp.json().get("access_token", "")
+                cap_resp = httpx.post(
+                    f"{gateway_url}/api/capability/resolve",
+                    json={"task": task},
+                    headers={"Authorization": f"Bearer {access_token}"},
+                    timeout=3,
+                )
+                if cap_resp.status_code == 200:
+                    cap = cap_resp.json()
+                    agent_name = self._capability_to_agent(cap.get("capability", ""))
+                    if agent_name and cap.get("confidence", 0) >= 0.3:
+                        log.info(
+                            f"CapabilityRegistry: '{task[:60]}' → {cap['capability']} ({cap['confidence']}) → {agent_name}"
+                        )
+                        return agent_name
+        except Exception as e:
+            log.debug(f"CapabilityRegistry unavailable, fallback to keywords: {e}")
+
+        # Fallback: keyword matching
         for keywords, agent_name in self.routing_rules:
             if any(
                 re.search(r"\b" + re.escape(kw) + r"\b", task_lower) for kw in keywords
             ):
                 return agent_name
         return "research"
+
+    def _capability_to_agent(self, capability: str) -> str | None:
+        mapping = {
+            "Lead Acquisition": "sales",
+            "Lead Qualification": "sales",
+            "Sales Execution": "sales",
+            "Client Onboarding": "hermes",
+            "Product Deployment": "explore",
+            "Support Operations": "hermes",
+            "Knowledge Management": "memory",
+            "Content Production": "code",
+            "Infrastructure Operations": "explore",
+            "Financial Operations": "skill",
+            "Agent Operations": "hermes",
+            "Customer Success": "sales",
+            "Strategic Intelligence": "research",
+            "Business Intelligence": "research",
+            "Capability Optimization": "gbrain",
+        }
+        return mapping.get(capability)
 
     async def execute(self, task: str, context: dict = None) -> dict[str, Any]:
         _start = time.time()

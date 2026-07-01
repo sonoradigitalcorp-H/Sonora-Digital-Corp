@@ -1,0 +1,125 @@
+# docker-compose.vps.yml — VPS Production Override
+# Usa la misma estructura que docker-compose.yml pero con overrides para VPS.
+# Incluye el MCP Gateway como entry point único.
+
+x-common-env: &common-env
+  NEO4J_URI: bolt://sdc-neo4j:7687
+  NEO4J_PASSWORD: ${NEO4J_PASSWORD:-jarvis2026}
+  QDRANT_HOST: sdc-qdrant
+  QDRANT_PORT: 6333
+  REDIS_HOST: sdc-redis
+  REDIS_PASSWORD: ${REDIS_PASSWORD:-sdc2026prod}
+  POSTGRES_HOST: sdc-postgres
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sdc2026prod}
+  OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+  MERCADO_PAGO_ACCESS_TOKEN: ${MERCADO_PAGO_ACCESS_TOKEN}
+  SONORA_CLIENT_ID: sdc-core
+  SONORA_CLIENT_SECRET: ${SONORA_CLIENT_SECRET}
+
+services:
+  # MCP Gateway — Entry Point Único
+  sonora-mcp-gateway:
+    build:
+      context: ../mcp
+      dockerfile: Dockerfile
+    container_name: sdc-mcp-gateway
+    labels:
+      - "sdc.domain=core"
+      - "sdc.service=mcp-gateway"
+    ports:
+      - "127.0.0.1:18989:18989"
+    environment:
+      <<: *common-env
+      SONORA_GATEWAY_PORT: 18989
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - sdc-network
+    restart: unless-stopped
+    mem_limit: 256m
+    memswap_limit: 256m
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "-O", "/dev/null", "http://127.0.0.1:18989/api/health"]
+      interval: 15s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # Infraestructura de datos
+  postgres:
+    extends:
+      file: docker-compose.yml
+      service: postgres
+
+  redis:
+    extends:
+      file: docker-compose.yml
+      service: redis
+
+  neo4j:
+    extends:
+      file: docker-compose.yml
+      service: neo4j
+
+  qdrant:
+    extends:
+      file: docker-compose.yml
+      service: qdrant
+
+  mcp-server:
+    extends:
+      file: docker-compose.yml
+      service: mcp-server
+    depends_on:
+      sonora-mcp-gateway:
+        condition: service_healthy
+
+  n8n:
+    extends:
+      file: docker-compose.yml
+      service: n8n
+
+  telegram-bot:
+    extends:
+      file: docker-compose.yml
+      service: telegram-bot
+
+  langfuse:
+    extends:
+      file: docker-compose.yml
+      service: langfuse
+
+  langfuse-db:
+    extends:
+      file: docker-compose.yml
+      service: langfuse-db
+
+  jarvis-core:
+    extends:
+      file: docker-compose.yml
+      service: jarvis-core
+    depends_on:
+      sonora-mcp-gateway:
+        condition: service_healthy
+
+  jarvis-webui:
+    extends:
+      file: docker-compose.yml
+      service: jarvis-webui
+    depends_on:
+      sonora-mcp-gateway:
+        condition: service_healthy
+
+networks:
+  sdc-network:
+    external: true
+
+volumes:
+  pg_data:
+  redis_data:
+  neo4j_data:
+  neo4j_logs:
+  qdrant_storage:
+  qdrant_snapshots:
+  n8n_data:
+  langfuse_data:

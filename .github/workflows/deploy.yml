@@ -28,12 +28,16 @@ jobs:
         run: |
           cd /home/mystic/sonora-digital-corp
           docker compose -f infra/docker-compose.vps.yml up -d --no-build
-      - name: Health check
+      - name: Health check — MCP Gateway (entry point)
         run: |
           FAIL=0
-          sleep 5
-          for svc in localhost:3001 127.0.0.1:8000 127.0.0.1:3000; do
-            code=$(curl -so /dev/null -w "%{http_code}" --connect-timeout 5 http://$svc/ 2>/dev/null || echo "000")
+          for svc in \
+            "http://127.0.0.1:18989/api/health" \
+            "http://127.0.0.1:18989/api/status" \
+            "http://127.0.0.1:8000/health" \
+            "http://127.0.0.1:3000" \
+            "http://127.0.0.1:5174/api/enterprise-score"; do
+            code=$(curl -so /dev/null -w "%{http_code}" --connect-timeout 5 "$svc" 2>/dev/null || echo "000")
             echo "  $svc → $code"
             [ "$code" = "000" ] && FAIL=1
           done
@@ -43,6 +47,23 @@ jobs:
             echo "Some services are not responding"
             exit 1
           fi
+      - name: MCP Gateway — Auth test
+        run: |
+          TOKEN=$(curl -s -X POST http://127.0.0.1:18989/api/auth/token \
+            -H 'Content-Type: application/json' \
+            -d "{\"client_id\":\"sdc-core\",\"client_secret\":\"${SONORA_CLIENT_SECRET}\"}" | \
+            python3 -c "import sys,json; print(json.load(sys.stdin).get('access_token',''))")
+          if [ -z "$TOKEN" ]; then
+            echo "❌ MCP Gateway auth failed"
+            exit 1
+          fi
+          echo "✅ MCP Gateway auth OK"
+          TOOLS=$(curl -s http://127.0.0.1:18989/api/tools -H "Authorization: Bearer $TOKEN" | \
+            python3 -c "import sys,json; print(len(json.load(sys.stdin).get('tools',[])))")
+          echo "   Tools: $TOOLS"
+          CAPS=$(curl -s http://127.0.0.1:18989/api/capability/list -H "Authorization: Bearer $TOKEN" | \
+            python3 -c "import sys,json; print(len(json.load(sys.stdin).get('capabilities',[])))")
+          echo "   Capabilities: $CAPS"
       - name: Prisma migrations
         run: |
           npx prisma migrate deploy

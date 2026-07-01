@@ -13,7 +13,34 @@ if [ "$EUID" -ne 0 ]; then
     exit 1
 fi
 
-log "Setting up JARVIS systemd services..."
+log "Setting up Sonora systemd services..."
+
+# 0. MCP Gateway (Node.js, entry point único)
+cat > "${SERVICES_DIR}/sonora-mcp-gateway.service" << 'EOF'
+[Unit]
+Description=Sonora MCP Gateway — Entry Point Único (Auth JWT + CapabilityRegistry + ADK)
+After=network.target docker.service redis.service
+Requires=docker.service
+Wants=redis.service
+
+[Service]
+Type=simple
+User=mystic
+WorkingDirectory=/home/mystic/sonora-digital-corp/mcp
+ExecStart=/usr/bin/node /home/mystic/sonora-digital-corp/mcp/gateway/mcp-server-http.js
+Restart=always
+RestartSec=5
+Environment="NODE_ENV=production"
+Environment="SONORA_CLIENT_ID=sdc-core"
+Environment="SONORA_CLIENT_SECRET=${SONORA_CLIENT_SECRET:-}"
+Environment="OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}"
+Environment="OPENCODE_API_KEY=${OPENCODE_API_KEY:-}"
+StandardOutput=append:/home/mystic/sonora-digital-corp/state/logs/mcp-gateway.log
+StandardError=append:/home/mystic/sonora-digital-corp/state/logs/mcp-gateway.log
+
+[Install]
+WantedBy=multi-user.target
+EOF
 
 # 1. JARVIS Core Orchestrator
 cat > "${SERVICES_DIR}/jarvis-core.service" << 'EOF'
@@ -117,6 +144,7 @@ log "Enabling services..."
 systemctl daemon-reload
 
 services=(
+    "sonora-mcp-gateway.service"
     "jarvis-core.service"
     "jarvis-webui.service"
     "jarvis-healthcheck.timer"
@@ -131,12 +159,14 @@ done
 log "=" * 50
 log "Systemd services installed!"
 log "Start with:"
+log "  sudo systemctl start sonora-mcp-gateway.service"
 log "  sudo systemctl start jarvis-core.service"
 log "  sudo systemctl start jarvis-webui.service"
 log "  sudo systemctl start jarvis-healthcheck.timer"
 log "  sudo systemctl start jarvis-backup.timer"
 log ""
 log "Check status:"
+log "  sudo systemctl status sonora-mcp-gateway.service"
 log "  sudo systemctl status jarvis-core.service"
 log "  sudo systemctl status jarvis-webui.service"
 log "  systemctl list-timers --all | grep jarvis"

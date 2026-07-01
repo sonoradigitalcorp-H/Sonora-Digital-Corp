@@ -57,3 +57,58 @@ jobs:
           if [ -f CHECKSUMS.sha256 ]; then
             sha256sum -c CHECKSUMS.sha256 --quiet && echo "✅ Constitution intacta" || echo "⚠️ Constitution checksum mismatch"
           fi
+
+      # MCP Gateway Tests (Node.js)
+      - name: MCP Gateway — Install dependencies
+        run: |
+          cd mcp
+          npm ci
+      - name: MCP Gateway — Syntax check
+        run: |
+          cd mcp
+          node -c gateway/mcp-server-http.js
+          node -c auth/jwt.js
+          node -c auth/middleware.js
+          node -c registry/capability-registry.js
+          node -c providers/provider-router.js
+          node -c adk/adk.js
+      - name: MCP Gateway — Integration test
+        run: |
+          cd mcp
+          node -e "
+            const { runtime } = require('./adk/adk');
+            const agents = runtime.list();
+            console.log('ADK agents:', agents.length);
+            const registry = require('./registry/capability-registry');
+            const caps = registry.getRegistered();
+            console.log('Capabilities:', caps.length);
+            const r1 = registry.resolve('generate a sales proposal');
+            console.log('Resolve test:', r1.capability, r1.confidence);
+            const provider = require('./providers/provider-router');
+            const models = provider.listModels();
+            console.log('Providers:', Object.keys(provider.PROVIDERS).length, '| Models:', models.length);
+            const r2 = provider.resolveForCapability('research');
+            console.log('Provider resolve:', r2.provider, r2.model);
+            process.exit(0);
+          "
+      - name: MCP Gateway — Test gateway startup
+        run: |
+          cd mcp
+          timeout 5 node -e "
+            const { spawn } = require('child_process');
+            const gw = spawn('node', ['gateway/mcp-server-http.js'], { stdio: 'pipe' });
+            setTimeout(() => {
+              const http = require('http');
+              http.get('http://127.0.0.1:18989/api/health', (res) => {
+                let d = '';
+                res.on('data', c => d += c);
+                res.on('end', () => {
+                  const j = JSON.parse(d);
+                  console.log('Gateway health:', j.status);
+                  gw.kill();
+                  process.exit(j.status === 'ok' ? 0 : 1);
+                });
+              }).on('error', (e) => { console.log('Gateway failed:', e.message); gw.kill(); process.exit(1); });
+            }, 2000);
+          "
+

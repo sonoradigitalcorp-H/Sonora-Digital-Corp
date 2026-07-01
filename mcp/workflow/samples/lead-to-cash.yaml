@@ -1,0 +1,18 @@
+name: lead-to-cash
+steps:
+  - id: qualify
+    agent: sales_capture_lead
+    input: "Captura este lead: nombre={{nombre}}, email={{email}}, source={{source}}"
+  - id: propose
+    agent: sales_generate_proposal
+    input: "Genera propuesta para {{qualify.output}}"
+    depends_on: qualify
+    on_failure: escalate
+  - id: close
+    agent: sales_close_won
+    input: "Cierra el deal del lead {{propose.output}}"
+    depends_on: propose
+  - id: notify
+    agent: webhook_incoming
+    input: "Notifica: nuevo deal cerrado"
+    depends_on: close

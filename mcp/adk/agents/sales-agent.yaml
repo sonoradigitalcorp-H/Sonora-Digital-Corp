@@ -1,0 +1,41 @@
+name: sales-agent
+version: 1.0.0
+description: "Agente de ventas — califica leads, genera propuestas, cierra deals"
+model: deepseek-v4-flash
+provider: opencode-go
+capability: sales-execution
+maturity: 2-Assisted
+
+tools:
+  - sonora:sales_capture_lead
+  - sonora:sales_get_lead
+  - sonora:sales_list_leads
+  - sonora:sales_qualify_lead
+  - sonora:sales_generate_proposal
+  - sonora:sales_accept_proposal
+  - sonora:sales_close_won
+  - sonora:sales_close_lost
+  - sonora:sales_dashboard
+  - sonora:capability_resolve
+  - sonora:enterprise_score
+
+policies:
+  max_tokens_per_call: 4096
+  timeout_seconds: 60
+  requires_human_approval: close_won, close_lost
+
+events:
+  emits:
+    - lead_captured
+    - lead_qualified
+    - proposal_generated
+    - deal_won
+    - deal_lost
+  listens:
+    - lead_received
+    - customer_onboarded
+
+lifecycle:
+  spawn: on-demand
+  max_idle: 30m
+  max_concurrent: 5
