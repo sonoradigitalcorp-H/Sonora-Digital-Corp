@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ABE Fan CRM</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+:root{--bg:#0a0a12;--surface:rgba(255,255,255,.05);--border:rgba(255,255,255,.1);--text:#f0f0f0;--dim:rgba(255,255,255,.4);--gold:#FFD700;--accent:#7c5cfc;--green:#34d399;--radius:16px;--font:'Inter',-apple-system,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);padding:2rem;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(124,92,252,.08),transparent 50%),radial-gradient(circle at 70% 80%,rgba(255,215,0,.05),transparent 50%);z-index:-1}
+.glass{background:var(--surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius)}
+h1{font-size:1.5rem;margin-bottom:.3rem}h1 span{color:var(--gold)}.sub{color:var(--dim);font-size:.85rem;margin-bottom:2rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem}
+.card{padding:1.5rem}.card .val{font-size:1.8rem;font-weight:700}.card .val.gold{color:var(--gold)}
+.card .label{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dim)}
+.card ul{list-style:none;margin-top:.5rem}.card li{padding:.3rem 0;font-size:.8rem;border-bottom:1px solid var(--border)}.card li:last-child{border:0}
+.card li::before{content:'👤 ';font-size:.7rem}
+pre{font-size:.75rem;color:var(--dim);white-space:pre-wrap}
+</style></head>
+<body>
+<h1>👥 <span style="color:var(--gold)">ABE</span> Fan CRM</h1>
+<p class="sub">Fan engagement · Gamification · 539,000 listeners · Multi-artist</p>
+<div class="grid" id="fanGrid"></div>
+<div class="grid" style="margin-top:1rem">
+  <div class="card glass"><h3 style="margin-bottom:.5rem">🏆 Gamification Levels</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:.3rem">
+      <div style="background:rgba(255,255,255,.03);padding:.5rem;border-radius:8px;text-align:center;font-size:.7rem"><div style="font-size:1.2rem">🥉</div>Bronze</div>
+      <div style="background:rgba(255,255,255,.03);padding:.5rem;border-radius:8px;text-align:center;font-size:.7rem"><div style="font-size:1.2rem">🥈</div>Silver</div>
+      <div style="background:rgba(255,215,0,.1);padding:.5rem;border-radius:8px;text-align:center;font-size:.7rem;border:1px solid var(--gold)"><div style="font-size:1.2rem">🥇</div>Gold</div>
+      <div style="background:rgba(124,92,252,.1);padding:.5rem;border-radius:8px;text-align:center;font-size:.7rem"><div style="font-size:1.2rem">💎</div>Platinum</div>
+      <div style="background:rgba(52,211,153,.1);padding:.5rem;border-radius:8px;text-align:center;font-size:.7rem"><div style="font-size:1.2rem">💠</div>Diamond</div>
+    </div>
+  </div>
+  <div class="card glass"><h3 style="margin-bottom:.5rem">🔧 API</h3>
+    <pre># Get fan stats by artist
+curl -X POST https://sonoradigitalcorp.com/api/call \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -d '{"tool":"abe_list_artists","params":{}}'
+
+# Track fan engagement
+curl -X POST https://sonoradigitalcorp.com/api/call \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -d '{"tool":"intake_text","params":{"text":"New fan engagement data","source":"manual"}}'</pre></div>
+</div>
+<script>
+const G='http://127.0.0.1:18989';let t='';
+async function a(){const r=await fetch(G+'/api/auth/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id:'abe-fenix',client_secret:'abe_f3n1x_pr0_k3y_2026'})});const d=await r.json();t=d.access_token||''}
+async function c(tool,p){if(!t)await a();const r=await fetch(G+'/api/call',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+t},body:JSON.stringify({tool,params:p||{}})});return await r.json()}
+async function load(){
+  const r=await c('abe_list_artists',{});const artists=r.artists||[];
+  const ts=artists.reduce((s,x)=>s+(x.streams||0),0);
+  document.getElementById('fanGrid').innerHTML=`
+    <div class="card glass"><div class="label">Total Fans</div><div class="val gold">${(ts/1000).toFixed(0)}K</div><div class="sub">across all artists</div></div>
+    <div class="card glass"><div class="label">Active Artists</div><div class="val">${artists.filter(x=>x.status==='active'||!x.status).length}</div><div class="sub">generating listeners</div></div>
+    <div class="card glass"><div class="label">Avg Fans/Artist</div><div class="val">${artists.length>0?Math.round(ts/artists.length/1000).toFixed(0)+'K':'0'}</div><div class="sub">average per artist</div></div>
+    <div class="card glass"><div class="label">Top Artist</div><div class="val" style="font-size:1rem">${artists.sort((a,b)=>(b.streams||0)-(a.streams||0))[0]?.name||'?'}</div><div class="sub">by listener count</div></div>`;
+  document.getElementById('fanGrid').innerHTML+=artists.map(x=>`
+    <div class="card glass"><h3 style="margin-bottom:.3rem">🎤 ${x.name}</h3>
+      <div class="val gold" style="font-size:1.2rem">${(x.streams||0).toLocaleString()}</div>
+      <div class="label">listeners</div>
+      <ul><li>Genre: ${x.genre||'N/A'}</li><li>Status: ${x.status||'Active'}</li><li>Engagement: ${((x.streams||0)/1000).toFixed(0)}K</li></ul></div>
+  `).join('');
+}
+a().then(load);
+</script></body></html>
