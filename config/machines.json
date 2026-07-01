@@ -1,5 +1,23 @@
 {
   "version": "1.0.0",
+  "people": {
+    "luis-daniel": {
+      "name": "Luis Daniel Guerrero Enciso",
+      "role": "dueno del sistema, laptop, VPS, Sonora Digital Corp",
+      "email": null,
+      "note": "El fundador tecnico. Desde su laptop (Mexico) opera todo el sistema. Es quien habla conmigo (el AI)."
+    },
+    "noel-nichols": {
+      "name": "Noel Nichols",
+      "role": "socio creativo colaborativo — trabaja junto con Luis Daniel",
+      "note": "Aporta trabajo creativo y colaborativo. No es technical founder pero co-construye el proyecto."
+    },
+    "abraham": {
+      "name": "Abraham Ortega",
+      "role": "CEO de ABE Music",
+      "note": "El cliente del sistema ABE Music OS. Consume via PWA, no codea, no configura."
+    }
+  },
   "machines": {
     "sdc-prod": {
       "type": "vps",
@@ -24,10 +42,11 @@
     },
     "laptop": {
       "type": "personal",
+      "owner": "Luis Daniel Guerrero Enciso",
       "os": "Linux",
       "ip_known": "187.245.106.218",
       "ip_note": "IP dinamica desde Mexico, no accesible directamente desde VPS",
-      "role": "maquina local de Abraham — desde aqui se conecta al VPS",
+      "role": "maquina local de Luis Daniel — desde aqui se conecta al VPS",
       "browser": "xdg-open / firefox / chrome",
       "display": true,
       "note": "Para ver presentaciones del VPS en laptop: ssh -L 8080:localhost:8080 ubuntu@149.56.46.173 y abrir http://localhost:8080/"
@@ -50,12 +69,15 @@
     }
   },
   "remember": [
-    "Abraham trabaja desde laptop Linux en Mexico (187.245.106.218)",
+    "Luis Daniel Guerrero Enciso = dueno de la laptop, el VPS, y todo el sistema. Es quien habla con el AI.",
+    "Noel Nichols = socio creativo colaborativo de Luis Daniel. Co-construye el proyecto.",
+    "Abraham Ortega = CEO de ABE Music. Cliente del sistema ABE Music OS. No codea ni configura.",
+    "Luis Daniel trabaja desde laptop Linux en Mexico (187.245.106.218)",
     "El VPS es OVH (sdc-prod) con IPv4 149.56.46.173",
     "La laptop NO es accesible desde el VPS (NAT/firewall)",
-    "Para abrir algo en browser de Abraham: necesita SSH forwarding o URL directa a IP publica",
-    "La URL directa http://149.56.46.173:8080/ funciona si Abraham no tiene firewall bloqueando",
-    "Si Abraham no puede abrir la IP publica: ssh -L 8080:localhost:8080 ubuntu@149.56.46.173 y luego localhost:8080",
+    "Para abrir algo en browser de Luis Daniel: necesita SSH forwarding o URL directa a IP publica",
+    "La URL directa http://149.56.46.173:8080/ funciona si Luis Daniel no tiene firewall bloqueando",
+    "Si no puede abrir la IP publica: ssh -L 8080:localhost:8080 ubuntu@149.56.46.173 y luego localhost:8080",
     "NUNCA asumir que el VPS tiene display o browser",
     "NUNCA asumir que la laptop es alcanzable desde el VPS"
   ]

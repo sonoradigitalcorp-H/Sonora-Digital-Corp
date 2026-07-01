@@ -4,6 +4,23 @@
   "spec": "SPEC-20260701-004",
   "title": "Capability Registry + Decision Engine",
   "score": 77,
+  "people": {
+    "luis-daniel": {
+      "name": "Luis Daniel Guerrero Enciso",
+      "role": "dueno del sistema",
+      "note": "Fundador tecnico. Opera desde laptop Linux en Mexico. Es quien habla con el AI."
+    },
+    "noel-nichols": {
+      "name": "Noel Nichols",
+      "role": "socio creativo colaborativo",
+      "note": "Co-construye el proyecto con Luis Daniel. Aporta trabajo creativo."
+    },
+    "abraham": {
+      "name": "Abraham Ortega",
+      "role": "CEO de ABE Music",
+      "note": "Cliente del sistema. Consume via PWA. No codea ni configura."
+    }
+  },
   "machines": {
     "sdc-prod": {
       "type": "vps",
@@ -19,9 +36,10 @@
     },
     "laptop": {
       "type": "personal",
+      "owner": "Luis Daniel Guerrero Enciso",
       "ip_known": "187.245.106.218",
       "os": "Linux",
-      "role": "maquina local de Abraham (Mexico)",
+      "role": "maquina local de Luis Daniel (Mexico)",
       "display": true,
       "browser": true,
       "reachable_from_vps": false,

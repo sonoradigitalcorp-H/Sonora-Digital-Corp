@@ -6,17 +6,25 @@
 
 ---
 
+## People
+
+| Persona | Rol | Nota |
+|---------|-----|------|
+| **Luis Daniel Guerrero Enciso** | Dueño del sistema | Fundador técnico. Opera desde laptop Linux en Mexico. Habla con el AI. |
+| **Noel Nichols** | Socio creativo | Co-construye el proyecto con Luis Daniel. Aporta trabajo colaborativo creativo. |
+| **Abraham Ortega** | CEO de ABE Music | Cliente del sistema. Consume vía PWA. No codea ni configura. |
+
 ## Machines
 
 | Máquina | IP | OS | Rol | Acceso |
 |---------|-----|-----|-----|--------|
 | **sdc-prod** (OVH VPS) | `149.56.46.173` | Ubuntu 26.04 | Servidor principal | `ssh ubuntu@149.56.46.173` |
-| **laptop** (Abraham) | `187.245.106.218` (dinámica MX) | Linux | Máquina local | Solo sale, no entra (NAT) |
+| **laptop** (Luis Daniel) | `187.245.106.218` (dinámica MX) | Linux | Máquina local | Solo sale, no entra (NAT) |
 
 **Reglas**:
 - El VPS NO tiene display ni browser — todo es headless
 - La laptop NO es accesible desde el VPS
-- Para abrir algo en browser de Abraham: necesita SSH forwarding o URL directa a IP publica
+- Para abrir algo en browser de Luis Daniel: necesita SSH forwarding o URL directa a IP publica
 - `config/machines.json` tiene todos los detalles persistentes
 - `scripts/ver.sh <servicio>` muestra el comando exacto para abrir en laptop
 
