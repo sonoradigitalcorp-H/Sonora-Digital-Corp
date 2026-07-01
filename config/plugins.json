@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0",
+  "plugins": {
+    "github-mcp": {
+      "version": "1.0.0",
+      "description": "GitHub API via MCP — PRs, issues, repos, code search",
+      "tools": ["github_pr_list", "github_issue_create", "github_repo_search"],
+      "capabilities": ["code-management"]
+    },
+    "browser-debug": {
+      "version": "1.0.0",
+      "description": "Chrome DevTools MCP — browser debugging from agents",
+      "tools": ["browser_debug", "browser_screenshot"],
+      "capabilities": ["browser-automation"]
+    },
+    "deep-research": {
+      "version": "1.0.0",
+      "description": "Deep research multi-source with synthesis",
+      "tools": ["research_deep", "research_synthesize"],
+      "capabilities": ["strategic-intelligence"]
+    },
+    "data-analyst": {
+      "version": "1.0.0",
+      "description": "Data analysis: SQL, graphs, vectors, reports",
+      "tools": ["postgres_query", "neo4j_query", "qdrant_search"],
+      "capabilities": ["business-intelligence"]
+    },
+    "social-publisher": {
+      "version": "1.0.0",
+      "description": "Auto-publish to social media",
+      "tools": ["social_post", "social_schedule"],
+      "capabilities": ["content-production"]
+    }
+  }
+}

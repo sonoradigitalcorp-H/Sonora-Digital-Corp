@@ -1,0 +1,5 @@
+name: research-swarm
+topology: mesh
+agents:
+  - capability_resolve
+  - enterprise_score
