@@ -312,6 +312,24 @@ ALL_TOOL_HANDLERS['workflow_get'] = async ({ id }) => {
   return wf || { error: 'Workflow no encontrado' };
 };
 
+
+ALL_TOOL_HANDLERS['ollama_models'] = async () => {
+  try {
+    const http = require('http');
+    return new Promise((resolve) => {
+      http.get({hostname:'127.0.0.1',port:11434,path:'/api/tags',timeout:5000}, res => {
+        let d='';res.on('data',c=>d+=c);res.on('end',()=>{try{const j=JSON.parse(d);resolve({models:j.models?.map(m=>({name:m.name,size:m.size,details:m.details}))||[]})}catch{resolve({error:'parse error'})}});
+      }).on('error',e=>resolve({error:e.message}));
+    });
+  } catch(e) { return {error:e.message}; }
+};
+ALL_TOOL_HANDLERS['ollama_test'] = async ({ model }) => {
+  try {
+    const router = require('../providers/provider-router');
+    const r = await router.chatCompletion({provider:'ollama',model:model||'qwen2.5:1.5b',messages:[{role:'user',content:'respondé solo OK'}],timeout:15000});
+    return {success:!!r.choices, response: r.choices?.[0]?.message?.content?.trim() };
+  } catch(e) { return {error:e.message}; }
+};
 // Provider Manager tools
 ALL_TOOL_HANDLERS['provider_manager_list'] = async () => {
   return { providers: providerManager.list() };
@@ -421,6 +439,8 @@ function buildToolList() {
     { name: 'provider_manager_add', description: 'Añade un nuevo provider', inputSchema: { type: 'object', properties: { name: { type: 'string' }, config: { type: 'object' } }, required: ['name'] } },
     { name: 'provider_manager_remove', description: 'Elimina un provider', inputSchema: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] } },
     { name: 'provider_manager_test', description: 'Prueba un provider', inputSchema: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] } },
+    { name: 'ollama_models', description: 'Lista modelos locales instalados en Ollama', inputSchema: { type: 'object', properties: {} } },
+    { name: 'ollama_test', description: 'Prueba un modelo local de Ollama', inputSchema: { type: 'object', properties: { model: { type: 'string' } } } },
     { name: 'provider_manager_fallback', description: 'Configura cadena de fallback por capability', inputSchema: { type: 'object', properties: { capability: { type: 'string' }, chain: { type: 'array', items: { type: 'string' } } }, required: ['capability'] } },
   ];
 

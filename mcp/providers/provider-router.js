@@ -10,6 +10,7 @@
 
 const http = require('http');
 const https = require('https');
+const { execSync } = require('child_process');
 
 const PROVIDERS = {
   'opencode-go': {
@@ -35,15 +36,31 @@ const PROVIDERS = {
     default_model: 'opencode/deepseek-v4-flash-free',
     weight: 1,
   },
+  'ollama': {
+    base_url: 'http://127.0.0.1:11434',
+    api_key: () => '',
+    models: {
+      'qwen2.5:1.5b': { context: 32768, cost_per_1k: 0.0, free: true, local: true },
+      'llama3.2:3b': { context: 8192, cost_per_1k: 0.0, free: true, local: true },
+      'deepseek-r1:7b': { context: 16384, cost_per_1k: 0.0, free: true, local: true },
+      'nomic-embed-text': { context: 8192, cost_per_1k: 0.0, free: true, local: true, embedding: true },
+    },
+    default_model: 'qwen2.5:1.5b',
+    weight: 10,
+  },
 };
 
 const CAPABILITY_MODEL_MAP = {
-  'research': { provider: 'openrouter', model: 'google/gemini-2.5-flash' },
-  'code': { provider: 'opencode-go', model: 'deepseek-v4-flash' },
-  'sales': { provider: 'openrouter', model: 'openai/gpt-4o' },
-  'content': { provider: 'openrouter', model: 'openai/gpt-4o' },
+  'routing': { provider: 'ollama', model: 'qwen2.5:1.5b' },
+  'classification': { provider: 'ollama', model: 'qwen2.5:1.5b' },
+  'research': { provider: 'ollama', model: 'deepseek-r1:7b' },
+  'code': { provider: 'ollama', model: 'deepseek-r1:7b' },
+  'sales': { provider: 'ollama', model: 'llama3.2:3b' },
+  'content': { provider: 'ollama', model: 'llama3.2:3b' },
+  'analysis': { provider: 'ollama', model: 'deepseek-r1:7b' },
+  'embedding': { provider: 'ollama', model: 'nomic-embed-text' },
   'agent': { provider: 'opencode-go', model: 'deepseek-v4-flash' },
-  'default': { provider: 'opencode-go', model: 'deepseek-v4-flash' },
+  'default': { provider: 'ollama', model: 'qwen2.5:1.5b' },
 };
 
 function getProvider(providerName) {
@@ -79,6 +96,7 @@ function _getInputCost(model) {
     'gemini-2.5-flash': 0.00015, 'gemini-2.0-pro': 0.002,
     'llama-3.3-70b': 0.00059, 'llama-3.1-8b': 0.00005,
     'deepseek-v3': 0.0007, 'deepseek-r1': 0.00055,
+    'qwen2.5:1.5b': 0, 'llama3.2:3b': 0, 'deepseek-r1:7b': 0, 'nomic-embed-text': 0,
   };
   return costs[model] || 0.001;
 }
@@ -115,7 +133,37 @@ function _logFinOps({ provider, model, capability, input_tokens, output_tokens, 
   } catch (e) { /* finops file not available */ }
 }
 
+async function _ollamaChat(model, messages, timeout) {
+  const start = Date.now();
+  return new Promise((resolve, reject) => {
+    const body = JSON.stringify({ model, messages, stream: false });
+    const req = http.request({
+      hostname: '127.0.0.1', port: 11434, path: '/api/chat', method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(body) },
+      timeout,
+    }, (res) => {
+      let data = ''; res.on('data', c => data += c);
+      res.on('end', () => {
+        const latency = Date.now() - start;
+        try {
+          const parsed = JSON.parse(data);
+          const content = parsed.message?.content || '';
+          const usage = { prompt_tokens: parsed.prompt_eval_count || 0, completion_tokens: parsed.eval_count || 0 };
+          _logFinOps({ provider: 'ollama', model, capability: 'local', input_tokens: usage.prompt_tokens, output_tokens: usage.completion_tokens, cost: 0, latency_ms: latency, status: 'success' });
+          resolve({ choices: [{ message: { content }, finish_reason: 'stop' }], usage, model });
+        } catch { reject(new Error(`Ollama: respuesta inválida`)); }
+      });
+    });
+    req.on('error', reject);
+    req.on('timeout', () => { req.destroy(); reject(new Error(`Ollama timeout: ${model}`)); });
+    req.write(body); req.end();
+  });
+}
+
 async function chatCompletion({ provider: providerName, model, messages, stream = false, timeout = 30000, capability }) {
+  if (providerName === 'ollama') {
+    return await _ollamaChat(model, messages, timeout);
+  }
   const provider = getProvider(providerName);
   const baseUrl = provider.base_url;
   const apiKey = provider.api_key;
