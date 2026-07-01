@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ABE Music — Portal</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+:root{--bg:#0a0a12;--surface:rgba(255,255,255,.05);--border:rgba(255,255,255,.1);--text:#f0f0f0;--dim:rgba(255,255,255,.4);--gold:#FFD700;--accent:#7c5cfc;--green:#34d399;--red:#ff3b5c;--radius:16px;--font:'Inter',-apple-system,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(255,215,0,.06),transparent 50%),radial-gradient(circle at 70% 80%,rgba(124,92,252,.04),transparent 50%);z-index:-1}
+.glass{background:var(--surface);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius)}
+.glass-sm{background:rgba(255,255,255,.08);backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:10px}
+.header{position:sticky;top:0;z-index:100;padding:.8rem 2rem;background:rgba(10,10,18,.8);backdrop-filter:blur(30px);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.5rem}
+.header h1{font-size:1.3rem;font-weight:700}.header h1 span{color:var(--gold)}
+.header nav{display:flex;gap:.5rem;flex-wrap:wrap}
+.header nav a{padding:.3rem .6rem;border-radius:6px;color:var(--dim);text-decoration:none;font-size:.75rem;transition:all .15s;border:1px solid transparent}
+.header nav a:hover{color:var(--gold);border-color:var(--border)}
+.hero{padding:3rem 1rem;text-align:center}
+.hero h1{font-size:2.5rem;font-weight:700;letter-spacing:-.03em;margin-bottom:.3rem}
+.hero h1 span{color:var(--gold)}
+.hero .sub{font-size:1rem;color:var(--dim);margin-bottom:1.5rem;max-width:600px;margin-left:auto;margin-right:auto}
+.hero .stats{display:flex;justify-content:center;gap:2rem;flex-wrap:wrap}
+.hero .stat{text-align:center}.hero .stat .num{font-size:1.8rem;font-weight:700;color:var(--gold)}
+.hero .stat .lbl{font-size:.65rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dim)}
+.container{max-width:1200px;margin:0 auto;padding:1rem 1.5rem 3rem}
+.section{margin-bottom:2rem}
+.section h2{font-size:1.1rem;margin-bottom:.8rem;padding-bottom:.3rem;border-bottom:1px solid var(--border)}
+.section h2 span{color:var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.8rem}
+.card{padding:1.2rem;cursor:pointer;transition:all .2s;text-decoration:none;color:var(--text);display:block;position:relative;overflow:hidden}
+.card:hover{transform:translateY(-2px);border-color:var(--gold)}
+.card .icon{font-size:1.5rem;margin-bottom:.3rem}
+.card h3{font-size:.9rem;font-weight:600;margin-bottom:.1rem}
+.card p{font-size:.75rem;color:var(--dim)}
+.card .tag{position:absolute;top:.8rem;right:.8rem;font-size:.55rem;padding:.1rem .4rem;border-radius:3px;text-transform:uppercase;letter-spacing:.05em}
+.tag-gold{background:rgba(255,215,0,.15);color:var(--gold)}
+.tag-green{background:rgba(52,211,153,.15);color:var(--green)}
+.tag-purple{background:rgba(124,92,252,.15);color:var(--accent)}
+.tag-blue{background:rgba(96,165,250,.15);color:#60a5fa}
+.btn{display:inline-block;padding:.4rem .8rem;border-radius:8px;border:none;font-family:var(--font);font-size:.75rem;font-weight:500;cursor:pointer;text-decoration:none;transition:all .15s}
+.btn-gold{background:var(--gold);color:#000}.btn-gold:hover{opacity:.85}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}.btn-ghost:hover{border-color:var(--gold)}
+pre{font-size:.7rem;color:var(--dim);white-space:pre-wrap;max-height:200px;overflow:auto}
+.live{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--green);animation:pulse 2s infinite;margin-right:.3rem}
+@keyframes pulse{0%{opacity:1}50%{opacity:.3}100%{opacity:1}}
+.live-section{display:flex;gap:.5rem;align-items:center;font-size:.75rem;color:var(--dim);margin-bottom:1rem}
+</style></head>
+<body>
+<div class="header">
+  <h1>🎵 <span>ABE</span> Music Portal</h1>
+  <nav>
+    <a href="/abe-saas">📊 SaaS</a>
+    <a href="/abe-store">🛍️ Store</a>
+    <a href="/abe-services">📦 Services</a>
+    <a href="/abe-content-queue">📋 Content</a>
+    <a href="/abe-product-artists">🎤 Artists</a>
+    <a href="/abe-product-revenue">💰 Revenue</a>
+    <a href="/abe-product-content">🎨 Create</a>
+    <a href="/abraham">📥 Intake</a>
+    <a href="/abe-businesses">🏢 All</a>
+  </nav>
+</div>
+
+<div class="hero">
+  <h1><span>ABE</span> Music</h1>
+  <p class="sub">Digital record label platform · 3 artists · 539K streams · $26,880 revenue · AI-powered</p>
+  <div class="stats" id="heroStats">
+    <div class="stat"><div class="num" id="statStreams">539K</div><div class="lbl">Streams</div></div>
+    <div class="stat"><div class="num" id="statRevenue">$26.9K</div><div class="lbl">Revenue</div></div>
+    <div class="stat"><div class="num" id="statArtists">3</div><div class="lbl">Artists</div></div>
+    <div class="stat"><div class="num" id="statTools">198</div><div class="lbl">AI Tools</div></div>
+    <div class="stat"><div class="num" id="statProducts">0</div><div class="lbl">Products</div></div>
+  </div>
+  <div class="live-section"><span class="live"></span> Live data · 198 tools · 9 dashboards · 24/7 on VPS</div>
+</div>
+
+<div class="container">
+  <div class="section">
+    <h2><span>🚀</span> Core Platform</h2>
+    <div class="grid">
+      <a href="/abe-saas" class="card glass"><span class="tag tag-gold">SaaS</span><div class="icon">📊</div><h3>Business Dashboard</h3><p>Full SaaS platform with artists, revenue, agents, and analytics</p></a>
+      <a href="/abe-store" class="card glass"><span class="tag tag-green">Store</span><div class="icon">🛍️</div><h3>Merch Store</h3><p>Sell merch per event · Artist commissions · $RESO tokens · Gamification</p></a>
+      <a href="/abe-services" class="card glass"><span class="tag tag-purple">Services</span><div class="icon">📦</div><h3>Services Hub</h3><p>All ABE services: agents, workflows, media, sandbox, design systems</p></a>
+      <a href="/abe-content-queue" class="card glass"><span class="tag tag-blue">Content</span><div class="icon">📋</div><h3>Content Queue</h3><p>Daily content generation · Trend analysis · Approve & publish to Telegram</p></a>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2><span>🎤</span> Artists</h2>
+    <div class="grid" id="artistCards"></div>
+  </div>
+
+  <div class="section">
+    <h2><span>📈</span> Live Metrics</h2>
+    <div class="grid" id="metricsGrid"></div>
+  </div>
+
+  <div class="section">
+    <h2><span>🛍️</span> Latest Products</h2>
+    <div class="grid" id="productsGrid"></div>
+  </div>
+</div>
+
+<script>
+const G='http://127.0.0.1:18989';let t='';
+async function auth(){const r=await fetch(G+'/api/auth/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id:'abe-fenix',client_secret:'abe_f3n1x_pr0_k3y_2026'})});const d=await r.json();t=d.access_token||''}
+async function call(tool,p){if(!t)await auth();const r=await fetch(G+'/api/call',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+t},body:JSON.stringify({tool,params:p||{}})});return await r.json()}
+async function load(){
+  const artists=await call('abe_list_artists',{});
+  const a=artists.artists||[];
+  const ceo=await call('abe_ceo_dashboard',{});
+  const store=await call('store_dashboard',{});
+  const score=await call('enterprise_score',{});
+
+  const ts=ceo.total_streams||a.reduce((s,x)=>s+(x.streams||0),0);
+  const tr=ceo.total_revenue||a.reduce((s,x)=>s+(x.revenue||0),0);
+  document.getElementById('statStreams').textContent=(ts/1000).toFixed(0)+'K';
+  document.getElementById('statRevenue').textContent='$'+(tr/1000).toFixed(1)+'K';
+  document.getElementById('statArtists').textContent=a.length;
+  document.getElementById('statProducts').textContent=store.stats?.products||0;
+
+  document.getElementById('artistCards').innerHTML=a.map(x=>{
+    const inits=(x.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2);
+    return `<div class="card glass" onclick="window.open('/abe-product-artists','_self')">
+      <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#b8860b);display:flex;align-items:center;justify-content:center;font-weight:700;margin-bottom:.5rem">${inits}</div>
+      <h3>${x.name}</h3>
+      <p>${x.genre||'Artist'} · ${(x.streams||0).toLocaleString()} streams · $${(x.revenue||0).toLocaleString()}</p>
+    </div>`;
+  }).join('');
+
+  document.getElementById('metricsGrid').innerHTML=`
+    <div class="card glass" onclick="window.open('/abe-product-revenue','_self')"><div class="icon">💰</div><h3>Revenue</h3><p>Total: $${tr.toLocaleString()} · Split: 70/20/10</p></div>
+    <div class="card glass" onclick="window.open('/abe-saas','_self')"><div class="icon">🏆</div><h3>Score</h3><p>Enterprise: ${score.score||'?'}/100 · Security: 81% · Soul: 100%</p></div>
+    <div class="card glass" onclick="window.open('/abe-store','_self')"><div class="icon">🛍️</div><h3>Store</h3><p>${store.stats?.products||0} products · ${store.stats?.orders||0} orders · $${(store.stats?.revenue||0).toLocaleString()}</p></div>
+    <div class="card glass" onclick="window.open('/abe-businesses','_self')"><div class="icon">🏢</div><h3>Businesses</h3><p>5 products · ${(artists.agents||call('adk_list_agents',{}).then(r=>r.agents?.length))||'12+'} agents · 198 tools</p></div>
+  `;
+
+  const prods=store.top_products||[];
+  document.getElementById('productsGrid').innerHTML=prods.slice(0,4).map(p=>`
+    <div class="card glass-sm" style="padding:.8rem;cursor:default"><div style="font-size:1.2rem">${p.icon||'👕'}</div><div style="font-size:.8rem;font-weight:500;margin:.1rem 0">${p.name}</div><div style="font-size:.7rem;color:var(--dim)">${p.artist} · $${p.price} · ${p.sales||0} sold</div></div>
+  `).join('')||'<div style="color:var(--dim);padding:.5rem">Create products in /abe-store</div>';
+}
+auth().then(load);
+</script></body></html>
