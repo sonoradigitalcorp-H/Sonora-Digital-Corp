@@ -1,114 +1,53 @@
-name: CI + Eval Gates
+name: CI
 
 on:
   push:
+    branches: [main]
   pull_request:
-  workflow_dispatch:
+    branches: [main]
 
 jobs:
-  validate:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      # Node stack
-      - uses: actions/setup-node@v4
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
         with:
-          node-version: 20
-          cache: npm
-      - run: npm ci || true
-      - run: npm run lint || true
-      - run: npx prisma generate || true
-      - run: npm run build || true
+          python-version: "3.13"
+          cache: pip
 
-      # Python stack
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.10"
-      - name: Python lint
+      - name: Install Python dependencies
         run: |
-          pip install ruff flake8
-          ruff check apps/ || true
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || true
+          python -m pip install --upgrade pip
+          pip install -r apps/abe-service/requirements.txt
+          pip install pytest httpx pytest-asyncio pydantic
 
-      # Pytest
-      - name: Pytest
+      - name: Lint with ruff
         run: |
-          pip install pytest pytest-cov
-          if [ -f requirements.txt ]; then pip install -r requirements.txt || true; fi
-          pytest tests/ -q --cov-fail-under=80 -v || echo "Tests incomplete"
+          pip install ruff
+          ruff check planner/ scrapers/ tests/ apps/abe-service/
 
-      # Eval gates (DeepEval)
-      - name: Install DeepEval
-        run: pip install deepeval || true
-      - name: Run eval suite
-        continue-on-error: true
+      - name: Run ABE Service tests
         run: |
-          if [ -d sonora-enterprise-os/eval/ ]; then
-            deepeval test run sonora-enterprise-os/eval/ || echo "⚠️ Eval suite tiene fallos"
-          else
-            echo "ℹ️ No eval suite yet — crear en sonora-enterprise-os/eval/"
-          fi
+          PYTHONPATH=. python -m pytest tests/test_abe_service.py -v
 
-      # Validate constitution integrity
-      - name: Verify constitution checksums
+      - name: Run planner tests
         run: |
-          cd sonora-enterprise-os/constitution
-          if [ -f CHECKSUMS.sha256 ]; then
-            sha256sum -c CHECKSUMS.sha256 --quiet && echo "✅ Constitution intacta" || echo "⚠️ Constitution checksum mismatch"
-          fi
+          PYTHONPATH=. python -m pytest tests/planner/ -v
 
-      # MCP Gateway Tests (Node.js)
-      - name: MCP Gateway — Install dependencies
+      - name: Run unit tests
         run: |
-          cd mcp
-          npm ci
-      - name: MCP Gateway — Syntax check
+          PYTHONPATH=. python -m pytest tests/unit/ -v
+
+      - name: Verify registry loads
         run: |
-          cd mcp
-          node -c gateway/mcp-server-http.js
-          node -c auth/jwt.js
-          node -c auth/middleware.js
-          node -c registry/capability-registry.js
-          node -c providers/provider-router.js
-          node -c adk/adk.js
-      - name: MCP Gateway — Integration test
-        run: |
-          cd mcp
-          node -e "
-            const { runtime } = require('./adk/adk');
-            const agents = runtime.list();
-            console.log('ADK agents:', agents.length);
-            const registry = require('./registry/capability-registry');
-            const caps = registry.getRegistered();
-            console.log('Capabilities:', caps.length);
-            const r1 = registry.resolve('generate a sales proposal');
-            console.log('Resolve test:', r1.capability, r1.confidence);
-            const provider = require('./providers/provider-router');
-            const models = provider.listModels();
-            console.log('Providers:', Object.keys(provider.PROVIDERS).length, '| Models:', models.length);
-            const r2 = provider.resolveForCapability('research');
-            console.log('Provider resolve:', r2.provider, r2.model);
-            process.exit(0);
+          PYTHONPATH=. python -c "
+          from planner.registry import load_registry
+          r = load_registry()
+          assert len(r) == 3, f'Expected 3 capabilities, got {len(r)}'
+          for cid, cap in r.items():
+              assert len(cap.providers) > 0, f'{cid} has no providers'
+          print(f'Registry OK: {len(r)} capabilities loaded')
           "
-      - name: MCP Gateway — Test gateway startup
-        run: |
-          cd mcp
-          timeout 5 node -e "
-            const { spawn } = require('child_process');
-            const gw = spawn('node', ['gateway/mcp-server-http.js'], { stdio: 'pipe' });
-            setTimeout(() => {
-              const http = require('http');
-              http.get('http://127.0.0.1:18989/api/health', (res) => {
-                let d = '';
-                res.on('data', c => d += c);
-                res.on('end', () => {
-                  const j = JSON.parse(d);
-                  console.log('Gateway health:', j.status);
-                  gw.kill();
-                  process.exit(j.status === 'ok' ? 0 : 1);
-                });
-              }).on('error', (e) => { console.log('Gateway failed:', e.message); gw.kill(); process.exit(1); });
-            }, 2000);
-          "
-

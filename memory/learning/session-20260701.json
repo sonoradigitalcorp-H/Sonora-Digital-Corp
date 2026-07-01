@@ -1,0 +1,65 @@
+{
+  "type": "session_summary",
+  "date": "2026-07-01",
+  "spec": "SPEC-20260701-004",
+  "title": "Capability Registry + Decision Engine",
+  "score": 77,
+  "learnings": [
+    "Capability-first abstractions: el registry fuerza todas las abstracciones correctas desde el día 1",
+    "SDK executor bridge fue necesario para conectar engine con collectors reales (Deezer search→ID→detail→tracks)",
+    "HTTP executor genérico no sirve para APIs multi-step — cada collector tiene lógica propia",
+    "Browser scraping con Playwright funciona para TikTok/Spotify pero es frágil a cambios HTML",
+    "Fallback por weight (no health-first) es más robusto — health checks pueden fallar por network glitch",
+    "Revenue de todos los artistas es 100% Spotify ($0.004/stream) — Oplaai no paga multi-plataforma",
+    "Instagram requiere cookies/sesión — sin auth no se puede scrapear"
+  ],
+  "builds": [
+    "planner/: 7 módulos — models, registry, health, decision_engine, events, exceptions, executors",
+    "70 planner tests, 79 total en el repo",
+    "config/registry.json v2: 3 capabilities, 10 providers",
+    "SDK executor: bridge scrapers.collectors.{deezer,apple_music} → decision engine",
+    "MCP executor: stub para futuro MCP tool calling",
+    "TikTok scraper: Playwright browser, followerCount/followingCount/heartCount",
+    "Spotify scraper: Playwright browser, monthly listeners del raw text",
+    "Instagram scraper: login wall detection (redirect a /accounts/login/)",
+    "sync.py migrado a execute_capability() con fallback chain",
+    "SPEC-20260701-004 closed: Score 77, ADR (5 decisions), LECCION (14 puntos)"
+  ],
+  "broken": [
+    "Instagram: login wall, necesita cookies/sesión",
+    "Wikipedia: 403 desde datacenter IP (Cloudflare)",
+    "TikTok handles: @thor_rubio / @jesusurquijo.oficial no existen",
+    "Lead bridge: import path incorrecto para SalesPipeline",
+    "Commit hooks: requieren active spec, pero no hay spec activa tras completar"
+  ],
+  "missing": [
+    "Qdrant seed de colección abe-artists",
+    "Sync cron cada 6h (script existe, no instalado)",
+    "GitHub Actions push (workflow creado, no ejecutado)",
+    "Timeout por provider en registry",
+    "Instagram cookie auth",
+    "Dashboard de salud de providers"
+  ],
+  "services": {
+    "5174": "Web UI JARVIS",
+    "5180": "ABE Service PWA",
+    "8000": "Hermes MCP Gateway",
+    "18789": "OpenClaw Gateway",
+    "6333": "Qdrant (Docker)",
+    "7687": "Neo4j (Docker)",
+    "5678": "n8n (Docker)"
+  },
+  "artists": {
+    "Hector Rubio": {"streams": 115093009, "revenue": 460372, "spotify_ml": 1028288},
+    "Jesus Urquijo": {"streams": 4635222, "revenue": 18540, "spotify_ml": 24278},
+    "Javier Arvayo": {"streams": 50000, "revenue": 200, "spotify_ml": 73680}
+  },
+  "revenue_conclusion": "100% Spotify a $0.004/stream. Sin mezcla multi-plataforma. Para crecer revenue: subir streams en Spotify.",
+  "next_priorities": [
+    "1. Git push a GitHub",
+    "2. Instalar sync cron cada 6h",
+    "3. Seedear Qdrant con artistas",
+    "4. Fix lead bridge path",
+    "5. GitHub Actions: verificar CI verde"
+  ]
+}
