@@ -21,7 +21,7 @@ RUN mkdir -p /app/state/logs
 COPY .env /app/.env
 COPY .gitignore /app/
 COPY opencode.json /app/
-COPY pyproject.toml /app/tests/pyproject.toml
+COPY pyproject.toml /app/pyproject.toml
 
 ENV PYTHONPATH=/app:/app/apps/jarvis
 ENV JARVIS_UI_PORT=5174
