@@ -874,6 +874,11 @@ async function handleRequest(req, res, path) {
       const tp = require('path').join(__dirname, 'tenant-dashboard.html');
       if (fs2.existsSync(tp)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fs2.readFileSync(tp, 'utf-8')); }
       else { sendJson(res, { error: 'Tenant dashboard no encontrado' }, 404); }
+    } else if (path === '/' || path === '/showcase' || path === '/api/showcase') {
+      const fs2 = require('fs');
+      const sp = require('path').join(__dirname, 'showcase.html');
+      if (fs2.existsSync(sp)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fs2.readFileSync(sp, 'utf-8')); }
+      else { sendJson(res, { error: 'Showcase no encontrado' }, 404); }
     } else if (path === '/cheatsheet' || path === '/api/cheatsheet') {
       const fs = require('fs');
       const csPath = require('path').join(__dirname, 'cheatsheet.html');
