@@ -29,11 +29,16 @@ const BUILTIN_PROVIDERS = {
 };
 
 const FALLBACK_CHAINS = {
-  research: ['google/gemini-2.5-flash', 'openai/gpt-4o', 'deepseek-v4-flash'],
-  code: ['deepseek-v4-flash', 'anthropic/claude-3.5-sonnet', 'openai/gpt-4o'],
-  sales: ['openai/gpt-4o', 'anthropic/claude-3.5-sonnet', 'deepseek-v4-flash'],
-  content: ['openai/gpt-4o', 'google/gemini-2.5-flash', 'deepseek-v4-flash'],
-  default: ['deepseek-v4-flash', 'opencode/deepseek-v4-flash-free'],
+  routing: ['qwen2.5:1.5b', 'deepseek-v4-flash-free'],
+  classification: ['qwen2.5:1.5b', 'deepseek-v4-flash-free'],
+  research: ['deepseek-r1:7b', 'google/gemini-2.5-flash', 'deepseek-v4-flash'],
+  code: ['deepseek-r1:7b', 'deepseek-v4-flash', 'anthropic/claude-3.5-sonnet'],
+  sales: ['llama3.2:3b', 'openai/gpt-4o', 'deepseek-v4-flash'],
+  content: ['llama3.2:3b', 'openai/gpt-4o', 'google/gemini-2.5-flash'],
+  analysis: ['deepseek-r1:7b', 'google/gemini-2.5-flash', 'deepseek-v4-flash'],
+  embedding: ['nomic-embed-text', 'deepseek-v4-flash-free'],
+  agent: ['deepseek-v4-flash', 'deepseek-r1:7b'],
+  default: ['qwen2.5:1.5b', 'deepseek-v4-flash-free'],
 };
 
 class ProviderManager {
