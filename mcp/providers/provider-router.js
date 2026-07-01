@@ -41,6 +41,8 @@ const PROVIDERS = {
     api_key: () => '',
     models: {
       'qwen2.5:1.5b': { context: 32768, cost_per_1k: 0.0, free: true, local: true },
+      'qwen3:1.7b': { context: 16384, cost_per_1k: 0.0, free: true, local: true },
+      'qwen3:4b': { context: 32768, cost_per_1k: 0.0, free: true, local: true },
       'llama3.2:3b': { context: 8192, cost_per_1k: 0.0, free: true, local: true },
       'deepseek-r1:7b': { context: 16384, cost_per_1k: 0.0, free: true, local: true },
       'nomic-embed-text': { context: 8192, cost_per_1k: 0.0, free: true, local: true, embedding: true },
@@ -97,7 +99,7 @@ function _getInputCost(model) {
     'gemini-2.5-flash': 0.00015, 'gemini-2.0-pro': 0.002,
     'llama-3.3-70b': 0.00059, 'llama-3.1-8b': 0.00005,
     'deepseek-v3': 0.0007, 'deepseek-r1': 0.00055,
-    'qwen2.5:1.5b': 0, 'llama3.2:3b': 0, 'deepseek-r1:7b': 0, 'nomic-embed-text': 0,
+    'qwen2.5:1.5b': 0, 'qwen3:1.7b': 0, 'qwen3:4b': 0, 'llama3.2:3b': 0, 'deepseek-r1:7b': 0, 'nomic-embed-text': 0,
   };
   return costs[model] || 0.001;
 }
