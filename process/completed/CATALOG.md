@@ -15,3 +15,4 @@
 | 2026-07-01 | 20260701-native-agent-os | ... | ... | ... | completed | ... |
 | 2026-07-01 | SPEC-20260630-000 | Auto Session Start + Session Memory | 2 | 65 | completed | [link](20260701-auto-session-start/LECCION.md) |
 | 2026-07-01 | 20260701-final-archive | ... | ... | ... | completed | ... |
+| 2026-07-01 | SPEC-20260701-100 | Native Agent OS Completion | 2 | 84 | completed | [link](20260701-native-agent-os-completion/LECCION.md) |
