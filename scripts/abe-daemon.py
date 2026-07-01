@@ -30,6 +30,7 @@ log = logging.getLogger('abe-daemon')
 TOKEN = os.environ.get('ABE_TELEGRAM_TOKEN')
 CHAT_ID = os.environ.get('ABE_TELEGRAM_CHAT') or '5738935134'
 JARVIS_URL = 'http://localhost:5174'
+ABE_SERVICE_URL = 'http://127.0.0.1:5180'
 CYCLE_10M = 600
 CYCLE_6H = 21600
 CYCLE_24H = 86400
@@ -84,6 +85,13 @@ class AbeDaemon:
         except Exception:
             results['bot_ok'] = False
 
+        # ABE Service
+        try:
+            r = requests.get(f'{ABE_SERVICE_URL}/api/health', timeout=5)
+            results['abe_service'] = r.status_code == 200
+        except Exception:
+            results['abe_service'] = False
+
         return results
 
     def auto_fix(self, status):
@@ -109,6 +117,13 @@ class AbeDaemon:
             self.send_alert("⚠️ *ALERTA CRÍTICA*: El bot de Telegram no responde. "
                           "Regenera token en BotFather.")
             fixes.append("ALERT: bot token dead")
+
+        # ABE Service caído
+        if not status.get('abe_service', False):
+            log.warning("ABE Service caído — intentando restart via systemd")
+            subprocess.run(['systemctl', '--user', 'restart', 'abe-service'],
+                         capture_output=True, timeout=30)
+            fixes.append("restarted abe-service")
 
         return fixes
 
@@ -176,6 +191,7 @@ class AbeDaemon:
         log.info(f"RAM: {status.get('ram_free', '?')}MB | "
                 f"Containers: {status.get('container_count', '?')} | "
                 f"JARVIS: {'✅' if status.get('jarvis') else '❌'} | "
+                f"ABE: {'✅' if status.get('abe_service') else '❌'} | "
                 f"Bot: {'✅' if status.get('bot_ok') else '❌'}")
 
         # Auto-fix

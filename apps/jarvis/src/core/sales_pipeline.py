@@ -39,6 +39,7 @@ class LeadSource(str, Enum):
     N8N = "n8n"
     WHATSAPP = "whatsapp"
     REFERRAL = "referral"
+    DATA_SYNC = "data_sync"
     MANUAL = "manual"
 
 
@@ -109,7 +110,7 @@ def _emit_score_log(stage: str, deal_id: str, amount: float):
 class LeadScorer:
     WEIGHTS = {
         "plan_interest": {"imperio": 10, "agente_ia": 7, "conquistador": 5, "explorador": 1},
-        "source": {"referral": 8, "telegram": 5, "web_form": 4, "n8n": 3, "whatsapp": 5, "manual": 3},
+        "source": {"referral": 8, "telegram": 5, "web_form": 4, "n8n": 3, "whatsapp": 5, "data_sync": 6, "manual": 3},
         "niche": {"empresa": 8, "musica": 6, "ecommerce": 7, "fitness": 5, "educacion": 5, "adulto": 4, "creativo": 4, "general": 2},
     }
 

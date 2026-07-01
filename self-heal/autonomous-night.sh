@@ -238,4 +238,12 @@ fi
 # ─── SAVE TO KNOWLEDGE GRAPH ───
 call "graph_learn" "{\"agent\":\"night-cycle\",\"topic\":\"system-health\",\"content\":\"Night cycle completed: ${PASSED}/${TOTAL} checks passed\",\"importance\":2}" > /dev/null 2>&1 || true
 
+# ─── REPORT TO ABE SERVICE ───
+ABE_SERVICE="http://127.0.0.1:5180"
+curl -s -X POST "$ABE_SERVICE/api/health/night-cycle" \
+  -H "Content-Type: application/json" \
+  -d "{\"results\":$(echo "$RESULTS" | python3 -c "import sys;print(sys.stdin.read())" 2>/dev/null || echo '{}'),\"passed\":$PASSED,\"failed\":$FAILED,\"total\":$TOTAL}" \
+  > /dev/null 2>&1 || true
+log "📊 Night cycle results sent to ABE Service"
+
 log "🌙 System sleeping until next cycle. Fundador: Buenos sueños."

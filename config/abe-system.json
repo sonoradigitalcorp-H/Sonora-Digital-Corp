@@ -31,11 +31,26 @@
       "client_onboarding": "client-onboarding",
       "daily_sync": null
     },
+    "service": {
+      "port": 5180,
+      "host": "127.0.0.1",
+      "type": "fastapi+ws",
+      "pwa": true,
+      "avatar_3d": true,
+      "endpoints": {
+        "rest": "/api/*",
+        "ws": "/ws",
+        "pwa": "/pwa",
+        "avatar": "/avatar",
+        "docs": "/docs"
+      }
+    },
     "dashboards": {
       "main": "/abe-saas",
       "services": "/abe-services",
       "intake": "/abraham",
-      "music_os": "/abe"
+      "music_os": "/abe",
+      "internal": "http://127.0.0.1:5180/pwa"
     },
     "integrations": {
       "spotify": { "enabled": true, "client_id": "SPOTIFY_CLIENT_ID", "client_secret": "SPOTIFY_CLIENT_SECRET", "artist_ids": { "hector-rubio": "2uS9JywE44eIRoTMatARAy", "jesus-urquijo": "1hfrbMUDkM2tlUE85D3dR6", "javier-arvayo": "0td9IOgiffWGMbcz3xKy0s" } },

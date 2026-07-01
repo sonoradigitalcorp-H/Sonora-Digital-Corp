@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABE Avatar</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a12; overflow: hidden; font-family: Inter, sans-serif; }
+  #canvas-container { width: 100vw; height: 100vh; }
+  #controls {
+    position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 10px; align-items: center;
+  }
+  #controls button {
+    padding: 8px 16px; border: none; border-radius: 6px;
+    background: #FFD700; color: #000; font-weight: 600; cursor: pointer;
+  }
+  #controls button:disabled { opacity: 0.5; cursor: default; }
+  #status {
+    position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+    color: #888; font-size: 0.8rem; background: rgba(0,0,0,0.7);
+    padding: 4px 12px; border-radius: 12px;
+  }
+  #speech-bubble {
+    position: absolute; top: 80px; left: 50%; transform: translateX(-50%);
+    background: #1e1e2e; color: #e0e0e0; padding: 12px 20px;
+    border-radius: 16px; max-width: 400px; text-align: center;
+    border: 1px solid #FFD70044; display: none;
+  }
+</style>
+</head>
+<body>
+<div id="status">Cargando avatar...</div>
+<div id="speech-bubble"></div>
+<div id="canvas-container"></div>
+<div id="controls">
+  <button id="say-hello">Hola</button>
+  <button id="say-think">¿Qué necesitas?</button>
+  <button id="reset-cam">Reset</button>
+</div>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="manager.js"></script>
+</body>
+</html>
