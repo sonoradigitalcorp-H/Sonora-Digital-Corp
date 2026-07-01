@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ABE Revenue Engine</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+:root{--bg:#0a0a12;--surface:rgba(255,255,255,.05);--border:rgba(255,255,255,.1);--text:#f0f0f0;--dim:rgba(255,255,255,.4);--gold:#FFD700;--accent:#7c5cfc;--green:#34d399;--radius:16px;--font:'Inter',-apple-system,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);padding:2rem;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(124,92,252,.08),transparent 50%),radial-gradient(circle at 70% 80%,rgba(255,215,0,.05),transparent 50%);z-index:-1}
+.glass{background:var(--surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius)}
+h1{font-size:1.5rem;margin-bottom:.3rem}h1 span{color:var(--gold)}.sub{color:var(--dim);font-size:.85rem;margin-bottom:2rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin-bottom:1rem}
+.card{padding:1.5rem}
+.card .val{font-size:2rem;font-weight:700;letter-spacing:-.02em}.card .val.gold{color:var(--gold)}
+.card .label{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:.3rem}
+.card .sub{font-size:.7rem;color:var(--dim);margin-top:.1rem}
+.bar{height:8px;border-radius:4px;background:rgba(255,255,255,.06);overflow:hidden;margin:.3rem 0}
+.bar-fill{height:100%;border-radius:4px}
+pre{font-size:.75rem;color:var(--dim);white-space:pre-wrap}
+table{width:100%;border-collapse:collapse;font-size:.8rem;margin-top:.5rem}
+th{text-align:left;padding:.5rem;color:var(--dim);font-weight:400;border-bottom:1px solid var(--border)}
+td{padding:.4rem .5rem;border-bottom:1px solid var(--border)}</style></head>
+<body>
+<h1>💰 <span style="color:var(--gold)">ABE</span> Revenue Engine</h1>
+<p class="sub">Splits automáticos 70/20/10 · Facturación · FinOps</p>
+<div class="grid" id="revenueGrid"></div>
+<div class="grid">
+  <div class="card glass"><h3 style="margin-bottom:.5rem">📊 Per-Artist Breakdown</h3><div id="artistRevenue"></div></div>
+  <div class="card glass"><h3 style="margin-bottom:.5rem">🔧 API Access</h3>
+    <pre># Get revenue dashboard
+curl -X POST https://sonoradigitalcorp.com/api/call \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -d '{"tool":"abe_ceo_dashboard","params":{}}'
+
+# Get billing plan
+curl -X POST https://sonoradigitalcorp.com/api/call \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -d '{"tool":"billing_plan","params":{"tenant_id":"abe-fenix"}}'
+
+# Generate invoice
+curl -X POST https://sonoradigitalcorp.com/api/call \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -d '{"tool":"billing_invoice","params":{"tenant_id":"abe-fenix"}}'</pre></div>
+</div>
+<script>
+const G='http://127.0.0.1:18989';let t='';
+async function a(){const r=await fetch(G+'/api/auth/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id:'abe-fenix',client_secret:'abe_f3n1x_pr0_k3y_2026'})});const d=await r.json();t=d.access_token||''}
+async function c(tool,p){if(!t)await a();const r=await fetch(G+'/api/call',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+t},body:JSON.stringify({tool,params:p||{}})});return await r.json()}
+async function load(){
+  const ceo=await c('abe_ceo_dashboard',{});const artists=await c('abe_list_artists',{});
+  const ar=artists.artists||[];const tr=ceo.total_revenue||ar.reduce((s,x)=>s+(x.revenue||0),0);
+  document.getElementById('revenueGrid').innerHTML=`
+    <div class="card glass"><div class="label">Total Revenue</div><div class="val gold">$${tr.toLocaleString()}</div><div class="sub">all artists combined</div></div>
+    <div class="card glass"><div class="label">Artist Share 70%</div><div class="val">$${Math.round(tr*0.7).toLocaleString()}</div><div class="bar"><div class="bar-fill" style="width:70%;background:var(--gold)"></div></div></div>
+    <div class="card glass"><div class="label">Label Share 20%</div><div class="val">$${Math.round(tr*0.2).toLocaleString()}</div><div class="bar"><div class="bar-fill" style="width:20%;background:var(--accent)"></div></div></div>
+    <div class="card glass"><div class="label">Distributor 10%</div><div class="val">$${Math.round(tr*0.1).toLocaleString()}</div><div class="bar"><div class="bar-fill" style="width:10%;background:var(--green)"></div></div></div>`;
+  document.getElementById('artistRevenue').innerHTML=`<table><tr><th>Artist</th><th>Revenue</th><th>Artist Gets</th><th>Label Gets</th></tr>${
+    ar.map(x=>`<tr><td>${x.name}</td><td>$${(x.revenue||0).toLocaleString()}</td><td>$${Math.round((x.revenue||0)*0.7).toLocaleString()}</td><td>$${Math.round((x.revenue||0)*0.2).toLocaleString()}</td></tr>`).join('')
+  }</table>`;
+}
+a().then(load);
+</script></body></html>

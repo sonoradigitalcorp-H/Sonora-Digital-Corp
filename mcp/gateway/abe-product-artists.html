@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ABE Artist Management</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+:root{--bg:#0a0a12;--surface:rgba(255,255,255,.05);--border:rgba(255,255,255,.1);--text:#f0f0f0;--dim:rgba(255,255,255,.4);--gold:#FFD700;--accent:#7c5cfc;--green:#34d399;--radius:16px;--font:'Inter',-apple-system,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);padding:2rem;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(124,92,252,.08),transparent 50%),radial-gradient(circle at 70% 80%,rgba(255,215,0,.05),transparent 50%);z-index:-1}
+.glass{background:var(--surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius)}
+h1{font-size:1.5rem;margin-bottom:.3rem}.h1 span{color:var(--gold)}
+.sub{color:var(--dim);font-size:.85rem;margin-bottom:2rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem}
+.card{padding:1.5rem;position:relative;overflow:hidden}
+.card .avatar{width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#b8860b);display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:700;margin-bottom:.5rem}
+.card h2{font-size:1.1rem;margin-bottom:.1rem}
+.card .genre{font-size:.75rem;color:var(--dim);margin-bottom:.5rem}
+.card .stat{display:flex;justify-content:space-between;padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.8rem}.card .stat:last-child{border:0}
+.card .stat .l{color:var(--dim)}.card .stat .r{font-weight:500}
+.card .badge{position:absolute;top:1rem;right:1rem;font-size:.6rem;padding:.15rem .4rem;border-radius:4px;background:rgba(52,211,153,.15);color:var(--green);text-transform:uppercase}
+pre{font-size:.75rem;color:var(--dim);white-space:pre-wrap;margin-top:.5rem}
+</style></head>
+<body>
+<h1>🎤 <span style="color:var(--gold)">ABE</span> Artist Management</h1>
+<p class="sub">Sello discográfico digital · 3 artistas reales · 539,000 streams · $26,880 revenue</p>
+<div class="grid" id="artistGrid"></div>
+<div style="margin-top:1rem">
+  <div class="card glass"><h2 style="margin-bottom:.5rem">📋 Total Portfolio</h2>
+    <div class="grid" id="portfolioGrid"></div>
+    <div style="margin-top:.5rem"><pre>curl -X POST https://sonoradigitalcorp.com/api/call \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -d '{"tool":"abe_list_artists","params":{}}'</pre></div>
+  </div>
+</div>
+<script>
+const G='http://127.0.0.1:18989';let t='';
+async function a(){const r=await fetch(G+'/api/auth/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id:'abe-fenix',client_secret:'abe_f3n1x_pr0_k3y_2026'})});const d=await r.json();t=d.access_token||''}
+async function c(tool,p){if(!t)await a();const r=await fetch(G+'/api/call',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+t},body:JSON.stringify({tool,params:p||{}})});return await r.json()}
+async function load(){
+  const r=await c('abe_list_artists',{});const artists=r.artists||[];
+  document.getElementById('artistGrid').innerHTML=artists.map(x=>{
+    const inits=(x.name||'?').split(' ').map(w=>w[0]).join('').slice(0,2);
+    return `<div class="card glass"><div class="avatar">${inits}</div><h2>${x.name}</h2><div class="genre">${x.genre||'Artist'}</div>
+      <div class="stat"><span class="l">Streams</span><span class="r">${(x.streams||0).toLocaleString()}</span></div>
+      <div class="stat"><span class="l">Revenue</span><span class="r">$${(x.revenue||0).toLocaleString()}</span></div>
+      <div class="stat"><span class="l">Status</span><span class="r" style="color:var(--green)">${x.status||'Active'}</span></div>
+      <div class="badge">${x.genre||'Music'}</div></div>`;
+  }).join('');
+  const ts=artists.reduce((s,x)=>s+(x.streams||0),0),tr=artists.reduce((s,x)=>s+(x.revenue||0),0);
+  document.getElementById('portfolioGrid').innerHTML=`
+    <div class="card glass"><div class="stat"><span class="l">Total Artists</span><span class="r">${artists.length}</span></div><div class="stat"><span class="l">Active</span><span class="r">${artists.filter(x=>x.status==='active'||!x.status).length}</span></div></div>
+    <div class="card glass"><div class="stat"><span class="l">Total Streams</span><span class="r">${ts.toLocaleString()}</span></div><div class="stat"><span class="l">Total Revenue</span><span class="r">$${tr.toLocaleString()}</span></div></div>`;
+}
+a().then(load);
+</script></body></html>

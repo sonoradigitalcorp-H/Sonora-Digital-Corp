@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ABE Content Factory</title>
+<style>@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+:root{--bg:#0a0a12;--surface:rgba(255,255,255,.05);--border:rgba(255,255,255,.1);--text:#f0f0f0;--dim:rgba(255,255,255,.4);--gold:#FFD700;--accent:#7c5cfc;--green:#34d399;--radius:16px;--font:'Inter',-apple-system,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);padding:2rem;-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(124,92,252,.08),transparent 50%),radial-gradient(circle at 70% 80%,rgba(255,215,0,.05),transparent 50%);z-index:-1}
+.glass{background:var(--surface);backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius)}
+h1{font-size:1.5rem;margin-bottom:.3rem}h1 span{color:var(--gold)}.sub{color:var(--dim);font-size:.85rem;margin-bottom:2rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
+.card{padding:1.5rem}.card .icon{font-size:2rem;margin-bottom:.5rem}.card h3{font-size:.95rem;margin-bottom:.3rem}
+.card p{font-size:.8rem;color:var(--dim)}.card .tag{display:inline-block;padding:.15rem .4rem;border-radius:4px;font-size:.65rem;background:rgba(124,92,252,.15);color:var(--accent);margin:.1rem}
+.tool-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.5rem;margin-top:.5rem}
+.tool-card{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;padding:.8rem;font-size:.8rem;cursor:pointer}
+.tool-card:hover{border-color:var(--gold)}
+.tool-card .name{font-weight:500}.tool-card .desc{font-size:.7rem;color:var(--dim);margin-top:.2rem}
+pre{font-size:.75rem;color:var(--dim);white-space:pre-wrap;margin-top:.5rem}
+</style></head>
+<body>
+<h1>🎨 <span style="color:var(--gold)">ABE</span> Content Factory</h1>
+<p class="sub">AI-generated music content · FLUX.1-dev · Minimax Video · 152 Design Systems</p>
+<div class="grid">
+  <div class="card glass"><div class="icon">🖼️</div><h3>Album Covers</h3><p>Generate professional album art with FLUX.1-dev AI. Any genre, any style.</p><div><span class="tag">media_album_cover</span><span class="tag">FLUX Pro</span></div></div>
+  <div class="card glass"><div class="icon">🎬</div><h3>Music Videos</h3><p>AI-generated music video concepts. Cinematic, lyric, or abstract styles.</p><div><span class="tag">media_music_video</span><span class="tag">Minimax</span></div></div>
+  <div class="card glass"><div class="icon">🎨</div><h3>Design Systems</h3><p>152 design systems from real brands. Apple, Stripe, Linear, Spotify, and more.</p><div><span class="tag">design_list</span><span class="tag">design_recommend</span></div></div>
+  <div class="card glass"><div class="icon">📄</div><h3>Page Generator</h3><p>Generate complete HTML pages with brand-accurate design tokens.</p><div><span class="tag">design_generate</span><span class="tag">152 systems</span></div></div>
+</div>
+<div style="margin-top:1rem">
+  <div class="card glass">
+    <h3 style="margin-bottom:.5rem">🎬 Try Content Generation</h3>
+    <div style="display:flex;gap:.3rem;flex-wrap:wrap;margin-bottom:.5rem">
+      <input id="promptInput" placeholder="Describe your content..." style="flex:1;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:.6rem;font-family:var(--font);font-size:.8rem">
+    </div>
+    <div style="display:flex;gap:.3rem;flex-wrap:wrap">
+      <button class="glass" style="padding:.4rem .8rem;cursor:pointer;border:1px solid var(--border);border-radius:8px;font-size:.75rem" onclick="gen('image')">🖼️ Generate Image</button>
+      <button class="glass" style="padding:.4rem .8rem;cursor:pointer;border:1px solid var(--border);border-radius:8px;font-size:.75rem" onclick="gen('cover')">💿 Album Cover</button>
+      <button class="glass" style="padding:.4rem .8rem;cursor:pointer;border:1px solid var(--border);border-radius:8px;font-size:.75rem" onclick="gen('design')">🎨 Recommend Design</button>
+    </div>
+    <pre id="result" style="margin-top:.5rem">Ready. Enter a prompt and click a button.</pre>
+  </div>
+</div>
+<div style="margin-top:1rem">
+  <div class="card glass"><h3 style="margin-bottom:.5rem">🔧 API</h3>
+    <pre># Generate album cover
+curl -X POST https://sonoradigitalcorp.com/api/call \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -d '{"tool":"media_album_cover","params":{"artist":"Hector Rubio","album_title":"Corazon de Oro"}}
+
+# Preview all design systems
+curl -X POST https://sonoradigitalcorp.com/api/call \
+  -H "Authorization: Bearer &lt;token&gt;" \
+  -d '{"tool":"design_list","params":{}}'</pre></div>
+</div>
+<script>
+const G='http://127.0.0.1:18989';let t='';
+async function a(){const r=await fetch(G+'/api/auth/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id:'abe-fenix',client_secret:'abe_f3n1x_pr0_k3y_2026'})});const d=await r.json();t=d.access_token||''}
+async function c(tool,p){if(!t)await a();const r=await fetch(G+'/api/call',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+t},body:JSON.stringify({tool,params:p||{}})});return await r.json()}
+async function gen(type){
+  const p=document.getElementById('promptInput').value||'ABE Music artist portrait';
+  document.getElementById('result').textContent='⏳ Generating...';
+  let r;
+  if(type==='image') r=await c('media_image',{prompt:p});
+  else if(type==='cover') r=await c('media_album_cover',{artist:'ABE Music',album_title:p});
+  else r=await c('design_recommend',{client:'ABE Music',purpose:p});
+  document.getElementById('result').textContent=JSON.stringify(r,null,2).substring(0,2000);
+}
+a();
+</script></body></html>

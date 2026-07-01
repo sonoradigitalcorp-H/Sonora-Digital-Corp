@@ -931,6 +931,21 @@ async function handleRequest(req, res, path) {
       const bp = require('path').join(__dirname, 'abe-businesses.html');
       if (fs6.existsSync(bp)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fs6.readFileSync(bp, 'utf-8')); }
       else { sendJson(res, { error: 'ABE Businesses no encontrado' }, 404); }
+    } else if (path === '/abe-product-saas') {
+      const f = require('fs'); const p = require('path').join(__dirname, 'abe-product-saas.html');
+      if (f.existsSync(p)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(f.readFileSync(p, 'utf-8')); } else { sendJson(res, { error: 'Not found' }, 404); }
+    } else if (path === '/abe-product-artists') {
+      const f = require('fs'); const p = require('path').join(__dirname, 'abe-product-artists.html');
+      if (f.existsSync(p)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(f.readFileSync(p, 'utf-8')); } else { sendJson(res, { error: 'Not found' }, 404); }
+    } else if (path === '/abe-product-revenue') {
+      const f = require('fs'); const p = require('path').join(__dirname, 'abe-product-revenue.html');
+      if (f.existsSync(p)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(f.readFileSync(p, 'utf-8')); } else { sendJson(res, { error: 'Not found' }, 404); }
+    } else if (path === '/abe-product-content') {
+      const f = require('fs'); const p = require('path').join(__dirname, 'abe-product-content.html');
+      if (f.existsSync(p)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(f.readFileSync(p, 'utf-8')); } else { sendJson(res, { error: 'Not found' }, 404); }
+    } else if (path === '/abe-product-fans') {
+      const f = require('fs'); const p = require('path').join(__dirname, 'abe-product-fans.html');
+      if (f.existsSync(p)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(f.readFileSync(p, 'utf-8')); } else { sendJson(res, { error: 'Not found' }, 404); }
     } else if (path === '/abe-services' || path === '/api/abe-services') {
       const fs5 = require('fs');
       const svp = require('path').join(__dirname, 'abe-services.html');
