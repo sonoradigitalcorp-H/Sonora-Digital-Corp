@@ -1,0 +1,46 @@
+{
+  "providers": {
+    "opencode-go": {
+      "base_url": "https://opencode.ai/zen/go/v1",
+      "models": {
+        "deepseek-v4-flash": { "context": 32768, "cost_per_1k_input": 0.0001, "cost_per_1k_output": 0.0001 },
+        "deepseek-v4-flash-free": { "context": 8192, "cost_per_1k_input": 0, "cost_per_1k_output": 0 }
+      },
+      "status": "active"
+    },
+    "openrouter": {
+      "base_url": "https://openrouter.ai/api/v1",
+      "models": {
+        "opencode/deepseek-v4-flash-free": { "context": 8192, "cost_per_1k_input": 0, "cost_per_1k_output": 0 },
+        "openai/gpt-4o": { "context": 128000, "cost_per_1k_input": 0.0025, "cost_per_1k_output": 0.01 },
+        "anthropic/claude-3.5-sonnet": { "context": 200000, "cost_per_1k_input": 0.003, "cost_per_1k_output": 0.015 },
+        "google/gemini-2.5-flash": { "context": 1000000, "cost_per_1k_input": 0.00015, "cost_per_1k_output": 0.0004 },
+        "meta-llama/llama-3.3-70b": { "context": 128000, "cost_per_1k_input": 0.00059, "cost_per_1k_output": 0.00079 }
+      },
+      "status": "active"
+    },
+    "ollama": {
+      "base_url": "http://127.0.0.1:11434",
+      "models": {
+        "qwen2.5:1.5b": { "context": 32768, "cost_per_1k_input": 0, "cost_per_1k_output": 0, "local": true },
+        "llama3.2:3b": { "context": 8192, "cost_per_1k_input": 0, "cost_per_1k_output": 0, "local": true },
+        "deepseek-r1:7b": { "context": 16384, "cost_per_1k_input": 0, "cost_per_1k_output": 0, "local": true },
+        "nomic-embed-text": { "context": 8192, "cost_per_1k_input": 0, "cost_per_1k_output": 0, "local": true, "embedding": true }
+      },
+      "status": "active"
+    }
+  },
+  "fallback_chains": {
+    "routing": ["qwen2.5:1.5b", "opencode/deepseek-v4-flash-free"],
+    "classification": ["qwen2.5:1.5b", "opencode/deepseek-v4-flash-free"],
+    "research": ["llama3.2:3b", "google/gemini-2.5-flash", "deepseek-v4-flash"],
+    "code": ["llama3.2:3b", "deepseek-v4-flash", "anthropic/claude-3.5-sonnet"],
+    "sales": ["llama3.2:3b", "openai/gpt-4o", "deepseek-v4-flash"],
+    "content": ["llama3.2:3b", "openai/gpt-4o", "google/gemini-2.5-flash"],
+    "analysis": ["llama3.2:3b", "google/gemini-2.5-flash", "deepseek-v4-flash"],
+    "deep_analysis": ["deepseek-r1:7b", "google/gemini-2.5-flash", "deepseek-v4-flash"],
+    "embedding": ["nomic-embed-text", "opencode/deepseek-v4-flash-free"],
+    "agent": ["deepseek-v4-flash", "llama3.2:3b"],
+    "default": ["qwen2.5:1.5b", "opencode/deepseek-v4-flash-free"]
+  }
+}
