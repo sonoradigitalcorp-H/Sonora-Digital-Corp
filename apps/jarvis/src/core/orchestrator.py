@@ -420,6 +420,16 @@ class AgentOrchestrator:
         ctx = context or {}
         ctx["agent"] = agent_name
         ctx["history"] = self.get_context(5)
+        # Auto-query Engram for relevant past learnings
+        try:
+            from src.core.pipeline_bridge import query_engram_context, format_engram_context
+            engram_results = query_engram_context(task, limit=3)
+            engram_ctx = format_engram_context(engram_results)
+            if engram_ctx:
+                ctx["engram_context"] = engram_ctx
+                log.info(f"Engram: {len(engram_results)} past learnings injected for {agent_name}")
+        except Exception:
+            pass
         log.info(f"Routing to {agent.name}: {task[:100]}...")
         try:
             result = await asyncio.wait_for(agent.run(task, ctx), timeout=agent.timeout)
@@ -438,6 +448,18 @@ class AgentOrchestrator:
         result["task"] = task
         result["execution_time"] = time.time()
         self.push_context(agent_name, task, result)
+
+        # Auto-store errors in Engram
+        if result.get("status") == "error" and str(result.get("error", "")) != "unknown":
+            try:
+                from src.core.pipeline_bridge import store_spec_completion
+                store_spec_completion(
+                    f"error-{agent_name}-{int(time.time())}",
+                    f"Agent {agent_name} failed: {result.get('error', 'unknown')[:200]}",
+                    ["error", agent_name],
+                )
+            except Exception:
+                pass
         # LangFuse trace
         if _tracker:
             _tracker.trace(
