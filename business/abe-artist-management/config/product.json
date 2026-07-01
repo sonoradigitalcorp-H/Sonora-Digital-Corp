@@ -1,0 +1,35 @@
+{
+  "name": "ABE Artist Management",
+  "type": "music_label",
+  "icon": "🎤",
+  "tenant": "abe-fenix",
+  "description": "Gestión completa de artistas: contratos, releases, streams, revenue",
+  "artists": [
+    { "name": "Hector Rubio", "genre": "Regional Mexicano", "streams": 193000, "revenue": 9660, "status": "active" },
+    { "name": "Jesus Urquijo", "genre": "Pop Latino", "streams": 245000, "revenue": 12110, "status": "active" },
+    { "name": "Javier Arvayo", "genre": "Urbano", "streams": 101000, "revenue": 5110, "status": "active" }
+  ],
+  "features": [
+    "Artist onboarding & KYC",
+    "Contract management",
+    "Release scheduling & tracking",
+    "Stream monitoring across platforms",
+    "Royalty calculation & payout tracking",
+    "Artist portal with self-service KPIs"
+  ],
+  "agents": [
+    "abe-artist-management-crm-agent",
+    "abe-artist-management-revenue-agent",
+    "abe-artist-management-marketing-agent",
+    "abe-artist-management-analytics-agent",
+    "abe-artist-management-scheduler-agent"
+  ],
+  "metrics": {
+    "total_artists": 3,
+    "active_artists": 3,
+    "total_streams": 539000,
+    "total_revenue": 26880,
+    "top_artist": "Jesus Urquijo",
+    "target_artists_q3": 10
+  }
+}

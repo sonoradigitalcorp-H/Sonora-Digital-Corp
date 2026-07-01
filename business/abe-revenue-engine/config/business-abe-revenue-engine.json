@@ -1,0 +1,24 @@
+{
+  "name": "ABE Revenue Engine",
+  "type": "saas",
+  "tenant_id": "abe-fenix",
+  "agents": [
+    "abe-revenue-engine-crm-agent",
+    "abe-revenue-engine-revenue-agent",
+    "abe-revenue-engine-analytics-agent",
+    "abe-revenue-engine-scheduler-agent",
+    "abe-revenue-engine-support-agent"
+  ],
+  "features": [
+    "user management",
+    "billing",
+    "analytics",
+    "support tickets"
+  ],
+  "icon": "☁️",
+  "created_at": "2026-07-01T10:18:46.794Z",
+  "status": "active",
+  "design_system": "arc",
+  "model": "llama3.2:3b",
+  "provider": "ollama"
+}

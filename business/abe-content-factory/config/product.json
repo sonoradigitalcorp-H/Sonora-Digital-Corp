@@ -1,0 +1,36 @@
+{
+  "name": "ABE Content Factory",
+  "type": "agency",
+  "icon": "🎨",
+  "tenant": "abe-fenix",
+  "description": "Fábrica de contenido musical AI: portadas, videos, promos, redes",
+  "capabilities": [
+    { "name": "Album Cover Generation", "tool": "media_album_cover", "model": "FLUX.1-dev (fal.ai)" },
+    { "name": "Music Video Concepts", "tool": "media_music_video", "model": "Minimax (fal.ai)" },
+    { "name": "Image Generation", "tool": "media_image", "model": "FLUX Pro (fal.ai)" },
+    { "name": "Video Generation", "tool": "media_video", "model": "Minimax (fal.ai)" },
+    { "name": "Design System Selection", "tool": "design_recommend", "systems": 152 },
+    { "name": "Page Generation", "tool": "design_generate", "templates": "dashboard, landing, pricing" }
+  ],
+  "features": [
+    "AI album cover generator (FLUX.1-dev)",
+    "Music video concept generator",
+    "Social media content automation",
+    "Brand-accurate design system matching",
+    "Multi-format export (image, video, HTML)",
+    "Content calendar & scheduling",
+    "Cross-platform publishing"
+  ],
+  "agents": [
+    "abe-content-factory-crm-agent",
+    "abe-content-factory-marketing-agent",
+    "abe-content-factory-analytics-agent",
+    "abe-content-factory-scheduler-agent",
+    "abe-content-factory-support-agent"
+  ],
+  "design_systems": {
+    "total_available": 152,
+    "recommended_for_music": ["energy", "apple", "discord", "spotify", "tiktok"],
+    "default": "arc"
+  }
+}

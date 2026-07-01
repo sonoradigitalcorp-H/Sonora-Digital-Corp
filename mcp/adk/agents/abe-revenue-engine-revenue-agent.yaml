@@ -1,0 +1,22 @@
+name: abe-revenue-engine-revenue-agent
+version: 1.0.0
+description: "revenue agent for ABE Revenue Engine"
+model: llama3.2:3b
+provider: ollama
+capability: financial-operations
+maturity: 2-Assisted
+tools:
+  - sonora:capability_resolve
+- sonora:billing_plan
+  - sonora:billing_invoice
+  - sonora:finops_summary
+policies:
+  max_tokens_per_call: 4096
+  timeout_seconds: 60
+events:
+  emits: []
+  listens: []
+lifecycle:
+  spawn: on-demand
+  max_idle: 30m
+  max_concurrent: 3

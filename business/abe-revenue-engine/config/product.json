@@ -1,0 +1,40 @@
+{
+  "name": "ABE Revenue Engine",
+  "type": "fintech",
+  "icon": "💰",
+  "tenant": "abe-fenix",
+  "description": "Revenue tracking, splits automáticos 70/20/10, facturación recurrente",
+  "revenue_model": {
+    "streaming": { "artist": 0.7, "label": 0.2, "distributor": 0.1 },
+    "merch": { "artist": 0.6, "label": 0.3, "distributor": 0.1 },
+    "sync_license": { "artist": 0.5, "label": 0.4, "distributor": 0.1 }
+  },
+  "current_totals": {
+    "total_streams": 539000,
+    "total_revenue": 26880,
+    "artist_share": 18816,
+    "label_share": 5376,
+    "distributor_share": 2688
+  },
+  "features": [
+    "Real-time revenue tracking per artist",
+    "Automatic 70/20/10 split calculation",
+    "Monthly invoice generation",
+    "Payout scheduling & history",
+    "Multi-currency support (USD, MXN)",
+    "Tax reporting ready",
+    "FinOps cost tracking for AI operations"
+  ],
+  "agents": [
+    "abe-revenue-engine-crm-agent",
+    "abe-revenue-engine-revenue-agent",
+    "abe-revenue-engine-analytics-agent",
+    "abe-revenue-engine-scheduler-agent",
+    "abe-revenue-engine-support-agent"
+  ],
+  "integrations": {
+    "stripe": { "status": "planned" },
+    "mercadopago": { "status": "available" },
+    "bitso": { "status": "available" }
+  }
+}

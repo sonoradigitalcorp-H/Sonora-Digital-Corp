@@ -1,0 +1,24 @@
+{
+  "name": "ABE Music SaaS",
+  "type": "saas",
+  "tenant_id": "abe-fenix",
+  "agents": [
+    "abe-music-saas-crm-agent",
+    "abe-music-saas-revenue-agent",
+    "abe-music-saas-analytics-agent",
+    "abe-music-saas-scheduler-agent",
+    "abe-music-saas-support-agent"
+  ],
+  "features": [
+    "user management",
+    "billing",
+    "analytics",
+    "support tickets"
+  ],
+  "icon": "☁️",
+  "created_at": "2026-07-01T10:18:46.752Z",
+  "status": "active",
+  "design_system": "arc",
+  "model": "llama3.2:3b",
+  "provider": "ollama"
+}

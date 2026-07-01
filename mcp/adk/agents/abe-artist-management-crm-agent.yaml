@@ -1,0 +1,22 @@
+name: abe-artist-management-crm-agent
+version: 1.0.0
+description: "crm agent for ABE Artist Management"
+model: llama3.2:3b
+provider: ollama
+capability: client-onboarding
+maturity: 2-Assisted
+tools:
+  - sonora:capability_resolve
+- sonora:intake_query
+  - sonora:intake_stats
+  - sonora:enterprise_score
+policies:
+  max_tokens_per_call: 4096
+  timeout_seconds: 60
+events:
+  emits: []
+  listens: []
+lifecycle:
+  spawn: on-demand
+  max_idle: 30m
+  max_concurrent: 3
