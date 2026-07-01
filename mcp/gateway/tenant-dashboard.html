@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SDC — Mi Panel</title>
+<style>
+:root{--bg:#0a0a0f;--surface:#13131a;--border:#1e1e2a;--text:#e0e0e0;--dim:#6b6b80;--accent:#7c5cfc;--green:#34d399;--red:#f87171;--blue:#60a5fa}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'SF Mono','Fira Code',monospace;background:var(--bg);color:var(--text);padding:1rem;font-size:14px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.header h1{font-size:1.2rem}.header h1 span{color:var(--accent)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:.5rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1rem}
+.card h2{font-size:.75rem;text-transform:uppercase;color:var(--dim);letter-spacing:1px;margin-bottom:.5rem}
+.card .val{font-size:1.5rem;font-weight:700}
+.card .sub{font-size:.7rem;color:var(--dim)}
+.item{display:flex;justify-content:space-between;padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.8rem}
+.item:last-child{border:0}
+.tag{display:inline-block;padding:.1rem .4rem;border-radius:3px;font-size:.65rem}
+.tag-green{background:rgba(52,211,153,.15);color:var(--green)}
+.tag-purple{background:rgba(124,92,252,.15);color:var(--accent)}
+.tag-red{background:rgba(248,113,113,.15);color:var(--red)}
+.btn{padding:.3rem .6rem;border-radius:4px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:.75rem}
+.btn:hover{border-color:var(--accent)}
+.btn-primary{background:var(--accent);border-color:var(--accent)}
+select,input{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:.4rem;font-family:inherit;font-size:.8rem;width:100%;margin-bottom:.3rem}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1><span>SDC</span> — Mi Panel</h1>
+  <div>
+    <select id="tenantSelect" onchange="switchTenant()">
+      <option value="sdc-core">Sonora Digital Corp</option>
+      <option value="abe-fenix">ABE Fenix</option>
+    </select>
+  </div>
+</div>
+
+<div class="grid" id="stats"></div>
+<div class="grid" id="content" style="margin-top:.5rem"></div>
+
+<script>
+const GATEWAY = 'http://127.0.0.1:18989';
+let currentTenant = 'sdc-core';
+
+function getToken() {
+  const secrets = { 'sdc-core': 'sdc_secret_ent3rpr1s3_k3y_2026', 'abe-fenix': 'abe_f3n1x_pr0_k3y_2026' };
+  return fetch(GATEWAY + '/api/auth/token', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({client_id:currentTenant, client_secret:secrets[currentTenant]}) }).then(r=>r.json()).then(d=>d.access_token).catch(()=>null);
+}
+
+async function call(tool, params) {
+  const token = await getToken();
+  if (!token) return {error:'Auth failed'};
+  const r = await fetch(GATEWAY + '/api/call', { method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+token}, body:JSON.stringify({tool, params}) });
+  return await r.json();
+}
+
+async function load() {
+  document.getElementById('stats').innerHTML = '<div class="card"><h2>Cargando...</h2></div>';
+  const status = await call('health_all');
+  const score = await call('enterprise_score');
+  const caps = await call('capability_list');
+  const skills = await call('skills_stats');
+
+  document.getElementById('stats').innerHTML = `
+    <div class="card"><h2>Estado</h2><div class="val" style="font-size:1rem">${currentTenant}</div><div class="sub">Tenant activo</div></div>
+    <div class="card"><h2>Servicios</h2><div class="val">${status.services ? Object.values(status.services).filter(Boolean).length+'/'+Object.keys(status.services).length : '?'}</div><div class="sub">online</div></div>
+    <div class="card"><h2>Score</h2><div class="val">${score.score||'?'}/100</div><div class="sub">Enterprise Score</div></div>
+    <div class="card"><h2>Capacidades</h2><div class="val">${caps.capabilities ? caps.capabilities.length : '?'}</div><div class="sub">disponibles</div></div>
+  `;
+
+  const toolsList = ['enterprise_score', 'audit_run', 'skills_list', 'finops_summary', 'workflow_list_samples'];
+  const toolsHtml = toolsList.map(t => `
+    <div class="card" style="cursor:pointer" onclick="runTool('${t}')">
+      <div class="item"><span>${t}</span><span class="tag tag-purple">▶ ejecutar</span></div>
+    </div>
+  `).join('');
+
+  document.getElementById('content').innerHTML = `
+    <div class="card"><h2>🔧 Herramientas</h2>${toolsHtml}</div>
+    <div class="card"><h2>📊 Plan Actual</h2>
+      <div class="item"><span>Plan</span><span>${currentTenant === 'sdc-core' ? 'Enterprise' : 'Pro'}</span></div>
+      <div class="item"><span>Rate Limit</span><span>${currentTenant === 'sdc-core' ? '1000/min' : '200/min'}</span></div>
+      <div class="item"><span>Tokens/mes</span><span>${currentTenant === 'sdc-core' ? 'Ilimitado' : '500K'}</span></div>
+      <div class="item"><span>Status</span><span class="tag tag-green">Activo</span></div>
+    </div>
+    <div class="card"><h2>⚡ Acciones Rápidas</h2>
+      <button class="btn btn-primary" style="width:100%;margin-bottom:.3rem" onclick="runTool('health_all')">Healthcheck</button>
+      <button class="btn btn-primary" style="width:100%;margin-bottom:.3rem" onclick="runTool('enterprise_score')">Ver Score</button>
+      <button class="btn" style="width:100%" onclick="runTool('audit_run')">Auditar</button>
+    </div>
+    <div class="card"><h2>📋 Resultado</h2><pre id="result" style="font-size:.7rem;color:var(--dim);max-height:300px;overflow:auto">Ejecutá una herramienta...</pre></div>
+  `;
+}
+
+async function runTool(tool) {
+  document.getElementById('result').textContent = 'Ejecutando ' + tool + '...';
+  const r = await call(tool, {});
+  document.getElementById('result').textContent = JSON.stringify(r, null, 2);
+}
+
+function switchTenant() {
+  currentTenant = document.getElementById('tenantSelect').value;
+  load();
+}
+
+load();
+</script>
+</body>
+</html>
