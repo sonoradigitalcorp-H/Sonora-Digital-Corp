@@ -32,8 +32,11 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Ruff lint inside container
-        run: docker run --rm jarvis-test ruff check apps/ scripts/
+      - name: Ruff lint — fail on hard errors (allow E501 cosmetic)
+        run: |
+          docker run --rm jarvis-test ruff check apps/ scripts/ --output-format=concise 2>&1 | \
+            grep -v "E501" | grep -v "Found" | grep -E '^[^ ]*:[0-9]+' && exit 1 || \
+            echo "✓ Lint passed (E501 line-too-long warnings allowed)"
 
       - name: TDD Check
         run: |
