@@ -13,5 +13,6 @@
 | Customer Value | 1/10 | No hay cliente directo |
 | FinOps Efficiency | 5/10 | Ahorra tiempo del agente = ahorro en tokens |
 | **TOTAL** | **60/100** | |
+**Total: 60/100**
 
 **Nota:** No alcanza el corte de 60, pero es infraestructura operativa necesaria. Human override aplicado por solicitud directa del fundador.
