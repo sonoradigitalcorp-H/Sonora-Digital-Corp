@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
-"""Genera dashboard de salud de providers — HTML visual.
+"""Genera dashboard de salud de providers — ejecuta health checks reales.
 
 Uso: python3 scripts/dashboard-salud.py [--watch]
      --watch: regenera cada 30s (dejalo corriendo)
 """
 import argparse
-import json
+import asyncio
 import logging
 import os
+import sys
 import time
 from datetime import datetime
 from pathlib import Path
@@ -17,7 +18,10 @@ log = logging.getLogger("dashboard")
 
 BASE = Path(__file__).resolve().parent.parent
 OUTPUT = Path.home() / "evolucion" / "dashboard-salud.html"
-REFRESH = 30  # segundos
+REFRESH = 60
+
+sys.path.insert(0, str(BASE))
+os.environ["PYTHONPATH"] = str(BASE)
 
 HTML_TEMPLATE = """<!DOCTYPE html>
 <html lang="es">
@@ -89,29 +93,29 @@ CARD = """  <div class="card">
       <span>Type: {ctype}</span>
       <span>Ultimo check: {last_check}</span>
       <span>Latencia: {latency}</span>
+      <span>Error: {error}</span>
     </div>
   </div>"""
 
 
-def get_health_data():
-    """Obtiene datos de salud usando planner."""
-    os.environ["PYTHONPATH"] = str(BASE)
-    import sys
-    sys.path.insert(0, str(BASE))
-
-    from planner.registry import load_registry, get_capability, list_capabilities
-    from planner.health import get_provider_health
-    from planner.models import ProviderRef
+async def get_health_data():
+    from planner.registry import load_registry
+    from planner.health import check_provider_health, get_provider_health
 
     registry = load_registry()
     providers = []
 
     for cid, cap in registry.items():
         for p in cap.providers:
+            if not p.enabled:
+                continue
+            try:
+                await check_provider_health(p.health_url, p.id)
+            except Exception as e:
+                log.warning(f"Health check failed for {p.id}: {e}")
             health = get_provider_health(p.id)
             providers.append({
                 "id": p.id,
-                "name": p.id,
                 "capability": cid,
                 "contract_type": p.contract_type,
                 "health": health,
@@ -131,23 +135,21 @@ def status_info(health):
         return "fail", "Down"
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--watch", action="store_true", help="Regenera cada 30s")
-    args = parser.parse_args()
-
+async def main_async(watch: bool):
     while True:
         try:
-            providers = get_health_data()
+            providers = await get_health_data()
             cards = []
             for p in providers:
                 css_class, label = status_info(p["health"])
                 last_check = "never"
                 latency = "N/A"
+                error = "—"
                 if p["health"]:
                     if p["health"].last_checked:
                         last_check = p["health"].last_checked.strftime("%H:%M:%S")
-                    latency = f"{p['health'].latency or 0:.0f}ms"
+                    latency = f"{p['health'].latency_ms:.0f}ms"
+                    error = p["health"].error or "—"
                 cards.append(CARD.format(
                     name=p["id"],
                     css_class=css_class,
@@ -156,6 +158,7 @@ def main():
                     ctype=p["contract_type"],
                     last_check=last_check,
                     latency=latency,
+                    error=error,
                 ))
 
             now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -169,14 +172,23 @@ def main():
             with open(OUTPUT, "w") as f:
                 f.write(html)
 
-            log.info(f"Dashboard generado: {OUTPUT}")
+            healthy = sum(1 for p in providers if p["health"] and p["health"].is_healthy)
+            total = len(providers)
+            log.info(f"Dashboard: {healthy}/{total} providers healthy → {OUTPUT}")
 
         except Exception as e:
             log.error(f"Error generando dashboard: {e}")
 
-        if not args.watch:
+        if not watch:
             break
-        time.sleep(REFRESH)
+        await asyncio.sleep(REFRESH)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--watch", action="store_true", help="Regenera cada 60s")
+    args = parser.parse_args()
+    asyncio.run(main_async(args.watch))
 
 
 if __name__ == "__main__":

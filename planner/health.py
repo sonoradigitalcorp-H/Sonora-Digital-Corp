@@ -73,12 +73,14 @@ async def check_provider_health(health_url: str | None = None, provider_id: str 
     start = time.time()
 
     if not health_url:
-        return ProviderHealth(
+        health = ProviderHealth(
             provider_id=provider_id,
             status="healthy",
             last_checked=now,
             latency_ms=0.0,
         )
+        set_health(health)
+        return health
 
     try:
         async with httpx.AsyncClient(timeout=timeout) as client:

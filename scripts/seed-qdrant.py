@@ -6,7 +6,10 @@ Uso: python3 scripts/seed-qdrant.py [--recreate]
 import argparse
 import json
 import logging
+import warnings
 from pathlib import Path
+
+warnings.filterwarnings("ignore", category=UserWarning, module="qdrant_client")
 
 from qdrant_client import QdrantClient
 from qdrant_client.models import (
