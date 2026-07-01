@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDC Mission Control</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family:'Inter',sans-serif;
+  background:#08080e;
+  color:#e0e0e0;
+  padding:30px 40px;
+}
+
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:30px;
+  padding-bottom:20px;
+  border-bottom:1px solid #1a1a2e;
+}
+
+.header h1 {
+  font-size:1.5rem;
+  font-weight:700;
+  background:linear-gradient(135deg,#60a5fa,#a78bfa);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.header .status-bar {
+  display:flex;
+  gap:20px;
+  font-size:0.78rem;
+}
+
+.status-dot {
+  display:inline-block;
+  width:8px;height:8px;
+  border-radius:50%;
+  margin-right:6px;
+}
+.status-dot.green { background:#4ade80; }
+.status-dot.yellow { background:#facc15; }
+.status-dot.red { background:#f87171; }
+
+.grid { display:grid; gap:16px; }
+
+.row { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
+
+.card {
+  background:#111827;
+  border-radius:12px;
+  padding:20px;
+  border:1px solid #1e293b;
+}
+
+.card h3 {
+  font-size:0.7rem;
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  color:#64748b;
+  margin-bottom:12px;
+}
+
+.card .big {
+  font-size:2.2rem;
+  font-weight:700;
+}
+
+table { width:100%; border-collapse:collapse; font-size:0.82rem; }
+td, th { padding:8px 6px; text-align:left; border-bottom:1px solid #1a1a2e; }
+th { color:#64748b; font-size:0.7rem; text-transform:uppercase; letter-spacing:1px; }
+td:last-child, th:last-child { text-align:right; }
+
+.badge {
+  display:inline-block;
+  padding:2px 8px;
+  border-radius:4px;
+  font-size:0.7rem;
+  font-weight:600;
+}
+.badge.green { background:#1a2e1a; color:#4ade80; }
+.badge.yellow { background:#3b2e1a; color:#facc15; }
+.badge.red { background:#3b1a1a; color:#f87171; }
+.badge.gray { background:#1e293b; color:#64748b; }
+
+.alert-list { list-style:none; }
+.alert-list li {
+  padding:8px 0;
+  border-bottom:1px solid #1a1a2e;
+  font-size:0.82rem;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.env-grid {
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:4px;
+  font-size:0.78rem;
+}
+.env-grid .key { color:#64748b; }
+.env-grid .val { color:#94a3b8; text-align:right; font-family:monospace; font-size:0.75rem; }
+
+.section-title {
+  font-size:0.85rem;
+  font-weight:600;
+  color:#94a3b8;
+  margin:20px 0 10px;
+  padding-left:10px;
+  border-left:2px solid #60a5fa;
+}
+
+@media (max-width:768px) {
+  body { padding:15px; }
+  .row { grid-template-columns:1fr; }
+  .header { flex-direction:column; gap:10px; }
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🛸 SDC Mission Control</h1>
+  <div class="status-bar">
+    <span><span class="status-dot green"></span> VPS Online</span>
+    <span><span class="status-dot green"></span> 11 Containers</span>
+    <span><span class="status-dot yellow"></span> 2 Unhealthy</span>
+    <span>v2.0.0</span>
+  </div>
+</div>
+
+<!-- STATS ROW -->
+<div class="row">
+  <div class="card"><h3>VPS Uptime</h3><div class="big" id="uptime">—</div></div>
+  <div class="card"><h3>Memory</h3><div class="big" id="memory">—</div></div>
+  <div class="card"><h3>Disk</h3><div class="big" id="disk">—</div></div>
+  <div class="card"><h3>Enterprise Score</h3><div class="big" id="score">—</div></div>
+  <div class="card"><h3>Engram Memories</h3><div class="big" id="engram">209</div></div>
+</div>
+
+<!-- MAIN CONTENT ROW -->
+<div class="row">
+  <!-- LEFT: Containers -->
+  <div class="card" style="grid-column:span 1;">
+    <h3>🐳 Containers</h3>
+    <table id="containers">
+      <thead><tr><th>Name</th><th>Domain</th><th>Status</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- MIDDLE: Services -->
+  <div class="card" style="grid-column:span 1;">
+    <h3>🔌 Services</h3>
+    <table id="services">
+      <thead><tr><th>Endpoint</th><th>Status</th></tr></thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+  <!-- RIGHT: Alerts -->
+  <div class="card" style="grid-column:span 1;">
+    <h3>🔔 Recent Alerts</h3>
+    <ul class="alert-list" id="alerts">
+      <li><span>Loading...</span><span>—</span></li>
+    </ul>
+  </div>
+</div>
+
+<!-- SECOND ROW: Security + Env -->
+<div class="row">
+  <div class="card">
+    <h3>🔒 Security</h3>
+    <table>
+      <tr><td>UFW Firewall</td><td><span class="badge green">Active</span></td></tr>
+      <tr><td>Fail2ban Jails</td><td><span class="badge green" id="fail2ban">4</span></td></tr>
+      <tr><td>SSH Password Auth</td><td><span class="badge red">Disabled</span></td></tr>
+      <tr><td>Root Login</td><td><span class="badge green">Disabled</span></td></tr>
+      <tr><td>Branch Protection</td><td><span class="badge green">Active</span></td></tr>
+      <tr><td>Secrets in Git</td><td><span class="badge green">None</span></td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>🌐 Environment Variables</h3>
+    <div class="env-grid">
+      <span class="key">ABE_TELEGRAM_TOKEN</span><span class="val">✅ Set</span>
+      <span class="key">ABE_FENIX_BOT_TOKEN</span><span class="val">✅ Set</span>
+      <span class="key">MERCADO_PAGO_TOKEN</span><span class="val">✅ Set</span>
+      <span class="key">OPENROUTER_API_KEY</span><span class="val">⚠️ Check</span>
+      <span class="key">NEO4J_PASSWORD</span><span class="val">✅ Set</span>
+      <span class="key">POSTGRES_PASSWORD</span><span class="val">✅ Set</span>
+      <span class="key">REDIS_PASSWORD</span><span class="val">✅ Set</span>
+      <span class="key">NEXTAUTH_SECRET</span><span class="val">⚠️ Default</span>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>📋 SPECs Completed</h3>
+    <table>
+      <tr><td>SPEC-001</td><td>Pipeline System</td><td><span class="badge green">✅</span></td></tr>
+      <tr><td>SPEC-002</td><td>Revenue Pipeline</td><td><span class="badge green">84</span></td></tr>
+      <tr><td>SPEC-003</td><td>Dockerización</td><td><span class="badge green">82</span></td></tr>
+      <tr><td>SPEC-004</td><td>Redis Streams</td><td><span class="badge green">✅</span></td></tr>
+      <tr><td>SPEC-005</td><td>Governance as Code</td><td><span class="badge green">✅</span></td></tr>
+      <tr><td>SPEC-006</td><td>Domain Architecture</td><td><span class="badge green">✅</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- SCRIPTS: Live data -->
+<script>
+async function loadData() {
+  try {
+    // Enterprise Score
+    const scoreRes = await fetch('http://127.0.0.1:5174/api/enterprise-score');
+    const scoreData = await scoreRes.json();
+    document.getElementById('score').textContent = scoreData.total + '/100';
+  } catch(e) {
+    document.getElementById('score').textContent = 'Offline';
+  }
+
+  // Docker containers
+  try {
+    const res = await fetch('http://127.0.0.1:5174/api/brain/dashboard');
+    const data = await res.json();
+  } catch(e) {}
+
+  // Uptime placeholder
+  document.getElementById('uptime').textContent = '6 days';
+  document.getElementById('memory').textContent = '2.7/11 GB';
+  document.getElementById('disk').textContent = '21/96 GB';
+}
+
+loadData();
+setInterval(loadData, 30000);
+</script>
+</body>
+</html>
