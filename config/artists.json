@@ -1,0 +1,54 @@
+{
+  "artists": {
+    "911c7986": {
+      "name": "Hector Rubio",
+      "spotify_artist_id": null,
+      "spotify_client_id": null,
+      "spotify_client_secret": null,
+      "spotify_refresh_token": null,
+      "manual_streams": 193000,
+      "manual_revenue": 9660,
+      "last_sync": null,
+      "sources": [
+        "manual"
+      ]
+    },
+    "f5fcf586": {
+      "name": "Jesus Urquijo",
+      "spotify_artist_id": null,
+      "spotify_client_id": null,
+      "spotify_client_secret": null,
+      "spotify_refresh_token": null,
+      "manual_streams": 245000,
+      "manual_revenue": 12110,
+      "last_sync": null,
+      "sources": [
+        "manual"
+      ]
+    },
+    "645ca026": {
+      "name": "Javier Arvayo",
+      "spotify_artist_id": null,
+      "spotify_client_id": null,
+      "spotify_client_secret": null,
+      "spotify_refresh_token": null,
+      "manual_streams": 101000,
+      "manual_revenue": 5110,
+      "last_sync": null,
+      "sources": [
+        "manual"
+      ]
+    },
+    "test-artist": {
+      "name": "Test Artist",
+      "spotify_artist_id": null,
+      "spotify_client_id": null,
+      "spotify_client_secret": null,
+      "spotify_refresh_token": null,
+      "manual_streams": 10000,
+      "manual_revenue": 500,
+      "last_sync": null,
+      "sources": []
+    }
+  }
+}

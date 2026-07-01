@@ -190,6 +190,21 @@ body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%
         <h3>💰 Revenue Split</h3>
         <div id="revenueSplit"></div>
       </div>
+      <div class="panel-card glass">
+        <h3>🔌 Conectar Datos Reales</h3>
+        <p style="font-size:.75rem;color:var(--dim);margin-bottom:.5rem">Conectá Spotify para datos automáticos o ingresá manualmente.</p>
+        <select id="connectorArtistSelect" style="font-size:.75rem;padding:.3rem;margin-bottom:.3rem"></select>
+        <div style="display:flex;gap:.3rem;margin-bottom:.3rem">
+          <button class="glass-sm" style="flex:1;padding:.3rem;font-size:.7rem;cursor:pointer;border:none;color:var(--text)" onclick="syncArtist()">🔄 Sync Spotify</button>
+          <button class="glass-sm" style="flex:1;padding:.3rem;font-size:.7rem;cursor:pointer;border:none;color:var(--text)" onclick="showManualInput()">✏️ Manual</button>
+        </div>
+        <div id="manualInput" style="display:none">
+          <input id="manualStreams" placeholder="Streams" style="width:48%;font-size:.75rem;padding:.3rem">
+          <input id="manualRevenue" placeholder="Revenue" style="width:48%;font-size:.75rem;padding:.3rem">
+          <button class="glass-sm" style="width:100%;padding:.3rem;font-size:.7rem;cursor:pointer;border:none;color:var(--text);margin-top:.3rem" onclick="saveManual()">Guardar</button>
+        </div>
+        <div id="syncResult" style="font-size:.7rem;color:var(--dim);margin-top:.3rem"></div>
+      </div>
     </div>
   </div>
 </div>
@@ -246,13 +261,14 @@ async function load() {
     const initials = (a.name || a.nombre || '?').split(' ').map(w => w[0]).join('').slice(0, 2);
     const streams = a.streams || 0;
     const revenue = a.income || a.revenue || 0;
-    return `<div class="artist-card glass-sm" onclick="askAbout('${a.name || a.nombre}')">
+      const source = a.spotify_listeners ? '🎵 Spotify' : (a.data_source || '📝 Manual');
+      return `<div class="artist-card glass-sm" onclick="askAbout('${a.name || a.nombre}')">
       <div class="avatar">${initials}</div>
       <h3>${a.name || a.nombre}</h3>
-      <div class="genre">${a.genre || 'Artista'}</div>
+      <div class="genre">${a.genre || 'Artista'} · ${a.spotify_listeners ? '👥 '+(a.spotify_listeners/1000).toFixed(0)+'K oyentes' : ''}</div>
       <div class="row"><span class="l">Streams</span><span class="r">${(streams/1000).toFixed(1)}K</span></div>
       <div class="row"><span class="l">Revenue</span><span class="r">$${revenue.toLocaleString()}</span></div>
-      <div class="badge">${a.status || 'active'}</div>
+      <div class="badge">${source}</div>
     </div>`;
   }).join('');
 
@@ -314,6 +330,43 @@ function askAbout(topic) {
   document.getElementById('chatInput').value = 'Dime sobre ' + topic;
   sendChat();
 }
+
+// Connector functions
+function showManualInput() {
+  document.getElementById('manualInput').style.display = 'block';
+}
+
+async function syncArtist() {
+  const sel = document.getElementById('connectorArtistSelect');
+  const name = sel.value;
+  if (!name) return;
+  document.getElementById('syncResult').textContent = 'Sincronizando ' + name + '...';
+  const result = await call('artist_sync', {artist_id: name});
+  document.getElementById('syncResult').textContent = '✅ ' + name + ' sincronizado. ' + (result.results||[]).map(r => r.source + '=' + r.status).join(', ');
+  setTimeout(load, 2000);
+}
+
+async function saveManual() {
+  const sel = document.getElementById('connectorArtistSelect');
+  const name = sel.value;
+  const streams = parseInt(document.getElementById('manualStreams').value) || 0;
+  const revenue = parseInt(document.getElementById('manualRevenue').value) || 0;
+  await call('artist_configure', {artist_id: name, artist_name: name, manual_streams: streams, manual_revenue: revenue});
+  document.getElementById('syncResult').textContent = '✅ Datos manuales guardados para ' + name;
+  setTimeout(load, 2000);
+}
+
+// Fill connector select after loading artists
+const origLoad = load;
+load = function() {
+  origLoad();
+  setTimeout(() => {
+    const sel = document.getElementById('connectorArtistSelect');
+    const cards = document.querySelectorAll('.artist-card h3');
+    sel.innerHTML = '<option value="">Seleccionar artista...</option>';
+    cards.forEach(c => sel.innerHTML += '<option value="'+c.textContent+'">'+c.textContent+'</option>');
+  }, 500);
+};
 
 load();
 </script>
