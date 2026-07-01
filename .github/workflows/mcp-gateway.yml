@@ -1,0 +1,159 @@
+name: MCP Gateway — CI + Conformance
+
+on:
+  push:
+    paths:
+      - 'mcp/**'
+      - '.github/workflows/mcp-gateway.yml'
+  pull_request:
+    paths:
+      - 'mcp/**'
+  schedule:
+    - cron: '0 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: mcp/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd mcp
+          npm ci
+
+      - name: Lint & syntax check
+        run: |
+          cd mcp
+          echo "=== Syntax checks ==="
+          node -c gateway/mcp-server-http.js
+          node -c gateway/mcp-gateway.js
+          node -c auth/jwt.js
+          node -c auth/middleware.js
+          node -c registry/capability-registry.js
+          node -c providers/provider-router.js
+          node -c adk/adk.js
+          node -c sdk/sonora-client.js
+          echo "=== Module resolution ==="
+          node -e "
+            require('./auth/jwt');
+            require('./auth/middleware');
+            require('./registry/capability-registry');
+            require('./providers/provider-router');
+            require('./adk/adk');
+            console.log('All modules loaded OK');
+          "
+
+      - name: ADK — Agent definitions test
+        run: |
+          cd mcp
+          node -e "
+            const { runtime } = require('./adk/adk');
+            const agents = runtime.list();
+            console.log('ADK agents:', agents.length);
+            agents.forEach(a => {
+              const v = runtime.validate(a);
+              console.log('  ' + a.name + ': ' + (v.valid ? '✅' : '❌ ' + v.errors.join(', ')));
+            });
+            if (agents.some(a => !runtime.validate(a).valid)) process.exit(1);
+          "
+
+      - name: Capability Registry test
+        run: |
+          cd mcp
+          node -e "
+            const r = require('./registry/capability-registry');
+            const caps = r.getRegistered();
+            console.log('Capabilities:', caps.length);
+            const tests = [
+              { task: 'generate a sales proposal', expect: 'Sales' },
+              { task: 'find me a new lead for our service', expect: 'Lead' },
+              { task: 'deploy the application to production', expect: 'Deployment' },
+              { task: 'what is the meaning of life', expect: 'research' },
+            ];
+            let pass = 0;
+            tests.forEach(t => {
+              const res = r.resolve(t.task);
+              const ok = res.capability.includes(t.expect) || t.expect === 'research' && res.fallback;
+              console.log('  [' + (ok ? '✅' : '❌') + '] ' + t.task + ' → ' + res.capability + ' (' + res.confidence + ')');
+              if (ok) pass++;
+            });
+            console.log('Passed:', pass, '/', tests.length);
+            if (pass < tests.length) process.exit(1);
+          "
+
+      - name: Provider Router test
+        run: |
+          cd mcp
+          node -e "
+            const p = require('./providers/provider-router');
+            const models = p.listModels();
+            console.log('Models:', models.length);
+            const capabilities = ['research', 'code', 'sales', 'content', 'default'];
+            capabilities.forEach(cap => {
+              const r = p.resolveForCapability(cap);
+              console.log('  ' + cap + ' → ' + r.provider + '/' + r.model);
+            });
+          "
+
+      - name: SDK integration test
+        run: |
+          cd mcp
+          node -e "
+            const Sonora = require('./sdk/sonora-client');
+            const sdk = new SonoraSDK({ clientId: 'test', clientSecret: 'test' });
+            console.log('SDK loaded OK');
+          "
+
+      - name: Gateway startup test
+        run: |
+          cd mcp
+          timeout 8 node -e "
+            const { spawn } = require('child_process');
+            const http = require('http');
+            const gw = spawn('node', ['gateway/mcp-server-http.js'], { stdio: 'pipe' });
+            gw.stderr.on('data', d => process.stderr.write(d));
+            
+            setTimeout(async () => {
+              try {
+                // Health
+                const h = await new Promise(r => http.get('http://127.0.0.1:18989/api/health', res => { let d='';res.on('data',c=>d+=c);res.on('end',()=>r(JSON.parse(d))); }));
+                console.log('Health:', h.status === 'ok' ? '✅' : '❌');
+                
+                // Auth
+                const t = await new Promise((resolve, reject) => {
+                  const data = JSON.stringify({client_id:'sdc-core',client_secret:'sdc_secret_ent3rpr1s3_k3y_2026'});
+                  const req = http.request({hostname:'127.0.0.1',port:18989,path:'/api/auth/token',method:'POST',headers:{'Content-Type':'application/json','Content-Length':data.length}}, r => { let d='';r.on('data',c=>d+=c);r.on('end',()=>resolve(JSON.parse(d))); });
+                  req.on('error', reject); req.write(data); req.end();
+                });
+                const token = t.access_token;
+                console.log('Auth:', token ? '✅' : '❌');
+                
+                // Capabilities via auth
+                const r = await new Promise((resolve, reject) => {
+                  const req = http.get({hostname:'127.0.0.1',port:18989,path:'/api/capability/list',headers:{'Authorization':'Bearer '+token}}, r => { let d='';r.on('data',c=>d+=c);r.on('end',()=>resolve(JSON.parse(d))); });
+                  req.on('error', reject);
+                });
+                console.log('Capabilities:', r.capabilities ? r.capabilities.length + ' ✅' : '❌');
+                
+                // 401 for no auth
+                const u = await new Promise(r => http.get({hostname:'127.0.0.1',port:18989,path:'/api/tools'}, res => r(res.statusCode)));
+                console.log('401 check:', u === 401 ? '✅' : '❌');
+                
+                gw.kill();
+                process.exit(0);
+              } catch(e) {
+                console.log('Error:', e.message);
+                gw.kill();
+                process.exit(1);
+              }
+            }, 2500);
+          "

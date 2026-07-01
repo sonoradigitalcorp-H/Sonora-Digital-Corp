@@ -1,0 +1,13 @@
+const http = require('http'); const FASTAPI = { host: '127.0.0.1', port: 8000 };
+function api(method, path, body) { return new Promise((resolve) => { const data = body ? JSON.stringify(body) : null; const req = http.request({ hostname: FASTAPI.host, port: FASTAPI.port, path, method, headers: { 'Content-Type': 'application/json' }, timeout: 15000 }, (res) => { let d = ''; res.on('data', c => d += c); res.on('end', () => { try { resolve(JSON.parse(d)); } catch { resolve({ raw: d }); } }); }); req.on('error', (e) => resolve({ error: e.message })); if (data) req.write(data); req.end(); }); }
+const tools = {
+  abe_create_artist: { description: 'Crea artista en ABE Music CRM', inputSchema: { type: 'object', properties: {} }, handler: async (args) => await api('POST', '/api/abe/artists', args) },
+  abe_list_artists: { description: 'Lista artistas ABE', inputSchema: { type: 'object', properties: { status: { type: 'string' } } }, handler: async (args) => await api('GET', `/api/abe/artists${args.status ? '?status=' + args.status : ''}`) },
+  abe_get_artist: { description: 'Obtiene artista por ID', inputSchema: { type: 'object', properties: { artist_id: { type: 'string' } }, required: ['artist_id'] }, handler: async (args) => await api('GET', `/api/abe/artists/${args.artist_id}`) },
+  abe_create_release: { description: 'Crea release para artista', inputSchema: { type: 'object', properties: { artist_id: { type: 'string' } }, required: ['artist_id'] }, handler: async (args) => await api('POST', `/api/abe/artists/${args.artist_id}/releases`, args) },
+  abe_record_stream: { description: 'Registra stream en release', inputSchema: { type: 'object', properties: { release_id: { type: 'string' }, amount: { type: 'number' } }, required: ['release_id'] }, handler: async (args) => await api('POST', `/api/abe/releases/${args.release_id}/stream`, { amount: args.amount || 1 }) },
+  abe_record_revenue: { description: 'Registra revenue en release', inputSchema: { type: 'object', properties: { release_id: { type: 'string' }, amount: { type: 'number' }, source: { type: 'string' } }, required: ['release_id'] }, handler: async (args) => await api('POST', `/api/abe/releases/${args.release_id}/revenue`, args) },
+  abe_ceo_dashboard: { description: 'Dashboard CEO de ABE Music', inputSchema: { type: 'object', properties: {} }, handler: async () => await api('GET', '/api/abe/dashboard/ceo') },
+  abe_artist_kpi: { description: 'KPI de artista', inputSchema: { type: 'object', properties: { artist_id: { type: 'string' } }, required: ['artist_id'] }, handler: async (args) => await api('GET', `/api/abe/dashboard/artist/${args.artist_id}`) },
+};
+module.exports = { tools };

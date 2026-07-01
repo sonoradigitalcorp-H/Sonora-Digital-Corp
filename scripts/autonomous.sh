@@ -59,6 +59,23 @@ echo "[$NOW] === Autónomo: Iniciando ciclo ===" >> "$LOG"
 {
     echo "=== Healthcheck ==="
     ALL_UP=true
+    
+    # MCP Gateway (entry point único)
+    mcp_code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 "http://127.0.0.1:18989/api/health" 2>/dev/null || echo "000")
+    echo "  MCP Gateway (:18989) → $mcp_code"
+    if [ "$mcp_code" != "200" ]; then
+        ALL_UP=false
+        echo "  ⚠️ MCP Gateway caído"
+        emit_event "service_down" "ops" "{\"service\":\"mcp-gateway\",\"port\":\"18989\",\"detected_by\":\"autonomous.sh\"}"
+        systemctl restart sonora-mcp-gateway.service 2>/dev/null && echo "  🔄 Restarted mcp-gateway" || echo "  ⚠️ MCP restart failed"
+        sleep 5
+        retry=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 "http://127.0.0.1:18989/api/health" 2>/dev/null || echo "000")
+        if [ "$retry" = "200" ]; then
+            echo "  ✅ Auto-recovery successful for mcp-gateway"
+            emit_event "service_recovered" "ops" "{\"service\":\"mcp-gateway\",\"recovered_by\":\"autonomous.sh\"}"
+        fi
+    fi
+    
     for svc in "http://localhost:5174/api/status" "http://localhost:8000/health" "http://localhost:18789/health"; do
         code=$(curl -s -o /dev/null -w "%{http_code}" --max-time 5 "$svc" 2>/dev/null || echo "000")
         echo "  $svc → $code"
@@ -67,7 +84,6 @@ echo "[$NOW] === Autónomo: Iniciando ciclo ===" >> "$LOG"
             ALL_UP=false
             echo "  ⚠️  Servicio caído: $svc"
             emit_event "service_down" "ops" "{\"service\":\"${svc_name}\",\"port\":\"${svc_name}\",\"detected_by\":\"autonomous.sh\"}"
-            # ── Auto-recovery (event-driven trigger) ──
             case "$svc_name" in
                 5174) systemctl --user restart jarvis-webui.service 2>/dev/null && echo "  🔄 Restarted webui" || echo "  ⚠️ WebUI restart failed" ;;
                 8000) systemctl --user restart hermes-gateway.service 2>/dev/null && echo "  🔄 Restarted hermes" || echo "  ⚠️ Hermes restart failed" ;;
@@ -82,7 +98,7 @@ echo "[$NOW] === Autónomo: Iniciando ciclo ===" >> "$LOG"
         fi
     done
     if [ "$ALL_UP" = true ]; then
-        emit_event "service_healthy" "ops" "{\"checks\":3,\"all_up\":true}"
+        emit_event "service_healthy" "ops" "{\"checks\":4,\"all_up\":true}"
     fi
     
     # Verificar Docker

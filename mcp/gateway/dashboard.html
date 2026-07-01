@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Native Agent OS — Dashboard</title>
+<style>
+  :root { --bg: #0a0a0f; --surface: #13131a; --border: #1e1e2a; --text: #e0e0e0; --dim: #6b6b80; --accent: #7c5cfc; --green: #34d399; --yellow: #fbbf24; --red: #f87171; --blue: #60a5fa; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace; background: var(--bg); color: var(--text); padding: 2rem; }
+  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+  .header h1 { font-size: 1.4rem; font-weight: 600; }
+  .header h1 span { color: var(--accent); }
+  .header .ts { color: var(--dim); font-size: 0.8rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 1.2rem; }
+  .card h2 { font-size: 0.75rem; text-transform: uppercase; color: var(--dim); letter-spacing: 1px; margin-bottom: 0.8rem; }
+  .card .val { font-size: 2rem; font-weight: 700; }
+  .card .sub { font-size: 0.8rem; color: var(--dim); margin-top: 0.3rem; }
+  .card .list { margin-top: 0.5rem; }
+  .card .item { display: flex; justify-content: space-between; padding: 0.3rem 0; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+  .card .item:last-child { border: 0; }
+  .tag { display: inline-block; padding: 0.1rem 0.4rem; border-radius: 3px; font-size: 0.65rem; margin-right: 0.3rem; }
+  .tag-green { background: rgba(52,211,153,0.15); color: var(--green); }
+  .tag-yellow { background: rgba(251,191,36,0.15); color: var(--yellow); }
+  .tag-red { background: rgba(248,113,113,0.15); color: var(--red); }
+  .tag-blue { background: rgba(96,165,250,0.15); color: var(--blue); }
+  .tag-purple { background: rgba(124,92,252,0.15); color: var(--accent); }
+  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 0.4rem; }
+  .dot-green { background: var(--green); }
+  .dot-yellow { background: var(--yellow); }
+  .dot-red { background: var(--red); }
+  .bar { height: 4px; border-radius: 2px; background: var(--border); margin-top: 0.3rem; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 2px; transition: width 0.5s; }
+  pre { font-size: 0.7rem; color: var(--dim); white-space: pre-wrap; margin-top: 0.5rem; }
+  .flex { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .refresh { background: var(--surface); border: 1px solid var(--border); color: var(--text); padding: 0.4rem 0.8rem; border-radius: 4px; cursor: pointer; font-size: 0.75rem; }
+  .refresh:hover { background: var(--border); }
+  @media (max-width: 600px) { body { padding: 1rem; } .grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🜁 <span>Native Agent OS</span> — Sonora Digital Corp</h1>
+  <div><button class="refresh" onclick="location.reload()">⟳ refresh</button> <span class="ts" id="ts"></span></div>
+</div>
+
+<div class="grid" id="stats"></div>
+<div class="grid" id="main"></div>
+
+<script>
+const GATEWAY = 'http://127.0.0.1:18989';
+
+async function api(path, opts = {}) {
+  try {
+    const r = await fetch(GATEWAY + path, {
+      headers: { 'Content-Type': 'application/json', ...opts.headers },
+      method: opts.method || 'GET',
+      body: opts.body ? JSON.stringify(opts.body) : undefined,
+    });
+    return await r.json();
+  } catch { return { error: 'MCP Gateway no disponible en :18989' }; }
+}
+
+async function getToken() {
+  const r = await api('/api/auth/token', {
+    method: 'POST',
+    body: { client_id: 'sdc-core', client_secret: 'sdc_secret_ent3rpr1s3_k3y_2026' },
+  });
+  return r.access_token || '';
+}
+
+async function call(tool, params = {}) {
+  const token = await getToken();
+  if (!token) return { error: 'Auth failed' };
+  return api('/api/call', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token },
+    body: { tool, params },
+  });
+}
+
+async function load() {
+  document.getElementById('ts').textContent = new Date().toISOString();
+
+  // Status
+  const status = await api('/api/status', { headers: { 'Authorization': 'Bearer ' + (await getToken()) } });
+
+  // Stats row
+  const statsHtml = `
+    <div class="card"><h2>Gateway</h2><div class="val">${status.summary ? status.summary.online + '/' + status.summary.total : '?'}</div><div class="sub">servicios online</div></div>
+    <div class="card"><h2>Version</h2><div class="val" style="font-size:1.4rem">${status.version || '?'}</div><div class="sub">${status.ecosystem || ''}</div></div>
+    <div class="card"><h2>Tenant</h2><div class="val" style="font-size:1.4rem">${status.tenant || 'N/A'}</div><div class="sub">autenticado</div></div>
+    <div class="card"><h2>Timestamp</h2><div class="val" style="font-size:0.9rem">${status.timestamp ? new Date(status.timestamp).toLocaleTimeString() : '?'}</div><div class="sub">último check</div></div>
+  `;
+  document.getElementById('stats').innerHTML = statsHtml;
+
+  // Tools
+  const toolsResp = await api('/api/tools', { headers: { 'Authorization': 'Bearer ' + (await getToken()) } });
+  const tools = toolsResp.tools || [];
+  const byType = {};
+  tools.forEach(t => { const cat = t.name.split('_')[0] || 'other'; byType[cat] = (byType[cat] || 0) + 1; });
+
+  // Capabilities
+  const capsResp = await call('capability_list');
+  const caps = capsResp.capabilities || [];
+
+  // Skills
+  const skillsResp = await call('skills_stats');
+  const skills = skillsResp.bySource || {};
+
+  // ADK
+  const adkResp = await call('adk_list_agents');
+  const adk = adkResp.agents || [];
+
+  // Providers
+  const provResp = await call('provider_list');
+  const models = provResp.models || [];
+
+  // Score
+  const scoreResp = await call('enterprise_score');
+
+  // Services status
+  const svcs = status.services || {};
+
+  const mainHtml = `
+    <div class="card">
+      <h2>🔧 Tools (${tools.length})</h2>
+      <div class="flex" style="margin-bottom:0.5rem">
+        ${Object.entries(byType).sort((a,b) => b[1]-a[1]).slice(0,8).map(([k,v]) =>
+          `<span class="tag tag-purple">${k}: ${v}</span>`
+        ).join('')}
+      </div>
+      <div style="max-height:200px;overflow-y:auto">
+        ${tools.slice(0,30).map(t => `<div class="item"><span>${t.name}</span></div>`).join('')}
+        ${tools.length > 30 ? `<div class="sub">... y ${tools.length - 30} más</div>` : ''}
+      </div>
+    </div>
+
+    <div class="card">
+      <h2>📋 Capability Registry (${caps.length})</h2>
+      ${caps.slice(0,15).map(c => `
+        <div class="item">
+          <span>${c.capability}</span>
+          <span class="tag ${c.maturity?.includes('1') ? 'tag-red' : c.maturity?.includes('2') ? 'tag-yellow' : 'tag-green'}">${c.maturity || '?'}</span>
+        </div>
+      `).join('')}
+    </div>
+
+    <div class="card">
+      <h2>🎯 Enterprise Score</h2>
+      <div class="val">${scoreResp.score || '?'}/100</div>
+      <div class="bar"><div class="bar-fill" style="width:${Math.min(scoreResp.score || 0, 100)}%;background:${(scoreResp.score||0) >= 60 ? 'var(--green)' : 'var(--yellow)'}"></div></div>
+      ${scoreResp.metrics ? Object.entries(scoreResp.metrics).slice(0,5).map(([k,v]) =>
+        `<div class="item"><span>${k}</span><span>${v}/10</span></div>`
+      ).join('') : ''}
+    </div>
+
+    <div class="card">
+      <h2>🧠 ADK Agents (${adk.length})</h2>
+      ${adk.map(a => `
+        <div class="item">
+          <span><span class="dot dot-green"></span>${a.name}</span>
+          <span class="tag tag-purple">${a.capability || '?'}</span>
+        </div>
+      `).join('') || '<div class="sub">No hay agentes ADK registrados</div>'}
+    </div>
+
+    <div class="card">
+      <h2>🌐 Providers (${models.length} models)</h2>
+      ${models.slice(0,8).map(m =>
+        `<div class="item"><span>${m.provider}</span><span>${m.model}</span></div>`
+      ).join('')}
+    </div>
+
+    <div class="card">
+      <h2>📦 Skills Marketplace</h2>
+      ${Object.entries(skills).map(([k,v]) =>
+        `<div class="item"><span>${k}</span><span>${v} skills</span></div>`
+      ).join('')}
+      <div class="sub">Total: ${Object.values(skills).reduce((a,b) => a+b, 0)} skills</div>
+    </div>
+
+    <div class="card">
+      <h2>🟢 Servicios</h2>
+      ${Object.entries(svcs).map(([k,v]) =>
+        `<div class="item"><span><span class="dot ${v ? 'dot-green' : 'dot-red'}"></span>${k}</span><span>${v ? 'UP' : 'DOWN'}</span></div>`
+      ).join('')}
+    </div>
+
+    <div class="card">
+      <h2>💻 Sistema</h2>
+      <div class="item"><span>GitHub Actions</span><span>22 workflows</span></div>
+      <div class="item"><span>Docker Services</span><span>12 containers</span></div>
+      <div class="item"><span>Systemd</span><span>5 services</span></div>
+      <div class="item"><span>MCP Gateway</span><span>:18989</span></div>
+      <div class="item"><span>FastAPI (legacy)</span><span>:8000/:5174</span></div>
+    </div>
+  `;
+  document.getElementById('main').innerHTML = mainHtml;
+}
+
+load();
+</script>
+</body>
+</html>

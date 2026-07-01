@@ -1,31 +1,46 @@
 {
   "name": "@sonora/mcp-ecosystem",
-  "version": "1.0.0",
-  "description": "MCP Ecosystem — Sonora Digital Corp. Gateway unificado, servidores MCP, CLI y SDK para todos los servicios.",
+  "version": "2.0.0",
+  "description": "MCP Ecosystem — Sonora Digital Corp. Native Agent OS: Gateway, Auth, ADK, CLI, SDK.",
   "main": "gateway/mcp-gateway.js",
   "type": "commonjs",
   "bin": {
     "sonora": "./cli/sonora",
     "sonora-mcp": "./gateway/mcp-gateway.js",
-    "sonora-sdk": "./sdk/sonora-client.js"
+    "sonora-sdk": "./sdk/sonora-client.js",
+    "sdc": "./cli/sdc"
   },
   "scripts": {
-    "start": "node gateway/mcp-gateway.js",
-    "cli": "node cli/sonora",
+    "start": "node gateway/mcp-server-http.js",
+    "cli": "node cli/sdc",
     "sdk": "node sdk/sonora-client.js",
+    "adk": "node cli/sdc adk",
     "test": "node -e \"const s = require('./sdk/sonora-client'); console.log('SDK OK:', typeof s);\""
   },
-  "keywords": ["sonora", "mcp", "openclaw", "hermes", "ecosystem"],
+  "keywords": [
+    "sonora",
+    "mcp",
+    "openclaw",
+    "hermes",
+    "adk",
+    "native-agent-os"
+  ],
   "author": "Luis Daniel Guerrero Enciso",
   "license": "MIT",
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
+    "jsonwebtoken": "^9.0.3",
     "zod": "^4.4.3"
   },
   "files": [
     "gateway/",
     "servers/",
     "cli/",
-    "sdk/"
+    "sdk/",
+    "auth/",
+    "registry/",
+    "tools/",
+    "adk/",
+    "providers/"
   ]
 }

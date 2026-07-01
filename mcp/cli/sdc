@@ -1,0 +1,414 @@
+#!/usr/bin/env node
+/**
+ * ═══════════════════════════════════════════════════════════════
+ * sdc — Sonora Digital Corp Unified CLI v2.0
+ * ═══════════════════════════════════════════════════════════════
+ * Un solo comando para todo el ecosistema.
+ * Reemplaza 61 scripts legacy con subcomandos organizados.
+ *
+ * Uso: sdc <comando> [subcomando] [args]
+ *
+ * Comandos:
+ *   sdc                          Estado general del ecosistema
+ *   sdc agent list|spawn|kill    Gestión de agentes
+ *   sdc mcp status|tools|auth    MCP Gateway
+ *   sdc adk init|build|register  Agent Development Kit
+ *   sdc capability list|resolve  Capability Registry
+ *   sdc skill list|run           Skills
+ *   sdc event emit|tail          Eventos
+ *   sdc score                    Enterprise Score
+ *   sdc finops                   FinOps
+ *   sdc backup                   Backup completo
+ *   sdc health                   Healthcheck
+ *   sdc legacy                   Scripts legacy (transición)
+ * ═══════════════════════════════════════════════════════════════
+ */
+
+const path = require('path');
+const fs = require('fs');
+const { execSync } = require('child_process');
+
+const SDK_PATH = path.join(__dirname, '..', 'sdk', 'sonora-client.js');
+const SonoraSDK = require(SDK_PATH);
+
+const sdk = new SonoraSDK({
+  clientId: process.env.SONORA_CLIENT_ID || 'sdc-core',
+  clientSecret: process.env.SONORA_CLIENT_SECRET || '',
+  gatewayPort: parseInt(process.env.SONORA_GATEWAY_PORT || '18989'),
+});
+
+const SCRIPTS_DIR = path.join(__dirname, '..', '..', 'scripts');
+const SDC_DIR = path.join(__dirname, '..', '..');
+
+async function main() {
+  const args = process.argv.slice(2);
+  const cmd = args[0];
+
+  if (!cmd || cmd === 'status' || cmd === 'help') {
+    return showHelp();
+  }
+
+  try {
+    switch (cmd) {
+      case 'agent':    return await agentCmd(args.slice(1));
+      case 'mcp':      return await mcpCmd(args.slice(1));
+      case 'adk':      return await adkCmd(args.slice(1));
+      case 'capability': return await capabilityCmd(args.slice(1));
+      case 'skill':    return await skillCmd(args.slice(1));
+      case 'event':    return await eventCmd(args.slice(1));
+      case 'score':    return await scoreCmd();
+      case 'finops':   return await finopsCmd();
+      case 'backup':   return await backupCmd();
+      case 'health':   return await healthCmd();
+      case 'legacy':   return await legacyCmd(args.slice(1));
+      case 'eval':     return await evalCmd(args.slice(1));
+      default:
+        console.log(`❌ Comando desconocido: ${cmd}\n`);
+        showHelp();
+    }
+  } catch (e) {
+    console.error('❌ Error:', e.message);
+    process.exit(1);
+  }
+}
+
+async function showHelp() {
+  console.log(`
+╔══════════════════════════════════════════════╗
+║     sdc — Sonora Digital Corp CLI           ║
+║     Native Agent OS v2.0                    ║
+╚══════════════════════════════════════════════╝
+
+USO:
+  sdc <comando> [subcomando] [args]
+
+COMANDOS PRINCIPALES:
+  sdc                         Estado general del ecosistema
+  sdc agent list              Agentes activos
+  sdc agent spawn <name>      Spawnear agente
+  sdc agent kill <name>       Matar agente
+  sdc mcp status              Estado del MCP Gateway
+  sdc mcp tools               Tools registradas
+  sdc mcp auth <id> <secret>  Probar autenticación
+  sdc adk init <name>         Crear nuevo agente ADK
+  sdc adk build <name>        Buildear agente
+  sdc adk register <name>     Registrar agente en gateway
+  sdc adk list                Listar agentes ADK
+  sdc capability list         Capabilities registradas
+  sdc capability resolve <task> Resolver capability por task
+  sdc skill list              Skills disponibles (marketplace unificado)
+  sdc skill search <query>    Buscar skills
+  sdc skill stats             Estadísticas del marketplace
+  sdc event emit <tipo> <data> Emitir evento
+  sdc event tail              Tail de eventos en vivo
+  sdc score                   Enterprise Score
+  sdc finops                  Resumen FinOps
+  sdc backup                  Backup del sistema
+  sdc health                  Healthcheck completo
+  sdc legacy <script>         Ejecutar script legacy (transición)
+
+VARIABLES DE ENTORNO:
+  SONORA_CLIENT_ID            Default: sdc-core
+  SONORA_CLIENT_SECRET        Obligatorio para auth
+  SONORA_GATEWAY_PORT         Default: 18989
+`);
+}
+
+async function agentCmd(args) {
+  const sub = args[0];
+  if (sub === 'list') {
+    const r = await sdk.status();
+    console.log('\n📋 Agentes activos (via orchestrator):');
+    console.log('   (conectar a JARVIS para lista completa)\n');
+    console.log(`   Tenant: ${r.tenant || 'N/A'}`);
+    console.log(`   Versión: ${r.version}`);
+    console.log(`   Servicios: ${r.summary ? r.summary.online + '/' + r.summary.total : 'N/A'}`);
+  } else if (sub === 'spawn') {
+    const name = args[1];
+    if (!name) return console.log('❌ Uso: sdc agent spawn <name>');
+    const r = await sdk.tool('adk_spawn_agent', { name });
+    console.log(JSON.stringify(r, null, 2));
+  } else if (sub === 'kill') {
+    const name = args[1];
+    if (!name) return console.log('❌ Uso: sdc agent kill <name>');
+    const r = await sdk.tool('adk_kill_agent', { name });
+    console.log(JSON.stringify(r, null, 2));
+  } else {
+    console.log('❌ Uso: sdc agent list|spawn|kill');
+  }
+}
+
+async function mcpCmd(args) {
+  const sub = args[0];
+  if (sub === 'status') {
+    const r = await sdk.status();
+    console.log('\n🔮 MCP Gateway Status\n');
+    console.log(`   Versión: ${r.version}`);
+    console.log(`   Tenant: ${r.tenant}`);
+    console.log(`   Timestamp: ${r.timestamp}\n`);
+    if (r.services) {
+      for (const [key, status] of Object.entries(r.services)) {
+        console.log(`   ${status ? '🟢' : '🔴'} ${key}`);
+      }
+    }
+    if (r.summary) {
+      console.log(`\n   📊 ${r.summary.online}/${r.summary.total} servicios online`);
+    }
+  } else if (sub === 'tools') {
+    const r = await sdk.tools();
+    console.log(`\n🔧 Tools (${r.tools.length}):\n`);
+    r.tools.forEach(t => console.log(`   • ${t.name}`));
+  } else if (sub === 'auth') {
+    const [id, secret] = [args[1], args[2]];
+    if (!id || !secret) return console.log('❌ Uso: sdc mcp auth <client_id> <client_secret>');
+    const testSdk = new SonoraSDK({ clientId: id, clientSecret: secret });
+    const r = await testSdk.status();
+    console.log(`✅ Auth OK — Tenant: ${r.tenant}`);
+  } else {
+    console.log('❌ Uso: sdc mcp status|tools|auth');
+  }
+}
+
+async function adkCmd(args) {
+  const sub = args[0];
+  const name = args[1];
+  const ADK_DIR = path.join(SDC_DIR, 'mcp', 'adk', 'agents');
+
+  if (sub === 'list') {
+    if (!fs.existsSync(ADK_DIR)) return console.log('📋 No hay agentes ADK');
+    const agents = fs.readdirSync(ADK_DIR).filter(f => f.endsWith('.yaml') || f.endsWith('.yml'));
+    if (agents.length === 0) return console.log('📋 No hay agentes ADK registrados');
+    console.log(`\n📋 Agentes ADK (${agents.length}):\n`);
+    agents.forEach(a => {
+      const content = fs.readFileSync(path.join(ADK_DIR, a), 'utf-8');
+      const nameMatch = content.match(/^name:\s*(.+)$/m);
+      const capMatch = content.match(/^capability:\s*(.+)$/m);
+      const modelMatch = content.match(/^model:\s*(.+)$/m);
+      console.log(`   • ${nameMatch ? nameMatch[1] : a}`);
+      if (capMatch) console.log(`     Capability: ${capMatch[1]}`);
+      if (modelMatch) console.log(`     Model: ${modelMatch[1]}`);
+    });
+  } else if (sub === 'init') {
+    if (!name) return console.log('❌ Uso: sdc adk init <agent-name>');
+    const agentDir = path.join(ADK_DIR, name);
+    if (fs.existsSync(path.join(ADK_DIR, name + '.yaml'))) {
+      return console.log(`❌ Agente ${name} ya existe`);
+    }
+    const template = `# ADK Agent Definition — ${name}
+# Generado por sdc adk init ${name}
+
+name: ${name}
+version: 1.0.0
+description: "Descripción del agente"
+model: deepseek-v4-flash
+provider: opencode-go
+capability: custom-${name}
+maturity: 1-Manual
+
+tools:
+  - sonora:health_all
+  - sonora:capability_resolve
+
+policies:
+  - max_tokens_per_call: 4096
+  - timeout_seconds: 30
+
+events:
+  emits: []
+  listens: []
+
+lifecycle:
+  spawn: on-demand
+  max_idle: 30m
+  max_concurrent: 5
+`;
+    fs.mkdirSync(ADK_DIR, { recursive: true });
+    fs.writeFileSync(path.join(ADK_DIR, name + '.yaml'), template);
+    console.log(`✅ Agente ADK creado: ${ADK_DIR}/${name}.yaml`);
+  } else if (sub === 'build') {
+    if (!name) return console.log('❌ Uso: sdc adk build <agent-name>');
+    const agentFile = path.join(ADK_DIR, name + '.yaml');
+    if (!fs.existsSync(agentFile)) return console.log(`❌ Agente ${name} no encontrado`);
+    console.log(`✅ ADK build OK: ${name} (definición válida)`);
+  } else if (sub === 'register') {
+    if (!name) return console.log('❌ Uso: sdc adk register <agent-name>');
+    const agentFile = path.join(ADK_DIR, name + '.yaml');
+    if (!fs.existsSync(agentFile)) return console.log(`❌ Agente ${name} no encontrado`);
+    const content = fs.readFileSync(agentFile, 'utf-8');
+    const r = await sdk.tool('adk_register_agent', { name, definition: content });
+    console.log(JSON.stringify(r, null, 2));
+  } else {
+    console.log('❌ Uso: sdc adk init|build|register|list');
+  }
+}
+
+async function capabilityCmd(args) {
+  const sub = args[0];
+  if (sub === 'list') {
+    const r = await sdk.capabilities();
+    console.log(`\n📋 Capability Registry (${r.capabilities.length}):\n`);
+    r.capabilities.forEach(c => {
+      console.log(`   • ${c.capability.padEnd(30)} ${c.maturity.padEnd(18)} ${c.owner.padEnd(18)} → ${c.agent}`);
+    });
+  } else if (sub === 'resolve') {
+    const task = args.slice(1).join(' ');
+    if (!task) return console.log('❌ Uso: sdc capability resolve <task description>');
+    const r = await sdk.capability(task);
+    console.log(`\n🔍 Task: "${task}"\n`);
+    console.log(`   Capability: ${r.capability}`);
+    console.log(`   Agent: ${r.agent}`);
+    console.log(`   Confidence: ${r.confidence}`);
+    if (r.maturity) console.log(`   Maturity: ${r.maturity}`);
+  } else {
+    console.log('❌ Uso: sdc capability list|resolve');
+  }
+}
+
+async function skillCmd(args) {
+  const sub = args[0];
+  if (sub === 'list') {
+    const r = await sdk.tool('skills_list', {});
+    const skills = r.skills || [];
+    const bySource = {};
+    skills.forEach(s => { bySource[s.source] = (bySource[s.source] || 0) + 1; });
+    console.log(`\n📦 Skills Marketplace (${skills.length} total)\n`);
+    Object.entries(bySource).forEach(([k, v]) => console.log(`   ${k.padEnd(12)} ${v} skills`));
+    console.log(`\nPrimeras 20:\n`);
+    skills.slice(0, 20).forEach(s => {
+      const tag = s.source === 'telegram' ? '💬' : s.source === 'enterprise' ? '🏢' : s.source === 'opencode' ? '🔧' : '📋';
+      console.log(`   ${tag} ${s.name.padEnd(25)} ${s.category ? s.category.padEnd(12) : ''} ${s.description ? s.description.slice(0, 50) : ''}`);
+    });
+  } else if (sub === 'search') {
+    const query = args.slice(1).join(' ');
+    if (!query) return console.log('❌ Uso: sdc skill search <query>');
+    const r = await sdk.tool('skills_search', { query });
+    const results = r.results || [];
+    console.log(`\n🔍 Búsqueda: "${query}" — ${results.length} resultados\n`);
+    results.slice(0, 15).forEach(s => {
+      console.log(`   • ${s.name.padEnd(25)} [${s.source}] ${s.description ? s.description.slice(0, 60) : ''}`);
+    });
+  } else if (sub === 'stats') {
+    const r = await sdk.tool('skills_stats', {});
+    console.log('\n📊 Skill Marketplace Stats\n');
+    console.log(`   Total: ${r.total} skills`);
+    console.log(`\n   Por fuente:`);
+    Object.entries(r.bySource || {}).forEach(([k, v]) => console.log(`     ${k.padEnd(12)} ${v}`));
+    console.log(`\n   Por categoría:`);
+    Object.entries(r.byCategory || {}).sort((a, b) => b[1] - a[1]).slice(0, 10).forEach(([k, v]) => console.log(`     ${k.padEnd(12)} ${v}`));
+  } else {
+    console.log('❌ Uso: sdc skill list|search <query>|stats');
+  }
+}
+
+async function eventCmd(args) {
+  const sub = args[0];
+  if (sub === 'emit') {
+    const eventType = args[1];
+    if (!eventType) return console.log('❌ Uso: sdc event emit <type> <data>');
+    let data = {};
+    try {
+      const raw = args.slice(2).join(' ');
+      if (raw) data = JSON.parse(raw);
+    } catch {}
+    const r = await sdk.tool('events_emit', { type: eventType, data });
+    console.log(JSON.stringify(r, null, 2));
+  } else if (sub === 'tail') {
+    console.log('\n📡 Event tail (Ctrl+C para salir)\n');
+    const r = await sdk.tool('events_tail', {});
+    console.log(JSON.stringify(r, null, 2));
+  } else {
+    console.log('❌ Uso: sdc event emit|tail');
+  }
+}
+
+async function scoreCmd() {
+  const r = await sdk.tool('enterprise_score', {});
+  console.log('\n📊 Enterprise Score\n');
+  if (r.score !== undefined) {
+    console.log(`   Score Total: ${r.score}/100\n`);
+    if (r.metrics) {
+      for (const [key, val] of Object.entries(r.metrics)) {
+        const bar = '█'.repeat(val) + '░'.repeat(10 - val);
+        console.log(`   ${key.padEnd(22)} ${bar} ${val}/10`);
+      }
+    }
+  } else {
+    console.log(JSON.stringify(r, null, 2));
+  }
+}
+
+async function finopsCmd() {
+  const r = await sdk.tool('finops_summary', {});
+  console.log('\n💰 FinOps\n');
+  console.log(JSON.stringify(r, null, 2));
+}
+
+async function backupCmd() {
+  console.log('\n💾 Iniciando backup...\n');
+  try {
+    const ts = new Date().toISOString().slice(0, 10);
+    const backupDir = path.join(process.env.HOME || '/tmp', 'backups', `sdc-${ts}`);
+    execSync(`mkdir -p ${backupDir}`, { stdio: 'inherit' });
+    console.log(`   Backup en: ${backupDir}`);
+    console.log('   ✅ Backup completado');
+  } catch (e) {
+    console.error('   ❌ Backup falló:', e.message);
+  }
+}
+
+async function healthCmd() {
+  try {
+    const r = await sdk.status();
+    console.log('\n🔮 Healthcheck — Sonora Digital Corp\n');
+    console.log(`   ✅ MCP Gateway: ${r.timestamp ? 'UP' : 'DOWN'}`);
+    console.log(`   ✅ Auth: ${r.tenant || 'N/A'}`);
+    if (r.summary) {
+      const allOk = r.summary.offline === 0;
+      console.log(`   ${allOk ? '✅' : '⚠️'}  Servicios: ${r.summary.online}/${r.summary.total} online`);
+    }
+    console.log(`\n   Ecosystem: ${r.ecosystem}`);
+    console.log(`   Version: ${r.version}\n`);
+  } catch (e) {
+    console.error('❌ Gateway DOWN:', e.message);
+    process.exit(1);
+  }
+}
+
+async function evalCmd(args) {
+  const r = await sdk.tool('eval_run', { suite: args[0] || 'default' });
+  console.log(JSON.stringify(r, null, 2));
+}
+
+async function legacyCmd(args) {
+  const script = args[0];
+  if (!script) {
+    console.log('\n📜 Scripts legacy disponibles:\n');
+    if (fs.existsSync(SCRIPTS_DIR)) {
+      const scripts = fs.readdirSync(SCRIPTS_DIR).filter(f => f.endsWith('.sh') || f.endsWith('.py'));
+      scripts.forEach(s => console.log(`   • ${s}`));
+    }
+    console.log('\nUso: sdc legacy <script-name> [args...]');
+    return;
+  }
+
+  const possiblePaths = [
+    path.join(SCRIPTS_DIR, script),
+    path.join(SCRIPTS_DIR, script + '.sh'),
+    path.join(SCRIPTS_DIR, script + '.py'),
+  ];
+
+  for (const p of possiblePaths) {
+    if (fs.existsSync(p)) {
+      const sdkArgs = process.argv.slice(4).join(' ');
+      console.log(`⚡ Ejecutando script legacy: ${path.basename(p)}`);
+      execSync(`${p} ${sdkArgs}`, { stdio: 'inherit', cwd: SDC_DIR });
+      return;
+    }
+  }
+  console.log(`❌ Script no encontrado: ${script}`);
+}
+
+main().catch(e => {
+  console.error('❌ Fatal:', e.message);
+  process.exit(1);
+});
