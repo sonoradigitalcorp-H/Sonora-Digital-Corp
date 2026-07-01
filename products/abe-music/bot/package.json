@@ -1,0 +1,20 @@
+{
+  "name": "abe-music-bot",
+  "version": "1.0.0",
+  "private": true,
+  "main": "dist/abe-music-bot.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/abe-music-bot.js",
+    "dev": "ts-node abe-music-bot.ts"
+  },
+  "dependencies": {
+    "axios": "^1.7.0",
+    "telegraf": "^4.16.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.4.0"
+  }
+}
