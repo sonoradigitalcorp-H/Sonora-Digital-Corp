@@ -11,19 +11,40 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Create CI stubs (state/, .env)
+        run: |
+          cp .env.ci .env 2>/dev/null || echo "NEO4J_PASSWORD=ci" > .env
+          mkdir -p state/logs
+          echo '{"event":"ci_build"}' > state/logs/events.jsonl
+
+      - name: Build test image with cache
+        uses: docker/build-push-action@v4
         with:
-          python-version: "3.10"
-      - name: Install dependencies
+          context: .
+          file: infra/docker/jarvis/Dockerfile
+          target: test
+          load: true
+          tags: jarvis-test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Ruff lint — fail on hard errors (allow E501 cosmetic)
         run: |
-          pip install -r requirements.txt
-          pip install pytest pytest-cov ruff
-      - name: Lint
+          docker run --rm jarvis-test ruff check apps/ scripts/ --output-format=concise 2>&1 | \
+            grep -v "E501" | grep -v "Found" | grep -E '^[^ ]*:[0-9]+' && exit 1 || \
+            echo "✓ Lint passed (E501 line-too-long warnings allowed)"
+
+      - name: TDD Check
         run: |
-          ruff check apps/ scripts/ 2>/dev/null || true
-      - name: TDD Check — every new core module must have a test file
-        run: |
-          CHANGED=$(git diff --name-only origin/main...HEAD 2>/dev/null || git diff --name-only HEAD~1)
+          CHANGED=$(git diff --name-only origin/main...HEAD 2>/dev/null || git diff --name-only HEAD~1 2>/dev/null || echo "")
+          if [ -z "$CHANGED" ]; then
+            echo "ℹ No changed files to check for TDD"
+            exit 0
+          fi
           for f in $CHANGED; do
             if [[ "$f" =~ ^apps/jarvis/src/core/(.+)\.py$ ]]; then
               module="${BASH_REMATCH[1]}"
@@ -35,6 +56,7 @@ jobs:
             fi
           done
           echo "✓ TDD check passed"
-      - name: Test with coverage
+
+      - name: Run tests with coverage
         run: |
-          python -m pytest tests/unit/ -v --cov=src.core --cov-report=term-missing --cov-fail-under=60 2>/dev/null || python -m pytest tests/ -v 2>/dev/null || echo "No tests to run"
+          docker run --rm jarvis-test python3 -m pytest tests/unit/ -v --cov=src.core --cov-report=term-missing --cov-fail-under=60

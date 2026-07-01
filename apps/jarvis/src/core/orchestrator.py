@@ -12,9 +12,6 @@ import uuid
 from pathlib import Path
 from typing import Any
 
-from src.core.redis_streams import push_agent_context, read_agent_context
-from src.core.redis_streams import clear_context as redis_clear_stream
-
 from src.core.agents import (
     AgentBase,
     CodeAgent,
@@ -30,6 +27,8 @@ from src.core.agents import (
     SkillAgent,
     VoiceAgent,
 )
+from src.core.redis_streams import clear_context as redis_clear_stream
+from src.core.redis_streams import push_agent_context, read_agent_context
 
 log = logging.getLogger("jarvis.orchestrator")
 

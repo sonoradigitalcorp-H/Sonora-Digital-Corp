@@ -19,3 +19,5 @@ cache/
 data/generated/
 apps/webui/data/
 credentials/
+# .env files: .env is real secrets, .env.ci is CI stub (committed)
+.env

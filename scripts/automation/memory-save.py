@@ -33,7 +33,7 @@ def get_system_state() -> dict:
             ["docker", "ps", "--format", "{{.Names}} {{.Status}}"],
             capture_output=True, text=True
         )
-        containers = [l.strip() for l in docker_ps.stdout.split("\n") if l.strip()]
+        containers = [line.strip() for line in docker_ps.stdout.split("\n") if line.strip()]
         return {
             "memory": free.stdout.split("\n")[1].split()[0:5] if free.stdout else [],
             "uptime": uptime.stdout.strip() if uptime.stdout else "",
