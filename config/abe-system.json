@@ -1,0 +1,59 @@
+{
+  "abe_music": {
+    "name": "ABE Music Inc",
+    "founder": "Abraham Ortega",
+    "tier": "pro",
+    "tenant_id": "abe-fenix",
+    "rate_limit": 200,
+    "plan": "Pro",
+    "price_monthly": 499,
+    "features": ["chat", "agents", "rag", "music", "booking", "content", "analytics", "crm", "revenue"],
+    "design_system": "abe-music",
+    "brand": {
+      "colors": { "primary": "#FFD700", "bg": "#0a0a12", "accent": "#7c5cfc" },
+      "font": "Inter, -apple-system, BlinkMacSystemFont, sans-serif",
+      "logo": "🎵 ABE Music",
+      "tone": "profesional, cálido, directo, español MX"
+    },
+    "agents": {
+      "primary": "abe-agent",
+      "crm": "abe-crm-agent",
+      "revenue": "abe-revenue-agent",
+      "marketing": "abe-marketing-agent",
+      "analytics": "abe-analytics-agent",
+      "scheduler": "abe-scheduler-agent",
+      "support": "support-agent"
+    },
+    "workflows": {
+      "weekly_report": "abe-weekly-report",
+      "lead_to_cash": "lead-to-cash-real",
+      "content_pipeline": "content-pipeline",
+      "client_onboarding": "client-onboarding",
+      "daily_sync": null
+    },
+    "dashboards": {
+      "main": "/abe-saas",
+      "services": "/abe-services",
+      "intake": "/abraham",
+      "music_os": "/abe"
+    },
+    "integrations": {
+      "spotify": { "enabled": false, "client_id": null, "artist_ids": {} },
+      "fal_ai": { "enabled": false, "api_key": null },
+      "telegram": { "enabled": true, "bot_token": null, "chat_id": "5738935134" },
+      "openrouter": { "enabled": true, "fallback": true }
+    },
+    "schedules": {
+      "spotify_sync": { "cron": "0 */6 * * *", "description": "Sync Spotify cada 6 horas" },
+      "weekly_report": { "cron": "0 9 * * 1", "description": "Reporte semanal los lunes" },
+      "daily_backup": { "cron": "0 3 * * *", "description": "Backup diario 3 AM" },
+      "healthcheck": { "cron": "*/15 * * * *", "description": "Healthcheck cada 15 min" }
+    },
+    "metrics": {
+      "target_streams": 1000000,
+      "target_revenue": 100000,
+      "target_artists": 20,
+      "target_releases": 50
+    }
+  }
+}
