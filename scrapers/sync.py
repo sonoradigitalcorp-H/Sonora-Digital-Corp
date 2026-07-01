@@ -237,7 +237,7 @@ def bridge_lead_to_pipeline(artist: dict):
 
     try:
         import sys
-        sys.path.insert(0, str(BASE / "apps" / "jarvis" / "src"))
+        sys.path.insert(0, str(BASE / "apps" / "jarvis"))
         from src.core.sales_pipeline import LeadSource, SalesPipeline
 
         genre = artist.get("genero", "")
