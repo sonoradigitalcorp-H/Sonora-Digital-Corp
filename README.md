@@ -1,7 +1,6 @@
 # 🜁 Native Agent OS
 
-**The world's first MCP-native agent operating system.**  
-Built by Sonora Digital Corp for autonomous, 24/7 AI operations.
+**The world's first MCP-native agent operating system.**
 
 ```bash
 # 155 tools · 6 agents · 6 workflows · 6 local models · 3 providers · 1 gateway
@@ -120,4 +119,4 @@ sdc audit run                # security audit
 
 ## License
 
-MIT — Sonora Digital Corp
+MIT
