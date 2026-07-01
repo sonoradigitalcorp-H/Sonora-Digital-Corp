@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>ABE Music OS</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+:root{
+  --bg:#0a0a12;
+  --surface:rgba(255,255,255,.05);
+  --surface2:rgba(255,255,255,.08);
+  --border:rgba(255,255,255,.1);
+  --text:#f0f0f0;
+  --dim:rgba(255,255,255,.4);
+  --gold:#FFD700;
+  --accent:#7c5cfc;
+  --red:#ff3b5c;
+  --green:#34d399;
+  --radius:16px;
+  --radius-sm:10px;
+  --font:'Inter',-apple-system,BlinkMacSystemFont,'SF Pro Display',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(124,92,252,.08),transparent 50%),radial-gradient(circle at 70% 80%,rgba(255,215,0,.05),transparent 50%);z-index:-1}
+
+/* Glassmorphism */
+.glass{background:var(--surface);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius)}
+.glass-sm{background:var(--surface2);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:var(--radius-sm)}
+
+/* Header */
+.header{position:sticky;top:0;z-index:100;padding:.8rem 1.5rem;margin-bottom:1.5rem;background:rgba(10,10,18,.8);backdrop-filter:blur(30px);-webkit-backdrop-filter:blur(30px);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.header h1{font-size:1.4rem;font-weight:700;letter-spacing:-.02em}
+.header h1 span{color:var(--gold)}
+.header .status{font-size:.7rem;color:var(--dim);display:flex;align-items:center;gap:.3rem}
+.header .dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+
+/* Container */
+.container{max-width:1400px;margin:0 auto;padding:0 1.5rem 2rem}
+
+/* Grid top stats */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.8rem;margin-bottom:1.5rem}
+.stat-card{padding:1.2rem 1.2rem;position:relative;overflow:hidden}
+.stat-card .label{font-size:.7rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:.3rem}
+.stat-card .value{font-size:1.8rem;font-weight:700;letter-spacing:-.02em}
+.stat-card .sub{font-size:.75rem;color:var(--dim);margin-top:.1rem}
+.stat-card .trend{font-size:.65rem;padding:.15rem .4rem;border-radius:4px;margin-left:.4rem}
+.stat-card .trend-up{background:rgba(52,211,153,.15);color:var(--green)}
+.stat-card .trend-down{background:rgba(255,59,92,.15);color:var(--red)}
+.stat-card .icon{position:absolute;right:1rem;top:1rem;font-size:1.5rem;opacity:.2}
+
+/* Main grid */
+.main-grid{display:grid;grid-template-columns:1fr 380px;gap:1rem;margin-bottom:1.5rem}
+@media(max-width:900px){.main-grid{grid-template-columns:1fr}}
+
+/* Artists section */
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:.8rem}
+.section-header h2{font-size:.9rem;font-weight:600;letter-spacing:-.01em}
+.section-header h2 span{color:var(--gold)}
+.artist-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:.8rem}
+.artist-card{padding:1.2rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.artist-card:hover{border-color:var(--gold);transform:translateY(-2px)}
+.artist-card .avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#b8860b);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:1.2rem;margin-bottom:.6rem}
+.artist-card h3{font-size:.95rem;font-weight:600;margin-bottom:.1rem}
+.artist-card .genre{font-size:.7rem;color:var(--dim);margin-bottom:.4rem}
+.artist-card .row{display:flex;justify-content:space-between;font-size:.75rem;padding:.15rem 0}
+.artist-card .row .l{color:var(--dim)}
+.artist-card .row .r{font-weight:500}
+.artist-card .badge{position:absolute;top:.8rem;right:.8rem;font-size:.6rem;padding:.15rem .4rem;border-radius:4px;background:rgba(255,215,0,.15);color:var(--gold);text-transform:uppercase;letter-spacing:.05em}
+
+/* Right panel */
+.right-panel{display:flex;flex-direction:column;gap:.8rem}
+.right-panel .panel-card{padding:1.2rem}
+.right-panel .panel-card h3{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:.5rem}
+.revenue-bar{display:flex;align-items:center;gap:.5rem;padding:.3rem 0}
+.revenue-bar .bar{flex:1;height:6px;border-radius:3px;background:rgba(255,255,255,.06);overflow:hidden}
+.revenue-bar .bar-fill{height:100%;border-radius:3px;transition:width .5s}
+.revenue-bar .pct{font-size:.75rem;font-weight:500;width:35px;text-align:right}
+
+/* AI Chat */
+.chat-box{flex:1;display:flex;flex-direction:column;min-height:200px;max-height:350px}
+.chat-msg{padding:.5rem .8rem;margin-bottom:.3rem;border-radius:var(--radius-sm);font-size:.8rem;line-height:1.4;max-width:85%}
+.chat-msg.user{background:rgba(124,92,252,.2);align-self:flex-end;border-bottom-right-radius:4px}
+.chat-msg.assistant{background:var(--surface2);align-self:flex-start;border-bottom-left-radius:4px}
+.chat-msg .time{font-size:.6rem;color:var(--dim);margin-top:.2rem}
+.chat-input{display:flex;gap:.5rem;margin-top:.5rem}
+.chat-input input{flex:1;background:rgba(255,255,255,.05);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.6rem .8rem;color:var(--text);font-size:.8rem;font-family:var(--font);outline:none}
+.chat-input input:focus{border-color:var(--gold)}
+.chat-input button{padding:.6rem 1rem;border-radius:var(--radius-sm);border:none;background:var(--gold);color:#000;font-weight:600;font-size:.75rem;cursor:pointer;font-family:var(--font);transition:opacity .2s}
+.chat-input button:hover{opacity:.85}
+
+/* Agent grid */
+.agent-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:.5rem;margin-top:.5rem}
+.agent-chip{padding:.4rem .7rem;border-radius:var(--radius-sm);font-size:.7rem;display:flex;align-items:center;gap:.3rem;transition:all .2s;cursor:pointer}
+.agent-chip:hover{border-color:var(--gold)}
+
+/* Loading shimmer */
+@keyframes shimmer{0%{opacity:1}50%{opacity:.4}100%{opacity:1}}
+.loading{animation:shimmer 1.5s infinite}
+
+/* Tooltip-like KPIs */
+.kpi-mini{font-size:.7rem;color:var(--dim);display:flex;justify-content:space-between;padding:.2rem 0}
+.kpi-mini .kv{color:var(--text);font-weight:500}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🎵 <span>ABE</span> Music OS</h1>
+  <div class="status">
+    <span class="dot" id="statusDot" style="background:var(--green)"></span>
+    <span id="statusText">Online</span>
+    <span style="margin-left:.5rem;font-size:.65rem;color:var(--dim)" id="timeDisplay"></span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Stats row -->
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card glass">
+      <div class="label">Total Streams</div>
+      <div class="value" id="totalStreams">—</div>
+      <div class="sub">todas las plataformas</div>
+      <div class="icon">🎧</div>
+    </div>
+    <div class="stat-card glass">
+      <div class="label">Revenue</div>
+      <div class="value" id="totalRevenue">—</div>
+      <div class="sub">USD · este período</div>
+      <div class="icon">💰</div>
+    </div>
+    <div class="stat-card glass">
+      <div class="label">Artists</div>
+      <div class="value" id="totalArtists">—</div>
+      <div class="sub">activos · firmados</div>
+      <div class="icon">🎤</div>
+    </div>
+    <div class="stat-card glass">
+      <div class="label">Releases</div>
+      <div class="value" id="totalReleases">—</div>
+      <div class="sub">este año</div>
+      <div class="icon">💿</div>
+    </div>
+    <div class="stat-card glass">
+      <div class="label">Avg Streams/Artist</div>
+      <div class="value" id="avgStreams">—</div>
+      <div class="sub">promedio</div>
+      <div class="icon">📈</div>
+    </div>
+    <div class="stat-card glass">
+      <div class="label">Score</div>
+      <div class="value" id="enterpriseScore">—</div>
+      <div class="sub">Enterprise Score</div>
+      <div class="icon">🏆</div>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <div class="main-grid">
+    <!-- Left: Artists -->
+    <div class="glass" style="padding:1.2rem">
+      <div class="section-header">
+        <h2><span>🎤</span> Artists</h2>
+        <span style="font-size:.7rem;color:var(--dim)" id="artistCount"></span>
+      </div>
+      <div class="artist-grid" id="artistGrid"></div>
+    </div>
+
+    <!-- Right: AI + Agents -->
+    <div class="right-panel">
+      <div class="panel-card glass">
+        <h3>🤖 AI Assistant</h3>
+        <div class="chat-box" id="chatBox">
+          <div class="chat-msg assistant">¡Hola! Soy el asistente de ABE Music OS. Pregúntame sobre streams, revenue, artistas o lo que necesites.<div class="time">ahora</div></div>
+        </div>
+        <div class="chat-input">
+          <input id="chatInput" placeholder="Ej: cuántos streams tiene Héctor Rubio..." onkeydown="if(event.key==='Enter')sendChat()">
+          <button onclick="sendChat()">→</button>
+        </div>
+      </div>
+
+      <div class="panel-card glass">
+        <h3>⚡ ABE Agents</h3>
+        <div class="agent-grid" id="agentGrid"></div>
+      </div>
+
+      <div class="panel-card glass">
+        <h3>💰 Revenue Split</h3>
+        <div id="revenueSplit"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GATEWAY = 'http://127.0.0.1:18989';
+let authToken = '';
+let artists = [];
+
+async function getToken() {
+  const r = await fetch(GATEWAY + '/api/auth/token', {
+    method: 'POST', headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({client_id:'abe-fenix', client_secret:'abe_f3n1x_pr0_k3y_2026'})
+  });
+  const d = await r.json();
+  authToken = d.access_token || '';
+}
+
+async function call(tool, params) {
+  if (!authToken) await getToken();
+  try {
+    const r = await fetch(GATEWAY + '/api/call', {
+      method: 'POST', headers: {'Content-Type':'application/json','Authorization':'Bearer '+authToken},
+      body: JSON.stringify({tool, params: params || {}})
+    });
+    return await r.json();
+  } catch(e) { return {}; }
+}
+
+async function load() {
+  await getToken();
+
+  // Get artists from ABE tools
+  const artistsData = await call('abe_list_artists', {});
+  artists = artistsData.artists || [];
+  document.getElementById('totalArtists').textContent = artists.length;
+  document.getElementById('artistCount').textContent = artists.length + ' artistas';
+
+  // Calculate aggregates
+  let totalStreams = 0, totalRevenue = 0, totalReleases = 0;
+  artists.forEach(a => {
+    totalStreams += a.streams || 0;
+    totalRevenue += a.income || a.revenue || 0;
+    totalReleases += (a.releases || []).length;
+  });
+
+  document.getElementById('totalStreams').textContent = (totalStreams / 1000).toFixed(1) + 'K';
+  document.getElementById('totalRevenue').textContent = '$' + totalRevenue.toLocaleString();
+  document.getElementById('totalReleases').textContent = totalReleases;
+  document.getElementById('avgStreams').textContent = artists.length > 0 ? ((totalStreams / artists.length) / 1000).toFixed(1) + 'K' : '—';
+
+  // Artist cards
+  document.getElementById('artistGrid').innerHTML = artists.map(a => {
+    const initials = (a.name || a.nombre || '?').split(' ').map(w => w[0]).join('').slice(0, 2);
+    const streams = a.streams || 0;
+    const revenue = a.income || a.revenue || 0;
+    return `<div class="artist-card glass-sm" onclick="askAbout('${a.name || a.nombre}')">
+      <div class="avatar">${initials}</div>
+      <h3>${a.name || a.nombre}</h3>
+      <div class="genre">${a.genre || 'Artista'}</div>
+      <div class="row"><span class="l">Streams</span><span class="r">${(streams/1000).toFixed(1)}K</span></div>
+      <div class="row"><span class="l">Revenue</span><span class="r">$${revenue.toLocaleString()}</span></div>
+      <div class="badge">${a.status || 'active'}</div>
+    </div>`;
+  }).join('');
+
+  // Revenue split
+  const total = totalRevenue;
+  const artistShare = total * 0.7;
+  const labelShare = total * 0.2;
+  const distShare = total * 0.1;
+  document.getElementById('revenueSplit').innerHTML = `
+    <div class="revenue-bar"><span style="width:40px;font-size:.7rem">Artist</span><div class="bar"><div class="bar-fill" style="width:70%;background:var(--gold)"></div></div><span class="pct">70%</span></div>
+    <div class="kpi-mini"><span>Total artista</span><span class="kv">$${artistShare.toLocaleString()}</span></div>
+    <div class="revenue-bar"><span style="width:40px;font-size:.7rem">Label</span><div class="bar"><div class="bar-fill" style="width:20%;background:var(--accent)"></div></div><span class="pct">20%</span></div>
+    <div class="kpi-mini"><span>Total label</span><span class="kv">$${labelShare.toLocaleString()}</span></div>
+    <div class="revenue-bar"><span style="width:40px;font-size:.7rem">Dist.</span><div class="bar"><div class="bar-fill" style="width:10%;background:var(--green)"></div></div><span class="pct">10%</span></div>
+    <div class="kpi-mini"><span>Total dist</span><span class="kv">$${distShare.toLocaleString()}</span></div>
+  `;
+
+  // Enterprise Score
+  const score = await call('enterprise_score', {});
+  document.getElementById('enterpriseScore').textContent = (score.score || '—') + '/100';
+
+  // Agents
+  const agents = await call('adk_list_agents', {});
+  const agentList = agents.agents || [];
+  document.getElementById('agentGrid').innerHTML = agentList.slice(0, 6).map(a =>
+    `<div class="agent-chip glass-sm" onclick="askAbout('${a.name}')">🧠 ${a.name}</div>`
+  ).join('');
+
+  // Clock
+  function updateClock() {
+    const now = new Date();
+    document.getElementById('timeDisplay').textContent = now.toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit'});
+  }
+  setInterval(updateClock, 1000);
+  updateClock();
+}
+
+// AI Chat
+async function sendChat() {
+  const input = document.getElementById('chatInput');
+  const msg = input.value.trim();
+  if (!msg) return;
+  input.value = '';
+
+  const box = document.getElementById('chatBox');
+  box.innerHTML += `<div class="chat-msg user">${msg}<div class="time">ahora</div></div>`;
+
+  // Resolve capability
+  const cap = await call('capability_resolve', {task: msg});
+  const agentName = cap.agent || 'research';
+  const result = await call(agentName, {task: msg});
+  const response = result.synthesis || result.content || result.response || JSON.stringify(result).substring(0, 300);
+
+  box.innerHTML += `<div class="chat-msg assistant">${response || 'Procesando...'}<div class="time">ahora</div></div>`;
+  box.scrollTop = box.scrollHeight;
+}
+
+function askAbout(topic) {
+  document.getElementById('chatInput').value = 'Dime sobre ' + topic;
+  sendChat();
+}
+
+load();
+</script>
+</body>
+</html>
