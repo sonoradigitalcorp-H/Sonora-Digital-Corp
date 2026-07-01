@@ -1,0 +1,20 @@
+name: abe-scheduler-agent
+version: 1.0.0
+description: "Automatización — programación de tareas, recordatorios, sync automático"
+model: qwen3:1.7b
+provider: ollama
+capability: agent-operations
+maturity: 2-Assisted
+tools:
+  - sonora:scheduler_list
+  - sonora:scheduler_add
+  - sonora:scheduler_tick
+  - sonora:artist_sync
+  - sonora:artist_sync_all
+  - sonora:workflow_run
+  - sonora:workflow_list
+  - sonora:alerts_check
+  - sonora:auto_heal
+policies: { max_tokens_per_call: 4096, timeout_seconds: 30 }
+events: { emits: [task_scheduled, auto_sync_completed], listens: [payment_received, intake_processed] }
+lifecycle: { spawn: always, max_idle: 5m, max_concurrent: 2 }

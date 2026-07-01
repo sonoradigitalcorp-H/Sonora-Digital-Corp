@@ -1,0 +1,17 @@
+name: abe-marketing-agent
+version: 1.0.0
+description: "Marketing y contenido — generación de contenido, campañas, redes sociales"
+model: llama3.2:3b
+provider: ollama
+capability: content-production
+maturity: 2-Assisted
+tools:
+  - sonora:content_generate
+  - sonora:content_deliver
+  - sonora:skills_system
+  - sonora:skills_search
+  - sonora:enterprise_score
+  - sonora:abe_list_artists
+policies: { max_tokens_per_call: 4096, timeout_seconds: 60 }
+events: { emits: [campaign_created, content_published], listens: [release_published] }
+lifecycle: { spawn: on-demand, max_idle: 30m, max_concurrent: 3 }
