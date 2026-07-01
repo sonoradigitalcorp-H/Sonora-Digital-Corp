@@ -49,6 +49,7 @@ const { tools: appTools } = require('../tools/app');
 const { tools: hermesTools } = require('../tools/hermes');
 const { tools: openclawTools } = require('../tools/openclaw');
 const { tools: billingTools } = require('../tools/billing');
+const { tools: musicProviders } = require('../tools/music-providers');
 const { healer: autoHeal } = require('../scheduler/auto-heal');
 const { engine: workflowEngine } = require('../workflow/engine');
 const { manager: providerManager } = require('../providers/provider-manager');
@@ -372,6 +373,9 @@ for (const [name, def] of Object.entries(openclawTools)) {
 for (const [name, def] of Object.entries(billingTools)) {
   ALL_TOOL_HANDLERS[name] = def.handler;
 }
+for (const [name, def] of Object.entries(musicProviders)) {
+  ALL_TOOL_HANDLERS[name] = def.handler;
+}
 ALL_TOOL_HANDLERS['auto_heal'] = async () => await autoHeal.heal();
 ALL_TOOL_HANDLERS['auto_heal_history'] = async () => ({ history: autoHeal.getHistory() });
 
@@ -639,6 +643,12 @@ function buildToolList() {
     { name: 'billing_plans', description: 'Planes disponibles', inputSchema: { type: 'object', properties: {} } },
     { name: 'auto_heal', description: 'Auto-recuperación', inputSchema: { type: 'object', properties: {} } },
     { name: 'auto_heal_history', description: 'Historial auto-heal', inputSchema: { type: 'object', properties: {} } },
+
+    { name: 'artist_configure', description: 'Configura fuentes de datos de un artista', inputSchema: { type: 'object', properties: { artist_id: { type: 'string' }, artist_name: { type: 'string' }, spotify_artist_id: { type: 'string' }, spotify_refresh_token: { type: 'string' }, manual_streams: { type: 'number' }, manual_revenue: { type: 'number' } }, required: ['artist_id', 'artist_name'] } },
+    { name: 'artist_sync', description: 'Sincroniza datos reales desde Spotify', inputSchema: { type: 'object', properties: { artist_id: { type: 'string' } }, required: ['artist_id'] } },
+    { name: 'artist_sync_all', description: 'Sincroniza todos los artistas', inputSchema: { type: 'object', properties: {} } },
+    { name: 'artist_status', description: 'Estado de fuentes de datos de un artista', inputSchema: { type: 'object', properties: { artist_id: { type: 'string' } }, required: ['artist_id'] } },
+    { name: 'artist_list_configs', description: 'Todos los artistas configurados', inputSchema: { type: 'object', properties: {} } },
 { name: 'app_execute', description: 'Ejecuta acción para usuario', inputSchema: { type: 'object', properties: { user_id: { type: 'string' }, type: { type: 'string' }, name: { type: 'string' } }, required: ['user_id', 'type', 'name'] } },
     { name: 'workflow_run', description: 'Ejecuta un workflow multi-agente', inputSchema: { type: 'object', properties: { name: { type: 'string' }, context: { type: 'object' } }, required: ['name'] } },
     { name: 'workflow_list', description: 'Lista ejecuciones de workflow', inputSchema: { type: 'object', properties: {} } },
