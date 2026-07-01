@@ -1,0 +1,8 @@
+{
+  "server": { "name": "postgres-mcp", "version": "1.0.0", "description": "MCP Server para PostgreSQL — Consultas SQL directas" },
+  "transport": { "type": "http", "endpoint": "http://127.0.0.1:5432", "healthEndpoint": "/" },
+  "tools": [
+    { "name": "postgres_query", "description": "Ejecuta consulta SQL", "endpoint": "/api/postgres/query", "method": "POST" },
+    { "name": "postgres_tables", "description": "Lista tablas de la BD", "endpoint": "/api/postgres/tables", "method": "GET" }
+  ]
+}
