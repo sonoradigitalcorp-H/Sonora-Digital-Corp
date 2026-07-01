@@ -21,25 +21,25 @@ export function ActivityChart() {
 
   if (error) {
     return (
-      <div className="rounded-xl border bg-card p-5">
-        <p className="text-destructive text-sm">Failed to load activity data</p>
+      <div className="kpi-card p-4">
+        <p className="text-destructive text-xs">Failed to load activity data</p>
       </div>
     );
   }
 
   if (isLoading) {
     return (
-      <div className="rounded-xl border bg-card animate-pulse">
-        <div className="p-5 border-b">
-          <div className="h-5 w-32 bg-muted rounded" />
-          <div className="h-3 w-48 bg-muted rounded mt-2" />
+      <div className="kpi-card animate-pulse">
+        <div className="px-4 pt-4 pb-3 border-b border-border">
+          <div className="h-4 w-28 bg-muted rounded" />
+          <div className="h-2.5 w-40 bg-muted rounded mt-1.5" />
         </div>
         <div className="p-4">
-          <div className="flex items-end gap-3 h-48">
+          <div className="flex items-end gap-3 h-40">
             {Array.from({ length: 7 }).map((_, i) => (
               <div key={i} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
                 <div className="w-full rounded-t bg-muted" style={{ height: `${[35, 55, 45, 70, 60, 30, 40][i]}%` }} />
-                <div className="h-3 w-8 bg-muted rounded" />
+                <div className="h-2.5 w-6 bg-muted rounded" />
               </div>
             ))}
           </div>
@@ -50,7 +50,6 @@ export function ActivityChart() {
 
   const artists: Artist[] = Array.isArray(data) ? data : [];
 
-  // Aggregate growthHistory by month (use followers as metric)
   const growthMap = new Map<string, number[]>();
   artists.forEach(artist => {
     if (artist.growthHistory && Array.isArray(artist.growthHistory)) {
@@ -74,7 +73,6 @@ export function ActivityChart() {
       return months.indexOf(a.label) - months.indexOf(b.label);
     });
 
-  // If still empty (API didn't return growthHistory), generate sample data
   const displayData = chartData.length > 0 ? chartData : [
     { label: 'Ene', value: 4200 },
     { label: 'Feb', value: 5800 },
@@ -87,22 +85,22 @@ export function ActivityChart() {
   const maxValue = Math.max(...displayData.map(d => d.value)) || 1;
 
   return (
-    <div className="rounded-xl border bg-card">
-      <div className="p-5 border-b">
-        <h2 className="font-semibold">Weekly Activity</h2>
-        <p className="text-xs text-muted-foreground mt-0.5">Average growth history across tracked artists</p>
+    <div className="kpi-card">
+      <div className="px-4 pt-4 pb-3 border-b border-border">
+        <h2 className="text-sm font-semibold tracking-tight">Growth Activity</h2>
+        <p className="text-[11px] text-muted-foreground mt-0.5">Average growth across tracked artists</p>
       </div>
 
       <div className="p-4">
-        <div className="flex items-end gap-3 h-48">
+        <div className="flex items-end gap-3 h-40">
           {displayData.map((item) => (
             <div key={item.label} className="flex-1 flex flex-col items-center gap-2 h-full justify-end">
-              <span className="text-xs font-medium tabular-nums text-muted-foreground">{item.value.toLocaleString()}</span>
+              <span className="text-[10px] font-medium tabular-nums text-muted-foreground">{item.value.toLocaleString()}</span>
               <div
-                className="w-full rounded-t bg-primary/80 hover:bg-primary transition-colors"
+                className="w-full rounded-t bg-primary/70 hover:bg-primary transition-colors"
                 style={{ height: `${(item.value / maxValue) * 70}%` }}
               />
-              <span className="text-xs text-muted-foreground">{item.label}</span>
+              <span className="text-[10px] text-muted-foreground">{item.label}</span>
             </div>
           ))}
         </div>
