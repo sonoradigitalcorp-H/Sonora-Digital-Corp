@@ -53,6 +53,7 @@ const { tools: musicProviders } = require('../tools/music-providers');
 const { tools: intakeTools } = require('../tools/intake');
 const { tools: mediaTools } = require('../tools/media');
 const { tools: designTools } = require('../tools/design-tools');
+const { tools: generatorTools } = require('../tools/generator');
 const { sandbox } = require('../sandbox/sandbox');
 const { healer: autoHeal } = require('../scheduler/auto-heal');
 const { engine: workflowEngine } = require('../workflow/engine');
@@ -389,6 +390,9 @@ for (const [name, def] of Object.entries(mediaTools)) {
 for (const [name, def] of Object.entries(designTools)) {
   ALL_TOOL_HANDLERS[name] = def.handler;
 }
+for (const [name, def] of Object.entries(generatorTools)) {
+  ALL_TOOL_HANDLERS[name] = def.handler;
+}
 ALL_TOOL_HANDLERS['sandbox_run'] = async () => await sandbox.runAll();
 ALL_TOOL_HANDLERS['auto_heal'] = async () => await autoHeal.heal();
 ALL_TOOL_HANDLERS['auto_heal_history'] = async () => ({ history: autoHeal.getHistory() });
@@ -677,6 +681,10 @@ function buildToolList() {
     { name: 'media_library', description: 'Medios generados', inputSchema: { type: 'object', properties: { limit: { type: 'number' } } } },
     { name: 'media_seedance', description: 'Video Seedance', inputSchema: { type: 'object', properties: { prompt: { type: 'string' } }, required: ['prompt'] } },
     { name: 'sandbox_run', description: 'Valida todo el sistema pre-deploy', inputSchema: { type: 'object', properties: {} } },
+    { name: 'generate_business', description: 'Crea sistema de negocio completo: agents + workflows + config', inputSchema: { type: 'object', properties: { name: { type: 'string' }, type: { type: 'string' }, description: { type: 'string' } }, required: ['name', 'type'] } },
+    { name: 'generate_agent', description: 'Crea un agente ADK nuevo en segundos', inputSchema: { type: 'object', properties: { name: { type: 'string' }, capability: { type: 'string' }, model: { type: 'string' }, description: { type: 'string' } }, required: ['name', 'capability'] } },
+    { name: 'generate_saas', description: 'Genera SaaS completo con dashboard', inputSchema: { type: 'object', properties: { name: { type: 'string' }, industry: { type: 'string' }, features: { type: 'string' }, color: { type: 'string' } }, required: ['name', 'industry'] } },
+    { name: 'generate_business_types', description: 'Tipos de negocio disponibles', inputSchema: { type: 'object', properties: {} } },
     { name: 'design_list', description: 'Lista 152 design systems de marcas reales', inputSchema: { type: 'object', properties: { category: { type: 'string' } } } },
     { name: 'design_recommend', description: 'Recomienda design system para un proyecto', inputSchema: { type: 'object', properties: { client: { type: 'string' }, purpose: { type: 'string' } }, required: ['client', 'purpose'] } },
     { name: 'design_tokens', description: 'Tokens CSS de un design system', inputSchema: { type: 'object', properties: { system: { type: 'string' } }, required: ['system'] } },
