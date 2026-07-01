@@ -10,3 +10,4 @@
 | 2026-06-30 | SPEC-20260630-006 | FASE 4: Extracción por Dominios | 2 | — | completed | [link](20260630-domain-architecture/LECCION.md) |
 | 2026-06-30 | SPEC-20260701-001 | FASE 5: Engram Pipeline Loop | 2 | — | completed | — |
 | 2026-07-01 | SPEC-20260701-001 | FASE 5: Engram Pipeline Loop | 2 | — | completed | — |
+| 2026-06-30 | 20260630-engram-pipeline-loop | ... | ... | ... | completed | ... |
