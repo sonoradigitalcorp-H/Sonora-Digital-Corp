@@ -1,0 +1,4 @@
+{"event":"spec_created","timestamp":"2026-06-30T17:30:00Z","payload":{"spec":"SPEC-20260630-006","title":"FASE 4: Extracción por Dominios"}}
+{"event":"domain_architecture_defined","timestamp":"2026-06-30T17:30:00Z","payload":{"domains":["data","core","ux"],"containers":11}}
+{"event":"consumer_groups_created","timestamp":"2026-06-30T17:30:00Z","payload":{"groups":["agents-core","agents-ux"],"streams":["events:pipeline","context:history"]}}
+{"event":"spec_completed","timestamp":"2026-06-30T17:30:00Z","payload":{"spec":"SPEC-20260630-006"}}

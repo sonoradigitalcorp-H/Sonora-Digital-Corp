@@ -161,6 +161,31 @@ def read_agent_context(count: int = 10) -> list[dict]:
     return stream_read("context:history", count=count, reverse=True)
 
 
+def ensure_consumer_group(stream: str, group: str) -> bool:
+    """Create a consumer group for a Redis Stream if it doesn't exist."""
+    client = get_redis()
+    if client is None:
+        return False
+    try:
+        client.xgroup_create(stream, group, id="0", mkstream=True)
+        log.info(f"Consumer group '{group}' created for '{stream}'")
+        return True
+    except Exception as e:
+        if "BUSYGROUP" in str(e):
+            log.debug(f"Consumer group '{group}' already exists for '{stream}'")
+            return True
+        log.warning(f"Could not create consumer group '{group}' for '{stream}': {e}")
+        return False
+
+
+def init_streams():
+    """Initialize all streams and consumer groups."""
+    ensure_consumer_group("events:pipeline", "agents-core")
+    ensure_consumer_group("events:pipeline", "agents-ux")
+    ensure_consumer_group("context:history", "agents-core")
+    log.info("Redis Streams initialized")
+
+
 def clear_context() -> None:
     """Delete the context:history stream."""
     client = get_redis()

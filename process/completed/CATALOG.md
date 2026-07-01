@@ -7,3 +7,4 @@
 | 2026-06-30 | SPEC-20260630-003 | FASE 1: Dockerización Jarvis + WebUI | 2 | 82 | completed | [link](20260630-dockerizacion/LECCION.md) |
 | 2026-06-30 | SPEC-20260630-004 | FASE 2: Redis Streams como Sistema Nervioso | 2 | — | completed | [link](20260630-redis-streams/LECCION.md) |
 | 2026-06-30 | SPEC-20260630-005 | FASE 3: Governance as Code | 2 | — | completed | [link](20260630-governance-code/LECCION.md) |
+| 2026-06-30 | SPEC-20260630-006 | FASE 4: Extracción por Dominios | 2 | — | completed | [link](20260630-domain-architecture/LECCION.md) |
