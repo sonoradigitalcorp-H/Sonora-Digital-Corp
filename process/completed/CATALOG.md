@@ -14,3 +14,4 @@
 | 2026-06-30 | 20260630-engram-pipeline-loop | ... | ... | ... | completed | ... |
 | 2026-07-01 | 20260701-native-agent-os | ... | ... | ... | completed | ... |
 | 2026-07-01 | SPEC-20260630-000 | Auto Session Start + Session Memory | 2 | 65 | completed | [link](20260701-auto-session-start/LECCION.md) |
+| 2026-07-01 | 20260701-final-archive | ... | ... | ... | completed | ... |

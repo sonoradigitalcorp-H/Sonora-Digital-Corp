@@ -56,11 +56,35 @@
       "endpoint": "http://127.0.0.1:3008",
       "config": "mcp/servers/uptime-mcp.json",
       "status": "inactive"
+    },
+    {
+      "id": "hermes",
+      "name": "Hermes MCP",
+      "type": "http",
+      "endpoint": "http://127.0.0.1:8000",
+      "config": null,
+      "status": "active",
+      "description": "Multi-channel messaging (Telegram, WhatsApp, Desktop)"
+    },
+    {
+      "id": "openclaw",
+      "name": "OpenClaw MCP",
+      "type": "http",
+      "endpoint": "http://127.0.0.1:18789",
+      "config": null,
+      "status": "active",
+      "description": "55 specialized skills (browser, payments, social)"
     }
   ],
   "bindings": {
-    "mystic": ["sonora-mcp-gateway"],
-    "hermes": ["sonora-mcp-gateway"],
-    "openclaw": ["sonora-mcp-gateway"]
+    "mystic": [
+      "sonora-mcp-gateway"
+    ],
+    "hermes": [
+      "sonora-mcp-gateway"
+    ],
+    "openclaw": [
+      "sonora-mcp-gateway"
+    ]
   }
 }
