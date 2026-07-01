@@ -6,6 +6,33 @@
 
 ---
 
+## Machines
+
+| Máquina | IP | OS | Rol | Acceso |
+|---------|-----|-----|-----|--------|
+| **sdc-prod** (OVH VPS) | `149.56.46.173` | Ubuntu 26.04 | Servidor principal | `ssh ubuntu@149.56.46.173` |
+| **laptop** (Abraham) | `187.245.106.218` (dinámica MX) | Linux | Máquina local | Solo sale, no entra (NAT) |
+
+**Reglas**:
+- El VPS NO tiene display ni browser — todo es headless
+- La laptop NO es accesible desde el VPS
+- Para abrir algo en browser de Abraham: necesita SSH forwarding o URL directa a IP publica
+- `config/machines.json` tiene todos los detalles persistentes
+- `scripts/ver.sh <servicio>` muestra el comando exacto para abrir en laptop
+
+**Forwarding recomendado** (agregar a `~/.ssh/config` en la laptop):
+```
+Host sdc-prod
+  HostName 149.56.46.173
+  User ubuntu
+  LocalForward 8080 localhost:8080
+  LocalForward 5180 localhost:5180
+  LocalForward 5174 localhost:5174
+```
+Luego `ssh sdc-prod` forwards automático. Abrir `http://localhost:8080/` en laptop.
+
+---
+
 ## Structure
 
 | Ruta | Qué es |
@@ -57,7 +84,17 @@ python -m uvicorn apps.abe-service.main:app --host 127.0.0.1 --port 5180  # ABE 
 | 7687 | Neo4j | Docker |
 | 5678 | n8n | Docker (33 workflows) |
 | 5180 | **ABE Service** | `abe-service.service` --user |
-| 9090 | Session HTML (temporal) | python http.server |
+| 8080 | Evolucion Dashboard | `evolucion-dashboard.service` --user |
+
+## Comandos utiles
+
+```bash
+bash scripts/ver.sh presentacion  # muestra como abrir presentacion en laptop
+bash scripts/ver.sh abe           # muestra como abrir ABE Service en laptop
+bash scripts/deploy.sh            # genera + despliega presentacion
+tmux attach -t presentacion       # ver presentacion en terminal
+ssh -L 8080:localhost:8080 ubuntu@149.56.46.173  # forwarding para laptop
+```
 
 ## Revenue Intelligence
 

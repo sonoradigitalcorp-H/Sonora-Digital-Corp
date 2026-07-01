@@ -4,6 +4,30 @@
   "spec": "SPEC-20260701-004",
   "title": "Capability Registry + Decision Engine",
   "score": 77,
+  "machines": {
+    "sdc-prod": {
+      "type": "vps",
+      "provider": "OVH",
+      "ip": "149.56.46.173",
+      "user": "ubuntu",
+      "os": "Ubuntu 26.04",
+      "role": "servidor principal",
+      "display": false,
+      "browser": false,
+      "services": {"8080": "evolucion dashboard", "5180": "ABE Service", "5174": "Web UI", "8000": "Hermes", "18789": "OpenClaw", "6333": "Qdrant", "7687": "Neo4j", "5678": "n8n"},
+      "note": "headless — no puede abrir browsers"
+    },
+    "laptop": {
+      "type": "personal",
+      "ip_known": "187.245.106.218",
+      "os": "Linux",
+      "role": "maquina local de Abraham (Mexico)",
+      "display": true,
+      "browser": true,
+      "reachable_from_vps": false,
+      "note": "Para ver algo del VPS en laptop: ssh -L PORT:localhost:PORT ubuntu@149.56.46.173"
+    }
+  },
   "learnings": [
     "Capability-first abstractions: el registry fuerza todas las abstracciones correctas desde el día 1",
     "SDK executor bridge fue necesario para conectar engine con collectors reales (Deezer search→ID→detail→tracks)",
