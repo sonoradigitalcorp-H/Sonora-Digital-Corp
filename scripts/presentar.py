@@ -396,7 +396,7 @@ def main():
     with open(output, "w") as f:
         f.write(html)
     print(f"✅ Presentacion generada: {output}")
-    print(f"   http://localhost:8080/{Path(output).name}")
+    print(f"   http://149.56.46.173:8080/{Path(output).name}")
 
 
 if __name__ == "__main__":

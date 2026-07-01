@@ -24,5 +24,5 @@ sleep 1
 SESSION_DATE=$(basename "$SESSION" | sed 's/session-//;s/\.json//')
 echo ""
 echo "✅ Presentacion desplegada:"
-echo "   http://$(curl -s ifconfig.me 2>/dev/null || hostname -I | awk '{print $1}'):8080/presentacion-${SESSION_DATE}.html"
+echo "   http://149.56.46.173:8080/presentacion-${SESSION_DATE}.html"
 echo ""

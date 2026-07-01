@@ -1,0 +1,62 @@
+{
+  "version": "1.0.0",
+  "machines": {
+    "sdc-prod": {
+      "type": "vps",
+      "provider": "OVH",
+      "hostname": "sdc-prod.vps.ovh.ca",
+      "ipv4": "149.56.46.173",
+      "ipv6": "2607:5300:229:74d::1",
+      "user": "ubuntu",
+      "os": "Ubuntu 26.04 LTS",
+      "role": "servidor principal — Sonora Digital Corp",
+      "services": {
+        "5174": "Web UI JARVIS",
+        "5180": "ABE Service PWA",
+        "8000": "Hermes MCP Gateway",
+        "18789": "OpenClaw Gateway",
+        "6333": "Qdrant (Docker)",
+        "7687": "Neo4j (Docker)",
+        "5678": "n8n (Docker)",
+        "8080": "Evolucion Dashboard (presentaciones)"
+      },
+      "note": "Acceso via SSH: ssh ubuntu@149.56.46.173"
+    },
+    "laptop": {
+      "type": "personal",
+      "os": "Linux",
+      "ip_known": "187.245.106.218",
+      "ip_note": "IP dinamica desde Mexico, no accesible directamente desde VPS",
+      "role": "maquina local de Abraham — desde aqui se conecta al VPS",
+      "browser": "xdg-open / firefox / chrome",
+      "display": true,
+      "note": "Para ver presentaciones del VPS en laptop: ssh -L 8080:localhost:8080 ubuntu@149.56.46.173 y abrir http://localhost:8080/"
+    }
+  },
+  "ssh_forwarding": {
+    "evolucion_dashboard": {
+      "local_port": 8080,
+      "remote_port": 8080,
+      "remote_host": "localhost",
+      "command": "ssh -L 8080:localhost:8080 ubuntu@149.56.46.173",
+      "browser_url": "http://localhost:8080/",
+      "config_para_laptop": "Agregar a ~/.ssh/config:\n\nHost sdc-prod\n  HostName 149.56.46.173\n  User ubuntu\n  LocalForward 8080 localhost:8080\n  LocalForward 5180 localhost:5180\n  LocalForward 5174 localhost:5174\n\nLuego: ssh sdc-prod  # forwards automatico"
+    },
+    "abe_service": {
+      "local_port": 5180,
+      "remote_port": 5180,
+      "command": "ssh -L 5180:localhost:5180 ubuntu@149.56.46.173",
+      "browser_url": "http://localhost:5180/pwa/"
+    }
+  },
+  "remember": [
+    "Abraham trabaja desde laptop Linux en Mexico (187.245.106.218)",
+    "El VPS es OVH (sdc-prod) con IPv4 149.56.46.173",
+    "La laptop NO es accesible desde el VPS (NAT/firewall)",
+    "Para abrir algo en browser de Abraham: necesita SSH forwarding o URL directa a IP publica",
+    "La URL directa http://149.56.46.173:8080/ funciona si Abraham no tiene firewall bloqueando",
+    "Si Abraham no puede abrir la IP publica: ssh -L 8080:localhost:8080 ubuntu@149.56.46.173 y luego localhost:8080",
+    "NUNCA asumir que el VPS tiene display o browser",
+    "NUNCA asumir que la laptop es alcanzable desde el VPS"
+  ]
+}
