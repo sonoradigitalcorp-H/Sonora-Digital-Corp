@@ -944,6 +944,9 @@ async function handleRequest(req, res, path) {
       const bp = require('path').join(__dirname, 'abe-businesses.html');
       if (fs6.existsSync(bp)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fs6.readFileSync(bp, 'utf-8')); }
       else { sendJson(res, { error: 'ABE Businesses no encontrado' }, 404); }
+    } else if (path === '/abe-portal' || path === '/abe' || path === '/') {
+      const fP = require('fs'); const pP = require('path').join(__dirname, 'abe-portal.html');
+      if (fP.existsSync(pP)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fP.readFileSync(pP, 'utf-8')); } else { sendJson(res, { error: 'Not found' }, 404); }
     } else if (path === '/abe-product-saas') {
       const f = require('fs'); const p = require('path').join(__dirname, 'abe-product-saas.html');
       if (f.existsSync(p)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(f.readFileSync(p, 'utf-8')); } else { sendJson(res, { error: 'Not found' }, 404); }
@@ -956,6 +959,9 @@ async function handleRequest(req, res, path) {
     } else if (path === '/abe-product-content') {
       const f = require('fs'); const p = require('path').join(__dirname, 'abe-product-content.html');
       if (f.existsSync(p)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(f.readFileSync(p, 'utf-8')); } else { sendJson(res, { error: 'Not found' }, 404); }
+    } else if (path === '/abe-store') {
+      const fS = require('fs'); const pS = require('path').join(__dirname, 'abe-store.html');
+      if (fS.existsSync(pS)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fS.readFileSync(pS, 'utf-8')); } else { sendJson(res, { error: 'Not found' }, 404); }
     } else if (path === '/abe-content-queue') {
       const f7 = require('fs'); const p7 = require('path').join(__dirname, 'abe-content-queue.html');
       if (f7.existsSync(p7)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(f7.readFileSync(p7, 'utf-8')); } else { sendJson(res, { error: 'Not found' }, 404); }
