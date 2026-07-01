@@ -57,6 +57,8 @@ const { tools: generatorTools } = require('../tools/generator');
 const { tools: contentEngineTools } = require('../tools/content-engine');
 const { tools: storeTools } = require('../tools/abe-store');
 const { tools: graphTools } = require('../tools/knowledge-graph');
+const { tools: viralTools } = require('../tools/viral-engine');
+const { tools: converseTools } = require('../tools/agent-converse');
 const { sandbox } = require('../sandbox/sandbox');
 const { healer: autoHeal } = require('../scheduler/auto-heal');
 const { engine: workflowEngine } = require('../workflow/engine');
@@ -403,6 +405,12 @@ for (const [name, def] of Object.entries(storeTools)) {
   ALL_TOOL_HANDLERS[name] = def.handler;
 }
 for (const [name, def] of Object.entries(graphTools)) {
+  ALL_TOOL_HANDLERS[name] = def.handler;
+}
+for (const [name, def] of Object.entries(viralTools)) {
+  ALL_TOOL_HANDLERS[name] = def.handler;
+}
+for (const [name, def] of Object.entries(converseTools)) {
   ALL_TOOL_HANDLERS[name] = def.handler;
 }
 ALL_TOOL_HANDLERS['sandbox_run'] = async () => await sandbox.runAll();
@@ -963,6 +971,9 @@ async function handleRequest(req, res, path) {
     } else if (path === '/abe-product-content') {
       const f = require('fs'); const p = require('path').join(__dirname, 'abe-product-content.html');
       if (f.existsSync(p)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(f.readFileSync(p, 'utf-8')); } else { sendJson(res, { error: 'Not found' }, 404); }
+    } else if (path === '/mission-control') {
+      const fMC = require('fs'); const pMC = require('path').join(__dirname, '..', 'mission-control', 'index.html');
+      if (fMC.existsSync(pMC)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fMC.readFileSync(pMC, 'utf-8')); } else { sendJson(res, { error: 'Not found' }, 404); }
     } else if (path === '/abe-store') {
       const fS = require('fs'); const pS = require('path').join(__dirname, 'abe-store.html');
       if (fS.existsSync(pS)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fS.readFileSync(pS, 'utf-8')); } else { sendJson(res, { error: 'Not found' }, 404); }
