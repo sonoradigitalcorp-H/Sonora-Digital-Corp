@@ -34,7 +34,7 @@ const { registry: skillRegistry } = require('../registry/skill-registry');
 const { tools: sessionTools } = require('../tools/sessions');
 const { tools: brainTools } = require('../tools/brain');
 const { tools: contentTools } = require('../tools/content');
-const { tools: storeTools } = require('../tools/store');
+const { tools: storeLegacyTools } = require('../tools/store');
 const { tools: webhookTools } = require('../tools/webhooks');
 const { tools: commandsTools } = require('../tools/commands');
 const { tools: sdcTools } = require('../tools/sdc');
@@ -55,6 +55,7 @@ const { tools: mediaTools } = require('../tools/media');
 const { tools: designTools } = require('../tools/design-tools');
 const { tools: generatorTools } = require('../tools/generator');
 const { tools: contentEngineTools } = require('../tools/content-engine');
+const { tools: storeTools } = require('../tools/abe-store');
 const { sandbox } = require('../sandbox/sandbox');
 const { healer: autoHeal } = require('../scheduler/auto-heal');
 const { engine: workflowEngine } = require('../workflow/engine');
@@ -334,7 +335,7 @@ for (const [name, def] of Object.entries(brainTools)) {
 for (const [name, def] of Object.entries(contentTools)) {
   ALL_TOOL_HANDLERS[name] = def.handler;
 }
-for (const [name, def] of Object.entries(storeTools)) {
+for (const [name, def] of Object.entries(storeLegacyTools)) {
   ALL_TOOL_HANDLERS[name] = def.handler;
 }
 for (const [name, def] of Object.entries(webhookTools)) {
@@ -395,6 +396,9 @@ for (const [name, def] of Object.entries(generatorTools)) {
   ALL_TOOL_HANDLERS[name] = def.handler;
 }
 for (const [name, def] of Object.entries(contentEngineTools)) {
+  ALL_TOOL_HANDLERS[name] = def.handler;
+}
+for (const [name, def] of Object.entries(storeTools)) {
   ALL_TOOL_HANDLERS[name] = def.handler;
 }
 ALL_TOOL_HANDLERS['sandbox_run'] = async () => await sandbox.runAll();
