@@ -422,7 +422,7 @@ class AgentOrchestrator:
         ctx["history"] = self.get_context(5)
         # Auto-query Engram for relevant past learnings
         try:
-            from src.core.pipeline_bridge import query_engram_context, format_engram_context
+            from src.core.pipeline_bridge import format_engram_context, query_engram_context
             engram_results = query_engram_context(task, limit=3)
             engram_ctx = format_engram_context(engram_results)
             if engram_ctx:
