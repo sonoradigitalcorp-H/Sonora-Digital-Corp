@@ -1,6 +1,6 @@
 const { verifyToken } = require('./jwt');
 
-const PUBLIC_PATHS = ['/api/auth/token', '/api/health', '/healthz', '/dashboard', '/api/dashboard', '/adk', '/api/adk', '/workflow-editor', '/api/workflow-editor', '/cheatsheet', '/api/cheatsheet', '/tenant', '/api/tenant', '/mi-panel', '/api/mi-panel', '/abe', '/api/abe', '/abraham', '/api/abraham', '/abe-saas', '/api/abe-saas', '/abe-services', '/api/abe-services', '/abe-businesses', '/api/abe-businesses', '/abe-product-saas', '/abe-product-artists', '/abe-product-revenue', '/abe-product-content', '/abe-product-fans'];
+const PUBLIC_PATHS = ['/api/auth/token', '/api/health', '/healthz', '/dashboard', '/api/dashboard', '/adk', '/api/adk', '/workflow-editor', '/api/workflow-editor', '/cheatsheet', '/api/cheatsheet', '/tenant', '/api/tenant', '/mi-panel', '/api/mi-panel', '/abe', '/api/abe', '/abraham', '/api/abraham', '/abe-saas', '/api/abe-saas', '/abe-services', '/api/abe-services', '/abe-businesses', '/api/abe-businesses', '/abe-product-saas', '/abe-product-artists', '/abe-product-revenue', '/abe-product-content', '/abe-product-fans', '/abe-content-queue'];
 
 function parseAuthHeader(req) {
   const auth = req.headers['authorization'];

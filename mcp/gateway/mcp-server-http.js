@@ -54,6 +54,7 @@ const { tools: intakeTools } = require('../tools/intake');
 const { tools: mediaTools } = require('../tools/media');
 const { tools: designTools } = require('../tools/design-tools');
 const { tools: generatorTools } = require('../tools/generator');
+const { tools: contentEngineTools } = require('../tools/content-engine');
 const { sandbox } = require('../sandbox/sandbox');
 const { healer: autoHeal } = require('../scheduler/auto-heal');
 const { engine: workflowEngine } = require('../workflow/engine');
@@ -393,6 +394,9 @@ for (const [name, def] of Object.entries(designTools)) {
 for (const [name, def] of Object.entries(generatorTools)) {
   ALL_TOOL_HANDLERS[name] = def.handler;
 }
+for (const [name, def] of Object.entries(contentEngineTools)) {
+  ALL_TOOL_HANDLERS[name] = def.handler;
+}
 ALL_TOOL_HANDLERS['sandbox_run'] = async () => await sandbox.runAll();
 ALL_TOOL_HANDLERS['auto_heal'] = async () => await autoHeal.heal();
 ALL_TOOL_HANDLERS['auto_heal_history'] = async () => ({ history: autoHeal.getHistory() });
@@ -691,6 +695,11 @@ function buildToolList() {
     { name: 'design_generate', description: 'Genera página profesional con design system', inputSchema: { type: 'object', properties: { system: { type: 'string' }, title: { type: 'string' }, type: { type: 'string' } }, required: ['system', 'title'] } },
     { name: 'design_claude_prompt', description: 'Prompt profesional para Claude Design', inputSchema: { type: 'object', properties: { project: { type: 'string' }, type: { type: 'string' } }, required: ['project', 'type'] } },
     { name: 'design_search', description: 'Busca design systems', inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
+    { name: 'content_daily', description: 'Genera contenido diario según agenda y tendencias', inputSchema: { type: 'object', properties: { artist: { type: 'string' }, date: { type: 'string' }, type: { type: 'string' } } } },
+    { name: 'content_queue', description: 'Contenido pendiente de revisión', inputSchema: { type: 'object', properties: { status: { type: 'string' } } } },
+    { name: 'content_approve', description: 'Aprueba contenido y envía a canal', inputSchema: { type: 'object', properties: { content_id: { type: 'string' }, channel: { type: 'string' } }, required: ['content_id'] } },
+    { name: 'content_agenda', description: 'Agenda mensual de contenido', inputSchema: { type: 'object', properties: { month: { type: 'number' } } } },
+    { name: 'content_trends', description: 'Tendencias actuales y sugerencias', inputSchema: { type: 'object', properties: { artist: { type: 'string' } } } },
     { name: 'app_execute', description: 'Ejecuta acción para usuario', inputSchema: { type: 'object', properties: { user_id: { type: 'string' }, type: { type: 'string' }, name: { type: 'string' } }, required: ['user_id', 'type', 'name'] } },
     { name: 'workflow_run', description: 'Ejecuta un workflow multi-agente', inputSchema: { type: 'object', properties: { name: { type: 'string' }, context: { type: 'object' } }, required: ['name'] } },
     { name: 'workflow_list', description: 'Lista ejecuciones de workflow', inputSchema: { type: 'object', properties: {} } },
@@ -943,6 +952,9 @@ async function handleRequest(req, res, path) {
     } else if (path === '/abe-product-content') {
       const f = require('fs'); const p = require('path').join(__dirname, 'abe-product-content.html');
       if (f.existsSync(p)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(f.readFileSync(p, 'utf-8')); } else { sendJson(res, { error: 'Not found' }, 404); }
+    } else if (path === '/abe-content-queue') {
+      const f7 = require('fs'); const p7 = require('path').join(__dirname, 'abe-content-queue.html');
+      if (f7.existsSync(p7)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(f7.readFileSync(p7, 'utf-8')); } else { sendJson(res, { error: 'Not found' }, 404); }
     } else if (path === '/abe-product-fans') {
       const f = require('fs'); const p = require('path').join(__dirname, 'abe-product-fans.html');
       if (f.existsSync(p)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(f.readFileSync(p, 'utf-8')); } else { sendJson(res, { error: 'Not found' }, 404); }
