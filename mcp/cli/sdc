@@ -14,6 +14,9 @@
  *   sdc mcp status|tools|auth    MCP Gateway
  *   sdc adk init|build|register  Agent Development Kit
  *   sdc capability list|resolve  Capability Registry
+  sdc plugin list|install|search|create  Plugin Marketplace
+  sdc swarm run|list            Swarm de agentes
+  sdc learning stats            Self-Learning stats
  *   sdc skill list|run           Skills
  *   sdc event emit|tail          Eventos
  *   sdc score                    Enterprise Score
@@ -54,7 +57,10 @@ async function main() {
       case 'mcp':      return await mcpCmd(args.slice(1));
       case 'adk':      return await adkCmd(args.slice(1));
       case 'capability': return await capabilityCmd(args.slice(1));
-      case 'skill':    return await skillCmd(args.slice(1));
+        case 'skill':    return await skillCmd
+      case 'plugin':   return await pluginCmd
+      case 'swarm':    return await swarmCmd
+      case 'learning': return await learningCmd(args.slice(1));
       case 'event':    return await eventCmd(args.slice(1));
       case 'score':    return await scoreCmd();
       case 'finops':   return await finopsCmd();
@@ -412,3 +418,44 @@ main().catch(e => {
   console.error('❌ Fatal:', e.message);
   process.exit(1);
 });
+
+async function pluginCmd(args) {
+  const sub = args[0];
+  if (sub === 'list') {
+    const r = await sdk.tool('plugin_list', {});
+    (r.plugins || []).forEach(p => console.log("   " + p.name + " v" + p.version + " " + p.tools + " tools"));
+  } else if (sub === 'install') {
+    const name = args[1];
+    if (!name) return console.log('Uso: sdc plugin install <name>');
+    const r = await sdk.tool('plugin_install', { name });
+    console.log(JSON.stringify(r, null, 2));
+  } else if (sub === 'search') {
+    const q = args.slice(1).join(' ');
+    if (!q) return console.log('Uso: sdc plugin search <query>');
+    const r = await sdk.tool('plugin_search', { query: q });
+    (r.results || []).forEach(p => console.log("  " + p.name + " - " + (p.description || '')));
+  } else console.log('Uso: sdc plugin list|install|search');
+}
+
+async function swarmCmd(args) {
+  const sub = args[0];
+  if (sub === 'list') {
+    const r = await sdk.tool('swarm_list', {});
+    (r.swarms || []).slice(0,10).forEach(s => console.log("  " + s.id + " " + s.name + " " + s.status));
+  } else if (sub === 'run') {
+    const name = args[1];
+    const task = args.slice(2).join(' ');
+    if (!name || !task) return console.log('Uso: sdc swarm run <name> <task>');
+    console.log("Running swarm " + name + "...");
+    const r = await sdk.tool('swarm_run', { name, task });
+    console.log("Status: " + r.status);
+  } else console.log('Uso: sdc swarm list|run');
+}
+
+async function learningCmd(args) {
+  const r = await sdk.tool('learning_stats', {});
+  console.log("\nSelf-Learning Stats\n");
+  console.log("Total calls: " + r.total_calls);
+  console.log("Capabilities: " + r.capabilities_tracked);
+  if (r.scores) Object.entries(r.scores).slice(0,10).forEach(([k,v]) => console.log("  " + k + " " + v.confidence + "% (" + v.attempts + " calls)"));
+}

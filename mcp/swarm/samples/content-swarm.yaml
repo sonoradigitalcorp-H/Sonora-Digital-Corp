@@ -1,0 +1,6 @@
+name: content-swarm
+topology: mesh
+agents:
+  - content_generate
+  - skills_system
+  - enterprise_score

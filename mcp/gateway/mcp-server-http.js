@@ -48,6 +48,9 @@ const { tools: skillsTools } = require('../tools/skills');
 const { tools: appTools } = require('../tools/app');
 const { engine: workflowEngine } = require('../workflow/engine');
 const { manager: providerManager } = require('../providers/provider-manager');
+const { manager: pluginManager } = require('../plugins/plugin-manager');
+const { engine: swarmEngine } = require('../swarm/swarm-engine');
+const { loop: learningLoop } = require('../registry/learning-loop');
 
 const MCP_PORT = 18989;
 const N8N_HOST = '127.0.0.1';
@@ -369,6 +372,40 @@ ALL_TOOL_HANDLERS['workflow_get'] = async ({ id }) => {
 };
 
 
+// Plugin Marketplace tools
+ALL_TOOL_HANDLERS['plugin_list'] = async () => ({ plugins: pluginManager.list() });
+ALL_TOOL_HANDLERS['plugin_install'] = async ({ name, version, description, tools, capabilities }) => {
+  return pluginManager.install(name, { version, description, tools, capabilities });
+};
+ALL_TOOL_HANDLERS['plugin_remove'] = async ({ name }) => pluginManager.remove(name);
+ALL_TOOL_HANDLERS['plugin_search'] = async ({ query }) => ({ results: pluginManager.search(query) });
+ALL_TOOL_HANDLERS['plugin_create'] = async ({ name }) => pluginManager.createScaffold(name);
+ALL_TOOL_HANDLERS['plugin_defaults'] = async () => ({ plugins: pluginManager.getDefaultPlugins() });
+
+// Swarm tools
+ALL_TOOL_HANDLERS['swarm_run'] = async ({ name, task, agents }) => {
+  if (!agents || agents.length === 0) {
+    const path = require('path');
+    const samplesDir = path.join(__dirname, '..', 'swarm', 'samples');
+    const fs = require('fs');
+    const files = fs.readdirSync(samplesDir).filter(f => f.startsWith(name));
+    if (files.length > 0) {
+      const content = fs.readFileSync(path.join(samplesDir, files[0]), 'utf-8');
+      const def = swarmEngine.parseDef(content);
+      agents = def.agents;
+    }
+  }
+  return await swarmEngine.run(name, agents || [], task);
+};
+ALL_TOOL_HANDLERS['swarm_list'] = async () => ({ swarms: swarmEngine.list() });
+
+// Learning Loop tools
+ALL_TOOL_HANDLERS['learning_stats'] = async () => learningLoop.getStats();
+ALL_TOOL_HANDLERS['learning_record'] = async ({ tool, capability, success, duration }) => {
+  learningLoop.record(tool, capability, success, duration);
+  return { recorded: true };
+};
+
 ALL_TOOL_HANDLERS['ollama_models'] = async () => {
   try {
     const http = require('http');
@@ -501,7 +538,18 @@ function buildToolList() {
     { name: 'provider_manager_test', description: 'Prueba un provider', inputSchema: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] } },
     { name: 'ollama_models', description: 'Lista modelos locales instalados en Ollama', inputSchema: { type: 'object', properties: {} } },
     { name: 'ollama_test', description: 'Prueba un modelo local de Ollama', inputSchema: { type: 'object', properties: { model: { type: 'string' } } } },
-    { name: 'provider_manager_fallback', description: 'Configura cadena de fallback por capability', inputSchema: { type: 'object', properties: { capability: { type: 'string' }, chain: { type: 'array', items: { type: 'string' } } }, required: ['capability'] } },
+    
+    { name: 'plugin_list', description: 'Lista plugins instalados', inputSchema: { type: 'object', properties: {} } },
+    { name: 'plugin_install', description: 'Instala un plugin', inputSchema: { type: 'object', properties: { name: { type: 'string' }, version: { type: 'string' }, description: { type: 'string' }, tools: { type: 'array' }, capabilities: { type: 'array' } }, required: ['name'] } },
+    { name: 'plugin_remove', description: 'Elimina un plugin', inputSchema: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] } },
+    { name: 'plugin_search', description: 'Busca plugins', inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
+    { name: 'plugin_create', description: 'Crea scaffold de plugin', inputSchema: { type: 'object', properties: { name: { type: 'string' } }, required: ['name'] } },
+    { name: 'plugin_defaults', description: 'Lista plugins recomendados', inputSchema: { type: 'object', properties: {} } },
+    { name: 'swarm_run', description: 'Ejecuta un swarm de agentes', inputSchema: { type: 'object', properties: { name: { type: 'string' }, task: { type: 'string' }, agents: { type: 'array' } }, required: ['name', 'task'] } },
+    { name: 'swarm_list', description: 'Lista ejecuciones de swarm', inputSchema: { type: 'object', properties: {} } },
+    { name: 'learning_stats', description: 'Estadísticas de aprendizaje', inputSchema: { type: 'object', properties: {} } },
+    { name: 'learning_record', description: 'Registra resultado de tool call para aprendizaje', inputSchema: { type: 'object', properties: { tool: { type: 'string' }, capability: { type: 'string' }, success: { type: 'boolean' }, duration: { type: 'number' } }, required: ['tool'] } },
+{ name: 'provider_manager_fallback', description: 'Configura cadena de fallback por capability', inputSchema: { type: 'object', properties: { capability: { type: 'string' }, chain: { type: 'array', items: { type: 'string' } } }, required: ['capability'] } },
   ];
 
   for (const [name, def] of Object.entries(salesTools)) {
