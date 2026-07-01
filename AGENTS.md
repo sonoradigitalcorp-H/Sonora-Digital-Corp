@@ -122,6 +122,8 @@ Estado completo desplegado en:
 - `/ops` — Ops OS
 - `/quality` — Quality OS
 - `/strategy` — Strategy OS
+- `/presentar` — genera presentacion reveal.js de la sesion actual
+- `/deploy` — genera + despliega presentacion a :8080
 
 ## Templates
 
