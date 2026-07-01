@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Abraham OS — Intake</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+:root{--bg:#0a0a12;--surface:rgba(255,255,255,.05);--surface2:rgba(255,255,255,.08);--border:rgba(255,255,255,.1);--text:#f0f0f0;--dim:rgba(255,255,255,.4);--gold:#FFD700;--accent:#7c5cfc;--green:#34d399;--radius:16px;--font:'Inter',-apple-system,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(124,92,252,.08),transparent 50%),radial-gradient(circle at 70% 80%,rgba(255,215,0,.05),transparent 50%);z-index:-1}
+.glass{background:var(--surface);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius)}
+.glass-sm{background:var(--surface2);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:10px}
+.header{position:sticky;top:0;z-index:100;padding:.8rem 1.5rem;background:rgba(10,10,18,.8);backdrop-filter:blur(30px);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.header h1{font-size:1.3rem;font-weight:700;letter-spacing:-.02em}
+.header h1 span{color:var(--gold)}.header .sub{font-size:.7rem;color:var(--dim)}
+.container{max-width:1200px;margin:0 auto;padding:1.5rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem;margin-bottom:1rem}
+.main-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem}@media(max-width:800px){.main-grid{grid-template-columns:1fr}}
+.card{padding:1.5rem}.card h2{font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:.8rem}
+.card .stat{font-size:1.5rem;font-weight:700}.card .subl{font-size:.7rem;color:var(--dim)}
+textarea,input,select{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;color:var(--text);padding:.7rem;font-family:var(--font);font-size:.85rem;width:100%;outline:none;transition:border-color .2s}
+textarea:focus,input:focus{border-color:var(--gold)}
+textarea{min-height:80px;resize:vertical}
+.btn{padding:.5rem 1rem;border-radius:10px;border:none;font-family:var(--font);font-size:.8rem;font-weight:500;cursor:pointer;transition:all .2s}
+.btn-primary{background:var(--gold);color:#000}.btn-primary:hover{opacity:.85}
+.btn-accent{background:var(--accent);color:#fff}.btn-accent:hover{opacity:.85}
+.btn-sm{padding:.3rem .6rem;font-size:.7rem}
+.drop-zone{border:2px dashed var(--border);border-radius:var(--radius);padding:2rem;text-align:center;cursor:pointer;transition:all .2s}
+.drop-zone:hover{border-color:var(--gold);background:rgba(255,215,0,.03)}
+.drop-zone .icon{font-size:2rem;margin-bottom:.5rem}
+.drop-zone .text{font-size:.8rem;color:var(--dim)}
+.chip{display:inline-block;padding:.2rem .5rem;border-radius:6px;font-size:.65rem;margin:.15rem}
+.chip-gold{background:rgba(255,215,0,.15);color:var(--gold)}
+.chip-purple{background:rgba(124,92,252,.15);color:var(--accent)}
+.chip-green{background:rgba(52,211,153,.15);color:var(--green)}
+.item{display:flex;justify-content:space-between;padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.8rem}.item:last-child{border:0}
+.item .l{color:var(--dim)}.item .r{font-weight:500}
+pre{font-size:.7rem;color:var(--dim);white-space:pre-wrap;max-height:300px;overflow:auto}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>🎵 <span>Abraham</span> OS</h1>
+  <div class="sub">🧠 Todo lo que le mandas, el sistema lo entiende solo</div>
+</div>
+
+<div class="container">
+  <!-- Stats -->
+  <div class="grid" id="statsGrid">
+    <div class="card glass"><h2>Entradas</h2><div class="stat" id="totalEntries">—</div><div class="subl">procesadas</div></div>
+    <div class="card glass"><h2>Canales</h2><div class="stat" id="channelCount">—</div><div class="subl">texto · voz · archivos · email</div></div>
+    <div class="card glass"><h2>Categorías</h2><div class="stat" id="categoryCount">—</div><div class="subl">streams · revenue · releases · etc</div></div>
+    <div class="card glass"><h2>Archivos</h2><div class="stat" id="fileCount">—</div><div class="subl">en inbox</div></div>
+  </div>
+
+  <!-- Main intake area -->
+  <div class="main-grid">
+    <!-- Left: Input channels -->
+    <div>
+      <div class="card glass" style="margin-bottom:1rem">
+        <h2>💬 Texto / Voz</h2>
+        <textarea id="textInput" placeholder="Ej: Héctor Rubio tuvo 50,000 streams nuevos esta semana en Spotify..."></textarea>
+        <div style="display:flex;gap:.5rem;margin-top:.5rem">
+          <select id="sourceSelect" style="width:auto;padding:.4rem;font-size:.75rem">
+            <option value="manual">✏️ Escrito</option>
+            <option value="voice">🎤 Voz</option>
+            <option value="telegram">📱 Telegram</option>
+            <option value="email">📧 Email</option>
+          </select>
+          <input id="contextInput" placeholder="Contexto (ej: Hector Rubio)" style="flex:1;padding:.4rem;font-size:.75rem">
+          <button class="btn btn-primary" onclick="sendText()">Enviar</button>
+        </div>
+        <div id="textResult" style="font-size:.75rem;color:var(--dim);margin-top:.4rem"></div>
+      </div>
+
+      <div class="card glass" style="margin-bottom:1rem">
+        <h2>📁 Archivos</h2>
+        <div class="drop-zone" id="dropZone">
+          <div class="icon">📄</div>
+          <div class="text">Arrastrá archivos acá o hacé click</div>
+          <div class="text" style="font-size:.65rem;margin-top:.3rem">PDF · Excel · CSV · TXT · JSON · Imágenes · Audio · Video</div>
+        </div>
+        <input type="file" id="fileInput" style="display:none" multiple onchange="handleFiles(this.files)">
+        <div id="fileResult" style="font-size:.75rem;color:var(--dim);margin-top:.4rem"></div>
+      </div>
+
+      <div class="card glass">
+        <h2>📧 Email</h2>
+        <input id="emailFrom" placeholder="De: abraham@abe-music.com" style="margin-bottom:.3rem;padding:.4rem;font-size:.75rem">
+        <input id="emailSubject" placeholder="Asunto: Nuevas streams de Héctor" style="margin-bottom:.3rem;padding:.4rem;font-size:.75rem">
+        <textarea id="emailBody" placeholder="Cuerpo del email..." style="min-height:50px;padding:.4rem;font-size:.75rem"></textarea>
+        <button class="btn btn-accent btn-sm" style="margin-top:.3rem" onclick="sendEmail()">Procesar Email</button>
+        <div id="emailResult" style="font-size:.75rem;color:var(--dim);margin-top:.4rem"></div>
+      </div>
+    </div>
+
+    <!-- Right: Knowledge browser -->
+    <div>
+      <div class="card glass" style="margin-bottom:1rem">
+        <h2>🔍 Buscar en mi conocimiento</h2>
+        <div style="display:flex;gap:.5rem">
+          <input id="queryInput" placeholder="Ej: streams de Héctor Rubio..." style="flex:1;padding:.4rem;font-size:.75rem">
+          <button class="btn btn-accent btn-sm" onclick="queryKnowledge()">Buscar</button>
+        </div>
+        <div id="queryResult" style="font-size:.75rem;color:var(--dim);margin-top:.4rem"></div>
+      </div>
+
+      <div class="card glass">
+        <h2>📋 Actividad Reciente</h2>
+        <div id="recentActivity"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GATEWAY = 'http://127.0.0.1:18989';
+let authToken = '';
+
+async function getToken() {
+  const r = await fetch(GATEWAY+'/api/auth/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id:'abe-fenix',client_secret:'abe_f3n1x_pr0_k3y_2026'})});
+  const d=await r.json(); authToken=d.access_token||'';
+}
+async function call(tool,params) {
+  if(!authToken) await getToken();
+  try{const r=await fetch(GATEWAY+'/api/call',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+authToken},body:JSON.stringify({tool,params:params||{}})});return await r.json()}catch(e){return{}}
+}
+
+async function loadStats() {
+  const s=await call('intake_stats',{});
+  document.getElementById('totalEntries').textContent=s.total_entries||0;
+  document.getElementById('channelCount').textContent=Object.keys(s.by_type||{}).length||0;
+  document.getElementById('categoryCount').textContent=Object.keys(s.by_category||{}).length||0;
+  document.getElementById('fileCount').textContent=s.files_in_inbox||0;
+
+  const recent=(s.recent||[]).slice(-8).reverse();
+  document.getElementById('recentActivity').innerHTML=recent.length?recent.map(r=>
+    '<div class="item"><span class="l">'+(r.type||'?')+'</span><span class="chip chip-'+(r.category==='streams'||r.category==='revenue'?'gold':'purple')+'">'+r.category+'</span><span class="r" style="font-size:.65rem;color:var(--dim)">'+(r.summary||'').substring(0,40)+'</span></div>'
+  ).join(''):'<div style="font-size:.75rem;color:var(--dim)">Todavía no hay datos. Mandale algo al sistema!</div>';
+}
+
+async function sendText() {
+  const text=document.getElementById('textInput').value; if(!text)return;
+  const source=document.getElementById('sourceSelect').value;
+  const context=document.getElementById('contextInput').value;
+  document.getElementById('textResult').textContent='⏳ Procesando...';
+  const r=await call('intake_text',{text,source,context});
+  document.getElementById('textResult').innerHTML='✅ <strong>'+r.category+'</strong>: '+r.message;
+  document.getElementById('textInput').value='';
+  loadStats();
+}
+
+async function sendEmail() {
+  const from=document.getElementById('emailFrom').value;
+  const subject=document.getElementById('emailSubject').value;
+  const body=document.getElementById('emailBody').value;
+  if(!from||!subject||!body) return;
+  document.getElementById('emailResult').textContent='⏳ Procesando email...';
+  const r=await call('intake_email',{from,subject,body});
+  document.getElementById('emailResult').innerHTML='✅ <strong>'+r.category+'</strong>: '+r.subject;
+  document.getElementById('emailFrom').value='';document.getElementById('emailSubject').value='';document.getElementById('emailBody').value='';
+  loadStats();
+}
+
+async function handleFiles(files) {
+  for(const file of files) {
+    const reader=new FileReader();
+    reader.onload=async function(e) {
+      const base64=e.target.result.split(',')[1];
+      const context=document.getElementById('contextInput').value;
+      document.getElementById('fileResult').innerHTML='⏳ Subiendo '+file.name+'...';
+      const r=await call('intake_file',{filename:file.name,content_base64:base64,context});
+      document.getElementById('fileResult').innerHTML='✅ <strong>'+r.category+'</strong>: '+r.filename+' ('+(r.size?(r.size/1024).toFixed(0)+'KB':'')+')';
+      loadStats();
+    };reader.readAsDataURL(file);
+  }
+}
+
+async function queryKnowledge() {
+  const q=document.getElementById('queryInput').value; if(!q)return;
+  document.getElementById('queryResult').textContent='🔍 Buscando...';
+  const r=await call('intake_query',{query:q});
+  document.getElementById('queryResult').innerHTML=(r.results||[]).length+' resultados:<br>'+
+    (r.results||[]).map(r=>'<div style="padding:.2rem 0;font-size:.7rem">• ['+r.type+'] <strong>'+r.category+'</strong>: '+(r.summary||'').substring(0,80)+'</div>').join('');
+}
+
+// Drag and drop
+const dropZone=document.getElementById('dropZone');
+dropZone.addEventListener('dragover',e=>{e.preventDefault();dropZone.style.borderColor='var(--gold)'});
+dropZone.addEventListener('dragleave',()=>{dropZone.style.borderColor=''});
+dropZone.addEventListener('drop',e=>{e.preventDefault();dropZone.style.borderColor='';handleFiles(e.dataTransfer.files)});
+dropZone.addEventListener('click',()=>document.getElementById('fileInput').click());
+
+loadStats();
+</script>
+</body>
+</html>

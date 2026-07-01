@@ -50,6 +50,7 @@ const { tools: hermesTools } = require('../tools/hermes');
 const { tools: openclawTools } = require('../tools/openclaw');
 const { tools: billingTools } = require('../tools/billing');
 const { tools: musicProviders } = require('../tools/music-providers');
+const { tools: intakeTools } = require('../tools/intake');
 const { healer: autoHeal } = require('../scheduler/auto-heal');
 const { engine: workflowEngine } = require('../workflow/engine');
 const { manager: providerManager } = require('../providers/provider-manager');
@@ -376,6 +377,9 @@ for (const [name, def] of Object.entries(billingTools)) {
 for (const [name, def] of Object.entries(musicProviders)) {
   ALL_TOOL_HANDLERS[name] = def.handler;
 }
+for (const [name, def] of Object.entries(intakeTools)) {
+  ALL_TOOL_HANDLERS[name] = def.handler;
+}
 ALL_TOOL_HANDLERS['auto_heal'] = async () => await autoHeal.heal();
 ALL_TOOL_HANDLERS['auto_heal_history'] = async () => ({ history: autoHeal.getHistory() });
 
@@ -649,6 +653,13 @@ function buildToolList() {
     { name: 'artist_sync_all', description: 'Sincroniza todos los artistas', inputSchema: { type: 'object', properties: {} } },
     { name: 'artist_status', description: 'Estado de fuentes de datos de un artista', inputSchema: { type: 'object', properties: { artist_id: { type: 'string' } }, required: ['artist_id'] } },
     { name: 'artist_list_configs', description: 'Todos los artistas configurados', inputSchema: { type: 'object', properties: {} } },
+
+    { name: 'intake_text', description: 'Abraham ingresa texto y el sistema lo clasifica', inputSchema: { type: 'object', properties: { text: { type: 'string' }, source: { type: 'string' }, context: { type: 'string' } }, required: ['text'] } },
+    { name: 'intake_voice', description: 'Abraham dicta por voz', inputSchema: { type: 'object', properties: { transcript: { type: 'string' } }, required: ['transcript'] } },
+    { name: 'intake_file', description: 'Abraham sube archivos', inputSchema: { type: 'object', properties: { filename: { type: 'string' }, content_base64: { type: 'string' }, context: { type: 'string' } }, required: ['filename'] } },
+    { name: 'intake_email', description: 'Abraham reenvía emails', inputSchema: { type: 'object', properties: { from: { type: 'string' }, subject: { type: 'string' }, body: { type: 'string' } }, required: ['from', 'subject', 'body'] } },
+    { name: 'intake_stats', description: 'Resumen de todo lo ingresado', inputSchema: { type: 'object', properties: {} } },
+    { name: 'intake_query', description: 'Busca en el conocimiento de Abraham', inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
 { name: 'app_execute', description: 'Ejecuta acción para usuario', inputSchema: { type: 'object', properties: { user_id: { type: 'string' }, type: { type: 'string' }, name: { type: 'string' } }, required: ['user_id', 'type', 'name'] } },
     { name: 'workflow_run', description: 'Ejecuta un workflow multi-agente', inputSchema: { type: 'object', properties: { name: { type: 'string' }, context: { type: 'object' } }, required: ['name'] } },
     { name: 'workflow_list', description: 'Lista ejecuciones de workflow', inputSchema: { type: 'object', properties: {} } },
@@ -884,6 +895,11 @@ async function handleRequest(req, res, path) {
       const tp = require('path').join(__dirname, 'tenant-dashboard.html');
       if (fs2.existsSync(tp)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fs2.readFileSync(tp, 'utf-8')); }
       else { sendJson(res, { error: 'Tenant dashboard no encontrado' }, 404); }
+        } else if (path === '/abraham' || path === '/api/abraham') {
+      const fs3 = require('fs');
+      const ip = require('path').join(__dirname, 'abraham-intake.html');
+      if (fs3.existsSync(ip)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fs3.readFileSync(ip, 'utf-8')); }
+      else { sendJson(res, { error: 'Abraham Intake no encontrado' }, 404); }
     } else if (path === '/abe' || path === '/api/abe') {
       const fs2 = require('fs');
       const ap = require('path').join(__dirname, 'abe-music-os.html');
