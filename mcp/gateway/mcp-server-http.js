@@ -48,6 +48,8 @@ const { tools: skillsTools } = require('../tools/skills');
 const { tools: appTools } = require('../tools/app');
 const { tools: hermesTools } = require('../tools/hermes');
 const { tools: openclawTools } = require('../tools/openclaw');
+const { tools: billingTools } = require('../tools/billing');
+const { healer: autoHeal } = require('../scheduler/auto-heal');
 const { engine: workflowEngine } = require('../workflow/engine');
 const { manager: providerManager } = require('../providers/provider-manager');
 const { manager: pluginManager } = require('../plugins/plugin-manager');
@@ -367,6 +369,11 @@ for (const [name, def] of Object.entries(hermesTools)) {
 for (const [name, def] of Object.entries(openclawTools)) {
   ALL_TOOL_HANDLERS[name] = def.handler;
 }
+for (const [name, def] of Object.entries(billingTools)) {
+  ALL_TOOL_HANDLERS[name] = def.handler;
+}
+ALL_TOOL_HANDLERS['auto_heal'] = async () => await autoHeal.heal();
+ALL_TOOL_HANDLERS['auto_heal_history'] = async () => ({ history: autoHeal.getHistory() });
 
 // Workflow Engine tools
 ALL_TOOL_HANDLERS['workflow_run'] = async ({ name, context }) => {
@@ -626,7 +633,13 @@ function buildToolList() {
     { name: 'openclaw_skills', description: 'Skills de OpenClaw', inputSchema: { type: 'object', properties: {} } },
     { name: 'openclaw_execute', description: 'Ejecuta skill de OpenClaw', inputSchema: { type: 'object', properties: { skill: { type: 'string' }, params: { type: 'object' } }, required: ['skill'] } },
     { name: 'openclaw_browser', description: 'Navegador via OpenClaw', inputSchema: { type: 'object', properties: { url: { type: 'string' } }, required: ['url'] } },
-    { name: 'app_execute', description: 'Ejecuta acción para usuario', inputSchema: { type: 'object', properties: { user_id: { type: 'string' }, type: { type: 'string' }, name: { type: 'string' } }, required: ['user_id', 'type', 'name'] } },
+    
+    { name: 'billing_plan', description: 'Plan y uso de un tenant', inputSchema: { type: 'object', properties: { tenant_id: { type: 'string' } }, required: ['tenant_id'] } },
+    { name: 'billing_invoice', description: 'Genera factura', inputSchema: { type: 'object', properties: { tenant_id: { type: 'string' } }, required: ['tenant_id'] } },
+    { name: 'billing_plans', description: 'Planes disponibles', inputSchema: { type: 'object', properties: {} } },
+    { name: 'auto_heal', description: 'Auto-recuperación', inputSchema: { type: 'object', properties: {} } },
+    { name: 'auto_heal_history', description: 'Historial auto-heal', inputSchema: { type: 'object', properties: {} } },
+{ name: 'app_execute', description: 'Ejecuta acción para usuario', inputSchema: { type: 'object', properties: { user_id: { type: 'string' }, type: { type: 'string' }, name: { type: 'string' } }, required: ['user_id', 'type', 'name'] } },
     { name: 'workflow_run', description: 'Ejecuta un workflow multi-agente', inputSchema: { type: 'object', properties: { name: { type: 'string' }, context: { type: 'object' } }, required: ['name'] } },
     { name: 'workflow_list', description: 'Lista ejecuciones de workflow', inputSchema: { type: 'object', properties: {} } },
     { name: 'workflow_list_samples', description: 'Lista samples de workflow disponibles', inputSchema: { type: 'object', properties: {} } },
@@ -856,6 +869,11 @@ async function handleRequest(req, res, path) {
       } else {
         sendJson(res, { error: 'Workflow Editor no encontrado' }, 404);
       }
+        } else if (path === '/tenant' || path === '/api/tenant' || path === '/mi-panel' || path === '/api/mi-panel') {
+      const fs2 = require('fs');
+      const tp = require('path').join(__dirname, 'tenant-dashboard.html');
+      if (fs2.existsSync(tp)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fs2.readFileSync(tp, 'utf-8')); }
+      else { sendJson(res, { error: 'Tenant dashboard no encontrado' }, 404); }
     } else if (path === '/cheatsheet' || path === '/api/cheatsheet') {
       const fs = require('fs');
       const csPath = require('path').join(__dirname, 'cheatsheet.html');
