@@ -1,4 +1,4 @@
-FROM python:3.12-slim AS base
+FROM python:3.14-slim AS base
 
 # Allow PIP_ROOT_USER_ACTION for container builds
 ENV PIP_ROOT_USER_ACTION=ignore
