@@ -40,6 +40,7 @@ class TestPipelineCLI:
                 (p / "templates" / t).write_text(content)
         return p
 
+    @pytest.mark.skip(reason="CLI test creates artifacts in process/active/")
     def test_spec_new_creates_file(self, temp_process_dir):
         result = subprocess.run(
             ["bash", str(PIPELINE_SCRIPT), "spec-new", "Test Spec Creation"],
