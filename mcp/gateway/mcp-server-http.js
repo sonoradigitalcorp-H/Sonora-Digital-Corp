@@ -57,12 +57,12 @@ const TENANTS_PATH = require('path').join(__dirname, '..', '..', 'config', 'tena
 const TENANTS = JSON.parse(require('fs').readFileSync(TENANTS_PATH, 'utf-8')).tenants;
 
 const SERVICES = {
-  paperclip: { name: 'Paperclip', port: 3100, host: '127.0.0.1', desc: 'Gestión de agentes IA', icon: '🧠', healthPath: '/api/health' },
   n8n:       { name: 'n8n', port: 5678, host: '127.0.0.1', desc: 'Automatización visual', icon: '⚡', healthPath: '/healthz' },
-  metabase:  { name: 'Metabase', port: 3002, host: '127.0.0.1', desc: 'Dashboards SQL', icon: '📊', healthPath: '/api/health' },
-  uptime:    { name: 'UptimeKuma', port: 3003, host: '127.0.0.1', desc: 'Monitor de estado', icon: '🔍', healthPath: '/' },
-  dashy:     { name: 'Dashy', port: 3004, host: '127.0.0.1', desc: 'Homepage servicios', icon: '🚀', healthPath: '/' },
-  plausible: { name: 'Plausible', port: 3006, host: '127.0.0.1', desc: 'Analytics web', icon: '📈', healthPath: '/' },
+  uptime:    { name: 'UptimeKuma', port: 3008, host: '127.0.0.1', desc: 'Monitor de estado', icon: '🔍', healthPath: '/' },
+  postgres:  { name: 'PostgreSQL', port: 5432, host: '127.0.0.1', desc: 'Base de datos relacional', icon: '🐘', healthPath: '/', healthCmd: true },
+  redis:     { name: 'Redis', port: 6379, host: '127.0.0.1', desc: 'Cache y rate limiting', icon: '⚡', healthPath: '/', healthCmd: true },
+  neo4j:     { name: 'Neo4j', port: 7687, host: '127.0.0.1', desc: 'Base de grafos', icon: '🔗', healthPath: '/', healthCmd: true },
+  qdrant:    { name: 'Qdrant', port: 6333, host: '127.0.0.1', desc: 'Base vectorial', icon: '📐', healthPath: '/healthz' },
 };
 
 function httpGet(host, port, path) {
@@ -131,7 +131,63 @@ const SHARED_TOOL_HANDLERS = {
     if (!svc) return { error: `Servicio ${service} no encontrado` };
     return { ...svc, status: 'configured' };
   },
-  paperclip_status: async () => await httpGet('127.0.0.1', 3100, '/api/health'),
+  postgres_query: async ({ query, params }) => {
+    try {
+      const { execSync } = require('child_process');
+      const escaped = (query || '').replace(/'/g, "'\\''");
+      const r = execSync(`psql -h 127.0.0.1 -U sdc -d sdc -c '${escaped}' --csv 2>/dev/null`, { timeout: 10000, encoding: 'utf-8' });
+      return { success: true, result: r.trim().split('\n').slice(0, 50) };
+    } catch (e) { return { error: e.message }; }
+  },
+  redis_ping: async () => {
+    try {
+      const { execSync } = require('child_process');
+      const r = execSync('redis-cli -h 127.0.0.1 -a sdc2026prod PING', { timeout: 5000, encoding: 'utf-8' });
+      return { status: r.trim() };
+    } catch (e) { return { error: e.message }; }
+  },
+  redis_get: async ({ key }) => {
+    try {
+      const { execSync } = require('child_process');
+      const r = execSync(`redis-cli -h 127.0.0.1 -a sdc2026prod GET '${key.replace(/'/g, "'\\''")}'`, { timeout: 5000, encoding: 'utf-8' });
+      return { key, value: r.trim() };
+    } catch (e) { return { error: e.message }; }
+  },
+  neo4j_query: async ({ query }) => {
+    try {
+      const http = require('http');
+      const body = JSON.stringify({ statements: [{ statement: query }] });
+      return await new Promise((resolve) => {
+        const req = http.request({ hostname: '127.0.0.1', port: 7687, path: '/db/neo4j/tx/commit', method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Basic ' + Buffer.from('neo4j:jarvis2026').toString('base64') }, timeout: 10000 }, (res) => {
+          let d = ''; res.on('data', c => d += c); res.on('end', () => { try { resolve({ results: JSON.parse(d) }); } catch { resolve({ raw: d }); } });
+        });
+        req.on('error', (e) => resolve({ error: e.message }));
+        req.write(body); req.end();
+      });
+    } catch (e) { return { error: e.message }; }
+  },
+  qdrant_search: async ({ collection, vector, limit }) => {
+    try {
+      const http = require('http');
+      const body = JSON.stringify({ vector: vector || Array(384).fill(0), limit: limit || 5, with_payload: true });
+      return await new Promise((resolve) => {
+        const req = http.request({ hostname: '127.0.0.1', port: 6333, path: `/collections/${collection || 'jarvis_knowledge'}/points/search`, method: 'POST', headers: { 'Content-Type': 'application/json' }, timeout: 10000 }, (res) => {
+          let d = ''; res.on('data', c => d += c); res.on('end', () => { try { resolve(JSON.parse(d)); } catch { resolve({ raw: d }); } });
+        });
+        req.on('error', (e) => resolve({ error: e.message }));
+        req.write(body); req.end();
+      });
+    } catch (e) { return { error: e.message }; }
+  },
+  playwright_run: async ({ url, action, selector }) => {
+    try {
+      const { execSync } = require('child_process');
+      const dir = process.env.HOME + '/sonora-digital-corp/mcp';
+      const cmd = `cd ${dir} && npx -y @playwright/mcp -e "goto('${(url || 'https://google.com').replace(/'/g, '')}')" 2>/dev/null | tail -5`;
+      const r = execSync(cmd, { timeout: 30000, encoding: 'utf-8' });
+      return { result: r.trim().substring(0, 2000) };
+    } catch (e) { return { error: e.message }; }
+  },
   n8n_workflows: async () => await httpGet(N8N_HOST, N8N_PORT, '/rest/workflows'),
   uptime_monitors: async () => await httpGet('127.0.0.1', 3003, '/api/status'),
   n8n_trigger_workflow: async ({ workflow_id, payload }) => {
@@ -352,9 +408,13 @@ function buildToolList() {
     { name: 'health_all', description: 'Estado de todos los servicios', inputSchema: { type: 'object', properties: {} } },
     { name: 'health_service', description: 'Estado de un servicio específico', inputSchema: { type: 'object', properties: { service: { type: 'string', enum: Object.keys(SERVICES) } }, required: ['service'] } },
     { name: 'service_info', description: 'Info detallada de un servicio', inputSchema: { type: 'object', properties: { service: { type: 'string', enum: Object.keys(SERVICES) } }, required: ['service'] } },
-    { name: 'paperclip_status', description: 'Estado de Paperclip', inputSchema: { type: 'object', properties: {} } },
     { name: 'n8n_workflows', description: 'Lista workflows n8n', inputSchema: { type: 'object', properties: {} } },
-    { name: 'uptime_monitors', description: 'Lista monitores UptimeKuma', inputSchema: { type: 'object', properties: {} } },
+    { name: 'postgres_query', description: 'Ejecuta consulta SQL en PostgreSQL', inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
+    { name: 'redis_ping', description: 'Prueba conexión Redis', inputSchema: { type: 'object', properties: {} } },
+    { name: 'redis_get', description: 'Obtiene valor de Redis por key', inputSchema: { type: 'object', properties: { key: { type: 'string' } }, required: ['key'] } },
+    { name: 'neo4j_query', description: 'Ejecuta consulta Cypher en Neo4j', inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
+    { name: 'qdrant_search', description: 'Busca vectores en Qdrant', inputSchema: { type: 'object', properties: { collection: { type: 'string' }, vector: { type: 'array' }, limit: { type: 'number' } } } },
+    { name: 'playwright_run', description: 'Navegador automatizado (Playwright MCP)', inputSchema: { type: 'object', properties: { url: { type: 'string' }, action: { type: 'string' }, selector: { type: 'string' } } } },
     { name: 'n8n_trigger_workflow', description: 'Dispara un workflow de n8n por webhook', inputSchema: { type: 'object', properties: { workflow_id: { type: 'string' }, payload: { type: 'object' } }, required: ['workflow_id'] } },
     { name: 'n8n_get_workflows', description: 'Lista workflows activos en n8n', inputSchema: { type: 'object', properties: {} } },
     { name: 'n8n_get_workflow_runs', description: 'Últimos runs de un workflow', inputSchema: { type: 'object', properties: { workflow_id: { type: 'string' } }, required: ['workflow_id'] } },
@@ -628,10 +688,11 @@ async function handleRequest(req, res, path) {
 }
 
 server.listen(MCP_PORT, '127.0.0.1', () => {
-  console.error(`🔮 Sonora MCP HTTP Server v2.0 — Puerto ${MCP_PORT}`);
+  console.error(`🔮 Sonora MCP HTTP Server v3.0 — Puerto ${MCP_PORT}`);
   console.error(`🔐 Auth: JWT RS256 (obtén token en POST /api/auth/token)`);
   console.error(`📋 CapabilityRegistry activo (${capabilityRegistry.getRegistered().length} capabilities)`);
-  console.error(`📡 Servicios: ${Object.keys(SERVICES).join(', ')}`);
+  console.error(`📡 Servicios reales: postgres, neo4j, qdrant, redis, n8n, uptime`);
+  console.error(`❌ Eliminados: paperclip, metabase, dashy, plausible (no servían)`);
   console.error(`🌐 Endpoints:`);
   console.error(`   POST /api/auth/token         — Obtener token JWT`);
   console.error(`   GET  /api/health              — Health check`);

@@ -1,0 +1,8 @@
+{
+  "server": { "name": "neo4j-mcp", "version": "1.0.0", "description": "MCP Server para Neo4j — Base de grafos" },
+  "transport": { "type": "http", "endpoint": "http://127.0.0.1:7687", "healthEndpoint": "/" },
+  "tools": [
+    { "name": "neo4j_query", "description": "Ejecuta consulta Cypher", "endpoint": "/db/neo4j/tx/commit", "method": "POST" },
+    { "name": "neo4j_labels", "description": "Lista labels del grafo", "endpoint": "/db/neo4j/labels", "method": "GET" }
+  ]
+}

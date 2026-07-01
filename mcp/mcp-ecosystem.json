@@ -1,59 +1,66 @@
 {
-  "ecosystem": "Sonora Digital Corp — MCP Ecosystem v1.0",
+  "ecosystem": "Sonora Digital Corp — Native Agent OS v3.0",
   "gateway": {
     "name": "sonora-mcp-gateway",
-    "type": "stdio",
-    "command": "node",
-    "args": ["/home/mystic/sonora-digital-corp/mcp/gateway/mcp-gateway.js"],
-    "port": 0,
-    "tools": 14,
+    "type": "http",
+    "port": 18989,
+    "description": "Entry point único del ecosistema SDC con auth JWT, CapabilityRegistry, ADK, Workflow Engine",
+    "tools": 108,
     "resources": 9
   },
   "servers": [
     {
-      "id": "paperclip",
-      "name": "Paperclip MCP",
+      "id": "postgres",
+      "name": "PostgreSQL MCP",
       "type": "http",
-      "endpoint": "http://127.0.0.1:3100/mcp",
-      "config": "/home/mystic/sonora-digital-corp/mcp/servers/paperclip-mcp.json"
+      "endpoint": "http://127.0.0.1:5432",
+      "config": "mcp/servers/postgres-mcp.json",
+      "status": "active"
+    },
+    {
+      "id": "qdrant",
+      "name": "Qdrant MCP",
+      "type": "http",
+      "endpoint": "http://127.0.0.1:6333",
+      "config": "mcp/servers/qdrant-mcp.json",
+      "status": "active"
+    },
+    {
+      "id": "neo4j",
+      "name": "Neo4j MCP",
+      "type": "http",
+      "endpoint": "http://127.0.0.1:7687",
+      "config": "mcp/servers/neo4j-mcp.json",
+      "status": "active"
+    },
+    {
+      "id": "redis",
+      "name": "Redis MCP",
+      "type": "http",
+      "endpoint": "http://127.0.0.1:6379",
+      "config": "mcp/servers/redis-mcp.json",
+      "status": "active"
     },
     {
       "id": "n8n",
       "name": "n8n MCP",
       "type": "http",
-      "endpoint": "http://127.0.0.1:5678/mcp",
-      "config": "/home/mystic/sonora-digital-corp/mcp/servers/n8n-mcp.json"
-    },
-    {
-      "id": "metabase",
-      "name": "Metabase MCP",
-      "type": "http",
-      "endpoint": "http://127.0.0.1:3002/mcp",
-      "config": "/home/mystic/sonora-digital-corp/mcp/servers/metabase-mcp.json"
+      "endpoint": "http://127.0.0.1:5678",
+      "config": "mcp/servers/n8n-mcp.json",
+      "status": "inactive"
     },
     {
       "id": "uptime",
-      "name": "Uptime Kuma MCP",
+      "name": "UptimeKuma MCP",
       "type": "http",
-      "endpoint": "http://127.0.0.1:3003/mcp",
-      "config": "/home/mystic/sonora-digital-corp/mcp/servers/uptime-mcp.json"
-    },
-    {
-      "id": "dashy",
-      "name": "Dashy MCP",
-      "type": "http",
-      "endpoint": "http://127.0.0.1:3004/mcp"
-    },
-    {
-      "id": "plausible",
-      "name": "Plausible MCP",
-      "type": "http",
-      "endpoint": "http://127.0.0.1:3006/mcp"
+      "endpoint": "http://127.0.0.1:3008",
+      "config": "mcp/servers/uptime-mcp.json",
+      "status": "inactive"
     }
   ],
   "bindings": {
+    "mystic": ["sonora-mcp-gateway"],
     "hermes": ["sonora-mcp-gateway"],
-    "openclaw": ["paperclip", "n8n", "metabase", "uptime", "dashy"],
-    "mystic": ["sonora-mcp-gateway"]
+    "openclaw": ["sonora-mcp-gateway"]
   }
 }

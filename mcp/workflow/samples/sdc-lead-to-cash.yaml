@@ -1,0 +1,23 @@
+name: sdc-lead-to-cash
+description: "Pipeline completo de venta SDC: lead → qualify → proposal → close → notify → activate"
+steps:
+  - id: capture
+    agent: sales_capture_lead
+    input: "Captura este lead: nombre={{nombre}}, email={{email}}, telefono={{telefono}}, source={{source}}, nicho={{nicho}}, plan_interest={{plan}}"
+  - id: qualify
+    agent: sales_qualify_lead
+    input: "Califica el lead {{capture.output.lead_id}} con scoring BANT"
+    depends_on: capture
+    on_failure: escalate
+  - id: proposal
+    agent: sales_generate_proposal
+    input: "Genera propuesta comercial para {{qualify.output.lead_id}} destacando beneficios del plan {{plan}} para nicho {{nicho}}"
+    depends_on: qualify
+  - id: send_proposal
+    agent: capability_resolve
+    input: "Prepara resumen ejecutivo de la propuesta {{proposal.output.proposal}} para enviar al cliente"
+    depends_on: proposal
+  - id: enterprise
+    agent: enterprise_score
+    input: "Actualiza enterprise score con nuevo lead calificado"
+    depends_on: qualify

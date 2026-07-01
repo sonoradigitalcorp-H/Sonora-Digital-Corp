@@ -1,0 +1,9 @@
+{
+  "server": { "name": "redis-mcp", "version": "1.0.0", "description": "MCP Server para Redis — Cache y rate limiting" },
+  "transport": { "type": "http", "endpoint": "http://127.0.0.1:6379", "healthEndpoint": "/" },
+  "tools": [
+    { "name": "redis_ping", "description": "Prueba conexión", "endpoint": "/api/redis/ping", "method": "GET" },
+    { "name": "redis_get", "description": "Obtiene valor por key", "endpoint": "/api/redis/get", "method": "GET" },
+    { "name": "redis_stats", "description": "Estadísticas de Redis", "endpoint": "/api/redis/stats", "method": "GET" }
+  ]
+}
