@@ -36,6 +36,19 @@ const PROVIDERS = {
     default_model: 'opencode/deepseek-v4-flash-free',
     weight: 1,
   },
+  'huggingface': {
+    base_url: 'https://api-inference.huggingface.co/models',
+    api_key: () => process.env.HF_API_KEY || '',
+    models: {
+      'mistralai/Mistral-7B-Instruct-v0.3': { context: 8192, cost_per_1k: 0.0, free: true },
+      'HuggingFaceH4/zephyr-7b-beta': { context: 8192, cost_per_1k: 0.0, free: true },
+      'microsoft/Phi-3-mini-4k-instruct': { context: 4096, cost_per_1k: 0.0, free: true },
+      'Qwen/Qwen2.5-1.5B-Instruct': { context: 8192, cost_per_1k: 0.0, free: true },
+      'stabilityai/stable-diffusion-2-1': { context: 0, cost_per_1k: 0.0, free: true, image: true },
+    },
+    default_model: 'Qwen/Qwen2.5-1.5B-Instruct',
+    weight: 5,
+  },
   'ollama': {
     base_url: 'http://127.0.0.1:11434',
     api_key: () => '',

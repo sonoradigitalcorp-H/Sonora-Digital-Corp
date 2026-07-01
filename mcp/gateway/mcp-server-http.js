@@ -52,6 +52,7 @@ const { tools: billingTools } = require('../tools/billing');
 const { tools: musicProviders } = require('../tools/music-providers');
 const { tools: intakeTools } = require('../tools/intake');
 const { tools: mediaTools } = require('../tools/media');
+const { tools: designTools } = require('../tools/design-tools');
 const { sandbox } = require('../sandbox/sandbox');
 const { healer: autoHeal } = require('../scheduler/auto-heal');
 const { engine: workflowEngine } = require('../workflow/engine');
@@ -385,6 +386,9 @@ for (const [name, def] of Object.entries(intakeTools)) {
 for (const [name, def] of Object.entries(mediaTools)) {
   ALL_TOOL_HANDLERS[name] = def.handler;
 }
+for (const [name, def] of Object.entries(designTools)) {
+  ALL_TOOL_HANDLERS[name] = def.handler;
+}
 ALL_TOOL_HANDLERS['sandbox_run'] = async () => await sandbox.runAll();
 ALL_TOOL_HANDLERS['auto_heal'] = async () => await autoHeal.heal();
 ALL_TOOL_HANDLERS['auto_heal_history'] = async () => ({ history: autoHeal.getHistory() });
@@ -673,6 +677,12 @@ function buildToolList() {
     { name: 'media_library', description: 'Medios generados', inputSchema: { type: 'object', properties: { limit: { type: 'number' } } } },
     { name: 'media_seedance', description: 'Video Seedance', inputSchema: { type: 'object', properties: { prompt: { type: 'string' } }, required: ['prompt'] } },
     { name: 'sandbox_run', description: 'Valida todo el sistema pre-deploy', inputSchema: { type: 'object', properties: {} } },
+    { name: 'design_list', description: 'Lista 152 design systems de marcas reales', inputSchema: { type: 'object', properties: { category: { type: 'string' } } } },
+    { name: 'design_recommend', description: 'Recomienda design system para un proyecto', inputSchema: { type: 'object', properties: { client: { type: 'string' }, purpose: { type: 'string' } }, required: ['client', 'purpose'] } },
+    { name: 'design_tokens', description: 'Tokens CSS de un design system', inputSchema: { type: 'object', properties: { system: { type: 'string' } }, required: ['system'] } },
+    { name: 'design_generate', description: 'Genera página profesional con design system', inputSchema: { type: 'object', properties: { system: { type: 'string' }, title: { type: 'string' }, type: { type: 'string' } }, required: ['system', 'title'] } },
+    { name: 'design_claude_prompt', description: 'Prompt profesional para Claude Design', inputSchema: { type: 'object', properties: { project: { type: 'string' }, type: { type: 'string' } }, required: ['project', 'type'] } },
+    { name: 'design_search', description: 'Busca design systems', inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
     { name: 'app_execute', description: 'Ejecuta acción para usuario', inputSchema: { type: 'object', properties: { user_id: { type: 'string' }, type: { type: 'string' }, name: { type: 'string' } }, required: ['user_id', 'type', 'name'] } },
     { name: 'workflow_run', description: 'Ejecuta un workflow multi-agente', inputSchema: { type: 'object', properties: { name: { type: 'string' }, context: { type: 'object' } }, required: ['name'] } },
     { name: 'workflow_list', description: 'Lista ejecuciones de workflow', inputSchema: { type: 'object', properties: {} } },
