@@ -1,0 +1,42 @@
+{
+  "contracts": {
+    "9293b7c6": {
+      "id": "9293b7c6",
+      "artist_id": "artist-1",
+      "type": "distribution_only",
+      "start_date": "2026-07-01T23:05:40.949017+00:00",
+      "end_date": null,
+      "revenue_splits": {
+        "streaming": {
+          "artist": 0.7,
+          "label": 0.2,
+          "distributor": 0.1,
+          "manager": 0.0,
+          "producer": 0.0
+        },
+        "merch": {
+          "artist": 0.6,
+          "label": 0.3,
+          "distributor": 0.1,
+          "manager": 0.0,
+          "producer": 0.0
+        },
+        "sync_license": {
+          "artist": 0.5,
+          "label": 0.4,
+          "distributor": 0.1,
+          "manager": 0.0,
+          "producer": 0.0
+        }
+      },
+      "territories": [
+        "worldwide"
+      ],
+      "platforms": [
+        "all"
+      ],
+      "status": "draft",
+      "created_at": "2026-07-01T23:05:40.949079+00:00"
+    }
+  }
+}

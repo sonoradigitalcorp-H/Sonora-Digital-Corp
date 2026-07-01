@@ -16,6 +16,8 @@ All business activity originates from events. Every event is owned by a sub-OS a
 | `lead_received` | Contact form submission | Sales OS | Sales OS, Knowledge OS | `{source, contact, timestamp}` |
 | `lead_qualified` | Lead score > threshold | Sales OS | Sales OS, Sales OS | `{lead_id, score, intent}` |
 | `proposal_generated` | Proposal created from qualified lead | Sales OS | Sales OS, Knowledge OS | `{lead_id, proposal_id, value}` |
+| `lead_generated_from_data` | High-value artist detected during data sync | Data OS (Scrapers) | Sales OS, Knowledge OS | `{artist_id, artist_name, streams, followers}` |
+| `data_sync_completed` | Live data pipeline sync cycle finished | Data OS (Scrapers) | Knowledge OS, Strategy OS | `{artists_synced, total_artists}` |
 | `contract_signed` | Client accepts terms | Sales OS | Finance OS, Knowledge OS | `{deal_id, value, terms}` |
 | `deal_stage_changed` | Deal moves to next pipeline stage | Sales OS | Sales OS, Strategy OS | `{deal_id, from_stage, to_stage}` |
 

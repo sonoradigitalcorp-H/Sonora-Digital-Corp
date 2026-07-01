@@ -59,6 +59,8 @@ const { tools: storeTools } = require('../tools/abe-store');
 const { tools: graphTools } = require('../tools/knowledge-graph');
 const { tools: viralTools } = require('../tools/viral-engine');
 const { tools: converseTools } = require('../tools/agent-converse');
+const { tools: abeConnectTools } = require('../tools/abe-connect');
+const { tools: abeHubTools } = require('../tools/abe-hub');
 const { sandbox } = require('../sandbox/sandbox');
 const { healer: autoHeal } = require('../scheduler/auto-heal');
 const { engine: workflowEngine } = require('../workflow/engine');
@@ -411,6 +413,12 @@ for (const [name, def] of Object.entries(viralTools)) {
   ALL_TOOL_HANDLERS[name] = def.handler;
 }
 for (const [name, def] of Object.entries(converseTools)) {
+  ALL_TOOL_HANDLERS[name] = def.handler;
+}
+for (const [name, def] of Object.entries(abeConnectTools)) {
+  ALL_TOOL_HANDLERS[name] = def.handler;
+}
+for (const [name, def] of Object.entries(abeHubTools)) {
   ALL_TOOL_HANDLERS[name] = def.handler;
 }
 ALL_TOOL_HANDLERS['sandbox_run'] = async () => await sandbox.runAll();

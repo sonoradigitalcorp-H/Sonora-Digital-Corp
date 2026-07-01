@@ -1,0 +1,23 @@
+{
+  "entries": [
+    {
+      "id": "68493e88",
+      "contract_id": "9293b7c6",
+      "artist_id": "artist-1",
+      "release_id": "release-1",
+      "amount": 1000,
+      "source": "streaming",
+      "split": {
+        "artist": 0.7,
+        "label": 0.2,
+        "distributor": 0.1,
+        "manager": 0.0,
+        "producer": 0.0
+      },
+      "artist_share": 700.0,
+      "label_share": 200.0,
+      "distributor_share": 100.0,
+      "timestamp": "2026-07-01T23:05:40.949524+00:00"
+    }
+  ]
+}

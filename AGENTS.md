@@ -14,11 +14,12 @@
 | `apps/webui/` | FastAPI frontend + WebSocket |
 | `apps/voice/` | Whisper + TTS |
 | `apps/hermes/` | MCP bridge + servicios |
+| `apps/abe-service/` | **ABE Music OS** — canal interno PWA con voz, avatar, contratos, revenue, CRM |
 | `platforms/telegram/` | Bot + 97 skills |
 | `platforms/whatsapp/` | Bridge |
 | `infra/` | Docker, compose, monitoreo, n8n |
 | `products/` | ABE Music, AZREC, Masterclass |
-| `tests/` | 26 tests |
+| `tests/` | 34 tests (26 legacy + 8 ABE Service) |
 | `scripts/` | 50+ DevOps |
 | `sonora-enterprise-os/` | Enterprise OS completo |
 
@@ -32,6 +33,8 @@ ruff check apps/                # lint
 flake8 apps/                    # flake8
 docker compose -f infra/docker-compose.yml up -d
 python apps/jarvis/main.py      # JARVIS core
+python -m uvicorn apps.abe-service.main:app --host 127.0.0.1 --port 5180  # ABE Service
+pytest tests/test_abe_service.py -v  # ABE Service tests
 ```
 
 ## Servicios
@@ -44,6 +47,7 @@ python apps/jarvis/main.py      # JARVIS core
 | 6333 | Qdrant | Docker |
 | 7687 | Neo4j | Docker |
 | 5678 | n8n | Docker (33 workflows) |
+| 5180 | **ABE Service** | `abe-service.service` --user |
 
 ## Sub-OS Architecture
 

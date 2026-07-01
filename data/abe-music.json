@@ -1,10 +1,37 @@
 {
+  "metadata": {
+    "label": "ABE Music Inc",
+    "legal_name": "ABE Music Inc",
+    "founded": "2018-01-19",
+    "jurisdiction": "California, USA",
+    "founder": "Abraham Ortega",
+    "founder_role": "President",
+    "status": "Active",
+    "location": "Compton / Torrance, CA",
+    "estimated_revenue": "$4M",
+    "employees": 4,
+    "social": {
+      "instagram": "@abemusicgroup",
+      "instagram_followers": 16000,
+      "twitter": "@abemusicinc",
+      "facebook": "ABEMusicInc",
+      "youtube": "@AbeMusicGroup"
+    },
+    "distribution": {
+      "primary": "Oplaai, LLC",
+      "secondary": "Colonize Media",
+      "oplaai_founded": 2017,
+      "oplaai_location": "Maricopa, Arizona",
+      "oplaai_specialty": "Independent distribution, digital marketing, video production"
+    },
+    "last_research_update": "2026-07-01"
+  },
   "artists": {
     "6727f51e": {
       "id": "6727f51e",
       "nombre": "Hector Rubio",
       "genero": "Regional Mexicano",
-      "pais": "M\u00e9xico",
+      "pais": "México",
       "status": "active",
       "email": "",
       "telefono": "",
@@ -16,40 +43,93 @@
       "top_song": "Se Volvieron Locos",
       "top_song_streams": 16000000,
       "youtube_views": 117000000,
-      "followers": 45000,
+      "followers": 660,
       "instagram": "@hector_rubiorr",
-      "tiktok": "@hector_rubio77",
-      "spotify_url": "https://open.spotify.com/artist/2uS9JywE44eIRoTMatARAy",
+      "tiktok": "@thor_rubio",
+      "spotify_url": "https://open.spotify.com/artist/2uSJ9ywE44eIRoTMatARAy",
+      "apple_music_url": "https://music.apple.com/us/artist/hector-rubio/1082292215?uo=4",
       "label": "ABE Music + VIZUAL",
+      "distribution": "Oplaai, LLC (exclusive license)",
       "album": "SMOKING",
       "from": "Angostura, Sinaloa",
-      "notable": "Abri\u00f3 para Peso Pluma en \u00c9xodo Tour 2025"
+      "notable": "Abrió para Peso Pluma en Éxodo Tour 2025",
+      "latest_release": "Malicia (En Vivo) - Single (2025-07-18)",
+      "nb_album": 41,
+      "deezer_id": 9814216,
+      "has_radio": true,
+      "top_tracks": [
+        {
+          "name": "Se Volvieron Locos",
+          "popularity_score": 289703
+        },
+        {
+          "name": "Mil Historias",
+          "popularity_score": 87932
+        },
+        {
+          "name": "Un Millón",
+          "popularity_score": 189100
+        }
+      ],
+      "deezer_url": "https://www.deezer.com/artist/9814216",
+      "picture": "https://api.deezer.com/artist/9814216/image",
+      "last_sync": "2026-07-01T23:08:49Z",
+      "apple_music_id": 1082292215,
+      "genres": [
+        "Música Mexicana"
+      ],
+      "bio": "",
+      "wikipedia_url": "",
+      "youtube_video_count": 3,
+      "instagram_followers": ".",
+      "spotify_monthly_listeners": 1028288
     },
     "f23cab60": {
       "id": "f23cab60",
       "nombre": "Jesus Urquijo",
       "genero": "Regional Mexicano",
-      "pais": "M\u00e9xico",
+      "pais": "México",
       "status": "active",
       "email": "",
       "telefono": "",
       "created_at": "2026-06-17T20:43:38.113526+00:00",
-      "streams": 4600000,
-      "revenue": 18400.0,
-      "releases_count": 5,
+      "streams": 4635222,
+      "revenue": 18540.0,
+      "releases_count": 11,
       "monthly_listeners": 29800,
       "top_song": "Power Trae",
       "top_song_streams": 2125681,
+      "youtube_views": 3341069,
+      "shazams": 1347,
       "instagram": "@jesusurquijo_oficial",
       "tiktok": "@jesusurquijo.oficial",
       "spotify_url": "https://open.spotify.com/artist/1hfrbMUDkM2tlUE85D3dR6",
-      "label": "ABE Music Inc"
+      "apple_music_url": "https://music.apple.com/us/artist/jesus-urquijo/1319826332?uo=4",
+      "label": "ABE Music Inc",
+      "distribution": "ABE Music / Colonize Media",
+      "followers": 73,
+      "nb_album": 22,
+      "deezer_id": 15277093,
+      "has_radio": true,
+      "top_tracks": [],
+      "deezer_url": "https://www.deezer.com/artist/15277093",
+      "picture": "https://api.deezer.com/artist/15277093/image",
+      "last_sync": "2026-07-01T23:08:52Z",
+      "apple_music_id": 1319826332,
+      "genres": [
+        "Música Mexicana"
+      ],
+      "bio": "",
+      "wikipedia_url": "",
+      "youtube_video_count": 3,
+      "instagram_followers": ".",
+      "spotify_monthly_listeners": 24278
     },
     "00cf4992": {
       "id": "00cf4992",
       "nombre": "Javier Arvayo",
       "genero": "Pop Latino",
-      "pais": "M\u00e9xico",
+      "pais": "México",
       "status": "signed",
       "email": "",
       "telefono": "",
@@ -57,14 +137,32 @@
       "streams": 50000,
       "revenue": 200.0,
       "releases_count": 3,
-      "monthly_listeners": 810,
+      "monthly_listeners": 981,
       "top_song": "GOETT",
       "instagram": "",
       "tiktok": "",
       "spotify_url": "https://open.spotify.com/artist/0td9IOgiffWGMbcz3xKy0s",
+      "apple_music_url": "https://music.apple.com/us/artist/javier-arvayo/1519877798?uo=4",
       "youtube_channel": "Javier Arvayo Y Su Blindaje",
       "label": "ABE Music",
-      "from": "Hermosillo, Sonora"
+      "from": "Hermosillo, Sonora",
+      "album": "Abe Music Presenta (2020)",
+      "followers": 10,
+      "nb_album": 16,
+      "deezer_id": 98593652,
+      "has_radio": true,
+      "top_tracks": [],
+      "deezer_url": "https://www.deezer.com/artist/98593652",
+      "picture": "https://api.deezer.com/artist/98593652/image",
+      "last_sync": "2026-07-01T23:08:56Z",
+      "apple_music_id": 1519877798,
+      "genres": [
+        "Música Mexicana"
+      ],
+      "bio": "",
+      "wikipedia_url": "",
+      "youtube_video_count": 3,
+      "spotify_monthly_listeners": 73680
     },
     "e82dc72e": {
       "id": "e82dc72e",
@@ -77,7 +175,21 @@
       "created_at": "2026-07-01T07:29:54.718031+00:00",
       "streams": 0,
       "revenue": 0.0,
-      "releases_count": 0
+      "releases_count": 0,
+      "followers": 192,
+      "nb_album": 10,
+      "deezer_id": 134574542,
+      "has_radio": true,
+      "top_tracks": [],
+      "deezer_url": "https://www.deezer.com/artist/134574542",
+      "picture": "https://api.deezer.com/artist/134574542/image",
+      "last_sync": "2026-07-01T23:09:00Z",
+      "apple_music_id": 0,
+      "apple_music_url": "",
+      "genres": [],
+      "bio": "",
+      "wikipedia_url": "",
+      "youtube_video_count": 3
     },
     "cbc85001": {
       "id": "cbc85001",
@@ -95,7 +207,20 @@
       "monthly_listeners": 0,
       "popularity": 0,
       "genres": [],
-      "last_spotify_sync": null
+      "last_spotify_sync": null,
+      "followers": 192,
+      "nb_album": 10,
+      "deezer_id": 134574542,
+      "has_radio": true,
+      "top_tracks": [],
+      "deezer_url": "https://www.deezer.com/artist/134574542",
+      "picture": "https://api.deezer.com/artist/134574542/image",
+      "last_sync": "2026-07-01T23:09:02Z",
+      "apple_music_id": 0,
+      "apple_music_url": "",
+      "bio": "",
+      "wikipedia_url": "",
+      "youtube_video_count": 3
     }
   },
   "releases": {
@@ -146,7 +271,7 @@
     "r005": {
       "id": "r005",
       "artist_id": "f23cab60",
-      "titulo": "Ah\u00ed La Llevo",
+      "titulo": "Ahí La Llevo",
       "tipo": "single",
       "genero": "Regional Mexicano",
       "fecha_lanzamiento": "2024-12-05",
@@ -175,6 +300,31 @@
       "streams": 15000,
       "revenue": 60.0,
       "status": "published"
+    },
+    "r008": {
+      "id": "r008",
+      "artist_id": "6727f51e",
+      "titulo": "Malicia (En Vivo)",
+      "tipo": "single",
+      "genero": "Regional Mexicano",
+      "fecha_lanzamiento": "2025-07-18",
+      "streams": 0,
+      "revenue": 0.0,
+      "status": "published",
+      "label": "Oplaai, LLC",
+      "apple_music_url": "https://music.apple.com/us/album/malicia-en-vivo-single/1821418831"
+    },
+    "r009": {
+      "id": "r009",
+      "artist_id": "f23cab60",
+      "titulo": "El Abe",
+      "tipo": "single",
+      "genero": "Regional Mexicano",
+      "fecha_lanzamiento": "2024-01-01",
+      "streams": 538100,
+      "revenue": 2152.0,
+      "status": "published",
+      "label": "ABE Music / Colonize Media"
     }
   }
 }

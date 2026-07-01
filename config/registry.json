@@ -1,71 +1,109 @@
 {
-  "version": "1.0.0",
-  "skills": {
-    "research": {
-      "description": "Búsqueda y síntesis de información",
-      "category": "core",
-      "mcp_server": null,
-      "command": "/research"
+  "version": "2.0.0",
+  "capabilities": {
+    "acquire-metadata": {
+      "id": "acquire-metadata",
+      "name": "Acquire Artist Metadata",
+      "description": "Fetch artist profile, stats, and top tracks from DSPs",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "artist_name": { "type": "string", "description": "Artist name to search for" },
+          "platform": { "type": "string", "enum": ["deezer", "apple", "youtube", "spotify", "instagram", "tiktok"], "description": "Preferred platform (optional)" }
+        },
+        "required": ["artist_name"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "source": { "type": "string" },
+          "artist_name": { "type": "string" },
+          "followers": { "type": "integer" },
+          "monthly_listeners": { "type": "integer" },
+          "top_tracks": { "type": "array" },
+          "genres": { "type": "array" },
+          "picture": { "type": "string" },
+          "url": { "type": "string" },
+          "fetched_at": { "type": "string" }
+        }
+      },
+      "providers": [
+        { "id": "deezer-api", "contract_type": "sdk", "weight": 1, "enabled": true, "cost_per_call": 0, "rate_limit": 50, "health_url": "https://api.deezer.com/artist/0", "config": { "executor_module": "scrapers.collectors.deezer", "timeout": 10 } },
+        { "id": "apple-music-api", "contract_type": "sdk", "weight": 2, "enabled": true, "cost_per_call": 0, "rate_limit": 20, "health_url": null, "config": { "executor_module": "scrapers.collectors.apple_music", "timeout": 10 } }
+      ],
+      "tags": ["artist", "metadata", "dsp"]
     },
-    "code": {
-      "description": "Análisis y generación de código",
-      "category": "core",
-      "mcp_server": null,
-      "command": "/code"
+    "search-artist": {
+      "id": "search-artist",
+      "name": "Search Artist",
+      "description": "Search for artist across YouTube and Wikipedia",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "artist_name": { "type": "string" },
+          "limit": { "type": "integer", "default": 5 }
+        },
+        "required": ["artist_name"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "source": { "type": "string" },
+          "results": { "type": "array" },
+          "total_views": { "type": "integer" }
+        }
+      },
+      "providers": [
+        { "id": "youtube-search", "contract_type": "cli", "weight": 1, "enabled": true, "cost_per_call": 0, "rate_limit": 10, "health_url": null, "config": { "binary": "yt-dlp", "args": ["ytsearch5:{artist_name}", "--skip-download", "--no-warnings", "--flat-playlist", "--print-json"], "timeout": 30 } },
+        { "id": "wikipedia-api", "contract_type": "http", "weight": 2, "enabled": true, "cost_per_call": 0, "rate_limit": 100, "health_url": "https://en.wikipedia.org/api/rest_v1/page/summary/Test", "config": { "base_url": "https://en.wikipedia.org/api/rest_v1", "timeout": 10 } }
+      ],
+      "tags": ["artist", "search", "youtube", "wikipedia"]
     },
-    "explore": {
-      "description": "Navegación de sistema de archivos y exploratorio",
-      "category": "core",
-      "mcp_server": null,
-      "command": "/explore"
-    },
-    "memory": {
-      "description": "Gestión de memoria y contexto",
-      "category": "core",
-      "mcp_server": null,
-      "command": "/memory"
-    },
-    "skill": {
-      "description": "Ejecución de habilidades MCP",
-      "category": "core",
-      "mcp_server": null,
-      "command": "/skill"
-    },
-    "voice": {
-      "description": "Procesamiento de voz",
-      "category": "core",
-      "mcp_server": null,
-      "command": "/voice"
-    },
-    "review": {
-      "description": "Revisión de código y verificación",
-      "category": "core",
-      "mcp_server": null,
-      "command": "/review"
-    },
-    "hermes": {
-      "description": "Integración con Hermes para mensajería",
-      "category": "external",
-      "mcp_server": "hermes",
-      "command": "/hermes"
-    },
-    "openclaw": {
-      "description": "Gateway de agentes OpenClaw",
-      "category": "external",
-      "mcp_server": "openclaw",
-      "command": "/openclaw"
-    },
-    "gbrain": {
-      "description": "Motor de razonamiento y síntesis",
-      "category": "core",
-      "mcp_server": null,
-      "command": "/gbrain"
-    },
-    "engram": {
-      "description": "Memoria contextual persistente",
-      "category": "core",
-      "mcp_server": null,
-      "command": "/engram"
+    "browse-artist": {
+      "id": "browse-artist",
+      "name": "Browse Artist Profile",
+      "description": "Render and extract artist profile pages via browser",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "platform": { "type": "string", "enum": ["instagram", "tiktok", "spotify", "facebook"] },
+          "username": { "type": "string" },
+          "url": { "type": "string" }
+        },
+        "required": ["platform"]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "source": { "type": "string" },
+          "followers": { "type": "integer" },
+          "following": { "type": "integer" },
+          "posts": { "type": "integer" },
+          "bio": { "type": "string" },
+          "verified": { "type": "boolean" },
+          "fetched_at": { "type": "string" }
+        }
+      },
+      "providers": [
+        { "id": "instagram-browser", "contract_type": "browser", "weight": 1, "enabled": true, "cost_per_call": 0.001, "rate_limit": 3, "health_url": "http://127.0.0.1:8931/health", "config": { "url_template": "https://www.instagram.com/{username}/", "timeout": 20 } },
+        { "id": "tiktok-browser", "contract_type": "browser", "weight": 2, "enabled": true, "cost_per_call": 0.001, "rate_limit": 5, "health_url": "http://127.0.0.1:8931/health", "config": { "url_template": "https://www.tiktok.com/@{username}", "timeout": 20 } },
+        { "id": "spotify-browser", "contract_type": "browser", "weight": 3, "enabled": true, "cost_per_call": 0.001, "rate_limit": 5, "health_url": "http://127.0.0.1:8931/health", "config": { "url_template": "https://open.spotify.com/artist/{artist_id}", "timeout": 20 } },
+        { "id": "facebook-browser", "contract_type": "browser", "weight": 4, "enabled": false, "cost_per_call": 0.001, "rate_limit": 3, "health_url": null, "config": { "url_template": "https://www.facebook.com/{username}", "timeout": 20 } }
+      ],
+      "tags": ["artist", "browser", "profile", "social"]
     }
+  },
+  "skills": {
+    "research": { "description": "Búsqueda y síntesis de información", "category": "core", "mcp_server": null, "command": "/research" },
+    "code": { "description": "Análisis y generación de código", "category": "core", "mcp_server": null, "command": "/code" },
+    "explore": { "description": "Navegación de sistema de archivos y exploratorio", "category": "core", "mcp_server": null, "command": "/explore" },
+    "memory": { "description": "Gestión de memoria y contexto", "category": "core", "mcp_server": null, "command": "/memory" },
+    "skill": { "description": "Ejecución de habilidades MCP", "category": "core", "mcp_server": null, "command": "/skill" },
+    "voice": { "description": "Procesamiento de voz", "category": "core", "mcp_server": null, "command": "/voice" },
+    "review": { "description": "Revisión de código y verificación", "category": "core", "mcp_server": null, "command": "/review" },
+    "hermes": { "description": "Integración con Hermes para mensajería", "category": "external", "mcp_server": "hermes", "command": "/hermes" },
+    "openclaw": { "description": "Gateway de agentes OpenClaw", "category": "external", "mcp_server": "openclaw", "command": "/openclaw" },
+    "gbrain": { "description": "Motor de razonamiento y síntesis", "category": "core", "mcp_server": null, "command": "/gbrain" },
+    "engram": { "description": "Memoria contextual persistente", "category": "core", "mcp_server": null, "command": "/engram" }
   }
 }
