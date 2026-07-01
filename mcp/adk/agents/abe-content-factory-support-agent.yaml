@@ -1,0 +1,22 @@
+name: abe-content-factory-support-agent
+version: 1.0.0
+description: "support agent for ABE Content Factory"
+model: llama3.2:3b
+provider: ollama
+capability: support-operations
+maturity: 2-Assisted
+tools:
+  - sonora:capability_resolve
+- sonora:sessions_list
+  - sonora:incident_report
+  - sonora:health_all
+policies:
+  max_tokens_per_call: 4096
+  timeout_seconds: 60
+events:
+  emits: []
+  listens: []
+lifecycle:
+  spawn: on-demand
+  max_idle: 30m
+  max_concurrent: 3

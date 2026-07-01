@@ -1,0 +1,22 @@
+name: abe-fan-crm-analytics-agent
+version: 1.0.0
+description: "analytics agent for ABE Fan CRM"
+model: llama3.2:3b
+provider: ollama
+capability: business-intelligence
+maturity: 2-Assisted
+tools:
+  - sonora:capability_resolve
+- sonora:enterprise_score
+  - sonora:enterprise_score_history
+  - sonora:learning_stats
+policies:
+  max_tokens_per_call: 4096
+  timeout_seconds: 60
+events:
+  emits: []
+  listens: []
+lifecycle:
+  spawn: on-demand
+  max_idle: 30m
+  max_concurrent: 3

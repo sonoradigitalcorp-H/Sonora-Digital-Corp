@@ -1,0 +1,47 @@
+{
+  "name": "ABE Music SaaS",
+  "type": "saas",
+  "icon": "🎵",
+  "tenant": "abe-fenix",
+  "founder": "Abraham Ortega",
+  "description": "Plataforma SaaS completa para sello discográfico digital",
+  "pricing": { "setup": 5000, "monthly": 499, "currency": "USD" },
+  "revenue_split": { "artist": 0.7, "label": 0.2, "distributor": 0.1 },
+  "features": [
+    "Artist CRM with real-time KPIs",
+    "Revenue tracking & automatic 70/20/10 splits",
+    "Content generation (portadas, videos, promos)",
+    "Analytics & weekly automated reports",
+    "Fan CRM with engagement scoring",
+    "Multi-platform distribution integration",
+    "Telegram bot for on-demand metrics"
+  ],
+  "integrations": {
+    "spotify": { "status": "pending", "note": "Abraham needs to create Spotify Developer App" },
+    "fal_ai": { "status": "pending", "key_needed": true },
+    "telegram": { "enabled": true, "chat_id": "5738935134" },
+    "openrouter": { "enabled": true, "fallback": true }
+  },
+  "agents": [
+    "abe-music-saas-crm-agent",
+    "abe-music-saas-revenue-agent",
+    "abe-music-saas-analytics-agent",
+    "abe-music-saas-scheduler-agent",
+    "abe-music-saas-support-agent"
+  ],
+  "dashboards": {
+    "main": "/abe-saas",
+    "services": "/abe-services",
+    "music_os": "/abe",
+    "intake": "/abraham"
+  },
+  "metrics": {
+    "target_monthly_streams": 1000000,
+    "target_monthly_revenue": 100000,
+    "target_artists": 20,
+    "target_releases": 50,
+    "current_streams": 539000,
+    "current_revenue": 26880,
+    "current_artists": 3
+  }
+}

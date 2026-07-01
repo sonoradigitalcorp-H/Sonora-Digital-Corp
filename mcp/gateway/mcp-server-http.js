@@ -926,7 +926,12 @@ async function handleRequest(req, res, path) {
       const tp = require('path').join(__dirname, 'tenant-dashboard.html');
       if (fs2.existsSync(tp)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fs2.readFileSync(tp, 'utf-8')); }
       else { sendJson(res, { error: 'Tenant dashboard no encontrado' }, 404); }
-        } else if (path === '/abe-services' || path === '/api/abe-services') {
+        } else if (path === '/abe-businesses' || path === '/api/abe-businesses') {
+      const fs6 = require('fs');
+      const bp = require('path').join(__dirname, 'abe-businesses.html');
+      if (fs6.existsSync(bp)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fs6.readFileSync(bp, 'utf-8')); }
+      else { sendJson(res, { error: 'ABE Businesses no encontrado' }, 404); }
+    } else if (path === '/abe-services' || path === '/api/abe-services') {
       const fs5 = require('fs');
       const svp = require('path').join(__dirname, 'abe-services.html');
       if (fs5.existsSync(svp)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fs5.readFileSync(svp, 'utf-8')); }
