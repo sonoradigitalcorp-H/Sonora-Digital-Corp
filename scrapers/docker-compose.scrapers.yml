@@ -1,0 +1,22 @@
+services:
+  playwright-mcp:
+    image: mcr.microsoft.com/playwright:v1.51.0-noble
+    container_name: sdc-playwright-mcp
+    restart: unless-stopped
+    ports:
+      - "8931:8931"
+    command: ["npx", "@playwright/mcp", "--port", "8931", "--headless"]
+    healthcheck:
+      test: ["CMD-SHELL", "pgrep -f playwright-mcp > /dev/null 2>&1 && exit 0 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    mem_limit: 256m
+    cpus: 0.5
+    networks:
+      - sdc-scrapers
+
+networks:
+  sdc-scrapers:
+    driver: bridge
