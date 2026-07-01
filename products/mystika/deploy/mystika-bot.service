@@ -1,0 +1,21 @@
+# Mystika Telegram Bot — systemd service
+# Deploy to: /etc/systemd/system/mystika-bot.service
+
+[Unit]
+Description=Mystika Telegram Bot
+After=network.target mystika-api.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/mystika/telegram-bot
+ExecStart=/usr/bin/node bot.js
+Restart=always
+RestartSec=10
+Environment=NODE_ENV=production
+
+# Environment file
+EnvironmentFile=/home/ubuntu/mystika/telegram-bot/.env
+
+[Install]
+WantedBy=multi-user.target

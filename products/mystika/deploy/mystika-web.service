@@ -1,0 +1,22 @@
+# Mystika Web (Next.js) — systemd service
+# Deploy to: /etc/systemd/system/mystika-web.service
+
+[Unit]
+Description=Mystika Web (Next.js)
+After=network.target mystika-api.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/mystika/web
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=5
+Environment=NODE_ENV=production
+Environment=PORT=3000
+
+# Environment file
+EnvironmentFile=/home/ubuntu/mystika/web/.env
+
+[Install]
+WantedBy=multi-user.target
