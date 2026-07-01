@@ -46,6 +46,8 @@ const { tools: approvalsTools } = require('../tools/approvals');
 const { tools: filesTools } = require('../tools/files');
 const { tools: skillsTools } = require('../tools/skills');
 const { tools: appTools } = require('../tools/app');
+const { tools: hermesTools } = require('../tools/hermes');
+const { tools: openclawTools } = require('../tools/openclaw');
 const { engine: workflowEngine } = require('../workflow/engine');
 const { manager: providerManager } = require('../providers/provider-manager');
 const { manager: pluginManager } = require('../plugins/plugin-manager');
@@ -353,6 +355,12 @@ for (const [name, def] of Object.entries(skillsTools)) {
 for (const [name, def] of Object.entries(appTools)) {
   ALL_TOOL_HANDLERS[name] = def.handler;
 }
+for (const [name, def] of Object.entries(hermesTools)) {
+  ALL_TOOL_HANDLERS[name] = def.handler;
+}
+for (const [name, def] of Object.entries(openclawTools)) {
+  ALL_TOOL_HANDLERS[name] = def.handler;
+}
 
 // Workflow Engine tools
 ALL_TOOL_HANDLERS['workflow_run'] = async ({ name, context }) => {
@@ -572,6 +580,12 @@ function buildToolList() {
     { name: 'app_register', description: 'Registra usuario', inputSchema: { type: 'object', properties: { nombre: { type: 'string' }, email: { type: 'string' }, nicho: { type: 'string' } }, required: ['nombre', 'email', 'nicho'] } },
     { name: 'app_login', description: 'Login de usuario', inputSchema: { type: 'object', properties: { email: { type: 'string' }, password: { type: 'string' } }, required: ['email', 'password'] } },
     { name: 'app_dashboard', description: 'Dashboard de usuario', inputSchema: { type: 'object', properties: { user_id: { type: 'string' } }, required: ['user_id'] } },
+    { name: 'hermes_telegram_send', description: 'Envía mensaje a Telegram via Hermes', inputSchema: { type: 'object', properties: { chat_id: { type: 'string' }, text: { type: 'string' } }, required: ['chat_id', 'text'] } },
+    { name: 'hermes_whatsapp_send', description: 'Envía mensaje a WhatsApp via Hermes', inputSchema: { type: 'object', properties: { to: { type: 'string' }, text: { type: 'string' } }, required: ['to', 'text'] } },
+    { name: 'hermes_health', description: 'Estado del agente Hermes', inputSchema: { type: 'object', properties: {} } },
+    { name: 'openclaw_skills', description: 'Skills de OpenClaw', inputSchema: { type: 'object', properties: {} } },
+    { name: 'openclaw_execute', description: 'Ejecuta skill de OpenClaw', inputSchema: { type: 'object', properties: { skill: { type: 'string' }, params: { type: 'object' } }, required: ['skill'] } },
+    { name: 'openclaw_browser', description: 'Navegador via OpenClaw', inputSchema: { type: 'object', properties: { url: { type: 'string' } }, required: ['url'] } },
     { name: 'app_execute', description: 'Ejecuta acción para usuario', inputSchema: { type: 'object', properties: { user_id: { type: 'string' }, type: { type: 'string' }, name: { type: 'string' } }, required: ['user_id', 'type', 'name'] } },
     { name: 'workflow_run', description: 'Ejecuta un workflow multi-agente', inputSchema: { type: 'object', properties: { name: { type: 'string' }, context: { type: 'object' } }, required: ['name'] } },
     { name: 'workflow_list', description: 'Lista ejecuciones de workflow', inputSchema: { type: 'object', properties: {} } },
