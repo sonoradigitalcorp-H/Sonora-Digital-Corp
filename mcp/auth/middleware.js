@@ -1,6 +1,6 @@
 const { verifyToken } = require('./jwt');
 
-const PUBLIC_PATHS = ['/api/auth/token', '/api/health', '/healthz', '/dashboard', '/api/dashboard', '/adk', '/api/adk'];
+const PUBLIC_PATHS = ['/api/auth/token', '/api/health', '/healthz', '/dashboard', '/api/dashboard', '/adk', '/api/adk', '/workflow-editor', '/api/workflow-editor'];
 
 function parseAuthHeader(req) {
   const auth = req.headers['authorization'];

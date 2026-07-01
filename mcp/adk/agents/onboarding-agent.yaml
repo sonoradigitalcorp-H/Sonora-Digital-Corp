@@ -1,0 +1,39 @@
+name: onboarding-agent
+version: 1.0.0
+description: "Agente de onboarding — registro, KYC, configuración y activación de clientes"
+model: llama3.2:3b
+provider: ollama
+capability: client-onboarding
+maturity: 2-Assisted
+
+tools:
+  - sonora:sdc_onboarding
+  - sonora:sdc_onboarding_mystic
+  - sonora:sdc_plans
+  - sonora:app_register
+  - sonora:app_login
+  - sonora:app_dashboard
+  - sonora:mysticverse_kyc_age
+  - sonora:mysticverse_kyc_status
+  - sonora:payments_plans
+  - sonora:payments_create
+  - sonora:enterprise_score
+
+policies:
+  max_tokens_per_call: 4096
+  timeout_seconds: 60
+  requires_kyc: true
+
+events:
+  emits:
+    - client_registered
+    - client_onboarded
+    - kyc_verified
+  listens:
+    - lead_received
+    - payment_received
+
+lifecycle:
+  spawn: on-demand
+  max_idle: 30m
+  max_concurrent: 3

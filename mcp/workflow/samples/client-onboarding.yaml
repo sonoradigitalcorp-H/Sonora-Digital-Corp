@@ -1,0 +1,23 @@
+name: client-onboarding
+description: "Pipeline de onboarding de cliente: registro → KYC → plan → activación → bienvenida"
+steps:
+  - id: register
+    agent: app_register
+    input: "Registra nuevo cliente: nombre={{nombre}}, email={{email}}, nicho={{nicho}}, plan={{plan}}"
+  - id: kyc
+    agent: mysticverse_kyc_age
+    input: "Verifica edad para creator_id={{register.output.user_id}}"
+    depends_on: register
+    on_failure: escalate
+  - id: plan
+    agent: payments_create
+    input: "Crea pago para plan {{plan}}, nicho {{nicho}}"
+    depends_on: kyc
+  - id: activate
+    agent: sdc_onboarding
+    input: "Activa cliente {{register.output.user_id}} con plan {{plan}}"
+    depends_on: plan
+  - id: welcome
+    agent: app_dashboard
+    input: "Genera dashboard de bienvenida para user_id={{register.output.user_id}}"
+    depends_on: activate

@@ -1,0 +1,30 @@
+name: booking-agent
+version: 1.0.0
+description: "Agente de reservas — gestiona citas, consultas y booking de servicios"
+model: qwen2.5:1.5b
+provider: ollama
+capability: client-onboarding
+maturity: 1-Manual
+
+tools:
+  - sonora:sessions_create
+  - sonora:sessions_list
+  - sonora:app_register
+  - sonora:app_dashboard
+  - sonora:capability_resolve
+
+policies:
+  max_tokens_per_call: 2048
+  timeout_seconds: 30
+
+events:
+  emits:
+    - booking_created
+    - booking_confirmed
+  listens:
+    - booking_requested
+
+lifecycle:
+  spawn: on-demand
+  max_idle: 15m
+  max_concurrent: 5

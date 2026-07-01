@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Workflow Editor — Native Agent OS</title>
+<style>:root{--bg:#0a0a0f;--surface:#13131a;--border:#1e1e2a;--text:#e0e0e0;--dim:#6b6b80;--accent:#7c5cfc;--green:#34d399;--red:#f87171;--blue:#60a5fa}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'SF Mono','Fira Code',monospace;background:var(--bg);color:var(--text);padding:1rem;font-size:14px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+.header h1{font-size:1.2rem}.header h1 span{color:var(--accent)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;height:calc(100vh - 80px)}
+@media(max-width:800px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1rem;overflow:auto}
+.panel h2{font-size:.75rem;text-transform:uppercase;color:var(--dim);letter-spacing:1px;margin-bottom:.5rem}
+.panel select,.panel input,.panel textarea{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:.4rem;width:100%;font-family:inherit;font-size:.8rem;margin-bottom:.5rem}
+.panel textarea{min-height:200px}
+.panel button{padding:.3rem .6rem;border-radius:4px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:.75rem;margin-right:.3rem}
+.panel button:hover{border-color:var(--accent)}
+.panel button.primary{background:var(--accent);border-color:var(--accent)}
+.btn-danger{background:rgba(248,113,113,.2);border-color:var(--red);color:var(--red)}
+.step-card{background:rgba(124,92,252,.05);border:1px solid var(--border);border-radius:4px;padding:.5rem;margin-bottom:.3rem;display:flex;justify-content:space-between;align-items:center}
+.step-card .name{font-weight:600;font-size:.8rem}
+.step-card .agent{font-size:.7rem;color:var(--dim)}
+.step-card .status{font-size:.65rem}
+.arrow{text-align:center;color:var(--dim);font-size:.7rem;padding:.1rem 0}
+pre{font-size:.7rem;color:var(--dim);white-space:pre-wrap}
+.log-line{padding:.1rem 0;font-size:.7rem;border-bottom:1px solid rgba(255,255,255,.03)}
+.flex{display:flex;gap:.3rem;flex-wrap:wrap}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1><span>⚡</span> Workflow Editor</h1>
+  <div><button onclick="loadSamples()">⟳ Samples</button> <button onclick="runWorkflow()" class="primary">▶ Run</button> <span id="status"></span></div>
+</div>
+<div class="grid">
+  <div class="panel">
+    <h2>Editor</h2>
+    <div class="flex">
+      <select id="wfSelect" style="flex:1" onchange="loadSample()"></select>
+      <button onclick="exportYaml()" class="primary">Export</button>
+    </div>
+    <textarea id="yamlEditor" placeholder="YAML workflow definition..."></textarea>
+    <div class="flex">
+      <input id="contextInput" placeholder='{"nombre":"Juan","email":"j@x.com"}' style="flex:1">
+    </div>
+    <div id="editorSteps"></div>
+  </div>
+  <div class="panel">
+    <h2>Execution</h2>
+    <div id="executionResult"></div>
+    <div style="margin-top:.5rem"><button onclick="clearLog()">Clear</button></div>
+    <pre id="logContainer">Ready.</pre>
+  </div>
+</div>
+
+<script>
+const GATEWAY = 'http://127.0.0.1:18989';
+
+async function auth() {
+  const r = await fetch(GATEWAY + '/api/auth/token', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({client_id:'sdc-core',client_secret:'sdc_secret_ent3rpr1s3_k3y_2026'})});
+  const d = await r.json();
+  return d.access_token || '';
+}
+
+async function call(tool, params) {
+  const token = await auth();
+  if (!token) return {error:'Auth failed'};
+  const r = await fetch(GATEWAY + '/api/call', {method:'POST', headers:{'Content-Type':'application/json','Authorization':'Bearer '+token}, body:JSON.stringify({tool, params})});
+  return await r.json();
+}
+
+function log(msg) { const c = document.getElementById('logContainer'); c.innerHTML += '<div class="log-line">' + msg + '</div>'; c.scrollTop = c.scrollHeight; }
+function clearLog() { document.getElementById('logContainer').innerHTML = ''; }
+
+async function loadSamples() {
+  const r = await call('workflow_list_samples', {});
+  const sel = document.getElementById('wfSelect');
+  sel.innerHTML = (r.samples || []).map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+  loadSample();
+}
+
+function loadSample() {
+  const sel = document.getElementById('wfSelect');
+  if (sel.selectedIndex < 0) return;
+  const name = sel.value;
+  // Load from samples directory
+  fetch('/api/health').then(() => {});
+  // For now, just show the name
+  log('Loaded: ' + name);
+}
+
+async function runWorkflow() {
+  const name = document.getElementById('wfSelect').value;
+  const yaml = document.getElementById('yamlEditor').value;
+  let context = {};
+  try { context = JSON.parse(document.getElementById('contextInput').value || '{}'); } catch {}
+  document.getElementById('executionResult').innerHTML = '<div class="step-card"><span class="status">Running ' + name + '...</span></div>';
+  const r = await call('workflow_run', {name, context});
+  const steps = r.steps || [];
+  let html = '<h3 style="margin-bottom:.5rem">' + (r.status === 'completed' ? '✅' : r.status === 'failed' ? '❌' : '⚡') + ' ' + (r.name || name) + '</h3>';
+  html += '<div class="item"><span>Status</span><span>' + r.status + '</span></div>';
+  html += '<div class="item"><span>Duration</span><span>' + (r.duration || '?') + 'ms</span></div>';
+  if (r.error) html += '<div class="item"><span>Error</span><span style="color:var(--red)">' + r.error + '</span></div>';
+  html += '<pre>' + JSON.stringify(r.outputs || {}, null, 2).substring(0, 2000) + '</pre>';
+  document.getElementById('executionResult').innerHTML = html;
+  log('Workflow ' + name + ': ' + r.status + ' (' + (r.duration || '?') + 'ms)');
+}
+
+function exportYaml() {
+  const yaml = document.getElementById('yamlEditor').value;
+  const blob = new Blob([yaml], {type: 'text/yaml'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'workflow.yaml';
+  a.click();
+}
+
+loadSamples();
+</script>
+</body>
+</html>
