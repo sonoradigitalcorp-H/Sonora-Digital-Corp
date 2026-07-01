@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonora Digital Corp — Sesión 2026-06-30</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0a0a0f;
+  color: #e0e0e0;
+  overflow-x: hidden;
+}
+
+.slide {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 60px 40px;
+  position: relative;
+  scroll-snap-align: start;
+}
+
+.container {
+  max-width: 1100px;
+  width: 100%;
+}
+
+/* ===== TITLE SLIDE ===== */
+#title {
+  background: radial-gradient(ellipse at 30% 50%, #0f172a 0%, #020617 100%);
+  text-align: center;
+}
+
+#title h1 {
+  font-size: clamp(2.5rem, 6vw, 5rem);
+  font-weight: 900;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa, #f472b6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  letter-spacing: -2px;
+  margin-bottom: 12px;
+}
+
+#title .sub {
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  color: #94a3b8;
+  font-weight: 300;
+  margin-bottom: 8px;
+}
+
+#title .date {
+  font-size: 0.9rem;
+  color: #64748b;
+  font-weight: 300;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+}
+
+#title .stats-row {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 50px;
+  flex-wrap: wrap;
+}
+
+#title .stat {
+  text-align: center;
+}
+
+#title .stat-num {
+  font-size: 2.8rem;
+  font-weight: 700;
+  color: #60a5fa;
+}
+
+#title .stat-label {
+  font-size: 0.8rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-top: 4px;
+}
+
+/* ===== TIMELINE ===== */
+.timeline {
+  position: relative;
+  padding: 20px 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 24px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(180deg, #60a5fa, #a78bfa, #f472b6);
+}
+
+.timeline-item {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 28px;
+  align-items: flex-start;
+}
+
+.timeline-dot {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1rem;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.timeline-dot.spec { background: #1e3a5f; color: #60a5fa; border: 2px solid #60a5fa; }
+.timeline-dot.fix { background: #3b1f3b; color: #f472b6; border: 2px solid #f472b6; }
+.timeline-dot.arch { background: #1a2e1a; color: #4ade80; border: 2px solid #4ade80; }
+
+.timeline-content {
+  flex: 1;
+  padding-top: 6px;
+}
+
+.timeline-content h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.timeline-content .meta {
+  font-size: 0.78rem;
+  color: #64748b;
+  margin-bottom: 6px;
+}
+
+.timeline-content p {
+  font-size: 0.85rem;
+  color: #94a3b8;
+  line-height: 1.5;
+}
+
+/* ===== SPEC TABLE ===== */
+.spec-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0 6px;
+}
+
+.spec-table thead th {
+  text-align: left;
+  padding: 12px 16px;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #64748b;
+  border-bottom: 1px solid #1e293b;
+}
+
+.spec-table tbody td {
+  padding: 14px 16px;
+  background: #111827;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.spec-table tbody tr:hover td {
+  background: #1a2332;
+}
+
+.spec-table .badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+
+.badge.completed { background: #1a2e1a; color: #4ade80; }
+.badge.active { background: #1e3a5f; color: #60a5fa; }
+.badge.score { background: #3b1f3b; color: #f472b6; }
+
+/* ===== PHASES ===== */
+.phases-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.phase-card {
+  background: #111827;
+  border-radius: 16px;
+  padding: 28px;
+  border: 1px solid #1e293b;
+  transition: 0.2s;
+}
+
+.phase-card:hover {
+  border-color: #334155;
+  transform: translateY(-2px);
+}
+
+.phase-card .phase-num {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+}
+
+.phase-card .phase-num.f1 { color: #60a5fa; }
+.phase-card .phase-num.f2 { color: #a78bfa; }
+.phase-card .phase-num.f3 { color: #f472b6; }
+.phase-card .phase-num.f4 { color: #4ade80; }
+
+.phase-card h3 { font-size: 1.1rem; margin-bottom: 6px; }
+.phase-card p { font-size: 0.82rem; color: #94a3b8; line-height: 1.6; }
+.phase-card .result {
+  margin-top: 12px;
+  padding: 8px 12px;
+  background: #0f172a;
+  border-radius: 8px;
+  font-size: 0.78rem;
+  color: #4ade80;
+}
+
+/* ===== METRICS ===== */
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.metric-card {
+  background: #111827;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  border: 1px solid #1e293b;
+}
+
+.metric-card .m-value {
+  font-size: 2.2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #60a5fa, #a78bfa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.metric-card .m-label {
+  font-size: 0.72rem;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 6px;
+}
+
+.metric-card .m-change {
+  font-size: 0.72rem;
+  margin-top: 4px;
+}
+
+.metric-card .m-change.up { color: #4ade80; }
+.metric-card .m-change.down { color: #f87171; }
+
+/* ===== ARCHITECTURE ===== */
+.arch-diagram {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 20px 0;
+}
+
+.arch-box {
+  padding: 16px 20px;
+  border-radius: 12px;
+  text-align: center;
+  min-width: 120px;
+}
+
+.arch-box.data { background: #1a2e1a; border: 1px solid #166534; }
+.arch-box.core { background: #1e3a5f; border: 1px solid #1d4ed8; }
+.arch-box.ux { background: #3b1f3b; border: 1px solid #86198f; }
+
+.arch-box .a-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+
+.arch-box .a-services {
+  font-size: 0.78rem;
+  color: #94a3b8;
+}
+
+.arch-arrow {
+  color: #334155;
+  font-size: 1.5rem;
+}
+
+/* ===== FINAL SLIDE ===== */
+#final {
+  background: radial-gradient(ellipse at 70% 50%, #0f172a 0%, #020617 100%);
+  text-align: center;
+}
+
+#final h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+#final .next-spec {
+  margin-top: 40px;
+  padding: 20px 30px;
+  background: #111827;
+  border-radius: 12px;
+  border: 1px solid #1e293b;
+  display: inline-block;
+  text-align: left;
+}
+
+#final .next-spec h4 {
+  color: #60a5fa;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 6px;
+}
+
+#final .next-spec p {
+  color: #94a3b8;
+  font-size: 0.9rem;
+}
+
+/* ===== SECTION TITLES ===== */
+h2.section-title {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.section-desc {
+  color: #64748b;
+  font-size: 0.9rem;
+  margin-bottom: 40px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .phases-grid, .metrics-grid { grid-template-columns: 1fr; }
+  #title .stats-row { gap: 20px; }
+  .arch-diagram { flex-direction: column; }
+  .arch-arrow { transform: rotate(90deg); }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== SLIDE 1: TITLE ===== -->
+<div class="slide" id="title">
+  <div class="container">
+    <div class="date">30 de Junio, 2026</div>
+    <h1>Sonora Digital Corp</h1>
+    <div class="sub">De un VPS frágil a una plataforma Agent-Native</div>
+    <div class="sub" style="font-size:0.9rem; color:#64748b;">6 SPECs · 4 Fases · 1 Sistema Operativo de Empresa</div>
+    
+    <div class="stats-row">
+      <div class="stat"><div class="stat-num">6</div><div class="stat-label">SPECs</div></div>
+      <div class="stat"><div class="stat-num">442</div><div class="stat-label">Tests</div></div>
+      <div class="stat"><div class="stat-num">11</div><div class="stat-label">Containers</div></div>
+      <div class="stat"><div class="stat-num">209</div><div class="stat-label">Memorias</div></div>
+      <div class="stat"><div class="stat-num">3</div><div class="stat-label">Dominios</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 2: THE PROBLEM ===== -->
+<div class="slide">
+  <div class="container">
+    <h2 class="section-title">🔄 El Problema Esta Mañana</h2>
+    <div class="section-desc">¿Por qué estábamos haciendo todo esto?</div>
+    
+    <div class="timeline">
+      <div class="timeline-item">
+        <div class="timeline-dot fix">!</div>
+        <div class="timeline-content">
+          <h3>Python 3.10 vs 3.11</h3>
+          <div class="meta">🔴 Crítico</div>
+          <p>El VPS corría Python 3.10, pero el código usaba sintaxis 3.11 (StrEnum, datetime.UTC). Los tests se rompían al borrar caché. Solución temporal: parche con sed en 12 archivos. Solución real: contenedores.</p>
+        </div>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-dot fix">!</div>
+        <div class="timeline-content">
+          <h3>Ruff: 911 errores de lint</h3>
+          <div class="meta">🔴 Crítico</div>
+          <p>El código tenía 911 errores detectados por ruff. Solo 627 eran auto-fixables. Los restantes incluían bare-except, raise-without-from, imports sin usar, y variables ambiguas.</p>
+        </div>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-dot fix">!</div>
+        <div class="timeline-content">
+          <h3>Systemd + Docker híbrido</h3>
+          <div class="meta">🟡 Medio</div>
+          <p>Jarvis Core y WebUI corrían como servicios systemd nativos, mientras los datos (Neo4j, Redis, Postgres) corrían en Docker. Sin healthchecks consistentes, sin orquestación unificada.</p>
+        </div>
+      </div>
+      
+      <div class="timeline-item">
+        <div class="timeline-dot fix">!</div>
+        <div class="timeline-content">
+          <h3>Gobernanza en papel</h3>
+          <div class="meta">🟡 Medio</div>
+          <p>Las reglas existían en archivos .md (CONDUCT.md, 10-RULES.md) pero la IA podía saltárselas con --no-verify. Sin branch protection, sin CI gates impositivos.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 3: THE 6 SPECS ===== -->
+<div class="slide">
+  <div class="container">
+    <h2 class="section-title">📋 Los 6 SPECs Completados</h2>
+    <div class="section-desc">Cada uno con score, lección, eventos, y trazabilidad completa</div>
+    
+    <table class="spec-table">
+      <thead>
+        <tr>
+          <th>SPEC</th><th>Título</th><th>Score</th><th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge completed">001</span></td>
+          <td>Pipeline System — templates, hooks, CI gates, CLI</td>
+          <td><span class="badge score">—</span></td>
+          <td>✅ Completado</td>
+        </tr>
+        <tr>
+          <td><span class="badge completed">002</span></td>
+          <td>Revenue Pipeline — SalesAgent, 8 endpoints, Telegram skill</td>
+          <td><span class="badge score">84</span></td>
+          <td>✅ Completado</td>
+        </tr>
+        <tr>
+          <td><span class="badge completed">003</span></td>
+          <td>Dockerización — Python 3.12, adiós systemd</td>
+          <td><span class="badge score">82</span></td>
+          <td>✅ Completado</td>
+        </tr>
+        <tr>
+          <td><span class="badge completed">004</span></td>
+          <td>Redis Streams — sistema nervioso, fallback degradado</td>
+          <td><span class="badge score">—</span></td>
+          <td>✅ Completado</td>
+        </tr>
+        <tr>
+          <td><span class="badge completed">005</span></td>
+          <td>Governance as Code — branch protection, CI hardening</td>
+          <td><span class="badge score">—</span></td>
+          <td>✅ Completado</td>
+        </tr>
+        <tr>
+          <td><span class="badge completed">006</span></td>
+          <td>Domain Architecture — labels, survey, consumer groups</td>
+          <td><span class="badge score">—</span></td>
+          <td>✅ Completado</td>
+        </tr>
+        <tr>
+          <td><span class="badge active">007</span></td>
+          <td>Engram Pipeline Loop — auto-store + auto-query</td>
+          <td><span class="badge score">—</span></td>
+          <td>⬜ Planificado</td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:20px; font-size:0.85rem; color:#64748b;">
+      7 SPECs en total: 6 completados, 1 planificado. 0 fallaron el score gate.
+    </p>
+  </div>
+</div>
+
+<!-- ===== SLIDE 4: THE 4 PHASES ===== -->
+<div class="slide">
+  <div class="container">
+    <h2 class="section-title">🏗️ Las 4 Fases de Infraestructura</h2>
+    <div class="section-desc">De la dependencia del sistema operativo a la inmunidad total</div>
+    
+    <div class="phases-grid">
+      <div class="phase-card">
+        <div class="phase-num f1">Fase 1 · Dockerización</div>
+        <h3>🐳 Python 3.12 en contenedores</h3>
+        <p>Eliminamos la dependencia del Python 3.10 del host VPS. Jarvis Core y WebUI ahora corren en python:3.12-slim. Systemd apagado. 11 contenedores unificados bajo un solo docker-compose.yml.</p>
+        <div class="result">✅ 432 tests pasan dentro del contenedor en build time</div>
+      </div>
+      
+      <div class="phase-card">
+        <div class="phase-num f2">Fase 2 · Redis Streams</div>
+        <h3>⚡ Sistema nervioso en Redis</h3>
+        <p>Reemplazamos la lista Python del orquestador por Redis Streams. El contexto ahora persiste aunque el orquestador se reinicie. Eventos del pipeline se publican dualmente (archivo + stream). Fallback degradado si Redis no está disponible.</p>
+        <div class="result">✅ 443 tests, 0 failures</div>
+      </div>
+      
+      <div class="phase-card">
+        <div class="phase-num f3">Fase 3 · Governance as Code</div>
+        <h3>🔒 La ley es código, no prompt</h3>
+        <p>Branch protection: Tests + Process Gate + Docker Build requeridos. CI fail en errores de lint y baja cobertura. PR template con checklist obligatorio. Auto-assign de reviewers. Push directo a main bloqueado.</p>
+        <div class="result">✅ Ni el admin puede pushear directo — todo via PR</div>
+      </div>
+      
+      <div class="phase-card">
+        <div class="phase-num f4">Fase 4 · Domain Architecture</div>
+        <h3>📊 3 dominios, 11 contenedores</h3>
+        <p>Labels sdc.domain=data|core|ux para todos los contenedores. Script de survey que reporta health por dominio. Redis consumer groups (agents-core, agents-ux) para comunicación entre dominios.</p>
+        <div class="result">✅ docker compose config válido, build exitoso</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 5: ARCHITECTURE ===== -->
+<div class="slide">
+  <div class="container">
+    <h2 class="section-title">🏛️ Arquitectura Final</h2>
+    <div class="section-desc">149.56.46.173 · OVH · 11GB RAM · 11 contenedores</div>
+    
+    <div class="arch-diagram">
+      <div class="arch-box ux">
+        <div class="a-title" style="color:#e879f9;">UX</div>
+        <div class="a-services">Telegram Bot<br>MCP Server<br>n8n<br>Langfuse</div>
+      </div>
+      <div class="arch-arrow">↔</div>
+      <div class="arch-box core">
+        <div class="a-title" style="color:#60a5fa;">CORE</div>
+        <div class="a-services">Jarvis Core<br>Jarvis WebUI<br>Sales Pipeline</div>
+      </div>
+      <div class="arch-arrow">↔</div>
+      <div class="arch-box data">
+        <div class="a-title" style="color:#4ade80;">DATA</div>
+        <div class="a-services">Neo4j · Qdrant<br>Redis · Postgres<br>Langfuse DB</div>
+      </div>
+    </div>
+    
+    <p style="text-align:center; color:#64748b; margin:10px 0 30px; font-size:0.85rem;">
+      Redis Streams como bus inter-dominio · Labels sdc.domain · Healthchecks HTTP
+    </p>
+    
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="m-value">911→88</div>
+        <div class="m-label">Errores Ruff</div>
+        <div class="m-change up">↓ 90%</div>
+      </div>
+      <div class="metric-card">
+        <div class="m-value">417→442</div>
+        <div class="m-label">Tests</div>
+        <div class="m-change up">↑ 25 tests</div>
+      </div>
+      <div class="metric-card">
+        <div class="m-value">9→11</div>
+        <div class="m-label">Contenedores</div>
+        <div class="m-change up">+2 (core + webui)</div>
+      </div>
+      <div class="metric-card">
+        <div class="m-value">50→209</div>
+        <div class="m-label">Memorias Engram</div>
+        <div class="m-change up">↑ 4x</div>
+      </div>
+      <div class="metric-card">
+        <div class="m-value">3.10→3.12</div>
+        <div class="m-label">Python</div>
+        <div class="m-change up">Containerizado</div>
+      </div>
+      <div class="metric-card">
+        <div class="m-value">0→6</div>
+        <div class="m-label">SPECs</div>
+        <div class="m-change up">Pipeline activo</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 6: AGENTS ===== -->
+<div class="slide">
+  <div class="container">
+    <h2 class="section-title">🤖 Ecosistema Multi-Agente</h2>
+    <div class="section-desc">18 agentes en el orquestador + Engram como memoria colectiva</div>
+    
+    <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:12px;">
+      <div style="background:#111827; border-radius:10px; padding:16px; border:1px solid #1e293b;">
+        <div style="font-size:0.7rem; color:#60a5fa; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Core</div>
+        <div style="font-size:0.85rem; color:#94a3b8; line-height:1.8;">
+          research · code · explore · memory · skill · voice · review · hermes · openclaw · gbrain · pr · sales · spec · design · apply · verify · archive
+        </div>
+      </div>
+      <div style="background:#111827; border-radius:10px; padding:16px; border:1px solid #1e293b;">
+        <div style="font-size:0.7rem; color:#a78bfa; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Memoria</div>
+        <div style="font-size:0.85rem; color:#94a3b8; line-height:1.8;">
+          Engram (SQLite+FTS5)<br>
+          209 memorias · importance scoring<br>
+          Promoción 3 niveles · decay 30 días<br>
+          Auto-store en pipeline
+        </div>
+      </div>
+      <div style="background:#111827; border-radius:10px; padding:16px; border:1px solid #1e293b;">
+        <div style="font-size:0.7rem; color:#4ade80; text-transform:uppercase; letter-spacing:1px; margin-bottom:6px;">Registro</div>
+        <div style="font-size:0.85rem; color:#94a3b8; line-height:1.8;">
+          agents/MANIFEST.md<br>
+          5 agentes registrados<br>
+          Niveles L0-L4<br>
+          Event bus definido
+        </div>
+      </div>
+    </div>
+    
+    <div style="margin-top:30px; background:#111827; border-radius:12px; padding:20px; border:1px solid #1e293b;">
+      <div style="font-size:0.7rem; color:#f472b6; text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;">Pipeline de Ventas</div>
+      <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;">
+        <span style="background:#1e293b; padding:4px 12px; border-radius:6px; font-size:0.78rem;">Lead →</span>
+        <span style="background:#1e293b; padding:4px 12px; border-radius:6px; font-size:0.78rem;">Qualified →</span>
+        <span style="background:#1e293b; padding:4px 12px; border-radius:6px; font-size:0.78rem;">Proposal →</span>
+        <span style="background:#1e293b; padding:4px 12px; border-radius:6px; font-size:0.78rem;">Negotiation →</span>
+        <span style="background:#1e293b; padding:4px 12px; border-radius:6px; font-size:0.78rem;">Won | Lost</span>
+      </div>
+      <div style="margin-top:8px; font-size:0.78rem; color:#64748b;">
+        8 endpoints REST · Telegram skill · Neo4j persistence · Gamification XP + badges
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SLIDE 7: FINAL ===== -->
+<div class="slide" id="final">
+  <div class="container">
+    <h2>🚀 Estado del Arte</h2>
+    <p style="color:#94a3b8; font-size:1.1rem; margin-bottom:40px;">
+      El VPS puede morir y reconstruirse con <code style="background:#1e293b; padding:2px 8px; border-radius:4px;">git clone + docker compose up -d</code>
+    </p>
+    
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:16px; text-align:left; margin-bottom:40px;">
+      <div>
+        <div style="font-size:0.75rem; color:#4ade80; margin-bottom:4px;">✅ Infraestructura</div>
+        <div style="font-size:0.82rem; color:#94a3b8; line-height:1.6;">
+          Python 3.12 containerizado<br>
+          11 contenedores con healthchecks<br>
+          3 dominios (core/ux/data)<br>
+          Branch protection activo
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.75rem; color:#60a5fa; margin-bottom:4px;">✅ Procesos</div>
+        <div style="font-size:0.82rem; color:#94a3b8; line-height:1.6;">
+          Pipeline de 6 pasos (SPEC→Score→TDD→Code→ADR→Lección)<br>
+          CI gates server-side<br>
+          6 SPECs completados<br>
+          Score gate ≥60
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.75rem; color:#a78bfa; margin-bottom:4px;">✅ Agentes</div>
+        <div style="font-size:0.82rem; color:#94a3b8; line-height:1.6;">
+          18 agentes en el orquestador<br>
+          Redis Streams como memoria compartida<br>
+          Sales pipeline automático<br>
+          Engram: 209 memorias
+        </div>
+      </div>
+    </div>
+    
+    <div class="next-spec">
+      <h4>⬆️ Próximo SPEC</h4>
+      <p style="font-size:1.1rem; font-weight:600; margin-bottom:4px;">SPEC-20260701-001: Engram Pipeline Loop</p>
+      <p>Cerrar el ciclo de aprendizaje: auto-store al completar SPEC, auto-query antes de ejecutar tareas, auto-store en errores del sistema.</p>
+      <p style="margin-top:10px; color:#64748b; font-size:0.82rem;">
+        Meta: Engram de 209 → 300+ memorias · Overhead &lt;500ms por query
+      </p>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
