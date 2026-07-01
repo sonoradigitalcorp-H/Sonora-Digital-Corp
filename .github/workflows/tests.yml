@@ -40,7 +40,11 @@ jobs:
 
       - name: TDD Check
         run: |
-          CHANGED=$(git diff --name-only origin/main...HEAD 2>/dev/null || git diff --name-only HEAD~1)
+          CHANGED=$(git diff --name-only origin/main...HEAD 2>/dev/null || git diff --name-only HEAD~1 2>/dev/null || echo "")
+          if [ -z "$CHANGED" ]; then
+            echo "ℹ No changed files to check for TDD"
+            exit 0
+          fi
           for f in $CHANGED; do
             if [[ "$f" =~ ^apps/jarvis/src/core/(.+)\.py$ ]]; then
               module="${BASH_REMATCH[1]}"
