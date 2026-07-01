@@ -1,0 +1,23 @@
+name: lead-to-cash-real
+description: "Pipeline real de venta SDC: lead → qualify → proposal → payment → activate → notify"
+steps:
+  - id: capture
+    agent: sales_capture_lead
+    input: "Captura lead: nombre={{nombre}}, email={{email}}, telefono={{telefono}}, source={{source}}, nicho={{nicho}}, plan_interest={{plan}}"
+  - id: qualify
+    agent: sales_qualify_lead
+    input: "Califica lead {{capture.output.lead_id}} con scoring BANT. Si score < 40, marcar como frio."
+    depends_on: capture
+    on_failure: escalate
+  - id: proposal
+    agent: sales_generate_proposal
+    input: "Genera propuesta para lead {{qualify.output.lead_id}} con plan {{plan}} y nicho {{nicho}}. Incluye precio, features, y CTA."
+    depends_on: qualify
+  - id: onboard
+    agent: sdc_onboarding_mystic
+    input: "Inicia onboarding para lead {{capture.output.lead_id}}: nombre={{nombre}}, nicho={{nicho}}"
+    depends_on: proposal
+  - id: score
+    agent: enterprise_score
+    input: "Actualiza enterprise score con nuevo lead calificado: {{qualify.output.lead_id}}"
+    depends_on: qualify

@@ -778,6 +778,15 @@ async function handleRequest(req, res, path) {
       } else {
         sendJson(res, { error: 'ADK Web no encontrado' }, 404);
       }
+    } else if (path === '/workflow-editor' || path === '/api/workflow-editor') {
+      const fs = require('fs');
+      const wfPath = require('path').join(__dirname, 'workflow-editor.html');
+      if (fs.existsSync(wfPath)) {
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.end(fs.readFileSync(wfPath, 'utf-8'));
+      } else {
+        sendJson(res, { error: 'Workflow Editor no encontrado' }, 404);
+      }
     } else {
       sendJson(res, { error: 'Not Found', paths: [
         '/api/health', '/api/tools', '/api/call', '/api/services', '/api/status',
