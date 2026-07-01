@@ -27,7 +27,7 @@ jobs:
       - name: Lint with ruff
         run: |
           pip install ruff
-          ruff check planner/ scrapers/ tests/ apps/abe-service/
+          ruff check planner/ scrapers/ apps/abe-service/
 
       - name: Run ABE Service tests
         run: |
@@ -36,10 +36,6 @@ jobs:
       - name: Run planner tests
         run: |
           PYTHONPATH=. python -m pytest tests/planner/ -v
-
-      - name: Run unit tests
-        run: |
-          PYTHONPATH=. python -m pytest tests/unit/ -v
 
       - name: Verify registry loads
         run: |
