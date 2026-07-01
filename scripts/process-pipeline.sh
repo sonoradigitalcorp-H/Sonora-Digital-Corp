@@ -71,6 +71,16 @@ case "$cmd" in
     # Emit completion event
     "$BASE_DIR/scripts/process-pipeline.sh" event "spec_completed" "{\"spec\":\"$spec_name\"}"
     echo "Completed spec moved to: $completed_dir"
+    # Auto-store in Engram
+    if command -v python3 &>/dev/null; then
+      python3 -c "
+import sys
+sys.path.insert(0, '$BASE_DIR/apps/jarvis')
+from src.core.pipeline_bridge import store_spec_completion
+store_spec_completion('$spec_name', 'Spec completed: $spec_name', ['pipeline', 'spec'])
+print('✓ Engram: stored completion for $spec_name')
+" 2>/dev/null || echo "ℹ Engram store skipped (not available)"
+    fi
     ;;
 
   event)
