@@ -56,6 +56,7 @@ const { tools: designTools } = require('../tools/design-tools');
 const { tools: generatorTools } = require('../tools/generator');
 const { tools: contentEngineTools } = require('../tools/content-engine');
 const { tools: storeTools } = require('../tools/abe-store');
+const { tools: graphTools } = require('../tools/knowledge-graph');
 const { sandbox } = require('../sandbox/sandbox');
 const { healer: autoHeal } = require('../scheduler/auto-heal');
 const { engine: workflowEngine } = require('../workflow/engine');
@@ -399,6 +400,9 @@ for (const [name, def] of Object.entries(contentEngineTools)) {
   ALL_TOOL_HANDLERS[name] = def.handler;
 }
 for (const [name, def] of Object.entries(storeTools)) {
+  ALL_TOOL_HANDLERS[name] = def.handler;
+}
+for (const [name, def] of Object.entries(graphTools)) {
   ALL_TOOL_HANDLERS[name] = def.handler;
 }
 ALL_TOOL_HANDLERS['sandbox_run'] = async () => await sandbox.runAll();
