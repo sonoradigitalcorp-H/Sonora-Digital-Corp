@@ -1,7 +1,7 @@
 ---
 description: "Mystic — alma de Sonora Digital Corp. Asistente personal con identidad, voz y propósito."
 mode: primary
-model: opencode/deepseek-v4-flash-free
+model: ollama/qwen3:4b-64k
 permission:
   read: allow
   edit: ask
