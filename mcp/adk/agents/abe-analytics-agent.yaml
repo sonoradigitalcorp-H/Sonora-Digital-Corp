@@ -1,0 +1,21 @@
+name: abe-analytics-agent
+version: 1.0.0
+description: "Analítica y reportes — KPIs, tendencias, predicciones, dashboards automáticos"
+model: deepseek-r1:7b
+provider: ollama
+capability: business-intelligence
+maturity: 2-Assisted
+tools:
+  - sonora:abe_ceo_dashboard
+  - sonora:abe_artist_kpi
+  - sonora:abe_list_artists
+  - sonora:enterprise_score
+  - sonora:enterprise_score_history
+  - sonora:finops_summary
+  - sonora:intake_stats
+  - sonora:intake_query
+  - sonora:workflow_list
+  - sonora:learning_stats
+policies: { max_tokens_per_call: 8192, timeout_seconds: 120 }
+events: { emits: [report_generated, trend_detected], listens: [stream_recorded, revenue_recorded] }
+lifecycle: { spawn: on-demand, max_idle: 30m, max_concurrent: 2 }

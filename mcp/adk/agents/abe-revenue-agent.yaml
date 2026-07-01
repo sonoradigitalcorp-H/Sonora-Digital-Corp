@@ -1,0 +1,19 @@
+name: abe-revenue-agent
+version: 1.0.0
+description: "Revenue y royalties — tracking de ingresos, splits, pagos a artistas"
+model: qwen3:4b
+provider: ollama
+capability: financial-operations
+maturity: 2-Assisted
+tools:
+  - sonora:abe_record_revenue
+  - sonora:abe_record_stream
+  - sonora:abe_ceo_dashboard
+  - sonora:abe_artist_kpi
+  - sonora:billing_plan
+  - sonora:billing_invoice
+  - sonora:finops_summary
+  - sonora:enterprise_score
+policies: { max_tokens_per_call: 4096, timeout_seconds: 60 }
+events: { emits: [revenue_processed, royalty_paid], listens: [stream_recorded, revenue_recorded] }
+lifecycle: { spawn: on-demand, max_idle: 30m, max_concurrent: 3 }
