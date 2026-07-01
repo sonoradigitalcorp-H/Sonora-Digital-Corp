@@ -1,0 +1,26 @@
+{
+  "abe_music": {
+    "default_artist": "Hector Rubio",
+    "telegram_chat_id": "5738935134",
+    "auto_approve": false,
+    "post_to_dashboard": true,
+    "content_types": ["album_cover", "promotional", "social_media", "video_concept", "announcement"],
+    "schedule": {
+      "monday": { "type": "album_cover", "theme": "nuevo lanzamiento" },
+      "tuesday": { "type": "promotional", "theme": "detrás de cámaras" },
+      "wednesday": { "type": "social_media", "theme": "talento del artista" },
+      "thursday": { "type": "video_concept", "theme": "visualizer" },
+      "friday": { "type": "announcement", "theme": "próximos eventos" },
+      "saturday": { "type": "promotional", "theme": "fin de semana" },
+      "sunday": { "type": "album_cover", "theme": "reflexión semanal" }
+    },
+    "monthly_highlights": {
+      "07": { "events": ["Día del Rock: 13 Jul", "Vacaciones de Verano"], "themes": ["verano", "fiesta", "viajes", "rock"] },
+      "08": { "events": ["Día del Músico: 22 Ago"], "themes": ["música", "talento", "regreso"] },
+      "09": { "events": ["Independencia MX: 16 Sep"], "themes": ["patriotismo", "mexicanidad", "septiembre"] },
+      "10": { "events": ["Halloween: 31 Oct", "Día de la Música: 1 Oct"], "themes": ["terror", "disfraces", "noche"] },
+      "11": { "events": ["Día de Muertos: 2 Nov"], "themes": ["tradición", "recuerdo", "cultura"] },
+      "12": { "events": ["Navidad: 25 Dic", "Año Nuevo: 31 Dic"], "themes": ["navidad", "familia", "celebración"] }
+    }
+  }
+}
