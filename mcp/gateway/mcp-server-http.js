@@ -972,7 +972,7 @@ async function handleRequest(req, res, path) {
       const f = require('fs'); const p = require('path').join(__dirname, 'abe-product-content.html');
       if (f.existsSync(p)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(f.readFileSync(p, 'utf-8')); } else { sendJson(res, { error: 'Not found' }, 404); }
     } else if (path === '/mission-control') {
-      const fMC = require('fs'); const pMC = require('path').join(__dirname, '..', 'mission-control', 'index.html');
+      const fMC = require('fs'); const pMC = require('path').join(__dirname, '..', '..', 'mission-control', 'index.html');
       if (fMC.existsSync(pMC)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fMC.readFileSync(pMC, 'utf-8')); } else { sendJson(res, { error: 'Not found' }, 404); }
     } else if (path === '/abe-store') {
       const fS = require('fs'); const pS = require('path').join(__dirname, 'abe-store.html');
