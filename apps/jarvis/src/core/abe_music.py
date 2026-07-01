@@ -103,6 +103,11 @@ class ArtistCRM:
             "streams": 0,
             "revenue": 0.0,
             "releases_count": 0,
+            "spotify_url": data.get("spotify_url", ""),
+            "monthly_listeners": 0,
+            "popularity": 0,
+            "genres": [],
+            "last_spotify_sync": None,
         }
         self._artists[artist_id] = artist
         if self.neo4j:
@@ -229,6 +234,22 @@ class KPIDashboard:
             },
         }
 
+    def get_sync_status(self) -> dict:
+        artists = self.crm.list_artists()
+        synced = 0
+        pending = 0
+        for a in artists:
+            if a.get("last_spotify_sync"):
+                synced += 1
+            else:
+                pending += 1
+        return {
+            "total_artists": len(artists),
+            "synced": synced,
+            "pending": pending,
+            "last_sync": max((a["last_spotify_sync"] for a in artists if a.get("last_spotify_sync")), default=None),
+        }
+
     def get_artist_kpi(self, artist_id: str) -> dict | None:
         artist = self.crm.get_artist(artist_id)
         if not artist:
@@ -248,4 +269,11 @@ class KPIDashboard:
                 if artist["streams"] > 0
                 else 0
             ),
+            "spotify": {
+                "monthly_listeners": artist.get("monthly_listeners", 0),
+                "popularity": artist.get("popularity", 0),
+                "genres": artist.get("genres", []),
+                "last_sync": artist.get("last_spotify_sync"),
+                "url": artist.get("spotify_url", ""),
+            },
         }
