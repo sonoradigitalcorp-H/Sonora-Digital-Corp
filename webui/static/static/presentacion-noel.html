@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sonora Digital Corp — Presentación para Noel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; background: #000; }
+    .reveal { font-family: 'Inter', -apple-system, sans-serif; }
+    .reveal h1 { font-weight: 700; font-size: 2.8em; letter-spacing: -0.02em; }
+    .reveal h2 { font-weight: 600; font-size: 1.8em; letter-spacing: -0.01em; color: #fff; }
+    .reveal h3 { font-weight: 500; font-size: 1.2em; color: #8e8e93; }
+    .reveal p { font-weight: 300; line-height: 1.6; }
+    .reveal .slides section { padding: 20px; }
+    .reveal .slides section .fragment { opacity: 0; transition: opacity 0.4s ease; }
+    .reveal .slides section .fragment.visible { opacity: 1; }
+    .reveal .progress { background: rgba(255,255,255,0.08); height: 3px; }
+    .reveal .progress span { background: linear-gradient(90deg, #5e5ce6, #00d4aa); }
+    .reveal .controls { color: #5e5ce6; }
+    .reveal .slide-number { font-size: 12px; color: #555; }
+    .slide-content { max-width: 960px; margin: 0 auto; }
+
+    .badge-sdc {
+      display: inline-block;
+      background: linear-gradient(135deg, #5e5ce6, #00d4aa);
+      color: #fff;
+      font-size: 0.7em;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      margin-bottom: 12px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      text-align: left;
+      margin-top: 20px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      text-align: left;
+      margin-top: 20px;
+    }
+    .card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 16px;
+      padding: 20px;
+      backdrop-filter: blur(10px);
+    }
+    .card h4 { font-size: 0.9em; font-weight: 600; color: #00d4aa; margin-bottom: 6px; }
+    .card p, .card li { font-size: 0.78em; color: #aeaeb2; line-height: 1.5; }
+    .card ul { list-style: none; padding: 0; }
+    .card li { padding: 3px 0; }
+    .card li i { width: 16px; color: #5e5ce6; margin-right: 6px; }
+
+    .metric-row {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      margin: 20px 0;
+    }
+    .metric {
+      text-align: center;
+    }
+    .metric .num {
+      font-size: 2.2em;
+      font-weight: 700;
+      background: linear-gradient(135deg, #5e5ce6, #00d4aa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .metric .label {
+      font-size: 0.7em;
+      color: #8e8e93;
+      font-weight: 400;
+    }
+
+    .tag { display: inline-block; background: rgba(94,92,230,0.15); color: #b3b0ff; padding: 2px 10px; border-radius: 12px; font-size: 0.65em; margin: 2px; }
+    .tag-green { background: rgba(0,212,170,0.15); color: #00d4aa; }
+    .tag-orange { background: rgba(255,159,10,0.15); color: #ff9f0a; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 0.75em; }
+    th { color: #5e5ce6; font-weight: 500; text-align: left; padding: 8px 6px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+    td { padding: 6px; border-bottom: 1px solid rgba(255,255,255,0.04); color: #aeaeb2; }
+    td:first-child { color: #fff; font-weight: 400; }
+
+    .commit-list { text-align: left; margin: 10px 0; }
+    .commit { display: flex; gap: 10px; padding: 4px 0; font-size: 0.68em; color: #aeaeb2; }
+    .commit .hash { color: #5e5ce6; font-family: monospace; min-width: 72px; }
+    .commit .msg { color: #fff; flex: 1; }
+    .commit .date { color: #555; min-width: 80px; text-align: right; }
+
+    .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+    .status-dot.green { background: #30d158; }
+    .status-dot.yellow { background: #ff9f0a; }
+    .status-dot.red { background: #ff453a; }
+
+    .cover {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
+    .cover h1 {
+      font-size: 3.2em;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, #5e5ce6 0%, #00d4aa 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+    .cover .sub {
+      font-size: 1.1em;
+      color: #8e8e93;
+      font-weight: 300;
+      letter-spacing: 0.3px;
+    }
+    .cover .meta {
+      font-size: 0.75em;
+      color: #555;
+      margin-top: 30px;
+    }
+
+    .arch-diagram {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      margin: 10px 0;
+      font-size: 0.7em;
+    }
+    .arch-row {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      justify-content: center;
+    }
+    .arch-box {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 6px 12px;
+      color: #aeaeb2;
+      font-size: 0.85em;
+    }
+    .arch-box.highlight {
+      background: rgba(94,92,230,0.1);
+      border-color: rgba(94,92,230,0.3);
+      color: #b3b0ff;
+    }
+    .arch-box.green {
+      background: rgba(0,212,170,0.1);
+      border-color: rgba(0,212,170,0.3);
+      color: #00d4aa;
+    }
+    .arch-arrow { color: #555; font-size: 0.7em; padding: 0 2px; }
+
+    .timeline-bar {
+      display: flex;
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+      margin: 15px 0;
+      background: rgba(255,255,255,0.06);
+    }
+    .timeline-bar .seg {
+      height: 100%;
+    }
+    .timeline-bar .seg.infra { background: #5e5ce6; flex: 25; }
+    .timeline-bar .seg.omega { background: #00d4aa; flex: 20; }
+    .timeline-bar .seg.migration { background: #ff9f0a; flex: 18; }
+    .timeline-bar .seg.improve { background: #30d158; flex: 22; }
+    .timeline-bar .seg.automation { background: #ff375f; flex: 15; }
+
+    .progress-table td:nth-child(2) { text-align: center; }
+    .progress-table .check { color: #30d158; }
+    .progress-table .cross { color: #ff453a; }
+    .progress-table .clock { color: #ff9f0a; }
+
+    @media (max-width: 768px) {
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .metric-row { flex-wrap: wrap; gap: 15px; }
+      .cover h1 { font-size: 2em; }
+    }
+  </style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<!-- ===== SLIDE 1: COVER ===== -->
+<section data-background-gradient="linear-gradient(135deg, #000 0%, #0a0a0f 50%, #000 100%)">
+  <div class="cover">
+    <span class="badge-sdc">SONORA DIGITAL CORP</span>
+    <h1>Ecosistema OMEGA</h1>
+    <p class="sub">Arquitectura de Automación Total · AI-First · Self-Healing</p>
+    <p class="meta">Presentación para Noel · Junio 2026</p>
+  </div>
+</section>
+
+<!-- ===== SLIDE 2: OVERVIEW ===== -->
+<section data-background-gradient="linear-gradient(135deg, #000, #0a0a0f)">
+  <div class="slide-content">
+    <h2>¿Qué Construimos?</h2>
+    <p style="color:#8e8e93; margin-bottom:25px;">Un ecosistema de AI autónomo para Sonora Digital Corp — VPS-hosted, self-healing, multi-cliente.</p>
+    <div class="grid-3">
+      <div class="card">
+        <h4><i class="fas fa-server" style="margin-right:6px;"></i> Infraestructura</h4>
+        <ul>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> VPS OVH Ubuntu 26.04</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> 5 Docker containers</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> nginx + SSL (certbot)</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> Ollama local (2 modelos)</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> OpenClaw + Hermes systemd</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-code-branch" style="margin-right:6px;"></i> Automación</h4>
+        <ul>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> 38/42 workflows n8n</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> Watchdog self-healing</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> Content pipeline diario</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> ABE Music + Telegram bot</li>
+          <li><i class="fas fa-clock" style="color:#ff9f0a;"></i> Auto git-sync cron</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-brain" style="margin-right:6px;"></i> AI & Memoria</h4>
+        <ul>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> 23 MCP servers</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> Memoria holographic + mem0</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> Learning loop (18 reglas)</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> OMEGA Ref Library (8 docs)</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> fal.ai image generation</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 3: VPS INFRASTRUCTURE ===== -->
+<section data-background-gradient="linear-gradient(135deg, #000, #050510)">
+  <div class="slide-content">
+    <h2>Infraestructura VPS</h2>
+    <p style="color:#8e8e93; margin-bottom:8px;">OVH · 149.56.46.173 · 11GB RAM · 96GB SSD</p>
+    <div class="arch-diagram">
+      <div class="arch-row">
+        <div class="arch-box highlight">nginx</div>
+        <div class="arch-arrow">⬇</div>
+        <div class="arch-box highlight">SSL certbot</div>
+      </div>
+      <div class="arch-row">
+        <div class="arch-box highlight">OpenClaw Gateway</div>
+        <div class="arch-box highlight">Hermes Gateway</div>
+      </div>
+      <div class="arch-row">
+        <div class="arch-box">n8n</div>
+        <div class="arch-box green">Qdrant</div>
+        <div class="arch-box green">Neo4j</div>
+        <div class="arch-box green">PostgreSQL</div>
+        <div class="arch-box green">Redis</div>
+      </div>
+      <div class="arch-row">
+        <div class="arch-box">Ollama</div>
+        <div class="arch-arrow">⬇</div>
+        <div class="arch-box">nomic-embed-text</div>
+        <div class="arch-box">qwen2.5:1.5b</div>
+      </div>
+      <div class="arch-row">
+        <div class="arch-box">ABE FastAPI</div>
+        <div class="arch-arrow">⬇</div>
+        <div class="arch-box">Telegram Bot</div>
+        <div class="arch-arrow">⬇</div>
+        <div class="arch-box">Weekly Cron</div>
+      </div>
+    </div>
+    <div class="grid-2" style="margin-top:12px;">
+      <div class="card">
+        <h4>Seguridad</h4>
+        <ul>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> SSH key auth</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> UFW (22/80/443)</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> fail2ban</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> unattended-upgrades</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> Swap 2GB</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4>Datos Reales</h4>
+        <ul>
+          <li><i class="fas fa-music"></i> Hector Rubio: ~115M Spotify + ~117M YouTube</li>
+          <li><i class="fas fa-music"></i> Jesus Urquijo: ~4.6M streams</li>
+          <li><i class="fas fa-music"></i> Javier Arvayo: ~50K streams</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 4: LOCAL STACK ===== -->
+<section data-background-gradient="linear-gradient(135deg, #000, #0f0a05)">
+  <div class="slide-content">
+    <h2>Stack Local (Desktop)</h2>
+    <p style="color:#8e8e93; margin-bottom:20px;">Máquina de desarrollo — código, skills, MCP, pruebas</p>
+    <div class="grid-2">
+      <div class="card">
+        <h4><i class="fab fa-github"></i> Repositorio</h4>
+        <ul>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> GitHub: sonoradigitalcorp-H/Sonora-Digital-Corp</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> 20 commits, OMEGA v10.0 → v10.4</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> 34 directorios organizados</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-cubes"></i> Hermes Config</h4>
+        <ul>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> 23 MCP servers habilitados</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> Stripe, Supabase, GitHub, YouTube</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> Playwright, Redis, Postgres, Linear</li>
+          <li><i class="fas fa-check-circle" style="color:#30d158;"></i> Telegram platform + WhatsApp (pending)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="metric-row">
+      <div class="metric">
+        <div class="num">67</div>
+        <div class="label">Skills OpenClaw</div>
+      </div>
+      <div class="metric">
+        <div class="num">51</div>
+        <div class="label">Habilitadas</div>
+      </div>
+      <div class="metric">
+        <div class="num">23</div>
+        <div class="label">MCP Servers</div>
+      </div>
+      <div class="metric">
+        <div class="num">53</div>
+        <div class="label">Scripts</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 5: LANDING PAGES ===== -->
+<section data-background-gradient="linear-gradient(135deg, #000, #0a050f)">
+  <div class="slide-content">
+    <h2>Landing Pages</h2>
+    <p style="color:#8e8e93; margin-bottom:20px;">Apple-style + TailwindCSS · https://sonoradigitalcorp.com</p>
+    <div class="grid-3">
+      <div class="card">
+        <h4><i class="fas fa-globe"></i> Main Site</h4>
+        <ul>
+          <li>landing-sdc-apple.html</li>
+          <li>Apple design system</li>
+          <li>Hero, pricing, features</li>
+          <li><span class="tag">nginx</span> <span class="tag">SSL</span></li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-chart-line"></i> Enterprise Dashboard</h4>
+        <ul>
+          <li>sdc-enterprise-dashboard.html</li>
+          <li>Métricas en vivo</li>
+          <li>Estado del stack</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-microchip"></i> Model Comparison</h4>
+        <ul>
+          <li>model-comparison.html</li>
+          <li>Comparativa AI models</li>
+          <li>Quantum Dashboard 2040</li>
+        </ul>
+      </div>
+    </div>
+    <p style="color:#555; margin-top:15px; font-size:0.7em;">
+      <i class="fas fa-palette"></i> Estándar de diseño: Apple + TailwindCSS para todas las páginas públicas
+    </p>
+  </div>
+</section>
+
+<!-- ===== SLIDE 6: ABE MUSIC ===== -->
+<section data-background-gradient="linear-gradient(135deg, #000, #050505)">
+  <div class="slide-content">
+    <h2>ABE Music OS</h2>
+    <p style="color:#8e8e93; margin-bottom:20px;">Sistema de monitoreo y reportes para artistas del sello</p>
+    <div class="grid-2">
+      <div class="card">
+        <h4><i class="fas fa-microphone"></i> Artistas</h4>
+        <ul>
+          <li><strong>Hector Rubio</strong> — ~115M Spotify + ~117M YouTube</li>
+          <li><strong>Jesus Urquijo</strong> — ~4.6M streams</li>
+          <li><strong>Javier Arvayo</strong> — ~50K streams</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-robot"></i> Componentes</h4>
+        <ul>
+          <li>FastAPI server (puerto 8080)</li>
+          <li>Telegram bot @Gucci_ortega_bot</li>
+          <li>Reporte semanal (lunes 9am cron)</li>
+          <li>Datos reales, no simulados</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card" style="margin-top:10px;">
+      <h4><i class="fas fa-envelope"></i> Último Reporte</h4>
+      <p style="font-size:0.78em; color:#aeaeb2;">
+        Enviado al CEO vía Telegram (chat 5738935134) con resumen semanal de sesión, métricas OMEGA y estado del stack.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 7: n8n AUTOMATIONS ===== -->
+<section data-background-gradient="linear-gradient(135deg, #000, #0f0505)">
+  <div class="slide-content">
+    <h2>n8n Automations</h2>
+    <p style="color:#8e8e93; margin-bottom:20px;">38 de 42 workflows importados exitosamente</p>
+    <div class="grid-2">
+      <div class="card">
+        <h4><i class="fas fa-check" style="color:#30d158;"></i> Importados (38)</h4>
+        <ul>
+          <li>35 SDC-specific (config/n8n-sdc/)</li>
+          <li>3 zero-token automation</li>
+          <li>CRM, content, billing, social, monitoring</li>
+          <li>Incluyen watchdog, git-sync, disk-cleanup</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-times" style="color:#ff453a;"></i> Fallados (4)</h4>
+        <ul>
+          <li>workflow-content-payment</li>
+          <li>workflow-daily-content</li>
+          <li>workflow-social-automation</li>
+          <li>workflow-video-publish</li>
+          <li><em>Causa:</em> formato export antiguo incompatible con n8n v2</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:12px;">
+      <span class="tag">01-system-health</span>
+      <span class="tag">02-git-sync</span>
+      <span class="tag">03-disk-cleanup</span>
+      <span class="tag">04-error-sentinel</span>
+      <span class="tag tag-green">watchdog_self_healing</span>
+      <span class="tag tag-orange">content-pipeline-diario</span>
+      <span class="tag tag-orange">content-factory-daily</span>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 8: OMEGA & SELF-IMPROVEMENT ===== -->
+<section data-background-gradient="linear-gradient(135deg, #000, #000510)">
+  <div class="slide-content">
+    <h2>OMEGA & Self-Improvement</h2>
+    <p style="color:#8e8e93; margin-bottom:20px;">Metodología VDD→EDD→PDD→ODD→SDD→BDD→TDD</p>
+    <div class="grid-2">
+      <div class="card">
+        <h4><i class="fas fa-book"></i> OMEGA Reference Library</h4>
+        <ul>
+          <li>BIBLIOGRAPHY.md — APA-citado</li>
+          <li>METHODOLOGY.md — VDD→TDD pipeline</li>
+          <li>OMEGA-PROMPT.md — System prompt canónico</li>
+          <li>GLOSSARY.md — 30+ términos</li>
+          <li>MODEL-MAP.md — Provider matrix</li>
+          <li>AGENTS.md — Roles + MoE</li>
+          <li>CLAUDE.md — Comandos</li>
+          <li>mcp-servers.json — 23 servers</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-graduation-cap"></i> Learning Loop</h4>
+        <ul>
+          <li>18 reglas activas (R-001 a R-019)</li>
+          <li>13 eventos capturados en events.jsonl</li>
+          <li>6X-BETTER-MANIFESTO.md</li>
+          <li>SKILL-OMEGA-AUTOIMPROVEMENT.md</li>
+          <li>30-OPENCLAW-HACKS.md</li>
+          <li>Confidence decay + anomaly detection</li>
+        </ul>
+      </div>
+    </div>
+    <div style="margin-top:12px; text-align:center;">
+      <p style="color:#5e5ce6; font-weight:500;">
+        <i class="fas fa-robot"></i> Local Models FIRST → OpenCode Go FALLBACK
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 9: MÉTRICAS ===== -->
+<section data-background-gradient="linear-gradient(135deg, #000, #0a0a0f)">
+  <div class="slide-content">
+    <h2>Métricas Clave</h2>
+    <p style="color:#8e8e93; margin-bottom:10px;">Estado actual del ecosistema</p>
+    <div class="metric-row">
+      <div class="metric">
+        <div class="num">53%</div>
+        <div class="label">OMEGA Compliance</div>
+      </div>
+      <div class="metric">
+        <div class="num">20</div>
+        <div class="label">Commits</div>
+      </div>
+      <div class="metric">
+        <div class="num">18</div>
+        <div class="label">Reglas activas</div>
+      </div>
+      <div class="metric">
+        <div class="num">53</div>
+        <div class="label">Scripts</div>
+      </div>
+    </div>
+    <table class="progress-table">
+      <tr><th>Dimensión</th><th>%</th><th>Barra</th></tr>
+      <tr><td>Infraestructura</td><td>85%</td><td><div style="height:4px; width:85%; background:#30d158; border-radius:2px;"></div></td></tr>
+      <tr><td>Seguridad</td><td>85%</td><td><div style="height:4px; width:85%; background:#30d158; border-radius:2px;"></div></td></tr>
+      <tr><td>Datos</td><td>90%</td><td><div style="height:4px; width:90%; background:#30d158; border-radius:2px;"></div></td></tr>
+      <tr><td>Auto-improvement</td><td>80%</td><td><div style="height:4px; width:80%; background:#30d158; border-radius:2px;"></div></td></tr>
+      <tr><td>Automation</td><td>45%</td><td><div style="height:4px; width:45%; background:#ff9f0a; border-radius:2px;"></div></td></tr>
+      <tr><td>Multi-client</td><td>30%</td><td><div style="height:4px; width:30%; background:#ff9f0a; border-radius:2px;"></div></td></tr>
+      <tr><td>24/7 Support</td><td>50%</td><td><div style="height:4px; width:50%; background:#ff9f0a; border-radius:2px;"></div></td></tr>
+      <tr><td>Integrations</td><td>45%</td><td><div style="height:4px; width:45%; background:#ff9f0a; border-radius:2px;"></div></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ===== SLIDE 10: GIT TIMELINE ===== -->
+<section data-background-gradient="linear-gradient(135deg, #000, #050510)">
+  <div class="slide-content">
+    <h2>Timeline de Commits</h2>
+    <p style="color:#8e8e93; margin-bottom:15px;">Últimos 10 commits — Sesiones recientes</p>
+    <div class="timeline-bar">
+      <div class="seg infra" title="Infra"></div>
+      <div class="seg omega" title="OMEGA"></div>
+      <div class="seg migration" title="Migration"></div>
+      <div class="seg improve" title="Improve"></div>
+      <div class="seg automation" title="Auto"></div>
+    </div>
+    <div class="commit-list">
+      <div class="commit"><span class="hash">bd19860</span><span class="msg">OMEGA v10.4: AGENTS.md, 30+ OpenClaw hacks, 18 rules, self-improvement</span><span class="date">Jun 25</span></div>
+      <div class="commit"><span class="hash">a8c21d3</span><span class="msg">OMEGA v10.3: 38/42 n8n workflows, MCP servers, enterprise dashboard</span><span class="date">Jun 25</span></div>
+      <div class="commit"><span class="hash">6a15635</span><span class="msg">OMEGA v10.2: Self-improvement, 14 rules, Apple landing, fal.ai</span><span class="date">Jun 25</span></div>
+      <div class="commit"><span class="hash">418f7e6</span><span class="msg">OMEGA v10.1: Migration Day — VPS, Ollama, OpenClaw, MCP</span><span class="date">Jun 25</span></div>
+      <div class="commit"><span class="hash">9d062c4</span><span class="msg">docs: TRUTH.md — add Yami repo path</span><span class="date">Jun 20</span></div>
+      <div class="commit"><span class="hash">9fd4d01</span><span class="msg">OMEGA v10.0 live execution: all 5 layers deployed</span><span class="date">Jun 20</span></div>
+      <div class="commit"><span class="hash">2234d14</span><span class="msg">OMEGA v10.0 complete: all 10 OS have skills + harnesses</span><span class="date">Jun 19</span></div>
+      <div class="commit"><span class="hash">e5ea453</span><span class="msg">FinOps baseline: AI cost tracking across all agents</span><span class="date">Jun 19</span></div>
+      <div class="commit"><span class="hash">370c35d</span><span class="msg">ADR-011: OMEGA architecture adoption</span><span class="date">Jun 18</span></div>
+      <div class="commit"><span class="hash">f372869</span><span class="msg">feat: omega activation — 3 skills, 1 harness, 1 initiative</span><span class="date">Jun 18</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 11: NEXT STEPS ===== -->
+<section data-background-gradient="linear-gradient(135deg, #000, #0a0005)">
+  <div class="slide-content">
+    <h2>Próximos Pasos</h2>
+    <p style="color:#8e8e93; margin-bottom:20px;">Lo que viene — prioridades para las próximas sesiones</p>
+    <div class="grid-2">
+      <div class="card">
+        <h4><i class="fas fa-circle" style="color:#ff9f0a;"></i> Alta Prioridad</h4>
+        <ul>
+          <li>Activar 5 Telegram sales chatbots (skills listas, sin conectar)</li>
+          <li>Activar watchdog self-healing + content pipeline workflows</li>
+          <li>Configurar Stripe API keys → cobranza automática</li>
+          <li>Migrar Qdrant + Neo4j datos (local → VPS)</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h4><i class="fas fa-circle" style="color:#5e5ce6;"></i> Media Prioridad</h4>
+        <ul>
+          <li>Crear DNS subdominios (api, mcp, openclaw)</li>
+          <li>Configurar HeyGen → voice clone</li>
+          <li>Auto-git commit+push cron schedule</li>
+          <li>Healthcheck.sh + setup.sh recovery scripts</li>
+        </ul>
+      </div>
+    </div>
+    <div class="card" style="margin-top:10px; text-align:center;">
+      <p style="color:#8e8e93; font-size:0.78em;">
+        <i class="fas fa-key"></i> APIs pendientes: Stripe, HeyGen, Google Ads, Meta/Facebook Ads
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SLIDE 12: THANK YOU / GITHUB ===== -->
+<section data-background-gradient="linear-gradient(135deg, #5e5ce6 0%, #00d4aa 100%)">
+  <div class="slide-content" style="text-align:center;">
+    <h2 style="color:#fff; font-size:2.5em; font-weight:800;">Gracias, Noel</h2>
+    <p style="color:rgba(255,255,255,0.7); font-size:1.1em; margin-top:15px;">
+      Todo el progreso visible en GitHub
+    </p>
+    <div style="margin:25px auto; display:inline-block; background:rgba(0,0,0,0.2); border-radius:16px; padding:20px 40px;">
+      <p style="font-size:1em; color:#fff; font-weight:500;">
+        <i class="fab fa-github" style="margin-right:10px;"></i>
+        github.com/sonoradigitalcorp-H/Sonora-Digital-Corp
+      </p>
+    </div>
+    <p style="color:rgba(255,255,255,0.5); font-size:0.75em; margin-top:25px;">
+      20 commits · 34 directorios · OMEGA v10.4 · Junio 2026
+    </p>
+  </div>
+</section>
+
+</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    slideNumber: true,
+    controls: true,
+    progress: true,
+    backgroundTransition: 'slide',
+    transition: 'fade',
+    width: 1200,
+    height: 700,
+    plugins: [],
+    keyboard: {
+      27: 'toggleOverview',
+    }
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDC Enterprise Dashboard</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script>tailwind.config={theme:{extend:{colors:{apple:'#0071e3',blue2:'#0066cc'},fontFamily:{sans:['system-ui','-apple-system','Segoe UI','Roboto','Helvetica Neue', 'Arial', 'sans-serif']}}}}}</script>
+<style>body{font-family:'system-ui',-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif}</style>
+</head>
+<body class="bg-[#f5f5f7] text-[#1d1d1f] antialiased">
+
+<div class="max-w-6xl mx-auto px-5 py-8">
+
+<!-- HEADER -->
+<div class="mb-10">
+<div class="flex items-center justify-between mb-2">
+<h1 class="text-3xl font-semibold tracking-tight">SDC Enterprise Stack</h1>
+<span class="text-xs text-[rgba(0,0,0,0.48)]">Actualizado: 25 Jun 2026</span>
+</div>
+<div class="flex items-center gap-3">
+<span class="text-sm text-[rgba(0,0,0,0.48)]">Maturity Score:</span>
+<div class="w-48 h-2 bg-[#e8e8ed] rounded-full overflow-hidden">
+<div class="h-full rounded-full bg-gradient-to-r from-[#ff5b4f] via-[#fbbf24] to-[#34d399]" style="width:53%"></div>
+</div>
+<span class="font-semibold text-lg">53<span class="text-sm font-normal text-[rgba(0,0,0,0.48)]">/100</span></span>
+</div>
+</div>
+
+<div class="grid md:grid-cols-4 gap-4 mb-8">
+<div class="bg-white rounded-xl p-4 border border-[#e8e8ed] text-center">
+<div class="text-2xl font-bold text-[#0071e3]">8</div>
+<div class="text-xs text-[rgba(0,0,0,0.48)] mt-1">Servidores VPS</div>
+</div>
+<div class="bg-white rounded-xl p-4 border border-[#e8e8ed] text-center">
+<div class="text-2xl font-bold text-[#34d399]">38</div>
+<div class="text-xs text-[rgba(0,0,0,0.48)] mt-1">Workflows n8n</div>
+</div>
+<div class="bg-white rounded-xl p-4 border border-[#e8e8ed] text-center">
+<div class="text-2xl font-bold text-[#0071e3]">51</div>
+<div class="text-xs text-[rgba(0,0,0,0.48)] mt-1">Skills Activas</div>
+</div>
+<div class="bg-white rounded-xl p-4 border border-[#e8e8ed] text-center">
+<div class="text-2xl font-bold text-[#fbbf24]">10</div>
+<div class="text-xs text-[rgba(0,0,0,0.48)] mt-1">APIs Conectadas</div>
+</div>
+</div>
+
+<!-- INFRASTRUCTURE -->
+<h2 class="text-lg font-semibold mb-3 tracking-tight">Infraestructura</h2>
+<div class="bg-white rounded-xl border border-[#e8e8ed] p-5 mb-8">
+<div class="grid md:grid-cols-2 gap-4 text-sm">
+<div><span class="text-[rgba(0,0,0,0.48)]">Servidor:</span> OVH VPS — 149.56.46.173</div>
+<div><span class="text-[rgba(0,0,0,0.48)]">RAM:</span> 5.5 / 11 GB (50%)</div>
+<div><span class="text-[rgba(0,0,0,0.48)]">Disco:</span> 9.7 / 96 GB (10%)</div>
+<div><span class="text-[rgba(0,0,0,0.48)]">OS:</span> Ubuntu 26.04 LTS</div>
+<div><span class="text-[rgba(0,0,0,0.48)]">Docker:</span> 5 contenedores saludables</div>
+<div><span class="text-[rgba(0,0,0,0.48)]">SSL:</span> sonoradigitalcorp.com + n8n</div>
+</div>
+</div>
+
+<!-- TODAY'S COMPLETIONS -->
+<h2 class="text-lg font-semibold mb-3 tracking-tight">Logros de la Sesion</h2>
+<div class="bg-white rounded-xl border border-[#e8e8ed] p-5 mb-8">
+<ul class="space-y-2 text-sm">
+<li class="flex items-start gap-2"><span class="text-[#34d399] mt-1">&#x2713;</span> <strong>23 MCP servers</strong> activados en Hermes config</li>
+<li class="flex items-start gap-2"><span class="text-[#34d399] mt-1">&#x2713;</span> <strong>38/42 workflows n8n</strong> importados via API</li>
+<li class="flex items-start gap-2"><span class="text-[#34d399] mt-1">&#x2713;</span> <strong>Ollama en VPS</strong> con nomic-embed-text + qwen2.5:1.5b</li>
+<li class="flex items-start gap-2"><span class="text-[#34d399] mt-1">&#x2713;</span> <strong>OpenClaw v2026.6.10</strong> en VPS + systemd gateway</li>
+<li class="flex items-start gap-2"><span class="text-[#34d399] mt-1">&#x2713;</span> <strong>Biblioteca OMEGA</strong> (8 archivos APA) + auto-mejora (14 reglas)</li>
+<li class="flex items-start gap-2"><span class="text-[#34d399] mt-1">&#x2713;</span> <strong>Landing Apple-style</strong> desplegada en sonoradigitalcorp.com</li>
+<li class="flex items-start gap-2"><span class="text-[#34d399] mt-1">&#x2713;</span> <strong>fal.ai</strong> generacion de imagenes funcional</li>
+<li class="flex items-start gap-2"><span class="text-[#34d399] mt-1">&#x2713;</span> <strong>GitHub push</strong> — 3 commits enviados a Noel</li>
+</ul>
+</div>
+
+<!-- API STATUS -->
+<h2 class="text-lg font-semibold mb-3 tracking-tight">APIs Conectadas</h2>
+<div class="bg-white rounded-xl border border-[#e8e8ed] p-5 mb-8">
+<table class="w-full text-sm">
+<thead class="text-[rgba(0,0,0,0.48)] text-xs uppercase tracking-wider">
+<tr><th class="text-left pb-2 font-medium">Servicio</th><th class="text-left pb-2 font-medium">Estado</th></tr>
+</thead>
+<tbody class="divide-y divide-[#e8e8ed]">
+<tr><td class="py-2">OpenRouter</td><td class="py-2"><span class="inline-flex items-center gap-1 text-[#34d399]">&#9679; Configurado</span></td></tr>
+<tr><td class="py-2">OpenCode Go</td><td class="py-2"><span class="inline-flex items-center gap-1 text-[#34d399]">&#9679; Configurado</span></td></tr>
+<tr><td class="py-2">Telegram (6 bots)</td><td class="py-2"><span class="inline-flex items-center gap-1 text-[#34d399]">&#9679; Configurado</span></td></tr>
+<tr><td class="py-2">FAL.ai (imagenes)</td><td class="py-2"><span class="inline-flex items-center gap-1 text-[#34d399]">&#9679; Configurado</span></td></tr>
+<tr><td class="py-2">WhatsApp</td><td class="py-2"><span class="inline-flex items-center gap-1 text-[#34d399]">&#9679; Configurado</span></td></tr>
+<tr><td class="py-2">AWS S3</td><td class="py-2"><span class="inline-flex items-center gap-1 text-[#34d399]">&#9679; Configurado</span></td></tr>
+<tr><td class="py-2">Resend (Email)</td><td class="py-2"><span class="inline-flex items-center gap-1 text-[#34d399]">&#9679; Configurado</span></td></tr>
+<tr><td class="py-2">Linear (OAuth)</td><td class="py-2"><span class="inline-flex items-center gap-1 text-[#34d399]">&#9679; Configurado</span></td></tr>
+<tr><td class="py-2">Qdrant + Neo4j + PG + Redis</td><td class="py-2"><span class="inline-flex items-center gap-1 text-[#34d399]">&#9679; Corriendo en VPS</span></td></tr>
+<tr><td class="py-2">n8n (workflows)</td><td class="py-2"><span class="inline-flex items-center gap-1 text-[#34d399]">&#9679; API key activa + 38 workflows</span></td></tr>
+<tr class="border-t-2 border-[#e8e8ed]"><td class="py-2 font-medium text-[rgba(0,0,0,0.48)]">Stripe</td><td class="py-2"><span class="inline-flex items-center gap-1 text-[#fbbf24]">&#9679; Falta configurar</span></td></tr>
+<tr><td class="py-2 font-medium text-[rgba(0,0,0,0.48)]">HeyGen</td><td class="py-2"><span class="inline-flex items-center gap-1 text-[#fbbf24]">&#9679; API key placeholder</span></td></tr>
+<tr><td class="py-2 font-medium text-[rgba(0,0,0,0.48)]">Google APIs</td><td class="py-2"><span class="inline-flex items-center gap-1 text-[#ff5b4f]">&#9679; No configurado</span></td></tr>
+<tr><td class="py-2 font-medium text-[rgba(0,0,0,0.48)]">Meta/Facebook Ads</td><td class="py-2"><span class="inline-flex items-center gap-1 text-[#fbbf24]">&#9679; Skill lista, sin API key</span></td></tr>
+</tbody>
+</table>
+</div>
+
+<!-- ENTERPRISE MATURITY BY DIMENSION -->
+<h2 class="text-lg font-semibold mb-3 tracking-tight">Madurez por Dimension</h2>
+<div class="grid md:grid-cols-2 gap-4 mb-8">
+<div class="bg-white rounded-xl border border-[#e8e8ed] p-4">
+<div class="flex justify-between items-center mb-2"><span class="text-sm font-medium">Infraestructura</span><span class="text-xs font-semibold text-[#34d399]">85%</span></div><div class="w-full h-1.5 bg-[#e8e8ed] rounded-full"><div class="h-full rounded-full bg-[#34d399]" style="width:85%"></div></div>
+</div>
+<div class="bg-white rounded-xl border border-[#e8e8ed] p-4">
+<div class="flex justify-between items-center mb-2"><span class="text-sm font-medium">Seguridad</span><span class="text-xs font-semibold text-[#34d399]">85%</span></div><div class="w-full h-1.5 bg-[#e8e8ed] rounded-full"><div class="h-full rounded-full bg-[#34d399]" style="width:85%"></div></div>
+</div>
+<div class="bg-white rounded-xl border border-[#e8e8ed] p-4">
+<div class="flex justify-between items-center mb-2"><span class="text-sm font-medium">Datos Reales</span><span class="text-xs font-semibold text-[#34d399]">90%</span></div><div class="w-full h-1.5 bg-[#e8e8ed] rounded-full"><div class="h-full rounded-full bg-[#34d399]" style="width:90%"></div></div>
+</div>
+<div class="bg-white rounded-xl border border-[#e8e8ed] p-4">
+<div class="flex justify-between items-center mb-2"><span class="text-sm font-medium">Auto-Mejora</span><span class="text-xs font-semibold text-[#34d399]">80%</span></div><div class="w-full h-1.5 bg-[#e8e8ed] rounded-full"><div class="h-full rounded-full bg-[#34d399]" style="width:80%"></div></div>
+</div>
+<div class="bg-white rounded-xl border border-[#e8e8ed] p-4">
+<div class="flex justify-between items-center mb-2"><span class="text-sm font-medium">Automatizacion</span><span class="text-xs font-semibold text-[#fbbf24]">45%</span></div><div class="w-full h-1.5 bg-[#e8e8ed] rounded-full"><div class="h-full rounded-full bg-[#fbbf24]" style="width:45%"></div></div>
+</div>
+<div class="bg-white rounded-xl border border-[#e8e8ed] p-4">
+<div class="flex justify-between items-center mb-2"><span class="text-sm font-medium">Multi-Cliente</span><span class="text-xs font-semibold text-[#ff5b4f]">30%</span></div><div class="w-full h-1.5 bg-[#e8e8ed] rounded-full"><div class="h-full rounded-full bg-[#ff5b4f]" style="width:30%"></div></div>
+</div>
+<div class="bg-white rounded-xl border border-[#e8e8ed] p-4">
+<div class="flex justify-between items-center mb-2"><span class="text-sm font-medium">Atencion 24/7</span><span class="text-xs font-semibold text-[#fbbf24]">50%</span></div><div class="w-full h-1.5 bg-[#e8e8ed] rounded-full"><div class="h-full rounded-full bg-[#fbbf24]" style="width:50%"></div></div>
+</div>
+<div class="bg-white rounded-xl border border-[#e8e8ed] p-4">
+<div class="flex justify-between items-center mb-2"><span class="text-sm font-medium">Integraciones</span><span class="text-xs font-semibold text-[#fbbf24]">45%</span></div><div class="w-full h-1.5 bg-[#e8e8ed] rounded-full"><div class="h-full rounded-full bg-[#fbbf24]" style="width:45%"></div></div>
+</div>
+</div>
+
+<!-- NEXT STEPS -->
+<h2 class="text-lg font-semibold mb-3 tracking-tight">Proximos Pasos para 6x</h2>
+<div class="bg-white rounded-xl border border-[#e8e8ed] p-5">
+<div class="grid md:grid-cols-3 gap-4 text-sm">
+<div class="p-3 bg-[#f5f5f7] rounded-lg">
+<div class="font-semibold text-[#0071e3] mb-1">1. Stripe + Cobranza</div>
+<div class="text-[rgba(0,0,0,0.48)] text-xs">Configurar Stripe para pagos recurrentes automaticos.</div>
+</div>
+<div class="p-3 bg-[#f5f5f7] rounded-lg">
+<div class="font-semibold text-[#0071e3] mb-1">2. HeyGen Voz</div>
+<div class="text-[rgba(0,0,0,0.48)] text-xs">Activar API key de HeyGen para voz clonada en contenido.</div>
+</div>
+<div class="p-3 bg-[#f5f5f7] rounded-lg">
+<div class="font-semibold text-[#0071e3] mb-1">3. Meta/Google Ads</div>
+<div class="text-[rgba(0,0,0,0.48)] text-xs">Conectar API keys para campanas automatizadas.</div>
+</div>
+<div class="p-3 bg-[#f5f5f7] rounded-lg">
+<div class="font-semibold text-[#0071e3] mb-1">4. Chatbots Ventas</div>
+<div class="text-[rgba(0,0,0,0.48)] text-xs">Activar 5 skills Telegram de ventas + CRM conexion.</div>
+</div>
+<div class="p-3 bg-[#f5f5f7] rounded-lg">
+<div class="font-semibold text-[#0071e3] mb-1">5. Content Pipeline</div>
+<div class="text-[rgba(0,0,0,0.48)] text-xs">Activar los 5 workflows de contenido en n8n.</div>
+</div>
+<div class="p-3 bg-[#f5f5f7] rounded-lg">
+<div class="font-semibold text-[#0071e3] mb-1">6. Auto-Git + Backup</div>
+<div class="text-[rgba(0,0,0,0.48)] text-xs">Configurar commit automatico + backup a Google Drive.</div>
+</div>
+</div>
+</div>
+
+<!-- FOOTER -->
+<div class="mt-10 pt-6 border-t border-[#e8e8ed] text-center text-xs text-[rgba(0,0,0,0.32)]">
+<p>OMEGA v10.1 &middot; Sonora Digital Corp &middot; Pipeline: VDD &rarr; EDD &rarr; PDD &rarr; ODD &rarr; SDD &rarr; BDD &rarr; TDD</p>
+<p class="mt-1">14 reglas de auto-mejora &middot; 9 eventos capturados &middot; Learning loop activo</p>
+</div>
+
+</div>
+</body>
+</html>

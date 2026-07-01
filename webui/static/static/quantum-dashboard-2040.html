@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OMEGA 2040 — Quantum Intelligence Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{--bg-deep:#010102;--bg-surface:#0a0b0e;--bg-card:#121318;--bg-elevated:#1a1b23;--text-primary:#f0f0f5;--text-secondary:#a0a3b1;--text-tertiary:#6b6e7c;--accent:#7c6af0;--accent-light:#9b8bff;--accent-glow:rgba(124,106,240,0.25);--purple-deep:#4a3a8a;--cyan:#22d3ee;--green:#34d399;--amber:#fbbf24;--red:#f87171;--border:rgba(255,255,255,0.06);--border-light:rgba(255,255,255,0.1);--radius:16px;--radius-sm:10px}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{background:var(--bg-deep);color:var(--text-primary);font-family:'Inter',system-ui,sans-serif;overflow-x:hidden;line-height:1.6}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 20% 50%,rgba(124,106,240,0.03),transparent 50%),radial-gradient(ellipse at 80% 20%,rgba(34,211,238,0.02),transparent 50%);pointer-events:none;z-index:0}
+.container{max-width:1300px;margin:0 auto;padding:0 24px;position:relative;z-index:1}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;position:relative;padding:80px 0}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(124,106,240,0.12);border:1px solid rgba(124,106,240,0.2);border-radius:100px;padding:6px 16px 6px 8px;font-size:12px;font-weight:500;color:var(--accent-light);margin-bottom:24px;letter-spacing:0.5px;text-transform:uppercase}
+.hero-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:pulse-dot 2s ease-in-out infinite}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:0.4}}
+.hero h1{font-family:'Space Grotesk',sans-serif;font-size:clamp(2.5rem,6vw,5rem);font-weight:700;line-height:1.05;letter-spacing:-0.03em;margin-bottom:20px}
+.hero h1 .gradient{background:linear-gradient(135deg,var(--accent-light),var(--cyan),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-size:200% auto;animation:gradient-shift 4s ease infinite}
+@keyframes gradient-shift{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+.hero p{font-size:clamp(1rem,1.5vw,1.2rem);color:var(--text-secondary);max-width:680px;margin-bottom:40px;line-height:1.8}
+.hero-stats{display:flex;gap:40px;flex-wrap:wrap}
+.hero-stat{text-align:center}
+.hero-stat-value{font-family:'Space Grotesk',sans-serif;font-size:2rem;font-weight:700;color:var(--accent-light)}
+.hero-stat-label{font-size:0.8rem;color:var(--text-tertiary);margin-top:4px}
+
+/* GLOW ORB */
+.glow-orb{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(124,106,240,0.08),transparent 70%);top:-200px;right:-200px;pointer-events:none;animation:orb-float 8s ease-in-out infinite}
+@keyframes orb-float{0%,100%{transform:translate(0,0)}50%{transform:translate(-30px,30px)}}
+.glow-orb-2{position:absolute;width:400px;height:400px;border-radius:50%;background:radial-gradient(circle,rgba(34,211,238,0.05),transparent 70%);bottom:-100px;left:-100px;pointer-events:none;animation:orb-float 10s ease-in-out infinite reverse}
+
+/* SECTION */
+.section{padding:80px 0;position:relative}
+.section-header{text-align:center;margin-bottom:56px}
+.section-label{display:inline-block;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:2px;color:var(--accent-light);margin-bottom:12px;background:rgba(124,106,240,0.1);padding:4px 14px;border-radius:100px;border:1px solid rgba(124,106,240,0.15)}
+.section h2{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.8rem,3vw,2.8rem);font-weight:700;letter-spacing:-0.02em;margin-bottom:12px}
+.section h2 .highlight{color:var(--accent-light)}
+.section>p{color:var(--text-secondary);font-size:1.05rem;max-width:600px;margin:0 auto}
+
+/* CARDS */
+.card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:all 0.3s ease}
+.card:hover{border-color:rgba(124,106,240,0.2);box-shadow:0 0 40px rgba(124,106,240,0.06)}
+.card-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.card-header h3{font-size:0.95rem;font-weight:600;letter-spacing:-0.01em}
+.card-body{padding:20px 24px}
+
+/* GRID */
+.grid-2{display:grid;grid-template-columns:repeat(auto-fit,minmax(500px,1fr));gap:20px}
+.grid-3{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:20px}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+
+/* PIPELINE */
+.pipeline{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;padding:20px 0}
+.pipeline-item{display:flex;align-items:center;gap:8px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 18px;font-family:'Space Grotesk',sans-serif;font-weight:600;font-size:0.85rem;transition:all 0.3s}
+.pipeline-item:hover{border-color:var(--accent);background:rgba(124,106,240,0.08);transform:translateY(-2px)}
+.pipeline-item .num{color:var(--accent-light);font-size:0.7rem}
+.pipeline-item .name{color:var(--text-primary)}
+.pipeline-item .desc{color:var(--text-tertiary);font-size:0.7rem;font-weight:400}
+.pipeline-arrow{color:var(--text-tertiary);font-size:1.2rem;align-self:center}
+
+/* TABLES */
+.table-wrap{overflow-x:auto;border-radius:var(--radius)}
+table{width:100%;border-collapse:separate;border-spacing:0;font-size:0.82rem}
+thead{position:sticky;top:0;z-index:5}
+th{background:var(--bg-elevated);color:var(--text-secondary);font-weight:500;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.8px;padding:12px 16px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}
+th:first-child{border-radius:var(--radius-sm) 0 0 0}
+th:last-child{border-radius:0 var(--radius-sm) 0 0}
+td{padding:12px 16px;border-bottom:1px solid var(--border);color:var(--text-secondary);transition:background 0.2s}
+tr:hover td{background:rgba(124,106,240,0.04)}
+tr:last-child td{border-bottom:none}
+td:first-child{font-weight:500;color:var(--text-primary)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-size:0.7rem;font-weight:500}
+.badge-green{background:rgba(52,211,153,0.12);color:var(--green);border:1px solid rgba(52,211,153,0.2)}
+.badge-amber{background:rgba(251,191,36,0.12);color:var(--amber);border:1px solid rgba(251,191,36,0.2)}
+.badge-red{background:rgba(248,113,113,0.12);color:var(--red);border:1px solid rgba(248,113,113,0.2)}
+.badge-purple{background:rgba(124,106,240,0.12);color:var(--accent-light);border:1px solid rgba(124,106,240,0.2)}
+.badge-cyan{background:rgba(34,211,238,0.12);color:var(--cyan);border:1px solid rgba(34,211,238,0.2)}
+
+/* METRIC CARDS */
+.metric-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;transition:all 0.3s}
+.metric-card:hover{border-color:rgba(124,106,240,0.15);transform:translateY(-4px);box-shadow:0 8px 40px rgba(124,106,240,0.08)}
+.metric-card .metric-icon{font-size:1.5rem;margin-bottom:12px}
+.metric-card .metric-value{font-family:'Space Grotesk',sans-serif;font-size:1.8rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.02em}
+.metric-card .metric-label{font-size:0.8rem;color:var(--text-tertiary);margin-top:4px}
+.metric-card .metric-change{font-size:0.75rem;margin-top:8px;display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:100px;font-weight:500}
+
+/* QUANTUM SECTION */
+.quantum-section{background:linear-gradient(135deg,rgba(124,106,240,0.05),rgba(34,211,238,0.03));border:1px solid rgba(124,106,240,0.12);border-radius:var(--radius);padding:48px;margin:40px 0;position:relative;overflow:hidden}
+.quantum-section::before{content:'';position:absolute;top:0;right:0;width:300px;height:300px;background:radial-gradient(circle,rgba(124,106,240,0.06),transparent 70%);pointer-events:none}
+.quantum-section h3{font-family:'Space Grotesk',sans-serif;font-size:1.6rem;margin-bottom:16px;display:flex;align-items:center;gap:12px}
+.quantum-section .formula-box{background:rgba(124,106,240,0.06);border:1px solid rgba(124,106,240,0.15);border-radius:var(--radius-sm);padding:24px;margin:20px 0;font-family:'JetBrains Mono',monospace;font-size:1.1rem;text-align:center;color:var(--cyan);line-height:2}
+.quantum-principle{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin:24px 0}
+.quantum-principle-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px}
+.quantum-principle-item h4{font-size:0.85rem;font-weight:600;color:var(--accent-light);margin-bottom:8px}
+.quantum-principle-item p{font-size:0.82rem;color:var(--text-tertiary);line-height:1.6}
+
+/* ROUTING MATRIX */
+.routing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.routing-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:16px;display:flex;flex-direction:column;gap:6px}
+.routing-card .task{font-size:0.82rem;font-weight:600;color:var(--text-primary)}
+.routing-card .model{font-size:0.78rem;color:var(--accent-light);font-family:'JetBrains Mono',monospace}
+.routing-card .reason{font-size:0.72rem;color:var(--text-tertiary)}
+.routing-card .fallback{font-size:0.7rem;color:var(--text-tertiary);padding-top:4px;border-top:1px solid var(--border);margin-top:4px}
+
+/* AFFIRMATION */
+.affirmation{text-align:center;padding:60px 0;position:relative}
+.affirmation blockquote{font-family:'Space Grotesk',sans-serif;font-size:clamp(1.3rem,2.5vw,2rem);font-weight:500;line-height:1.4;letter-spacing:-0.01em;max-width:800px;margin:0 auto;background:linear-gradient(135deg,var(--text-primary),var(--accent-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.affirmation cite{display:block;margin-top:16px;font-size:0.85rem;font-style:normal;color:var(--text-tertiary);-webkit-text-fill-color:var(--text-tertiary)}
+
+/* COMPLIANCE BAR */
+.compliance-bar{background:var(--bg-elevated);border-radius:100px;height:8px;overflow:hidden;margin:16px 0}
+.compliance-fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--red),var(--amber),var(--green));transition:width 1.5s ease;width:53%}
+.compliance-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
+.compliance-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:12px;text-align:center}
+.compliance-item .rule{font-size:0.72rem;color:var(--text-tertiary)}
+.compliance-item .status{font-size:1.2rem;margin:4px 0}
+.compliance-item .score{font-size:0.75rem;font-weight:600}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:16px 0;background:rgba(1,1,2,0.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+nav .container{display:flex;align-items:center;justify-content:space-between}
+nav .logo{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:1.1rem;background:linear-gradient(135deg,var(--accent-light),var(--cyan));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+nav .nav-links{display:flex;gap:24px;list-style:none}
+nav .nav-links a{color:var(--text-tertiary);text-decoration:none;font-size:0.82rem;font-weight:500;transition:color 0.2s}
+nav .nav-links a:hover{color:var(--accent-light)}
+
+/* TABS */
+.tabs{display:flex;gap:4px;background:var(--bg-elevated);padding:4px;border-radius:var(--radius-sm);margin-bottom:24px;overflow-x:auto}
+.tab-btn{padding:8px 18px;border:none;background:transparent;color:var(--text-tertiary);font-family:'Inter',sans-serif;font-size:0.82rem;font-weight:500;border-radius:8px;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.tab-btn:hover{color:var(--text-primary)}
+.tab-btn.active{background:var(--accent);color:white}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* FOOTER */
+footer{padding:40px 0;border-top:1px solid var(--border);text-align:center;font-size:0.8rem;color:var(--text-tertiary)}
+footer a{color:var(--accent-light);text-decoration:none}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .grid-2{grid-template-columns:1fr}
+  .hero h1{font-size:2rem}
+  .hero-stats{gap:20px}
+  .quantum-section{padding:24px}
+  nav .nav-links{display:none}
+  .section{padding:40px 0}
+}
+@media(max-width:500px){
+  .grid-3,.grid-4{grid-template-columns:1fr}
+  .container{padding:0 16px}
+  .hero{padding:120px 0 60px}
+}
+</style>
+</head>
+<body>
+
+<nav>
+<div class="container">
+<div class="logo">OMEGA <span style="opacity:0.4;font-weight:400">2040</span></div>
+<ul class="nav-links">
+<li><a href="#models">Modelos</a></li>
+<li><a href="#methodologies">Metodologias</a></li>
+<li><a href="#routing">Routing</a></li>
+<li><a href="#quantum">Quantum</a></li>
+<li><a href="#compliance">Estado</a></li>
+</ul>
+</div>
+</nav>
+
+<div class="container">
+
+<!-- HERO -->
+<section class="hero">
+<div class="glow-orb"></div>
+<div class="glow-orb-2"></div>
+<div class="hero-badge">&#x25C6; LIVE &mdash; OMEGA v10.1</div>
+<h1>Quantum Intelligence<br><span class="gradient">Dashboard 2040</span></h1>
+<p>Sonora Digital Corp &mdash; Arquitectura de IA autonoma. Pipeline VDD &rarr; EDD &rarr; PDD &rarr; ODD &rarr; SDD &rarr; BDD &rarr; TDD. Inferencia local en VPS. Fallback inteligente a OpenCode Go.</p>
+<div class="hero-stats">
+<div class="hero-stat"><div class="hero-stat-value">8</div><div class="hero-stat-label">Servicios Activos</div></div>
+<div class="hero-stat"><div class="hero-stat-value">53<span style="font-size:1rem;color:var(--text-tertiary)">%</span></div><div class="hero-stat-label">OMEGA Compliance</div></div>
+<div class="hero-stat"><div class="hero-stat-value">2</div><div class="hero-stat-label">Modelos Locales</div></div>
+<div class="hero-stat"><div class="hero-stat-value">47</div><div class="hero-stat-label">Workflows n8n</div></div>
+</div>
+</section>
+
+<!-- PIPELINE -->
+<section class="section">
+<div class="section-header">
+<div class="section-label">Pipeline OMEGA</div>
+<h2>VDD &rarr; EDD &rarr; PDD &rarr; ODD &rarr; <span class="highlight">SDD</span> &rarr; BDD &rarr; TDD</h2>
+</div>
+<div class="pipeline">
+<div class="pipeline-item"><span class="num">01</span><span class="name">VDD</span><span class="desc">Value</span></div><div class="pipeline-arrow">&rarr;</div>
+<div class="pipeline-item"><span class="num">02</span><span class="name">EDD</span><span class="desc">Event</span></div><div class="pipeline-arrow">&rarr;</div>
+<div class="pipeline-item"><span class="num">03</span><span class="name">PDD</span><span class="desc">Plan</span></div><div class="pipeline-arrow">&rarr;</div>
+<div class="pipeline-item"><span class="num">04</span><span class="name">ODD</span><span class="desc">Ontology</span></div><div class="pipeline-arrow">&rarr;</div>
+<div class="pipeline-item" style="border-color:rgba(124,106,240,0.3);background:rgba(124,106,240,0.08)"><span class="num">05</span><span class="name">SDD</span><span class="desc">Spec</span></div><div class="pipeline-arrow">&rarr;</div>
+<div class="pipeline-item"><span class="num">06</span><span class="name">BDD</span><span class="desc">Behavior</span></div><div class="pipeline-arrow">&rarr;</div>
+<div class="pipeline-item"><span class="num">07</span><span class="name">TDD</span><span class="desc">Test</span></div>
+</div>
+</section>
+
+<!-- MODELS -->
+<section class="section" id="models">
+<div class="section-header">
+<div class="section-label">Modelos de IA</div>
+<h2>Top 10 Embeddings <span class="highlight">+</span> Top 5 LLMs</h2>
+<p>Evaluados para CPU-only VPS con 11GB RAM</p>
+</div>
+
+<div class="card" style="margin-bottom:24px">
+<div class="card-header"><h3>Embedding Models</h3><span class="badge badge-purple">768-dim activo</span></div>
+<div class="card-body">
+<div class="table-wrap">
+<table>
+<thead><tr><th>#</th><th>Modelo</th><th>Params</th><th>RAM</th><th>Dims</th><th>MTEB</th><th>Multilang</th><th>Licencia</th><th>VPS</th></tr></thead>
+<tbody>
+<tr><td>1</td><td>all-MiniLM-L6-v2</td><td>22M</td><td>46MB</td><td>384</td><td>59.98</td><td><span style="color:var(--red)">&#x2717;</span></td><td>Apache 2.0</td><td><span class="badge badge-green">Ideal</span></td></tr>
+<tr><td>2</td><td>bge-small-en-v1.5</td><td>33M</td><td>67MB</td><td>384</td><td>62.17</td><td><span style="color:var(--red)">&#x2717;</span></td><td>MIT</td><td><span class="badge badge-green">Ideal</span></td></tr>
+<tr style="background:rgba(124,106,240,0.06)"><td>3</td><td><strong>nomic-embed-text</strong> &#x25C9;</td><td>137M</td><td>274MB</td><td><strong>768</strong></td><td>62.28</td><td><span style="color:var(--red)">&#x2717;</span></td><td>Apache 2.0</td><td><span class="badge badge-green">ACTIVO</span></td></tr>
+<tr><td>4</td><td>mxbai-embed-large</td><td>335M</td><td>670MB</td><td>1024</td><td>64.68</td><td><span style="color:var(--red)">&#x2717;</span></td><td>Apache 2.0</td><td><span class="badge badge-green">Good</span></td></tr>
+<tr><td>5</td><td>BGE-M3</td><td>569M</td><td>1.2GB</td><td>1024</td><td>63.2</td><td><span style="color:var(--green)">100+</span></td><td>MIT</td><td><span class="badge badge-amber">Borde</span></td></tr>
+<tr><td>6</td><td>EmbeddingGemma</td><td>300M</td><td>622MB</td><td>768</td><td>61.15</td><td><span style="color:var(--red)">&#x2717;</span></td><td>Apache 2.0</td><td><span class="badge badge-green">Good</span></td></tr>
+<tr><td>7</td><td>Snowflake arctic-embed-l v2</td><td>568M</td><td>1.1GB</td><td>1024</td><td>65.43</td><td><span style="color:var(--red)">&#x2717;</span></td><td>Apache 2.0</td><td><span class="badge badge-amber">Borde</span></td></tr>
+<tr><td>8</td><td>gte-Qwen3-8B</td><td>8B</td><td>4.7GB</td><td>4096</td><td>68.1</td><td>Si</td><td>Apache 2.0</td><td><span class="badge badge-red">Pesado</span></td></tr>
+<tr><td>9</td><td>Qwen3-Embedding-8B</td><td>8B</td><td>4.7GB</td><td>4096</td><td>70.6</td><td>Si</td><td>Apache 2.0</td><td><span class="badge badge-red">Pesado</span></td></tr>
+<tr><td>10</td><td>NV-Embed-v2</td><td>7B</td><td>4.0GB</td><td>4096</td><td>72.31</td><td>Si</td><td>NVIDIA</td><td><span class="badge badge-red">Pesado</span></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div class="card">
+<div class="card-header"><h3>Small LLMs para Chat Local</h3><span class="badge badge-cyan">qwen2.5:1.5b activo</span></div>
+<div class="card-body">
+<div class="table-wrap">
+<table>
+<thead><tr><th>#</th><th>Modelo</th><th>Params</th><th>RAM (Q4)</th><th>Contexto</th><th>Razonamiento</th><th>Codigo</th><th>Espanol</th><th>Licencia</th><th>VPS</th></tr></thead>
+<tbody>
+<tr style="background:rgba(124,106,240,0.06)"><td>1</td><td><strong>Qwen2.5 1.5B</strong> &#x25C9;</td><td>1.5B</td><td>1.1GB</td><td>32K</td><td>&#x2605;&#x2605;&#x2605;&#x2605;</td><td>&#x2605;&#x2605;&#x2605;&#x2605;</td><td>Excelente</td><td>Apache 2.0</td><td><span class="badge badge-green">ACTIVO</span></td></tr>
+<tr><td>2</td><td>Phi-4-mini</td><td>3.8B</td><td>2.5GB</td><td>128K</td><td>&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</td><td>&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</td><td>Bueno</td><td>MIT</td><td><span class="badge badge-green">Best Reason</span></td></tr>
+<tr><td>3</td><td>Gemma 4 E4B</td><td>4B</td><td>3.0GB</td><td>32K</td><td>&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</td><td>&#x2605;&#x2605;&#x2605;&#x2605;</td><td>Bueno</td><td>Apache 2.0</td><td><span class="badge badge-amber">+RAM</span></td></tr>
+<tr><td>4</td><td>Llama 3.2 3B</td><td>3B</td><td>2.0GB</td><td>128K</td><td>&#x2605;&#x2605;&#x2605;&#x2605;</td><td>&#x2605;&#x2605;&#x2605;&#x2605;</td><td>Bueno</td><td>Llama</td><td><span class="badge badge-green">Good</span></td></tr>
+<tr><td>5</td><td>SmolLM3-3B</td><td>3B</td><td>1.8GB</td><td>128K</td><td>&#x2605;&#x2605;&#x2605;&#x2605;</td><td>&#x2605;&#x2605;&#x2605;</td><td>Regular</td><td>Apache 2.0</td><td><span class="badge badge-amber">EN only</span></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</section>
+
+<!-- METHODOLOGIES -->
+<section class="section" id="methodologies">
+<div class="section-header">
+<div class="section-label">Metodologias</div>
+<h2>VDD vs EDD vs PDD vs ODD vs <span class="highlight">SDD</span> vs BDD vs TDD</h2>
+<p>Cada metodologia con fuente academica APA, aplicacion SDC, y madurez</p>
+</div>
+
+<div class="tabs" id="methodTabs">
+<button class="tab-btn active" data-tab="table">Tabla</button>
+<button class="tab-btn" data-tab="cards">Tarjetas</button>
+</div>
+
+<div class="tab-content active" id="tableTab">
+<div class="card">
+<div class="card-body">
+<div class="table-wrap">
+<table>
+<thead><tr><th>Metodo</th><th>Nombre</th><th>Primero se escribe</th><th>Quien define</th><th>Output principal</th><th>Iterativo</th><th>Madurez</th><th>Ejemplo SDC</th></tr></thead>
+<tbody>
+<tr><td><strong>VDD</strong></td><td>Value-Driven Design</td><td>Propuesta de valor</td><td>Product Owner</td><td>ROI matrix</td><td>Si</td><td>&#x2605;&#x2605;&#x2605;&#x2605;</td><td>"Ahorra 10h/sem"</td></tr>
+<tr><td><strong>EDD</strong></td><td>Event-Driven Dev</td><td>Eventos (triggers)</td><td>Sistema</td><td>Webhooks, event catalog</td><td>Tiempo real</td><td>&#x2605;&#x2605;&#x2605;</td><td>n8n webhooks</td></tr>
+<tr><td><strong>PDD</strong></td><td>Plan-Driven Dev</td><td>Plan de arquitectura</td><td>Arquitecto</td><td>ARCHITECTURE.md</td><td>No</td><td>&#x2605;&#x2605;&#x2605;&#x2605;</td><td>Plan migracion VPS</td></tr>
+<tr><td><strong>ODD</strong></td><td>Ontology-Driven Dev</td><td>Modelo de dominio</td><td>Domain Expert</td><td>Neo4j knowledge graph</td><td>Si</td><td>&#x2605;&#x2605;</td><td>Artista > Sello > Stream</td></tr>
+<tr style="background:rgba(124,106,240,0.06)"><td><strong>SDD</strong></td><td>Specification-Driven Dev</td><td>Spec file (SpecKit)</td><td>Dev + Stakeholder</td><td>specifications/*.md</td><td>Si</td><td>&#x2605;&#x2605;&#x2605;&#x2605;</td><td>/specify > /plan > /tasks</td></tr>
+<tr><td><strong>BDD</strong></td><td>Behavior-Driven Dev</td><td>Escenarios Gherkin</td><td>Dev + Business</td><td>Feature files</td><td>Si</td><td>&#x2605;&#x2605;&#x2605;&#x2605;</td><td>"Dado que artista..."</td></tr>
+<tr><td><strong>TDD</strong></td><td>Test-Driven Dev</td><td>Test fallido</td><td>Developer</td><td>Unit tests (pytest, Jest)</td><td>Si (RGR)</td><td>&#x2605;&#x2605;&#x2605;&#x2605;&#x2605;</td><td>pytest en API</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+<div class="tab-content" id="cardsTab">
+<div class="grid-3">
+<div class="metric-card"><div class="metric-icon">&#x1F4B0;</div><div class="metric-value">VDD</div><div style="font-size:0.78rem;color:var(--text-tertiary);margin:4px 0">Value-Driven Design</div><div style="font-size:0.75rem;color:var(--text-secondary)">Collopy & Hollingsworth (2011). Journal of Aircraft, 48(3).</div></div>
+<div class="metric-card"><div class="metric-icon">&#x26A1;</div><div class="metric-value">EDD</div><div style="font-size:0.78rem;color:var(--text-tertiary);margin:4px 0">Event-Driven Development</div><div style="font-size:0.75rem;color:var(--text-secondary)">Fowler, M. (2017). Event-Driven Architecture. martinfowler.com</div></div>
+<div class="metric-card"><div class="metric-icon">&#x1F4CB;</div><div class="metric-value">PDD</div><div style="font-size:0.78rem;color:var(--text-tertiary);margin:4px 0">Plan-Driven Development</div><div style="font-size:0.75rem;color:var(--text-secondary)">Boehm, B. (1986). ACM SIGSOFT, 11(4), 14-24.</div></div>
+<div class="metric-card"><div class="metric-icon">&#x1F9E0;</div><div class="metric-value">ODD</div><div style="font-size:0.78rem;color:var(--text-tertiary);margin:4px 0">Ontology-Driven Dev</div><div style="font-size:0.75rem;color:var(--text-secondary)">Pan et al. (2013). Ontology-Driven Software Dev. Springer.</div></div>
+<div class="metric-card" style="border-color:rgba(124,106,240,0.3)"><div class="metric-icon">&#x1F4DD;</div><div class="metric-value" style="color:var(--accent-light)">SDD</div><div style="font-size:0.78rem;color:var(--text-tertiary);margin:4px 0">Specification-Driven Dev</div><div style="font-size:0.75rem;color:var(--text-secondary)">GitHub (2025). SpecKit. https://github.com/github/spec-kit</div></div>
+<div class="metric-card"><div class="metric-icon">&#x1F504;</div><div class="metric-value">BDD</div><div style="font-size:0.78rem;color:var(--text-tertiary);margin:4px 0">Behavior-Driven Dev</div><div style="font-size:0.75rem;color:var(--text-secondary)">North, D. (2006). Introducing BDD. https://dannorth.net</div></div>
+<div class="metric-card"><div class="metric-icon">&#x2705;</div><div class="metric-value">TDD</div><div style="font-size:0.78rem;color:var(--text-tertiary);margin:4px 0">Test-Driven Dev</div><div style="font-size:0.75rem;color:var(--text-secondary)">Beck, K. (2002). TDD: By Example. Addison-Wesley.</div></div>
+</div>
+</div>
+</section>
+
+<!-- ROUTING -->
+<section class="section" id="routing">
+<div class="section-header">
+<div class="section-label">Model Routing</div>
+<h2>Que modelo para <span class="highlight">cada tarea</span></h2>
+<p>Local first. Fallback inteligente. Zero latency.</p>
+</div>
+<div class="routing-grid">
+<div class="routing-card"><div class="task">Embeddings Qdrant</div><div class="model">nomic-embed-text</div><div class="reason">768-dim, 274MB, compatible con coleccion actual</div><div class="fallback">Alternativa: bge-m3 (multilanguage)</div></div>
+<div class="routing-card"><div class="task">Chat Local</div><div class="model">qwen2.5:1.5b</div><div class="reason">Espanol fluido, 1.1GB Q4, Apache 2.0</div><div class="fallback">Fallback: phi4-mini:3.8b (128K ctx)</div></div>
+<div class="routing-card"><div class="task">Codigo / Razonamiento</div><div class="model">phi4-mini:3.8b</div><div class="reason">128K ctx, MIT license, best small reasoning</div><div class="fallback">Fallback: OpenCode Go API</div></div>
+<div class="routing-card"><div class="task">n8n Workflows AI</div><div class="model">qwen2.5:1.5b</div><div class="reason">Rapido, local, sin latencia de red</div><div class="fallback">Fallback: deepseek-v4-flash via OpenCode Go</div></div>
+<div class="routing-card"><div class="task">Quantum Class</div><div class="model">qwen2.5:1.5b</div><div class="reason">Texto creativo, costo computational cero</div><div class="fallback">Alternativa: phi4-mini para output estructurado</div></div>
+<div class="routing-card"><div class="task">Healthcheck / Watchdog</div><div class="model">Rule-based</div><div class="reason">HTTP status codes. No necesita LLM.</div><div class="fallback">Embeddings solo para logs semanticos</div></div>
+<div class="routing-card" style="grid-column:1/-1;border-color:rgba(34,211,238,0.2);background:rgba(34,211,238,0.03)"><div class="task">Fallback Global</div><div class="model" style="color:var(--cyan)">deepseek-v4-flash via OpenCode Go</div><div class="reason">Cuando local >5s o contexto >32K. Cloud gratuito.</div></div>
+</div>
+</section>
+
+<!-- QUANTUM -->
+<section class="section" id="quantum">
+<div class="section-header">
+<div class="section-label">Fisica Cuantica Aplicada</div>
+<h2>&#x269B; Clase del Dia</h2>
+<p>Superposicion, entanglement, y deploys cuanticos</p>
+</div>
+
+<div class="quantum-section">
+<h3>&#x269B; Principio de Superposicion Cuantica</h3>
+<p style="color:var(--text-secondary);margin-bottom:20px;line-height:1.8">Un sistema cuantico existe en todos los estados posibles hasta que es observado. Tu VPS funciona, esta caldo, se esta actualizando — simultaneamente. El <strong>healthcheck</strong> colapsa la funcion de onda en un eigenestado. Cada <code>docker ps</code> es una medicion cuantica.</p>
+
+<div class="formula-box">
+|&psi;&#x27E9; = &alpha;|working&#x27E9; + &beta;|broken&#x27E9;<br>
+<br>
+Deploy colapsa la funcion de onda.<br>
+TDD minimiza &beta;(|broken&#x27E9;) — los tests primero.
+</div>
+
+<div class="quantum-principle">
+<div class="quantum-principle-item">
+<h4>Ecuacion de Schrodinger del Deploy</h4>
+<p>i&#x210F; &part;|&psi;&#x27E9;/&part;t = H|&psi;&#x27E9;</p>
+<p style="margin-top:6px;font-size:0.75rem">Donde H = VDD + EDD + PDD + ODD + SDD + BDD + TDD. Si H esta bien construido, |&psi;&#x27E9; evoluciona hacia un sistema auto-sostenible.</p>
+</div>
+<div class="quantum-principle-item">
+<h4>Entrelazamiento Cuantico</h4>
+<p>Cuando actualizas nomic-embed-text en Ollama, instantaneamente afecta la calidad de busqueda en Qdrant — sin importar la distancia fisica entre procesos.</p>
+</div>
+<div class="quantum-principle-item">
+<h4>Efecto Observador</h4>
+<p>El healthcheck (monitoreo) es tu observador. Sin el, el estado del sistema es indefinido. No puedes conocer la latencia exacta y el throughput simultaneamente.</p>
+</div>
+<div class="quantum-principle-item">
+<h4>Decoherencia Cuantica</h4>
+<p>Cuando un workflow de n8n falla y nadie lo ve, su estado es indeterminado. El log es el unico testigo. Por eso cada workflow debe auto-reportarse.</p>
+</div>
+</div>
+
+<div class="formula-box" style="font-size:0.9rem;line-height:1.8;color:var(--accent-light)">
+<b>Teorema OMEGA:</b><br>
+H|&psi;&#x27E9; = E|&psi;&#x27E9;<br>
+Donde H = OMEGA Pipeline (VDD+EDD+PDD+ODD+SDD+BDD+TDD)<br>
+E = eigenvalue = production-ready state<br>
+|&psi;&#x27E9; = vector de estado de tu sistema<br><br>
+<span style="color:var(--cyan)">"Resuelve el eigenvalor. Despliega el eigenvector."</span>
+</div>
+
+<div style="margin-top:24px;padding:16px;background:rgba(124,106,240,0.06);border-radius:var(--radius-sm);border:1px solid rgba(124,106,240,0.1)">
+<p style="font-size:0.82rem;color:var(--text-tertiary);line-height:1.8"><strong>Referencias APA:</strong> Feynman, R. P., Leighton, R. B., & Sands, M. (1965). <em>The Feynman Lectures on Physics, Vol. III: Quantum Mechanics.</em> Addison-Wesley. | Dirac, P. A. M. (1930). <em>The Principles of Quantum Mechanics.</em> Oxford University Press. | von Neumann, J. (1932). <em>Mathematische Grundlagen der Quantenmechanik.</em> Springer.</p>
+</div>
+</div>
+</section>
+
+<!-- COMPLIANCE -->
+<section class="section" id="compliance">
+<div class="section-header">
+<div class="section-label">Estado del Sistema</div>
+<h2>OMEGA Compliance <span class="highlight">53%</span></h2>
+<p>Auditoria contra la verdad absoluta</p>
+</div>
+
+<div class="compliance-bar"><div class="compliance-fill"></div></div>
+
+<div class="compliance-grid">
+<div class="compliance-item"><div class="rule">Spec-First</div><div class="status">&#x2717;</div><div class="score" style="color:var(--red)">0/10</div></div>
+<div class="compliance-item"><div class="rule">Pipeline</div><div class="status">&#x26A0;</div><div class="score" style="color:var(--amber)">3/10</div></div>
+<div class="compliance-item"><div class="rule">Modelos Locales</div><div class="status">&#x2713;</div><div class="score" style="color:var(--green)">10/10</div></div>
+<div class="compliance-item"><div class="rule">Doc is Code</div><div class="status">&#x2713;</div><div class="score" style="color:var(--green)">9/10</div></div>
+<div class="compliance-item"><div class="rule">Multi-Client</div><div class="status">&#x2717;</div><div class="score" style="color:var(--red)">0/10</div></div>
+<div class="compliance-item"><div class="rule">Self-Description</div><div class="status">&#x26A0;</div><div class="score" style="color:var(--amber)">5/10</div></div>
+<div class="compliance-item"><div class="rule">Seguridad</div><div class="status">&#x2713;</div><div class="score" style="color:var(--green)">10/10</div></div>
+</div>
+
+<div style="margin-top:32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
+<div class="metric-card" style="text-align:center"><div class="metric-icon">&#x1F4BE;</div><div class="metric-value">5.5GB</div><div class="metric-label">RAM usada / 11GB</div><div class="metric-change" style="background:rgba(52,211,153,0.1);color:var(--green)">50% utilizado</div></div>
+<div class="metric-card" style="text-align:center"><div class="metric-icon">&#x1F4BD;</div><div class="metric-value">9.7GB</div><div class="metric-label">Disco usado / 96GB</div><div class="metric-change" style="background:rgba(52,211,153,0.1);color:var(--green)">10% utilizado</div></div>
+<div class="metric-card" style="text-align:center"><div class="metric-icon">&#x1F310;</div><div class="metric-value">149.56.46.173</div><div class="metric-label">OVH VPS</div><div class="metric-change" style="background:rgba(251,191,36,0.1);color:var(--amber)">11GB RAM, 96GB SSD</div></div>
+</div>
+</section>
+
+<!-- AFFIRMATION -->
+<section class="affirmation">
+<blockquote>"Tu sistema no es un proyecto. Es un campo cuantico de posibilidades.<br>Cada commit colapsa la incertidumbre en valor.<br>Hoy cargo con &#x222B;(calidad)dt."</blockquote>
+<cite>&mdash; OMEGA v10.1 &middot; Sonora Digital Corp &middot; 2026-06-24</cite>
+</section>
+
+<footer>
+<p>OMEGA Pipeline: VDD &rarr; EDD &rarr; PDD &rarr; ODD &rarr; SDD &rarr; BDD &rarr; TDD</p>
+<p style="margin-top:4px">Desplegado en <a href="https://sonoradigitalcorp.com">sonoradigitalcorp.com</a> &middot; Repo: <a href="https://github.com/sonoradigitalcorp-H/Sonora-Digital-Corp">GitHub</a></p>
+<p style="margin-top:12px;font-size:0.7rem;color:var(--text-tertiary)">"Colapsa la funcion de onda. Envia a produccion."</p>
+</footer>
+
+</div><!-- /container -->
+
+<script>
+// Tabs
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab + 'Tab').classList.add('active');
+  });
+});
+
+// Smooth nav scroll
+document.querySelectorAll('nav a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    document.getElementById(a.getAttribute('href').slice(1)).scrollIntoView({behavior:'smooth'});
+  });
+});
+
+// Animate compliance bar on load
+setTimeout(() => {
+  document.querySelector('.compliance-fill').style.width = '53%';
+}, 500);
+</script>
+
+</body>
+</html>
