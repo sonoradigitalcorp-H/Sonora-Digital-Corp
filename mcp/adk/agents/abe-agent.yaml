@@ -1,0 +1,39 @@
+name: abe-agent
+version: 1.0.0
+description: "Agente de ABE Music — gestión de artistas, releases, streams, revenue y KPIs"
+model: qwen3:4b
+provider: ollama
+capability: music-production
+maturity: 2-Assisted
+
+tools:
+  - sonora:abe_list_artists
+  - sonora:abe_get_artist
+  - sonora:abe_create_artist
+  - sonora:abe_create_release
+  - sonora:abe_record_stream
+  - sonora:abe_record_revenue
+  - sonora:abe_ceo_dashboard
+  - sonora:abe_artist_kpi
+  - sonora:enterprise_score
+  - sonora:skills_system
+  - sonora:incident_report
+
+policies:
+  max_tokens_per_call: 4096
+  timeout_seconds: 60
+
+events:
+  emits:
+    - artist_created
+    - release_published
+    - stream_recorded
+    - revenue_recorded
+  listens:
+    - lead_received
+    - payment_received
+
+lifecycle:
+  spawn: on-demand
+  max_idle: 30m
+  max_concurrent: 3

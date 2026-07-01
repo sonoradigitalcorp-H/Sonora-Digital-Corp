@@ -874,6 +874,11 @@ async function handleRequest(req, res, path) {
       const tp = require('path').join(__dirname, 'tenant-dashboard.html');
       if (fs2.existsSync(tp)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fs2.readFileSync(tp, 'utf-8')); }
       else { sendJson(res, { error: 'Tenant dashboard no encontrado' }, 404); }
+    } else if (path === '/abe' || path === '/api/abe') {
+      const fs2 = require('fs');
+      const ap = require('path').join(__dirname, 'abe-music-os.html');
+      if (fs2.existsSync(ap)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fs2.readFileSync(ap, 'utf-8')); }
+      else { sendJson(res, { error: 'ABE Music OS no encontrado' }, 404); }
     } else if (path === '/cheatsheet' || path === '/api/cheatsheet') {
       const fs = require('fs');
       const csPath = require('path').join(__dirname, 'cheatsheet.html');
