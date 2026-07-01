@@ -43,7 +43,7 @@ python apps/jarvis/main.py      # JARVIS core
 | 18789 | OpenClaw Gateway | `openclaw-gateway.service` |
 | 6333 | Qdrant | Docker |
 | 7687 | Neo4j | Docker |
-| 5678 | n8n | Docker (not deployed) |
+| 5678 | n8n | Docker (33 workflows) |
 
 ## Sub-OS Architecture
 
@@ -93,4 +93,4 @@ python apps/jarvis/main.py      # JARVIS core
 | Event Catalog | `events/CATALOG.md` |
 | Enterprise Score | `metrics/enterprise-score.md` |
 
-Enterprise Score: ≥60 para aprobar (9 metrics × 10).
+Enterprise Score: ≥60 para aprobar (10 metrics × 10, max 100).

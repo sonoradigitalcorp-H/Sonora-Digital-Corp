@@ -23,7 +23,7 @@ Each metric scored 0–10:
 
 ---
 
-## The 9 Metrics
+## The 10 Metrics
 
 ### 1. Revenue Impact
 

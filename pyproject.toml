@@ -21,4 +21,4 @@ source = ["src/core", "webui", "voice"]
 omit = ["*/tests/*", "*/venv/*", "*/hermes-env/*"]
 
 [tool.coverage.report]
-fail_under = 60
+fail_under = 80

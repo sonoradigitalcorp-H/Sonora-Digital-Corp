@@ -59,4 +59,4 @@ jobs:
 
       - name: Run tests with coverage
         run: |
-          docker run --rm jarvis-test python3 -m pytest tests/unit/ -v --cov=src.core --cov-report=term-missing --cov-fail-under=60
+          docker run --rm jarvis-test python3 -m pytest tests/unit/ -v --cov=src.core --cov-report=term-missing --cov-fail-under=80

@@ -10,7 +10,18 @@ IMPORTANCE_LEVELS = {
     "low": 0,
 }
 MAX_PROMOTION_LEVEL = 3
-DECAY_DAYS = 30  # demote one level after this many days without access
+DECAY_DAYS = 30
+
+MEMORY_LAYERS = {
+    "working": 0,
+    "task": 1,
+    "project": 2,
+    "customer": 3,
+    "business": 4,
+    "historical": 5,
+    "strategic": 6,
+}
+
 WRITE_LOCK_TIMEOUT_MS = 5000
 
 
@@ -34,6 +45,7 @@ class Engram:
                     summary TEXT,
                     context TEXT,
                     importance INTEGER DEFAULT 1,
+                    layer INTEGER DEFAULT 0,
                     access_count INTEGER DEFAULT 0,
                     last_accessed DATETIME,
                     timestamp DATETIME
@@ -55,6 +67,7 @@ class Engram:
     def _migrate_schema(self, c):
         for col, col_type in [
             ("importance", "INTEGER DEFAULT 1"),
+            ("layer", "INTEGER DEFAULT 0"),
             ("access_count", "INTEGER DEFAULT 0"),
             ("last_accessed", "DATETIME"),
         ]:
@@ -70,13 +83,15 @@ class Engram:
         summary: str,
         context: str,
         importance: str = "medium",
+        layer: str = "project",
     ):
         level = IMPORTANCE_LEVELS.get(importance, 1)
+        layer_num = MEMORY_LAYERS.get(layer, 2)
         with sqlite3.connect(self.db_path, timeout=WRITE_LOCK_TIMEOUT_MS / 1000) as conn:
             c = conn.cursor()
             c.execute(
-                "INSERT INTO memories (spec_id, tag, summary, context, importance, timestamp) VALUES (?, ?, ?, ?, ?, ?)",
-                (spec_id, tag, summary, context, level, datetime.now().isoformat()),
+                "INSERT INTO memories (spec_id, tag, summary, context, importance, layer, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (spec_id, tag, summary, context, level, layer_num, datetime.now().isoformat()),
             )
             rowid = c.lastrowid
             c.execute(
@@ -166,13 +181,17 @@ class Engram:
             total = c.fetchone()[0]
             c.execute("SELECT importance, COUNT(*) FROM memories GROUP BY importance")
             by_level = {str(row[0]): row[1] for row in c.fetchall()}
+            c.execute("SELECT layer, COUNT(*) FROM memories GROUP BY layer ORDER BY layer")
+            by_layer = {str(row[0]): row[1] for row in c.fetchall()}
             c.execute("SELECT COUNT(*) FROM memories WHERE last_accessed IS NOT NULL")
             accessed = c.fetchone()[0]
             return {
                 "total": total,
                 "by_importance": by_level,
+                "by_layer": by_layer,
                 "accessed": accessed,
                 "decay_days": DECAY_DAYS,
+                "layers": MEMORY_LAYERS,
             }
 
 

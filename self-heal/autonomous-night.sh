@@ -190,6 +190,49 @@ if [ "$FAILED" -gt 0 ]; then
   log "⚠️  $FAILED checks failed. Running auto-heal..."
   call "auto_heal" "{}" > /dev/null 2>&1 || true
   log "✅ Auto-heal executed"
+  sleep 10
+
+  # ─── RETEST — re-run only failed checks after heal ───
+  log ""
+  log "📋 RETEST — Verifying fixes..."
+  RETEST_PASSED=0
+  RETEST_FAILED=0
+  for check in $(echo "$RESULTS" | python3 -c "import sys,json;d=json.load(sys.stdin);[print(c['name']) for c in d['checks'] if c['status']!='pass']" 2>/dev/null); do
+    case "$check" in
+      "Gateway Health")
+        HEALTH=$(curl -s -o /dev/null -w "%{http_code}" "$GATEWAY/api/health" 2>/dev/null)
+        if [ "$HEALTH" = "200" ]; then RETEST_PASSED=$((RETEST_PASSED+1)); log "  ✅ $check — fixed"; else RETEST_FAILED=$((RETEST_FAILED+1)); log "  ❌ $check — still failing"; fi
+        ;;
+      "Security Audit")
+        AUDIT=$(call "audit_run" "{}"); SCORE=$(echo "$AUDIT" | python3 -c "import sys,json;print(json.load(sys.stdin).get('score',0))" 2>/dev/null || echo "0")
+        if [ "$SCORE" -ge 70 ]; then RETEST_PASSED=$((RETEST_PASSED+1)); log "  ✅ $check — fixed"; else RETEST_FAILED=$((RETEST_FAILED+1)); log "  ❌ $check — still failing"; fi
+        ;;
+      *) RETEST_FAILED=$((RETEST_FAILED+1)); log "  ⚠️  $check — cannot retest automatically";;
+    esac
+  done
+  log "📊 Retest: $RETEST_PASSED fixed, $RETEST_FAILED remaining"
+
+  # ─── DOCUMENT — store what was fixed ───
+  FIX_LOG="/home/ubuntu/sonora-digital-corp/state/logs/audit/auto-heal-$(date '+%Y%m%d-%H%M%S').log"
+  RESULTS_TIMESTAMP=$(echo "$RESULTS" | python3 -c "import sys,json;print(json.load(sys.stdin).get('timestamp','unknown'))")
+  {
+    echo "=== Auto-Heal Report ==="
+    echo "Initial: $PASSED passed, $FAILED failed"
+    echo "Retest: $RETEST_PASSED fixed, $RETEST_FAILED remaining"
+    echo "Results: $RESULTS_FILE"
+    echo "=== Checks ==="
+    echo "$RESULTS" | python3 -c "import sys,json;d=json.load(sys.stdin);[print(f\"  {c['status']}: {c['name']} — {c.get('detail','')}\") for c in d['checks']]"
+  } > "$FIX_LOG"
+  log "📝 Fix log saved: $FIX_LOG"
+
+  # ─── LEARN — store lesson in Engram ───
+  LEARN_ENTRY="{\"event\":\"auto_heal_completed\",\"timestamp\":\"$(date -u '+%Y-%m-%dT%H:%M:%SZ')\",\"payload\":{\"fixed\":$RETEST_PASSED,\"remaining\":$RETEST_FAILED,\"total_failed_initial\":$FAILED}}"
+  echo "$LEARN_ENTRY" >> "$EVENTS"
+  python3 -c "
+from apps.jarvis.src.core.engram import Engram
+e = Engram()
+e.store_learning('auto-heal', 'system-recovery', 'Auto-heal cycle: $RETEST_PASSED/$FAILED failed checks fixed', 'Night cycle auto-heal results: initial failures=$FAILED, fixed=$RETEST_PASSED, remaining=$RETEST_FAILED', importance='high', layer='task')
+  " 2>/dev/null || log "⚠️  Could not store to Engram"
 fi
 
 # ─── SAVE TO KNOWLEDGE GRAPH ───

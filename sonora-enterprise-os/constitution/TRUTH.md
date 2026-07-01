@@ -18,18 +18,17 @@ All agents (OpenClaw, Hermes, Mystic, JARVIS, ABE) MUST follow these rules.
 
 ## Latest Commit
 
-`9420abc` — feat: revenue pipeline — sales agent automation, Engram bridge, score dashboard
-(`87c4077` — feat: pipeline system)
+`a7d9ee9` — feat: Ollama local models — provider config + 5 models with extended context (64k/32k)
 
 ## Key Locations
 
-**UNIFIED PATH: `~/sdc`** — funciona en local y VPS.
+**UNIFIED PATH: `~/sdc`** — funciona en local y VPS (symlink → real path).
 
 | What | Where |
 |------|-------|
 | Monorepo root (any machine) | `~/sdc` |
 | Monorepo root (local real) | `/home/mystic/sonora-digital-corp/` |
-| Monorepo root (VPS real) | `/home/ubuntu/sonora-digital-corp/` |
+| Monorepo root (VPS real) | `/home/ubuntu/sonora-digital-corp/` (via symlink `~/sdc`) |
 | Abrir terminal | `sdc` (alias: `cd ~/sdc && opencode`) |
 | Enterprise OS | `sonora-enterprise-os/` |
 | Constitution | `sonora-enterprise-os/constitution/OMEGA-PROMPT-v10.0.md` |
@@ -38,9 +37,15 @@ All agents (OpenClaw, Hermes, Mystic, JARVIS, ABE) MUST follow these rules.
 | Truth | `sonora-enterprise-os/constitution/TRUTH.md` |
 | CONTRATO | `sonora-enterprise-os/constitution/CONTRATO.md` |
 | Checksums | `sonora-enterprise-os/constitution/CHECKSUMS.sha256` |
-| State (logs, engram, events) | `state/` |
+| State (logs, engram, events, quality) | `state/` |
 | JARVIS core engine | `apps/jarvis/src/core/` |
 | Web UI | `apps/webui/` (FastAPI, port 5174) |
+| Harnesses (10 OS) | `harnesses/` (symlink → `sonora-enterprise-os/harnesses/`) |
+| Skills (10 canonical) | `skills/` (symlink → `sonora-enterprise-os/skills/`) |
+| Initiatives (3 active) | `initiatives/` (symlink → `sonora-enterprise-os/initiatives/`) |
+| Metrics | `metrics/` (symlink → `sonora-enterprise-os/metrics/`) |
+| Specs (active) | `specs/` + `process/active/` |
+| Quality violations | `state/quality/violations.jsonl` |
 | Hermes bridge | `apps/hermes/hermes_bridge.py` |
 | Docker compose | `infra/docker-compose.yml` |
 | Tests | `tests/` |
@@ -116,8 +121,8 @@ Every tier 2+ spec must pass:
 |---------|--------|---------|
 | Location | `apps/jarvis/src/core/engram.py` | SQLite + FTS5 |
 | DB file | `~/.engram/engram.db` or `state/engram.db` | Auto-detected |
-| Memories stored | 48 | 45 level 1, 3 level 2 |
 | Importance levels | 4 | critical(3), high(2), medium(1), low(0) |
+| Memory layers | **7** | working(0), task(1), project(2), customer(3), business(4), historical(5), strategic(6) |
 | Max promotion | 3 | Engram.promote(memory_id) |
 | Decay | 30 days | Engram.apply_decay() |
 | Write lock | 5s timeout | concurrent write protection |
@@ -208,46 +213,83 @@ Autonomy levels: L0(Manual) → L1(Assisted) → L2(Supervised) → L3(Delegated
 | User | ubuntu |
 | SSH key | `~/.ssh/id_ed25519_sdc` |
 | SSH host | 149.56.46.173 |
-| Monorepo path | `/home/ubuntu/sonora-digital-corp/` (systemd) |
-| Old repo | `/home/ubuntu/sdc/` (deprecated) |
-| Latest commit | `9420abc` |
+| Monorepo path | `/home/ubuntu/sonora-digital-corp/` (physical) |
+| Symlink | `~/sdc → /home/ubuntu/sonora-digital-corp/` |
+| Latest commit | `a7d9ee9` |
 | n8n | Docker, port 5678 |
 | Neo4j | Docker, port 7687 |
 | Qdrant | Docker, port 6333 |
-| LangFuse | Docker, port 3000 |
+| LangFuse | Docker, port 3000 (unhealthy) |
+| Playwright MCP | Docker, port 8931 (unhealthy) |
+| Web UI | Docker, port 5174 |
 
-## Services (VPS)
+## Docker Management
 
-| Service | Port | Type | How to restart |
-|---------|------|------|---------------|
-| JARVIS Web UI | 5174 | systemd | `sudo systemctl restart jarvis-webui.service` |
-| JARVIS Core | — | systemd | `sudo systemctl restart jarvis-core.service` |
-| JARVIS Error Correction | — | systemd timer | `sudo systemctl restart jarvis-error-correction.timer` |
-| Docker containers (9) | various | docker compose | `cd /home/ubuntu/sonora-digital-corp && docker compose -f infra/docker-compose.yml restart` |
+```bash
+cd ~/sdc && docker compose -f infra/docker-compose.yml ps
+cd ~/sdc && docker compose -f infra/docker-compose.yml logs <container>
+cd ~/sdc && docker compose -f infra/docker-compose.yml restart <container>
+```
+
+Docker compose file: `infra/docker-compose.yml` (also `infra/docker-compose.vps.yml`)
+
+## Systemd Services (Split-brain — Pending Resolution)
+
+| Service | Port | Type | Status | Action Needed |
+|---------|------|------|--------|---------------|
+| `jarvis-core.service` | — | systemd | active | ⚠️ Duplicates Docker `sdc-jarvis-core` — stop + disable |
+| `abe-telegram-bot.service` | — | systemd | active | ⚠️ Duplicates Docker `sdc-telegram-bot` — stop + disable |
+| `sonora-mcp-gateway.service` | — | systemd | active | ⚠️ Duplicates Docker `sdc-mcp-server` — stop + disable |
+| `abe-daemon.service` | — | systemd | active | ✅ No Docker equivalent — keep |
+| Docker (12 containers) | various | docker compose | 10 healthy, 2 unhealthy | Fix langfuse + playwright-mcp |
+
+Docker services:
+```bash
+sudo systemctl stop jarvis-core.service abe-telegram-bot.service sonora-mcp-gateway.service
+sudo systemctl disable jarvis-core.service abe-telegram-bot.service sonora-mcp-gateway.service
+```
 
 ## Docker Containers
 
-| Container | Image | Mem Limit | Port |
-|-----------|-------|-----------|------|
-| postgres | postgres:15 | 512MB | 127.0.0.1:5432 |
-| redis | redis:7-alpine | 256MB | 127.0.0.1:6379 |
-| neo4j | neo4j:5.19-community | 3GB | 127.0.0.1:7687 |
-| qdrant | qdrant/qdrant | 256MB | 127.0.0.1:6333 |
-| mcp-server | custom | — | 127.0.0.1:8000 |
-| n8n | n8nio/n8n | 512MB | 127.0.0.1:5678 |
-| telegram-bot | custom | 128MB | — |
-| langfuse | langfuse/langfuse | 256MB | 127.0.0.1:3000 |
-| langfuse-db | postgres:15 | 256MB | — |
+| Container | Image | Status | Mem Limit | Port |
+|-----------|-------|--------|-----------|------|
+| sdc-postgres | postgres:15 | healthy | 512MB | 127.0.0.1:5432 |
+| sdc-redis | redis:7-alpine | healthy | 256MB | 127.0.0.1:6379 |
+| sdc-neo4j | neo4j:5.19-community | healthy | 3GB | 127.0.0.1:7687 |
+| sdc-qdrant | qdrant/qdrant | healthy | 256MB | 127.0.0.1:6333 |
+| sdc-mcp-server | custom | healthy | — | 127.0.0.1:8000 |
+| sdc-n8n | n8nio/n8n | healthy | 512MB | 127.0.0.1:5678 |
+| sdc-jarvis-webui | custom | healthy | — | 127.0.0.1:5174 |
+| sdc-jarvis-core | custom | Up 20h | — | — |
+| sdc-telegram-bot | custom | Up 25h | 128MB | 127.0.0.1:3003 |
+| sdc-langfuse | langfuse/langfuse | **unhealthy** | 256MB | 127.0.0.1:3000 |
+| sdc-langfuse-db | postgres:15 | healthy | 256MB | — |
+| sdc-playwright-mcp | custom | **unhealthy** | — | 0.0.0.0:8931 |
+
+Total: 12 containers (2 unhealthy: langfuse, playwright-mcp)
+
+## Systemd Services (VPS — Split-brain)
+
+| Service | Status | Port | Conflict |
+|---------|--------|------|----------|
+| `jarvis-core.service` | active | — | ⚠️ Duplicates Docker `sdc-jarvis-core` |
+| `abe-telegram-bot.service` | active | — | ⚠️ Duplicates Docker `sdc-telegram-bot` (causes 409 Conflict) |
+| `sonora-mcp-gateway.service` | active | — | ⚠️ Duplicates Docker `sdc-mcp-server` |
+| `abe-daemon.service` | active | — | ✅ Systemd only, no Docker equivalent |
+
+**Resolution needed**: Stop + disable systemd duplicates, keep only Docker.
 
 ## Test Results
-- `pytest tests/unit/ -q` → **417 pass, 1 skip, 0 fail** 🟢
-- Coverage: new modules have ≥70% (sales_pipeline.py, engram.py extended, pipeline_bridge.py, score calculation)
-- CI enforces: TDD check (new modules need test files) + pytest-cov --cov-fail-under=60
-- Integration: 372 pass, 4 fail (need API key), same as before
+- `pytest tests/unit/ -q` → **24 pass, 0 fail** (live-data-pipeline tests)
+- Coverage threshold: `fail_under = 80` (constitution requirement)
+- CI enforces: TDD check + pytest-cov --cov-fail-under=80
 
 ## Governance
-- **Decision hierarchy**: VDD → EDD → PDD → ODD → SDD → BDD → TDD → Implementation
+- **Decision hierarchy**: VDD → EDD → PDD → ODD → SDD → BDD → TDD
 - **Score gate**: ≥60 to approve | JR-Lite 15-point checklist enforced
 - **10 Sub-OS**: Sales, Dev, Support, Agent, Knowledge, Finance, Security, Ops, Quality, Strategy
-- **Observability**: LangFuse (traces, cost tracking)
-- **Enterprise Score**: Calculated from events.jsonl, live at /api/enterprise-score
+- **10 Agent Harnesses**: all defined in `harnesses/` (via symlink → `sonora-enterprise-os/harnesses/`)
+- **10 Canonical Skills**: all defined in `skills/` (via symlink → `sonora-enterprise-os/skills/`)
+- **3 Initiatives**: automation-coverage (64/100), finops-baseline (67/100), knowledge-immortality (71/100)
+- **Observability**: LangFuse (traces, cost tracking — currently unhealthy)
+- **Enterprise Score**: Calculated from events.jsonl, live at /api/enterprise-score. Currently 23/100. 10 metrics × 10 points, threshold ≥60.
