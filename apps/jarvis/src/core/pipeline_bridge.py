@@ -21,7 +21,7 @@ EVENTS_FILE = os.path.join(BASE_DIR, "state", "logs", "events.jsonl")
 
 def _emit_event(event: str, payload: dict):
     os.makedirs(os.path.dirname(EVENTS_FILE), exist_ok=True)
-    from datetime import datetime, timezone
+    from datetime import datetime
     ts = datetime.now(timezone.utc).isoformat()
     entry = json.dumps({
         "event": event,

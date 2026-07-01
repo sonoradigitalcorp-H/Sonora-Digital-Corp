@@ -9,7 +9,6 @@ import logging
 import os
 import time
 from datetime import datetime, timezone
-from typing import Any, Optional
 
 log = logging.getLogger("jarvis.redis_streams")
 
@@ -69,7 +68,7 @@ def get_redis():
         return None
 
 
-def stream_push(stream: str, data: dict, maxlen: int = 1000) -> Optional[str]:
+def stream_push(stream: str, data: dict, maxlen: int = 1000) -> str | None:
     """Push an entry to a Redis Stream. Returns entry ID or None."""
     client = get_redis()
     if client is None:

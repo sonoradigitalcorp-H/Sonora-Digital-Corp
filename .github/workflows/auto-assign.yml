@@ -1,0 +1,53 @@
+name: 🤖 Auto-Assign — SPEC Reviewer
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  auto-assign:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Check for SPEC and assign
+        id: spec-check
+        run: |
+          SPEC_FILE=$(find process/active -name "SPEC-*.md" 2>/dev/null | head -1)
+          if [ -n "$SPEC_FILE" ]; then
+            SPEC_ID=$(basename "$SPEC_FILE" .md)
+            echo "SPEC found: $SPEC_ID"
+            echo "spec_found=true" >> $GITHUB_OUTPUT
+            echo "spec_id=$SPEC_ID" >> $GITHUB_OUTPUT
+            # Extract author from SPEC
+            AUTHOR=$(grep -oP '(?<=Autor\s*\|\s*).+' "$SPEC_FILE" | head -1 || echo "OpenClaw")
+            echo "author=$AUTHOR" >> $GITHUB_OUTPUT
+          else
+            echo "No SPEC found in this PR"
+            echo "spec_found=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Auto-assign reviewer
+        if: steps.spec-check.outputs.spec_found == 'true'
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const specId = '${{ steps.spec-check.outputs.spec_id }}';
+            const author = '${{ steps.spec-check.outputs.author }}';
+            // Assign the PR author as assignee, request review from maintainers
+            github.rest.issues.addAssignees({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              assignees: [context.payload.pull_request.user.login],
+            });
+            // Post comment with SPEC info
+            github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+              body: `📋 **SPEC detected:** \`${specId}\`\n\nThis PR contains an active specification. Ensure the score gate (≥60) is met before merging.\n\n_Assigned automatically by 🤖 Auto-Assign_`,
+            });
