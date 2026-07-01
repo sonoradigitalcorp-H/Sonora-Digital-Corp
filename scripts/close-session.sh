@@ -56,9 +56,20 @@ done
 echo "[5/6] Recursos..." | tee -a "$LOG"
 free -h | tee -a "$LOG"
 
-# 6. Crear punto de restauracion
-echo "[6/6] Punto de restauracion creado" | tee -a "$LOG"
-date '+%s' > "${BASE_DIR}/state/last-session-epoch.txt"
+# 6. Guardar resumen para la próxima sesión
+BRANCH=$(git branch --show-current)
+LAST_COMMIT=$(git log --oneline -1)
+SUMMARY="${SESSION_SUMMARY:-trabajo en $BRANCH}"
+cat > "${BASE_DIR}/state/ultima-sesion.json" <<- EOF
+{
+  "fecha": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+  "branch": "$BRANCH",
+  "ultimo_commit": "$LAST_COMMIT",
+  "resumen": "$SUMMARY",
+  "commit_pendiente": $(git status --porcelain | wc -l)
+}
+EOF
+echo "[6/6] Resumen guardado en state/ultima-sesion.json" | tee -a "$LOG"
 
 echo "[$(date)] === SESSION CLOSED ===" | tee -a "$LOG"
 echo "Log: $LOG"
