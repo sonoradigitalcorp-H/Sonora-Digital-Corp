@@ -1,0 +1,35 @@
+{
+  "version": "1.0.0",
+  "tasks": [
+    {
+      "id": "task-healthcheck",
+      "name": "Healthcheck cada 15 min",
+      "schedule": "*/15 * * * *",
+      "workflow": null,
+      "tool": "health_all",
+      "params": {},
+      "enabled": true,
+      "last_run": null
+    },
+    {
+      "id": "task-score-daily",
+      "name": "Enterprise Score diario",
+      "schedule": "0 6 * * *",
+      "workflow": null,
+      "tool": "enterprise_score",
+      "params": {},
+      "enabled": true,
+      "last_run": null
+    },
+    {
+      "id": "task-backup-daily",
+      "name": "Backup diario",
+      "schedule": "0 3 * * *",
+      "workflow": null,
+      "tool": "webhook_backup",
+      "params": {},
+      "enabled": true,
+      "last_run": null
+    }
+  ]
+}

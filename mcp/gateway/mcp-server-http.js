@@ -53,6 +53,12 @@ const { manager: providerManager } = require('../providers/provider-manager');
 const { manager: pluginManager } = require('../plugins/plugin-manager');
 const { engine: swarmEngine } = require('../swarm/swarm-engine');
 const { loop: learningLoop } = require('../registry/learning-loop');
+const { scheduler } = require('../scheduler/scheduler');
+const { templates } = require('../templates/templates');
+const { monkey: chaosMonkey } = require('../chaos/chaos-monkey');
+const { achievements } = require('../achievements/achievements');
+const { alerts: alertSystem } = require('../alerts/alerts');
+const { improver: selfImprove } = require('../scheduler/self-improve');
 const { audit: securityAudit } = require('../security/security-audit');
 const { auditSoul } = require('../security/soul-policies');
 
@@ -425,6 +431,40 @@ ALL_TOOL_HANDLERS['audit_rotate_secrets'] = async () => {
   } catch (e) { return { error: e.message }; }
 };
 
+
+// Scheduler tools
+ALL_TOOL_HANDLERS['scheduler_list'] = async () => ({ tasks: scheduler.list() });
+ALL_TOOL_HANDLERS['scheduler_add'] = async ({ name, schedule, workflow, tool, params }) => {
+  return scheduler.add({ name, schedule, workflow, tool, params });
+};
+ALL_TOOL_HANDLERS['scheduler_remove'] = async ({ id }) => { scheduler.remove(id); return { removed: true }; };
+ALL_TOOL_HANDLERS['scheduler_tick'] = async () => { await scheduler.tick(); return { ticked: true }; };
+
+// Template tools
+ALL_TOOL_HANDLERS['template_agent'] = async ({ name, description, capability }) => ({ template: templates.agent({ name, description, capability }) });
+ALL_TOOL_HANDLERS['template_workflow'] = async ({ name, description, input }) => ({ template: templates.workflow({ name, description, input }) });
+ALL_TOOL_HANDLERS['template_plugin'] = async ({ name, description }) => ({ template: templates.plugin({ name, description }) });
+ALL_TOOL_HANDLERS['template_achievements'] = async () => ({ achievements: templates.achievements });
+
+// Chaos Monkey tools
+ALL_TOOL_HANDLERS['chaos_run'] = async () => await chaosMonkey.runTests();
+
+// Achievement tools
+ALL_TOOL_HANDLERS['achievements_list'] = async () => ({ achievements: achievements.listAll() });
+ALL_TOOL_HANDLERS['achievements_stats'] = async () => achievements.getStats();
+ALL_TOOL_HANDLERS['achievements_unlock'] = async ({ id }) => {
+  const a = achievements.unlock(id);
+  return a ? { unlocked: true, achievement: a } : { unlocked: false, error: 'Achievement not found' };
+};
+
+// Alert tools
+ALL_TOOL_HANDLERS['alerts_check'] = async () => await alertSystem.checkAll();
+ALL_TOOL_HANDLERS['alerts_history'] = async () => ({ alerts: alertSystem.getHistory() });
+
+// Self-improve tools
+ALL_TOOL_HANDLERS['self_improve_analyze'] = async () => selfImprove.analyze();
+ALL_TOOL_HANDLERS['self_improve_fixes'] = async () => ({ fixes: selfImprove.getFixes() });
+
 // Plugin Marketplace tools
 ALL_TOOL_HANDLERS['plugin_list'] = async () => ({ plugins: pluginManager.list() });
 ALL_TOOL_HANDLERS['plugin_install'] = async ({ name, version, description, tools, capabilities }) => {
@@ -617,6 +657,21 @@ function buildToolList() {
     { name: 'brand_guide', description: 'Guía de marca SDC', inputSchema: { type: 'object', properties: {} } },
     { name: 'incident_report', description: 'Reporta un incidente de seguridad', inputSchema: { type: 'object', properties: { severity: { type: 'string' }, description: { type: 'string' } }, required: ['description'] } },
     { name: 'incident_list', description: 'Lista incidentes recientes', inputSchema: { type: 'object', properties: {} } },
+
+    { name: 'scheduler_list', description: 'Lista tareas programadas', inputSchema: { type: 'object', properties: {} } },
+    { name: 'scheduler_add', description: 'Agrega tarea programada', inputSchema: { type: 'object', properties: { name: { type: 'string' }, schedule: { type: 'string' }, workflow: { type: 'string' }, tool: { type: 'string' }, params: { type: 'object' } }, required: ['name'] } },
+    { name: 'scheduler_tick', description: 'Ejecuta tareas programadas pendientes', inputSchema: { type: 'object', properties: {} } },
+    { name: 'template_agent', description: 'Genera template de agente ADK', inputSchema: { type: 'object', properties: { name: { type: 'string' }, description: { type: 'string' }, capability: { type: 'string' } }, required: ['name'] } },
+    { name: 'template_workflow', description: 'Genera template de workflow', inputSchema: { type: 'object', properties: { name: { type: 'string' }, description: { type: 'string' }, input: { type: 'string' } }, required: ['name'] } },
+    { name: 'template_plugin', description: 'Genera template de plugin', inputSchema: { type: 'object', properties: { name: { type: 'string' }, description: { type: 'string' } }, required: ['name'] } },
+    { name: 'template_achievements', description: 'Lista logros disponibles', inputSchema: { type: 'object', properties: {} } },
+    { name: 'chaos_run', description: 'Ejecuta Chaos Monkey (tests de resiliencia)', inputSchema: { type: 'object', properties: {} } },
+    { name: 'achievements_list', description: 'Lista logros con estado', inputSchema: { type: 'object', properties: {} } },
+    { name: 'achievements_stats', description: 'Estadísticas de logros', inputSchema: { type: 'object', properties: {} } },
+    { name: 'achievements_unlock', description: 'Desbloquea un logro manualmente', inputSchema: { type: 'object', properties: { id: { type: 'string' } }, required: ['id'] } },
+    { name: 'alerts_check', description: 'Verifica alertas activas', inputSchema: { type: 'object', properties: {} } },
+    { name: 'alerts_history', description: 'Historial de alertas', inputSchema: { type: 'object', properties: {} } },
+    { name: 'self_improve_analyze', description: 'Analiza logs y propone mejoras', inputSchema: { type: 'object', properties: {} } },
 { name: 'provider_manager_fallback', description: 'Configura cadena de fallback por capability', inputSchema: { type: 'object', properties: { capability: { type: 'string' }, chain: { type: 'array', items: { type: 'string' } } }, required: ['capability'] } },
   ];
 
@@ -800,6 +855,15 @@ async function handleRequest(req, res, path) {
         res.end(fs.readFileSync(wfPath, 'utf-8'));
       } else {
         sendJson(res, { error: 'Workflow Editor no encontrado' }, 404);
+      }
+    } else if (path === '/cheatsheet' || path === '/api/cheatsheet') {
+      const fs = require('fs');
+      const csPath = require('path').join(__dirname, 'cheatsheet.html');
+      if (fs.existsSync(csPath)) {
+        res.setHeader('Content-Type', 'text/html; charset=utf-8');
+        res.end(fs.readFileSync(csPath, 'utf-8'));
+      } else {
+        sendJson(res, { error: 'Cheatsheet no encontrado' }, 404);
       }
     } else {
       sendJson(res, { error: 'Not Found', paths: [
