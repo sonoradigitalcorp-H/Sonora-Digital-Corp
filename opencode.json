@@ -9,9 +9,10 @@
     "sonora-enterprise-os/constitution/OMEGA-PROMPT-v10.0.md",
     "sonora-enterprise-os/constitution/SOUL.md",
     "sonora-enterprise-os/constitution/TRUTH.md",
+    "sonora-enterprise-os/constitution/10-RULES.md",
     "AGENTS.md",
-    "sonora-enterprise-os/constitution/ECOSYSTEM-IDENTITY.md",
-    "sonora-enterprise-os/observability/INVENTARIO-FINAL.md"
+    "CLAUDE.md",
+    "docs/MAPA-SDC.md"
   ],
   "agent": {
     "mystic": {
