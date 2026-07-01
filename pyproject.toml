@@ -9,7 +9,7 @@ line-length = 160
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B"]
-ignore = ["B008", "UP042", "E402"]
+ignore = ["B008", "UP042", "E402", "UP017"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
