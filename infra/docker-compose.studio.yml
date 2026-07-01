@@ -1,0 +1,7 @@
+# ABE Studio — Docker Compose overlay
+# Úsalo con: docker compose -f infra/docker-compose.yml -f products/abe-music/studio/docker-compose.yml up -d
+# O standalone: docker compose -f products/abe-music/studio/docker-compose.yml up -d
+# Requiere: network sdc-network (creada por infra/docker-compose.yml)
+#
+# Modo test (sin SDC stack):
+#   docker compose -f products/abe-music/studio/docker-compose.test.yml up -d
