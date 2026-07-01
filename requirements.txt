@@ -19,7 +19,7 @@ PyAudio>=0.2.14
 pydub>=0.25.1
 
 # LLM & Embeddings
-ollama>=0.1.0
+ollama>=0.6.2
 
 # Testing
 pytest>=8.0.0
