@@ -2,6 +2,7 @@
 
 import { Sidebar } from './sidebar';
 import { TopBar } from './topbar';
+import { ChatAgent } from '@/components/chat-agent';
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -13,6 +14,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           {children}
         </main>
       </div>
+      <ChatAgent />
     </div>
   );
 }

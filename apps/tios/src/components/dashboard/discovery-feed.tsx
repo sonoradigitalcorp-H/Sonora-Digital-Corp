@@ -13,20 +13,12 @@ const typeIcons: Record<string, typeof Sparkles> = {
   signing: UserPlus,
 };
 
-const typeTextColors: Record<string, string> = {
-  breakout: 'text-green-500',
-  discovery: 'text-purple-500',
-  milestone: 'text-blue-500',
-  market: 'text-cyan-500',
-  signing: 'text-amber-500',
-};
-
-const typeBgColors: Record<string, string> = {
-  breakout: 'bg-green-500/10',
-  discovery: 'bg-purple-500/10',
-  milestone: 'bg-blue-500/10',
-  market: 'bg-cyan-500/10',
-  signing: 'bg-amber-500/10',
+const typeColors: Record<string, string> = {
+  breakout: 'text-green-500 bg-green-500/10',
+  discovery: 'text-purple-400 bg-purple-400/10',
+  milestone: 'text-primary bg-primary/10',
+  market: 'text-cyan-400 bg-cyan-400/10',
+  signing: 'text-amber-400 bg-amber-400/10',
 };
 
 export function DiscoveryFeed() {
@@ -34,31 +26,31 @@ export function DiscoveryFeed() {
 
   if (error) {
     return (
-      <div className="rounded-xl border bg-card p-5">
-        <p className="text-destructive text-sm">Failed to load discovery feed</p>
+      <div className="kpi-card p-4">
+        <p className="text-destructive text-xs">Failed to load discovery feed</p>
       </div>
     );
   }
 
   if (isLoading) {
     return (
-      <div className="rounded-xl border bg-card animate-pulse">
-        <div className="p-5 border-b flex items-center justify-between">
-          <div className="space-y-2">
-            <div className="h-5 w-36 bg-muted rounded" />
-            <div className="h-3 w-32 bg-muted rounded" />
+      <div className="kpi-card animate-pulse">
+        <div className="px-4 pt-4 pb-3 border-b border-border flex items-center justify-between">
+          <div className="space-y-1.5">
+            <div className="h-4 w-32 bg-muted rounded" />
+            <div className="h-2.5 w-28 bg-muted rounded" />
           </div>
-          <div className="h-4 w-10 bg-muted rounded" />
+          <div className="h-3 w-6 bg-muted rounded" />
         </div>
-        <div className="divide-y">
+        <div>
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex items-start gap-4 p-4">
-              <div className="w-8 h-8 rounded-lg bg-muted" />
+            <div key={i} className="flex items-start gap-4 px-4 py-3">
+              <div className="w-7 h-7 rounded-md bg-muted" />
               <div className="flex-1 space-y-1">
-                <div className="h-4 w-28 bg-muted rounded" />
-                <div className="h-3 w-48 bg-muted rounded" />
+                <div className="h-3.5 w-24 bg-muted rounded" />
+                <div className="h-2.5 w-40 bg-muted rounded" />
               </div>
-              <div className="h-3 w-10 bg-muted rounded" />
+              <div className="h-2.5 w-8 bg-muted rounded" />
             </div>
           ))}
         </div>
@@ -70,27 +62,27 @@ export function DiscoveryFeed() {
 
   if (!items.length) {
     return (
-      <div className="rounded-xl border bg-card p-5 text-center">
-        <Sparkles className="h-8 w-8 text-muted-foreground mx-auto mb-2" />
-        <p className="text-sm text-muted-foreground">No recent discoveries</p>
+      <div className="kpi-card p-6 text-center">
+        <Sparkles className="h-6 w-6 text-muted-foreground mx-auto mb-2" />
+        <p className="text-xs text-muted-foreground">No recent discoveries</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border bg-card">
-      <div className="p-5 border-b flex items-center justify-between">
+    <div className="kpi-card">
+      <div className="px-4 pt-4 pb-3 border-b border-border flex items-center justify-between">
         <div>
-          <h2 className="font-semibold">Live Discovery Feed</h2>
-          <p className="text-xs text-muted-foreground mt-0.5">Real-time intelligence stream</p>
+          <h2 className="text-sm font-semibold tracking-tight">Live Discovery Feed</h2>
+          <p className="text-[11px] text-muted-foreground mt-0.5">Real-time intelligence stream</p>
         </div>
-        <span className="flex items-center gap-1 text-xs text-muted-foreground">
-          <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+        <span className="badge badge-live">
+          <span className="w-1.5 h-1.5 rounded-full bg-green-500" />
           Live
         </span>
       </div>
 
-      <div className="divide-y">
+      <div>
         {items.map((item: {
           id?: string;
           type: string;
@@ -99,20 +91,19 @@ export function DiscoveryFeed() {
           time: string;
         }, i: number) => {
           const Icon = typeIcons[item.type] ?? Sparkles;
-          const textColor = typeTextColors[item.type] ?? 'text-muted-foreground';
-          const bgColor = typeBgColors[item.type] ?? 'bg-muted';
+          const colorClass = typeColors[item.type] ?? 'bg-muted text-muted-foreground';
           return (
-            <div key={item.id ?? i} className="flex items-start gap-4 p-4 hover:bg-accent/50 transition-colors">
-              <div className={`p-2 rounded-lg ${bgColor}`}>
-                <Icon className={`h-4 w-4 ${textColor}`} />
+            <div key={item.id ?? i} className="flex items-start gap-4 px-4 py-3 hover:bg-surface-hover transition-colors">
+              <div className={`p-1.5 rounded-md ${colorClass} shrink-0`}>
+                <Icon className="h-3.5 w-3.5" />
               </div>
               <div className="flex-1 min-w-0">
                 {item.artist && (
-                  <p className="text-sm font-medium">{item.artist}</p>
+                  <p className="text-xs font-medium">{item.artist}</p>
                 )}
-                <p className="text-sm text-muted-foreground">{item.description}</p>
+                <p className="text-[11px] text-muted-foreground">{item.description}</p>
               </div>
-              <span className="text-xs text-muted-foreground whitespace-nowrap">{item.time}</span>
+              <span className="text-[10px] text-muted-foreground whitespace-nowrap">{item.time}</span>
             </div>
           );
         })}

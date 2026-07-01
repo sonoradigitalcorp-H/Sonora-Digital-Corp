@@ -16,31 +16,31 @@ export function TopArtists() {
 
   if (error) {
     return (
-      <div className="rounded-xl border bg-card p-5">
-        <p className="text-destructive text-sm">Failed to load top artists</p>
+      <div className="kpi-card p-4">
+        <p className="text-destructive text-xs">Failed to load top artists</p>
       </div>
     );
   }
 
   if (isLoading) {
     return (
-      <div className="rounded-xl border bg-card animate-pulse">
-        <div className="p-5 border-b">
-          <div className="h-5 w-48 bg-muted rounded" />
-          <div className="h-3 w-36 bg-muted rounded mt-2" />
+      <div className="kpi-card animate-pulse">
+        <div className="px-4 pt-4 pb-3 border-b border-border">
+          <div className="h-4 w-36 bg-muted rounded" />
+          <div className="h-2.5 w-28 bg-muted rounded mt-1.5" />
         </div>
-        <div className="divide-y">
+        <div>
           {Array.from({ length: 5 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-4 p-4">
-              <div className="w-6 h-4 bg-muted rounded" />
-              <div className="w-10 h-10 rounded-full bg-muted" />
+            <div key={i} className="flex items-center gap-4 px-4 py-3">
+              <div className="w-5 h-3 bg-muted rounded" />
+              <div className="w-9 h-9 rounded-full bg-muted" />
               <div className="flex-1 space-y-1">
-                <div className="h-4 w-24 bg-muted rounded" />
-                <div className="h-3 w-16 bg-muted rounded" />
+                <div className="h-3.5 w-24 bg-muted rounded" />
+                <div className="h-2.5 w-16 bg-muted rounded" />
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-4 w-12 bg-muted rounded" />
-                <div className="w-12 h-8 rounded-md bg-muted" />
+                <div className="h-3 w-10 bg-muted rounded" />
+                <div className="w-10 h-7 rounded-md bg-muted" />
               </div>
             </div>
           ))}
@@ -53,20 +53,20 @@ export function TopArtists() {
 
   if (!artists.length) {
     return (
-      <div className="rounded-xl border bg-card p-5">
-        <p className="text-muted-foreground text-sm">No artist data available</p>
+      <div className="kpi-card p-4">
+        <p className="text-muted-foreground text-xs">No artist data available</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border bg-card">
-      <div className="p-5 border-b">
-        <h2 className="font-semibold">Top Artists by Discovery Score</h2>
-        <p className="text-xs text-muted-foreground mt-0.5">Real-time intelligence ranking</p>
+    <div className="kpi-card">
+      <div className="px-4 pt-4 pb-3 border-b border-border">
+        <h2 className="text-sm font-semibold tracking-tight">Top Artists by Discovery Score</h2>
+        <p className="text-[11px] text-muted-foreground mt-0.5">Real-time intelligence ranking</p>
       </div>
 
-      <div className="divide-y">
+      <div>
         {artists.map((artist: {
           rank: number;
           name: string;
@@ -80,9 +80,9 @@ export function TopArtists() {
           photoUrl?: string;
           contact?: string;
         }) => (
-          <div key={artist.rank} className="flex items-center gap-4 p-4 hover:bg-accent/50 transition-colors cursor-pointer">
-            <span className="text-sm font-bold text-muted-foreground w-6">{artist.rank}</span>
-            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold overflow-hidden">
+          <div key={artist.rank} className="flex items-center gap-4 px-4 py-3 hover:bg-surface-hover transition-colors cursor-pointer">
+            <span className="text-xs font-bold text-muted-foreground w-5">{artist.rank}</span>
+            <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center text-xs font-bold overflow-hidden shrink-0 ring-1 ring-border">
               {(artist.photoUrl || artist.image) ? (
                 <img src={artist.photoUrl || artist.image} alt={artist.name} className="w-full h-full object-cover" />
               ) : (
@@ -91,7 +91,7 @@ export function TopArtists() {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-medium truncate">{artist.name}</p>
-              <p className="text-xs text-muted-foreground">{artist.contact ?? `${artist.listeners?.toLocaleString() ?? '—'} listeners`}</p>
+              <p className="text-[11px] text-muted-foreground">{artist.contact ?? `${artist.listeners?.toLocaleString() ?? '—'} listeners`}</p>
             </div>
             <div className="flex items-center gap-2">
               <div className="flex items-center gap-1">
@@ -100,16 +100,16 @@ export function TopArtists() {
                   {artist.growth > 0 ? '+' : ''}{artist.growth}%
                 </span>
               </div>
-              <div className="w-12 h-8 rounded-md bg-primary/10 flex items-center justify-center" title={artist.reason ?? ''}>
-                <span className="text-sm font-bold text-primary">{artist.score}</span>
+              <div className="w-10 h-7 rounded-md bg-primary/10 flex items-center justify-center" title={artist.reason ?? ''}>
+                <span className="text-xs font-bold text-primary">{artist.score}</span>
               </div>
             </div>
           </div>
         ))}
       </div>
 
-      <div className="p-3 border-t">
-        <button className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+      <div className="p-3 border-t border-border">
+        <button className="w-full text-center text-xs text-muted-foreground hover:text-foreground transition-colors">
           View All Artists →
         </button>
       </div>

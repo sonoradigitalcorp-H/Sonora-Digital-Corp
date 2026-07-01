@@ -9,27 +9,27 @@ export function MarketOverview() {
 
   if (error) {
     return (
-      <div className="rounded-xl border bg-card p-5">
-        <p className="text-destructive text-sm">Failed to load market data</p>
+      <div className="kpi-card p-4">
+        <p className="text-destructive text-xs">Failed to load market data</p>
       </div>
     );
   }
 
   if (isLoading) {
     return (
-      <div className="rounded-xl border bg-card animate-pulse">
-        <div className="p-5 border-b">
-          <div className="h-5 w-28 bg-muted rounded" />
-          <div className="h-3 w-32 bg-muted rounded mt-2" />
+      <div className="kpi-card animate-pulse">
+        <div className="px-4 pt-4 pb-3 border-b border-border">
+          <div className="h-4 w-24 bg-muted rounded" />
+          <div className="h-2.5 w-28 bg-muted rounded mt-1.5" />
         </div>
-        <div className="divide-y">
+        <div>
           {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="p-4 space-y-1">
+            <div key={i} className="px-4 py-3 space-y-1">
               <div className="flex items-center justify-between">
-                <div className="h-3 w-24 bg-muted rounded" />
-                <div className="h-3 w-10 bg-muted rounded" />
+                <div className="h-2.5 w-20 bg-muted rounded" />
+                <div className="h-2.5 w-8 bg-muted rounded" />
               </div>
-              <div className="h-4 w-32 bg-muted rounded" />
+              <div className="h-3.5 w-28 bg-muted rounded" />
             </div>
           ))}
         </div>
@@ -61,26 +61,26 @@ export function MarketOverview() {
 
   if (!items.length) {
     return (
-      <div className="rounded-xl border bg-card p-5">
-        <p className="text-muted-foreground text-sm">No market data available</p>
+      <div className="kpi-card p-4">
+        <p className="text-muted-foreground text-xs">No market data available</p>
       </div>
     );
   }
 
   return (
-    <div className="rounded-xl border bg-card">
-      <div className="p-5 border-b">
-        <h2 className="font-semibold">Market Pulse</h2>
-        <p className="text-xs text-muted-foreground mt-0.5">Key market indicators</p>
+    <div className="kpi-card">
+      <div className="px-4 pt-4 pb-3 border-b border-border">
+        <h2 className="text-sm font-semibold tracking-tight">Market Pulse</h2>
+        <p className="text-[11px] text-muted-foreground mt-0.5">Key market indicators</p>
       </div>
 
-      <div className="divide-y">
+      <div>
         {items.map((item) => (
-          <div key={item.label} className="p-4">
-            <div className="flex items-center justify-between mb-1">
-              <p className="text-xs text-muted-foreground">{item.label}</p>
+          <div key={item.label} className="px-4 py-3">
+            <div className="flex items-center justify-between mb-0.5">
+              <p className="text-[11px] text-muted-foreground">{item.label}</p>
               {item.growth && (
-                <span className={`text-xs font-medium ${String(item.growth).startsWith('+') ? 'text-green-500' : 'text-orange-500'}`}>
+                <span className={`text-[10px] font-medium ${String(item.growth).startsWith('+') ? 'text-green-500' : 'text-rose-500'}`}>
                   {item.growth}
                 </span>
               )}
@@ -90,8 +90,8 @@ export function MarketOverview() {
         ))}
       </div>
 
-      <div className="p-3 border-t">
-        <button className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors">
+      <div className="p-3 border-t border-border">
+        <button className="w-full text-center text-xs text-muted-foreground hover:text-foreground transition-colors">
           Full Market Report →
         </button>
       </div>
