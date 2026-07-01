@@ -59,3 +59,8 @@ async def abe_artist_kpi(artist_id: str):
     if not kpi:
         raise HTTPException(status_code=404, detail="Artist not found")
     return kpi
+
+
+@router.get("/api/abe/sync/status")
+async def abe_sync_status():
+    return _kpi.get_sync_status()

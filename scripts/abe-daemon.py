@@ -149,6 +149,28 @@ class AbeDaemon:
         subprocess.run(['git', 'push'], capture_output=True, timeout=60, cwd=BASE_DIR)
         log.info("Daily commit + push done")
 
+    def spotify_sync(self):
+        pipeline = BASE_DIR / 'clients' / 'abe-music' / 'pipeline.py'
+        if not pipeline.exists():
+            log.warning("Spotify pipeline not found, skipping sync")
+            return
+        try:
+            env = os.environ.copy()
+            result = subprocess.run(
+                ['python3', str(pipeline)],
+                capture_output=True, text=True, timeout=120,
+                cwd=BASE_DIR, env=env
+            )
+            for line in result.stdout.strip().split('\n'):
+                if line.strip():
+                    log.info(f"[pipeline] {line.strip()}")
+            if result.returncode != 0:
+                log.error(f"Spotify pipeline failed: {result.stderr.strip()[:200]}")
+            else:
+                log.info("Spotify sync complete")
+        except Exception as e:
+            log.error(f"Spotify sync error: {e}")
+
     def run_cycle(self, status):
         log.info(f"=== Cycle #{self.cycle_count} ===")
         log.info(f"RAM: {status.get('ram_free', '?')}MB | "
@@ -161,9 +183,10 @@ class AbeDaemon:
         if fixes:
             log.info(f"Fixes applied: {', '.join(fixes)}")
 
-        # 6h report
+        # 6h tasks: Spotify sync + report
         now = time.time()
         if now - self.last_6h > CYCLE_6H:
+            self.spotify_sync()
             self.push_report()
             self.last_6h = now
 

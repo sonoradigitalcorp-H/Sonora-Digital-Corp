@@ -38,7 +38,7 @@
       "music_os": "/abe"
     },
     "integrations": {
-      "spotify": { "enabled": false, "client_id": null, "artist_ids": {} },
+      "spotify": { "enabled": true, "client_id": "SPOTIFY_CLIENT_ID", "client_secret": "SPOTIFY_CLIENT_SECRET", "artist_ids": { "hector-rubio": "2uS9JywE44eIRoTMatARAy", "jesus-urquijo": "1hfrbMUDkM2tlUE85D3dR6", "javier-arvayo": "0td9IOgiffWGMbcz3xKy0s" } },
       "fal_ai": { "enabled": false, "api_key": null },
       "telegram": { "enabled": true, "bot_token": null, "chat_id": "5738935134" },
       "openrouter": { "enabled": true, "fallback": true }
