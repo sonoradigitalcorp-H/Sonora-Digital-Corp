@@ -51,6 +51,8 @@ const { tools: openclawTools } = require('../tools/openclaw');
 const { tools: billingTools } = require('../tools/billing');
 const { tools: musicProviders } = require('../tools/music-providers');
 const { tools: intakeTools } = require('../tools/intake');
+const { tools: mediaTools } = require('../tools/media');
+const { sandbox } = require('../sandbox/sandbox');
 const { healer: autoHeal } = require('../scheduler/auto-heal');
 const { engine: workflowEngine } = require('../workflow/engine');
 const { manager: providerManager } = require('../providers/provider-manager');
@@ -380,6 +382,10 @@ for (const [name, def] of Object.entries(musicProviders)) {
 for (const [name, def] of Object.entries(intakeTools)) {
   ALL_TOOL_HANDLERS[name] = def.handler;
 }
+for (const [name, def] of Object.entries(mediaTools)) {
+  ALL_TOOL_HANDLERS[name] = def.handler;
+}
+ALL_TOOL_HANDLERS['sandbox_run'] = async () => await sandbox.runAll();
 ALL_TOOL_HANDLERS['auto_heal'] = async () => await autoHeal.heal();
 ALL_TOOL_HANDLERS['auto_heal_history'] = async () => ({ history: autoHeal.getHistory() });
 
@@ -660,7 +666,14 @@ function buildToolList() {
     { name: 'intake_email', description: 'Abraham reenvía emails', inputSchema: { type: 'object', properties: { from: { type: 'string' }, subject: { type: 'string' }, body: { type: 'string' } }, required: ['from', 'subject', 'body'] } },
     { name: 'intake_stats', description: 'Resumen de todo lo ingresado', inputSchema: { type: 'object', properties: {} } },
     { name: 'intake_query', description: 'Busca en el conocimiento de Abraham', inputSchema: { type: 'object', properties: { query: { type: 'string' } }, required: ['query'] } },
-{ name: 'app_execute', description: 'Ejecuta acción para usuario', inputSchema: { type: 'object', properties: { user_id: { type: 'string' }, type: { type: 'string' }, name: { type: 'string' } }, required: ['user_id', 'type', 'name'] } },
+    { name: 'media_image', description: 'Genera imágenes con fal.ai', inputSchema: { type: 'object', properties: { prompt: { type: 'string' } }, required: ['prompt'] } },
+    { name: 'media_video', description: 'Genera videos con fal.ai', inputSchema: { type: 'object', properties: { prompt: { type: 'string' }, duration: { type: 'number' } }, required: ['prompt'] } },
+    { name: 'media_album_cover', description: 'Portada de album con AI', inputSchema: { type: 'object', properties: { artist: { type: 'string' }, album_title: { type: 'string' } }, required: ['artist', 'album_title'] } },
+    { name: 'media_music_video', description: 'Video musical AI', inputSchema: { type: 'object', properties: { song: { type: 'string' }, artist: { type: 'string' } }, required: ['song', 'artist'] } },
+    { name: 'media_library', description: 'Medios generados', inputSchema: { type: 'object', properties: { limit: { type: 'number' } } } },
+    { name: 'media_seedance', description: 'Video Seedance', inputSchema: { type: 'object', properties: { prompt: { type: 'string' } }, required: ['prompt'] } },
+    { name: 'sandbox_run', description: 'Valida todo el sistema pre-deploy', inputSchema: { type: 'object', properties: {} } },
+    { name: 'app_execute', description: 'Ejecuta acción para usuario', inputSchema: { type: 'object', properties: { user_id: { type: 'string' }, type: { type: 'string' }, name: { type: 'string' } }, required: ['user_id', 'type', 'name'] } },
     { name: 'workflow_run', description: 'Ejecuta un workflow multi-agente', inputSchema: { type: 'object', properties: { name: { type: 'string' }, context: { type: 'object' } }, required: ['name'] } },
     { name: 'workflow_list', description: 'Lista ejecuciones de workflow', inputSchema: { type: 'object', properties: {} } },
     { name: 'workflow_list_samples', description: 'Lista samples de workflow disponibles', inputSchema: { type: 'object', properties: {} } },
@@ -895,7 +908,12 @@ async function handleRequest(req, res, path) {
       const tp = require('path').join(__dirname, 'tenant-dashboard.html');
       if (fs2.existsSync(tp)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fs2.readFileSync(tp, 'utf-8')); }
       else { sendJson(res, { error: 'Tenant dashboard no encontrado' }, 404); }
-        } else if (path === '/abe-saas' || path === '/api/abe-saas') {
+        } else if (path === '/abe-services' || path === '/api/abe-services') {
+      const fs5 = require('fs');
+      const svp = require('path').join(__dirname, 'abe-services.html');
+      if (fs5.existsSync(svp)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fs5.readFileSync(svp, 'utf-8')); }
+      else { sendJson(res, { error: 'ABE Services no encontrado' }, 404); }
+    } else if (path === '/abe-saas' || path === '/api/abe-saas') {
       const fs4 = require('fs');
       const sap = require('path').join(__dirname, 'abe-saas.html');
       if (fs4.existsSync(sap)) { res.setHeader('Content-Type', 'text/html; charset=utf-8'); res.end(fs4.readFileSync(sap, 'utf-8')); }
