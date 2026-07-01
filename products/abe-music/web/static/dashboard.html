@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Abe Music Hub</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --gold: #D4AF37;
+      --gold-dark: #B8962E;
+      --dark: #0A0A0A;
+      --dark2: #111111;
+      --dark3: #1A1A1A;
+      --text: #F0EDE8;
+      --muted: #888;
+      --green: #22C55E;
+      --red: #EF4444;
+      --radius: 10px;
+    }
+    body { background: var(--dark); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+
+    /* SIDEBAR */
+    .layout { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
+    .sidebar {
+      background: var(--dark2);
+      border-right: 1px solid #1a1a1a;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+    }
+    .sidebar-logo { font-size: 1.1rem; font-weight: 800; color: var(--gold); padding: 0.5rem 0.8rem 1.5rem; }
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.7rem;
+      padding: 0.6rem 0.8rem;
+      border-radius: 8px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      cursor: pointer;
+      transition: background 0.15s, color 0.15s;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
+    }
+    .nav-item:hover, .nav-item.active { background: rgba(212,175,55,0.1); color: var(--gold); }
+    .sidebar-divider { height: 1px; background: #1a1a1a; margin: 0.5rem 0; }
+
+    /* MAIN */
+    main { padding: 2rem; overflow-y: auto; }
+    .page-header { margin-bottom: 2rem; }
+    .page-header h1 { font-size: 1.6rem; font-weight: 800; letter-spacing: -0.5px; }
+    .page-header p { color: var(--muted); font-size: 0.9rem; margin-top: 0.3rem; }
+
+    /* KPI GRID */
+    .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-bottom: 2rem; }
+    .kpi-card {
+      background: var(--dark2);
+      border: 1px solid #1a1a1a;
+      border-radius: var(--radius);
+      padding: 1.2rem 1.4rem;
+    }
+    .kpi-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+    .kpi-value { font-size: 2rem; font-weight: 800; }
+    .kpi-change { font-size: 0.8rem; margin-top: 0.3rem; }
+    .kpi-change.up { color: var(--green); }
+    .kpi-change.down { color: var(--red); }
+    .kpi-card.gold .kpi-value { color: var(--gold); }
+
+    /* TWO COL */
+    .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+    .card {
+      background: var(--dark2);
+      border: 1px solid #1a1a1a;
+      border-radius: var(--radius);
+      padding: 1.4rem;
+    }
+    .card-title { font-size: 0.95rem; font-weight: 700; margin-bottom: 1.2rem; display: flex; justify-content: space-between; align-items: center; }
+    .card-title a { font-size: 0.75rem; color: var(--gold); text-decoration: none; }
+
+    /* TABLE */
+    table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    th { text-align: left; font-weight: 600; color: var(--muted); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.5px; padding-bottom: 0.8rem; border-bottom: 1px solid #1a1a1a; }
+    td { padding: 0.7rem 0; border-bottom: 1px solid #111; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+
+    /* BADGE */
+    .badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .badge-green { background: rgba(34,197,94,0.12); color: var(--green); }
+    .badge-gold { background: rgba(212,175,55,0.12); color: var(--gold); }
+    .badge-red { background: rgba(239,68,68,0.12); color: var(--red); }
+    .badge-gray { background: #1a1a1a; color: var(--muted); }
+
+    /* NIVEL */
+    .nivel { font-size: 0.7rem; font-weight: 700; padding: 0.15rem 0.5rem; border-radius: 4px; }
+    .nivel-EMERGENTE { background: #1e1e1e; color: var(--muted); }
+    .nivel-LOCAL { background: rgba(34,197,94,0.12); color: var(--green); }
+    .nivel-REGIONAL { background: rgba(212,175,55,0.12); color: var(--gold); }
+    .nivel-NACIONAL { background: rgba(239,68,68,0.12); color: #ff6b6b; }
+
+    /* ACTIVITY */
+    .activity-item { display: flex; gap: 0.8rem; align-items: flex-start; padding: 0.6rem 0; border-bottom: 1px solid #111; }
+    .activity-item:last-child { border-bottom: none; }
+    .activity-icon { width: 32px; height: 32px; border-radius: 8px; background: rgba(212,175,55,0.1); display: flex; align-items: center; justify-content: center; font-size: 0.9rem; flex-shrink: 0; }
+    .activity-text { font-size: 0.85rem; }
+    .activity-time { font-size: 0.75rem; color: var(--muted); margin-top: 0.1rem; }
+
+    /* BOOKING FORM */
+    .form-group { margin-bottom: 1rem; }
+    .form-group label { display: block; font-size: 0.8rem; color: var(--muted); margin-bottom: 0.4rem; }
+    .form-group input, .form-group select {
+      width: 100%;
+      background: var(--dark3);
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      padding: 0.6rem 0.8rem;
+      color: var(--text);
+      font-size: 0.875rem;
+      outline: none;
+    }
+    .form-group input:focus, .form-group select:focus { border-color: var(--gold); }
+    .btn { padding: 0.65rem 1.2rem; border-radius: 8px; font-weight: 600; font-size: 0.875rem; cursor: pointer; border: none; }
+    .btn-gold { background: var(--gold); color: #000; }
+    .btn-gold:hover { background: var(--gold-dark); }
+
+    /* LOADING */
+    .loading { color: var(--muted); font-size: 0.85rem; padding: 1rem 0; }
+    .empty { color: var(--muted); font-size: 0.85rem; text-align: center; padding: 2rem 0; }
+
+    @media (max-width: 1024px) {
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 768px) {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .two-col { grid-template-columns: 1fr; }
+      .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-logo">🎸 Abe Music Hub</div>
+    <a class="nav-item active" onclick="showSection('overview')">📊 Overview</a>
+    <a class="nav-item" onclick="showSection('fans')">👥 Fans CRM</a>
+    <a class="nav-item" onclick="showSection('bookings')">📅 Reservas</a>
+    <a class="nav-item" onclick="showSection('events')">🎤 Eventos</a>
+    <a class="nav-item" onclick="showSection('tokens')">🪙 $RESO</a>
+    <a class="nav-item" onclick="showSection('merch')">🎁 Merch</a>
+    <div class="sidebar-divider"></div>
+    <a class="nav-item" href="index.html">🌐 Landing pública</a>
+    <a class="nav-item" href="https://t.me/AbeMusicHubBot" target="_blank">🤖 Bot Telegram</a>
+  </aside>
+
+  <main>
+    <!-- OVERVIEW -->
+    <div id="section-overview">
+      <div class="page-header">
+        <h1>Dashboard — Abe Music Hub</h1>
+        <p id="last-updated">Cargando datos...</p>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card"><div class="kpi-label">Fans totales</div><div class="kpi-value" id="kpi-fans">—</div><div class="kpi-change up" id="kpi-fans-change"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Reservas este mes</div><div class="kpi-value" id="kpi-bookings">—</div><div class="kpi-change" id="kpi-bookings-change"></div></div>
+        <div class="kpi-card gold"><div class="kpi-label">$RESO en circulación</div><div class="kpi-value" id="kpi-reso">—</div><div class="kpi-change up" id="kpi-reso-change"></div></div>
+        <div class="kpi-card"><div class="kpi-label">Ingresos MXN (mes)</div><div class="kpi-value" id="kpi-revenue">—</div><div class="kpi-change" id="kpi-revenue-change"></div></div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">Actividad reciente <a href="#" onclick="showSection('fans')">Ver todo</a></div>
+          <div id="activity-list"><div class="loading">Cargando actividad...</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Top fans $RESO <a href="#" onclick="showSection('tokens')">Ranking completo</a></div>
+          <div id="top-fans-list"><div class="loading">Cargando ranking...</div></div>
+        </div>
+      </div>
+
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">Próximas reservas <a href="#" onclick="showSection('bookings')">Gestionar</a></div>
+          <div id="upcoming-bookings"><div class="loading">Cargando reservas...</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Distribución de niveles</div>
+          <div id="nivel-distribution"><div class="loading">Cargando...</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FANS CRM -->
+    <div id="section-fans" style="display:none">
+      <div class="page-header">
+        <h1>Fans CRM</h1>
+        <p>Gestiona tu comunidad de fans</p>
+      </div>
+      <div class="card">
+        <div class="card-title">Todos los fans</div>
+        <div id="fans-table"><div class="loading">Cargando fans...</div></div>
+      </div>
+    </div>
+
+    <!-- RESERVAS -->
+    <div id="section-bookings" style="display:none">
+      <div class="page-header">
+        <h1>Reservas</h1>
+        <p>Gestiona las reservas de servicios del hub</p>
+      </div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">Reservas activas</div>
+          <div id="bookings-table"><div class="loading">Cargando reservas...</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Nueva reserva manual</div>
+          <div class="form-group"><label>Servicio</label><select id="booking-service"><option>Cargando...</option></select></div>
+          <div class="form-group"><label>Nombre cliente</label><input type="text" id="booking-name" placeholder="Nombre" /></div>
+          <div class="form-group"><label>Teléfono</label><input type="tel" id="booking-phone" placeholder="+52 662..." /></div>
+          <div class="form-group"><label>Fecha</label><input type="date" id="booking-date" /></div>
+          <div class="form-group"><label>Hora inicio</label><input type="time" id="booking-time" /></div>
+          <button class="btn btn-gold" onclick="createBooking()">Crear reserva</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVENTOS -->
+    <div id="section-events" style="display:none">
+      <div class="page-header"><h1>Eventos</h1><p>Shows y eventos del hub</p></div>
+      <div class="card">
+        <div class="card-title">Eventos activos</div>
+        <div id="events-table"><div class="loading">Cargando eventos...</div></div>
+      </div>
+    </div>
+
+    <!-- TOKENS -->
+    <div id="section-tokens" style="display:none">
+      <div class="page-header"><h1>Token $RESO</h1><p>Leaderboard y transacciones</p></div>
+      <div class="two-col">
+        <div class="card">
+          <div class="card-title">Leaderboard mensual</div>
+          <div id="leaderboard-monthly"><div class="loading">Cargando...</div></div>
+        </div>
+        <div class="card">
+          <div class="card-title">Últimas transacciones</div>
+          <div id="token-txs"><div class="loading">Cargando...</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MERCH -->
+    <div id="section-merch" style="display:none">
+      <div class="page-header"><h1>Merch</h1><p>Catálogo de productos del artista</p></div>
+      <div class="card">
+        <div class="card-title">Productos activos</div>
+        <div id="merch-table"><div class="loading">Cargando...</div></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script>
+  const API = window.HERMES_API_URL || 'http://localhost:8000'
+
+  async function apiFetch(path) {
+    try {
+      const res = await fetch(`${API}${path}`, {
+        headers: { 'Content-Type': 'application/json' }
+      })
+      if (!res.ok) throw new Error(res.statusText)
+      return await res.json()
+    } catch (e) {
+      console.error(`apiFetch ${path}:`, e)
+      return null
+    }
+  }
+
+  function showSection(name) {
+    document.querySelectorAll('[id^="section-"]').forEach(el => el.style.display = 'none')
+    document.getElementById(`section-${name}`).style.display = 'block'
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'))
+    const loaders = {
+      fans: loadFans,
+      bookings: loadBookings,
+      events: loadEvents,
+      tokens: loadTokens,
+      merch: loadMerch,
+    }
+    if (loaders[name]) loaders[name]()
+  }
+
+  function nivelBadge(nivel) {
+    return `<span class="nivel nivel-${nivel}">${nivel}</span>`
+  }
+
+  function estadoBadge(estado) {
+    const map = {
+      pendiente: 'badge-gray', confirmada: 'badge-green', completada: 'badge-green',
+      cancelada: 'badge-red', activo: 'badge-green', cancelado: 'badge-red',
+    }
+    return `<span class="badge ${map[estado] || 'badge-gray'}">${estado}</span>`
+  }
+
+  // ── Overview ──────────────────────────────────────────────────────
+
+  async function loadOverview() {
+    document.getElementById('last-updated').textContent = `Última actualización: ${new Date().toLocaleString('es-MX')}`
+
+    const stats = await apiFetch('/hub/stats')
+    if (stats) {
+      document.getElementById('kpi-fans').textContent = stats.total_fans ?? '—'
+      document.getElementById('kpi-bookings').textContent = stats.bookings_mes ?? '—'
+      document.getElementById('kpi-reso').textContent = stats.reso_circulacion?.toLocaleString() ?? '—'
+      document.getElementById('kpi-revenue').textContent = stats.ingresos_mes ? `$${Number(stats.ingresos_mes).toLocaleString()}` : '—'
+    }
+
+    loadActivityFeed()
+    loadTopFans()
+    loadUpcomingBookings()
+    loadNivelDistribution()
+  }
+
+  async function loadActivityFeed() {
+    const data = await apiFetch('/hub/activity?limit=6')
+    const el = document.getElementById('activity-list')
+    if (!data || !data.length) { el.innerHTML = '<div class="empty">Sin actividad reciente</div>'; return }
+    el.innerHTML = data.map(a => `
+      <div class="activity-item">
+        <div class="activity-icon">${a.icon || '🎵'}</div>
+        <div>
+          <div class="activity-text">${a.texto}</div>
+          <div class="activity-time">${a.tiempo}</div>
+        </div>
+      </div>`).join('')
+  }
+
+  async function loadTopFans() {
+    const data = await apiFetch('/hub/leaderboard/weekly')
+    const el = document.getElementById('top-fans-list')
+    if (!data || !data.length) { el.innerHTML = '<div class="empty">Sin datos</div>'; return }
+    el.innerHTML = `<table><thead><tr><th>#</th><th>Fan</th><th>Nivel</th><th>$RESO</th></tr></thead><tbody>` +
+      data.slice(0, 8).map((f, i) => `
+        <tr>
+          <td>${i + 1}</td>
+          <td>${f.nombre}</td>
+          <td>${nivelBadge(f.nivel)}</td>
+          <td style="color:var(--gold);font-weight:700">${f.balance?.toLocaleString()}</td>
+        </tr>`).join('') + `</tbody></table>`
+  }
+
+  async function loadUpcomingBookings() {
+    const data = await apiFetch('/hub/bookings?estado=confirmada&limit=5')
+    const el = document.getElementById('upcoming-bookings')
+    if (!data || !data.length) { el.innerHTML = '<div class="empty">Sin reservas próximas</div>'; return }
+    el.innerHTML = `<table><thead><tr><th>Servicio</th><th>Cliente</th><th>Fecha</th><th>Estado</th></tr></thead><tbody>` +
+      data.map(b => `
+        <tr>
+          <td>${b.servicio_nombre || '—'}</td>
+          <td>${b.nombre_cliente || '—'}</td>
+          <td>${b.fecha_reserva} ${b.hora_inicio}</td>
+          <td>${estadoBadge(b.estado)}</td>
+        </tr>`).join('') + `</tbody></table>`
+  }
+
+  async function loadNivelDistribution() {
+    const data = await apiFetch('/hub/fans/stats')
+    const el = document.getElementById('nivel-distribution')
+    if (!data) { el.innerHTML = '<div class="empty">Sin datos</div>'; return }
+    const niveles = [
+      { name: 'EMERGENTE', icon: '🌱', count: data.emergente || 0 },
+      { name: 'LOCAL', icon: '⭐', count: data.local || 0 },
+      { name: 'REGIONAL', icon: '🔥', count: data.regional || 0 },
+      { name: 'NACIONAL', icon: '👑', count: data.nacional || 0 },
+    ]
+    const total = niveles.reduce((s, n) => s + n.count, 0) || 1
+    el.innerHTML = niveles.map(n => `
+      <div style="margin-bottom:1rem">
+        <div style="display:flex;justify-content:space-between;font-size:0.85rem;margin-bottom:0.3rem">
+          <span>${n.icon} ${n.name}</span><span style="color:var(--muted)">${n.count}</span>
+        </div>
+        <div style="height:6px;background:#1a1a1a;border-radius:3px">
+          <div style="height:6px;background:var(--gold);border-radius:3px;width:${Math.round(n.count/total*100)}%"></div>
+        </div>
+      </div>`).join('')
+  }
+
+  // ── Fans ──────────────────────────────────────────────────────────
+
+  async function loadFans() {
+    const data = await apiFetch('/artist-fans?limit=50')
+    const el = document.getElementById('fans-table')
+    if (!data || !data.length) { el.innerHTML = '<div class="empty">Sin fans registrados</div>'; return }
+    el.innerHTML = `<table>
+      <thead><tr><th>Nombre</th><th>Telegram</th><th>Nivel</th><th>Puntos</th><th>Eventos</th><th>Fuente</th></tr></thead>
+      <tbody>` +
+      data.map(f => `
+        <tr>
+          <td>${f.nombre}</td>
+          <td>${f.telegram_chat_id ? `@${f.telegram_chat_id}` : '—'}</td>
+          <td>${nivelBadge(f.nivel)}</td>
+          <td style="color:var(--gold);font-weight:700">${f.puntos}</td>
+          <td>${f.eventos_asistidos}</td>
+          <td><span class="badge badge-gray">${f.source || '—'}</span></td>
+        </tr>`).join('') + `</tbody></table>`
+  }
+
+  // ── Bookings ──────────────────────────────────────────────────────
+
+  async function loadBookings() {
+    const data = await apiFetch('/hub/bookings?limit=20')
+    const el = document.getElementById('bookings-table')
+    if (!data || !data.length) { el.innerHTML = '<div class="empty">Sin reservas</div>'; return }
+    el.innerHTML = `<table>
+      <thead><tr><th>Servicio</th><th>Cliente</th><th>Fecha</th><th>Hora</th><th>Estado</th><th>Pago</th></tr></thead>
+      <tbody>` +
+      data.map(b => `
+        <tr>
+          <td>${b.servicio_nombre || '—'}</td>
+          <td>${b.nombre_cliente || '—'}</td>
+          <td>${b.fecha_reserva}</td>
+          <td>${b.hora_inicio}</td>
+          <td>${estadoBadge(b.estado)}</td>
+          <td>${estadoBadge(b.pago_estado)}</td>
+        </tr>`).join('') + `</tbody></table>`
+
+    const services = await apiFetch('/hub/services')
+    const sel = document.getElementById('booking-service')
+    if (services) {
+      sel.innerHTML = services.map(s => `<option value="${s.id}">${s.nombre} — $${s.precio_mxn} MXN</option>`).join('')
+    }
+  }
+
+  async function createBooking() {
+    const body = {
+      service_id: document.getElementById('booking-service').value,
+      nombre_cliente: document.getElementById('booking-name').value,
+      telefono: document.getElementById('booking-phone').value,
+      fecha_reserva: document.getElementById('booking-date').value,
+      hora_inicio: document.getElementById('booking-time').value,
+    }
+    try {
+      const res = await fetch(`${API}/hub/bookings`, {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body)
+      })
+      if (res.ok) { alert('✅ Reserva creada'); loadBookings() }
+      else alert('❌ Error al crear reserva')
+    } catch { alert('❌ Error de conexión') }
+  }
+
+  // ── Events ────────────────────────────────────────────────────────
+
+  async function loadEvents() {
+    const data = await apiFetch('/hub/events')
+    const el = document.getElementById('events-table')
+    if (!data || !data.length) { el.innerHTML = '<div class="empty">Sin eventos</div>'; return }
+    el.innerHTML = `<table>
+      <thead><tr><th>Evento</th><th>Fecha</th><th>Lugar</th><th>Precio</th><th>Estado</th></tr></thead>
+      <tbody>` +
+      data.map(e => `
+        <tr>
+          <td><strong>${e.nombre_evento}</strong></td>
+          <td>${e.fecha_evento} ${e.hora_inicio || ''}</td>
+          <td>${e.lugar}</td>
+          <td>${e.entrada_libre ? '🆓 Libre' : `$${e.precio_entrada} MXN`}</td>
+          <td>${estadoBadge(e.estado)}</td>
+        </tr>`).join('') + `</tbody></table>`
+  }
+
+  // ── Tokens ────────────────────────────────────────────────────────
+
+  async function loadTokens() {
+    const [monthly, txs] = await Promise.all([
+      apiFetch('/hub/leaderboard/monthly'),
+      apiFetch('/hub/tokens/transactions?limit=10')
+    ])
+
+    const mlEl = document.getElementById('leaderboard-monthly')
+    if (monthly && monthly.length) {
+      mlEl.innerHTML = `<table><thead><tr><th>#</th><th>Fan</th><th>Nivel</th><th>$RESO</th></tr></thead><tbody>` +
+        monthly.slice(0, 10).map((f, i) => `
+          <tr>
+            <td>${i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : i + 1}</td>
+            <td>${f.nombre}</td><td>${nivelBadge(f.nivel)}</td>
+            <td style="color:var(--gold);font-weight:700">${f.balance?.toLocaleString()}</td>
+          </tr>`).join('') + `</tbody></table>`
+    } else mlEl.innerHTML = '<div class="empty">Sin datos</div>'
+
+    const txEl = document.getElementById('token-txs')
+    if (txs && txs.length) {
+      txEl.innerHTML = `<table><thead><tr><th>Fan</th><th>Tipo</th><th>Cantidad</th><th>Concepto</th></tr></thead><tbody>` +
+        txs.map(t => `
+          <tr>
+            <td>${t.fan_nombre || '—'}</td>
+            <td><span class="badge ${t.tipo === 'earn' ? 'badge-green' : 'badge-red'}">${t.tipo}</span></td>
+            <td style="font-weight:700">${t.tipo === 'earn' ? '+' : '-'}${t.cantidad}</td>
+            <td style="color:var(--muted)">${t.concepto}</td>
+          </tr>`).join('') + `</tbody></table>`
+    } else txEl.innerHTML = '<div class="empty">Sin transacciones</div>'
+  }
+
+  // ── Merch ─────────────────────────────────────────────────────────
+
+  async function loadMerch() {
+    const data = await apiFetch('/hub/merch')
+    const el = document.getElementById('merch-table')
+    if (!data || !data.length) { el.innerHTML = '<div class="empty">Sin productos</div>'; return }
+    el.innerHTML = `<table>
+      <thead><tr><th>Producto</th><th>Categoría</th><th>Precio MXN</th><th>Stock</th><th>Estado</th></tr></thead>
+      <tbody>` +
+      data.map(m => `
+        <tr>
+          <td><strong>${m.nombre}</strong></td>
+          <td>${m.categoria || '—'}</td>
+          <td>$${Number(m.precio_mxn).toLocaleString()}</td>
+          <td>${m.stock ?? '∞'}</td>
+          <td>${m.activo ? '<span class="badge badge-green">Activo</span>' : '<span class="badge badge-red">Inactivo</span>'}</td>
+        </tr>`).join('') + `</tbody></table>`
+  }
+
+  // ── Init ──────────────────────────────────────────────────────────
+  loadOverview()
+</script>
+</body>
+</html>
