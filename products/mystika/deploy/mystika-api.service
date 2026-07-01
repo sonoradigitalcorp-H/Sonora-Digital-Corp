@@ -1,0 +1,22 @@
+# Mystika API — systemd service
+# Deploy to: /etc/systemd/system/mystika-api.service
+
+[Unit]
+Description=Mystika API
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/mystika/api
+ExecStart=/usr/bin/node server.js
+Restart=always
+RestartSec=5
+Environment=NODE_ENV=production
+Environment=PORT=4000
+
+# Environment file
+EnvironmentFile=/home/ubuntu/mystika/api/.env
+
+[Install]
+WantedBy=multi-user.target
