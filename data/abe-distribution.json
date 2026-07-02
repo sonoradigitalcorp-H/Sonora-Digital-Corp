@@ -287,6 +287,54 @@
       "revenue": 0.0,
       "created_at": "2026-07-02T00:01:37.195236+00:00",
       "released_at": "2026-07-02T00:01:37.195697+00:00"
+    },
+    "7a2b1344": {
+      "id": "7a2b1344",
+      "artist_id": "artist-1",
+      "title": "Test Song",
+      "type": "single",
+      "genre": "Pop",
+      "upc": "ABE7A2B1344",
+      "isrc": "MX7A2B134400001",
+      "platforms": [
+        "spotify",
+        "apple_music",
+        "deezer",
+        "amazon_music",
+        "youtube_music",
+        "tidal",
+        "pandora",
+        "claro_musica"
+      ],
+      "status": "published",
+      "streams": 0,
+      "revenue": 0.0,
+      "created_at": "2026-07-02T03:52:38.604973+00:00",
+      "released_at": "2026-07-02T03:52:38.605404+00:00"
+    },
+    "d5be4c3c": {
+      "id": "d5be4c3c",
+      "artist_id": "artist-1",
+      "title": "Test Song",
+      "type": "single",
+      "genre": "Pop",
+      "upc": "ABED5BE4C3C",
+      "isrc": "MXD5BE4C3C00001",
+      "platforms": [
+        "spotify",
+        "apple_music",
+        "deezer",
+        "amazon_music",
+        "youtube_music",
+        "tidal",
+        "pandora",
+        "claro_musica"
+      ],
+      "status": "published",
+      "streams": 0,
+      "revenue": 0.0,
+      "created_at": "2026-07-02T03:52:41.496599+00:00",
+      "released_at": "2026-07-02T03:52:41.497167+00:00"
     }
   }
 }
