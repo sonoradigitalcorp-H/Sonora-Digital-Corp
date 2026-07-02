@@ -37,7 +37,7 @@ jobs:
         run: |
           PYTHONPATH=. python -m pytest tests/planner/ -v --asyncio-mode=auto
 
-      - name: Run collector mock tests (SPEC-20260701-006)
+      - name: Run collector mock tests (SPEC-20260701-006 + 007)
         run: |
           PYTHONPATH=. python -m pytest tests/collectors/ -v
 
