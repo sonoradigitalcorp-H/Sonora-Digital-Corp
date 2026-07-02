@@ -1,15 +1,15 @@
-"""AgentBaseV2 — Nueva base para agentes JARVIS con Redis + Ollama + HermesClient.
-
-Cada agente ahora:
-1. Se comunica via Redis Stream (agent:messages)
-2. Usa modelo local Ollama para decisiones (ask_local)
-3. Llama herramientas via HermesClient
-4. Guarda decisiones en Memory MCP
-"""
+"""AgentBaseV2 — Nueva base para agentes JARVIS con Redis + Ollama + HermesClient."""
 import json
 import logging
+import sys
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any
+
+# Ensure PYTHONPATH includes project root
+_HERE = Path(__file__).resolve().parent.parent.parent.parent.parent  # /home/ubuntu/sonora-digital-corp
+if str(_HERE) not in sys.path:
+    sys.path.insert(0, str(_HERE))
 
 # Redis
 REDIS_STREAM = "agent:messages"
@@ -17,11 +17,9 @@ REDIS_HOST = "localhost"
 REDIS_PORT = 6379
 REDIS_PASS = "sdc2026prod"
 
-# Hermes
+# Imports with absolute paths (PYTHONPATH fixed above)
 from apps.agents.hermes_client import HermesClient
-
-# Ollama
-from apps.jarvis.src.core.llm import ask_local
+from apps.jarvis.src.core.llm import ask_local as ask_local_impl
 
 
 def publish_to_redis(event_type: str, agent: str, data: dict):
@@ -47,7 +45,7 @@ def publish_to_redis(event_type: str, agent: str, data: dict):
 def ask_ollama(prompt: str, model: str = "qwen3:4b-64k") -> str:
     """Ask local Ollama model. Returns response text."""
     try:
-        return ask_local(prompt, model=model) or ""
+        return ask_local_impl(prompt, model=model) or ""
     except Exception as e:
         return f"Error: {e}"
 

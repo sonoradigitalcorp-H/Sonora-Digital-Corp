@@ -407,6 +407,30 @@
       "revenue": 0.0,
       "created_at": "2026-07-02T05:01:57.990471+00:00",
       "released_at": "2026-07-02T05:01:57.991029+00:00"
+    },
+    "3d934fc3": {
+      "id": "3d934fc3",
+      "artist_id": "artist-1",
+      "title": "Test Song",
+      "type": "single",
+      "genre": "Pop",
+      "upc": "ABE3D934FC3",
+      "isrc": "MX3D934FC300001",
+      "platforms": [
+        "spotify",
+        "apple_music",
+        "deezer",
+        "amazon_music",
+        "youtube_music",
+        "tidal",
+        "pandora",
+        "claro_musica"
+      ],
+      "status": "published",
+      "streams": 0,
+      "revenue": 0.0,
+      "created_at": "2026-07-02T05:11:36.385579+00:00",
+      "released_at": "2026-07-02T05:11:36.386173+00:00"
     }
   }
 }
