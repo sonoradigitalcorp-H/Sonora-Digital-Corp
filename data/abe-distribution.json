@@ -359,6 +359,30 @@
       "revenue": 0.0,
       "created_at": "2026-07-02T04:50:20.345193+00:00",
       "released_at": "2026-07-02T04:50:20.346124+00:00"
+    },
+    "9034f485": {
+      "id": "9034f485",
+      "artist_id": "artist-1",
+      "title": "Test Song",
+      "type": "single",
+      "genre": "Pop",
+      "upc": "ABE9034F485",
+      "isrc": "MX9034F48500001",
+      "platforms": [
+        "spotify",
+        "apple_music",
+        "deezer",
+        "amazon_music",
+        "youtube_music",
+        "tidal",
+        "pandora",
+        "claro_musica"
+      ],
+      "status": "published",
+      "streams": 0,
+      "revenue": 0.0,
+      "created_at": "2026-07-02T04:58:51.264933+00:00",
+      "released_at": "2026-07-02T04:58:51.265500+00:00"
     }
   }
 }

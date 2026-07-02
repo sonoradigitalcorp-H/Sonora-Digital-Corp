@@ -60,3 +60,25 @@ class HermesClient:
     async def list_tools(self) -> dict[str, Any]:
         """List all available tools via Hermes."""
         return await self.call_tool("gateway_tools", {})
+
+    # Git MCP tools
+    async def git_status(self, repo_path: str = ".") -> dict[str, Any]:
+        """Check git status via Git MCP."""
+        return await self.call_tool("git_status", {"repo_path": repo_path})
+
+    async def git_commit(self, message: str, repo_path: str = ".") -> dict[str, Any]:
+        """Commit changes via Git MCP."""
+        return await self.call_tool("git_commit", {"repo_path": repo_path, "message": message})
+
+    async def git_log(self, max_count: int = 10, repo_path: str = ".") -> dict[str, Any]:
+        """Show git log via Git MCP."""
+        return await self.call_tool("git_log", {"repo_path": repo_path, "max_count": max_count})
+
+    # Memory MCP tools
+    async def memory_search(self, query: str) -> dict[str, Any]:
+        """Search Memory MCP knowledge graph."""
+        return await self.call_tool("search_nodes", {"query": query})
+
+    async def memory_create_entities(self, entities: list[dict]) -> dict[str, Any]:
+        """Create entities in Memory MCP knowledge graph."""
+        return await self.call_tool("create_entities", {"entities": entities})
