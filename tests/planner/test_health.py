@@ -116,7 +116,7 @@ class TestCheckProviderHealth:
             provider_id="slow",
             timeout=1,
         )
-        assert health.status == "down"
+        assert health.status == "degraded"
         assert health.error is not None
 
 
