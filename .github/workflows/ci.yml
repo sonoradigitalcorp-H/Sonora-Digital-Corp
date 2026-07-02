@@ -41,9 +41,9 @@ jobs:
         run: |
           PYTHONPATH=. python -m pytest tests/collectors/ -v
 
-      - name: Run agent tests (SPEC-20260701-008)
+      - name: Run agent tests (SPEC-20260701-008 + 012)
         run: |
-          PYTHONPATH=. python -m pytest tests/agents/ -v
+          PYTHONPATH=apps/jarvis/src:. python -m pytest tests/agents/ -v
 
       - name: Total test count
         run: |
