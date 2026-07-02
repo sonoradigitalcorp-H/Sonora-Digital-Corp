@@ -22,7 +22,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r apps/abe-service/requirements.txt
-          pip install pytest httpx "pytest-asyncio>=0.24" pydantic playwright
+          pip install pytest httpx "pytest-asyncio>=0.24" pydantic playwright redis neo4j
 
       - name: Lint with ruff
         run: |
