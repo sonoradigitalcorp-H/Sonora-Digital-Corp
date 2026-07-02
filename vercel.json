@@ -10,6 +10,7 @@
     { "src": "/abe/(.*)", "dest": "/abe/$1" },
     { "src": "/dashboard/(.*)", "dest": "/dashboard/$1" },
     { "src": "/api/(.*)", "dest": "https://api.sonoradigitalcorp.com/$1" },
+    { "src": "/", "dest": "/landing/index.html" },
     { "src": "/(.*)", "dest": "/$1" }
   ],
   "headers": [
