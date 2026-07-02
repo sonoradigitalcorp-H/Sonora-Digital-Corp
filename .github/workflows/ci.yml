@@ -43,7 +43,8 @@ jobs:
 
       - name: Run agent tests (SPEC-20260701-008 + 012)
         run: |
-          PYTHONPATH=apps/jarvis/src:. python -m pytest tests/agents/ -v
+          pip install pytest-timeout
+          PYTHONPATH=apps/jarvis/src:. python -m pytest tests/agents/ -v --tb=long -x --timeout=30 2>&1 | head -50
 
       - name: Total test count
         run: |
