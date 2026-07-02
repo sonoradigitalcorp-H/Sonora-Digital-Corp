@@ -32,3 +32,4 @@
 | 2026-07-01 | SPEC-20260701-009 | OpenClaw como Interfaz Conversacional | 2 | 72 | completed | [link](SPEC-20260701-009/LECCION.md) |
 | 2026-07-01 | SPEC-20260701-010 | Hermes Bridge + Memory MCP | 2 | 68 | completed | [link](SPEC-20260701-010/LECCION.md) |
 | 2026-07-01 | SPEC-20260701-011 | MCP Tools Activos + Bloqueos Produccion | 2 | 63 | completed | [link](SPEC-20260701-011/LECCION.md) |
+| SPEC-202 | SPEC-20260701-012 | ... | ... | ... | completed | ... |
