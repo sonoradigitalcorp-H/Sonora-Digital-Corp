@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonora Digital Corp — Native Agent OS</title>
+<style>
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap");
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:"Inter",sans-serif;background:#0a0a0a;color:#e5e5e5;line-height:1.6;overflow-x:hidden}
+body::before{content:"";position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(124,92,252,0.06),transparent 50%),radial-gradient(circle at 70% 80%,rgba(200,168,124,0.04),transparent 50%);z-index:-1;pointer-events:none}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:2rem;text-align:center}
+.hero .badge{font-family:"JetBrains Mono",monospace;font-size:0.7rem;padding:0.4rem 1rem;border:1px solid rgba(124,92,252,0.3);border-radius:100px;color:#7c5cfc;letter-spacing:0.1em;margin-bottom:2rem}
+.hero h1{font-size:4.5rem;font-weight:800;letter-spacing:-0.04em;line-height:1.05;margin-bottom:1rem;background:linear-gradient(135deg,#fff 30%,#7c5cfc 70%,#c8a87c);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{font-size:1.2rem;color:#888;max-width:600px;margin-bottom:3rem}
+.hero .links{display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+.btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.9rem 2rem;border-radius:8px;font-weight:600;text-decoration:none;transition:all 0.3s;font-size:0.9rem}
+.btn-primary{background:#7c5cfc;color:#fff}
+.btn-primary:hover{background:#6a4ae0;transform:translateY(-2px)}
+.btn-secondary{background:rgba(255,255,255,0.05);color:#ccc;border:1px solid rgba(255,255,255,0.1)}
+.btn-secondary:hover{border-color:#7c5cfc;color:#fff;transform:translateY(-2px)}
+.btn-gold{background:#c8a87c;color:#0a0a0a}
+.btn-gold:hover{background:#d4b896;transform:translateY(-2px)}
+.grid{margin-top:5rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;max-width:800px;width:100%}
+.card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:1.5rem;text-align:center;transition:all 0.3s;text-decoration:none;color:inherit}
+.card:hover{border-color:#7c5cfc;transform:translateY(-4px);background:rgba(124,92,252,0.04)}
+.card .icon{font-size:2rem;margin-bottom:0.5rem}
+.card h3{font-size:0.95rem;color:#fff;font-weight:600}
+.card p{font-size:0.8rem;color:#666;margin-top:0.3rem}
+.footer{padding:2rem;text-align:center;color:#444;font-size:0.8rem;border-top:1px solid rgba(255,255,255,0.05)}
+@media(max-width:600px){
+  .hero h1{font-size:2.5rem}
+  .grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<div class="hero">
+  <div class="badge">✦ SONORA DIGITAL CORP</div>
+  <h1>Native Agent OS</h1>
+  <p>Infrastructure, AI agents, and music technology platform powering the next generation of independent labels.</p>
+  <div class="links">
+    <a href="https://abe.sonoradigitalcorp.com" class="btn btn-gold">ABE Music Group</a>
+    <a href="/dashboard/" class="btn btn-secondary">System Dashboard</a>
+    <a href="https://api.sonoradigitalcorp.com" class="btn btn-secondary">API</a>
+  </div>
+  <div class="grid">
+    <a href="https://abe.sonoradigitalcorp.com" class="card">
+      <div class="icon">🎵</div>
+      <h3>ABE Music</h3>
+      <p>Record label & artist platform</p>
+    </a>
+    <a href="/dashboard/" class="card">
+      <div class="icon">📊</div>
+      <h3>DASHBOARDS</h3>
+      <p>System monitoring & control</p>
+    </a>
+    <a href="https://api.sonoradigitalcorp.com" class="card">
+      <div class="icon">⚡</div>
+      <h3>API</h3>
+      <p>JARVIS Web UI & agents</p>
+    </a>
+  </div>
+</div>
+<div class="footer">
+  <p>&copy; 2026 Sonora Digital Corp — Built with Native Agent OS</p>
+</div>
+</body>
+</html>

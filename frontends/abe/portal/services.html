@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ABE Music — Servicios</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+:root{--bg:#0a0a12;--surface:rgba(255,255,255,.05);--border:rgba(255,255,255,.1);--text:#f0f0f0;--dim:rgba(255,255,255,.4);--gold:#FFD700;--accent:#7c5cfc;--green:#34d399;--radius:16px;--font:'Inter',-apple-system,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(124,92,252,.08),transparent 50%),radial-gradient(circle at 70% 80%,rgba(255,215,0,.05),transparent 50%);z-index:-1}
+.glass{background:var(--surface);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius)}
+.header{position:sticky;top:0;z-index:100;padding:.8rem 1.5rem;background:rgba(10,10,18,.8);backdrop-filter:blur(30px);border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.header h1{font-size:1.3rem}.header h1 span{color:var(--gold)}
+.container{max-width:1200px;margin:0 auto;padding:1.5rem}
+.service-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-bottom:2rem}
+.service-card{padding:1.5rem;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.service-card:hover{transform:translateY(-2px);border-color:var(--gold)}
+.service-card .icon{font-size:2rem;margin-bottom:.5rem}
+.service-card h3{font-size:1rem;margin-bottom:.3rem}
+.service-card p{font-size:.8rem;color:var(--dim);margin-bottom:.5rem}
+.service-card .status{position:absolute;top:1rem;right:1rem;font-size:.6rem;padding:.15rem .4rem;border-radius:4px;text-transform:uppercase;letter-spacing:.05em}
+.status-active{background:rgba(52,211,153,.15);color:var(--green)}
+.status-pending{background:rgba(251,191,36,.15);color:#fbbf24}
+.status-draft{background:rgba(96,165,250,.15);color:#60a5fa}
+.service-card .features{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.5rem}
+.service-card .features span{font-size:.65rem;padding:.15rem .4rem;border-radius:4px;background:rgba(255,255,255,.05)}
+.tab-bar{display:flex;gap:0;margin-bottom:1.5rem;border-bottom:1px solid var(--border)}
+.tab{padding:.5rem 1rem;cursor:pointer;font-size:.8rem;color:var(--dim);border-bottom:2px solid transparent}
+.tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.tab-content{display:none}.tab-content.active{display:block}
+pre{font-size:.7rem;color:var(--dim);white-space:pre-wrap;max-height:200px;overflow:auto}
+</style>
+</head>
+<body>
+<div class="header"><h1>🎵 <span>ABE</span> Services</h1><div style="font-size:.75rem;color:var(--dim)">Powered by Native Agent OS · 166 tools</div></div>
+<div class="container">
+
+<div class="tab-bar">
+  <div class="tab active" onclick="switchTab('services',this)">📦 Services</div>
+  <div class="tab" onclick="switchTab('agents',this)">🤖 Agents</div>
+  <div class="tab" onclick="switchTab('workflows',this)">⚡ Workflows</div>
+  <div class="tab" onclick="switchTab('media',this)">🎬 Media</div>
+  <div class="tab" onclick="switchTab('test',this)">🧪 Sandbox</div>
+</div>
+
+<div class="tab-content active" id="tab-services">
+  <div class="service-grid" id="servicesGrid"></div>
+</div>
+
+<div class="tab-content" id="tab-agents">
+  <div class="service-grid" id="agentsGrid"></div>
+</div>
+
+<div class="tab-content" id="tab-workflows">
+  <div class="service-grid" id="workflowsGrid"></div>
+</div>
+
+<div class="tab-content" id="tab-media">
+  <div class="glass" style="padding:1.5rem">
+    <h2 style="margin-bottom:.8rem">🎨 Generar Contenido</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.5rem">
+      <input id="mediaPrompt" placeholder="Descripción del contenido..." style="grid-column:1/-1;background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:10px;color:var(--text);padding:.7rem;font-family:var(--font)">
+      <button class="glass" style="padding:.5rem;cursor:pointer;border:1px solid var(--border);border-radius:10px;text-align:center" onclick="genImage()">🖼️ Generar Imagen</button>
+      <button class="glass" style="padding:.5rem;cursor:pointer;border:1px solid var(--border);border-radius:10px;text-align:center" onclick="genVideo()">🎬 Generar Video</button>
+      <button class="glass" style="padding:.5rem;cursor:pointer;border:1px solid var(--border);border-radius:10px;text-align:center" onclick="genCover()">💿 Portada Álbum</button>
+      <button class="glass" style="padding:.5rem;cursor:pointer;border:1px solid var(--border);border-radius:10px;text-align:center" onclick="genMVideo()">🎵 Video Musical</button>
+    </div>
+    <pre id="mediaResult" style="margin-top:.5rem">Ready.</pre>
+  </div>
+</div>
+
+<div class="tab-content" id="tab-test">
+  <div class="glass" style="padding:1.5rem">
+    <div style="display:flex;gap:.5rem;margin-bottom:.8rem">
+      <button class="glass" style="padding:.5rem 1rem;cursor:pointer;border:1px solid var(--gold);border-radius:10px" onclick="runSandbox()">🧪 Run Full Sandbox</button>
+      <span id="sandboxStatus" style="font-size:.8rem;color:var(--dim);align-self:center"></span>
+    </div>
+    <pre id="sandboxResult" style="font-size:.7rem">Click "Run Full Sandbox" to validate the entire system.</pre>
+  </div>
+</div>
+
+</div>
+
+<script>
+const GATEWAY='http://127.0.0.1:18989';
+let token='';
+
+async function auth(){
+  const r=await fetch(GATEWAY+'/api/auth/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id:'abe-fenix',client_secret:'abe_f3n1x_pr0_k3y_2026'})});
+  const d=await r.json();token=d.access_token||'';
+}
+async function call(tool,params){
+  if(!token)await auth();
+  try{const r=await fetch(GATEWAY+'/api/call',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({tool,params:params||{}})});return await r.json()}catch{return{}}
+}
+
+function switchTab(name,el){
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tab-'+name).classList.add('active');
+}
+
+// Load Services
+async function loadServices() {
+  const tools = await call('skills_list',{});
+  const skills = tools.skills||[];
+  const categories = {};
+  skills.forEach(s => {
+    const cat = s.category || 'general';
+    if(!categories[cat]) categories[cat]=[];
+    categories[cat].push(s);
+  });
+
+  document.getElementById('servicesGrid').innerHTML = Object.entries(categories).slice(0,12).map(([cat,items]) => `
+    <div class="service-card glass">
+      <div class="status status-active">Active</div>
+      <div class="icon">📦</div>
+      <h3>${cat}</h3>
+      <p>${items.length} tools disponibles</p>
+      <div class="features">${items.slice(0,5).map(i => `<span>${i.name}</span>`).join('')}</div>
+    </div>
+  `).join('');
+}
+
+async function loadAgents() {
+  const r = await call('adk_list_agents',{});
+  const agents = r.agents||[];
+  document.getElementById('agentsGrid').innerHTML = agents.map(a => `
+    <div class="service-card glass">
+      <div class="status status-active">${a.lifecycle||'on-demand'}</div>
+      <div class="icon">🧠</div>
+      <h3>${a.name}</h3>
+      <p>${a.capability||'?'} · ${a.model||'?'}</p>
+      <div class="features"><span>${a.provider||'?'}</span><span>${a.tools||0} tools</span></div>
+    </div>
+  `).join('');
+}
+
+async function loadWorkflows() {
+  const r = await call('workflow_list_samples',{});
+  const wfs = r.samples||[];
+  document.getElementById('workflowsGrid').innerHTML = wfs.map(w => `
+    <div class="service-card glass">
+      <div class="status status-draft">Ready</div>
+      <div class="icon">⚡</div>
+      <h3>${w.name}</h3>
+      <p>Workflow multi-paso</p>
+      <div class="features"><span>YAML</span><span>/workflow-editor</span></div>
+    </div>
+  `).join('');
+}
+
+// Media functions
+async function genImage() {
+  const p=document.getElementById('mediaPrompt').value;if(!p)return;
+  document.getElementById('mediaResult').textContent='⏳ Generando imagen...';
+  const r=await call('media_image',{prompt:p});
+  document.getElementById('mediaResult').textContent=JSON.stringify(r,null,2);
+}
+async function genVideo() {
+  const p=document.getElementById('mediaPrompt').value;if(!p)return;
+  document.getElementById('mediaResult').textContent='⏳ Generando video...';
+  const r=await call('media_video',{prompt:p});
+  document.getElementById('mediaResult').textContent=JSON.stringify(r,null,2);
+}
+async function genCover() {
+  const p=document.getElementById('mediaPrompt').value||'Album Cover';
+  document.getElementById('mediaResult').textContent='⏳ Generando portada...';
+  const r=await call('media_album_cover',{artist:'ABE Music',album_title:p});
+  document.getElementById('mediaResult').textContent=JSON.stringify(r,null,2);
+}
+async function genMVideo() {
+  const p=document.getElementById('mediaPrompt').value;if(!p)return;
+  document.getElementById('mediaResult').textContent='⏳ Generando video musical...';
+  const r=await call('media_music_video',{song:p,artist:'ABE Music'});
+  document.getElementById('mediaResult').textContent=JSON.stringify(r,null,2);
+}
+
+// Sandbox
+async function runSandbox() {
+  document.getElementById('sandboxStatus').textContent='⏳ Running...';
+  document.getElementById('sandboxResult').textContent='';
+  const r = await call('sandbox_run',{});
+  if(r.results) {
+    document.getElementById('sandboxResult').textContent = r.results.map(r => `${r.result} ${r.name}${r.passed?'':' — '+r.detail}`).join('\n') + `\n\n📊 ${r.passed}/${r.total} passed`;
+  }
+  document.getElementById('sandboxStatus').textContent=r.passed+'/'+r.total+' passed';
+}
+
+loadServices(); loadAgents(); loadWorkflows();
+</script>
+</body>
+</html>
