@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ADK Web — Agent OS Manager</title>
+<style>
+  :root{--bg:#0a0a0f;--surface:#13131a;--border:#1e1e2a;--text:#e0e0e0;--dim:#6b6b80;--accent:#7c5cfc;--green:#34d399;--yellow:#fbbf24;--red:#f87171;--blue:#60a5fa;}
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'SF Mono','Fira Code',monospace;background:var(--bg);color:var(--text);padding:1rem;font-size:14px;}
+  .header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border);}
+  .header h1{font-size:1.2rem;}.header h1 span{color:var(--accent);}
+  .tabs{display:flex;gap:0;margin-bottom:1rem;border-bottom:1px solid var(--border);}
+  .tab{padding:.5rem 1rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--dim);}
+  .tab.active{border-bottom-color:var(--accent);color:var(--text);}
+  .panel{display:none;}.panel.active{display:block;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1rem;margin-bottom:.5rem;}
+  .card h3{font-size:.75rem;text-transform:uppercase;color:var(--dim);letter-spacing:1px;margin-bottom:.5rem;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:.5rem;}
+  .item{display:flex;justify-content:space-between;padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.8rem;}
+  .item:last-child{border:0;}
+  .tag{display:inline-block;padding:.1rem .4rem;border-radius:3px;font-size:.65rem}
+  .tag-green{background:rgba(52,211,153,.15);color:var(--green);}
+  .tag-red{background:rgba(248,113,113,.15);color:var(--red);}
+  .tag-purple{background:rgba(124,92,252,.15);color:var(--accent);}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:.3rem;}
+  .dot-green{background:var(--green);}.dot-red{background:var(--red);}
+  .btn{padding:.3rem .6rem;border-radius:4px;border:1px solid var(--border);background:var(--surface);color:var(--text);cursor:pointer;font-size:.75rem;}
+  .btn:hover{border-color:var(--accent);}
+  .btn-primary{background:var(--accent);border-color:var(--accent);}
+  .btn-danger{background:rgba(248,113,113,.2);border-color:var(--red);color:var(--red);}
+  textarea,select,input{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:4px;color:var(--text);padding:.4rem;width:100%;font-family:inherit;font-size:.8rem;}
+  textarea{min-height:120px;}
+  .flex{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;}
+  pre{font-size:.7rem;color:var(--dim);max-height:200px;overflow:auto;}
+  .log-line{padding:.1rem 0;font-size:.7rem;border-bottom:1px solid rgba(255,255,255,.03);}
+  @media(max-width:600px){.grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>🜁 <span>ADK Web</span> — Agent OS Manager</h1>
+  <div class="flex"><span class="tag tag-purple" id="statusBadge">checking...</span> <button class="btn" onclick="location.reload()">⟳</button></div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('agents',this)">🧠 Agents</div>
+  <div class="tab" onclick="switchTab('workflows',this)">⚡ Workflows</div>
+  <div class="tab" onclick="switchTab('providers',this)">🌐 Providers</div>
+  <div class="tab" onclick="switchTab('logs',this)">📋 Logs</div>
+</div>
+
+<div id="agentsPanel" class="panel active">
+  <div class="flex" style="margin-bottom:.5rem"><button class="btn btn-primary" onclick="showCreateAgent()">+ New Agent</button></div>
+  <div class="grid" id="agentsList"></div>
+</div>
+
+<div id="workflowsPanel" class="panel">
+  <div class="flex" style="margin-bottom:.5rem">
+    <button class="btn btn-primary" onclick="runWorkflow()">Run Sample</button>
+    <select id="wfSelect" style="width:auto"></select>
+    <input id="wfContext" placeholder='{"nombre":"Juan","email":"j@x.com"}' style="width:300px">
+  </div>
+  <div class="grid" id="workflowsList"></div>
+</div>
+
+<div id="providersPanel" class="panel">
+  <div class="flex" style="margin-bottom:.5rem">
+    <input id="provName" placeholder="name" style="width:150px">
+    <input id="provUrl" placeholder="base_url" style="width:250px">
+    <input id="provKey" placeholder="api_key" style="width:250px">
+    <button class="btn btn-primary" onclick="addProvider()">Add</button>
+  </div>
+  <div class="grid" id="providersList"></div>
+</div>
+
+<div id="logsPanel" class="panel">
+  <div style="margin-bottom:.5rem"><button class="btn" onclick="loadLogs()">⟳ Refresh</button></div>
+  <div class="card"><pre id="logsContainer">Cargando...</pre></div>
+</div>
+
+<div id="createModal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:100;padding:2rem;">
+  <div class="card" style="max-width:600px;margin:auto;max-height:80vh;overflow:auto;">
+    <h3>Create ADK Agent</h3>
+    <input id="agentName" placeholder="agent-name" style="margin-bottom:.5rem">
+    <textarea id="agentYaml" placeholder="YAML definition..."></textarea>
+    <div class="flex" style="margin-top:.5rem">
+      <button class="btn btn-primary" onclick="saveAgent()">Create</button>
+      <button class="btn" onclick="document.getElementById('createModal').style.display='none'">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const GATEWAY = 'http://127.0.0.1:18989';
+
+async function api(path, opts) {
+  try {
+    const r = await fetch(GATEWAY + path, { headers: {'Content-Type':'application/json',...opts?.headers}, method:opts?.method||'GET', body: opts?.body ? JSON.stringify(opts.body) : undefined });
+    return await r.json();
+  } catch { return {error:'Gateway unreachable'}; }
+}
+
+async function auth() {
+  const r = await api('/api/auth/token', {method:'POST', body:{client_id:'sdc-core',client_secret:'sdc_secret_ent3rpr1s3_k3y_2026'}});
+  return r.access_token || '';
+}
+
+async function call(tool, params) {
+  const token = await auth();
+  if (!token) return {error:'Auth failed'};
+  return api('/api/call', {method:'POST', headers:{'Authorization':'Bearer '+token}, body:{tool, params}});
+}
+
+function switchTab(name, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(name + 'Panel').classList.add('active');
+}
+
+async function loadAgents() {
+  const r = await call('adk_list_agents', {});
+  const agents = r.agents || [];
+  const running = await call('adk_list_running', {});
+  const runMap = {};
+  (running.agents || []).forEach(a => runMap[a.agent] = a.status);
+
+  document.getElementById('agentsList').innerHTML = agents.map(a => `
+    <div class="card">
+      <div class="flex" style="margin-bottom:.3rem">
+        <span class="dot ${runMap[a.name] ? 'dot-green' : 'dot-red'}"></span>
+        <strong>${a.name}</strong>
+        <span class="tag tag-purple">${a.capability || '?'}</span>
+        <span class="tag ${a.lifecycle === 'always' ? 'tag-green' : 'tag-green'}">${a.lifecycle || 'on-demand'}</span>
+      </div>
+      <div class="item"><span>Model</span><span>${a.model || '?'}</span></div>
+      <div class="item"><span>Tools</span><span>${a.tools || 0}</span></div>
+      <div class="item"><span>Provider</span><span>${a.provider || '?'}</span></div>
+      <div class="flex" style="margin-top:.5rem">
+        <button class="btn btn-primary btn-sm" onclick="spawnAgent('${a.name}')">▶ Spawn</button>
+        <button class="btn btn-danger btn-sm" onclick="killAgent('${a.name}')">■ Kill</button>
+      </div>
+    </div>
+  `).join('') || '<div class="card">No agents registered. Create one above.</div>';
+  document.getElementById('statusBadge').textContent = agents.length + ' agents';
+}
+
+async function spawnAgent(name) {
+  await call('adk_spawn_agent', {name});
+  loadAgents();
+}
+
+async function killAgent(name) {
+  await call('adk_kill_agent', {name});
+  loadAgents();
+}
+
+function showCreateAgent() {
+  document.getElementById('agentYaml').value = `name: my-agent\nversion: 1.0.0\ndescription: "Custom agent"\nmodel: deepseek-v4-flash\nprovider: opencode-go\ncapability: custom\nmaturity: 1-Manual\ntools:\n  - sonora:capability_resolve\n  - sonora:enterprise_score\nlifecycle:\n  spawn: on-demand\n  max_idle: 30m`;
+  document.getElementById('createModal').style.display = 'block';
+}
+
+async function saveAgent() {
+  const name = document.getElementById('agentName').value || ('agent-' + Date.now());
+  const yaml = document.getElementById('agentYaml').value;
+  await call('adk_register_agent', {name, definition: yaml});
+  document.getElementById('createModal').style.display = 'none';
+  loadAgents();
+}
+
+async function loadWorkflows() {
+  const samples = await call('workflow_list_samples', {});
+  const sel = document.getElementById('wfSelect');
+  sel.innerHTML = (samples.samples || []).map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+}
+
+async function runWorkflow() {
+  const name = document.getElementById('wfSelect').value;
+  let ctx = {};
+  try { ctx = JSON.parse(document.getElementById('wfContext').value || '{}'); } catch {}
+  const r = await call('workflow_run', {name, context: ctx});
+  document.getElementById('workflowsList').innerHTML = `
+    <div class="card">
+      <h3>${r.status === 'running' ? '⚡' : r.status === 'completed' ? '✅' : '❌'} ${r.name || name}</h3>
+      <div class="item"><span>Status</span><span class="tag ${r.status === 'completed' ? 'tag-green' : 'tag-red'}">${r.status}</span></div>
+      <div class="item"><span>Duration</span><span>${r.duration || '?'}ms</span></div>
+      <div class="item"><span>Steps</span><span>${(r.steps || []).length}</span></div>
+      ${r.error ? `<div class="item"><span>Error</span><span style="color:var(--red)">${r.error}</span></div>` : ''}
+      <pre>${JSON.stringify(r.outputs || {}, null, 2)}</pre>
+    </div>`;
+}
+
+async function loadProviders() {
+  const r = await call('provider_manager_list', {});
+  const providers = r.providers || [];
+  document.getElementById('providersList').innerHTML = providers.map(p => `
+    <div class="card">
+      <div class="flex"><span class="dot ${p.status === 'active' ? 'dot-green' : 'dot-red'}"></span><strong>${p.name}</strong></div>
+      <div class="item"><span>Models</span><span>${p.models}</span></div>
+      <div class="item"><span>URL</span><span style="font-size:.65rem">${p.base_url || '?'}</span></div>
+      <div class="flex" style="margin-top:.3rem">
+        ${(p.models_list || []).slice(0,4).map(m => `<span class="tag tag-purple">${m.model}</span>`).join('')}
+      </div>
+      ${!BUILTIN(p.name) ? `<button class="btn btn-danger btn-sm" onclick="removeProvider('${p.name}')" style="margin-top:.3rem">Remove</button>` : ''}
+    </div>
+  `).join('');
+}
+
+function BUILTIN(n) { return ['opencode-go','openrouter'].includes(n); }
+
+async function addProvider() {
+  const name = document.getElementById('provName').value;
+  const url = document.getElementById('provUrl').value;
+  const key = document.getElementById('provKey').value;
+  if (!name) return;
+  await call('provider_manager_add', {name, config: {base_url: url, models: {}, api_key: key}});
+  document.getElementById('provName').value = '';
+  document.getElementById('provUrl').value = '';
+  document.getElementById('provKey').value = '';
+  loadProviders();
+}
+
+async function removeProvider(name) {
+  await call('provider_manager_remove', {name});
+  loadProviders();
+}
+
+async function loadLogs() {
+  const r = await call('adk_agent_logs', {name: 'sales-agent', lines: 100});
+  const logs = r.output || r.error || 'No logs';
+  document.getElementById('logsContainer').innerHTML = logs.split('\n').map(l => `<div class="log-line">${l}</div>`).join('');
+}
+
+setInterval(async () => {
+  if (document.getElementById('agentsPanel').classList.contains('active')) loadAgents();
+  if (document.getElementById('logsPanel').classList.contains('active')) loadLogs();
+}, 5000);
+
+loadAgents();
+loadWorkflows();
+loadProviders();
+</script>
+</body>
+</html>

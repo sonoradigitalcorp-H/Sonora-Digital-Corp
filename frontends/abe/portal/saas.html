@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ABE Music — SaaS Platform</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
+:root{--bg:#0a0a12;--surface:rgba(255,255,255,.05);--surface2:rgba(255,255,255,.08);--border:rgba(255,255,255,.1);--text:#f0f0f0;--dim:rgba(255,255,255,.4);--gold:#FFD700;--accent:#7c5cfc;--green:#34d399;--red:#ff3b5c;--blue:#60a5fa;--radius:16px;--font:'Inter',-apple-system,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased}
+body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 30% 20%,rgba(124,92,252,.08),transparent 50%),radial-gradient(circle at 70% 80%,rgba(255,215,0,.05),transparent 50%);z-index:-1}
+.glass{background:var(--surface);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--border);border-radius:var(--radius)}
+.glass-sm{background:var(--surface2);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:1px solid var(--border);border-radius:10px}
+.sidebar{position:fixed;top:0;left:0;width:220px;height:100vh;background:rgba(10,10,18,.95);backdrop-filter:blur(30px);border-right:1px solid var(--border);padding:1.5rem 0;z-index:100;overflow-y:auto}
+.sidebar .logo{font-size:1.1rem;font-weight:700;padding:0 1.5rem 1.5rem;border-bottom:1px solid var(--border);margin-bottom:1rem}
+.sidebar .logo span{color:var(--gold)}
+.sidebar .nav-item{padding:.6rem 1.5rem;cursor:pointer;font-size:.8rem;color:var(--dim);transition:all .15s;display:flex;align-items:center;gap:.5rem}
+.sidebar .nav-item:hover{color:var(--text);background:rgba(255,255,255,.03)}
+.sidebar .nav-item.active{color:var(--gold);border-right:2px solid var(--gold);background:rgba(255,215,0,.04)}
+.main{margin-left:220px;padding:1.5rem}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:.8rem;border-bottom:1px solid var(--border)}
+.header h1{font-size:1.3rem;font-weight:600}
+.header h1 span{color:var(--gold)}
+.header .user{display:flex;align-items:center;gap:.5rem;font-size:.8rem;color:var(--dim)}
+.header .avatar{width:32px;height:32px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#b8860b);display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:600}
+.panel{display:none}.panel.active{display:block}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:.8rem;margin-bottom:1rem}
+.cards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:.8rem;margin-bottom:1rem}
+.card{padding:1.2rem}
+.card h3{font-size:.75rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);margin-bottom:.5rem}
+.card .val{font-size:1.5rem;font-weight:700;letter-spacing:-.02em}
+.card .sub{font-size:.7rem;color:var(--dim);margin-top:.1rem}
+.card .icon{font-size:1.2rem;margin-bottom:.3rem}
+.item{display:flex;justify-content:space-between;padding:.3rem 0;border-bottom:1px solid var(--border);font-size:.8rem}
+.item:last-child{border:0}
+.item .l{color:var(--dim)}.item .r{font-weight:500}
+.btn{padding:.4rem .8rem;border-radius:8px;border:none;font-family:var(--font);font-size:.75rem;font-weight:500;cursor:pointer;transition:all .15s}
+.btn-gold{background:var(--gold);color:#000}.btn-gold:hover{opacity:.85}
+.btn-accent{background:var(--accent);color:#fff}.btn-accent:hover{opacity:.85}
+.btn-sm{padding:.25rem .5rem;font-size:.65rem}
+.btn-ghost{background:transparent;border:1px solid var(--border);color:var(--text)}.btn-ghost:hover{border-color:var(--gold)}
+.tag{display:inline-block;padding:.15rem .4rem;border-radius:4px;font-size:.6rem;text-transform:uppercase;letter-spacing:.03em}
+.tag-gold{background:rgba(255,215,0,.15);color:var(--gold)}
+.tag-green{background:rgba(52,211,153,.15);color:var(--green)}
+.tag-red{background:rgba(248,113,113,.15);color:var(--red)}
+.tag-blue{background:rgba(96,165,250,.15);color:var(--blue)}
+.tag-purple{background:rgba(124,92,252,.15);color:var(--accent)}
+select,input,textarea{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:8px;color:var(--text);padding:.5rem;font-family:var(--font);font-size:.8rem;width:100%;outline:none}
+select:focus,input:focus,textarea:focus{border-color:var(--gold)}
+textarea{min-height:60px;resize:vertical}
+.flex{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap}
+pre{font-size:.7rem;color:var(--dim);white-space:pre-wrap;max-height:250px;overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:.75rem}
+th{text-align:left;padding:.5rem;color:var(--dim);font-weight:400;border-bottom:1px solid var(--border)}
+td{padding:.4rem .5rem;border-bottom:1px solid var(--border)}
+tr:hover td{background:rgba(255,255,255,.02)}
+@media(max-width:700px){.sidebar{display:none}.main{margin-left:0}}
+</style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <div class="logo">🎵 <span>ABE</span> SaaS</div>
+  <div class="nav-item active" onclick="switchPanel('dashboard',this)">📊 Dashboard</div>
+  <div class="nav-item" onclick="switchPanel('artists',this)">🎤 Artists</div>
+  <div class="nav-item" onclick="switchPanel('releases',this)">💿 Releases</div>
+  <div class="nav-item" onclick="switchPanel('revenue',this)">💰 Revenue</div>
+  <div class="nav-item" onclick="switchPanel('fans',this)">👥 Fans</div>
+  <div class="nav-item" onclick="switchPanel('agents',this)">🤖 Agents</div>
+  <div class="nav-item" onclick="switchPanel('intake',this)">📥 Intake</div>
+  <div class="nav-item" onclick="switchPanel('settings',this)">⚙️ Settings</div>
+</div>
+
+<!-- Main -->
+<div class="main">
+  <div class="header">
+    <h1><span>ABE</span> Music Platform</h1>
+    <div class="user"><span>Abraham Ortega</span><div class="avatar">AO</div></div>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="panel active" id="panel-dashboard">
+    <div class="grid" id="dashboardStats"></div>
+    <div class="cards-grid">
+      <div class="card glass"><h3>🎤 Top Artists</h3><div id="topArtists"></div></div>
+      <div class="card glass"><h3>💰 Revenue Split</h3><div id="revSplit"></div></div>
+      <div class="card glass"><h3>📋 Recent Activity</h3><div id="recentActivity"></div></div>
+    </div>
+  </div>
+
+  <!-- Artists -->
+  <div class="panel" id="panel-artists">
+    <div class="flex" style="margin-bottom:.8rem">
+      <input id="newArtistName" placeholder="Nombre del artista" style="width:200px">
+      <input id="newArtistGenre" placeholder="Género" style="width:150px">
+      <button class="btn btn-gold btn-sm" onclick="addArtist()">+ Add Artist</button>
+    </div>
+    <div class="card glass"><div id="artistsTable"></div></div>
+  </div>
+
+  <!-- Releases -->
+  <div class="panel" id="panel-releases">
+    <div class="flex" style="margin-bottom:.8rem">
+      <select id="releaseArtist" style="width:150px"></select>
+      <input id="releaseTitle" placeholder="Título" style="width:250px">
+      <button class="btn btn-gold btn-sm" onclick="addRelease()">+ Add Release</button>
+    </div>
+    <div class="card glass"><div id="releasesTable"></div></div>
+  </div>
+
+  <!-- Revenue -->
+  <div class="panel" id="panel-revenue">
+    <div class="grid" id="revenueStats"></div>
+    <div class="card glass"><div id="revenueTable"></div></div>
+  </div>
+
+  <!-- Fans -->
+  <div class="panel" id="panel-fans">
+    <div class="grid" id="fanStats"></div>
+    <div class="card glass"><div id="fansList"></div></div>
+  </div>
+
+  <!-- Agents -->
+  <div class="panel" id="panel-agents">
+    <div class="cards-grid" id="agentsGrid"></div>
+  </div>
+
+  <!-- Intake -->
+  <div class="panel" id="panel-intake">
+    <div class="flex" style="margin-bottom:.8rem">
+      <input id="intakeInput" placeholder="Ej: Hector Rubio 50000 streams nuevos" style="flex:1">
+      <button class="btn btn-gold btn-sm" onclick="doIntake()">Ingresar</button>
+    </div>
+    <div class="card glass"><div id="intakeResult"></div></div>
+  </div>
+
+  <!-- Settings -->
+  <div class="panel" id="panel-settings">
+    <div class="cards-grid">
+      <div class="card glass">
+        <h3>🎵 Spotify Connection</h3>
+        <div id="spotifyStatus"></div>
+        <div class="flex" style="margin-top:.5rem">
+          <input id="spotifyId" placeholder="Spotify Artist ID" style="flex:1">
+          <button class="btn btn-accent btn-sm" onclick="saveSpotify()">Save</button>
+        </div>
+      </div>
+      <div class="card glass">
+        <h3>🤖 Active Agents</h3>
+        <div id="saasAgents"></div>
+      </div>
+      <div class="card glass">
+        <h3>📊 System Info</h3>
+        <div id="systemInfo"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const GATEWAY=location.origin.includes('18989')?'':(location.origin||'http://127.0.0.1:18989');
+let token='',artists=[];
+
+async function auth(){
+  try{const r=await fetch(GATEWAY+'/api/auth/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id:'abe-fenix',client_secret:'abe_f3n1x_pr0_k3y_2026'})});const d=await r.json();token=d.access_token||''}catch{}
+}
+async function call(tool,params){
+  if(!token)await auth();if(!token)return{};
+  try{const r=await fetch(GATEWAY+'/api/call',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+token},body:JSON.stringify({tool,params:params||{}})});return await r.json()}catch{return{}}
+}
+
+function switchPanel(name,el){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  if(el)el.classList.add('active');
+  loadPanel(name);
+}
+
+async function loadPanel(name){
+  if(name==='dashboard')loadDashboard();
+  if(name==='artists')loadArtists();
+  if(name==='releases')loadReleases();
+  if(name==='revenue')loadRevenue();
+  if(name==='fans')loadFans();
+  if(name==='agents')loadAgents();
+  if(name==='settings')loadSettings();
+}
+
+async function loadDashboard(){
+  const a=await call('abe_list_artists',{}); artists=a.artists||[];
+  const d=await call('abe_ceo_dashboard',{});
+  const s=await call('enterprise_score',{});
+  document.getElementById('dashboardStats').innerHTML=`
+    <div class="card glass"><div class="icon">🎧</div><div class="val">${(d.total_streams||0).toLocaleString()}</div><div class="sub">Total Streams</div></div>
+    <div class="card glass"><div class="icon">💰</div><div class="val">$${(d.total_revenue||0).toLocaleString()}</div><div class="sub">Total Revenue</div></div>
+    <div class="card glass"><div class="icon">🎤</div><div class="val">${d.total_artists||0}</div><div class="sub">Artists</div></div>
+    <div class="card glass"><div class="icon">💿</div><div class="val">${d.total_releases||0}</div><div class="sub">Releases</div></div>
+    <div class="card glass"><div class="icon">🏆</div><div class="val">${s.score||'?'}/100</div><div class="sub">Enterprise Score</div></div>
+  `;
+  document.getElementById('topArtists').innerHTML=(artists||[]).sort((a,b)=>b.streams-a.streams).slice(0,5).map((a,i)=>`
+    <div class="item"><span class="l">${i+1}. ${a.name}</span><span class="r">${(a.streams||0).toLocaleString()} streams</span></div>
+  `).join('');
+  document.getElementById('revSplit').innerHTML=`
+    <div class="item"><span class="l">Artist (70%)</span><span class="r">$${Math.round((d.total_revenue||0)*0.7).toLocaleString()}</span></div>
+    <div class="item"><span class="l">Label (20%)</span><span class="r">$${Math.round((d.total_revenue||0)*0.2).toLocaleString()}</span></div>
+    <div class="item"><span class="l">Distributor (10%)</span><span class="r">$${Math.round((d.total_revenue||0)*0.1).toLocaleString()}</span></div>
+    <div class="item"><span class="l">Top Artist</span><span class="r">${d.top_artist||'?'}</span></div>
+  `;
+  document.getElementById('recentActivity').innerHTML='<div class="item"><span class="l">Último sync</span><span class="r">ahora</span></div><div class="item"><span class="l">Artists</span><span class="r">'+artists.length+'</span></div>';
+}
+
+async function loadArtists(){
+  const a=await call('abe_list_artists',{}); artists=a.artists||[];
+  document.getElementById('artistsTable').innerHTML=`<table><tr><th>Name</th><th>Genre</th><th>Streams</th><th>Revenue</th><th>Status</th><th></th></tr>${
+    artists.map(a=>`<tr><td><strong>${a.name}</strong></td><td>${a.genre||'?'}</td><td>${(a.streams||0).toLocaleString()}</td><td>$${(a.revenue||0).toLocaleString()}</td><td><span class="tag tag-green">${a.status||'active'}</span></td><td><button class="btn btn-ghost btn-sm" onclick="switchPanel('releases',null);document.getElementById('releaseArtist').value='${a.name}'">View</button></td></tr>`).join('')
+  }</table>`;
+}
+
+async function loadReleases(){
+  const sel=document.getElementById('releaseArtist');
+  if(artists.length)sel.innerHTML='<option value="">All artists</option>'+artists.map(a=>`<option value="${a.name}">${a.name}</option>`).join('');
+  document.getElementById('releasesTable').innerHTML='<div style="color:var(--dim);font-size:.8rem">Select an artist to view releases</div>';
+}
+
+async function loadRevenue(){
+  const d=await call('abe_ceo_dashboard',{});
+  document.getElementById('revenueStats').innerHTML=`
+    <div class="card glass"><div class="val">$${(d.total_revenue||0).toLocaleString()}</div><div class="sub">Total Revenue</div></div>
+    <div class="card glass"><div class="val">$${Math.round((d.total_revenue||0)*0.7).toLocaleString()}</div><div class="sub">Artist Share (70%)</div></div>
+    <div class="card glass"><div class="val">$${Math.round((d.total_revenue||0)*0.2).toLocaleString()}</div><div class="sub">Label Share (20%)</div></div>
+  `;
+  document.getElementById('revenueTable').innerHTML=`<table><tr><th>Artist</th><th>Streams</th><th>Revenue</th><th>Artist Gets</th><th>Label Gets</th></tr>${
+    (artists||[]).map(a=>`<tr><td>${a.name}</td><td>${(a.streams||0).toLocaleString()}</td><td>$${(a.revenue||0).toLocaleString()}</td><td>$${Math.round((a.revenue||0)*0.7).toLocaleString()}</td><td>$${Math.round((a.revenue||0)*0.2).toLocaleString()}</td></tr>`).join('')
+  }</table>`;
+}
+
+async function loadFans(){
+  document.getElementById('fanStats').innerHTML=`
+    <div class="card glass"><div class="val">${(artists||[]).reduce((s,a)=>s+(a.streams||0),0)}</div><div class="sub">Total Streams = Total Fans</div></div>
+    <div class="card glass"><div class="val">${artists.length}</div><div class="sub">Artists Generating Fans</div></div>
+  `;
+  document.getElementById('fansList').innerHTML=artists.map(a=>`
+    <div class="item"><span class="l">🎤 ${a.name}</span><span class="r">${(a.streams||0).toLocaleString()} listeners</span></div>
+  `).join('');
+}
+
+async function loadAgents(){
+  const adk=await call('adk_list_agents',{});
+  const agents=adk.agents||[];
+  document.getElementById('agentsGrid').innerHTML=agents.map(a=>`
+    <div class="card glass">
+      <div class="flex" style="margin-bottom:.3rem"><span class="tag tag-purple">${a.capability||'?'}</span><span style="font-size:.7rem;color:var(--dim)">${a.model||'?'}</span></div>
+      <div style="font-size:.9rem;font-weight:600;margin-bottom:.2rem">🧠 ${a.name}</div>
+      <div class="item"><span class="l">Tools</span><span class="r">${a.tools||0}</span></div>
+      <div class="item"><span class="l">Provider</span><span class="r">${a.provider||'?'}</span></div>
+      <div class="item"><span class="l">Lifecycle</span><span class="r">${a.lifecycle||'on-demand'}</span></div>
+    </div>
+  `).join('');
+}
+
+async function loadSettings(){
+  document.getElementById('spotifyStatus').innerHTML='<div style="color:var(--dim);font-size:.8rem">🔌 Not connected. Add your Spotify Artist ID to pull real data.</div>';
+  const adk=await call('adk_list_agents',{});
+  document.getElementById('saasAgents').innerHTML=(adk.agents||[]).map(a=>'<div class="item"><span class="l">'+a.name+'</span><span class="tag tag-purple">'+a.capability+'</span></div>').join('');
+  document.getElementById('systemInfo').innerHTML=`
+    <div class="item"><span class="l">API Status</span><span class="tag tag-green">Online</span></div>
+    <div class="item"><span class="l">Version</span><span>3.0</span></div>
+    <div class="item"><span class="l">Tenant</span><span>ABE Fenix</span></div>
+  `;
+}
+
+async function addArtist(){
+  const name=document.getElementById('newArtistName').value;
+  const genre=document.getElementById('newArtistGenre').value;
+  if(!name)return;
+  await call('intake_text',{text:'Nuevo artista: '+name+' ('+genre+')',source:'manual',context:name});
+  document.getElementById('newArtistName').value='';document.getElementById('newArtistGenre').value='';
+  loadArtists();loadDashboard();
+}
+
+async function addRelease(){
+  const artist=document.getElementById('releaseArtist').value;
+  const title=document.getElementById('releaseTitle').value;
+  if(!artist||!title)return;
+  await call('intake_text',{text:'Nuevo release: '+title+' de '+artist,source:'manual',context:artist});
+  document.getElementById('releaseTitle').value='';
+  loadReleases();
+}
+
+async function saveSpotify(){
+  const id=document.getElementById('spotifyId').value;
+  if(!id)return;
+  await call('artist_configure',{artist_id:'abe-music',artist_name:'ABE Music',spotify_artist_id:id});
+  document.getElementById('spotifyStatus').innerHTML='<div style="color:var(--green);font-size:.8rem">✅ Spotify ID saved. Use Sync to pull data.</div>';
+}
+
+async function doIntake(){
+  const text=document.getElementById('intakeInput').value;
+  if(!text)return;
+  const r=await call('intake_text',{text,source:'manual'});
+  document.getElementById('intakeResult').innerHTML='<div style="padding:.5rem;font-size:.8rem">✅ <strong>'+r.category+'</strong>: '+r.message+'</div>';
+  document.getElementById('intakeInput').value='';
+  loadDashboard();
+}
+
+auth().then(()=>{loadDashboard()});
+</script>
+</body>
+</html>

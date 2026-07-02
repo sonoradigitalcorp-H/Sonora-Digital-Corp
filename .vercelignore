@@ -1,0 +1,26 @@
+# Ignore everything except frontends/ and vercel.json
+apps/
+backups/
+clients/
+data/
+docs/
+mcp/
+memory/
+products/
+process/
+ref/
+scripts/
+state/
+tests/
+*.md
+*.py
+*.sh
+*.yml
+*.yaml
+*.toml
+*.cfg
+*.ini
+.gitignore
+.env*
+docker-compose*
+Dockerfile*
