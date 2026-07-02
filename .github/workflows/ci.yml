@@ -37,6 +37,14 @@ jobs:
         run: |
           PYTHONPATH=. python -m pytest tests/planner/ -v --asyncio-mode=auto
 
+      - name: Run collector mock tests (SPEC-20260701-006)
+        run: |
+          PYTHONPATH=. python -m pytest tests/collectors/ -v
+
+      - name: Total test count
+        run: |
+          PYTHONPATH=. python -m pytest tests/collectors/ tests/planner/ tests/test_abe_service.py -q 2>&1 | tail -1
+
       - name: Verify registry loads
         run: |
           PYTHONPATH=. python -c "
