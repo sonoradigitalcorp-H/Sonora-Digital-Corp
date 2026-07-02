@@ -123,6 +123,11 @@ ssh -L 8080:localhost:8080 ubuntu@149.56.46.173  # forwarding para laptop
 - Instagram bloqueado (login wall) — Wikipedia bloqueado (datacenter 403)
 - Sync cron no instalado aún — script en `scripts/install-sync-cron.sh`
 
+## Protocolo de Construccion
+
+`docs/PROTOCOLO.md` — 7 mandamientos + checklist para no fallar.
+Leer antes de empezar cualquier tarea nueva.
+
 ## Session HTML
 
 Estado completo desplegado en:
