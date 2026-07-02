@@ -60,6 +60,17 @@ PROVIDERS = {
         },
         "default_model": "opencode/deepseek-v4-flash-free",
     },
+    "ollama": {
+        "base_url": "http://localhost:11434",
+        "api_key": "ollama",
+        "models": {
+            "deepseek-r1:7b-64k": {"context": 64000, "cost_per_1k": 0.0},
+            "qwen3:4b-64k": {"context": 64000, "cost_per_1k": 0.0},
+            "llama3.2:3b-64k": {"context": 64000, "cost_per_1k": 0.0},
+            "qwen3:1.7b-32k": {"context": 32000, "cost_per_1k": 0.0},
+        },
+        "default_model": "deepseek-r1:7b-64k",
+    },
 }
 
 # Select best available provider
@@ -249,6 +260,66 @@ def stream_chat_completion(
     except requests.exceptions.RequestException as e:
         log.error(f"LLM stream failed: {e}")
         return {"error": str(e)}
+
+
+def ollama_chat_completion(
+    messages: list,
+    model: str = "deepseek-r1:7b-64k",
+    max_tokens: int = 2000,
+    temperature: float = 0.7,
+) -> dict:
+    """Send a chat completion request to local Ollama."""
+    url = f"{PROVIDERS['ollama']['base_url']}/api/chat"
+    body = {
+        "model": model,
+        "messages": messages,
+        "stream": False,
+        "options": {
+            "num_predict": max_tokens,
+            "temperature": temperature,
+        },
+    }
+    _start = time.time()
+    log.info(f"Ollama request: {len(messages)} messages, model={model}")
+
+    try:
+        resp = requests.post(url, json=body, timeout=120)
+        resp.raise_for_status()
+        data = resp.json()
+        duration = (time.time() - _start) * 1000
+
+        content = data.get("message", {}).get("content", "")
+        log.info(f"Ollama response: {len(content)} chars in {duration:.0f}ms")
+
+        return {
+            "content": content,
+            "model": model,
+            "usage": {"total_tokens": data.get("eval_count", 0)},
+            "latency_ms": duration,
+        }
+    except requests.exceptions.Timeout:
+        log.error("Ollama request timed out (120s)")
+        return {"content": "", "error": "timeout", "model": model}
+    except requests.exceptions.ConnectionError:
+        log.error("Ollama not available at localhost:11434")
+        return {"content": "", "error": "ollama_not_available", "model": model}
+    except Exception as e:
+        log.error(f"Ollama request failed: {e}")
+        return {"content": "", "error": str(e), "model": model}
+
+
+def ask_local(
+    prompt: str,
+    system: str | None = None,
+    model: str = "deepseek-r1:7b-64k",
+) -> str:
+    """Send a prompt to local Ollama model, get text response."""
+    messages = []
+    if system:
+        messages.append({"role": "system", "content": system})
+    messages.append({"role": "user", "content": prompt})
+    result = ollama_chat_completion(messages, model=model)
+    return result.get("content", "")
 
 
 def ask(prompt: str, system: str | None = None) -> str:

@@ -41,6 +41,10 @@ jobs:
         run: |
           PYTHONPATH=. python -m pytest tests/collectors/ -v
 
+      - name: Run agent tests (SPEC-20260701-008)
+        run: |
+          PYTHONPATH=. python -m pytest tests/agents/ -v
+
       - name: Total test count
         run: |
           PYTHONPATH=. python -m pytest tests/collectors/ tests/planner/ tests/test_abe_service.py -q 2>&1 | tail -1
