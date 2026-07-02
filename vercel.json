@@ -6,7 +6,6 @@
   "buildCommand": "",
   "outputDirectory": "frontends",
   "routes": [
-    { "src": "/", "dest": "/landing/index.html" },
     { "src": "/abe/portal/(.*)", "dest": "/abe/portal/$1" },
     { "src": "/abe/(.*)", "dest": "/abe/$1" },
     { "src": "/dashboard/(.*)", "dest": "/dashboard/$1" },
