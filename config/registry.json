@@ -85,9 +85,9 @@
         }
       },
       "providers": [
-        { "id": "instagram-browser", "contract_type": "browser", "weight": 1, "enabled": true, "cost_per_call": 0.001, "rate_limit": 3, "health_url": "http://127.0.0.1:8931/health", "config": { "url_template": "https://www.instagram.com/{username}/", "timeout": 20 } },
-        { "id": "tiktok-browser", "contract_type": "browser", "weight": 2, "enabled": true, "cost_per_call": 0.001, "rate_limit": 5, "health_url": "http://127.0.0.1:8931/health", "config": { "url_template": "https://www.tiktok.com/@{username}", "timeout": 20 } },
-        { "id": "spotify-browser", "contract_type": "browser", "weight": 3, "enabled": true, "cost_per_call": 0.001, "rate_limit": 5, "health_url": "http://127.0.0.1:8931/health", "config": { "url_template": "https://open.spotify.com/artist/{artist_id}", "timeout": 20 } },
+        { "id": "instagram-browser", "contract_type": "browser", "weight": 1, "enabled": true, "cost_per_call": 0.001, "rate_limit": 3, "health_url": null, "config": { "url_template": "https://www.instagram.com/{username}/", "timeout": 20 } },
+        { "id": "tiktok-browser", "contract_type": "browser", "weight": 2, "enabled": true, "cost_per_call": 0.001, "rate_limit": 5, "health_url": null, "config": { "url_template": "https://www.tiktok.com/@{username}", "timeout": 20 } },
+        { "id": "spotify-browser", "contract_type": "browser", "weight": 3, "enabled": true, "cost_per_call": 0.001, "rate_limit": 5, "health_url": null, "config": { "url_template": "https://open.spotify.com/artist/{artist_id}", "timeout": 20 } },
         { "id": "facebook-browser", "contract_type": "browser", "weight": 4, "enabled": false, "cost_per_call": 0.001, "rate_limit": 3, "health_url": null, "config": { "url_template": "https://www.facebook.com/{username}", "timeout": 20 } }
       ],
       "tags": ["artist", "browser", "profile", "social"]
