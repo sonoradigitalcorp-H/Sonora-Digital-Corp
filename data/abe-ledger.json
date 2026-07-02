@@ -1,8 +1,8 @@
 {
   "entries": [
     {
-      "id": "ad47a68d",
-      "contract_id": "b24f46f8",
+      "id": "7763b4c6",
+      "contract_id": "e0f2da43",
       "artist_id": "artist-1",
       "release_id": "release-1",
       "amount": 1000,
@@ -17,7 +17,7 @@
       "artist_share": 700.0,
       "label_share": 200.0,
       "distributor_share": 100.0,
-      "timestamp": "2026-07-02T05:13:32.230377+00:00"
+      "timestamp": "2026-07-02T11:46:51.252125+00:00"
     }
   ]
 }
