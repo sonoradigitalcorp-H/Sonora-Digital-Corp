@@ -1,0 +1,113 @@
+{
+  "type": "session_summary",
+  "date": "2026-07-01",
+  "session": "SPEC-20260701-004 + 005 + 006 (inicio)",
+  "title": "Full stack: Capability Registry → Production Hardening → CI Completo",
+  "ci_status": "5 verdes consecutivos (#217-#221) — primeros en 221 intentos",
+  "people": {
+    "luis-daniel": {"name": "Luis Daniel Guerrero Enciso", "role": "dueno del sistema"},
+    "noel-nichols": {"name": "Noel Nichols", "role": "socio creativo colaborativo"},
+    "abraham": {"name": "Abraham Ortega", "role": "CEO de ABE Music — solo consume PWA"}
+  },
+  "machines": {
+    "sdc-prod": {"ip": "149.56.46.173", "os": "Ubuntu 26.04", "provider": "OVH", "role": "servidor principal"},
+    "laptop": {"ip_known": "187.245.106.218", "os": "Linux", "owner": "Luis Daniel", "location": "Mexico"}
+  },
+  "specs_completed": [
+    {"id": "SPEC-20260701-003", "title": "Live Data Pipeline", "score": 84, "status": "completed"},
+    {"id": "SPEC-20260701-004", "title": "Capability Registry + Decision Engine", "score": 77, "status": "completed"},
+    {"id": "SPEC-20260701-005", "title": "Production Hardening", "score": 76, "status": "completed"}
+  ],
+  "spec_active": {
+    "id": "SPEC-20260701-006",
+    "title": "CI Completo + Mock Tests + Sin Puntos Ciegos",
+    "target_tests": 90,
+    "current_tests": 88
+  },
+  "architecture": {
+    "data_stores": [
+      {"name": "Neo4j", "port": 7687, "type": "Graph DB", "purpose": "Relaciones semanticas. Personas, servicios, capabilities.", "status": "ok", "nodes": 19, "relationships": 19},
+      {"name": "Qdrant", "port": 6333, "type": "Vector DB", "purpose": "RAG, busqueda semantica de artistas y documentos", "status": "ok", "collections": 2, "points": 10},
+      {"name": "PostgreSQL", "port": 5432, "type": "Relational", "purpose": "LangFuse traces, sesiones estructuradas", "status": "ok"},
+      {"name": "Redis", "port": 6379, "type": "In-Memory", "purpose": "Cache ultra-rapido, colas de mensajes", "status": "ok"},
+      {"name": "Engram (SQLite)", "file": "engram.db", "type": "Embedded", "purpose": "Memoria persistente del sistema con FTS5", "status": "ok"},
+      {"name": "JSON Files", "path": "data/", "type": "File", "purpose": "Configuracion y backup de datos de Abraham", "status": "ok"},
+      {"name": "Memory/Learning", "path": "memory/learning/", "type": "Event Log", "purpose": "Contexto historico y sesiones pasadas para agentes", "status": "ok"}
+    ],
+    "services": [
+      {"name": "AGENTIC OS Dashboard", "port": 8080, "status": "nuevo"},
+      {"name": "ABE Music OS", "port": 5180, "status": "ok", "public": true},
+      {"name": "JARVIS Web UI", "port": 5174, "status": "ok"},
+      {"name": "Hermes MCP", "port": 8000, "status": "ok"},
+      {"name": "Neo4j Browser", "port": 7474, "status": "ok"},
+      {"name": "LangFuse", "port": 3000, "status": "ok"},
+      {"name": "n8n Workflows", "port": 5678, "status": "ok", "workflows": 33}
+    ],
+    "llm_models": [
+      "deepseek-r1:7b-64k — razonamiento principal (4.7GB)",
+      "qwen3:4b-64k — tareas ligeras (2.5GB)",
+      "llama3.2:3b-64k — alternativa (2.0GB)",
+      "qwen3:1.7b-32k — tiny (1.4GB)",
+      "qwen2.5:1.5b-32k — tiny alt (986MB)",
+      "nomic-embed-text — embeddings (274MB)"
+    ]
+  },
+  "builds_this_session": [
+    "Neo4j resucitado: Bolt en 0.0.0.0, auth off, 19 nodos seedeados",
+    "Monitor de containers via systemd timer cada 2min",
+    "docs/ARQUITECTURA.md: 7 almacenes diferenciados con proposito y analogia",
+    "docs/PROTOCOLO.md: 7 mandamientos + checklist de construccion",
+    "scripts/monitor.py: monitoreo con eventos de caida/recuperacion",
+    "scripts/seed-neo4j-arquitectura.py: grafo del sistema",
+    "scripts/presentar.py: generador reveal.js",
+    "scripts/deploy.sh: deploy automatico a dashboard",
+    "AGENTIC OS Dashboard: centro de comando unificado en :8080/agentic-os.html",
+    "WAR ROOM: tracking ejecutivo en :8080/ (index)",
+    "Health dashboard: 7/7 providers healthy (antes 4/7)",
+    "Playwright health URL corregida",
+    "ABE Service bind a 0.0.0.0 (accesible desde internet)",
+    "SPEC-20260701-005 cerrada: Score 76",
+    "SPEC-20260701-006 iniciada: mock tests, target 90+ tests",
+    "tests/collectors/test_deezer.py: 9 tests mock para Deezer",
+    "CI workflow actualizado con paso de collector tests",
+    "CI #221: 5to verde consecutivo (88 tests)"
+  ],
+  "revenue_intelligence": {
+    "conclusion": "100% Spotify a $0.004/stream. Oplaai paga solo Spotify.",
+    "artists": [
+      {"name": "Hector Rubio", "streams": 115093009, "revenue": 460372, "rate": 0.004},
+      {"name": "Jesus Urquijo", "streams": 4635222, "revenue": 18540, "rate": 0.004},
+      {"name": "Javier Arvayo", "streams": 50000, "revenue": 200, "rate": 0.004}
+    ]
+  },
+  "broken": [
+    {"sev": "critical", "item": "Instagram login wall", "blocker": "requiere cookies de sesion"},
+    {"sev": "high", "item": "Wikipedia 403 desde datacenter OVH", "blocker": "Cloudflare block"},
+    {"sev": "high", "item": "TikTok handles incorrectos en CEO data", "blocker": "@thor_rubio no existe"},
+    {"sev": "medium", "item": "Solo 9/?? tests mock para collectors", "blocker": "faltan Apple, YouTube, TikTok, Spotify, Wiki"},
+    {"sev": "medium", "item": "Monitor sin notificaciones externas", "blocker": "solo escribe a JSONL, no alerta"}
+  ],
+  "ci_history": {
+    "total_runs": 221,
+    "first_green": 216,
+    "consecutive_greens": 5,
+    "summary": "215 failures → 5 greens seguidos. CI ahora valida planner (70) + ABE (9) + collectors (9) = 88 tests."
+  },
+  "next_priorities": [
+    "1. Completar SPEC-20260701-006: mock tests para Apple Music, YouTube, TikTok, Spotify, Wikipedia",
+    "2. Instagram: cookies de sesion o remover del sync",
+    "3. Monitor: agregar notificaciones Telegram cuando container muere",
+    "4. Wikipedia: probar proxy residencial o API alternativa",
+    "5. Cerrar SPEC-006 (Score 90+) y abrir SPEC-007 (Produccion)"
+  ],
+  "key_urls": {
+    "war_room": "http://149.56.46.173:8080/",
+    "agentic_os": "http://149.56.46.173:8080/agentic-os.html",
+    "health": "http://149.56.46.173:8080/dashboard-salud.html",
+    "abe_pwa": "http://149.56.46.173:5180/pwa/",
+    "neo4j": "http://149.56.46.173:7474/",
+    "ci": "https://github.com/sonoradigitalcorp-H/Sonora-Digital-Corp/actions",
+    "arquitectura": "docs/ARQUITECTURA.md",
+    "protocolo": "docs/PROTOCOLO.md"
+  }
+}
