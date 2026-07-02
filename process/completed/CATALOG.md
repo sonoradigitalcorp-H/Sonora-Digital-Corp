@@ -24,3 +24,11 @@
 | SPEC-202 | SPEC-20260701-008 | ... | ... | ... | completed | ... |
 | SPEC-202 | SPEC-20260701-009 | ... | ... | ... | completed | ... |
 | SPEC-202 | SPEC-20260701-010 | ... | ... | ... | completed | ... |
+| 2026-07-01 | SPEC-20260701-004 | Capability Registry + Decision Engine | 2 | 77 | completed | [link](SPEC-20260701-004/LECCION.md) |
+| 2026-07-01 | SPEC-20260701-005 | Production Hardening | 2 | 76 | completed | [link](SPEC-20260701-005/LECCION.md) |
+| 2026-07-01 | SPEC-20260701-006 | CI Completo + Mock Tests | 2 | 77 | completed | [link](SPEC-20260701-006/LECCION.md) |
+| 2026-07-01 | SPEC-20260701-007 | Self-Healing Loop + Notificaciones | 2 | 77 | completed | [link](SPEC-20260701-007/LECCION.md) |
+| 2026-07-01 | SPEC-20260701-008 | Primer Agente Real con Modelo Local | 2 | 78 | completed | [link](SPEC-20260701-008/LECCION.md) |
+| 2026-07-01 | SPEC-20260701-009 | OpenClaw como Interfaz Conversacional | 2 | 72 | completed | [link](SPEC-20260701-009/LECCION.md) |
+| 2026-07-01 | SPEC-20260701-010 | Hermes Bridge + Memory MCP | 2 | 68 | completed | [link](SPEC-20260701-010/LECCION.md) |
+| 2026-07-01 | SPEC-20260701-011 | MCP Tools Activos + Bloqueos Produccion | 2 | 63 | completed | [link](SPEC-20260701-011/LECCION.md) |
