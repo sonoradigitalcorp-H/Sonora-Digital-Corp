@@ -64,6 +64,6 @@ async def execute(provider: ProviderRef, input_data: dict[str, Any]) -> dict[str
             return {"status_code": resp.status_code, "data": resp.json()}
 
     except httpx.TimeoutException:
-        raise ProviderExecutionError(provider.id, provider.id, "HTTP timeout")
+        raise ProviderExecutionError(provider.id, provider.id, "HTTP timeout") from None
     except httpx.HTTPError as e:
-        raise ProviderExecutionError(provider.id, provider.id, str(e))
+        raise ProviderExecutionError(provider.id, provider.id, str(e)) from e

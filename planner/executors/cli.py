@@ -60,8 +60,8 @@ async def execute(provider: ProviderRef, input_data: dict[str, Any]) -> dict[str
         }
 
     except TimeoutError:
-        raise ProviderExecutionError(provider.id, provider.id, f"CLI timeout after {timeout}s")
+        raise ProviderExecutionError(provider.id, provider.id, f"CLI timeout after {timeout}s") from None
     except FileNotFoundError:
-        raise ProviderExecutionError(provider.id, provider.id, f"Binary not found: {binary}")
+        raise ProviderExecutionError(provider.id, provider.id, f"Binary not found: {binary}") from None
     except OSError as e:
-        raise ProviderExecutionError(provider.id, provider.id, str(e))
+        raise ProviderExecutionError(provider.id, provider.id, str(e)) from e

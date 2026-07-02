@@ -35,7 +35,7 @@ async def execute(provider: ProviderRef, input_data: dict[str, Any]) -> dict[str
         raise ProviderExecutionError(
             provider.id, provider.id,
             f"SDK executor module '{executor_module}' not found: {e}"
-        )
+        ) from e
 
     raise ProviderExecutionError(
         provider.id, provider.id,

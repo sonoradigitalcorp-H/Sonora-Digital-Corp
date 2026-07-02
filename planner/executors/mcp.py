@@ -43,6 +43,6 @@ async def execute(provider: ProviderRef, input_data: dict[str, Any]) -> dict[str
                 )
             return resp.json()
     except httpx.TimeoutException:
-        raise ProviderExecutionError(provider.id, provider.id, "MCP timeout")
+        raise ProviderExecutionError(provider.id, provider.id, "MCP timeout") from None
     except httpx.HTTPError as e:
-        raise ProviderExecutionError(provider.id, provider.id, str(e))
+        raise ProviderExecutionError(provider.id, provider.id, str(e)) from e

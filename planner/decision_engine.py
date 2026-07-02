@@ -173,4 +173,4 @@ def _get_executor(contract_type: str) -> Any:
         return mod.execute
     except ImportError as e:
         raise ProviderExecutionError("unknown", "unknown",
-                                     f"Executor module '{module_path}' not found: {e}")
+                                     f"Executor module '{module_path}' not found: {e}") from e

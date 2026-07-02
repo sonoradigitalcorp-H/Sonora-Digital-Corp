@@ -29,7 +29,7 @@ async def execute(provider: ProviderRef, input_data: dict[str, Any]) -> dict[str
     except KeyError as e:
         raise ProviderExecutionError(
             provider.id, provider.id, f"Missing input parameter: {e}"
-        )
+        ) from e
 
     # Try direct Playwright first, then MCP
     try:
