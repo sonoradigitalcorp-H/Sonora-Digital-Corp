@@ -20,3 +20,4 @@
 | 2026-07-01 | SPEC-20260701-003 | Live Data Pipeline — Collectors → Revenue | 2 | 84 | completed | [link](20260701-live-data-pipeline/LECCION.md) |
 | SPEC-202 | SPEC-20260701-004 | ... | ... | ... | completed | ... |
 | SPEC-202 | SPEC-20260701-005 | ... | ... | ... | completed | ... |
+| SPEC-202 | SPEC-20260701-007 | ... | ... | ... | completed | ... |
