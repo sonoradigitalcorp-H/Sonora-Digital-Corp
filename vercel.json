@@ -1,50 +1,26 @@
 {
   "git": {
-    "deploymentEnabled": {
-      "main": true
-    }
+    "deploymentEnabled": { "main": true }
   },
   "framework": null,
   "buildCommand": "",
   "outputDirectory": "frontends",
   "routes": [
-    {
-      "src": "/abe/portal/(.*)",
-      "dest": "/abe/portal/$1"
-    },
-    {
-      "src": "/abe/(.*)",
-      "dest": "/abe/$1"
-    },
-    {
-      "src": "/dashboard/(.*)",
-      "dest": "/dashboard/$1"
-    },
-    {
-      "src": "/api/(.*)",
-      "dest": "https://api.sonoradigitalcorp.com/$1"
-    },
-    {
-      "src": "/",
-      "dest": "/landing/index.html"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/$1"
-    }
+    { "src": "/abe/portal/(.*)", "dest": "/abe/portal/$1" },
+    { "src": "/abe/(.*)", "dest": "/abe/$1" },
+    { "src": "/dashboard/(.*)", "dest": "/dashboard/$1" },
+    { "src": "/api/(.*)", "dest": "https://api.sonoradigitalcorp.com/$1" },
+    { "src": "/", "dest": "/landing/index.html" },
+    { "src": "/war-room.html", "dest": "/landing/war-room.html" },
+    { "src": "/abe-blueprint.html", "dest": "/landing/abe-blueprint.html" },
+    { "src": "/(.*)", "dest": "/$1" }
   ],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
-        {
-          "key": "X-Frame-Options",
-          "value": "DENY"
-        },
-        {
-          "key": "X-Content-Type-Options",
-          "value": "nosniff"
-        }
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" }
       ]
     }
   ]
