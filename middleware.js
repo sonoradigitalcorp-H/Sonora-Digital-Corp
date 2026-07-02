@@ -3,19 +3,19 @@ export default function middleware(req) {
 
   if (url.hostname === "abe.sonoradigitalcorp.com") {
     url.pathname = "/abe/index.html"
-    return Response.rewrite(url)
+    return new Response(null, {
+      headers: { "x-middleware-rewrite": url.toString() },
+    })
   }
 
   if (url.hostname === "sonoradigitalcorp.com" || url.hostname === "www.sonoradigitalcorp.com") {
-    if (url.pathname === "/") {
-      url.pathname = "/landing/index.html"
-      return Response.rewrite(url)
-    }
+    url.pathname = "/landing/index.html"
+    return new Response(null, {
+      headers: { "x-middleware-rewrite": url.toString() },
+    })
   }
-
-  return Response.rewrite(url)
 }
 
 export const config = {
-  matcher: "/",
+  matcher: ["/"],
 }
