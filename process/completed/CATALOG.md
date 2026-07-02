@@ -18,3 +18,4 @@
 | 2026-07-01 | SPEC-20260701-100 | Native Agent OS Completion | 2 | 84 | completed | [link](20260701-native-agent-os-completion/LECCION.md) |
 | 2026-07-01 | SPEC-20260701-200 | Native Agent OS v3.0 — Completo | 2 | 88 | completed | [link](20260701-native-agent-os-v3/LECCION.md) |
 | 2026-07-01 | SPEC-20260701-003 | Live Data Pipeline — Collectors → Revenue | 2 | 84 | completed | [link](20260701-live-data-pipeline/LECCION.md) |
+| SPEC-202 | SPEC-20260701-004 | ... | ... | ... | completed | ... |

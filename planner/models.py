@@ -60,6 +60,14 @@ class ProviderHealth(BaseModel):
     latency_ms: float = 0.0
     error: str | None = None
 
+    @property
+    def is_healthy(self) -> bool:
+        return self.status == "healthy"
+
+    @property
+    def is_degraded(self) -> bool:
+        return self.status == "degraded"
+
 
 class CapabilityResult(BaseModel):
     capability_id: str
