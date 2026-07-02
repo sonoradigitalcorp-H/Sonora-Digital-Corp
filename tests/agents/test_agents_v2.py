@@ -5,22 +5,28 @@ from unittest.mock import patch, AsyncMock, MagicMock
 
 # ── AgentBaseV2 ──
 
-@pytest.mark.asyncio
-async def test_base_v2_think():
-    from apps.jarvis.src.core.agents_v2.agent_base_v2 import AgentBaseV2, ask_ollama
-    with patch("apps.jarvis.src.core.agents_v2.agent_base_v2.ask_local") as mock_ask:
-        mock_ask.return_value = "test response"
+def test_base_v2_think():
+    from apps.jarvis.src.core.agents_v2.agent_base_v2 import ask_ollama, ask_local_impl
+    original = ask_local_impl
+    try:
+        import apps.jarvis.src.core.agents_v2.agent_base_v2 as v2
+        v2.ask_local_impl = lambda prompt, model="": "test response"
         result = ask_ollama("test prompt")
         assert result == "test response"
+    finally:
+        v2.ask_local_impl = original
 
 
-@pytest.mark.asyncio
-async def test_base_v2_think_error():
-    from apps.jarvis.src.core.agents_v2.agent_base_v2 import ask_ollama
-    with patch("apps.jarvis.src.core.agents_v2.agent_base_v2.ask_local") as mock_ask:
-        mock_ask.side_effect = Exception("Ollama down")
+def test_base_v2_think_error():
+    from apps.jarvis.src.core.agents_v2.agent_base_v2 import ask_ollama, ask_local_impl
+    import apps.jarvis.src.core.agents_v2.agent_base_v2 as v2
+    original = v2.ask_local_impl
+    try:
+        v2.ask_local_impl = lambda prompt, model="": (_ for _ in ()).throw(Exception("Ollama down"))
         result = ask_ollama("test prompt")
         assert "Error" in result
+    finally:
+        v2.ask_local_impl = original
 
 
 def test_base_v2_redis_publish():
