@@ -58,9 +58,8 @@ Luego `ssh sdc-prod` forwards automático. Abrir `http://localhost:8080/` en lap
 | `platforms/whatsapp/` | Bridge |
 | `infra/` | Docker, compose, monitoreo, n8n |
 | `products/` | ABE Music, AZREC, Masterclass |
-| `tests/` | 79 tests (26 legacy + 8 ABE Service + 70 planner) |
-| `tests/planner/` | 70 tests: models, registry, health, engine, events |
-| `scripts/` | 50+ DevOps |
+| `tests/` | 78 tests (truth 10 + collectors 17 + execution 24 + evolution 19 + ABE 9) |
+| `scripts/` | 50+ DevOps + `close-session.sh` (auto cleanup) |
 | `process/completed/SPEC-20260701-004/` | Capability Registry + Decision Engine (Score 77) |
 | `process/completed/20260701-live-data-pipeline/` | Live Data Pipeline (Score 84) |
 | `sonora-enterprise-os/` | Enterprise OS completo |
@@ -68,16 +67,15 @@ Luego `ssh sdc-prod` forwards automático. Abrir `http://localhost:8080/` en lap
 ## Comandos
 
 ```bash
-pytest tests/unit/              # unit tests
-pytest tests/integration/       # integration
-pytest tests/planner/ -v        # planner tests (70)
-pytest tests/test_abe_service.py -v  # ABE Service tests (9)
-npx playwright test             # E2E
-ruff check planner/ scrapers/ tests/ apps/  # lint all
-PYTHONPATH=. python scrapers/sync.py  # full sync cycle
-PYTHONPATH=. python -c "from planner import execute_capability; import asyncio; print(asyncio.run(execute_capability('acquire-metadata', {'artist_name':'Hector Rubio'})))"  # test engine
+PYTHONPATH=. python3 -m pytest tests/ -q          # all tests (78+)
+PYTHONPATH=. python3 -m pytest tests/test_execution.py -v  # Execution (24)
+PYTHONPATH=. python3 -m pytest tests/test_evolution.py -v  # Evolution (19)
+PYTHONPATH=. python3 -m pytest tests/test_collectors/ -v   # Collectors (17)
+PYTHONPATH=. python3 -m pytest tests/test_truth.py -v      # Truth (10)
+PYTHONPATH=. python3 -m pytest tests/test_abe_service.py -v  # ABE (9)
+ruff check apps/ collectors/ tests/ truth/  # lint
+python3 scripts/close-session.sh --dry-run   # test close flow
 docker compose -f infra/docker-compose.yml up -d
-python apps/jarvis/main.py      # JARVIS core
 python -m uvicorn apps.abe-service.main:app --host 127.0.0.1 --port 5180  # ABE Service
 ```
 
@@ -176,6 +174,23 @@ Estado completo desplegado en:
 - `/deploy` — genera + despliega presentacion a :8080
 - `/doc` — genera docs de proceso (SPEC, SCORE, ADR, LECCION, gherkin, events)
 
+## Close Session (AUTO-CLOSE)
+
+`scripts/close-session.sh` automatiza todo el cleanup post-sesión:
+
+```
+./scripts/close-session.sh --spec-id SPEC-xxx --title "Mi Feature" --tier 3 --summary "..."
+```
+
+Pipeline: tests gate → auto-doc → move SPECs activos → update AGENTS.md → merge CATALOGs → commit + push → VPS sync automático.
+
+Flags:
+- `--dry-run` — muestra el plan sin ejecutar
+- `--interactive` — pregunta antes de cada paso
+- `--no-tests` — saltea gate de tests
+- `--no-push` — hace commit pero no push
+- `--force` — sobreescribe docs existentes
+
 ## Documentación de Proceso (AUTO-DOC)
 
 Cada sesión debe documentarse siguiendo CONDUCT.md. **No marcar DONE sin documentar.**
@@ -211,16 +226,22 @@ Arquitectura de 3 fases implementada: Foundations (A), Kernel Separation (B), In
 ### Directorios clave
 | Ruta | Qué es |
 |------|--------|
-| `truth/` | 11 archivos YAML, 46 reglas — fuente única de verdad |
-| `agents/registry.yaml` | 9 agentes con capabilities explícitas |
-| `agents/capabilities/` | 6 definiciones de capabilities |
-| `agents/policies/` | 6 policies (deny-all por defecto) |
+| `truth/` | 12 archivos YAML, 46+ reglas — fuente única de verdad |
+| `agents/registry.yaml` | 11 agentes con capabilities explícitas |
+| `agents/capabilities/` | 8 definiciones de capabilities |
+| `agents/policies/` | 7 policies (deny-all por defecto) |
 | `state/memory/` | 3 DBs con TTL (working/project/organization) |
 | `state/events/catalog.yaml` | Schema de eventos unificado |
-| `apps/guardian/` | Truth Guardian: drift + health + compliance + scoreboard |
-| `apps/economics/` | Economics Kernel: costo por operación |
-| `apps/learning/` | Learning Kernel: heurísticas desde LECCION.md |
-| `apps/agent_metrics/` | Agent Scoreboard: métricas por agente |
+| `state/execution/` | Execution Kernel: SQLite queue + checkpoints |
+| `state/evolution/` | Evolution Loop: propuestas + decisiones |
+| `apps/observe/` | Nivel 1: collectors, events pipeline |
+| `apps/understand/` | Nivel 2: truth, knowledge, memory |
+| `apps/decide/` | Nivel 3: planning, economics, execution |
+| `apps/act/` | Nivel 4: agents, capabilities |
+| `apps/measure/` | Nivel 5: scoreboard, guardian, verification |
+| `apps/learn/` | Nivel 6: heuristics, evolution |
+| `apps/control/` | Nivel 7: dashboard unificado |
+| `collectors/` | Artist Intelligence Network: 4 collectors + registry |
 | `config/generated/` | Configs autogeneradas desde fleet.yml |
 
 ### Nuevos comandos
@@ -237,9 +258,25 @@ Arquitectura de 3 fases implementada: Foundations (A), Kernel Separation (B), In
 | `GET /api/v1/health` | Health check simple |
 | `GET /api/v1/drift` | Lista de drifts detectados |
 | `GET /api/v1/scoreboard` | Métricas por agente |
+| `GET /api/v1/events/recent` | Últimos eventos del bus |
+| `GET /api/v1/cost/summary` | Costos por agente desde economics.db |
+| `GET /api/v1/execution/stats` | Stats de la cola de ejecución |
+| `GET /api/v1/execution/tasks` | Lista de tareas (filtrable) |
+| `POST /api/v1/execution/submit` | Encola nueva tarea |
+| `POST /api/v1/execution/cancel/:id` | Cancela tarea |
+| `POST /api/v1/execution/retry/:id` | Reintenta tarea fallida |
+| `GET /scoreboard` | SPA scoreboard interactivo |
+| `GET /control` | Control Plane dashboard SPA |
 
 ### Sincronización
 - `scripts/sync-to-vps.sh` → rsync + regenerate + restart
 - `.github/workflows/sync-vps.yml` → GitHub Action que hace git pull en VPS
 
-### Enterprise Score actual: 84/100
+### Enterprise Score actual: 88/100
+
+### Última sesión: 2026-07-04 — ECA Fase 1
+- 40 archivos nuevos, 15 movidos, 0 borrados
+- 78 tests (5 suites), 0 fallos
+- Stack Lock, Vercel Secrets, GitHub Pages, 7 niveles cognitivos
+- Execution Kernel (24 tests) + Evolution Loop (19 tests) + Artist Intelligence (17 tests)
+- Control Plane + Scoreboard Dashboard

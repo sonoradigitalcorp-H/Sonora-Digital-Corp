@@ -25,7 +25,9 @@
 | 2026-07-03 | SPEC-20260703-001 | Hermes Asteroid Unification | 3 | 78 | completed | [link](20260703-hermes-asteroid/LECCION.md) |
 | 2026-07-03 | SPEC-20260703-002 | Unified Brain v2 | 3 | 80 | completed | [link](20260703-unified-brain-v2/LECCION.md) |
 | 2026-07-03 | SPEC-20260703-003 | Auto-Doc Compliance System | 2 | 80 | completed | [link](20260703-auto-doc-compliance/LECCION.md) |
-| 2026-07-03 | SPEC-20260703-A | Cognitive Kernel: Foundations | 83/100 | `process/completed/20260703-cognitive-kernel-a/` |
-| 2026-07-03 | SPEC-20260703-B | Cognitive Kernel: Kernel Separation | 85/100 | `process/completed/20260703-cognitive-kernel-b/` |
-| 2026-07-03 | SPEC-20260703-C | Cognitive Kernel: Intelligence Layer | 84/100 | `process/completed/20260703-cognitive-kernel-c/` |
-| 2026-07-03 | 20260703-cognitive-kernel-full | ... | ... | ... | completed | ... |
+| 2026-07-03 | SPEC-20260703-A | Cognitive Kernel: Foundations | 3 | 83 | completed | [link](20260703-cognitive-kernel-a/LECCION.md) |
+| 2026-07-03 | SPEC-20260703-B | Cognitive Kernel: Kernel Separation | 3 | 85 | completed | [link](20260703-cognitive-kernel-b/LECCION.md) |
+| 2026-07-03 | SPEC-20260703-C | Cognitive Kernel: Intelligence Layer | 3 | 84 | completed | [link](20260703-cognitive-kernel-c/LECCION.md) |
+| 2026-07-04 | 20260704-eca-fase1 | Enterprise Cognitive Architecture: Fase 1 | 3 | 88 | completed | [link](20260704-eca-fase1/LECCION.md) |
+
+> **20260704-eca-fase1**: 40 archivos nuevos, 15 movidos, 0 borrados. Execution Kernel (24 tests), Evolution Loop (19 tests), Artist Intelligence (17 tests). Reorganización apps/ en 7 niveles cognitivos. Stack Lock, Control Plane, Scoreboard Dashboard, GitHub Pages, Vercel Secrets.
