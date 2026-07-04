@@ -27,6 +27,7 @@ const navItems = [
   { href: '/command-center', label: 'Command Center', icon: Command },
   { href: '/workflows', label: 'Workflows', icon: Workflow },
   { href: '/agents', label: 'Agent Performance', icon: BrainCircuit },
+  { href: '/dashboard/intelligence', label: 'Intelligence', icon: BrainCircuit },
   { href: '/artists', label: 'Artist Radar', icon: Users },
   { href: '/discovery', label: 'Discovery Engine', icon: Search },
   { href: '/analytics', label: 'Analytics', icon: BarChart3 },
