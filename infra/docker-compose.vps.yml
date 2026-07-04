@@ -1,6 +1,6 @@
 # docker-compose.vps.yml — VPS Production Override
-# Usa la misma estructura que docker-compose.yml pero con overrides para VPS.
-# Incluye el MCP Gateway como entry point único.
+# NOTA: sonora-mcp-gateway corre como systemd service (no Docker)
+# para no competir por el puerto 18989.
 
 x-common-env: &common-env
   NEO4J_URI: bolt://sdc-neo4j:7687
@@ -17,34 +17,6 @@ x-common-env: &common-env
   SONORA_CLIENT_SECRET: ${SONORA_CLIENT_SECRET}
 
 services:
-  # MCP Gateway — Entry Point Único
-  sonora-mcp-gateway:
-    build:
-      context: ../mcp
-      dockerfile: Dockerfile
-    container_name: sdc-mcp-gateway
-    labels:
-      - "sdc.domain=core"
-      - "sdc.service=mcp-gateway"
-    ports:
-      - "127.0.0.1:18989:18989"
-    environment:
-      <<: *common-env
-      SONORA_GATEWAY_PORT: 18989
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    networks:
-      - sdc-network
-    restart: unless-stopped
-    mem_limit: 256m
-    memswap_limit: 256m
-    healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--tries=1", "-O", "/dev/null", "http://127.0.0.1:18989/api/health"]
-      interval: 15s
-      timeout: 5s
-      retries: 3
-      start_period: 10s
-
   # Infraestructura de datos
   postgres:
     extends:
@@ -70,9 +42,6 @@ services:
     extends:
       file: docker-compose.yml
       service: mcp-server
-    depends_on:
-      sonora-mcp-gateway:
-        condition: service_healthy
 
   n8n:
     extends:
@@ -98,17 +67,11 @@ services:
     extends:
       file: docker-compose.yml
       service: jarvis-core
-    depends_on:
-      sonora-mcp-gateway:
-        condition: service_healthy
 
   jarvis-webui:
     extends:
       file: docker-compose.yml
       service: jarvis-webui
-    depends_on:
-      sonora-mcp-gateway:
-        condition: service_healthy
 
 networks:
   sdc-network:
