@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { generateArtists, generateArtistById } from '@/lib/data-generator';
 import { fetchAllArtistImages } from '@/lib/artist-images';
-import { searchArtist, isSpotifyConfigured } from '@/lib/spotify-service';
+import { searchArtist, isSpotifyConfigured, validateSpotifyCredentials } from '@/lib/spotify-service';
 import { getCachedArtist, setCachedArtist, isFresh } from '@/lib/artist-cache';
 
 export async function GET(request: NextRequest) {

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { ARTIST_POOL } from '@/lib/data-generator';
-import { searchArtistsBatch, isSpotifyConfigured } from '@/lib/spotify-service';
+import { searchArtistsBatch, isSpotifyConfigured, validateSpotifyCredentials, getTokenStatus } from '@/lib/spotify-service';
 import { setCachedArtists, getCachedArtist, clearCache, getCacheStats } from '@/lib/artist-cache';
 
 /**
@@ -71,14 +71,20 @@ export async function POST() {
 
 /**
  * GET /api/v1/artists/refresh
- * Returns cache status and configuration info.
+ * Returns cache status, configuration info, and credential validation.
  */
 export async function GET() {
+  const configured = isSpotifyConfigured();
+  const validationError = configured ? null : validateSpotifyCredentials();
+  const tokenStatus = getTokenStatus();
+
   return NextResponse.json({
-    configured: isSpotifyConfigured(),
+    configured,
+    validationError,
+    tokenStatus,
     cacheStats: getCacheStats(),
     spotifyDocs: 'https://developer.spotify.com/dashboard/',
-    setupInstructions: isSpotifyConfigured()
+    setupInstructions: configured
       ? 'Spotify API is configured and ready.'
       : 'Create a Spotify App at https://developer.spotify.com/dashboard/ and set SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET in .env',
   });
