@@ -1,0 +1,44 @@
+version: 1
+domain: git
+updated: 2026-07-03T16:30:00Z
+rules:
+  - id: GIT-001
+    description: "No commits sin SPEC activa — pre-commit hook bloquea"
+    category: process
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+    check: "pre-commit hook"
+
+  - id: GIT-002
+    description: "Mensajes de commit: verb in imperative + breve descripción"
+    category: style
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: review
+    format: "tipo(scope): mensaje"
+    examples:
+      - "feat(guardian): add drift scanner"
+      - "fix(events): handle rotation edge case"
+      - "docs(spec): add FR21-FR24"
+
+  - id: GIT-003
+    description: "No forzar push (--force) — siempre --force-with-lease"
+    category: safety
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+  - id: GIT-004
+    description: "Secrets nunca se commitan — .gitignore lo enforce"
+    category: security
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+  - id: GIT-005
+    description: "Por cada SPEC completada, git tag con el ID"
+    category: process
+    severity: warning
+    applies_to: ["all_agents"]
+    enforcement: manual

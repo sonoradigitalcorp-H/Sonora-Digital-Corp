@@ -1,0 +1,16 @@
+# Capability: Filesystem
+version: 1
+domain: filesystem
+actions:
+  - id: fs.read
+    description: "Leer archivos"
+    severity: info
+  - id: fs.write
+    description: "Escribir archivos"
+    severity: warning
+  - id: fs.delete
+    description: "Eliminar archivos"
+    severity: error
+  - id: fs.execute
+    description: "Ejecutar archivos como proceso"
+    severity: error

@@ -1,0 +1,6 @@
+{"name":"session.start","spec":"SPEC-20260703-001","timestamp":"2026-07-03T00:00:00Z","source":"opencode","payload":{"action":"inicio sesion","phase":"diagnostico"}}
+{"name":"identity.changed","spec":"SPEC-20260703-001","timestamp":"2026-07-03T01:00:00Z","source":"opencode","payload":{"desc":"SOUL.md rewrite como Hermes Asteroid","file":"/home/mystic/.hermes/SOUL.md"}}
+{"name":"services.killed","spec":"SPEC-20260703-001","timestamp":"2026-07-03T02:00:00Z","source":"opencode","payload":{"desc":"OpenClaw PID 848 + Hermes gateway + Docker containers eliminados en laptop","load_before":"9.24","load_after":"2.95"}}
+{"name":"skills.synced","spec":"SPEC-20260703-001","timestamp":"2026-07-03T03:00:00Z","source":"opencode","payload":{"desc":"42 OpenClaw skills migradas laptop → VPS","from":"0","to":"42"}}
+{"name":"config.unified","spec":"SPEC-20260703-001","timestamp":"2026-07-03T04:00:00Z","source":"opencode","payload":{"desc":"Configs simplificadas SDC 278→193, ABE 39→25, MDS 28→18","tui_created":true}}
+{"name":"pipeline.fixed","spec":"SPEC-20260703-001","timestamp":"2026-07-03T05:00:00Z","source":"opencode","payload":{"desc":"daily-pipeline.sh python → python3 fix","file":"/home/mystic/sonora-digital-corp/scripts/daily-pipeline.sh"}}

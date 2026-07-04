@@ -1,0 +1,47 @@
+version: 1
+domain: architecture
+updated: 2026-07-03T16:30:00Z
+rules:
+  - id: ARCH-001
+    description: "No service binds 0.0.0.0 without nginx proxy — Policy P3"
+    category: networking
+    severity: error
+    applies_to: ["all_services"]
+    enforcement: automated
+    check: "ss -tlnp | awk '{print $4}' | grep '^0.0.0.0:' | grep -v ':22$|:80$|:443$'"
+
+  - id: ARCH-002
+    description: "Todos los servicios internos deben bind a 127.0.0.1"
+    category: networking
+    severity: error
+    applies_to: ["all_services"]
+    enforcement: automated
+
+  - id: ARCH-003
+    description: "nginx es el único entry point público (puertos 80/443)"
+    category: networking
+    severity: error
+    applies_to: ["infrastructure"]
+    enforcement: automated
+
+  - id: ARCH-004
+    description: "Secrets cifrados con age (X25519) — nunca en plaintext en disco"
+    category: security
+    severity: error
+    applies_to: ["all_services"]
+    enforcement: automated
+    check: "file *.age | grep 'age encrypted file'"
+
+  - id: ARCH-005
+    description: "Cada agente tiene capabilities explícitas — deny-all por defecto"
+    category: security
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+  - id: ARCH-006
+    description: "Cognitive Kernel: sistema decide, agentes ejecutan"
+    category: architecture
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated

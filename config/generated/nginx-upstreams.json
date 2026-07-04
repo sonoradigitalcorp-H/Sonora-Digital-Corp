@@ -1,0 +1,17 @@
+[
+  {
+    "domain": "api.sonoradigitalcorp.com",
+    "upstream": "abe-api",
+    "server": "127.0.0.1:8111"
+  },
+  {
+    "domain": "mystika.sonoradigitalcorp.com",
+    "upstream": "mystika-web",
+    "server": "127.0.0.1:3001"
+  },
+  {
+    "domain": "mystika.sonoradigitalcorp.com",
+    "upstream": "mystika-api",
+    "server": "127.0.0.1:4000"
+  }
+]

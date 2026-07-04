@@ -1,0 +1,65 @@
+version: 1
+domain: learned
+updated: '2026-07-03T23:48:55Z'
+description: "Heur\xEDsticas aprendidas \u2014 autogenerado desde LECCION.md. Siempre\
+  \ override por niveles superiores."
+rules:
+- id: LRN-001
+  type: error_pattern
+  description: Systemd service stuck
+  source: 20260703-enterprise-agentic-os
+  count: 1
+  learned_at: '2026-07-03T23:48:55Z'
+- id: LRN-002
+  type: error_pattern
+  description: Drift scanner ciclo infinito
+  source: 20260703-enterprise-agentic-os
+  count: 1
+  learned_at: '2026-07-03T23:48:55Z'
+- id: LRN-003
+  type: error_pattern
+  description: Log PermissionError
+  source: 20260703-enterprise-agentic-os
+  count: 1
+  learned_at: '2026-07-03T23:48:55Z'
+- id: LRN-004
+  type: error_pattern
+  description: SSH timeout
+  source: 20260703-enterprise-agentic-os
+  count: 1
+  learned_at: '2026-07-03T23:48:55Z'
+- id: LRN-005
+  type: lesson
+  description: "**Siempre probar edge cases en drift_scanner** \u2014 puertos como\
+    \ dict rompen set comprehension"
+  source: 20260703-enterprise-agentic-os
+  count: 1
+  learned_at: '2026-07-03T23:48:55Z'
+- id: LRN-006
+  type: lesson
+  description: "**No confiar en systemctl restart cuando el servicio est\xE1 stuck**\
+    \ \u2014 kill -9 primero"
+  source: 20260703-enterprise-agentic-os
+  count: 1
+  learned_at: '2026-07-03T23:48:55Z'
+- id: LRN-007
+  type: lesson
+  description: "**SSH commands deben ser cortos y con timeout** \u2014 cadenas largas\
+    \ de pipes timeoutan"
+  source: 20260703-enterprise-agentic-os
+  count: 1
+  learned_at: '2026-07-03T23:48:55Z'
+- id: LRN-008
+  type: lesson
+  description: "**Docker container names incluyen prefijo sdc-** \u2014 fleet.yml\
+    \ debe usar nombres reales de docker ps"
+  source: 20260703-enterprise-agentic-os
+  count: 1
+  learned_at: '2026-07-03T23:48:55Z'
+- id: LRN-009
+  type: lesson
+  description: "**HOST vs HOSTNAME en Next.js** \u2014 Next.js 16 usa `-H` flag, no\
+    \ `HOST` env var"
+  source: 20260703-enterprise-agentic-os
+  count: 1
+  learned_at: '2026-07-03T23:48:55Z'

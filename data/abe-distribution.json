@@ -527,6 +527,30 @@
       "revenue": 0.0,
       "created_at": "2026-07-02T11:46:51.247467+00:00",
       "released_at": "2026-07-02T11:46:51.248214+00:00"
+    },
+    "bff75990": {
+      "id": "bff75990",
+      "artist_id": "artist-1",
+      "title": "Test Song",
+      "type": "single",
+      "genre": "Pop",
+      "upc": "ABEBFF75990",
+      "isrc": "MXBFF7599000001",
+      "platforms": [
+        "spotify",
+        "apple_music",
+        "deezer",
+        "amazon_music",
+        "youtube_music",
+        "tidal",
+        "pandora",
+        "claro_musica"
+      ],
+      "status": "published",
+      "streams": 0,
+      "revenue": 0.0,
+      "created_at": "2026-07-03T23:42:12.430934+00:00",
+      "released_at": "2026-07-03T23:42:12.432558+00:00"
     }
   }
 }

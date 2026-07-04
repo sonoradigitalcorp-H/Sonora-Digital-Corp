@@ -1,0 +1,16 @@
+# Capability: Network
+version: 1
+domain: network
+actions:
+  - id: network.dns
+    description: "Modificar DNS"
+    severity: critical
+  - id: network.proxy
+    description: "Configurar proxy"
+    severity: error
+  - id: network.firewall
+    description: "Modificar firewall/iptables"
+    severity: critical
+  - id: network.fetch
+    description: "HTTP requests externos"
+    severity: info

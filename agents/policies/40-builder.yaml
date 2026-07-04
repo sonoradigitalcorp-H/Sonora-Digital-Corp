@@ -1,0 +1,18 @@
+# Builder Policy — Code execution
+version: 1
+agent: builder
+policy: allow-specific
+description: "Builder puede construir Docker y escribir código, no puede hacer push ni deploy"
+capabilities:
+  - "fs.read"
+  - "fs.write"
+  - "git.read"
+  - "docker.build"
+  - "docker.run"
+  - "docker.stop"
+  - "run.tests"
+never:
+  - "git.push"
+  - "deploy.*"
+  - "secrets.*"
+  - "network.firewall"
