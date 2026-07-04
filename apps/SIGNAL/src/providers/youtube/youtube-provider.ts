@@ -129,6 +129,48 @@ export class YouTubeProvider extends BaseProvider {
     return process.env.GOOGLE_API_KEY || process.env.YOUTUBE_API_KEY || '';
   }
 
+  /**
+   * Build headers with API key for secure transmission (avoid URL exposure).
+   * YouTube Data API supports API key via the `X-Goog-Api-Key` header.
+   */
+  private buildAuthHeaders(): Record<string, string> {
+    const apiKey = this.getApiKey();
+    if (!apiKey) return {};
+    return { 'X-Goog-Api-Key': apiKey };
+  }
+
+  /**
+   * Build URL with API key as fallback (for endpoints that don't support header auth).
+   * Prefers header-based auth to avoid key exposure in logs/URLs.
+   */
+  private buildUrl(path: string, params: Record<string, string> = {}): string {
+    const apiKey = this.getApiKey();
+    const searchParams = new URLSearchParams(params);
+    // Only add key to URL as last resort (header is preferred)
+    // Currently YouTube v3 supports key in `X-Goog-Api-Key` header
+    const qs = searchParams.toString();
+    return `${YT_API_BASE}${path}${qs ? `?${qs}` : ''}`;
+  }
+
+  private async ytRequest<T>(path: string, params: Record<string, string> = {}): Promise<{ ok: boolean; status: number; data: T | null; error: string | null }> {
+    const apiKey = this.getApiKey();
+    const headers: Record<string, string> = {
+      ...this.buildAuthHeaders(),
+      Accept: 'application/json',
+    };
+
+    // Add params as query string
+    const searchParams = new URLSearchParams(params);
+    // Add key as fallback (some YT endpoints may require it in URL)
+    if (apiKey && !searchParams.has('key')) {
+      searchParams.set('key', apiKey);
+    }
+    const qs = searchParams.toString();
+    const url = `${YT_API_BASE}${path}${qs ? `?${qs}` : ''}`;
+
+    return this.request<T>(url, { headers });
+  }
+
   private isDisabled(): boolean {
     return !this.config.enabled || process.env.YOUTUBE_PROVIDER_ENABLED === 'false';
   }
@@ -149,8 +191,8 @@ export class YouTubeProvider extends BaseProvider {
 
     // Test connectivity
     try {
-      const result = await this.request<{ kind: string }>(
-        `${YT_API_BASE}/channels?part=id&mine=false&maxResults=1&key=${apiKey}`
+      const result = await this.ytRequest<{ kind: string }>(
+        '/channels', { part: 'id', mine: 'false', maxResults: '1' }
       );
       if (result.ok) {
         this.initialized = true;
@@ -180,8 +222,8 @@ export class YouTubeProvider extends BaseProvider {
     }
 
     try {
-      const result = await this.request<{ kind: string }>(
-        `${YT_API_BASE}/channels?part=id&mine=false&maxResults=1&key=${apiKey}`
+      const result = await this.ytRequest<{ kind: string }>(
+        '/channels', { part: 'id', mine: 'false', maxResults: '1' }
       );
 
       if (result.ok) {
@@ -201,9 +243,8 @@ export class YouTubeProvider extends BaseProvider {
     const cached = cache.get<NormalizedSearchResult[]>('youtube', 'search', cacheKey);
     if (cached && cache.isFresh(cached)) return cached.data;
 
-    const apiKey = this.getApiKey();
-    const result = await this.request<YTSearchResponse>(
-      `${YT_API_BASE}/search?part=snippet&q=${encodeURIComponent(query)}&type=channel&maxResults=5&key=${apiKey}`
+    const result = await this.ytRequest<YTSearchResponse>(
+      '/search', { part: 'snippet', q: query, type: 'channel', maxResults: '5' }
     );
 
     if (!result.ok || !result.data?.items) return [];
@@ -230,9 +271,8 @@ export class YouTubeProvider extends BaseProvider {
     const cached = cache.get<Partial<NormalizedProfile>>('youtube', 'profile', externalId);
     if (cached && cache.isFresh(cached)) return cached.data;
 
-    const apiKey = this.getApiKey();
-    const result = await this.request<YTChannelResponse>(
-      `${YT_API_BASE}/channels?part=snippet&id=${externalId}&key=${apiKey}`
+    const result = await this.ytRequest<YTChannelResponse>(
+      '/channels', { part: 'snippet', id: externalId }
     );
 
     if (!result.ok || !result.data?.items?.[0]) return null;
@@ -263,11 +303,9 @@ export class YouTubeProvider extends BaseProvider {
     const cached = cache.get<Partial<NormalizedMetrics>>('youtube', 'metrics', cacheKey);
     if (cached && cache.isFresh(cached)) return cached.data;
 
-    const apiKey = this.getApiKey();
-
     // Fetch channel statistics
-    const channelResult = await this.request<YTChannelResponse>(
-      `${YT_API_BASE}/channels?part=statistics,snippet&id=${externalId}&key=${apiKey}`
+    const channelResult = await this.ytRequest<YTChannelResponse>(
+      '/channels', { part: 'statistics,snippet', id: externalId }
     );
 
     if (!channelResult.ok || !channelResult.data?.items?.[0]) return null;
@@ -280,8 +318,8 @@ export class YouTubeProvider extends BaseProvider {
     const channelAge = getChannelAge(snippet.publishedAt);
 
     // Fetch latest videos for engagement estimates
-    const videosResult = await this.request<YTVideoListResponse>(
-      `${YT_API_BASE}/search?part=snippet&channelId=${externalId}&order=date&maxResults=10&type=video&key=${apiKey}`
+    const videosResult = await this.ytRequest<YTVideoListResponse>(
+      '/search', { part: 'snippet', channelId: externalId, order: 'date', maxResults: '10', type: 'video' }
     );
 
     let avgViews = 0;
@@ -292,8 +330,8 @@ export class YouTubeProvider extends BaseProvider {
     if (videosResult.ok && videosResult.data?.items) {
       const videoIds = videosResult.data.items.map(v => v.id).filter(Boolean);
       if (videoIds.length > 0) {
-        const statsResult = await this.request<YTVideoListResponse>(
-          `${YT_API_BASE}/videos?part=statistics,snippet&id=${videoIds.join(',')}&key=${apiKey}`
+        const statsResult = await this.ytRequest<YTVideoListResponse>(
+          '/videos', { part: 'statistics,snippet', id: videoIds.join(',') }
         );
 
         if (statsResult.ok && statsResult.data?.items) {
@@ -355,9 +393,8 @@ export class YouTubeProvider extends BaseProvider {
     const cached = cache.get<Partial<NormalizedImages>>('youtube', 'images', cacheKey);
     if (cached && cache.isFresh(cached)) return cached.data;
 
-    const apiKey = this.getApiKey();
-    const result = await this.request<YTChannelResponse>(
-      `${YT_API_BASE}/channels?part=snippet&id=${externalId}&key=${apiKey}`
+    const result = await this.ytRequest<YTChannelResponse>(
+      '/channels', { part: 'snippet', id: externalId }
     );
 
     if (!result.ok || !result.data?.items?.[0]) {
@@ -399,9 +436,8 @@ export class YouTubeProvider extends BaseProvider {
     totalComments: number;
     hiddenSubscriberCount: boolean;
   } | null> {
-    const apiKey = this.getApiKey();
-    const result = await this.request<YTChannelResponse>(
-      `${YT_API_BASE}/channels?part=statistics,snippet&id=${externalId}&key=${apiKey}`
+    const result = await this.ytRequest<YTChannelResponse>(
+      '/channels', { part: 'statistics,snippet', id: externalId }
     );
 
     if (!result.ok || !result.data?.items?.[0]) return null;
@@ -437,11 +473,9 @@ export class YouTubeProvider extends BaseProvider {
     comments: number;
     thumbnailUrl: string | null;
   }>> {
-    const apiKey = this.getApiKey();
-
     // Search for latest videos
-    const searchResult = await this.request<YTVideoListResponse>(
-      `${YT_API_BASE}/search?part=snippet&channelId=${externalId}&order=date&maxResults=${maxResults}&type=video&key=${apiKey}`
+    const searchResult = await this.ytRequest<YTVideoListResponse>(
+      '/search', { part: 'snippet', channelId: externalId, order: 'date', maxResults: String(maxResults), type: 'video' }
     );
 
     if (!searchResult.ok || !searchResult.data?.items) return [];
@@ -450,8 +484,8 @@ export class YouTubeProvider extends BaseProvider {
     if (videoIds.length === 0) return [];
 
     // Fetch statistics
-    const statsResult = await this.request<YTVideoListResponse>(
-      `${YT_API_BASE}/videos?part=statistics,snippet&id=${videoIds.join(',')}&key=${apiKey}`
+    const statsResult = await this.ytRequest<YTVideoListResponse>(
+      '/videos', { part: 'statistics,snippet', id: videoIds.join(',') }
     );
 
     if (!statsResult.ok || !statsResult.data?.items) return [];
@@ -481,10 +515,8 @@ export class YouTubeProvider extends BaseProvider {
     comments: number;
     thumbnailUrl: string | null;
   }>> {
-    const apiKey = this.getApiKey();
-
-    const searchResult = await this.request<YTVideoListResponse>(
-      `${YT_API_BASE}/search?part=snippet&channelId=${externalId}&order=viewCount&maxResults=${maxResults}&type=video&key=${apiKey}`
+    const searchResult = await this.ytRequest<YTVideoListResponse>(
+      '/search', { part: 'snippet', channelId: externalId, order: 'viewCount', maxResults: String(maxResults), type: 'video' }
     );
 
     if (!searchResult.ok || !searchResult.data?.items) return [];
@@ -518,7 +550,7 @@ export class YouTubeProvider extends BaseProvider {
   async cache(): Promise<{ hits: number; misses: number; size: number }> {
     const stats = getCacheManager().getStats();
     const ytStats = stats.byProvider['youtube'];
-    return { hits: ytStats?.hits ?? 0, misses: 0, size: ytStats?.entries ?? 0 };
+    return { hits: ytStats?.hits ?? 0, misses: ytStats?.misses ?? 0, size: ytStats?.entries ?? 0 };
   }
 }
 

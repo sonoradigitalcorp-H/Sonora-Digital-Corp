@@ -210,6 +210,10 @@ export class IntelligenceEngine {
     const primaryProvider = options?.primaryProvider
       ?? (profiles.find(p => p?.provider)?.provider ?? 'generated');
 
+    // Build socials and links from provider profile data
+    const socials = buildSocialsFromProfiles(profiles.filter(Boolean) as Partial<import('../types').NormalizedProfile>[]);
+    const links = buildLinksFromProfiles(profiles.filter(Boolean) as Partial<import('../types').NormalizedProfile>[]);
+
     // Build the unified artist
     const artist: UnifiedArtist = {
       id: artistId,
@@ -217,8 +221,8 @@ export class IntelligenceEngine {
       profile: mergedProfile as import('../types').NormalizedProfile,
       metrics: mergedMetrics as import('../types').NormalizedMetrics,
       images: mergedImages as import('../types').NormalizedImages,
-      socials: { externalId: '', instagram: null, tiktok: null, twitter: null, youtube: null, spotify: null, appleMusic: null, provider: 'merged' },
-      links: { externalId: '', deezer: null, soundcloud: null, bandcamp: null, website: null, provider: 'merged' },
+      socials,
+      links,
       albums: mergedAlbums,
       primaryProvider,
     };
@@ -310,6 +314,95 @@ export class IntelligenceEngine {
         break;
     }
   }
+}
+
+// ── Socials & Links Builders ──
+
+/**
+ * Build social media links from provider profiles.
+ * Extracts social platform URLs from profileUrl fields.
+ */
+function buildSocialsFromProfiles(
+  profiles: Partial<import('../types').NormalizedProfile>[]
+): import('../types').NormalizedSocials {
+  const socials: import('../types').NormalizedSocials = {
+    externalId: '',
+    instagram: null,
+    tiktok: null,
+    twitter: null,
+    youtube: null,
+    spotify: null,
+    appleMusic: null,
+    provider: 'merged',
+  };
+
+  for (const profile of profiles) {
+    if (!profile.profileUrl) continue;
+
+    if (profile.externalId) socials.externalId = profile.externalId;
+
+    // Extract platform from profile URL
+    const url = profile.profileUrl.toLowerCase();
+    if (url.includes('instagram.com') || profile.provider === 'instagram') {
+      socials.instagram = profile.profileUrl;
+    }
+    if (url.includes('tiktok.com') || profile.provider === 'tiktok') {
+      socials.tiktok = profile.profileUrl;
+    }
+    if (url.includes('youtube.com') || profile.provider === 'youtube') {
+      socials.youtube = profile.profileUrl;
+    }
+    if (url.includes('spotify.com') || profile.provider === 'spotify') {
+      socials.spotify = profile.profileUrl;
+    }
+    if (url.includes('twitter.com') || url.includes('x.com')) {
+      socials.twitter = profile.profileUrl;
+    }
+    if (url.includes('apple.com/music') || url.includes('music.apple.com')) {
+      socials.appleMusic = profile.profileUrl;
+    }
+  }
+
+  return socials;
+}
+
+/**
+ * Build external links from provider profiles.
+ */
+function buildLinksFromProfiles(
+  profiles: Partial<import('../types').NormalizedProfile>[]
+): import('../types').NormalizedLinks {
+  const links: import('../types').NormalizedLinks = {
+    externalId: '',
+    deezer: null,
+    soundcloud: null,
+    bandcamp: null,
+    website: null,
+    provider: 'merged',
+  };
+
+  for (const profile of profiles) {
+    if (!profile.profileUrl) continue;
+
+    if (profile.externalId) links.externalId = profile.externalId;
+
+    const url = profile.profileUrl.toLowerCase();
+    if (url.includes('deezer.com') || profile.provider === 'deezer') {
+      links.deezer = profile.profileUrl;
+    }
+    if (url.includes('soundcloud.com')) {
+      links.soundcloud = profile.profileUrl;
+    }
+    if (url.includes('bandcamp.com')) {
+      links.bandcamp = profile.profileUrl;
+    }
+    // Non-platform URLs are treated as websites
+    if (!url.includes('.com/') && !url.includes('.org/') && !url.includes('.io/')) {
+      links.website = profile.profileUrl;
+    }
+  }
+
+  return links;
 }
 
 // ── Singleton ──

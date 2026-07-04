@@ -310,7 +310,7 @@ export class SpotifyProvider extends BaseProvider {
     const spotifyStats = stats.byProvider['spotify'];
     return {
       hits: spotifyStats?.hits ?? 0,
-      misses: 0,
+      misses: spotifyStats?.misses ?? 0,
       size: spotifyStats?.entries ?? 0,
     };
   }

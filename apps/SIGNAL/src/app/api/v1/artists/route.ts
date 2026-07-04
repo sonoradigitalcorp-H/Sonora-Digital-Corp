@@ -29,7 +29,24 @@ async function ensureProviders() {
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   const genre = searchParams.get('genre') || 'All';
-  const count = parseInt(searchParams.get('count') || '10');
+  const countParam = searchParams.get('count') || '10';
+  const count = parseInt(countParam, 10);
+
+  // ── Input Validation ──
+  if (isNaN(count) || count < 1 || count > 50) {
+    return NextResponse.json(
+      { error: 'Invalid count parameter. Must be a number between 1 and 50.' },
+      { status: 400 }
+    );
+  }
+
+  const validGenres = ['All', 'Regional Mexicano', 'Corridos Tumbados', 'Corridos Bélicos', 'Norteño', 'Sierreño', 'Latin Trap', 'Reggaeton', 'Latin Urban', 'Latin Pop', 'Hip Hop', 'Rap', 'R&B', 'Indie Pop', 'Latin Alternative', 'Cumbia', 'Tropical', 'Fusión', 'Dembow', 'Latin Drill', 'Experimental', 'Indie Folk', 'Electropop', 'Flamenco', 'Freestyle', 'Drill', 'Producer'];
+  if (!validGenres.includes(genre)) {
+    return NextResponse.json(
+      { error: `Invalid genre. Must be one of: ${validGenres.join(', ')}` },
+      { status: 400 }
+    );
+  }
 
   // 1. Initialize provider system
   const spotifyAvailable = await ensureProviders();

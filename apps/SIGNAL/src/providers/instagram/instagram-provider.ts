@@ -466,7 +466,7 @@ export class InstagramProvider extends BaseProvider {
   async cache(): Promise<{ hits: number; misses: number; size: number }> {
     const stats = getCacheManager().getStats();
     const igStats = stats.byProvider['instagram'];
-    return { hits: igStats?.hits ?? 0, misses: 0, size: igStats?.entries ?? 0 };
+    return { hits: igStats?.hits ?? 0, misses: igStats?.misses ?? 0, size: igStats?.entries ?? 0 };
   }
 }
 
