@@ -28,6 +28,24 @@ async def health():
     }
 
 
+_DEMO_USERS = {
+    "abraham": {"role": "ceo"},
+    "director": {"role": "director"},
+    "artista": {"role": "artista"},
+}
+
+@router.post("/auth/login")
+async def auth_login(data: dict):
+    user_id = data.get("user_id", "").strip().lower()
+
+    if user_id not in _DEMO_USERS:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    role_str = _DEMO_USERS[user_id]["role"]
+    token = create_token({"sub": user_id, "role": role_str, "tenant": "abe-fenix"})
+    return {"access_token": token, "token_type": "Bearer", "role": role_str}
+
+
 @router.post("/auth/token")
 async def auth_token(data: dict):
     user_id = data.get("user_id", "")

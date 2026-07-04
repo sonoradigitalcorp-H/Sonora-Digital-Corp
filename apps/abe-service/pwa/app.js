@@ -10,10 +10,10 @@ let audioChunks = [];
 let sessionId = null;
 
 async function getToken(role) {
-  const r = await fetch(`${API_URL}/auth/token`, {
+  const r = await fetch(`${API_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ user_id: 'abraham', role, secret: 'abe_music_jwt_secret_dev_change_in_prod_2026' }),
+    body: JSON.stringify({ user_id: 'abraham' }),
   });
   const data = await r.json();
   token = data.access_token;
