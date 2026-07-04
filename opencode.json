@@ -178,25 +178,25 @@
       "description": "OpenClaw Gateway — 42 skills (browser, payments, social, media)"
     }
   },
-  "commands": {
-    "status": { "description": "Estado completo del sistema", "prompt": "Ejecuta healthcheck completo: JARVIS, Hermes, OpenClaw, Neo4j, Qdrant, n8n, Docker, Systemd" },
-    "backup": { "description": "Backup completo del sistema", "prompt": "Ejecuta backup: copia sonora-enterprise-os/ apps/ config/ platforms/ a backups/ con timestamp" },
-    "brain": { "description": "Brain graph dashboard", "prompt": "Abre el Command Center con brain graph" },
-    "gsd": { "description": "Get Shit Done — flujo completo", "prompt": "GSD: 1) Estado actual 2) Qué hacer 3) Plan 4) Ejecutar 5) Verificar 6) Documentar", "agent": "builder" },
-    "sdd-new": { "description": "Nueva spec SDD", "prompt": "SDD pipeline: Research→Spec→Design→Tasks→Apply→Verify→Archive", "agent": "sdd" },
-    "build": { "description": "Construir feature", "prompt": "Analiza requerimiento y construye solución completa siguiendo SDD pipeline", "agent": "builder" },
-    "sales": { "description": "Sales OS — pipeline de ventas", "prompt": "Carga Sales OS: revisa leads activos, genera reporte de pipeline", "agent": "sales" },
-    "dev": { "description": "Dev OS — CI/CD, deploys", "prompt": "Carga Dev OS: revisa builds, deployments pendientes, issues activos", "agent": "dev" },
-    "support": { "description": "Support OS — tickets, SLAs", "prompt": "Carga Support OS: revisa tickets abiertos, SLAs próximos a vencer", "agent": "support" },
-    "agent": { "description": "Agent OS — harnesses, skills", "prompt": "Carga Agent OS: revisa estado de harnesses, skills, salud de agentes", "agent": "agent-os" },
-    "knowledge": { "description": "Knowledge OS — memoria, ADRs", "prompt": "Carga Knowledge OS: revisa ADRs pendientes, captura conocimiento reciente", "agent": "knowledge" },
-    "finance": { "description": "Finance OS — FinOps, revenue", "prompt": "Carga Finance OS: revisa costos, ingresos del período, ROI", "agent": "finance" },
-    "security": { "description": "Security OS — auditoría", "prompt": "Carga Security OS: revisa secrets, alertas activas, última auditoría", "agent": "security" },
-    "ops": { "description": "Ops OS — infraestructura", "prompt": "Carga Ops OS: revisa salud de servicios, uso de disco, containers", "agent": "ops" },
-    "quality": { "description": "Quality OS — tests, evaluaciones", "prompt": "Carga Quality OS: revisa pass rate de tests, scores, auditorías", "agent": "quality" },
-    "strategy": { "description": "Strategy OS — score, planificación", "prompt": "Carga Strategy OS: revisa enterprise score, iniciativas activas", "agent": "strategy" },
-    "doc": { "description": "Auto-Doc — genera docs de proceso (SPEC, SCORE, ADR, LECCION, gherkin, events)", "prompt": "Analiza la sesion actual de AGENTS.md y genera toda la documentacion de proceso siguiendo templates de process/templates/. Crea directorio en process/completed/, todos los archivos (SPEC.md, SCORE.md, ADR.md, LECCION.md, events.jsonl, gherkin/), y actualiza CATALOG.md.", "agent": "process-doc" },
-    "plan": { "description": "Planning Gate — descompone objetivo en tareas y genera PLAN.yaml", "prompt": "Ejecuta plan-gate.py con el objetivo especificado: descomponer en tareas, estimar costo, validar contra truth/. Si no hay objetivo claro, pedir descomposicion primero." },
-    "verify": { "description": "Verification Pipeline — ejecuta truth gate, security gate, cost gate", "prompt": "Ejecuta verify-gate.py contra el plan activo: truth gate (contradice truth/), security gate (capabilities), cost gate (budget). Reporta resultados." }
+  "command": {
+    "status": { "description": "Estado completo del sistema", "template": "Ejecuta healthcheck completo: JARVIS, Hermes, OpenClaw, Neo4j, Qdrant, n8n, Docker, Systemd" },
+    "backup": { "description": "Backup completo del sistema", "template": "Ejecuta backup: copia sonora-enterprise-os/ apps/ config/ platforms/ a backups/ con timestamp" },
+    "brain": { "description": "Brain graph dashboard", "template": "Abre el Command Center con brain graph" },
+    "gsd": { "description": "Get Shit Done — flujo completo", "template": "GSD: 1) Estado actual 2) Qué hacer 3) Plan 4) Ejecutar 5) Verificar 6) Documentar", "agent": "builder" },
+    "sdd-new": { "description": "Nueva spec SDD", "template": "SDD pipeline: Research→Spec→Design→Tasks→Apply→Verify→Archive", "agent": "sdd" },
+    "build": { "description": "Construir feature", "template": "Analiza requerimiento y construye solución completa siguiendo SDD pipeline", "agent": "builder" },
+    "sales": { "description": "Sales OS — pipeline de ventas", "template": "Carga Sales OS: revisa leads activos, genera reporte de pipeline", "agent": "sales" },
+    "dev": { "description": "Dev OS — CI/CD, deploys", "template": "Carga Dev OS: revisa builds, deployments pendientes, issues activos", "agent": "dev" },
+    "support": { "description": "Support OS — tickets, SLAs", "template": "Carga Support OS: revisa tickets abiertos, SLAs próximos a vencer", "agent": "support" },
+    "agent": { "description": "Agent OS — harnesses, skills", "template": "Carga Agent OS: revisa estado de harnesses, skills, salud de agentes", "agent": "agent-os" },
+    "knowledge": { "description": "Knowledge OS — memoria, ADRs", "template": "Carga Knowledge OS: revisa ADRs pendientes, captura conocimiento reciente", "agent": "knowledge" },
+    "finance": { "description": "Finance OS — FinOps, revenue", "template": "Carga Finance OS: revisa costos, ingresos del período, ROI", "agent": "finance" },
+    "security": { "description": "Security OS — auditoría", "template": "Carga Security OS: revisa secrets, alertas activas, última auditoría", "agent": "security" },
+    "ops": { "description": "Ops OS — infraestructura", "template": "Carga Ops OS: revisa salud de servicios, uso de disco, containers", "agent": "ops" },
+    "quality": { "description": "Quality OS — tests, evaluaciones", "template": "Carga Quality OS: revisa pass rate de tests, scores, auditorías", "agent": "quality" },
+    "strategy": { "description": "Strategy OS — score, planificación", "template": "Carga Strategy OS: revisa enterprise score, iniciativas activas", "agent": "strategy" },
+    "doc": { "description": "Auto-Doc — genera docs de proceso (SPEC, SCORE, ADR, LECCION, gherkin, events)", "template": "Analiza la sesion actual de AGENTS.md y genera toda la documentacion de proceso siguiendo templates de process/templates/. Crea directorio en process/completed/, todos los archivos (SPEC.md, SCORE.md, ADR.md, LECCION.md, events.jsonl, gherkin/), y actualiza CATALOG.md.", "agent": "process-doc" },
+    "plan": { "description": "Planning Gate — descompone objetivo en tareas y genera PLAN.yaml", "template": "Ejecuta plan-gate.py con el objetivo especificado: descomponer en tareas, estimar costo, validar contra truth/. Si no hay objetivo claro, pedir descomposicion primero." },
+    "verify": { "description": "Verification Pipeline — ejecuta truth gate, security gate, cost gate", "template": "Ejecuta verify-gate.py contra el plan activo: truth gate (contradice truth/), security gate (capabilities), cost gate (budget). Reporta resultados." }
   }
 }

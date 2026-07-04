@@ -1,0 +1,7 @@
+# Mystic Policy — Full access
+version: 1
+agent: mystic
+policy: allow-all
+description: "Mystic tiene acceso completo al sistema"
+capabilities: ["*"]
+never: []

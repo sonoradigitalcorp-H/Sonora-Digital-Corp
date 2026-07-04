@@ -4,7 +4,7 @@
       "id": "6727f51e",
       "nombre": "Hector Rubio",
       "genero": "Regional Mexicano",
-      "pais": "M\u00e9xico",
+      "pais": "México",
       "status": "active",
       "email": "",
       "telefono": "",
@@ -25,7 +25,7 @@
       "distribution": "Oplaai, LLC (exclusive license)",
       "album": "SMOKING",
       "from": "Angostura, Sinaloa",
-      "notable": "Abri\u00f3 para Peso Pluma en \u00c9xodo Tour 2025",
+      "notable": "Abrió para Peso Pluma en Éxodo Tour 2025",
       "latest_release": "Malicia (En Vivo) - Single (2025-07-18)",
       "nb_album": 41,
       "deezer_id": 9814216,
@@ -33,23 +33,23 @@
       "top_tracks": [
         {
           "name": "Se Volvieron Locos",
-          "popularity_score": 289703
+          "popularity_score": 325882
         },
         {
           "name": "Mil Historias",
-          "popularity_score": 87932
+          "popularity_score": 118533
         },
         {
-          "name": "Un Millo\u0301n",
+          "name": "Un Millón",
           "popularity_score": 189100
         }
       ],
       "deezer_url": "https://www.deezer.com/artist/9814216",
       "picture": "https://api.deezer.com/artist/9814216/image",
-      "last_sync": "2026-07-03T13:00:03Z",
+      "last_sync": "2026-07-04T13:00:02Z",
       "apple_music_id": 1082292215,
       "genres": [
-        "M\u00fasica Mexicana"
+        "Música Mexicana"
       ],
       "bio": "",
       "wikipedia_url": "",
@@ -61,7 +61,7 @@
       "id": "f23cab60",
       "nombre": "Jesus Urquijo",
       "genero": "Regional Mexicano",
-      "pais": "M\u00e9xico",
+      "pais": "México",
       "status": "active",
       "email": "",
       "telefono": "",
@@ -87,10 +87,10 @@
       "top_tracks": [],
       "deezer_url": "https://www.deezer.com/artist/15277093",
       "picture": "https://api.deezer.com/artist/15277093/image",
-      "last_sync": "2026-07-03T13:00:06Z",
+      "last_sync": "2026-07-04T13:00:05Z",
       "apple_music_id": 1319826332,
       "genres": [
-        "M\u00fasica Mexicana"
+        "Música Mexicana"
       ],
       "bio": "",
       "wikipedia_url": "",
@@ -102,7 +102,7 @@
       "id": "00cf4992",
       "nombre": "Javier Arvayo",
       "genero": "Pop Latino",
-      "pais": "M\u00e9xico",
+      "pais": "México",
       "status": "signed",
       "email": "",
       "telefono": "",
@@ -127,10 +127,10 @@
       "top_tracks": [],
       "deezer_url": "https://www.deezer.com/artist/98593652",
       "picture": "https://api.deezer.com/artist/98593652/image",
-      "last_sync": "2026-07-03T13:00:08Z",
+      "last_sync": "2026-07-04T13:00:07Z",
       "apple_music_id": 1519877798,
       "genres": [
-        "M\u00fasica Mexicana"
+        "Música Mexicana"
       ],
       "bio": "",
       "wikipedia_url": "",
@@ -156,7 +156,7 @@
       "top_tracks": [],
       "deezer_url": "https://www.deezer.com/artist/134574542",
       "picture": "https://api.deezer.com/artist/134574542/image",
-      "last_sync": "2026-07-03T13:00:10Z",
+      "last_sync": "2026-07-04T13:00:09Z",
       "apple_music_id": 0,
       "apple_music_url": "",
       "genres": [],
@@ -188,7 +188,7 @@
       "top_tracks": [],
       "deezer_url": "https://www.deezer.com/artist/134574542",
       "picture": "https://api.deezer.com/artist/134574542/image",
-      "last_sync": "2026-07-03T13:00:11Z",
+      "last_sync": "2026-07-04T13:00:11Z",
       "apple_music_id": 0,
       "apple_music_url": "",
       "bio": "",
@@ -211,7 +211,19 @@
       "monthly_listeners": 0,
       "popularity": 0,
       "genres": [],
-      "last_spotify_sync": null
+      "last_spotify_sync": null,
+      "followers": 192,
+      "nb_album": 10,
+      "deezer_id": 134574542,
+      "has_radio": true,
+      "top_tracks": [],
+      "deezer_url": "https://www.deezer.com/artist/134574542",
+      "picture": "https://api.deezer.com/artist/134574542/image",
+      "apple_music_id": 0,
+      "apple_music_url": "",
+      "bio": "",
+      "wikipedia_url": "",
+      "last_sync": "2026-07-04T13:00:12Z"
     },
     "df8ada2d": {
       "id": "df8ada2d",
@@ -229,7 +241,19 @@
       "monthly_listeners": 0,
       "popularity": 0,
       "genres": [],
-      "last_spotify_sync": null
+      "last_spotify_sync": null,
+      "followers": 192,
+      "nb_album": 10,
+      "deezer_id": 134574542,
+      "has_radio": true,
+      "top_tracks": [],
+      "deezer_url": "https://www.deezer.com/artist/134574542",
+      "picture": "https://api.deezer.com/artist/134574542/image",
+      "apple_music_id": 0,
+      "apple_music_url": "",
+      "bio": "",
+      "wikipedia_url": "",
+      "last_sync": "2026-07-04T13:00:13Z"
     }
   },
   "releases": {
@@ -280,7 +304,7 @@
     "r005": {
       "id": "r005",
       "artist_id": "f23cab60",
-      "titulo": "Ah\u00ed La Llevo",
+      "titulo": "Ahí La Llevo",
       "tipo": "single",
       "genero": "Regional Mexicano",
       "fecha_lanzamiento": "2024-12-05",

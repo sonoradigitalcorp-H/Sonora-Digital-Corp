@@ -1,0 +1,14 @@
+# Hermes Policy — Gateway access
+version: 1
+agent: hermes
+policy: allow-specific
+description: "Hermes puede leer infraestructura y escribir documentación"
+capabilities:
+  - "fs.read"
+  - "fs.write"
+  - "git.read"
+  - "network.fetch"
+never:
+  - "git.push"
+  - "deploy.*"
+  - "secrets.decrypt"
