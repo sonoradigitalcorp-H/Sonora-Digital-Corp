@@ -1,0 +1,195 @@
+[
+  {
+    "name": "sdc-mcp-server",
+    "port": 8000,
+    "bind": "127.0.0.1",
+    "protocol": "http",
+    "machine": "sdc-prod",
+    "type": "docker"
+  },
+  {
+    "name": "sdc-jarvis-webui",
+    "port": 5174,
+    "bind": "127.0.0.1",
+    "protocol": "http",
+    "machine": "sdc-prod",
+    "type": "docker"
+  },
+  {
+    "name": "sdc-qdrant",
+    "port": {
+      "http": 6333,
+      "grpc": 6334
+    },
+    "bind": "127.0.0.1",
+    "protocol": "http",
+    "machine": "sdc-prod",
+    "type": "docker"
+  },
+  {
+    "name": "sdc-neo4j",
+    "port": {
+      "http": 7474,
+      "bolt": 7687
+    },
+    "bind": "127.0.0.1",
+    "protocol": "http",
+    "machine": "sdc-prod",
+    "type": "docker"
+  },
+  {
+    "name": "sdc-n8n",
+    "port": 5678,
+    "bind": "127.0.0.1",
+    "protocol": "http",
+    "machine": "sdc-prod",
+    "type": "docker"
+  },
+  {
+    "name": "abe-service",
+    "port": 5180,
+    "bind": "127.0.0.1",
+    "protocol": "http",
+    "machine": "sdc-prod",
+    "type": "systemd"
+  },
+  {
+    "name": "abe-api",
+    "port": 8111,
+    "bind": "127.0.0.1",
+    "protocol": "http",
+    "machine": "sdc-prod",
+    "type": "systemd",
+    "proxy": true,
+    "proxy_domain": "api.sonoradigitalcorp.com"
+  },
+  {
+    "name": "mystika-web",
+    "port": 3001,
+    "bind": "127.0.0.1",
+    "protocol": "http",
+    "machine": "sdc-prod",
+    "type": "systemd",
+    "proxy": true,
+    "proxy_domain": "mystika.sonoradigitalcorp.com"
+  },
+  {
+    "name": "mystika-api",
+    "port": 4000,
+    "bind": "127.0.0.1",
+    "protocol": "http",
+    "machine": "sdc-prod",
+    "type": "systemd",
+    "proxy": true,
+    "proxy_domain": "mystika.sonoradigitalcorp.com"
+  },
+  {
+    "name": "mystika-bot",
+    "port": null,
+    "bind": null,
+    "protocol": null,
+    "machine": "sdc-prod",
+    "type": "systemd"
+  },
+  {
+    "name": "evolucion-dashboard",
+    "port": 8080,
+    "bind": "127.0.0.1",
+    "protocol": "http",
+    "machine": "sdc-prod",
+    "type": "systemd"
+  },
+  {
+    "name": "openclaw-gateway",
+    "port": 18789,
+    "bind": "127.0.0.1",
+    "protocol": "http",
+    "machine": "sdc-prod",
+    "type": "systemd"
+  },
+  {
+    "name": "sdc-postgres",
+    "port": 5432,
+    "bind": "127.0.0.1",
+    "protocol": "tcp",
+    "machine": "sdc-prod",
+    "type": "docker"
+  },
+  {
+    "name": "sdc-redis",
+    "port": 6379,
+    "bind": "127.0.0.1",
+    "protocol": "tcp",
+    "machine": "sdc-prod",
+    "type": "docker"
+  },
+  {
+    "name": "sdc-jarvis-core",
+    "port": null,
+    "bind": null,
+    "protocol": null,
+    "machine": "sdc-prod",
+    "type": "docker"
+  },
+  {
+    "name": "sdc-langfuse",
+    "port": 3000,
+    "bind": "127.0.0.1",
+    "protocol": "http",
+    "machine": "sdc-prod",
+    "type": "docker"
+  },
+  {
+    "name": "sdc-langfuse-db",
+    "port": null,
+    "bind": null,
+    "protocol": null,
+    "machine": "sdc-prod",
+    "type": "docker"
+  },
+  {
+    "name": "sdc-telegram-bot",
+    "port": 3003,
+    "bind": "127.0.0.1",
+    "protocol": "http",
+    "machine": "sdc-prod",
+    "type": "docker"
+  },
+  {
+    "name": "abe-daemon",
+    "port": null,
+    "bind": null,
+    "protocol": null,
+    "machine": "sdc-prod",
+    "type": "systemd"
+  },
+  {
+    "name": "truth-guardian",
+    "port": 8088,
+    "bind": "127.0.0.1",
+    "protocol": "http",
+    "machine": "sdc-prod",
+    "type": "systemd"
+  },
+  {
+    "name": "hermes-gateway",
+    "port": 8643,
+    "bind": "127.0.0.1",
+    "protocol": "http",
+    "machine": "sdc-prod"
+  },
+  {
+    "name": "openclaw-node",
+    "port": 18989,
+    "bind": "127.0.0.1",
+    "protocol": "http",
+    "machine": "sdc-prod"
+  },
+  {
+    "name": "ollama",
+    "port": 11434,
+    "bind": "127.0.0.1",
+    "protocol": "http",
+    "machine": "sdc-prod"
+  }
+]

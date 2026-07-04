@@ -95,12 +95,32 @@ jobs:
           fi
           echo "✓ Score $SCORE/100 passes threshold (≥60)"
 
+      - name: Truth Validation
+        run: |
+          if [ -f "scripts/validate-truth.py" ]; then
+            python3 scripts/validate-truth.py
+          else
+            echo "ℹ No truth validation script found"
+          fi
+
+      - name: Verify Gate (Truth + Security + Cost)
+        if: steps.detect-tier.outputs.tier2 == 'true'
+        run: |
+          if [ -f "scripts/verify-gate.py" ] && [ -f "process/active/PLAN.yaml" ]; then
+            python3 scripts/verify-gate.py
+          else
+            echo "ℹ No plan or verify-gate found — skipping"
+          fi
+
       - name: Event Emission Check
         run: |
-          EVENTS_FILE="state/logs/events.jsonl"
+          EVENTS_FILE="state/events/events.jsonl"
           if [ -f "$EVENTS_FILE" ]; then
             EVENT_COUNT=$(wc -l < "$EVENTS_FILE")
-            echo "✓ Events logged: $EVENT_COUNT"
+            echo "✓ Events in unified bus: $EVENT_COUNT"
+          elif [ -f "state/logs/events.jsonl" ]; then
+            EVENT_COUNT=$(wc -l < "state/logs/events.jsonl")
+            echo "⚠ Legacy events file: $EVENT_COUNT (migrate to state/events/)"
           else
             echo "ℹ No events file found"
           fi

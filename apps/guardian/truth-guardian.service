@@ -1,0 +1,20 @@
+[Unit]
+Description=Truth Guardian — Drift Scanner, Health Checker & Compliance Auditor
+After=network.target docker.service
+Wants=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+Environment=PYTHONPATH=/home/ubuntu/sonora-digital-corp
+Environment=GUARDIAN_INTERVAL=60
+Environment=GUARDIAN_PORT=8088
+Environment=GUARDIAN_HOST=127.0.0.1
+ExecStart=/usr/bin/python3 -m apps.guardian.main
+Restart=always
+RestartSec=5
+# Logging handled by Python FileHandler internally
+
+[Install]
+WantedBy=multi-user.target

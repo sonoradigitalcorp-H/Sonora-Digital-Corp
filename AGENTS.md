@@ -174,6 +174,23 @@ Estado completo desplegado en:
 - `/strategy` — Strategy OS
 - `/presentar` — genera presentacion reveal.js de la sesion actual
 - `/deploy` — genera + despliega presentacion a :8080
+- `/doc` — genera docs de proceso (SPEC, SCORE, ADR, LECCION, gherkin, events)
+
+## Documentación de Proceso (AUTO-DOC)
+
+Cada sesión debe documentarse siguiendo CONDUCT.md. **No marcar DONE sin documentar.**
+
+Reglas:
+1. **Toda sesión con cambios** (no solo consulta) genera directorio en `process/completed/`
+2. **Tier 2** requiere: SPEC.md, SCORE.md, gherkin, ADR.md, events.jsonl, LECCION.md
+3. **Tier 3** requiere: VDD→EDD→PDD→ODD→SDD→BDD→TDD + ADR + events + LECCION
+4. **Al terminar**: ejecutar `/doc` para auto-generar docs desde resumen de sesión
+5. Si `/doc` no captura todo, completar manualmente siguiendo `process/templates/`
+
+Comandos:
+- `python3 scripts/auto-doc.py --auto` — auto desde AGENTS.md
+- `python3 scripts/auto-doc.py --spec-id SPEC-xxx --title "..." --tier 3 --summary "..."` — manual
+- `/doc` — via process-doc agent
 
 ## Templates
 
@@ -186,3 +203,43 @@ Estado completo desplegado en:
 | Enterprise Score | `metrics/enterprise-score.md` |
 
 Enterprise Score: ≥60 para aprobar (10 metrics × 10, max 100).
+
+## Cognitive Kernel (NUEVO — 2026-07-03)
+
+Arquitectura de 3 fases implementada: Foundations (A), Kernel Separation (B), Intelligence Layer (C).
+
+### Directorios clave
+| Ruta | Qué es |
+|------|--------|
+| `truth/` | 11 archivos YAML, 46 reglas — fuente única de verdad |
+| `agents/registry.yaml` | 9 agentes con capabilities explícitas |
+| `agents/capabilities/` | 6 definiciones de capabilities |
+| `agents/policies/` | 6 policies (deny-all por defecto) |
+| `state/memory/` | 3 DBs con TTL (working/project/organization) |
+| `state/events/catalog.yaml` | Schema de eventos unificado |
+| `apps/guardian/` | Truth Guardian: drift + health + compliance + scoreboard |
+| `apps/economics/` | Economics Kernel: costo por operación |
+| `apps/learning/` | Learning Kernel: heurísticas desde LECCION.md |
+| `apps/agent_metrics/` | Agent Scoreboard: métricas por agente |
+| `config/generated/` | Configs autogeneradas desde fleet.yml |
+
+### Nuevos comandos
+| Comando | Qué hace |
+|---------|----------|
+| `/plan` | Planning Gate: descompone objetivo en tareas |
+| `/verify` | Verification Pipeline: 3 gates (truth/security/cost) |
+| `python3 scripts/check-capability.py <agent> <cap>` | Verifica capability |
+
+### API (Truth Guardian, :8088)
+| Endpoint | Respuesta |
+|----------|-----------|
+| `GET /api/v1/status` | Drifts + health + status general |
+| `GET /api/v1/health` | Health check simple |
+| `GET /api/v1/drift` | Lista de drifts detectados |
+| `GET /api/v1/scoreboard` | Métricas por agente |
+
+### Sincronización
+- `scripts/sync-to-vps.sh` → rsync + regenerate + restart
+- `.github/workflows/sync-vps.yml` → GitHub Action que hace git pull en VPS
+
+### Enterprise Score actual: 84/100

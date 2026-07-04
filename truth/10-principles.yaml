@@ -1,0 +1,64 @@
+version: 1
+domain: principles
+updated: 2026-07-03T16:30:00Z
+rules:
+  - id: PRINCIPLE-001
+    description: "TRUTH.md es AUTOGENERADO desde truth/ YAML — nadie lo edita manualmente"
+    category: documentation
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+    source: "Policy P1"
+
+  - id: PRINCIPLE-002
+    description: "fleet.yml es SINGLE SOURCE OF TRUTH de infraestructura — todas las configs se derivan"
+    category: infrastructure
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+    source: "Policy P2"
+
+  - id: PRINCIPLE-003
+    description: "Los agentes NO consultan TRUTH.md directamente — consultan /api/v1/status (live data)"
+    category: operations
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+    source: "Policy P8"
+
+  - id: PRINCIPLE-004
+    description: "Toda ejecución requiere un plan aprobado — no hay 'go ahead' sin plan"
+    category: process
+    severity: error
+    applies_to: ["mystic", "hermes", "builder"]
+    enforcement: automated
+    source: "Planning Gate"
+
+  - id: PRINCIPLE-005
+    description: "Ningún output se acepta sin pasar verification gates"
+    category: process
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+    source: "Verification Pipeline"
+
+  - id: PRINCIPLE-006
+    description: "Todo evento debe emitirse al Event Bus unificado — no hay eventos en archivos sueltos"
+    category: observability
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+  - id: PRINCIPLE-007
+    description: "El sistema decide, los agentes ejecutan — los agentes tienen capacidad, no autoridad"
+    category: architecture
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+  - id: PRINCIPLE-008
+    description: "El VPS (sdc-prod) es el único servidor operativo — la laptop es thin client"
+    category: infrastructure
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated

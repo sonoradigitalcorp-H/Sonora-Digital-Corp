@@ -8,7 +8,7 @@
   "provider": {
     "ollama": {
       "npm": "@ai-sdk/openai-compatible",
-      "name": "Ollama (local)",
+      "name": "Ollama (local en VPS)",
       "options": {
         "baseURL": "http://localhost:11434/v1"
       },
@@ -39,33 +39,13 @@
       "description": "Mystic — alma de Sonora Digital Corp. Asistente personal con identidad, voz y propósito.",
       "permission": { "read": "allow", "edit": "ask", "bash": "ask", "glob": "allow", "grep": "allow", "todowrite": "allow", "webfetch": "allow", "task": "ask" }
     },
-    "explore": {
-      "mode": "subagent",
-      "model": "ollama/qwen2.5:1.5b-32k",
-      "description": "Explorador del sistema — busca archivos, investiga código, entiende la arquitectura",
-      "permission": { "read": "allow", "glob": "allow", "grep": "allow", "bash": "ask" }
-    },
-    "builder": {
-      "mode": "subagent",
-      "model": "ollama/llama3.2:3b-64k",
-      "description": "Constructor — implementa features, escribe código, crea archivos",
-      "permission": { "edit": "allow", "bash": { "git *": "allow", "npm *": "allow", "pip *": "allow", "docker *": "ask", "*": "ask" } }
-    },
-    "reviewer": {
-      "mode": "subagent",
-      "model": "ollama/llama3.2:3b-64k",
-      "description": "Revisor — code review, seguridad, calidad",
-      "permission": { "read": "allow", "edit": "deny", "grep": "allow", "bash": "deny" }
-    },
     "hermes": {
       "mode": "subagent",
-      "model": "ollama/qwen2.5:1.5b-32k",
-      "description": "Hermes Agent — gateway multi-canal (Telegram, WhatsApp, Discord, Desktop)",
+      "description": "Hermes Agent — gateway multi-canal (Telegram, WhatsApp, Desktop)",
       "permission": { "read": "allow", "bash": "deny" }
     },
     "openclaw": {
       "mode": "subagent",
-      "model": "ollama/qwen2.5:1.5b-32k",
       "description": "OpenClaw Gateway — 42 skills especializadas (browser, payments, social, media)",
       "permission": { "read": "allow", "bash": "deny" }
     },
@@ -101,27 +81,19 @@
     },
     "sdd-archive": {
       "mode": "subagent",
-      "model": "ollama/qwen2.5:1.5b-32k",
       "description": "Archive Agent — documenta resultados y actualiza conocimiento",
+      "permission": { "read": "allow", "edit": "ask", "bash": "ask" }
+    },
+    "process-doc": {
+      "mode": "subagent",
+      "model": "ollama/deepseek-r1:7b-64k",
+      "description": "Auto-Doc — genera SPEC.md, SCORE.md, ADR.md, LECCION.md, events.jsonl, gherkin desde resumen de sesion",
       "permission": { "read": "allow", "edit": "ask", "bash": "ask" }
     },
     "memory": {
       "mode": "subagent",
-      "model": "ollama/qwen2.5:1.5b-32k",
       "description": "Memory Agent — gestiona contexto persistente vía Engram + Neo4j + Qdrant",
       "permission": { "read": "allow", "bash": "deny" }
-    },
-    "research": {
-      "mode": "subagent",
-      "model": "ollama/deepseek-r1:7b-64k",
-      "description": "Research Agent — búsqueda y síntesis de información en todo el ecosistema",
-      "permission": { "read": "allow", "glob": "allow", "grep": "allow", "bash": "ask", "webfetch": "allow" }
-    },
-    "code": {
-      "mode": "subagent",
-      "model": "ollama/llama3.2:3b-64k",
-      "description": "Code Agent — análisis, generación, lectura y corrección de código",
-      "permission": { "read": "allow", "edit": "allow", "bash": { "git *": "allow", "pip *": "allow", "*": "ask" } }
     },
     "sales": {
       "mode": "subagent",
@@ -160,7 +132,6 @@
     },
     "finance": {
       "mode": "subagent",
-      "model": "ollama/qwen3:1.7b-32k",
       "description": "Finance OS — FinOps, revenue tracking, ROI, invoicing",
       "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Finance-OS.md"],
       "permission": { "read": "allow", "edit": "deny", "bash": "ask" }
@@ -174,7 +145,6 @@
     },
     "ops": {
       "mode": "subagent",
-      "model": "ollama/qwen2.5:1.5b-32k",
       "description": "Ops OS — infrastructure, monitoring, recovery, scaling",
       "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Ops-OS.md"],
       "permission": { "read": "allow", "edit": "ask", "bash": { "docker *": "allow", "systemctl *": "allow", "*": "ask" } }
@@ -194,17 +164,10 @@
       "permission": { "read": "allow", "edit": "ask", "bash": "ask", "task": "allow" }
     }
   },
-  "skills": {
-    "paths": [
-      ".opencode/skills",
-      ".opencode/agents",
-      "/home/ubuntu/.hermes/skills"
-    ]
-  },
   "mcp": {
     "hermes": {
       "type": "remote",
-      "url": "http://localhost:8000",
+      "url": "http://localhost:8643",
       "enabled": true,
       "description": "Hermes API — comunicación multi-canal (Telegram, WhatsApp, Desktop)"
     },
@@ -212,67 +175,28 @@
       "type": "remote",
       "url": "http://localhost:18789",
       "enabled": true,
-      "description": "OpenClaw Gateway — 55 skills (browser, payments, social, media, MCP)"
-    },
-    "qdrant": {
-      "type": "remote",
-      "url": "http://localhost:6333",
-      "enabled": true,
-      "description": "Qdrant — vector DB for semantic search"
-    },
-    "neo4j": {
-      "type": "remote",
-      "url": "http://localhost:7687",
-      "enabled": true,
-      "description": "Neo4j — graph DB for sessions, relationships, CRM"
-    },
-    "n8n": {
-      "type": "remote",
-      "url": "http://localhost:5678",
-      "enabled": true,
-      "description": "n8n — workflow automation"
-    }
-  },
-  "permission": {
-    "edit": "ask",
-    "bash": {
-      "git *": "allow",
-      "git commit *": "ask",
-      "git push *": "ask",
-      "npm *": "allow",
-      "pip *": "allow",
-      "docker *": "ask",
-      "systemctl *": "ask",
-      "*": "ask"
-    },
-    "read": "allow",
-    "glob": "allow",
-    "grep": "allow",
-    "todowrite": "allow",
-    "webfetch": "allow",
-    "skill": "allow",
-    "task": "ask",
-    "external_directory": {
-      "/home/ubuntu/sonora-digital-corp/config/.secrets/**": "deny",
-      "*": "allow"
+      "description": "OpenClaw Gateway — 42 skills (browser, payments, social, media)"
     }
   },
   "commands": {
-    "status": { "description": "Estado completo del sistema — healthcheck de todos los servicios", "prompt": "Run full healthcheck and show status of JARVIS, Hermes, OpenClaw, Neo4j, Qdrant, n8n, Docker, Systemd" },
-    "backup": { "description": "Ejecuta backup completo del sistema", "prompt": "Execute the backup script: copy sonora-enterprise-os/ apps/ config/ platforms/ to /home/ubuntu/backups/sdc/ with timestamp, verify integrity" },
-    "brain": { "description": "Abre el brain graph (dashboard en vivo)", "prompt": "Ejecuta el script open-brain-monitor.sh para abrir el Command Center con brain graph" },
-    "gsd": { "description": "Get Shit Done — flujo completo (discutir→planificar→ejecutar→verificar)", "prompt": "Ejecuta el flujo GSD: 1) Analiza estado actual 2) Discute qué necesita hacerse 3) Crea plan de acción 4) Ejecuta 5) Verifica 6) Documenta", "agent": "builder" },
-    "sdd-new": { "description": "Inicia nueva spec SDD con todo el pipeline", "prompt": "Ejecuta el flujo SDD completo: Research→Spec→Design→Tasks→Apply→Verify→Archive para una nueva feature", "agent": "sdd" },
-    "build": { "description": "Construye features completos siguiendo SDD", "prompt": "Analiza requerimiento y construye solución completa siguiendo SDD pipeline", "agent": "builder" },
-    "sales": { "description": "Sales OS — pipeline de ventas, leads, propuestas", "prompt": "Carga Sales OS y ejecuta el pipeline de ventas: revisa leads activos, genera reporte de pipeline", "agent": "sales" },
-    "dev": { "description": "Dev OS — entrega de software, CI/CD, deploys", "prompt": "Carga Dev OS y ejecuta: revisa estado de builds, deployments pendientes, issues activos", "agent": "dev" },
-    "support": { "description": "Support OS — tickets, SLAs, satisfacción", "prompt": "Carga Support OS y ejecuta: revisa tickets abiertos, SLAs próximos a vencer, satisfacción", "agent": "support" },
-    "agent": { "description": "Agent OS — harnesses, skills, agentes", "prompt": "Carga Agent OS y ejecuta: revisa estado de harnesses, skills registrados, salud de agentes", "agent": "agent-os" },
-    "knowledge": { "description": "Knowledge OS — memoria, ADRs, conocimiento", "prompt": "Carga Knowledge OS y ejecuta: revisa ADRs pendientes, captura conocimiento reciente, verifica memoria", "agent": "knowledge" },
-    "finance": { "description": "Finance OS — FinOps, ingresos, ROI", "prompt": "Carga Finance OS y ejecuta: revisa costos de ejecución, ingresos del período, ROI de iniciativas", "agent": "finance" },
-    "security": { "description": "Security OS — auditoría, incidentes, compliance", "prompt": "Carga Security OS y ejecuta: revisa estado de secrets, alertas activas, última auditoría", "agent": "security" },
-    "ops": { "description": "Ops OS — infraestructura, monitoreo, recuperación", "prompt": "Carga Ops OS y ejecuta: revisa salud de servicios, uso de disco, containers, últimas recuperaciones", "agent": "ops" },
-    "quality": { "description": "Quality OS — tests, auditorías, evaluaciones", "prompt": "Carga Quality OS y ejecuta: revisa pass rate de tests, scores de iniciativa, últimas auditorías", "agent": "quality" },
-    "strategy": { "description": "Strategy OS — iniciativas, score, planificación", "prompt": "Carga Strategy OS y ejecuta: revisa enterprise score, iniciativas activas, salud de todos los OS", "agent": "strategy" }
+    "status": { "description": "Estado completo del sistema", "prompt": "Ejecuta healthcheck completo: JARVIS, Hermes, OpenClaw, Neo4j, Qdrant, n8n, Docker, Systemd" },
+    "backup": { "description": "Backup completo del sistema", "prompt": "Ejecuta backup: copia sonora-enterprise-os/ apps/ config/ platforms/ a backups/ con timestamp" },
+    "brain": { "description": "Brain graph dashboard", "prompt": "Abre el Command Center con brain graph" },
+    "gsd": { "description": "Get Shit Done — flujo completo", "prompt": "GSD: 1) Estado actual 2) Qué hacer 3) Plan 4) Ejecutar 5) Verificar 6) Documentar", "agent": "builder" },
+    "sdd-new": { "description": "Nueva spec SDD", "prompt": "SDD pipeline: Research→Spec→Design→Tasks→Apply→Verify→Archive", "agent": "sdd" },
+    "build": { "description": "Construir feature", "prompt": "Analiza requerimiento y construye solución completa siguiendo SDD pipeline", "agent": "builder" },
+    "sales": { "description": "Sales OS — pipeline de ventas", "prompt": "Carga Sales OS: revisa leads activos, genera reporte de pipeline", "agent": "sales" },
+    "dev": { "description": "Dev OS — CI/CD, deploys", "prompt": "Carga Dev OS: revisa builds, deployments pendientes, issues activos", "agent": "dev" },
+    "support": { "description": "Support OS — tickets, SLAs", "prompt": "Carga Support OS: revisa tickets abiertos, SLAs próximos a vencer", "agent": "support" },
+    "agent": { "description": "Agent OS — harnesses, skills", "prompt": "Carga Agent OS: revisa estado de harnesses, skills, salud de agentes", "agent": "agent-os" },
+    "knowledge": { "description": "Knowledge OS — memoria, ADRs", "prompt": "Carga Knowledge OS: revisa ADRs pendientes, captura conocimiento reciente", "agent": "knowledge" },
+    "finance": { "description": "Finance OS — FinOps, revenue", "prompt": "Carga Finance OS: revisa costos, ingresos del período, ROI", "agent": "finance" },
+    "security": { "description": "Security OS — auditoría", "prompt": "Carga Security OS: revisa secrets, alertas activas, última auditoría", "agent": "security" },
+    "ops": { "description": "Ops OS — infraestructura", "prompt": "Carga Ops OS: revisa salud de servicios, uso de disco, containers", "agent": "ops" },
+    "quality": { "description": "Quality OS — tests, evaluaciones", "prompt": "Carga Quality OS: revisa pass rate de tests, scores, auditorías", "agent": "quality" },
+    "strategy": { "description": "Strategy OS — score, planificación", "prompt": "Carga Strategy OS: revisa enterprise score, iniciativas activas", "agent": "strategy" },
+    "doc": { "description": "Auto-Doc — genera docs de proceso (SPEC, SCORE, ADR, LECCION, gherkin, events)", "prompt": "Analiza la sesion actual de AGENTS.md y genera toda la documentacion de proceso siguiendo templates de process/templates/. Crea directorio en process/completed/, todos los archivos (SPEC.md, SCORE.md, ADR.md, LECCION.md, events.jsonl, gherkin/), y actualiza CATALOG.md.", "agent": "process-doc" },
+    "plan": { "description": "Planning Gate — descompone objetivo en tareas y genera PLAN.yaml", "prompt": "Ejecuta plan-gate.py con el objetivo especificado: descomponer en tareas, estimar costo, validar contra truth/. Si no hay objetivo claro, pedir descomposicion primero." },
+    "verify": { "description": "Verification Pipeline — ejecuta truth gate, security gate, cost gate", "prompt": "Ejecuta verify-gate.py contra el plan activo: truth gate (contradice truth/), security gate (capabilities), cost gate (budget). Reporta resultados." }
   }
 }

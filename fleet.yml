@@ -1,0 +1,309 @@
+# fleet.yml — Single Source of Truth (SSOT) for Sonora Digital Corp fleet
+# Policy P2: All other configs auto-generated from this file
+# Last updated: 2026-07-03
+
+meta:
+  version: "1.1"
+  updated: "2026-07-03T16:20:00Z"
+  source: "fleet.yml"
+  generator: "manual"
+
+machines:
+  sdc-prod:
+    host: 149.56.46.173
+    user: ubuntu
+    os: Ubuntu 26.04
+    role: primary
+    notes: "OVH VPS, 11GB RAM, headless"
+
+  laptop:
+    host: 187.245.106.218
+    user: mystic
+    os: Linux
+    role: workstation
+    notes: "Luis Daniel laptop, NAT, thin client only"
+
+networking:
+  policy: "Policy P3 — No service binds 0.0.0.0 without nginx proxy"
+  ssl_path: "/etc/letsencrypt/live/"
+  ssl_permissions: "755"  # fixed 2026-07-03
+  nginx_sites:
+    - domain: "api.sonoradigitalcorp.com"
+      ssl: true
+      cert: "api.sonoradigitalcorp.com"
+      upstreams:
+        - "127.0.0.1:8111"  # ABE API
+        - "127.0.0.1:5174"  # Web UI
+    - domain: "mystika.sonoradigitalcorp.com"
+      ssl: false
+      upstreams:
+        - "127.0.0.1:3001"  # Mystika Web
+        - "127.0.0.1:4000"  # Mystika API
+
+services:
+  - name: sdc-mcp-server
+    machine: sdc-prod
+    port: 8000
+    bind: 127.0.0.1
+    protocol: http
+    docker: true
+    proxy: false
+    notes: Hermes MCP gateway
+
+  - name: sdc-jarvis-webui
+    machine: sdc-prod
+    port: 5174
+    bind: 127.0.0.1
+    protocol: http
+    docker: true
+    proxy: false
+    notes: Web frontend (Next.js)
+
+  - name: sdc-qdrant
+    machine: sdc-prod
+    port:
+      http: 6333
+      grpc: 6334
+    bind: 127.0.0.1
+    protocol: http
+    docker: true
+    proxy: false
+    notes: Vector store
+
+  - name: sdc-neo4j
+    machine: sdc-prod
+    port:
+      http: 7474
+      bolt: 7687
+    bind: 127.0.0.1
+    protocol: http
+    docker: true
+    proxy: false
+    notes: Graph database
+
+  - name: sdc-n8n
+    machine: sdc-prod
+    port: 5678
+    bind: 127.0.0.1
+    protocol: http
+    docker: true
+    proxy: false
+    notes: Automation (33 workflows)
+
+  - name: abe-service
+    machine: sdc-prod
+    port: 5180
+    bind: 127.0.0.1
+    protocol: http
+    systemd: abe-service.service --user
+    proxy: false
+    notes: ABE Music OS internal API
+
+  - name: abe-api
+    machine: sdc-prod
+    port: 8111
+    bind: 127.0.0.1
+    protocol: http
+    systemd: abe-api.service
+    proxy: true
+    proxy_domain: api.sonoradigitalcorp.com
+    notes: ABE Music API (FastAPI, nginx proxy)
+
+  - name: mystika-web
+    machine: sdc-prod
+    port: 3001
+    bind: 127.0.0.1
+    protocol: http
+    systemd: mystika-web.service
+    proxy: true
+    proxy_domain: mystika.sonoradigitalcorp.com
+    notes: Mystika Next.js frontend
+
+  - name: mystika-api
+    machine: sdc-prod
+    port: 4000
+    bind: 127.0.0.1
+    protocol: http
+    systemd: mystika-api.service
+    proxy: true
+    proxy_domain: mystika.sonoradigitalcorp.com
+    notes: Mystika Node.js API
+
+  - name: mystika-bot
+    machine: sdc-prod
+    port: null
+    bind: null
+    protocol: null
+    systemd: mystika-bot.service
+    proxy: false
+    notes: Mystika Telegram bot (no web)
+
+  - name: evolucion-dashboard
+    machine: sdc-prod
+    port: 8080
+    bind: 127.0.0.1
+    protocol: http
+    systemd: evolucion-dashboard.service --user
+    proxy: false
+    notes: Evolution dashboard
+
+  - name: openclaw-gateway
+    machine: sdc-prod
+    port: 18789
+    bind: 127.0.0.1
+    protocol: http
+    systemd: openclaw-gateway.service
+    proxy: false
+    notes: OpenClaw gateway
+
+  - name: sdc-postgres
+    machine: sdc-prod
+    port: 5432
+    bind: 127.0.0.1
+    protocol: tcp
+    docker: true
+    proxy: false
+    notes: PostgreSQL database
+
+  - name: sdc-redis
+    machine: sdc-prod
+    port: 6379
+    bind: 127.0.0.1
+    protocol: tcp
+    docker: true
+    proxy: false
+    notes: Redis cache
+
+  - name: sdc-jarvis-core
+    machine: sdc-prod
+    port: null
+    bind: null
+    protocol: null
+    docker: true
+    proxy: false
+    notes: JARVIS core engine (no web port)
+
+  - name: sdc-langfuse
+    machine: sdc-prod
+    port: 3000
+    bind: 127.0.0.1
+    protocol: http
+    docker: true
+    proxy: false
+    notes: LangFuse observability (unhealthy)
+
+  - name: sdc-langfuse-db
+    machine: sdc-prod
+    port: null
+    bind: null
+    protocol: null
+    docker: true
+    proxy: false
+    notes: LangFuse PostgreSQL (internal, no exposed port)
+
+  - name: sdc-telegram-bot
+    machine: sdc-prod
+    port: 3003
+    bind: 127.0.0.1
+    protocol: http
+    docker: true
+    proxy: false
+    notes: Telegram bot webhook
+
+  - name: abe-daemon
+    machine: sdc-prod
+    port: null
+    bind: null
+    protocol: null
+    systemd: abe-daemon.service
+    proxy: false
+    notes: ABE Daemon 24/7 — monitoring & auto-fix
+
+  - name: truth-guardian
+    machine: sdc-prod
+    port: 8088
+    bind: 127.0.0.1
+    protocol: http
+    systemd: truth-guardian.service
+    proxy: false
+    notes: Truth Guardian — drift scanner & health checker
+
+  - name: hermes-gateway
+    machine: sdc-prod
+    port: 8643
+    bind: 127.0.0.1
+    protocol: http
+    proxy: false
+    notes: Hermes gateway (node)
+
+  - name: openclaw-node
+    machine: sdc-prod
+    port: 18989
+    bind: 127.0.0.1
+    protocol: http
+    proxy: false
+    notes: OpenClaw node service
+
+  # Qdrant gRPC is same container as sdc-qdrant, port 6334
+
+  - name: ollama
+    machine: sdc-prod
+    port: 11434
+    bind: 127.0.0.1
+    protocol: http
+    proxy: false
+    notes: Ollama local LLM
+
+secrets:
+  method: age
+  version: "1.2.1"
+  files:
+    - path: "/home/ubuntu/.hermes/auth.json.age"
+      decrypt_key: "/home/ubuntu/.age/key.txt"
+      machine: sdc-prod
+      notes: "Hermes API keys (opencode-go + OpenRouter)"
+    - path: "/home/ubuntu/.local/share/opencode/auth.json.age"
+      decrypt_key: "/home/ubuntu/.age/key.txt"
+      machine: sdc-prod
+      notes: "OpenClaw auth"
+
+    - path: ".env.age"
+      decrypt_key: "~/.age/key.txt"
+      machine: laptop
+      notes: "Telegram tokens, Redis password"
+
+    - path: "config/.secrets/clients.json.age"
+      decrypt_key: "~/.age/key.txt"
+      machine: laptop
+      notes: "Client secrets"
+
+    - path: ".env.age"
+      decrypt_key: "~/.age/key.txt"
+      machine: sdc-prod
+      notes: "Telegram tokens, Redis password (VPS copy)"
+
+    - path: "config/.secrets/clients.json.age"
+      decrypt_key: "~/.age/key.txt"
+      machine: sdc-prod
+      notes: "Client secrets (VPS copy)"
+
+backup:
+  include_secrets: true
+  command: "scripts/decrypt-env.sh"
+  notes: "Secrets decrypted on restore via age key"
+
+health:
+  check_interval: 60
+  alerts: telegram
+  blackbox_targets:
+    - "http://localhost:8000/health"
+    - "http://localhost:6333/health"
+    - "http://localhost:7474"
+    - "http://localhost:5678/healthz"
+    - "http://localhost:5180/api/health"
+    - "http://localhost:8111/health"
+    - "http://localhost:8080/"
+    - "http://localhost:3001/"
+    - "http://localhost:4000/health"
+    - "http://localhost:11434/api/tags"
+    - "http://localhost:3000/health"

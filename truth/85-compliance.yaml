@@ -1,0 +1,64 @@
+version: 1
+domain: compliance
+updated: 2026-07-03T16:30:00Z
+rules:
+  - id: COMP-001
+    description: "Enterprise Score ≥ 60 para aprobar cualquier SPEC"
+    category: quality
+    severity: error
+    applies_to: ["all_specs"]
+    enforcement: automated
+    check: "Score calculado en SCORE.md"
+
+  - id: COMP-002
+    description: "JR-Lite 15-Point obligatorio para Tier 2+"
+    category: quality
+    severity: error
+    applies_to: ["all_specs"]
+    enforcement: automated
+    points:
+      - "1. Objetivo claro en 1 línea"
+      - "2. Value Driver identificado"
+      - "3. FR numerados (≥1)"
+      - "4. Success criteria verificables"
+      - "5. Gherkin scenarios (≥2)"
+      - "6. Edge cases documentados"
+      - "7. Enums tipados (si aplica)"
+      - "8. Data classes frozen (si aplica)"
+      - "9. Módulos < 200 líneas"
+      - "10. Dependencias explícitas"
+      - "11. Eventos definidos"
+      - "12. Kill criteria"
+      - "13. Scale criteria"
+      - "14. Docstrings con FR reference"
+      - "15. Score calculado"
+
+  - id: COMP-003
+    description: "Planning Gate obligatorio antes de toda ejecución"
+    category: process
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+  - id: COMP-004
+    description: "Verification Pipeline obligatorio después de toda ejecución"
+    category: process
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+  - id: COMP-005
+    description: "Event Bus obligatorio — toda operación emite evento"
+    category: observability
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+compliance_checks:
+  - name: "pre-commit"
+    gates: ["truth", "security"]
+  - name: "pre-merge"
+    gates: ["truth", "security", "cost"]
+  - name: "scheduled"
+    interval: "24h"
+    gates: ["truth", "security"]

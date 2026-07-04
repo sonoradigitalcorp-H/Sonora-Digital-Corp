@@ -1,0 +1,24 @@
+# Capability: Git
+version: 1
+domain: git
+actions:
+  - id: git.read
+    description: "Leer repositorio (log, diff, status, ls-files)"
+    severity: info
+  - id: git.write
+    description: "Escribir archivos locales"
+    severity: warning
+  - id: git.push
+    description: "Hacer push a remoto"
+    severity: error
+    constraints:
+      - "no --force"
+      - "solo ramas feature/*"
+  - id: git.tag
+    description: "Crear tags"
+    severity: warning
+  - id: git.merge
+    description: "Hacer merge de PRs"
+    severity: error
+    constraints:
+      - "requiere reviewer aprobado"

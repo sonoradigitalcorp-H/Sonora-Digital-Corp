@@ -1,0 +1,32 @@
+version: 1
+domain: operations
+updated: 2026-07-03T16:30:00Z
+rules:
+  - id: OPS-001
+    description: "Silence = health — no se envían reportes diarios 'all OK' a menos que algo cambie"
+    category: monitoring
+    severity: warning
+    applies_to: ["truth-guardian"]
+    enforcement: automated
+    source: "Policy P6"
+
+  - id: OPS-002
+    description: "Truth Guardian verifica drifts cada 60s — alerta por Telegram si detecta"
+    category: monitoring
+    severity: error
+    applies_to: ["truth-guardian"]
+    enforcement: automated
+
+  - id: OPS-003
+    description: "Backups diarios via systemd timer — incluyen secrets cifrados"
+    category: backup
+    severity: error
+    applies_to: ["infrastructure"]
+    enforcement: automated
+
+  - id: OPS-004
+    description: "Incident response: detect → alert → diagnose → repair → postmortem"
+    category: incident
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: manual

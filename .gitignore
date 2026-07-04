@@ -23,3 +23,10 @@ credentials/
 .env
 .vercel
 .env*
+.age/
+age-key.txt
+age-key*.txt
+
+# Event bus operational data (not committed)
+state/events/*.jsonl
+state/events/replay/
