@@ -80,3 +80,11 @@ rules:
   - all_agents
   enforcement: automated
   source: Decision 2026-07-03
+- id: PRINCIPLE-010
+  description: "Stack Lock v1 — solo Vercel, Next.js, React, Tailwind, shadcn/ui, FastAPI, PostgreSQL, Redis, Qdrant, Neo4j, Ollama, n8n, GitHub Actions. Ninguna herramienta nueva sin razon objetiva post-MVP."
+  category: infrastructure
+  severity: error
+  applies_to:
+  - all_agents
+  enforcement: automated
+  source: docs/STACK-LOCK.md
