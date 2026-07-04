@@ -26,7 +26,7 @@
 ## 🏗️ Arquitectura del Proyecto
 
 ```
-apps/tios/
+apps/SIGNAL/
 ├── src/
 │   ├── app/
 │   │   ├── (landing)/page.tsx          # Landing page
@@ -702,8 +702,7 @@ npx next build
 
 | URL | Estado | Descripción |
 |---|---|---|
-| `https://tios-iota.vercel.app` | ✅ **Live** | Producción activa, 38 rutas, 0 errores |
-| `https://signal-music.vercel.app` | ⚠️ Alias | Requiere configuración de dominio en Vercel |
+| `https://signal-music.vercel.app` | ✅ **Live** | Producción activa, 38 rutas, 0 errores |
 | **Vercel Project** | `nikkixan09/signal` | Build automático desde git |
 
 ### Git
@@ -772,78 +771,78 @@ npx next build
 ## 📁 Archivos Relevantes por Categoría
 
 ### Pages
-- `apps/tios/src/app/(landing)/page.tsx`
-- `apps/tios/src/app/dashboard/page.tsx`
-- `apps/tios/src/app/artists/page.tsx`
-- `apps/tios/src/app/artists/[id]/page.tsx`
-- `apps/tios/src/app/discovery/page.tsx`
-- `apps/tios/src/app/analytics/page.tsx`
-- `apps/tios/src/app/market/page.tsx`
-- `apps/tios/src/app/signings/page.tsx`
-- `apps/tios/src/app/contracts/page.tsx`
-- `apps/tios/src/app/war-rooms/page.tsx`
-- `apps/tios/src/app/war-rooms/[id]/page.tsx`
-- `apps/tios/src/app/workflows/page.tsx`
-- `apps/tios/src/app/playlists/page.tsx`
-- `apps/tios/src/app/finance/page.tsx`
-- `apps/tios/src/app/reports/page.tsx`
-- `apps/tios/src/app/agents/page.tsx`
-- `apps/tios/src/app/alerts/page.tsx`
-- `apps/tios/src/app/settings/page.tsx`
+- `apps/SIGNAL/src/app/(landing)/page.tsx`
+- `apps/SIGNAL/src/app/dashboard/page.tsx`
+- `apps/SIGNAL/src/app/artists/page.tsx`
+- `apps/SIGNAL/src/app/artists/[id]/page.tsx`
+- `apps/SIGNAL/src/app/discovery/page.tsx`
+- `apps/SIGNAL/src/app/analytics/page.tsx`
+- `apps/SIGNAL/src/app/market/page.tsx`
+- `apps/SIGNAL/src/app/signings/page.tsx`
+- `apps/SIGNAL/src/app/contracts/page.tsx`
+- `apps/SIGNAL/src/app/war-rooms/page.tsx`
+- `apps/SIGNAL/src/app/war-rooms/[id]/page.tsx`
+- `apps/SIGNAL/src/app/workflows/page.tsx`
+- `apps/SIGNAL/src/app/playlists/page.tsx`
+- `apps/SIGNAL/src/app/finance/page.tsx`
+- `apps/SIGNAL/src/app/reports/page.tsx`
+- `apps/SIGNAL/src/app/agents/page.tsx`
+- `apps/SIGNAL/src/app/alerts/page.tsx`
+- `apps/SIGNAL/src/app/settings/page.tsx`
 
 ### API Routes
-- `apps/tios/src/app/api/v1/artists/route.ts`
-- `apps/tios/src/app/api/v1/artists/refresh/route.ts`
-- `apps/tios/src/app/api/v1/chat/route.ts`
-- `apps/tios/src/app/api/v1/market/route.ts`
-- `apps/tios/src/app/api/v1/signings/route.ts`
-- `apps/tios/src/app/api/v1/contracts/route.ts`
-- `apps/tios/src/app/api/v1/war-rooms/route.ts`
-- `apps/tios/src/app/api/v1/war-rooms/[...slug]/route.ts`
-- `apps/tios/src/app/api/v1/finance/route.ts`
-- `apps/tios/src/app/api/v1/analytics/route.ts`
-- `apps/tios/src/app/api/v1/workflows/route.ts`
-- `apps/tios/src/app/api/v1/workflows/[...slug]/route.ts`
-- `apps/tios/src/app/api/v1/agents/route.ts`
-- `apps/tios/src/app/api/v1/discovery/route.ts`
-- `apps/tios/src/app/api/v1/reports/route.ts`
-- `apps/tios/src/app/api/v1/playlists/route.ts`
-- `apps/tios/src/app/api/v1/notifications/route.ts`
-- `apps/tios/src/app/api/v1/search/route.ts`
-- `apps/tios/src/app/api/v1/settings/route.ts`
-- `apps/tios/src/app/api/v1/approvals/[...slug]/route.ts`
-- `apps/tios/src/app/api/v1/command-center/health/route.ts`
-- `apps/tios/src/app/api/v1/command-center/briefing/route.ts`
+- `apps/SIGNAL/src/app/api/v1/artists/route.ts`
+- `apps/SIGNAL/src/app/api/v1/artists/refresh/route.ts`
+- `apps/SIGNAL/src/app/api/v1/chat/route.ts`
+- `apps/SIGNAL/src/app/api/v1/market/route.ts`
+- `apps/SIGNAL/src/app/api/v1/signings/route.ts`
+- `apps/SIGNAL/src/app/api/v1/contracts/route.ts`
+- `apps/SIGNAL/src/app/api/v1/war-rooms/route.ts`
+- `apps/SIGNAL/src/app/api/v1/war-rooms/[...slug]/route.ts`
+- `apps/SIGNAL/src/app/api/v1/finance/route.ts`
+- `apps/SIGNAL/src/app/api/v1/analytics/route.ts`
+- `apps/SIGNAL/src/app/api/v1/workflows/route.ts`
+- `apps/SIGNAL/src/app/api/v1/workflows/[...slug]/route.ts`
+- `apps/SIGNAL/src/app/api/v1/agents/route.ts`
+- `apps/SIGNAL/src/app/api/v1/discovery/route.ts`
+- `apps/SIGNAL/src/app/api/v1/reports/route.ts`
+- `apps/SIGNAL/src/app/api/v1/playlists/route.ts`
+- `apps/SIGNAL/src/app/api/v1/notifications/route.ts`
+- `apps/SIGNAL/src/app/api/v1/search/route.ts`
+- `apps/SIGNAL/src/app/api/v1/settings/route.ts`
+- `apps/SIGNAL/src/app/api/v1/approvals/[...slug]/route.ts`
+- `apps/SIGNAL/src/app/api/v1/command-center/health/route.ts`
+- `apps/SIGNAL/src/app/api/v1/command-center/briefing/route.ts`
 
 ### Componentes
-- `apps/tios/src/components/dashboard/layout.tsx`
-- `apps/tios/src/components/dashboard/sidebar.tsx`
-- `apps/tios/src/components/dashboard/topbar.tsx`
-- `apps/tios/src/components/dashboard/stats-grid.tsx`
-- `apps/tios/src/components/dashboard/top-artists.tsx`
-- `apps/tios/src/components/dashboard/activity-chart.tsx`
-- `apps/tios/src/components/dashboard/alerts-panel.tsx`
-- `apps/tios/src/components/dashboard/market-overview.tsx`
-- `apps/tios/src/components/dashboard/discovery-feed.tsx`
-- `apps/tios/src/components/chat-agent.tsx`
-- `apps/tios/src/components/workflows/workflow-list.tsx`
+- `apps/SIGNAL/src/components/dashboard/layout.tsx`
+- `apps/SIGNAL/src/components/dashboard/sidebar.tsx`
+- `apps/SIGNAL/src/components/dashboard/topbar.tsx`
+- `apps/SIGNAL/src/components/dashboard/stats-grid.tsx`
+- `apps/SIGNAL/src/components/dashboard/top-artists.tsx`
+- `apps/SIGNAL/src/components/dashboard/activity-chart.tsx`
+- `apps/SIGNAL/src/components/dashboard/alerts-panel.tsx`
+- `apps/SIGNAL/src/components/dashboard/market-overview.tsx`
+- `apps/SIGNAL/src/components/dashboard/discovery-feed.tsx`
+- `apps/SIGNAL/src/components/chat-agent.tsx`
+- `apps/SIGNAL/src/components/workflows/workflow-list.tsx`
 
 ### Librerías Core
-- `apps/tios/src/lib/data-generator.ts` — **38+ exports** (incluye `ARTIST_POOL` export)
-- `apps/tios/src/lib/chat-knowledge.ts` — **16 FAQ modules + fallback**
-- `apps/tios/src/lib/artist-images.ts` — **Deezer API**
-- `apps/tios/src/lib/artist-cache.ts` — **Cache global Spotify con TTL 24h** (NUEVO Fase 2A)
-- `apps/tios/src/lib/spotify-service.ts` — **Spotify Web API Client** (NUEVO Fase 2A)
-- `apps/tios/src/lib/report-pdf.ts` — **PDF generation**
-- `apps/tios/src/lib/utils.ts` — **cn() utility**
+- `apps/SIGNAL/src/lib/data-generator.ts` — **38+ exports** (incluye `ARTIST_POOL` export)
+- `apps/SIGNAL/src/lib/chat-knowledge.ts` — **16 FAQ modules + fallback**
+- `apps/SIGNAL/src/lib/artist-images.ts` — **Deezer API**
+- `apps/SIGNAL/src/lib/artist-cache.ts` — **Cache global Spotify con TTL 24h** (NUEVO Fase 2A)
+- `apps/SIGNAL/src/lib/spotify-service.ts` — **Spotify Web API Client** (NUEVO Fase 2A)
+- `apps/SIGNAL/src/lib/report-pdf.ts` — **PDF generation**
+- `apps/SIGNAL/src/lib/utils.ts` — **cn() utility**
 
 ### Config Env
-- `apps/tios/.env.local.example` — **Template con SPOTIFY_CLIENT_ID/SECRET** (NUEVO Fase 2A)
+- `apps/SIGNAL/.env.local.example` — **Template con SPOTIFY_CLIENT_ID/SECRET** (NUEVO Fase 2A)
 
 ### Configuración Global
-- `apps/tios/src/app/globals.css` — **Premium design system**
-- `apps/tios/tailwind.config.ts` — **Theme tokens**
-- `apps/tios/src/middleware.ts` — **Middleware (si existe)**
+- `apps/SIGNAL/src/app/globals.css` — **Premium design system**
+- `apps/SIGNAL/tailwind.config.ts` — **Theme tokens**
+- `apps/SIGNAL/src/middleware.ts` — **Middleware (si existe)**
 
 ---
 
