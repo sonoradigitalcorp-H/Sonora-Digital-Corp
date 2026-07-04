@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Control Plane — Mystic Engine</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'SF Mono','Fira Code',monospace; background: #0d1117; color: #c9d1d9; padding: 20px; }
+h1 { color: #58a6ff; font-size: 22px; margin-bottom: 4px; }
+.sub { color: #8b949e; font-size: 13px; margin-bottom: 20px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 16px; }
+.panel { background: #161b22; border: 1px solid #21262d; border-radius: 8px; padding: 16px; }
+.panel h2 { font-size: 13px; color: #8b949e; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.loading { color: #8b949e; font-size: 12px; }
+.error { color: #f85149; font-size: 12px; }
+.service { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 12px; border-bottom: 1px solid #21262d; }
+.service:last-child { border-bottom: none; }
+.dot-green { color: #3fb950; font-size: 14px; }
+.dot-red { color: #f85149; font-size: 14px; }
+.dot-yellow { color: #d29922; font-size: 14px; }
+.status-bar { display: flex; gap: 4px; margin: 8px 0; }
+.status-bar span { height: 8px; border-radius: 4px; flex: 1; }
+.sb-row { display: flex; justify-content: space-between; padding: 3px 0; font-size: 11px; border-bottom: 1px solid #1c2128; }
+.sb-row:last-child { border-bottom: none; }
+.sb-name { color: #58a6ff; }
+.sb-ops { color: #8b949e; }
+.event { padding: 4px 0; font-size: 11px; border-bottom: 1px solid #1c2128; display: flex; gap: 8px; }
+.event-time { color: #484f58; min-width: 60px; }
+.ev-name { color: #58a6ff; }
+.cost-row { display: flex; justify-content: space-between; padding: 3px 0; font-size: 12px; border-bottom: 1px solid #1c2128; }
+.refresh-btn { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; padding: 4px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; float: right; }
+.refresh-btn:hover { background: #30363d; }
+</style>
+</head>
+<body>
+
+<h1>Control Plane</h1>
+<p class="sub" id="sub">Cargando...</p>
+<button class="refresh-btn" onclick="load()">⟳ Recargar</button>
+
+<div class="grid" id="grid"></div>
+
+<script>
+async function fetchJSON(url) {
+  const r = await fetch(url);
+  if (!r.ok) throw new Error(r.status);
+  return r.json();
+}
+
+function statusDot(s) {
+  if (s === 'healthy' || s === 'active') return '<span class="dot-green">●</span>';
+  if (s === 'unhealthy' || s === 'inactive') return '<span class="dot-red">●</span>';
+  return '<span class="dot-yellow">●</span>';
+}
+
+async function load() {
+  document.getElementById('sub').textContent = new Date().toISOString().slice(0, 19).replace('T', ' ') + ' UTC';
+  const grid = document.getElementById('grid');
+
+  try {
+    const [status, scoreboard, events, cost] = await Promise.all([
+      fetchJSON('/api/v1/status').catch(() => null),
+      fetchJSON('/api/v1/scoreboard').catch(() => null),
+      fetchJSON('/api/v1/events/recent?limit=15').catch(() => null),
+      fetchJSON('/api/v1/cost/summary').catch(() => null),
+    ]);
+
+    let panels = '';
+
+    // Panel 1: System Health
+    panels += `<div class="panel"><h2>${statusDot('healthy')} System Health</h2>`;
+    if (status) {
+      const h = status.health || [];
+      let healthy = h.filter(s => s.status === 'healthy').length;
+      let total = h.length;
+      panels += `<div class="status-bar">${h.map(s => `<span style="background:${s.status === 'healthy' ? '#3fb950' : '#f85149'}"></span>`).join('')}</div>`;
+      panels += `<div style="font-size:11px;color:#8b949e;margin-bottom:8px">${healthy}/${total} servicios saludables · ${status.drift_count || 0} drifts</div>`;
+      h.slice(0, 8).forEach(s => {
+        panels += `<div class="service"><span>${statusDot(s.status)} ${s.target || s.url || '?'}</span><span>${s.status}</span></div>`;
+      });
+    } else {
+      panels += '<div class="error">Error cargando health</div>';
+    }
+    panels += '</div>';
+
+    // Panel 2: Scoreboard
+    panels += `<div class="panel"><h2>🤖 Agent Scoreboard</h2>`;
+    if (scoreboard) {
+      scoreboard.scoreboard.slice(0, 8).forEach(a => {
+        const dot = a.status === 'active' ? '<span class="dot-green">●</span>' : '<span class="dot-yellow">●</span>';
+        panels += `<div class="sb-row"><span><span class="sb-name">${dot} ${a.agent}</span></span><span class="sb-ops">$${a.total_cost_usd} · ${a.operations} ops</span></div>`;
+      });
+      panels += `<div style="font-size:11px;color:#484f58;margin-top:8px">${scoreboard.count} agentes total</div>`;
+    } else {
+      panels += '<div class="error">Error cargando scoreboard</div>';
+    }
+    panels += '</div>';
+
+    // Panel 3: Recent Events
+    panels += `<div class="panel"><h2>📡 Eventos Recientes</h2>`;
+    if (events && events.events) {
+      events.events.slice(0, 12).forEach(e => {
+        panels += `<div class="event"><span class="event-time">${(e.timestamp || '').slice(11, 19)}</span><span class="ev-name">${e.event}</span><span style="color:#8b949e">${e.source?.agent || ''}</span></div>`;
+      });
+    } else {
+      panels += '<div class="loading">Sin datos de eventos</div>';
+    }
+    panels += '</div>';
+
+    // Panel 4: Cost Summary
+    panels += `<div class="panel"><h2>💰 Costos</h2>`;
+    if (cost && cost.totals) {
+      Object.entries(cost.totals).forEach(([agent, data]) => {
+        panels += `<div class="cost-row"><span>${agent}</span><span>$${data.cost} · ${data.ops} ops</span></div>`;
+      });
+      panels += `<div class="cost-row" style="border-top:1px solid #30363d;margin-top:4px;padding-top:4px;font-weight:bold"><span>Total</span><span>$${Object.values(cost.totals).reduce((s, d) => s + d.cost, 0)}</span></div>`;
+    } else {
+      panels += '<div class="loading">Sin datos de costos</div>';
+    }
+    panels += '</div>';
+
+    grid.innerHTML = panels;
+  } catch (e) {
+    grid.innerHTML = `<div class="panel"><div class="error">Error: ${e.message}</div></div>`;
+  }
+}
+
+load();
+setInterval(load, 30000);
+</script>
+</body>
+</html>
