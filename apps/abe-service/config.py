@@ -26,10 +26,10 @@ class ABEConfig:
 
     @property
     def jwt_secret(self) -> str:
-        return os.environ.get(
-            "ABE_JWT_SECRET",
-            "abe_music_jwt_secret_dev_change_in_prod_2026",
-        )
+        val = os.environ.get("ABE_JWT_SECRET")
+        if not val:
+            raise RuntimeError("ABE_JWT_SECRET environment variable is required")
+        return val
 
     @property
     def mcp_gateway_url(self) -> str:
@@ -41,10 +41,10 @@ class ABEConfig:
 
     @property
     def mcp_client_secret(self) -> str:
-        return os.environ.get(
-            "MCP_CLIENT_SECRET",
-            "sdc_secret_ent3rpr1s3_k3y_2026",
-        )
+        val = os.environ.get("MCP_CLIENT_SECRET")
+        if not val:
+            raise RuntimeError("MCP_CLIENT_SECRET environment variable is required")
+        return val
 
     @property
     def qdrant_url(self) -> str:
