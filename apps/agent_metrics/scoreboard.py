@@ -105,47 +105,110 @@ def compute_scoreboard():
 
 
 def to_html(scoreboard):
-    """Genera HTML del scoreboard"""
-    rows = ""
+    """Genera HTML del scoreboard con sorting, filtros, y sparklines"""
     colors = {"active": "#27ae60", "unknown": "#f39c12", "inactive": "#e74c3c"}
+
+    def sparkline(ops):
+        if ops == 0:
+            return "<span style='color:#555'>—</span>"
+        bars = min(ops, 10)
+        return " ".join(f"<span style='display:inline-block;width:4px;height:{4+(i%3)*2}px;background:#27ae60;margin:0 1px'></span>" for i in range(bars))
+
+    def badge(count):
+        if count == 0:
+            return "<span style='color:#555'>0</span>"
+        return f"<span style='background:#e74c3c;color:#fff;padding:2px 6px;border-radius:8px;font-size:11px'>{count}</span>"
+
+    def status_dot(status):
+        c = colors.get(status, "#95a5a6")
+        return f"<span style='color:{c};font-size:18px'>●</span>"
+
+    rows_html = ""
     for a in scoreboard:
-        color = colors.get(a["status"], "#95a5a6")
-        rows += f"""
+        rows_html += f"""
         <tr>
             <td><strong>{a["agent"]}</strong></td>
-            <td>{a["role"]}</td>
+            <td style='color:#888'>{a["role"]}</td>
             <td>{a["level"]}</td>
-            <td><span style="color:{color}">●</span> {a["status"]}</td>
+            <td>{status_dot(a["status"])} {a["status"]}</td>
             <td>{a["operations"]}</td>
             <td>${a["total_cost_usd"]}</td>
             <td>{a["avg_cost_per_op"]}</td>
             <td>{a["avg_latency_ms"]}ms</td>
             <td>{a["total_tokens"]}</td>
-            <td>{", ".join(a["models_used"][:3]) if a["models_used"] else "—"}</td>
-            <td>{a["violations"]}</td>
-            <td>{a["last_seen"][:16] if a["last_seen"] != "never" else "—"}</td>
+            <td>{", ".join(a["models_used"][:3]) if a["models_used"] else "<span style='color:#555'>—</span>"}</td>
+            <td>{badge(a["violations"])}</td>
+            <td>{a["last_seen"][:16] if a["last_seen"] != "never" else "<span style='color:#555'>nunca</span>"}</td>
+            <td>{sparkline(a["operations"])}</td>
         </tr>"""
 
     return f"""<!DOCTYPE html>
 <html lang="es">
 <head><meta charset="utf-8"><title>Agent Scoreboard</title>
 <style>
-body {{ font-family: monospace; background: #1a1a2e; color: #eee; padding: 20px; }}
-h1 {{ color: #0f0; }}
-table {{ border-collapse: collapse; width: 100%; }}
-th {{ background: #16213e; color: #0f0; padding: 10px; text-align: left; }}
-td {{ padding: 8px; border-bottom: 1px solid #333; }}
-tr:hover {{ background: #16213e; }}
-.green {{ color: #27ae60; }}
-.red {{ color: #e74c3c; }}
+body {{ font-family: 'SF Mono','Fira Code',monospace; background: #0d1117; color: #c9d1d9; padding: 20px; margin: 0; }}
+h1 {{ color: #58a6ff; font-size: 24px; margin-bottom: 4px; }}
+.sub {{ color: #8b949e; font-size: 13px; margin-bottom: 20px; }}
+table {{ border-collapse: collapse; width: 100%; background: #161b22; border-radius: 8px; overflow: hidden; }}
+th {{ background: #21262d; color: #58a6ff; padding: 10px 12px; text-align: left; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; user-select: none; }}
+th:hover {{ background: #30363d; }}
+td {{ padding: 8px 12px; border-bottom: 1px solid #21262d; font-size: 13px; }}
+tr:hover {{ background: #1c2128; }}
+.filters {{ margin-bottom: 16px; display: flex; gap: 8px; align-items: center; }}
+.filters button {{ background: #21262d; color: #c9d1d9; border: 1px solid #30363d; padding: 4px 12px; border-radius: 6px; cursor: pointer; font-size: 12px; }}
+.filters button.active {{ background: #1f6feb; border-color: #1f6feb; color: #fff; }}
+.filters button:hover {{ background: #30363d; }}
+.search {{ background: #0d1117; color: #c9d1d9; border: 1px solid #30363d; padding: 4px 12px; border-radius: 6px; font-size: 13px; width: 200px; }}
 </style></head>
 <body>
-<h1>🤖 Agent Scoreboard</h1>
-<p>Updated: {datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")}</p>
-<table>
-<tr><th>Agent</th><th>Role</th><th>Lvl</th><th>Status</th><th>Ops</th><th>Cost</th><th>Avg $/op</th><th>Latency</th><th>Tokens</th><th>Models</th><th>Violations</th><th>Last Seen</th></tr>
-{rows}
+<h1>Agent Scoreboard</h1>
+<p class="sub">Actualizado: {datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")} · <span id="count">{len(scoreboard)}</span> agentes</p>
+<div class="filters">
+  <input class="search" id="search" placeholder="Buscar agente..." oninput="filterTable()">
+  <button onclick="filterByStatus('all')" id="f-all" class="active">Todos</button>
+  <button onclick="filterByStatus('active')" id="f-active">Activos</button>
+  <button onclick="filterByStatus('unknown')" id="f-unknown">Unknown</button>
+</div>
+<table id="sb-table">
+<thead>
+<tr><th onclick="sortTable(0)">Agent</th><th onclick="sortTable(1)">Role</th><th onclick="sortTable(2)">Lvl</th><th onclick="sortTable(3)">Status</th><th onclick="sortTable(4)">Ops</th><th onclick="sortTable(5)">Cost</th><th onclick="sortTable(6)">$/op</th><th onclick="sortTable(7)">Latency</th><th onclick="sortTable(8)">Tokens</th><th onclick="sortTable(9)">Models</th><th onclick="sortTable(10)">Violations</th><th onclick="sortTable(11)">Last Seen</th><th>Activity</th></tr>
+</thead>
+<tbody id="sb-body">
+{rows_html}
+</tbody>
 </table>
+<script>
+let sortDir = {{}};
+function sortTable(col) {{
+  const tbody = document.getElementById('sb-body');
+  const rows = Array.from(tbody.querySelectorAll('tr'));
+  sortDir[col] = !sortDir[col];
+  const dir = sortDir[col] ? 1 : -1;
+  rows.sort((a, b) => {{
+    let va = a.cells[col].textContent.trim(), vb = b.cells[col].textContent.trim();
+    let na = parseFloat(va.replace(/[$ms,]/g,'')), nb = parseFloat(vb.replace(/[$ms,]/g,''));
+    if (!isNaN(na) && !isNaN(nb)) return (na - nb) * dir;
+    return va.localeCompare(vb) * dir;
+  }});
+  rows.forEach(r => tbody.appendChild(r));
+}}
+function filterByStatus(s) {{
+  document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+  document.getElementById('f-' + s).classList.add('active');
+  const rows = document.querySelectorAll('#sb-body tr');
+  rows.forEach(r => {{
+    const status = r.cells[3].textContent.trim();
+    r.style.display = s === 'all' || status === s ? '' : 'none';
+  }});
+}}
+function filterTable() {{
+  const q = document.getElementById('search').value.toLowerCase();
+  const rows = document.querySelectorAll('#sb-body tr');
+  rows.forEach(r => {{
+    r.style.display = r.textContent.toLowerCase().includes(q) ? '' : 'none';
+  }});
+}}
+</script>
 </body></html>"""
 
 

@@ -2,8 +2,11 @@
 import json
 import traceback
 from http.server import HTTPServer, BaseHTTPRequestHandler
+from pathlib import Path
 
 from . import drift_scanner, health_checker
+
+STATIC_DIR = Path(__file__).resolve().parent / "static"
 
 
 class StatusHandler(BaseHTTPRequestHandler):
@@ -17,11 +20,19 @@ class StatusHandler(BaseHTTPRequestHandler):
                 self._handle_drift()
             elif self.path == "/api/v1/scoreboard":
                 self._handle_scoreboard()
+            elif self.path == "/scoreboard":
+                self._serve_static("scoreboard.html")
+            elif self.path == "/control":
+                self._serve_static("control.html")
             else:
-                self.send_response(404)
-                self.send_header("Content-Type", "application/json")
-                self.end_headers()
-                self.wfile.write(b'{"error":"not found"}')
+                static_file = STATIC_DIR / self.path.lstrip("/")
+                if static_file.exists() and static_file.is_file():
+                    self._serve_static(self.path.lstrip("/"))
+                else:
+                    self.send_response(404)
+                    self.send_header("Content-Type", "application/json")
+                    self.end_headers()
+                    self.wfile.write(b'{"error":"not found"}')
         except Exception:
             self.send_response(500)
             self.send_header("Content-Type", "application/json")
@@ -83,6 +94,30 @@ class StatusHandler(BaseHTTPRequestHandler):
         self.send_header("Content-Type", "application/json")
         self.end_headers()
         self.wfile.write(body)
+
+    def _serve_static(self, filename):
+        try:
+            filepath = STATIC_DIR / filename
+            if not filepath.exists() or not filepath.is_file():
+                self.send_response(404)
+                self.send_header("Content-Type", "text/plain")
+                self.end_headers()
+                self.wfile.write(b"not found")
+                return
+            ext = filename.split(".")[-1]
+            mime = {"html": "text/html", "css": "text/css", "js": "application/javascript", "png": "image/png", "svg": "image/svg+xml"}
+            content_type = mime.get(ext, "text/plain")
+            body = filepath.read_bytes()
+            self.send_response(200)
+            self.send_header("Content-Type", content_type)
+            self.send_header("Cache-Control", "no-cache")
+            self.end_headers()
+            self.wfile.write(body)
+        except Exception as e:
+            self.send_response(500)
+            self.send_header("Content-Type", "text/plain")
+            self.end_headers()
+            self.wfile.write(f"error: {e}".encode())
 
     def log_message(self, format, *args):
         pass
