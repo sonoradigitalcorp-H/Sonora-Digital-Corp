@@ -6,7 +6,7 @@
 // ---- ARTIST POOL (110 independent/unsigned/emerging Latin artists) ----
 // Criteria: MUST be unsigned/independent OR in process of leaving label OR seeking new label.
 // NO artists signed to major labels (Interscope, Warner, Sony, Universal, etc.)
-const ARTIST_POOL = [
+export const ARTIST_POOL = [
   // ═══ ABE MUSIC GROUP — SIGNED ARTISTS (exclusive, top priority) ═══
   // Héctor Rubio — Originario de Angostura, Sinaloa. Compositor de Alex Favela. Abrió para Peso Pluma en el Éxodo Tour.
   // Spotify: 2uSJ9ywE44eIRoTMatARAy | IG: @hector_rubiorr | TikTok: @thor_rubio | 1.1M+ oyentes mensuales | 12M+ streams "Un Millón"
