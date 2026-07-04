@@ -76,3 +76,19 @@ agents:
     status: active
     description: "Auto-Doc — genera documentación de proceso"
     capabilities: ["read.code", "write.docs", "read.git"]
+
+  - name: execution
+    role: scheduler
+    level: L1
+    model: "ollama/qwen3:4b-64k"
+    status: active
+    description: "Execution Kernel — gestiona cola de tareas, prioridad, retry, y ejecucion"
+    capabilities: ["execution.queue.*", "execution.execute.*"]
+
+  - name: evolution
+    role: self-improvement
+    level: L1
+    model: "ollama/deepseek-r1:7b-64k"
+    status: active
+    description: "Self-Evolution Loop — propone, simula, e implementa mejoras del sistema"
+    capabilities: ["read.metrics", "read.learned", "write.proposals", "simulate.change"]
