@@ -1,0 +1,41 @@
+name: Vercel Preview
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+    paths:
+      - "frontends/**"
+      - "vercel.json"
+
+jobs:
+  preview:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Deploy Preview — Main site
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+
+      - name: Deploy Preview — ABE
+        uses: amondnet/vercel-action@v25
+        with:
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+          vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+          vercel-project-id: ${{ secrets.VERCEL_ABE_PROJECT_ID }}
+          working-directory: frontends/abe
+
+      - name: Comment PR with preview URL
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const mainUrl = `https://${context.repo.repo}-git-${context.sha.slice(0,7)}-${context.repo.owner}.vercel.app`;
+            const abeUrl = `https://${context.repo.repo}-abe-git-${context.sha.slice(0,7)}-${context.repo.owner}.vercel.app`;
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `## Preview Deployments\n\n- **Main site**: ${mainUrl}\n- **ABE Portal**: ${abeUrl}\n\nAuto-deployed by Vercel.`
+            })

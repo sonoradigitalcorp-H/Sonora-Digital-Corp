@@ -28,3 +28,4 @@
 | 2026-07-03 | SPEC-20260703-A | Cognitive Kernel: Foundations | 83/100 | `process/completed/20260703-cognitive-kernel-a/` |
 | 2026-07-03 | SPEC-20260703-B | Cognitive Kernel: Kernel Separation | 85/100 | `process/completed/20260703-cognitive-kernel-b/` |
 | 2026-07-03 | SPEC-20260703-C | Cognitive Kernel: Intelligence Layer | 84/100 | `process/completed/20260703-cognitive-kernel-c/` |
+| 2026-07-03 | 20260703-cognitive-kernel-full | ... | ... | ... | completed | ... |
