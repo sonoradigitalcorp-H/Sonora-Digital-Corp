@@ -9,11 +9,11 @@
 const ARTIST_POOL = [
   // ═══ ABE MUSIC GROUP — SIGNED ARTISTS (exclusive, top priority) ═══
   // Héctor Rubio — Originario de Angostura, Sinaloa. Compositor de Alex Favela. Abrió para Peso Pluma en el Éxodo Tour.
-  // Spotify: 2uSJ9ywE44eIRoTMatARAy | IG: @hector_rubiorr | 440K+ oyentes mensuales | 113M+ streams totales
-  { id: 'art-amg-01', name: 'Héctor Rubio', genres: ['Regional Mexicano', 'Corridos Tumbados', 'Urbano'], country: 'México', city: 'Angostura', contact: 'IG: @hector_rubiorr | Spotify: 2uSJ9ywE44eIRoTMatARAy | ABE Music Inc / VIZUAL', image: '🎤' },
+  // Spotify: 2uSJ9ywE44eIRoTMatARAy | IG: @hector_rubiorr | TikTok: @thor_rubio | 1.1M+ oyentes mensuales | 12M+ streams "Un Millón"
+  { id: 'art-amg-01', name: 'Héctor Rubio', genres: ['Regional Mexicano', 'Corridos', 'Corridos Bélicos'], country: 'México', city: 'Angostura', contact: 'IG: @hector_rubiorr | Spotify: 2uSJ9ywE44eIRoTMatARAy | TikTok: @thor_rubio | ABE Music Inc / VIZUAL', image: '🎤' },
   // Jesús Urquijo — Jesús Antonio Urquijo León. Originario de Hermosillo, Sonora. Solista y compositor.
-  // Spotify: 1hfrbMUDkM2tlUE85D3dR6 | IG: @jesusurquijo_oficial | TikTok: @jesusurquijo.oficial | 25K+ oyentes mensuales
-  { id: 'art-amg-02', name: 'Jesús Urquijo', genres: ['Regional Mexicano', 'Corridos', 'Sierreño'], country: 'México', city: 'Hermosillo', contact: 'IG: @jesusurquijo_oficial | Spotify: 1hfrbMUDkM2tlUE85D3dR6 | ABE Music Inc', image: '🎵' },
+  // Spotify: 1hfrbMUDkM2tlUE85D3dR6 | IG: @jesusurquijo_oficial | TikTok: @jesusurquijo.oficial | 4.6M+ streams cross-platform
+  { id: 'art-amg-02', name: 'Jesús Urquijo', genres: ['Regional Mexicano', 'Corridos', 'Sierreño'], country: 'México', city: 'Hermosillo', contact: 'IG: @jesusurquijo_oficial | Spotify: 1hfrbMUDkM2tlUE85D3dR6 | TikTok: @jesusurquijo.oficial | ABE Music / Colonize Media', image: '🎵' },
 
   // ═══ REGIONAL MEXICANO / CORRIDOS TUMBADOS (35) ═══
   // TRULY INDEPENDENT — no major label
@@ -296,28 +296,28 @@ export function generateGrowthHistory(score: number, baseListeners: number): { m
 export function generateArtistById(id: string): Artist {
   const poolEntry = ARTIST_POOL.find(a => a.id === id);
 
-  // ═══ ABE MUSIC GROUP — ARTISTAS FIRMADOS (datos reales y congelados) ═══
+  // ═══ ABE MUSIC GROUP — ARTISTAS FIRMADOS (datos reales verificados Jul-2026) ═══
   if (id === 'art-amg-01') {
     return {
       id: 'art-amg-01',
       name: 'Héctor Rubio',
       score: 94,
-      growth: 28.5,
-      listeners: 440000,
-      followers: 162800,
-      genres: ['Regional Mexicano', 'Corridos Tumbados', 'Urbano'],
+      growth: 32.5,
+      listeners: 1105586,
+      followers: 45862,
+      genres: ['Regional Mexicano', 'Corridos', 'Corridos Bélicos'],
       status: 'signed',
       city: 'Angostura',
       country: 'México',
-      contact: 'IG: @hector_rubiorr | Spotify: 2uSJ9ywE44eIRoTMatARAy | ABE Music Inc / VIZUAL',
+      contact: 'IG: @hector_rubiorr | Spotify: 2uSJ9ywE44eIRoTMatARAy | TikTok: @thor_rubio | ABE Music Inc / VIZUAL',
       image: '🎤',
       photoUrl: 'https://i.scdn.co/image/ab6761610000e5eb6e2653d8a57bcfba3aff07cd',
-      reason: 'Artista estrella de ABE Music Group. 440K+ oyentes mensuales. Abrió para Peso Pluma en el Éxodo Tour.',
-      deal: 92000,
+      reason: 'Artista estrella de ABE Music Group. 1.1M+ oyentes mensuales. Compositor de Alex Favela. Abrió para Peso Pluma en el Éxodo Tour 2024.',
+      deal: 120000,
       engagement: 88,
       momentum: 94.5,
-      platforms: { Spotify: 440000, Instagram: 18500, TikTok: 12000, YouTube: 580000, 'Apple Music': 210000 },
-      growthHistory: generateGrowthHistory(94, 440000),
+      platforms: { Spotify: 1105586, Instagram: 26000, TikTok: 45000, YouTube: 12500000, 'Apple Music': 350000 },
+      growthHistory: generateGrowthHistory(94, 1105586),
     };
   }
 
@@ -326,22 +326,22 @@ export function generateArtistById(id: string): Artist {
       id: 'art-amg-02',
       name: 'Jesús Urquijo',
       score: 78,
-      growth: 18.3,
-      listeners: 32900,
+      growth: 22.1,
+      listeners: 25000,
       followers: 12100,
       genres: ['Regional Mexicano', 'Corridos', 'Sierreño'],
       status: 'signed',
       city: 'Hermosillo',
       country: 'México',
-      contact: 'IG: @jesusurquijo_oficial | Spotify: 1hfrbMUDkM2tlUE85D3dR6 | ABE Music Inc',
+      contact: 'IG: @jesusurquijo_oficial | Spotify: 1hfrbMUDkM2tlUE85D3dR6 | TikTok: @jesusurquijo.oficial | ABE Music / Colonize Media',
       image: '🎵',
-      photoUrl: 'https://assets.soundcharts.com/artist/b/9/5/23c1d13a-c59b-11e8-bfb2-549f35141000.jpg',
-      reason: 'Talento firmado de ABE Music Group. Originario de Hermosillo, Sonora. Compositor y solista.',
+      photoUrl: 'https://i.scdn.co/image/ab6761610000e5eb68958f76e011057a398a9904',
+      reason: 'Talento firmado de ABE Music Group. Originario de Hermosillo, Sonora. Jesús Antonio Urquijo León. 4.6M+ streams cross-platform.',
       deal: 35000,
       engagement: 72,
       momentum: 72.1,
-      platforms: { Spotify: 32900, Instagram: 26000, TikTok: 3000, YouTube: 13000, 'Apple Music': 15000 },
-      growthHistory: generateGrowthHistory(78, 32900),
+      platforms: { Spotify: 25000, Instagram: 26000, TikTok: 8000, YouTube: 18110000, 'Apple Music': 15000 },
+      growthHistory: generateGrowthHistory(78, 25000),
     };
   }
 
