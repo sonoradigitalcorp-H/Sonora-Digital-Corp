@@ -2,6 +2,15 @@
 // Spotify Web API Service
 // Client Credentials flow — no user login required
 // Conforms to Spotify Developer Platform Jul-2026
+//
+// ⚠️ IMPORTANT: As of Feb 2026, Spotify requires a Premium account
+// for Development Mode apps. See docs/SPOTIFY_INTEGRATION.md
+//
+// Known restrictions (Feb 2026 API changes):
+// • `followers` and `popularity` fields REMOVED from Artist responses
+// • `GET /artists/{id}/top-tracks` endpoint REMOVED
+// • Search `limit` max reduced to 10
+// • Premium subscription required for Development Mode
 // ───────────────────────────────────────────────
 
 const SPOTIFY_AUTH_URL = 'https://accounts.spotify.com/api/token';
@@ -13,8 +22,6 @@ const SPOTIFY_API_BASE = 'https://api.spotify.com/v1';
 interface SpotifyConfig {
   clientId: string;
   clientSecret: string;
-  /** Market for top-tracks endpoint (default: 'US') */
-  market: string;
   /** Request timeout in ms (default: 10000) */
   requestTimeoutMs: number;
   /** Min ms between requests for rate limiting (default: 200) */
@@ -29,7 +36,6 @@ function loadConfig(): SpotifyConfig {
   return {
     clientId: process.env.SPOTIFY_CLIENT_ID || '',
     clientSecret: process.env.SPOTIFY_CLIENT_SECRET || '',
-    market: process.env.SPOTIFY_MARKET || 'US',
     requestTimeoutMs: parseInt(process.env.SPOTIFY_REQUEST_TIMEOUT || '10000', 10),
     rateLimitIntervalMs: parseInt(process.env.SPOTIFY_RATE_LIMIT_INTERVAL || '200', 10),
     maxRetries: parseInt(process.env.SPOTIFY_MAX_RETRIES || '3', 10),
@@ -63,7 +69,11 @@ export function validateSpotifyCredentials(): string | null {
 export interface SpotifyArtistData {
   id: string;
   name: string;
+  /** ⚠️ Feb 2026: This field is REMOVED from Spotify API responses for Development Mode apps.
+   *  Will return 0 for new apps. Only available for Extended Quota Mode apps. */
   followers: number;
+  /** ⚠️ Feb 2026: This field is REMOVED from Spotify API responses for Development Mode apps.
+   *  Will return 0 for new apps. Only available for Extended Quota Mode apps. */
   popularity: number;         // 0-100
   genres: string[];
   imageUrl: string | null;
@@ -300,8 +310,9 @@ export async function searchArtist(name: string): Promise<SpotifyArtistData | nu
     return {
       id: artist.id,
       name: artist.name,
+      // ⚠️ followers/popularity may be 0 since Feb 2026 Spotify API changes
       followers: artist.followers?.total ?? 0,
-      popularity: artist.popularity,
+      popularity: artist.popularity ?? 0,
       genres: artist.genres ?? [],
       imageUrl: artist.images?.[0]?.url ?? null,
       spotifyUrl: artist.external_urls?.spotify ?? `https://open.spotify.com/artist/${artist.id}`,
@@ -406,8 +417,9 @@ export async function getArtist(spotifyId: string): Promise<SpotifyArtistData | 
     return {
       id: data.id,
       name: data.name,
+      // ⚠️ followers/popularity may be 0 since Feb 2026 Spotify API changes
       followers: data.followers?.total ?? 0,
-      popularity: data.popularity,
+      popularity: data.popularity ?? 0,
       genres: data.genres ?? [],
       imageUrl: data.images?.[0]?.url ?? null,
       spotifyUrl: data.external_urls?.spotify ?? `https://open.spotify.com/artist/${data.id}`,
@@ -422,56 +434,20 @@ export async function getArtist(spotifyId: string): Promise<SpotifyArtistData | 
 }
 
 /**
- * Get top tracks for an artist.
- * Market is configurable via SPOTIFY_MARKET env var (default: 'US').
+ * ⚠️ DEPRECATED — Endpoint removed by Spotify (Feb 2026 API changes).
+ * The `GET /artists/{id}/top-tracks` endpoint is NO LONGER AVAILABLE
+ * for Development Mode apps. Will always return an empty array.
+ *
+ * Kept for API compatibility — remove calls to this function from application code.
  */
 export async function getArtistTopTracks(
-  spotifyId: string,
-  market?: string
+  _spotifyId: string,
+  _market?: string
 ): Promise<SpotifyTrack[]> {
-  const config = loadConfig();
-  const resolvedMarket = market || config.market;
-
-  try {
-    const token = await getAccessToken();
-    const url = `${SPOTIFY_API_BASE}/artists/${spotifyId}/top-tracks?market=${resolvedMarket}`;
-    const response = await rateLimitedFetch(url, token);
-
-    if (!response.ok) {
-      log('warn', 'Top tracks failed', {
-        spotifyId,
-        market: resolvedMarket,
-        status: response.status,
-      });
-      return [];
-    }
-
-    const data = await response.json() as {
-      tracks?: Array<{
-        id: string; name: string; popularity: number;
-        duration_ms: number;
-        album: { name: string; images?: Array<{ url: string }> };
-        external_urls?: { spotify?: string };
-      }>;
-    };
-
-    return (data.tracks ?? []).map(t => ({
-      id: t.id,
-      name: t.name,
-      popularity: t.popularity,
-      durationMs: t.duration_ms,
-      album: t.album.name,
-      albumImage: t.album.images?.[0]?.url ?? null,
-      spotifyUrl: t.external_urls?.spotify ?? `https://open.spotify.com/track/${t.id}`,
-    }));
-  } catch (error) {
-    log('error', 'Top tracks error', {
-      spotifyId,
-      market: resolvedMarket,
-      error: error instanceof Error ? error.message : String(error),
-    });
-    return [];
-  }
+  log('warn', 'getArtistTopTracks() called but this endpoint was REMOVED by Spotify in Feb 2026', {
+    spotifyId: _spotifyId,
+  });
+  return [];
 }
 
 /**

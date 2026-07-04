@@ -25,15 +25,13 @@ export async function GET(request: NextRequest) {
   if (spotifyAvailable) {
     // Collect names that need Spotify lookup (not in cache or stale)
     const namesToRefresh: string[] = [];
-    const spotifyOverrides = new Map<string, { followers: number; popularity: number; genres: string[]; photoUrl: string | null; spotifyId: string }>();
+    const spotifyOverrides = new Map<string, { genres: string[]; photoUrl: string | null; spotifyId: string }>();
 
     for (const artist of artists) {
       const cached = getCachedArtist(artist.name);
       if (cached && isFresh(cached) && cached.spotify) {
-        // Use cached Spotify data
+        // Use cached Spotify data (followers/popularity no longer available since Feb 2026)
         spotifyOverrides.set(artist.name, {
-          followers: cached.spotify.followers,
-          popularity: cached.spotify.popularity,
           genres: cached.spotify.genres,
           photoUrl: cached.spotify.imageUrl,
           spotifyId: cached.spotify.id,
@@ -63,13 +61,11 @@ export async function GET(request: NextRequest) {
           })
         );
 
-        // Apply results
+        // Apply results (followers/popularity no longer available from Spotify since Feb 2026)
         for (const result of results) {
           if (result.status === 'fulfilled' && result.value) {
             const { name, data } = result.value;
             spotifyOverrides.set(name, {
-              followers: data.followers,
-              popularity: data.popularity,
               genres: data.genres,
               photoUrl: data.imageUrl,
               spotifyId: data.id,
@@ -80,19 +76,18 @@ export async function GET(request: NextRequest) {
     }
 
     // Apply Spotify overrides to generated artists
+    // ⚠️ Since Feb 2026: popularity and followers fields REMOVED by Spotify.
+    // Score/followers come from generated data; Spotify used for genres, image, contact.
     if (spotifyOverrides.size > 0) {
       artists = artists.map(artist => {
         const override = spotifyOverrides.get(artist.name);
         if (!override) return artist;
 
-        // Map Spotify popularity (0-100) to our score system (65-98)
-        const spotifyScore = Math.min(98, Math.max(65, Math.round(override.popularity * 0.85 + 15)));
-
         return {
           ...artist,
-          score: spotifyScore,
-          followers: override.followers,
-          // Keep generated growth/momentum/engagement but use Spotify data as base
+          // Keep generated score (popularity no longer available from Spotify)
+          // Keep generated followers (followers no longer available from Spotify)
+          // Use Spotify genres if available
           genres: override.genres.length > 0 ? override.genres.slice(0, 3) : artist.genres,
           photoUrl: override.photoUrl || artist.photoUrl,
           contact: artist.contact || `Spotify: open.spotify.com/artist/${override.spotifyId}`,
