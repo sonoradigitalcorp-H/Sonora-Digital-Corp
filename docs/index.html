@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mystic Engine — Enterprise Cognitive Architecture</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'SF Mono','Fira Code',monospace; background: #0d1117; color: #c9d1d9; min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; }
+.container { max-width: 800px; width: 100%; }
+h1 { color: #58a6ff; font-size: 28px; margin-bottom: 8px; text-align: center; }
+.sub { color: #8b949e; font-size: 14px; margin-bottom: 32px; text-align: center; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; }
+.card { background: #161b22; border: 1px solid #21262d; border-radius: 10px; padding: 20px; text-decoration: none; color: #c9d1d9; transition: all 0.2s; display: flex; flex-direction: column; }
+.card:hover { border-color: #58a6ff; background: #1c2128; transform: translateY(-2px); }
+.card .icon { font-size: 28px; margin-bottom: 8px; }
+.card .title { font-size: 16px; font-weight: bold; color: #58a6ff; margin-bottom: 4px; }
+.card .desc { font-size: 12px; color: #8b949e; line-height: 1.5; }
+.footer { margin-top: 40px; text-align: center; font-size: 12px; color: #484f58; }
+.footer a { color: #58a6ff; text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Mystic Engine</h1>
+  <p class="sub">Enterprise Cognitive Architecture · Documentación</p>
+  <div class="grid">
+    <a class="card" href="SYSTEM-MAP.html">
+      <div class="icon">🗺️</div>
+      <div class="title">System Map</div>
+      <div class="desc">Mapa completo del sistema: servicios, flujos, endpoints, y arquitectura del Cognitive Kernel</div>
+    </a>
+    <a class="card" href="presentacion-20260703.html">
+      <div class="icon">📊</div>
+      <div class="title">Presentación</div>
+      <div class="desc">Presentación reveal.js de la sesión 2026-07-03: Cognitive Kernel Fases A+B+C</div>
+    </a>
+    <a class="card" href="SONORA-EVOLUTION.html">
+      <div class="icon">📈</div>
+      <div class="title">State of the Union</div>
+      <div class="desc">Dashboard de evolución del sistema con timeline, métricas, y estado de servicios</div>
+    </a>
+    <a class="card" href="STACK-LOCK.md">
+      <div class="icon">🔒</div>
+      <div class="title">Stack Lock</div>
+      <div class="desc">Stack congelado v1: herramientas aprobadas y proceso para agregar nuevas</div>
+    </a>
+    <a class="card" href="VERCEL-SETUP.md">
+      <div class="icon">⚙️</div>
+      <div class="title">Vercel Setup</div>
+      <div class="desc">Instrucciones para configurar GitHub Secrets y auto-deploy a Vercel</div>
+    </a>
+    <a class="card" href="../AGENTS.md">
+      <div class="icon">🤖</div>
+      <div class="title">Agents</div>
+      <div class="desc">Catálogo de agentes, capabilities, policies, y endpoints del sistema</div>
+    </a>
+  </div>
+  <div class="footer">
+    Mystic Engine · <a href="https://github.com/sonoradigitalcorp-H/Sonora-Digital-Corp">GitHub</a>
+  </div>
+</div>
+</body>
+</html>
