@@ -36,6 +36,16 @@ export { isConfigured as isSpotifyConfigured, validateCredentials as validateSpo
 // Deezer Provider
 export { DeezerProvider, getDeezerProvider, fetchArtistImageByName, fetchAllArtistImagesByName } from './deezer/deezer-provider';
 
+// YouTube Provider
+export { YouTubeProvider, getYouTubeProvider } from './youtube/youtube-provider';
+
+// Instagram Provider
+export { InstagramProvider, getInstagramProvider } from './instagram/instagram-provider';
+
+// TikTok Provider
+export { TikTokProvider, getTikTokProvider } from './tiktok/tiktok-provider';
+export type { TikTokAPIClient } from './tiktok/tiktok-types';
+
 // Cache
 export { CacheManager, getCacheManager } from './cache/cache-manager';
 
