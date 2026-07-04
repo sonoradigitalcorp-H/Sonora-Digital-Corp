@@ -958,21 +958,28 @@ export function generateArtistRadar() {
 export function generateAnalytics() {
   const topArtists = generateArtists(10);
 
-  // --- DEMO: Always include AMG-signed artists at top ---
+  // --- Always include AMG-signed artists at top with REAL data ---
   const hector = generateArtistById('art-amg-01');
   const jesus = generateArtistById('art-amg-02');
 
-  // Force high scores and signed status for demo impact
+  // Format total cross-platform streams for display
+  function formatStreamsTotal(artist: Artist): string {
+    const total = Object.values(artist.platforms || {}).reduce((a: number, b: number) => a + b, 0);
+    if (total >= 1000000) return (total / 1000000).toFixed(1) + 'M+';
+    if (total >= 1000) return (total / 1000).toFixed(0) + 'K+';
+    return total.toLocaleString();
+  }
+
   const amgArtists = [
     {
       rank: 1,
       name: hector.name,
-      score: 97,
-      growth: 48.5,
-      listeners: 2850000,
-      dealEstimate: 1250000,
-      momentum: 94.2,
-      reason: '✅ FIRMADO — Artista estrella de Abe Music Group. 48.5% crecimiento mensual. Rompiendo en Regional Mexicano y Urbano.',
+      score: hector.score,
+      growth: hector.growth,
+      listeners: hector.listeners,
+      dealEstimate: hector.deal,
+      momentum: hector.momentum,
+      reason: '✅ FIRMADO — Artista de ABE Music Group. ' + (hector.listeners / 1000000).toFixed(1) + 'M+ oyentes mensuales. ' + hector.reason,
       image: hector.image,
       photoUrl: hector.photoUrl,
       contact: hector.contact,
@@ -981,12 +988,12 @@ export function generateAnalytics() {
     {
       rank: 2,
       name: jesus.name,
-      score: 94,
-      growth: 42.1,
-      listeners: 2100000,
-      dealEstimate: 980000,
-      momentum: 91.7,
-      reason: '✅ FIRMADO — Artista exclusivo Abe Music Group. 42.1% crecimiento. Corridos/Sierreño con proyección internacional.',
+      score: jesus.score,
+      growth: jesus.growth,
+      listeners: jesus.listeners,
+      dealEstimate: jesus.deal,
+      momentum: jesus.momentum,
+      reason: '✅ FIRMADO — Artista de ABE Music Group. ' + formatStreamsTotal(jesus) + ' streams cross-platform. ' + jesus.reason,
       image: jesus.image,
       photoUrl: jesus.photoUrl,
       contact: jesus.contact,
@@ -1026,7 +1033,7 @@ export function generateAnalytics() {
       { label: 'Avg Discovery Score', value: avgScore, change: '+6', trend: 'up' },
       { label: 'Active Pipeline', value: topForSigning.filter((a: any) => a.score > 85).length, change: '+4', trend: 'up' },
       { label: 'Signed Artists', value: 2, change: '+2', trend: 'up' },
-      { label: 'Portfolio Value', value: `$${(1250000 + 980000 + 3200000).toLocaleString()}`, change: '+18%', trend: 'up' },
+      { label: 'Portfolio Value', value: `$${(topForSigning.reduce((a: number, b: any) => a + (b.dealEstimate || 0), 0)).toLocaleString()}`, change: '+18%', trend: 'up' },
       { label: 'Avg Growth Rate', value: `${Math.round(topForSigning.reduce((a: number, b: any) => a + b.growth, 0) / topForSigning.length)}%`, change: '+8%', trend: 'up' },
     ],
     genreDistribution: [
