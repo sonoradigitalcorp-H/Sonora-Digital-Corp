@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Cognitive Kernel — System Map</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a1a; color: #c0c0d0; font-family: 'Courier New', monospace; padding: 30px; }
+  h1 { color: #00ff88; font-size: 24px; margin-bottom: 5px; }
+  h2 { color: #00ccff; font-size: 18px; margin: 25px 0 10px; border-bottom: 1px solid #333; padding-bottom: 5px; }
+  h3 { color: #ffcc00; font-size: 14px; margin: 15px 0 5px; }
+  .subtitle { color: #888; margin-bottom: 20px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 15px; }
+  .card { background: #111125; border: 1px solid #2a2a4a; border-radius: 8px; padding: 15px; }
+  .card h3 { margin-top: 0; }
+  .card .stat { display: inline-block; background: #1a1a3a; padding: 2px 8px; border-radius: 4px; margin: 2px; font-size: 12px; color: #0f0; }
+  .card .file { display: block; color: #888; font-size: 11px; margin-top: 5px; }
+  .green { color: #00ff88; }
+  .yellow { color: #ffcc00; }
+  .red { color: #ff4444; }
+  .blue { color: #00ccff; }
+  .layer-arch { background: #0a0a2a; border: 1px solid #334; border-radius: 10px; padding: 20px; margin: 15px 0; }
+  .layer-row { display: flex; align-items: center; gap: 15px; padding: 8px 0; border-bottom: 1px solid #1a1a3a; }
+  .layer-name { color: #00ff88; min-width: 160px; font-weight: bold; }
+  .layer-desc { color: #aaa; flex: 1; }
+  .kv { display: flex; flex-wrap: wrap; gap: 10px; margin: 5px 0; }
+  .kv-item { background: #0d0d20; padding: 5px 10px; border-radius: 4px; border-left: 3px solid #00ff88; }
+  .kv-key { color: #888; font-size: 11px; }
+  .kv-val { color: #fff; }
+  a { color: #00ccff; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  pre { background: #0d0d20; padding: 10px; border-radius: 5px; overflow-x: auto; font-size: 12px; }
+</style>
+</head>
+<body>
+
+<h1>🧠 Cognitive Kernel — System Map</h1>
+<p class="subtitle">Sonora Digital Corp · Actualizado: 2026-07-03 · <span class="green">3 fases completadas</span> · Score: 84/100</p>
+
+<h2>Arquitectura General</h2>
+<div class="layer-arch">
+  <div class="layer-row"><span class="layer-name">🌐 Human / API</span><span class="layer-desc">Usuario, GitHub Actions, cron</span></div>
+  <div class="layer-row"><span class="layer-name">📜 Truth YAML</span><span class="layer-desc">11 archivos, 46 reglas, validación automática</span></div>
+  <div class="layer-row"><span class="layer-name">📋 Planning Gate</span><span class="layer-desc">plan-gate.py → PLAN.yaml obligatorio</span></div>
+  <div class="layer-row"><span class="layer-name">✅ Verification Pipeline</span><span class="layer-desc">Truth Gate + Security Gate + Cost Gate</span></div>
+  <div class="layer-row"><span class="layer-name">🤖 Agent Registry</span><span class="layer-desc">9 agents · 6 capabilities · deny-all default</span></div>
+  <div class="layer-row"><span class="layer-name">🧠 Memory Kernel</span><span class="layer-desc">3 DBs (working/project/organization) + TTL</span></div>
+  <div class="layer-row"><span class="layer-name">💰 Economics Kernel</span><span class="layer-desc">Cost tracking por operación</span></div>
+  <div class="layer-row"><span class="layer-name">📊 Knowledge Graph</span><span class="layer-desc">Neo4j · 8 specs · 38 services</span></div>
+  <div class="layer-row"><span class="layer-name">📖 Learning Kernel</span><span class="layer-desc">9 heurísticas desde LECCION.md</span></div>
+  <div class="layer-row"><span class="layer-name">🛡️ Truth Guardian</span><span class="layer-desc">systemd · 0 drifts · status API · scoreboard</span></div>
+  <div class="layer-row"><span class="layer-name">📡 Event Bus</span><span class="layer-desc">463 eventos · emit-event.py · schema fijo</span></div>
+  <div class="layer-row"><span class="layer-name">⚙️ Config Unifier</span><span class="layer-desc">fleet.yml genera 3 configs automáticamente</span></div>
+  <div class="layer-row"><span class="layer-name">🔄 CI/CD</span><span class="layer-desc">GitHub Actions · truth-validation · verify-gate</span></div>
+</div>
+
+<h2>Fase A — Foundations <span class="stat">83/100</span></h2>
+<div class="grid">
+  <div class="card">
+    <h3>A1 · Truth YAML</h3>
+    <div class="kv">
+      <div class="kv-item"><span class="kv-key">Archivos</span><span class="kv-val">11</span></div>
+      <div class="kv-item"><span class="kv-key">Reglas</span><span class="kv-val">46</span></div>
+      <div class="kv-item"><span class="kv-key">Tests</span><span class="kv-val">9/9</span></div>
+    </div>
+    <span class="file">truth/*.yaml</span>
+  </div>
+  <div class="card">
+    <h3>A2 · Event Bus</h3>
+    <div class="kv">
+      <div class="kv-item"><span class="kv-key">Eventos migrados</span><span class="kv-val">462</span></div>
+      <div class="kv-item"><span class="kv-key">Schema</span><span class="kv-val">19 categorías</span></div>
+    </div>
+    <span class="file">scripts/emit-event.py · state/events/</span>
+  </div>
+  <div class="card">
+    <h3>A3 · Planning Gate</h3>
+    <span class="file">scripts/plan-gate.py → <span class="green">/plan</span></span>
+  </div>
+  <div class="card">
+    <h3>A4 · Verification Pipeline</h3>
+    <span class="file">scripts/verify-gate.py → <span class="green">/verify</span><br>Truth · Security · Cost gates</span>
+  </div>
+  <div class="card">
+    <h3>A5 · Knowledge Graph</h3>
+    <div class="kv">
+      <div class="kv-item"><span class="kv-key">Specs</span><span class="kv-val">8</span></div>
+      <div class="kv-item"><span class="kv-key">ADRs</span><span class="kv-val">3</span></div>
+      <div class="kv-item"><span class="kv-key">Services</span><span class="kv-val">38</span></div>
+    </div>
+    <span class="file">scripts/populate-graph.py → Neo4j</span>
+  </div>
+  <div class="card">
+    <h3>A6 · CONDUCT.md + CI</h3>
+    <span class="file">process/CONDUCT.md · tests/test_truth.py</span>
+  </div>
+</div>
+
+<h2>Fase B — Kernel Separation <span class="stat">85/100</span></h2>
+<div class="grid">
+  <div class="card">
+    <h3>B1 · Memory Architecture</h3>
+    <div class="kv">
+      <div class="kv-item"><span class="kv-key">DBs</span><span class="kv-val">3</span></div>
+      <div class="kv-item"><span class="kv-key">TTL</span><span class="kv-val">1h / 7d / ∞</span></div>
+      <div class="kv-item"><span class="kv-key">Migradas</span><span class="kv-val">21</span></div>
+    </div>
+    <span class="file">state/memory/ · scripts/memory-api.py</span>
+  </div>
+  <div class="card">
+    <h3>B2 · Agent Registry</h3>
+    <div class="kv">
+      <div class="kv-item"><span class="kv-key">Agentes</span><span class="kv-val">9</span></div>
+      <div class="kv-item"><span class="kv-key">Capabilities</span><span class="kv-val">6</span></div>
+      <div class="kv-item"><span class="kv-key">Policies</span><span class="kv-val">6</span></div>
+    </div>
+    <span class="file">agents/registry.yaml · agents/capabilities/ · agents/policies/</span>
+  </div>
+  <div class="card">
+    <h3>B3 · Security Kernel</h3>
+    <span class="file">scripts/check-capability.py · deny-all default</span>
+  </div>
+  <div class="card">
+    <h3>B4 · CI/CD v2</h3>
+    <span class="file">.github/workflows/process-gate.yml · truth-validation</span>
+  </div>
+  <div class="card">
+    <h3>B5 · Templates v2</h3>
+    <div class="kv">
+      <div class="kv-item"><span class="kv-key">Nuevos</span><span class="kv-val">7</span></div>
+      <div class="kv-item"><span class="kv-key">Total</span><span class="kv-val">13</span></div>
+    </div>
+    <span class="file">process/templates/ · scripts/generate-from-template.py</span>
+  </div>
+</div>
+
+<h2>Fase C — Intelligence Layer <span class="stat">84/100</span></h2>
+<div class="grid">
+  <div class="card">
+    <h3>C1 · Economics Kernel</h3>
+    <div class="kv">
+      <div class="kv-item"><span class="kv-key">Operaciones</span><span class="kv-val">trackeadas</span></div>
+      <div class="kv-item"><span class="kv-key">Modelos</span><span class="kv-val">5</span></div>
+    </div>
+    <span class="file">apps/economics/tracker.py</span>
+  </div>
+  <div class="card">
+    <h3>C2 · Learning Kernel</h3>
+    <div class="kv">
+      <div class="kv-item"><span class="kv-key">Heurísticas</span><span class="kv-val">9</span></div>
+    </div>
+    <span class="file">apps/learning/heuristics.py → truth/90-learned.yaml</span>
+  </div>
+  <div class="card">
+    <h3>C3 · Agent Scoreboard</h3>
+    <div class="kv">
+      <div class="kv-item"><span class="kv-key">Agentes</span><span class="kv-val">9</span></div>
+      <div class="kv-item"><span class="kv-key">Endpoint</span><span class="kv-val">/api/v1/scoreboard</span></div>
+    </div>
+    <span class="file">apps/agent_metrics/scoreboard.py</span>
+  </div>
+  <div class="card">
+    <h3>C4 · Config Unification</h3>
+    <div class="kv">
+      <div class="kv-item"><span class="kv-key">Servicios</span><span class="kv-val">23</span></div>
+      <div class="kv-item"><span class="kv-key">Health targets</span><span class="kv-val">11</span></div>
+      <div class="kv-item"><span class="kv-key">Nginx upstreams</span><span class="kv-val">3</span></div>
+    </div>
+    <span class="file">scripts/generate-configs.py · config/generated/</span>
+  </div>
+</div>
+
+<h2>API Endpoints</h2>
+<pre>
+GET /api/v1/status      → JSON: drifts, health, status
+GET /api/v1/health      → {"status":"healthy"}
+GET /api/v1/drift       → JSON: lista de drifts
+GET /api/v1/scoreboard  → JSON: métricas por agente
+</pre>
+
+<h2>Comandos</h2>
+<pre>
+/plan     → Planning Gate: descompone objetivo en tareas
+/verify   → Verification Pipeline: 3 gates
+/status   → Healthcheck completo del sistema
+/gsd      → Get Shit Done: flujo completo
+/doc      → Auto-Doc: genera documentación de proceso
+</pre>
+
+<h2>Servicios en VPS (sdc-prod)</h2>
+<pre>
+sdc-prod (149.56.46.173, Ubuntu 26.04, 11GB RAM)
+├── 22/tcp     → SSH (público)
+├── 80/tcp     → nginx (público)
+├── 443/tcp    → nginx SSL (público)
+└── 22 servicios internos en 127.0.0.1
+</pre>
+
+<p class="subtitle" style="margin-top:30px">Generado: 2026-07-03 · <span class="green">Cognitive Kernel v1.0</span></p>
+</body>
+</html>
