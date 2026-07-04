@@ -41,6 +41,7 @@ const statusColors: Record<string, string> = {
   watchlist: 'text-blue-500 bg-blue-500/10 border-blue-500/20',
   emerging: 'text-green-500 bg-green-500/10 border-green-500/20',
   established: 'text-gray-500 bg-gray-500/10 border-gray-500/20',
+  signed: 'text-emerald-500 bg-emerald-500/10 border-emerald-500/20',
 };
 
 const statusLabels: Record<string, { en: string; es: string }> = {
@@ -49,6 +50,7 @@ const statusLabels: Record<string, { en: string; es: string }> = {
   watchlist: { en: 'Watchlist', es: 'Observación' },
   emerging: { en: 'Emerging', es: 'Emergente' },
   established: { en: 'Established', es: 'Establecido' },
+  signed: { en: 'SIGNED', es: 'FIRMADO' },
 };
 
 const parseContact = (contact: string): { type: 'phone' | 'email' | 'text'; value: string } => {
@@ -135,7 +137,7 @@ export default function ArtistsPage() {
             <p className="text-muted-foreground mt-1">
               {isLoading
                 ? 'Loading prospects...'
-                : `${total} unsigned prospects tracked — ${data?.genres?.slice(0, 3).join(', ') ?? ''}`
+                : `${total} artists tracked — ${(data as any)?.signedCount || 2} signed (ABE Music Group) · ${data?.genres?.slice(0, 3).join(', ') ?? ''}`
               }
             </p>
           </div>
@@ -373,7 +375,7 @@ export default function ArtistsPage() {
             <p className="text-sm text-muted-foreground">
               {isLoading
                 ? 'Loading...'
-                : `Showing / Mostrando ${filtered.length} of / de ${total} unsigned prospects`
+                : `Showing / Mostrando ${filtered.length} of / de ${total} prospects (${(data as any)?.signedCount || 2} signed)`
               }
               {updatedAt && (
                 <>

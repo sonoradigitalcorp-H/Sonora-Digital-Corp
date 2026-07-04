@@ -29,7 +29,10 @@ function SkeletonOpps() {
 }
 
 export default function MarketPage() {
-  const { data, error, isLoading } = useSWR('/api/v1/market', fetcher, { revalidateOnFocus: false });
+  const { data, error, isLoading } = useSWR('/api/v1/market', fetcher, {
+    refreshInterval: 5000,
+    revalidateOnFocus: true,
+  });
 
   return (
     <DashboardLayout>

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { generateArtists } from '@/lib/data-generator';
+import { generateArtists, generateArtistById } from '@/lib/data-generator';
 import { fetchAllArtistImages } from '@/lib/artist-images';
 
 export async function GET(request: NextRequest) {
@@ -10,6 +10,14 @@ export async function GET(request: NextRequest) {
   let artists = genre === 'All'
     ? generateArtists(count)
     : generateArtists(count, genre);
+
+  // Always include AMG signed artists (Héctor Rubio & Jesús Urquijo)
+  const amgIds = ['art-amg-01', 'art-amg-02'];
+  const amgArtists = amgIds.map(id => generateArtistById(id));
+  // Remove duplicates if they were randomly selected
+  artists = artists.filter(a => !amgIds.includes(a.id));
+  // Prepend AMG artists at the top
+  artists = [...amgArtists, ...artists];
 
   // Enrich with real photos from Deezer (async, non-blocking)
   try {
@@ -26,7 +34,8 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({
     artists,
     total: artists.length,
-    genres: ['All', 'Regional Mexicano', 'Corridos Tumbados', 'Corridos Bélicos', 'Norteño', 'Sierreño', 'Latin Trap', 'Reggaeton', 'Latin Urban', 'Latin Pop', 'Hip Hop', 'Rap', 'R&B', 'Indie Pop', 'Latin Alternative', 'Cumbia', 'Tropical', 'Fusión', 'Dembow', 'Latin Drill', 'Experimental', 'Indie Folk', 'Electropop'],
+    signedCount: amgArtists.length,
+    genres: ['All', 'Regional Mexicano', 'Corridos Tumbados', 'Corridos Bélicos', 'Norteño', 'Sierreño', 'Latin Trap', 'Reggaeton', 'Latin Urban', 'Latin Pop', 'Hip Hop', 'Rap', 'R&B', 'Indie Pop', 'Latin Alternative', 'Cumbia', 'Tropical', 'Fusión', 'Dembow', 'Latin Drill', 'Experimental', 'Indie Folk', 'Electropop', 'Flamenco', 'Freestyle', 'Drill', 'Producer'],
     updatedAt: new Date().toISOString(),
   });
 }

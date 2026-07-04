@@ -6,7 +6,7 @@ import {
   DollarSign, TrendingUp, Users, Music2, Phone, Mail, Activity
 } from 'lucide-react';
 import useSWR from 'swr';
-import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
+import React, { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 
 const fetcher = (url: string) => fetch(url).then(r => r.json());
 
@@ -348,32 +348,36 @@ export default function SigningsPage() {
                       const stageMeta = STAGE_META[a.stage] || {};
                       const isExpanded = expandedId === a.id;
                       return (
-                        <tr key={a.id} className="group">
-                          <td colSpan={8} className="p-0">
-                            <div
-                              onClick={() => setExpandedId(isExpanded ? null : a.id)}
-                              className="flex items-center w-full p-3 pl-4 pr-4 hover:bg-accent/50 transition-colors cursor-pointer"
-                            >
-                              <div className="flex-1 min-w-0 flex items-center gap-2">
-                                <span className="text-base">{a.image}</span>
+                        <React.Fragment key={a.id}>
+                          {/* Main row — proper <td> columns */}
+                          <tr
+                            onClick={() => setExpandedId(isExpanded ? null : a.id)}
+                            className="group cursor-pointer hover:bg-surface-hover transition-colors"
+                          >
+                            <td className="p-3 pl-4 whitespace-nowrap">
+                              <div className="flex items-center gap-2 min-w-0">
+                                <span className="text-base shrink-0">{a.image}</span>
                                 <div className="min-w-0">
-                                  <p className="text-sm font-medium truncate">{a.name}</p>
-                                  <p className="text-[10px] text-muted-foreground truncate">{a.genres?.join(', ')}</p>
+                                  <p className="text-sm font-medium truncate max-w-[140px]">{a.name}</p>
+                                  <p className="text-[10px] text-muted-foreground truncate max-w-[140px]">{a.genres?.slice(0, 2).join(', ')}</p>
                                 </div>
                               </div>
-                              <div className="w-24 flex items-center gap-1.5">
+                            </td>
+                            <td className="p-3 whitespace-nowrap">
+                              <div className="flex items-center gap-1.5">
                                 <div className="h-1.5 w-12 rounded-full bg-muted overflow-hidden">
                                   <div className={`h-full rounded-full ${sc.bar}`} style={{ width: `${a.score}%` }} />
                                 </div>
                                 <span className={`text-xs font-mono font-medium ${sc.color}`}>{a.score}</span>
                               </div>
-                              <div className="w-28 px-2">
-                                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium ${stageMeta.color ? 'text-white' : ''}`}
-                                  style={stageMeta.color ? {} : {}}>
-                                  {t(stageMeta.label || a.stage, stageMeta.labelEs || a.stage)}
-                                </span>
-                              </div>
-                              <div className="w-24 flex items-center gap-1.5">
+                            </td>
+                            <td className="p-3 whitespace-nowrap">
+                              <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium text-white ${stageMeta.color}`}>
+                                {t(stageMeta.label || a.stage, stageMeta.labelEs || a.stage)}
+                              </span>
+                            </td>
+                            <td className="p-3 whitespace-nowrap">
+                              <div className="flex items-center gap-1.5">
                                 <div className="h-4 w-10 rounded-sm bg-muted overflow-hidden flex items-end">
                                   <div
                                     className={`w-full rounded-sm transition-all ${a.growth >= 30 ? 'bg-emerald-500' : a.growth >= 15 ? 'bg-green-500' : 'bg-amber-500'}`}
@@ -384,110 +388,111 @@ export default function SigningsPage() {
                                   +{a.growth}%
                                 </span>
                               </div>
-                              <div className="w-24 text-sm text-muted-foreground font-mono text-xs">
-                                <div className="flex items-center gap-1">
-                                  <Users className="h-3 w-3" />
-                                  {formatNumber(a.listeners)}
-                                </div>
+                            </td>
+                            <td className="p-3 whitespace-nowrap">
+                              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                                <Users className="h-3 w-3 shrink-0" />
+                                {formatNumber(a.listeners)}
                               </div>
-                              <div className="w-24 text-sm font-medium font-mono">
-                                {formatCurrency(a.value)}
-                              </div>
-                              <div className="w-24">
-                                <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium border ${PRIORITY_STYLES[a.priority] || ''}`}>
-                                  {a.priority}
-                                </span>
-                              </div>
-                              <div className="w-32 text-xs text-muted-foreground truncate flex items-center gap-1">
+                            </td>
+                            <td className="p-3 whitespace-nowrap text-sm font-medium font-mono">
+                              {formatCurrency(a.value)}
+                            </td>
+                            <td className="p-3 whitespace-nowrap">
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded-full font-medium border ${PRIORITY_STYLES[a.priority] || ''}`}>
+                                {a.priority}
+                              </span>
+                            </td>
+                            <td className="p-3 pr-4 whitespace-nowrap">
+                              <div className="flex items-center gap-1 text-xs text-muted-foreground max-w-[140px]">
                                 <Mail className="h-3 w-3 shrink-0" />
                                 <span className="truncate">{a.contact}</span>
                               </div>
-                              <div className="w-6 flex justify-end">
-                                {isExpanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
-                              </div>
-                            </div>
-                            {/* Expandable Row */}
-                            {isExpanded && (
-                              <div className="bg-muted/30 border-t px-4 sm:px-6 py-4 space-y-4">
-                                {/* Cost Breakdown */}
-                                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                                  <div>
-                                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                                      <DollarSign className="h-4 w-4 text-primary" />
-                                      {t('Deal Breakdown', 'Desglose del Deal')}
-                                      <span className="text-xs font-mono text-muted-foreground">{formatCurrency(a.value)}</span>
-                                    </h3>
-                                    <div className="flex flex-col sm:flex-row items-start gap-4">
-                                      <PieChart breakdown={COST_BREAKDOWN} />
-                                      <div className="flex-1 w-full space-y-1.5 text-xs">
-                                        {COST_BREAKDOWN.map(b => {
-                                          const amount = Math.round(a.value * b.pct / 100);
-                                          return (
-                                            <div key={b.label} className="flex items-center gap-2">
-                                              <span className="w-2 h-2 rounded-full shrink-0" style={{ background: b.color }} />
-                                              <span className="text-muted-foreground w-24">{b.labelEs}</span>
-                                              <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
-                                                <div className="h-full rounded-full" style={{ width: `${b.pct}%`, background: b.color }} />
+                            </td>
+                            <td className="p-3 pr-4 w-6">
+                              {isExpanded ? <ChevronUp className="h-4 w-4 text-muted-foreground" /> : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
+                            </td>
+                          </tr>
+                          {/* Expandable detail row */}
+                          {isExpanded && (
+                            <tr>
+                              <td colSpan={9} className="p-0 bg-surface-hover/30">
+                                <div className="border-t border-border px-6 py-5 space-y-5">
+                                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                                    {/* Deal Breakdown */}
+                                    <div>
+                                      <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                                        <DollarSign className="h-4 w-4 text-primary shrink-0" />
+                                        {t('Deal Breakdown', 'Desglose del Deal')}
+                                        <span className="text-xs font-mono text-muted-foreground ml-1">{formatCurrency(a.value)}</span>
+                                      </h3>
+                                      <div className="flex flex-col sm:flex-row items-start gap-4">
+                                        <PieChart breakdown={COST_BREAKDOWN} />
+                                        <div className="flex-1 w-full space-y-1.5 text-xs">
+                                          {COST_BREAKDOWN.map(b => {
+                                            const amount = Math.round(a.value * b.pct / 100);
+                                            return (
+                                              <div key={b.label} className="flex items-center gap-2">
+                                                <span className="w-2 h-2 rounded-full shrink-0" style={{ background: b.color }} />
+                                                <span className="text-muted-foreground w-24 shrink-0">{b.labelEs}</span>
+                                                <div className="flex-1 h-1.5 rounded-full bg-muted overflow-hidden">
+                                                  <div className="h-full rounded-full" style={{ width: `${b.pct}%`, background: b.color }} />
+                                                </div>
+                                                <span className="font-mono font-medium w-20 text-right shrink-0">{formatCurrency(amount)}</span>
+                                                <span className="text-muted-foreground w-8 text-right shrink-0">{b.pct}%</span>
                                               </div>
-                                              <span className="font-mono font-medium w-20 text-right">{formatCurrency(amount)}</span>
-                                              <span className="text-muted-foreground w-8 text-right">{b.pct}%</span>
+                                            );
+                                          })}
+                                        </div>
+                                      </div>
+                                    </div>
+                                    {/* Agent Workflow */}
+                                    <div>
+                                      <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
+                                        <Activity className="h-4 w-4 text-primary shrink-0" />
+                                        {t('Agent Workflow', 'Workflow de Agentes')}
+                                      </h3>
+                                      <div className="space-y-2">
+                                        {WORKFLOW_AGENTS.map(agent => {
+                                          const statusStyles: Record<string, string> = {
+                                            completed: 'text-green-500 border-green-500/30 bg-green-500/5',
+                                            in_progress: 'text-amber-500 border-amber-500/30 bg-amber-500/5',
+                                            pending: 'text-muted-foreground border-border bg-muted/30',
+                                          };
+                                          return (
+                                            <div key={agent.name} className="flex items-center gap-3 p-2 rounded-lg border border-border text-xs">
+                                              <div className={`w-2 h-2 rounded-full shrink-0 ${agent.status === 'completed' ? 'bg-green-500' : agent.status === 'in_progress' ? 'bg-amber-500 animate-pulse' : 'bg-muted-foreground'}`} />
+                                              <div className="flex-1 min-w-0">
+                                                <p className="font-medium truncate">{agent.name}</p>
+                                                <p className="text-muted-foreground truncate">{lang === 'en' ? agent.role : agent.roleEs}</p>
+                                              </div>
+                                              <span className={`text-[10px] px-1.5 py-0.5 rounded-full border font-medium shrink-0 ${statusStyles[agent.status]}`}>
+                                                {agent.status === 'completed' ? t('Done', 'Listo') : agent.status === 'in_progress' ? t('Working', 'Trabajando') : t('Pending', 'Pendiente')}
+                                              </span>
                                             </div>
                                           );
                                         })}
                                       </div>
                                     </div>
                                   </div>
-                                  {/* Workflow Agents */}
-                                  <div>
-                                    <h3 className="text-sm font-semibold mb-3 flex items-center gap-2">
-                                      <Activity className="h-4 w-4 text-primary" />
-                                      {t('Agent Workflow', 'Workflow de Agentes')}
-                                    </h3>
-                                    <div className="space-y-2">
-                                      {WORKFLOW_AGENTS.map(agent => {
-                                        const statusStyles: Record<string, string> = {
-                                          completed: 'text-green-500 border-green-500/30 bg-green-500/5',
-                                          in_progress: 'text-amber-500 border-amber-500/30 bg-amber-500/5',
-                                          pending: 'text-muted-foreground border-border bg-muted/30',
-                                        };
-                                        return (
-                                          <div key={agent.name} className="flex items-center gap-3 p-2 rounded-lg border text-xs"
-                                            style={{ borderColor: 'inherit' }}>
-                                            <div className={`w-2 h-2 rounded-full ${agent.status === 'completed' ? 'bg-green-500' : agent.status === 'in_progress' ? 'bg-amber-500 animate-pulse' : 'bg-muted-foreground'}`} />
-                                            <div className="flex-1">
-                                              <p className="font-medium">{agent.name}</p>
-                                              <p className="text-muted-foreground">{lang === 'en' ? agent.role : agent.roleEs}</p>
-                                            </div>
-                                            <span className={`text-[10px] px-1.5 py-0.5 rounded-full border font-medium ${statusStyles[agent.status]}`}>
-                                              {agent.status === 'completed' ? t('Done', 'Listo') : agent.status === 'in_progress' ? t('Working', 'Trabajando') : t('Pending', 'Pendiente')}
-                                            </span>
-                                          </div>
-                                        );
-                                      })}
+                                  {/* Genres & Contact */}
+                                  <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground border-t border-border pt-4">
+                                    <div className="flex items-center gap-1.5">
+                                      <Music2 className="h-3 w-3 shrink-0 text-foreground/60" />
+                                      <span className="font-medium text-foreground">{t('Genres', 'Géneros')}:</span>
+                                      <span>{a.genres?.join(', ')}</span>
+                                    </div>
+                                    <div className="flex items-center gap-1.5">
+                                      <Phone className="h-3 w-3 shrink-0 text-foreground/60" />
+                                      <span className="font-medium text-foreground">{t('Contact', 'Contacto')}:</span>
+                                      <span className="truncate max-w-[300px]">{a.contact}</span>
                                     </div>
                                   </div>
                                 </div>
-                                {/* Genres & Contact Details */}
-                                <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground border-t border-border pt-3">
-                                  <div className="flex items-center gap-1.5">
-                                    <Music2 className="h-3 w-3" />
-                                    <span className="font-medium text-foreground">
-                                      {t('Genres', 'Géneros')}:
-                                    </span>
-                                    {a.genres?.join(', ')}
-                                  </div>
-                                  <div className="flex items-center gap-1.5">
-                                    <Phone className="h-3 w-3" />
-                                    <span className="font-medium text-foreground">
-                                      {t('Contact', 'Contacto')}:
-                                    </span>
-                                    {a.contact}
-                                  </div>
-                                </div>
-                              </div>
-                            )}
-                          </td>
-                        </tr>
+                              </td>
+                            </tr>
+                          )}
+                        </React.Fragment>
                       );
                     })}
                   </tbody>

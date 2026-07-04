@@ -552,7 +552,7 @@ export function generateResponse(
     }
   }
 
-  // 3. Fallback — contextual intelligent response
+  // 3. Fallback — responde a CUALQUIER pregunta de forma conversacional
   const pageName = page.split('/').filter(Boolean).pop() || 'dashboard';
   const fallbacks: Record<string, string> = {
     dashboard: 'Mission Control',
@@ -572,14 +572,37 @@ export function generateResponse(
     finance: 'Financial View',
     settings: 'Settings',
   };
-  const label = fallbacks[pageName] || 'this page';
+  const label = fallbacks[pageName] || 'SIGNAL';
 
-  return {
-    response: `I understand you're asking about something on **${label}** that I don't have a specific answer for yet. Here's what I can tell you:\n\nThis module is designed to help you with ${pageName === 'dashboard' ? 'executive oversight and real-time intelligence monitoring' : 'your specific intelligence tasks in this area'}.\n\nTry asking me something more specific, or I can help you with:\n• Understanding the data on this page\n• Navigating to another module\n• General questions about SIGNAL's capabilities`,
-    suggestions: [
-      'What can I do here?',
-      'Show me around',
-      'How do I get started?',
-    ],
-  };
+  // Detect question types for smarter fallback
+  const isHow = /how\s+(do|to|can|does|is|are)/i.test(msg) || /cómo/i.test(msg);
+  const isWhat = /what\s+(is|are|does|can|do)/i.test(msg) || /qué/i.test(msg) || /cuál/i.test(msg) || /cual/i.test(msg);
+  const isWho = /who\s+is/i.test(msg) || /quién/i.test(msg) || /quien/i.test(msg);
+  const isWhere = /where\s+(is|are|can)/i.test(msg) || /dónde/i.test(msg) || /donde/i.test(msg);
+  const isWhy = /why\s+(is|are|does|do|would)/i.test(msg) || /por qué/i.test(msg) || /porque/i.test(msg);
+  const isWhen = /when\s+(is|are|does|do|will)/i.test(msg) || /cuándo/i.test(msg) || /cuando/i.test(msg);
+  const isGreeting = /\b(hi|hello|hey|good\s+(morning|afternoon|evening)|hola|buenos\s+días|buenas)\b/i.test(msg);
+  const isThanks = /\b(thanks|thank\s+you|gracias)\b/i.test(msg);
+
+  let responseText: string;
+  let suggestions: string[];
+
+  if (isGreeting) {
+    responseText = `¡Hola! 👋 Soy **SIGNAL Assist**, tu guía de inteligencia musical. Estás en **${label}**.\n\nPuedo ayudarte con:\n• Explicar lo que ves en esta página\n• Responder preguntas sobre artistas, datos o métricas\n• Guiarte a través de workflows, reports y contratos\n• Recomendarte qué hacer a continuación\n\n¿En qué puedo ayudarte hoy?`;
+    suggestions = ['What can I do here?', 'Explain the dashboard', 'How do I get started?'];
+  } else if (isThanks) {
+    responseText = '¡De nada! 🙌 Estoy aquí para ayudarte. Si tienes más preguntas, no dudes en decírmelas.';
+    suggestions = ['How do I track an artist?', 'Explain Discovery Engine', 'Show me how to create a report'];
+  } else if (isWho && (msg.includes('artist') || msg.includes('cantante') || msg.includes('musico') || msg.includes('músico'))) {
+    responseText = `En **${label}** puedes explorar todos los artistas que SIGNAL monitorea. Actualmente tenemos **artistas en seguimiento** de diversos géneros como Regional Mexicano, Latin Trap, Reggaeton, Rap Latino, Latin Pop, y más.\n\nPuedes buscar artistas específicos, filtrar por género, ciudad o país, y ver sus puntajes de descubrimiento, crecimiento y métricas de streaming.\n\n**Artistas destacados de ABE Music Group:**\n• **Héctor Rubio** — Angostura, Sinaloa. FIRMADO. Score 94.\n• **Jesús Urquijo** — Hermosillo, Sonora. FIRMADO. Score 78.`;
+    suggestions = ['Show me signed artists', 'Search by genre', 'How is the score calculated?'];
+  } else if (isHow || isWhat || isWhere || isWhy || isWhen) {
+    responseText = `Buena pregunta! 🤔 En **${label}** puedes encontrar mucha información útil.\n\n**¿Qué puedes hacer aquí?**\n• Explorar datos y métricas de artistas\n• Monitorear tendencias y alertas\n• Gestionar el pipeline de firmas\n• Generar reportes y análisis\n\nSi me dices un poco más sobre lo que necesitas, puedo darte una respuesta más precisa. Por ejemplo:\n• "Muéstrame los artistas mejor puntuados"\n• "Cómo funciona el Discovery Engine"\n• "Qué significa este score"\n• "Cómo contacto a un artista"`;
+    suggestions = ['Show top artists', 'Explain my dashboard', 'How do I find new talent?', 'What do the KPIs mean?'];
+  } else {
+    responseText = `¡Claro! 😊 Veo que estás en **${label}**. Déjame ayudarte con lo que necesites.\n\nSIGNAL es una plataforma integral de inteligencia musical que te permite:\n• Descubrir y evaluar talento emergente\n• Monitorear el mercado y la competencia\n• Gestionar firmas y contratos\n• Analizar datos de streaming y redes sociales\n• Colaborar con tu equipo en tiempo real\n\n¿Sobre qué tema específico te gustaría saber más?`;
+    suggestions = ['Give me a tour', 'What is SIGNAL?', 'How does scoring work?', 'Show me the best artists'];
+  }
+
+  return { response: responseText, suggestions };
 }

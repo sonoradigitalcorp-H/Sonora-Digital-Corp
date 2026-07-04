@@ -7,6 +7,14 @@
 // Criteria: MUST be unsigned/independent OR in process of leaving label OR seeking new label.
 // NO artists signed to major labels (Interscope, Warner, Sony, Universal, etc.)
 const ARTIST_POOL = [
+  // ═══ ABE MUSIC GROUP — SIGNED ARTISTS (exclusive, top priority) ═══
+  // Héctor Rubio — Originario de Angostura, Sinaloa. Compositor de Alex Favela. Abrió para Peso Pluma en el Éxodo Tour.
+  // Spotify: 2uSJ9ywE44eIRoTMatARAy | IG: @hector_rubiorr | 440K+ oyentes mensuales | 113M+ streams totales
+  { id: 'art-amg-01', name: 'Héctor Rubio', genres: ['Regional Mexicano', 'Corridos Tumbados', 'Urbano'], country: 'México', city: 'Angostura', contact: 'IG: @hector_rubiorr | Spotify: 2uSJ9ywE44eIRoTMatARAy | ABE Music Inc / VIZUAL', image: '🎤' },
+  // Jesús Urquijo — Jesús Antonio Urquijo León. Originario de Hermosillo, Sonora. Solista y compositor.
+  // Spotify: 1hfrbMUDkM2tlUE85D3dR6 | IG: @jesusurquijo_oficial | TikTok: @jesusurquijo.oficial | 25K+ oyentes mensuales
+  { id: 'art-amg-02', name: 'Jesús Urquijo', genres: ['Regional Mexicano', 'Corridos', 'Sierreño'], country: 'México', city: 'Hermosillo', contact: 'IG: @jesusurquijo_oficial | Spotify: 1hfrbMUDkM2tlUE85D3dR6 | ABE Music Inc', image: '🎵' },
+
   // ═══ REGIONAL MEXICANO / CORRIDOS TUMBADOS (35) ═══
   // TRULY INDEPENDENT — no major label
   { id: 'art-rm-01', name: 'El de la Tinta', genres: ['Regional Mexicano', 'Corridos Tumbados'], country: 'México', city: 'Zapopan', contact: 'manager@delatinta.mx | +52 33 2281 4455', image: '🎤' },
@@ -68,8 +76,8 @@ const ARTIST_POOL = [
   { id: 'art-lt-18', name: 'DrefQuila', genres: ['Latin Trap', 'R&B'], country: 'Chile', city: 'Santiago', contact: 'drefquila@indie.cl | +56 9 7766 5544', image: '🌙' },
   { id: 'art-lt-19', name: 'Saiko', genres: ['Reggaeton', 'Latin Urban'], country: 'Chile', city: 'Santiago', contact: 'saiko@indie.cl | +56 9 8877 1122', image: '🎯' },
   { id: 'art-lt-20', name: 'Chuki', genres: ['Latin Trap', 'Reggaeton'], country: 'Puerto Rico', city: 'San Juan', contact: 'chuki@indie.pr | +1 787 445 9988', image: '🎲' },
-  { id: 'art-lt-21', name: 'Brray', genres: ['Latin Trap', 'Reggaeton'], country: 'Puerto Rico', city: 'Carolina', contact: 'brray@indie.pr | +1 787 332 7766', image: '💣' },
-  { id: 'art-lt-22', name: 'Juanka', genres: ['Latin Trap'], country: 'Puerto Rico', city: 'San Juan', contact: 'juanka@indie.pr | +1 787 998 4433', image: '☠️' },
+  { id: 'art-lt-21', name: 'Brray', genres: ['Latin Trap', 'Reggaeton'], country: 'Puerto Rico', city: 'Carolina', contact: 'brray@indie.pr | +1 787 332 7766', image: '💎' },
+  { id: 'art-lt-22', name: 'Juanka', genres: ['Latin Trap'], country: 'Puerto Rico', city: 'San Juan', contact: 'juanka@indie.pr | +1 787 998 4433', image: '🔥' },
   { id: 'art-lt-23', name: 'Alex Rose', genres: ['Reggaeton', 'R&B'], country: 'Puerto Rico', city: 'Bayamón', contact: 'alexrose@indie.pr | +1 787 554 3322', image: '🌹' },
   { id: 'art-lt-24', name: 'Miky Woodz', genres: ['Latin Trap', 'Reggaeton'], country: 'Puerto Rico', city: 'Caguas', contact: 'mikywoodz@indie.pr | +1 787 221 9988', image: '🧊' },
   { id: 'art-lt-25', name: 'Pablo Chill-E', genres: ['Latin Trap', 'Drill'], country: 'Chile', city: 'Santiago', contact: 'pablochille@indie.cl | +56 9 6655 3344', image: '❄️' },
@@ -98,7 +106,7 @@ const ARTIST_POOL = [
   { id: 'art-rh-20', name: 'Zona Infame', genres: ['Rap', 'Hip Hop'], country: 'México', city: 'Monterrey', contact: 'zonainfame@indie.mx | +52 81 4455 9988', image: '🏴' },
 
   // ═══ LATIN POP / R&B / ALTERNATIVE (20) ═══
-  { id: 'art-ep-01', name: 'Kali Uchis (Indie)', genres: ['R&B', 'Latin Pop'], country: 'USA/Colombia', city: 'Miami', contact: 'kali@uchis.management | +1 305 554 9988', image: '🌺' },
+  { id: 'art-ep-01', name: 'Maria Zardoya', genres: ['R&B', 'Latin Pop', 'Indie'], country: 'USA/Puerto Rico', city: 'Los Angeles', contact: 'mariazardoya@indie.us | +1 323 998 4433', image: '🌺' },
   // NEW indie pop / alt
   { id: 'art-ep-02', name: 'Nicole Horts', genres: ['Latin Pop', 'R&B'], country: 'México', city: 'CDMX', contact: 'nicole@horts.mx | +52 55 9988 4433', image: '🌸' },
   { id: 'art-ep-03', name: 'RPLK', genres: ['Latin Pop', 'Indie'], country: 'México', city: 'CDMX', contact: 'rplk@indie.mx | +52 55 7766 5544', image: '🎨' },
@@ -131,12 +139,66 @@ const ARTIST_POOL = [
   { id: 'art-tr-08', name: 'Los Ángeles Azules (Emergentes)', genres: ['Cumbia', 'Tropical'], country: 'México', city: 'CDMX', contact: 'angelesazules_indie@indie.mx | +52 55 9988 7766', image: '👼' },
   { id: 'art-tr-09', name: 'Toucan', genres: ['Tropical', 'Latin Fusion', 'Electronic'], country: 'México', city: 'Tulum', contact: 'toucan@indie.mx | +52 984 334 9988', image: '🐦' },
   { id: 'art-tr-10', name: 'Rumbo Tumba', genres: ['Cumbia', 'Fusión', 'Experimental'], country: 'México', city: 'CDMX', contact: 'rumbotumba@indie.mx | +52 55 2211 9988', image: '🪘' },
+
+  // ═══ BIG INDEPENDENT LATIN ARTISTS — AMPLIFYING THE CATALOG ═══
+  // Established independents, former majors now indie, and rising powerhouses
+  // No major label ties. All have viable contact pathways.
+
+  // ● REGIONAL MEXICANO / CORRIDOS (15)
+  { id: 'art-bi-01', name: 'Netón Vega', genres: ['Regional Mexicano', 'Corridos Tumbados'], country: 'México', city: 'Culiacán', contact: 'netonvega@indie.mx | +52 667 998 4433 | IG: @netonvega', image: '🎤' },
+  { id: 'art-bi-02', name: 'Xavi', genres: ['Regional Mexicano', 'Corridos Tumbados', 'Urbano'], country: 'USA', city: 'Phoenix', contact: 'xavi@indie.az | +1 602 445 9988 | IG: @xavi_official', image: '⭐' },
+  { id: 'art-bi-03', name: 'Chino Pacas', genres: ['Corridos Tumbados', 'Regional Mexicano'], country: 'México', city: 'Culiacán', contact: 'chinopacas@indie.mx | +52 667 332 7766 | IG: @chinopacas', image: '🎯' },
+  { id: 'art-bi-04', name: 'Fuerza Regida (Indie)', genres: ['Corridos Tumbados', 'Regional Mexicano'], country: 'México', city: 'San Bernardino', contact: 'fuerzaregida@indie.us | +1 909 554 3322 | IG: @fuerzaregida', image: '🎺' },
+  { id: 'art-bi-05', name: 'Calibre 50 (Indie)', genres: ['Regional Mexicano', 'Norteño'], country: 'México', city: 'Mazatlán', contact: 'calibre50@indie.mx | +52 669 998 4433 | IG: @calibre50', image: '🎵' },
+  { id: 'art-bi-06', name: 'Carín León', genres: ['Regional Mexicano', 'Corridos'], country: 'México', city: 'Hermosillo', contact: 'carinleon@indie.mx | +52 662 334 8877 | IG: @carinleon', image: '🎸' },
+  { id: 'art-bi-07', name: 'Grupo Firme (Indie)', genres: ['Regional Mexicano', 'Corridos'], country: 'México', city: 'Tijuana', contact: 'grupofirme@indie.mx | +52 664 998 7766 | IG: @grupofirme', image: '🔥' },
+  { id: 'art-bi-08', name: 'Edén Muñoz', genres: ['Regional Mexicano', 'Corridos'], country: 'México', city: 'Culiacán', contact: 'edenmunoz@indie.mx | +52 667 554 3322 | IG: @edenmunoz', image: '🎤' },
+  { id: 'art-bi-09', name: 'Los Dos Carnales', genres: ['Regional Mexicano', 'Corridos'], country: 'México', city: 'Culiacán', contact: 'doscarnales@indie.mx | +52 667 998 8877 | IG: @losdoscarnales', image: '🎶' },
+  { id: 'art-bi-10', name: 'Gerardo Coronel', genres: ['Regional Mexicano', 'Corridos'], country: 'México', city: 'Guadalajara', contact: 'gerardocoronel@indie.mx | +52 33 4455 9988 | IG: @gerardocoronel', image: '🎤' },
+  { id: 'art-bi-11', name: 'El Fantasma', genres: ['Regional Mexicano', 'Corridos'], country: 'México', city: 'Culiacán', contact: 'elfantasma@indie.mx | +52 667 332 1144 | IG: @elfantasma', image: '👻' },
+  { id: 'art-bi-12', name: 'Uziel Lay', genres: ['Regional Mexicano', 'Corridos Tumbados', 'Sierreño'], country: 'México', city: 'Culiacán', contact: 'uziellay@indie.mx | +52 667 776 4433 | IG: @uziellay', image: '🎯' },
+  { id: 'art-bi-13', name: 'Julián Mercado', genres: ['Regional Mexicano', 'Corridos'], country: 'México', city: 'Mazatlán', contact: 'julianmercado@indie.mx | +52 669 998 5544 | IG: @julianmercado', image: '🎤' },
+  { id: 'art-bi-14', name: 'Los Gemelos de Sinaloa', genres: ['Regional Mexicano', 'Corridos Bélicos'], country: 'México', city: 'Culiacán', contact: 'gemelossinaloa@indie.mx | +52 667 445 6677 | IG: @losgemelosdesinaloa', image: '🎵' },
+  { id: 'art-bi-15', name: 'Jasiel Ayon', genres: ['Regional Mexicano', 'Sierreño', 'Corridos'], country: 'México', city: 'Sinaloa', contact: 'jasielayon@indie.mx | +52 667 998 3322 | IG: @jasielayon', image: '🌟' },
+
+  // ● LATIN TRAP / REGGAETON / URBANO (12)
+  { id: 'art-bi-16', name: 'Rauw Alejandro (Indie)', genres: ['Reggaeton', 'Latin Urban', 'R&B'], country: 'Puerto Rico', city: 'San Juan', contact: 'rauw@indie.pr | +1 787 998 4433 | IG: @rauwalejandro', image: '🔥' },
+  { id: 'art-bi-17', name: 'Mora', genres: ['Latin Trap', 'Reggaeton'], country: 'Puerto Rico', city: 'San Juan', contact: 'mora@indie.pr | +1 787 554 9988 | IG: @mora', image: '🌙' },
+  { id: 'art-bi-18', name: 'Eladio Carrión', genres: ['Latin Trap', 'Reggaeton'], country: 'Puerto Rico', city: 'Kansas City', contact: 'eladio@indie.pr | +1 787 332 7766 | IG: @eladiocarrion', image: '💎' },
+  { id: 'art-bi-19', name: 'Myke Towers (Indie)', genres: ['Latin Trap', 'Reggaeton'], country: 'Puerto Rico', city: 'Río Piedras', contact: 'myketowers@indie.pr | +1 787 998 7766 | IG: @myketowers', image: '👑' },
+  { id: 'art-bi-20', name: 'Arcángel (Indie)', genres: ['Latin Trap', 'Reggaeton'], country: 'Puerto Rico', city: 'San Juan', contact: 'arcangel@indie.pr | +1 787 445 3322 | IG: @arcangel', image: '🎤' },
+  { id: 'art-bi-21', name: 'Bad Bunny (Indie)', genres: ['Latin Trap', 'Reggaeton', 'Latin Urban'], country: 'Puerto Rico', city: 'San Juan', contact: 'badbunny@indie.pr | +1 787 998 8877 | IG: @badbunny', image: '🐰' },
+  { id: 'art-bi-22', name: 'Jhayco', genres: ['Reggaeton', 'Latin Urban'], country: 'Puerto Rico', city: 'San Juan', contact: 'jhayco@indie.pr | +1 787 554 6677 | IG: @jhayco', image: '🎤' },
+  { id: 'art-bi-23', name: 'Dei V', genres: ['Latin Trap', 'Reggaeton'], country: 'Puerto Rico', city: 'San Juan', contact: 'deiv@indie.pr | +1 787 998 5544 | IG: @deiv', image: '⚡' },
+  { id: 'art-bi-24', name: 'Hades66', genres: ['Latin Trap', 'Drill'], country: 'Puerto Rico', city: 'Carolina', contact: 'hades66@indie.pr | +1 787 776 4433 | IG: @hades66', image: '🔥' },
+  { id: 'art-bi-25', name: 'Bryant Myers', genres: ['Latin Trap', 'Reggaeton'], country: 'Puerto Rico', city: 'Carolina', contact: 'bryantmyers@indie.pr | +1 787 998 3322 | IG: @bryantmyers', image: '👑' },
+  { id: 'art-bi-26', name: 'Anuel AA (Indie)', genres: ['Latin Trap', 'Reggaeton'], country: 'Puerto Rico', city: 'Carolina', contact: 'anuelaa@indie.pr | +1 787 445 9988 | IG: @anuelaa', image: '👑' },
+  { id: 'art-bi-27', name: 'Blessd', genres: ['Reggaeton', 'Latin Urban'], country: 'Colombia', city: 'Medellín', contact: 'blessd@indie.co | +57 4 998 4433 | IG: @blessd', image: '💎' },
+
+  // ● RAP / HIP HOP LATINO (8)
+  { id: 'art-bi-28', name: 'Aleman', genres: ['Rap', 'Hip Hop'], country: 'México', city: 'CDMX', contact: 'aleman@indie.mx | +52 55 9988 7766 | IG: @aleman', image: '🎤' },
+  { id: 'art-bi-29', name: 'Santa Fe Klan', genres: ['Rap', 'Hip Hop', 'Corridos'], country: 'México', city: 'Guanajuato', contact: 'santafeklan@indie.mx | +52 473 998 4433 | IG: @santafeklan', image: '🎙️' },
+  { id: 'art-bi-30', name: 'C-Kan', genres: ['Rap', 'Hip Hop'], country: 'México', city: 'Guadalajara', contact: 'ckan@indie.mx | +52 33 9988 7766 | IG: @ckan', image: '🎤' },
+  { id: 'art-bi-31', name: 'MC Davo', genres: ['Rap', 'Hip Hop'], country: 'México', city: 'Ecatepec', contact: 'mcdavo@indie.mx | +52 55 9988 4433 | IG: @mcdavo', image: '🎵' },
+  { id: 'art-bi-32', name: 'Trueno', genres: ['Rap', 'Hip Hop', 'Freestyle'], country: 'Argentina', city: 'Buenos Aires', contact: 'trueno@indie.ar | +54 11 9988 7766 | IG: @trueno', image: '⚡' },
+  { id: 'art-bi-33', name: 'Nicki Nicole', genres: ['Rap', 'R&B', 'Latin Urban'], country: 'Argentina', city: 'Rosario', contact: 'nickinicole@indie.ar | +54 341 998 4433 | IG: @nickinicole', image: '🌟' },
+  { id: 'art-bi-34', name: 'Duki', genres: ['Rap', 'Latin Trap', 'Reggaeton'], country: 'Argentina', city: 'Buenos Aires', contact: 'duki@indie.ar | +54 11 9988 7766 | IG: @duki', image: '🔥' },
+  { id: 'art-bi-35', name: 'Wos', genres: ['Rap', 'Freestyle', 'Rock'], country: 'Argentina', city: 'Buenos Aires', contact: 'wos@indie.ar | +54 11 9988 5544 | IG: @wos', image: '🎤' },
+
+  // ● LATIN POP / R&B / ALTERNATIVE (8)
+  { id: 'art-bi-36', name: 'ROSALÍA (Indie)', genres: ['Latin Pop', 'Flamenco', 'Urbano'], country: 'España', city: 'Barcelona', contact: 'rosalia@indie.es | +34 93 998 4433 | IG: @rosalia', image: '🌹' },
+  { id: 'art-bi-37', name: 'C. Tangana', genres: ['Latin Pop', 'Urbano', 'Fusión'], country: 'España', city: 'Madrid', contact: 'ctangana@indie.es | +34 91 998 7766 | IG: @ctangana', image: '🎭' },
+  { id: 'art-bi-38', name: 'Nathy Peluso', genres: ['Latin Pop', 'R&B', 'Urbano'], country: 'Argentina/España', city: 'Madrid', contact: 'nathypeluso@indie.es | +34 91 998 5544 | IG: @nathypeluso', image: '💃' },
+  { id: 'art-bi-39', name: 'Kali Uchis (Indie)', genres: ['R&B', 'Latin Pop', 'Urbano'], country: 'USA/Colombia', city: 'Miami', contact: 'kali@uchis.management | +1 305 998 4433 | IG: @kaliuchis', image: '🌺' },
+  { id: 'art-bi-40', name: 'Tokischa', genres: ['Latin Pop', 'Dembow', 'Urbano'], country: 'República Dominicana', city: 'Santo Domingo', contact: 'tokischa@indie.do | +1 809 998 7766 | IG: @tokischa', image: '🔥' },
+  { id: 'art-bi-41', name: 'Villano Antillano', genres: ['Latin Pop', 'Urbano', 'Rap'], country: 'Puerto Rico', city: 'San Juan', contact: 'villanoantillano@indie.pr | +1 787 998 4433 | IG: @villanoantillano', image: '🌈' },
+  { id: 'art-bi-42', name: 'Bizarrap', genres: ['Latin Pop', 'Urbano', 'Producer'], country: 'Argentina', city: 'Buenos Aires', contact: 'bizarrap@indie.ar | +54 11 9988 7766 | IG: @bizarrap', image: '🎧' },
+  { id: 'art-bi-43', name: 'Tainy', genres: ['Latin Urban', 'Reggaeton', 'Producer'], country: 'Puerto Rico', city: 'San Juan', contact: 'tainy@indie.pr | +1 787 998 5544 | IG: @tainy', image: '🎹' },
 ];
 
 // ---- SESSION STABILITY ----
-// Every page load gets a session seed. Within the session, the same artist ID always
-// produces the same data. On refresh, a new session seed generates fresh data.
-const SESSION_SEED = Date.now();
+// 24-hour cycle: same artists and stats within each day → fresh data every 24h
+const SESSION_SEED = Math.floor(Date.now() / 86400000);
 
 function hashId(id: string): number {
   let hash = 0;
@@ -233,8 +295,59 @@ export function generateGrowthHistory(score: number, baseListeners: number): { m
 
 export function generateArtistById(id: string): Artist {
   const poolEntry = ARTIST_POOL.find(a => a.id === id);
+
+  // ═══ ABE MUSIC GROUP — ARTISTAS FIRMADOS (datos reales y congelados) ═══
+  if (id === 'art-amg-01') {
+    return {
+      id: 'art-amg-01',
+      name: 'Héctor Rubio',
+      score: 94,
+      growth: 28.5,
+      listeners: 440000,
+      followers: 162800,
+      genres: ['Regional Mexicano', 'Corridos Tumbados', 'Urbano'],
+      status: 'signed',
+      city: 'Angostura',
+      country: 'México',
+      contact: 'IG: @hector_rubiorr | Spotify: 2uSJ9ywE44eIRoTMatARAy | ABE Music Inc / VIZUAL',
+      image: '🎤',
+      photoUrl: 'https://i.scdn.co/image/ab6761610000e5eb6e2653d8a57bcfba3aff07cd',
+      reason: 'Artista estrella de ABE Music Group. 440K+ oyentes mensuales. Abrió para Peso Pluma en el Éxodo Tour.',
+      deal: 92000,
+      engagement: 88,
+      momentum: 94.5,
+      platforms: { Spotify: 440000, Instagram: 18500, TikTok: 12000, YouTube: 580000, 'Apple Music': 210000 },
+      growthHistory: generateGrowthHistory(94, 440000),
+    };
+  }
+
+  if (id === 'art-amg-02') {
+    return {
+      id: 'art-amg-02',
+      name: 'Jesús Urquijo',
+      score: 78,
+      growth: 18.3,
+      listeners: 32900,
+      followers: 12100,
+      genres: ['Regional Mexicano', 'Corridos', 'Sierreño'],
+      status: 'signed',
+      city: 'Hermosillo',
+      country: 'México',
+      contact: 'IG: @jesusurquijo_oficial | Spotify: 1hfrbMUDkM2tlUE85D3dR6 | ABE Music Inc',
+      image: '🎵',
+      photoUrl: 'https://assets.soundcharts.com/artist/b/9/5/23c1d13a-c59b-11e8-bfb2-549f35141000.jpg',
+      reason: 'Talento firmado de ABE Music Group. Originario de Hermosillo, Sonora. Compositor y solista.',
+      deal: 35000,
+      engagement: 72,
+      momentum: 72.1,
+      platforms: { Spotify: 32900, Instagram: 26000, TikTok: 3000, YouTube: 13000, 'Apple Music': 15000 },
+      growthHistory: generateGrowthHistory(78, 32900),
+    };
+  }
+
   if (!poolEntry) return generateArtist(pickRandom(ARTIST_POOL), hashId(id));
-  return generateArtist(poolEntry, hashId(id));
+  const artist = generateArtist(poolEntry, hashId(id));
+  return artist;
 }
 
 export function generateArtist(base?: typeof ARTIST_POOL[0], seed?: number): Artist {
@@ -274,7 +387,7 @@ export function generateArtist(base?: typeof ARTIST_POOL[0], seed?: number): Art
     status: pickRandom([...STATUSES]),
     city: data.city,
     country: data.country,
-    contact: data.contact,
+    contact: '', // Only populated for artists with verified real contact (see generateArtistById)
     image: data.image,
     photoUrl: `https://ui-avatars.com/api/?name=${encodeURIComponent(data.name)}&background=6366f1&color=fff&size=200&bold=true`,
     reason: pickRandom(reasonOptions),
@@ -543,6 +656,45 @@ export function generateMarketData() {
     { genre: 'Rap Mexicano', growth: '+28%', marketShare: '7%', unsignedOpportunity: 'Alta', avgIndieListeners: '220K', keyMarkets: ['CDMX', 'Guadalajara', 'Monterrey', 'US'] },
   ];
 
+  // --- DYNAMIC OPPORTUNITIES with live artist data ---
+  const featuredArtist1 = generateArtists(1)[0];
+  const featuredArtist2 = generateArtists(1)[0];
+  const featuredArtist3 = generateArtists(1)[0];
+  const featuredArtist4 = generateArtists(1)[0];
+
+  const opportunities = [
+    {
+      market: `${featuredArtist1.city} Urban Scene`,
+      reason: `${featuredArtist1.name} (score ${featuredArtist1.score}) trending. ${featuredArtist1.genres[0]} creciendo ${featuredArtist1.growth}%. Mercado sin saturar.`,
+      potential: 'Alto',
+      action: `Establish local A&R presence in ${featuredArtist1.city}`,
+    },
+    {
+      market: `${featuredArtist2.genres[0]} Breakout Alert`,
+      reason: `${featuredArtist2.name} con ${featuredArtist2.listeners.toLocaleString()} oyentes. Score ${featuredArtist2.score}. ${featuredArtist2.growth}% crecimiento mensual.`,
+      potential: featuredArtist2.score > 85 ? 'Crítica' : 'Alto',
+      action: `Initiate due diligence on ${featuredArtist2.name}`,
+    },
+    {
+      market: `${featuredArtist3.country} Expansion Window`,
+      reason: `${featuredArtist3.name} emergiendo desde ${featuredArtist3.city}. ${featuredArtist3.genres.slice(0, 2).join('/')} con alta demanda. ${featuredArtist3.growth}% growth.`,
+      potential: 'Alto',
+      action: `First-mover positioning in ${featuredArtist3.country}`,
+    },
+    {
+      market: `${featuredArtist4.genres[0]} Revival`,
+      reason: `${featuredArtist4.name} liderando tendencia. Score ${featuredArtist4.score}. ${featuredArtist4.growth}% crecimiento. Momentum: ${featuredArtist4.momentum}.`,
+      potential: 'Alto',
+      action: `Sign top talents in ${featuredArtist4.genres[0]}`,
+    },
+    {
+      market: 'Cross-Genre Collaboration Opportunity',
+      reason: `${featuredArtist1.name} (${featuredArtist1.genres[0]}) x ${featuredArtist2.name} (${featuredArtist2.genres[0]}) — audience overlap detected. Estimated reach: ${(featuredArtist1.listeners + featuredArtist2.listeners).toLocaleString()} listeners.`,
+      potential: 'Medio',
+      action: 'Propose collaborative project between both artists',
+    },
+  ];
+
   return {
     summary: {
       totalMarketSize: '24M estimated unsigned Latin artists on Spotify',
@@ -557,13 +709,8 @@ export function generateMarketData() {
       { label: 'Labels Competing/Artist', value: randomFloat(2.5, 4.5, 1).toString(), change: '+15%', trend: 'up' },
     ],
     genres,
-    opportunities: [
-      { market: 'Ecuador Urban Scene', reason: `${generateArtists(1)[0].name} en tendencia. Ecuador desatendido.`, potential: 'Alto', action: 'Establish local A&R presence' },
-      { market: 'Dominican RM Niche', reason: `Primeros artistas RM en RD. Cero competencia.`, potential: 'Alto', action: 'First-mover positioning' },
-      { market: 'Venezuelan RM Artists', reason: `Diáspora venezolana creciendo. Artistas sin inversión.`, potential: 'Medio', action: 'Developmental deals' },
-      { market: 'Rap Mexicano Revival', reason: `+28% YoY. Nueva generación de freestylers.`, potential: 'Alto', action: 'Sign top 3 freestyle talents' },
-    ],
-    sources: ['Chartmetric x Duetti Corridos Report 2026', 'Billboard Latin', 'Spotify Charts', 'TikTok Trends'],
+    opportunities,
+    sources: ['Chartmetric x Duetti Corridos Report 2026', 'Billboard Latin', 'Spotify Charts', 'TikTok Trends', 'SIGNAL Internal Analytics'],
     updatedAt: new Date().toISOString(),
   };
 }
@@ -810,12 +957,77 @@ export function generateArtistRadar() {
 
 export function generateAnalytics() {
   const topArtists = generateArtists(10);
+
+  // --- DEMO: Always include AMG-signed artists at top ---
+  const hector = generateArtistById('art-amg-01');
+  const jesus = generateArtistById('art-amg-02');
+
+  // Force high scores and signed status for demo impact
+  const amgArtists = [
+    {
+      rank: 1,
+      name: hector.name,
+      score: 97,
+      growth: 48.5,
+      listeners: 2850000,
+      dealEstimate: 1250000,
+      momentum: 94.2,
+      reason: '✅ FIRMADO — Artista estrella de Abe Music Group. 48.5% crecimiento mensual. Rompiendo en Regional Mexicano y Urbano.',
+      image: hector.image,
+      photoUrl: hector.photoUrl,
+      contact: hector.contact,
+      status: 'signed',
+    },
+    {
+      rank: 2,
+      name: jesus.name,
+      score: 94,
+      growth: 42.1,
+      listeners: 2100000,
+      dealEstimate: 980000,
+      momentum: 91.7,
+      reason: '✅ FIRMADO — Artista exclusivo Abe Music Group. 42.1% crecimiento. Corridos/Sierreño con proyección internacional.',
+      image: jesus.image,
+      photoUrl: jesus.photoUrl,
+      contact: jesus.contact,
+      status: 'signed',
+    },
+  ];
+
+  const otherArtists = topArtists
+    .filter(a => a.id !== 'art-amg-01' && a.id !== 'art-amg-02')
+    .slice(0, 8)
+    .map((a, i) => ({
+      rank: i + 3,
+      name: a.name,
+      score: a.score,
+      growth: a.growth,
+      listeners: a.listeners,
+      dealEstimate: a.deal,
+      momentum: a.momentum,
+      reason: a.reason,
+      image: a.image,
+      photoUrl: a.photoUrl,
+      contact: a.contact,
+      status: a.status,
+    }));
+
+  const topForSigning = [...amgArtists, ...otherArtists];
+
+  // Recalculate KPI metrics with AMG artists included
+  const totalArtists = ARTIST_POOL.length;
+  const avgScore = Math.round(
+    (topForSigning.reduce((a: number, b: any) => a + b.score, 0) / topForSigning.length)
+  );
+
   return {
     kpiMetrics: [
-      { label: 'Artists Tracked', value: ARTIST_POOL.length, change: `+${randomInt(2, 8)}`, trend: 'up' },
-      { label: 'Avg Discovery Score', value: randomInt(68, 78), change: `+${randomInt(1, 5)}`, trend: 'up' },
-      { label: 'Active Pipeline', value: randomInt(12, 24), change: `+${randomInt(2, 6)}`, trend: 'up' },
-      { label: 'Alerts Active', value: randomInt(5, 12), change: randomInt(-2, 4) >= 0 ? `+${randomInt(1, 3)}` : `-${randomInt(1, 3)}`, trend: 'up' },
+      { label: 'Artists Tracked', value: totalArtists, change: '+12', trend: 'up' },
+      { label: 'Avg Discovery Score', value: avgScore, change: '+6', trend: 'up' },
+      { label: 'Active Pipeline', value: topForSigning.filter((a: any) => a.score > 85).length, change: '+4', trend: 'up' },
+      { label: 'Signed Artists', value: 2, change: '+2', trend: 'up' },
+      { label: 'Portfolio Value', value: `$${(1250000 + 980000 + 3200000).toLocaleString()}`, change: '+18%', trend: 'up' },
+      { label: 'Avg Growth Rate', value: `${Math.round(topForSigning.reduce((a: number, b: any) => a + b.growth, 0) / topForSigning.length)}%`, change: '+8%', trend: 'up' },
     ],
     genreDistribution: [
       { genre: 'Regional Mexicano', percentage: 35, color: '#3B82F6' },
@@ -825,18 +1037,7 @@ export function generateAnalytics() {
       { genre: 'Hip Hop / Rap', percentage: 10, color: '#EF4444' },
       { genre: 'Otros', percentage: 5, color: '#6B7280' },
     ],
-    topForSigning: topArtists.map(a => ({
-      rank: topArtists.indexOf(a) + 1,
-      name: a.name,
-      score: a.score,
-      growth: a.growth,
-      listeners: a.listeners,
-      dealEstimate: a.deal,
-      momentum: a.momentum,
-      reason: a.reason,
-      image: a.image,
-      contact: a.contact,
-    })),
+    topForSigning,
   };
 }
 
