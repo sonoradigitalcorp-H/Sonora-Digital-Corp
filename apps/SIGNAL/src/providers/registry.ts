@@ -278,10 +278,16 @@ export async function registerDefaultProviders(): Promise<ProviderRegistry> {
 
   const { getSpotifyProvider } = await import('./spotify/spotify-provider');
   const { getDeezerProvider } = await import('./deezer/deezer-provider');
+  const { getYouTubeProvider } = await import('./youtube/youtube-provider');
+  const { getInstagramProvider } = await import('./instagram/instagram-provider');
+  const { getTikTokProvider } = await import('./tiktok/tiktok-provider');
 
   registry.registerAll([
     getSpotifyProvider(),
     getDeezerProvider(),
+    getYouTubeProvider(),
+    getInstagramProvider(),
+    getTikTokProvider(),
   ]);
 
   await registry.initializeAll();
