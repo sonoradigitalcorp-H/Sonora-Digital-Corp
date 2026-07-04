@@ -13,12 +13,12 @@ DB_PATH = REPO / "state" / "economics.db"
 EVENT_SCRIPT = REPO / "scripts" / "emit-event.py"
 
 MODEL_COSTS = {
-    "opencode-go": {"input": 0.15, "output": 0.60, "per_1k": True},
-    "deepseek-v4": {"input": 0.50, "output": 2.00, "per_1k": True},
-    "claude-sonnet": {"input": 3.00, "output": 15.00, "per_1k": True},
-    "claude-opus": {"input": 15.00, "output": 75.00, "per_1k": True},
     "ollama/qwen3:4b-64k": {"input": 0.0, "output": 0.0, "per_1k": True},
     "ollama/deepseek-r1:7b-64k": {"input": 0.0, "output": 0.0, "per_1k": True},
+    "ollama/llama3.2:3b-64k": {"input": 0.0, "output": 0.0, "per_1k": True},
+    "ollama/qwen3:1.7b-32k": {"input": 0.0, "output": 0.0, "per_1k": True},
+    "ollama/qwen2.5:1.5b-32k": {"input": 0.0, "output": 0.0, "per_1k": True},
+    "ollama/nomic-embed-text": {"input": 0.0, "output": 0.0, "per_1k": True},
 }
 
 

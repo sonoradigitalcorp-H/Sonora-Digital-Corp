@@ -1,6 +1,6 @@
 {
-  "$schema": "https://opencode.ai/config.json",
-  "username": "Mystic — Sonora Digital Corp",
+  "$schema": "./config/schema.json",
+  "username": "Mystic — Sonora Digital Corp (100% local Ollama)",
   "model": "ollama/qwen3:4b-64k",
   "small_model": "ollama/qwen2.5:1.5b-32k",
   "default_agent": "mystic",

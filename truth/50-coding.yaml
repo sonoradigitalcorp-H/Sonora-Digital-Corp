@@ -31,14 +31,16 @@ rules:
     enforcement: review
 
 model_routing:
-  code_generation: "opencode-go"
-  architecture_design: "deepseek-v4"
-  code_review: "claude-sonnet"
-  documentation: "opencode-go"
-  research: "deepseek-v4"
-  security_audit: "claude-opus"
-  planning: "deepseek-v4"
-  verification: "claude-sonnet"
+  description: "100% local Ollama — sin dependencia externa"
+  code_generation: "ollama/qwen3:4b-64k"
+  architecture_design: "ollama/deepseek-r1:7b-64k"
+  code_review: "ollama/llama3.2:3b-64k"
+  documentation: "ollama/qwen3:1.7b-32k"
+  research: "ollama/deepseek-r1:7b-64k"
+  security_audit: "ollama/deepseek-r1:7b-64k"
+  planning: "ollama/qwen3:4b-64k"
+  verification: "ollama/llama3.2:3b-64k"
+  embeddings: "ollama/nomic-embed-text"
   cost_optimization: true
 
 testing:
