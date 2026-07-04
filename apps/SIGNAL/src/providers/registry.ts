@@ -14,6 +14,7 @@ export class ProviderRegistry {
   private healthCache: Map<string, ProviderHealth> = new Map();
   private healthCheckTimers: Map<string, NodeJS.Timeout> = new Map();
   private initialized = false;
+  private initPromise: Promise<{ success: string[]; failed: string[] }> | null = null;
 
   /**
    * Register a provider with the registry.
@@ -83,6 +84,16 @@ export class ProviderRegistry {
    * Call this once during app startup.
    */
   async initializeAll(): Promise<{ success: string[]; failed: string[] }> {
+    // Mutex: prevent concurrent initialization (race condition guard)
+    if (this.initPromise) {
+      return this.initPromise;
+    }
+
+    this.initPromise = this._initializeAll();
+    return this.initPromise;
+  }
+
+  private async _initializeAll(): Promise<{ success: string[]; failed: string[] }> {
     const success: string[] = [];
     const failed: string[] = [];
 

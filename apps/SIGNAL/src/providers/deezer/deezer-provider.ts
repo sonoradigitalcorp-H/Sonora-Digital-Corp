@@ -193,7 +193,7 @@ export class DeezerProvider extends BaseProvider {
     const deezerStats = stats.byProvider['deezer'];
     return {
       hits: deezerStats?.hits ?? 0,
-      misses: 0,
+      misses: deezerStats?.misses ?? 0,
       size: deezerStats?.entries ?? 0,
     };
   }

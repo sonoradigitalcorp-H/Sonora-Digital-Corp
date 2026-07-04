@@ -12,8 +12,9 @@ import type {
   NormalizedMetrics,
   NormalizedImages,
 } from './types';
+import { recordProviderLatency } from '../lib/observability';
 
-// ── Logger ──
+// ── Logger (Structured JSON) ──
 
 export function logProvider(
   provider: string,
@@ -21,24 +22,29 @@ export function logProvider(
   message: string,
   context?: Record<string, unknown>
 ): void {
-  const timestamp = new Date().toISOString();
-  const prefix = `[${provider}] ${timestamp}`;
-  const ctx = context ? ` ${JSON.stringify(context)}` : '';
+  const entry = JSON.stringify({
+    timestamp: new Date().toISOString(),
+    level,
+    service: 'provider',
+    provider,
+    message,
+    ...(context ?? {}),
+  });
 
   switch (level) {
     case 'debug':
       if (process.env.NODE_ENV === 'development') {
-        console.debug(`${prefix}  ${message}${ctx}`);
+        console.debug(entry);
       }
       break;
     case 'info':
-      console.log(`${prefix} ${message}${ctx}`);
+      console.log(entry);
       break;
     case 'warn':
-      console.warn(`${prefix} ⚠️ ${message}${ctx}`);
+      console.warn(entry);
       break;
     case 'error':
-      console.error(`${prefix} ❌ ${message}${ctx}`);
+      console.error(entry);
       break;
   }
 }
@@ -195,69 +201,82 @@ export abstract class BaseProvider implements DataProvider {
    */
   protected async request<T>(
     url: string,
-    options: RequestInit & { retryCount?: number } = {}
+    options: RequestInit & { retryCount?: number; operation?: string } = {}
   ): Promise<{ ok: boolean; status: number; data: T | null; error: string | null }> {
-    return withRetry(
-      this.name,
-      async () => {
-        await this.rateLimiter.throttle();
+    const operation = options.operation ?? 'request';
+    const start = Date.now();
 
-        const { signal, clear } = createTimeoutSignal(this.config.timeoutMs);
-        let retryCount = options.retryCount ?? 0;
+    try {
+      const result = await withRetry(
+        this.name,
+        async () => {
+          await this.rateLimiter.throttle();
 
-        try {
-          const response = await fetch(url, {
-            ...options,
-            signal,
-            headers: {
-              ...options.headers,
-            },
-          });
+          const { signal, clear } = createTimeoutSignal(this.config.timeoutMs);
+          let retryCount = options.retryCount ?? 0;
 
-          // Handle 429 Too Many Requests
-          if (response.status === 429) {
-            const retryAfter = parseInt(response.headers.get('Retry-After') || '1', 10);
-            if (retryCount >= this.config.maxRetries) {
+          try {
+            const response = await fetch(url, {
+              ...options,
+              signal,
+              headers: {
+                ...options.headers,
+              },
+            });
+
+            // Handle 429 Too Many Requests
+            if (response.status === 429) {
+              const retryAfter = parseInt(response.headers.get('Retry-After') || '1', 10);
+              if (retryCount >= this.config.maxRetries) {
+                recordProviderLatency(this.name, operation, Date.now() - start, false);
+                return {
+                  ok: false,
+                  status: 429,
+                  data: null,
+                  error: `Rate limited after ${this.config.maxRetries} retries`,
+                };
+              }
+
+              const delay = retryAfter * 1000 + Math.random() * 1000;
+              logProvider(this.name, 'warn', 'Rate limited', {
+                retryAfter,
+                retryCount: retryCount + 1,
+                delayMs: Math.round(delay),
+              });
+
+              await new Promise(resolve => setTimeout(resolve, delay));
+              return this.request(url, { ...options, retryCount: retryCount + 1, operation });
+            }
+
+            if (!response.ok) {
+              const body = await response.text().catch(() => '(empty)');
+              recordProviderLatency(this.name, operation, Date.now() - start, false);
               return {
                 ok: false,
-                status: 429,
+                status: response.status,
                 data: null,
-                error: `Rate limited after ${this.config.maxRetries} retries`,
+                error: `${response.status} ${response.statusText}: ${body.slice(0, 200)}`,
               };
             }
 
-            const delay = retryAfter * 1000 + Math.random() * 1000;
-            logProvider(this.name, 'warn', 'Rate limited', {
-              retryAfter,
-              retryCount: retryCount + 1,
-              delayMs: Math.round(delay),
-            });
-
-            await new Promise(resolve => setTimeout(resolve, delay));
-            return this.request(url, { ...options, retryCount: retryCount + 1 });
+            const data = await response.json() as T;
+            recordProviderLatency(this.name, operation, Date.now() - start, true);
+            return { ok: true, status: response.status, data, error: null };
+          } finally {
+            clear();
           }
-
-          if (!response.ok) {
-            const body = await response.text().catch(() => '(empty)');
-            return {
-              ok: false,
-              status: response.status,
-              data: null,
-              error: `${response.status} ${response.statusText}: ${body.slice(0, 200)}`,
-            };
-          }
-
-          const data = await response.json() as T;
-          return { ok: true, status: response.status, data, error: null };
-        } finally {
-          clear();
+        },
+        {
+          maxRetries: this.config.maxRetries,
+          baseDelayMs: this.config.retryBaseDelayMs,
         }
-      },
-      {
-        maxRetries: this.config.maxRetries,
-        baseDelayMs: this.config.retryBaseDelayMs,
-      }
-    );
+      );
+
+      return result;
+    } catch (error) {
+      recordProviderLatency(this.name, operation, Date.now() - start, false);
+      throw error;
+    }
   }
 
   /**

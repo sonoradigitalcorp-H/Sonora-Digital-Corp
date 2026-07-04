@@ -54,6 +54,8 @@ export async function GET() {
         hits: providerCache.hits,
         misses: providerCache.misses,
         total: cacheStats.byProvider[health.name]?.entries ?? 0,
+        totalHits: cacheStats.byProvider[health.name]?.hits ?? 0,
+        totalMisses: cacheStats.byProvider[health.name]?.misses ?? 0,
       },
       // Provider-specific metadata
       capabilities: getProviderCapabilities(health.name, providerInstance),

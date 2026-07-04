@@ -299,7 +299,7 @@ export class TikTokProvider extends BaseProvider {
   async cache(): Promise<{ hits: number; misses: number; size: number }> {
     const stats = getCacheManager().getStats();
     const ttStats = stats.byProvider['tiktok'];
-    return { hits: ttStats?.hits ?? 0, misses: 0, size: ttStats?.entries ?? 0 };
+    return { hits: ttStats?.hits ?? 0, misses: ttStats?.misses ?? 0, size: ttStats?.entries ?? 0 };
   }
 }
 
