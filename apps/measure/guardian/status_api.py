@@ -6,6 +6,7 @@ from pathlib import Path
 
 from . import drift_scanner, health_checker
 
+REPO = Path(__file__).resolve().parent.parent.parent.parent
 STATIC_DIR = Path(__file__).resolve().parent / "static"
 
 
@@ -24,6 +25,10 @@ class StatusHandler(BaseHTTPRequestHandler):
                 self._serve_static("scoreboard.html")
             elif self.path == "/control":
                 self._serve_static("control.html")
+            elif self.path == "/api/v1/events/recent":
+                self._handle_events_recent()
+            elif self.path == "/api/v1/cost/summary":
+                self._handle_cost_summary()
             else:
                 static_file = STATIC_DIR / self.path.lstrip("/")
                 if static_file.exists() and static_file.is_file():
@@ -118,6 +123,66 @@ class StatusHandler(BaseHTTPRequestHandler):
             self.send_header("Content-Type", "text/plain")
             self.end_headers()
             self.wfile.write(f"error: {e}".encode())
+
+    def _handle_events_recent(self):
+        try:
+            import re
+            events_file = REPO / "state" / "events" / "events.jsonl"
+            events = []
+            if events_file.exists():
+                with open(events_file) as f:
+                    for line in f:
+                        line = line.strip()
+                        if line:
+                            try:
+                                events.append(json.loads(line))
+                            except json.JSONDecodeError:
+                                pass
+            events.sort(key=lambda e: e.get("timestamp", ""), reverse=True)
+            limit = 20
+            import urllib.parse
+            parsed = urllib.parse.urlparse(self.path)
+            qs = urllib.parse.parse_qs(parsed.query)
+            if "limit" in qs:
+                limit = int(qs["limit"][0])
+            body = json.dumps({"events": events[:limit], "count": len(events[:limit])}).encode()
+        except Exception as e:
+            body = json.dumps({"error": str(e), "events": []}).encode()
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _handle_cost_summary(self):
+        try:
+            eco_db = REPO / "state" / "economics.db"
+            if eco_db.exists():
+                import sqlite3
+                conn = sqlite3.connect(str(eco_db))
+                rows = conn.execute(
+                    "SELECT agent, SUM(tokens_input + tokens_output), SUM(cost_usd), COUNT(*) "
+                    "FROM operations GROUP BY agent ORDER BY SUM(cost_usd) DESC"
+                ).fetchall()
+                conn.close()
+                totals = {}
+                grand_cost = 0
+                grand_tokens = 0
+                for r in rows:
+                    totals[r[0]] = {"tokens": r[1], "cost": round(r[2], 4), "ops": r[3]}
+                    grand_cost += r[2]
+                    grand_tokens += r[1]
+                body = json.dumps({
+                    "totals": totals,
+                    "grand_total": {"tokens": grand_tokens, "cost": round(grand_cost, 4)}
+                }).encode()
+            else:
+                body = json.dumps({"totals": {}, "grand_total": {"tokens": 0, "cost": 0}}).encode()
+        except Exception as e:
+            body = json.dumps({"error": str(e), "totals": {}}).encode()
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(body)
 
     def log_message(self, format, *args):
         pass
