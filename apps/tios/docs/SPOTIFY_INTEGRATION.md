@@ -25,6 +25,51 @@
 
 ---
 
+## 0. ⚠️ Critical Update — February 2026 Spotify API Changes
+
+Spotify made **significant changes** to its Web API in February 2026 that directly affect SIGNAL's integration. These changes were verified from official Spotify documentation on **July 4, 2026**.
+
+### What changed
+
+| Change | Impact on SIGNAL |
+|--------|------------------|
+| **Spotify Premium now REQUIRED** for Development Mode | The app owner's account must have an active Premium subscription |
+| `followers` field **REMOVED** from Artist responses | `getArtist()` and `searchArtist()` return 0 for followers |
+| `popularity` field **REMOVED** from Artist responses | Score can no longer be mapped from Spotify popularity |
+| `GET /artists/{id}/top-tracks` **REMOVED** | `getArtistTopTracks()` always returns empty array |
+| **Batch endpoints REMOVED** (`GET /artists`, `GET /tracks`, etc.) | Not used by SIGNAL — no impact |
+| Search `limit` **reduced to 10** (was 50) | SIGNAL uses `limit=1` — no impact |
+| **1 Client ID per developer** | New apps limited to 1 app |
+| **5 users per app** | Development Mode limited to 5 authorized users |
+
+### Official sources
+
+- [Feb 6, 2026 Blog Post](https://developer.spotify.com/blog/2026-02-06-update-on-developer-access-and-platform-security)
+- [Feb 2026 Migration Guide](https://developer.spotify.com/documentation/web-api/tutorials/february-2026-migration-guide)
+- [Feb 2026 Changelog](https://developer.spotify.com/documentation/web-api/references/changes/february-2026)
+- [Quota Modes Documentation](https://developer.spotify.com/documentation/web-api/concepts/quota-modes)
+
+### What still works for Client Credentials in Development Mode
+
+| Endpoint | Status | Notes |
+|----------|--------|-------|
+| `GET /v1/search` | ✅ Available | `limit` max = 10 |
+| `GET /v1/artists/{id}` | ✅ Available | No `followers`, no `popularity` |
+| `GET /v1/albums/{id}` | ✅ Available | |
+| `GET /v1/tracks/{id}` | ✅ Available | |
+
+### What no longer works
+
+| Endpoint | Status | Notes |
+|----------|--------|-------|
+| `GET /v1/artists/{id}/top-tracks` | ❌ Removed | Returns 403/404 |
+| `GET /v1/audio-features/{id}` | ❌ Removed | |
+| `GET /v1/audio-analysis/{id}` | ❌ Removed | |
+| `GET /v1/recommendations` | ❌ Removed | |
+| `GET /v1/artists/{id}/related-artists` | ❌ Removed | |
+
+---
+
 ## 1. Architecture Overview
 
 ```
@@ -142,11 +187,12 @@ We use Client Credentials which doesn't require any OAuth scopes.
 |------------|--------|--------|
 | `SPOTIFY_CLIENT_ID` | Spotify Dashboard | 32-character hex string |
 | `SPOTIFY_CLIENT_SECRET` | Spotify Dashboard | 32-character hex string |
+| `Spotify Premium` | spotify.com | Active Premium on the app owner's account |
 
 ### How to obtain
 
 1. Go to [https://developer.spotify.com/dashboard/](https://developer.spotify.com/dashboard/)
-2. Log in with any Spotify account (free tier works)
+2. Log in with a **Spotify Premium** account (required since Feb 2026)
 3. Click **"Create app"**
 4. App name: `SIGNAL Music Intelligence` (or any name)
 5. App description: `Artist data enrichment for SIGNAL platform`
@@ -156,6 +202,8 @@ We use Client Credentials which doesn't require any OAuth scopes.
 9. Copy **Client ID** and **Client Secret** from the app dashboard
 
 > ⚠️ **Do NOT commit Client Secret to git.** It's already in `.gitignore`.
+>
+> ⚠️ **Premium required:** Without a Premium account on the app owner's profile, the API will return 403 errors.
 
 ---
 
@@ -173,7 +221,6 @@ SPOTIFY_CLIENT_SECRET=                                 # 32-char hex
 # ═══════════════════════════════════════════
 # SPOTIFY WEB API — OPCIONALES
 # ═══════════════════════════════════════════
-SPOTIFY_MARKET=US                                       # ISO 3166-1 alpha-2 (default: US)
 SPOTIFY_CACHE_TTL_HOURS=24                              # Cache TTL in hours (default: 24)
 SPOTIFY_REQUEST_TIMEOUT=10000                           # ms (default: 10000)
 SPOTIFY_RATE_LIMIT_INTERVAL=200                         # ms between requests (default: 200)
@@ -189,7 +236,6 @@ Set these in your Vercel project dashboard:
 Settings → Environment Variables → Add New
 SPOTIFY_CLIENT_ID        → <your-client-id>
 SPOTIFY_CLIENT_SECRET    → <your-client-secret>
-SPOTIFY_MARKET           → US (or MX for Latin focus)
 SPOTIFY_CACHE_TTL_HOURS  → 24
 ```
 
@@ -244,20 +290,28 @@ POST /api/v1/artists/refresh
 
 ## 7. Setup Instructions
 
+### Prerequisites (IMPORTANT)
+
+Since **February 2026**, Spotify requires:
+1. A **Spotify Premium** subscription on the account that owns the app
+2. The app owner **must** have Premium active — otherwise the API returns 403 errors
+
 ### Local development
 
 ```bash
-# 1. Copy env template
+# 1. Ensure your Spotify account has Premium (required since Feb 2026)
+
+# 2. Copy env template
 cp .env.local.example .env.local
 
-# 2. Edit .env.local with your Spotify credentials
+# 3. Edit .env.local with your Spotify credentials
 #    SPOTIFY_CLIENT_ID=xxx
 #    SPOTIFY_CLIENT_SECRET=xxx
 
-# 3. Start dev server
+# 4. Start dev server
 pnpm dev
 
-# 4. Verify integration
+# 5. Verify integration
 curl http://localhost:3000/api/v1/artists?count=1
 # Response includes: spotifyConnected: true
 ```
@@ -516,12 +570,14 @@ None. Architecture is fully backward-compatible:
 
 | Issue | Impact | Status |
 |-------|--------|--------|
-| ❓ No user auth | Cannot access user-specific data (playlists, saved tracks) | Wontfix — not needed |
-| ❓ Serverless cache | Cache lives in `globalThis` — reset per serverless instance | Accepted — 24h TTL mitigates |
-| ❓ No persistent cache | Cache lost on server restart | Accepted — suitable for current scale |
+| ❌ Premium required | Spotify API blocked without Premium subscription | Requires Premium account |
+| ❌ `followers`/`popularity` gone | Score mapping disabled; followers always 0 | Working around with generated data |
+| ❌ `top-tracks` removed | `getArtistTopTracks()` always returns `[]` | Deprecated — no replacement |
+| ❓ No user auth | Cannot access user-specific data | Wontfix — not needed |
+| ❓ Serverless cache | Cache lives in `globalThis` — resets per instance | Accepted — 24h TTL mitigates |
 | ❓ 1 moderate vulnerability | postcss@8.4.31 bundled in Next.js 15.5.19 | Waiting for Next.js release |
 | ❓ No CI test with real creds | Tests use generated data only | Future improvement |
-| ❓ No monitoring dashboard | Rate limit warnings only in logs | Future improvement |
+| ❓ Extended Quota impossible | Requires 250K MAU + registered business | Not viable for current stage |
 
 ---
 
