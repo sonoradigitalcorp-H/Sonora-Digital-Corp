@@ -584,7 +584,7 @@ None. Architecture is fully backward-compatible:
 ## Appendix: Complete File Inventory
 
 ```
-apps/tios/
+apps/SIGNAL/
 ├── src/
 │   ├── lib/
 │   │   ├── spotify-service.ts      # ★ Core: Spotify API client

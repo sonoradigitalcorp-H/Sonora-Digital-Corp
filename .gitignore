@@ -1,4 +1,5 @@
 node_modules/
+.next/
 __pycache__/
 *.pyc
 .venv/
@@ -19,10 +20,11 @@ cache/
 data/generated/
 apps/webui/data/
 credentials/
-# .env files: .env is real secrets, .env.ci is CI stub (committed)
+# .env files: .env is real secrets, .env.example templates are committed
 .env
+.env.*
+!.env*.example
 .vercel
-.env*
 .age/
 age-key.txt
 age-key*.txt
