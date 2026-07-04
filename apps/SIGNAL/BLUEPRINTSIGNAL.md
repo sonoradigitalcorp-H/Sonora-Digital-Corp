@@ -1,7 +1,7 @@
 # 🔷 SIGNAL Music Intelligence Platform — Blueprint Completo
 
 > **Plataforma**: SIGNAL (Strategic Intelligence for Global Networked Artist Acquisition & Logistics)
-> **Build**: 38 rutas, 0 errores
+> **Build**: 39 rutas, 0 errores (+1 refresh API endpoint)
 > **Stack**: Next.js 15, TypeScript, Tailwind v3.4.17, pnpm
 > **Design**: "Quiet Confidence" — electric blue `#3B82F6`, dark premium `#080808`
 
@@ -12,7 +12,7 @@
 | Métrica | Valor |
 |---|---|
 | **Rutas (páginas)** | 17 |
-| **Endpoints API** | 21 |
+| **Endpoints API** | 22 (+1 refresh) |
 | **Componentes dashboard** | 10 |
 | **Artistas en pool** | 158 (2 AMG firmados + 156 independientes) |
 | **Géneros musicales** | 28 |
@@ -726,15 +726,29 @@ npx next build
 2. ✅ Git push: `git push official signal-merge:main`
 3. ✅ Configurar dominio `signal-music.vercel.app` en Vercel
 
-### Corto Plazo
-4. Implementar `library/page.tsx` y `label-matching/page.tsx`
-5. Agregar endpoint `GET /api/v1/dashboard` para centralizar datos
-6. Revisar y consolidar páginas redundantes
+### Fase 1 — Datos Reales AMG
+- ✅ **Héctor Rubio**: listeners corregidos 1,105,586 (+151% vs mock), followers reales 45,862, deal $120K
+- ✅ **Jesús Urquijo**: listeners corregidos 25,000, datos verificados desde Spotify/Soundcharts/Chartex
+- ✅ `chat-knowledge.ts` actualizado con datos correctos
+
+### Fase 2A — Spotify API + Cache Layer
+- ✅ `lib/spotify-service.ts`: Cliente Spotify Web API (Client Credentials, rate limiting, search/batch)
+- ✅ `lib/artist-cache.ts`: Cache global `globalThis` con TTL 24h, stale detection, batch ops
+- ✅ `api/v1/artists/route.ts`: Busca Spotify real primero → cache → fallback a generated
+- ✅ `api/v1/artists/refresh/route.ts`: POST para refrescar batch, GET para status
+- ✅ `generateAnalytics()`: Ya no usa datos hardcodeados — usa datos reales de AMG artists
+- ⏸️ **Bloqueado**: requiere `SPOTIFY_CLIENT_ID` + `SPOTIFY_CLIENT_SECRET` en Vercel env vars
+
+### Corto Plazo / Fase 2B-C
+- Implementar `library/page.tsx` y `label-matching/page.tsx`
+- Agregar endpoint `GET /api/v1/dashboard` para centralizar datos
+- Conectar Market Intelligence a datos reales (Chartmetric/Spotify)
+- Discovery Engine con datos reales
 
 ### Medio Plazo
-7. Docker VPS para backend real (Node.js API + PostgreSQL)
-8. Autenticación real (Auth0 / NextAuth)
-9. Migrar datos mock a datos reales vía APIs externas
+- Docker VPS para backend real (Node.js API + PostgreSQL)
+- Autenticación real (Auth0 / NextAuth)
+- 🐛 **Dependabot**: 15 vulnerabilidades (2 high, 12 moderate, 1 low) por revisar
 
 ### Largo Plazo
 10. Backend real con Sonora Brain v3 (Engram + GBrain + OpenClaw)
@@ -750,6 +764,8 @@ npx next build
 3. **Dominio**: `signal-music.vercel.app` alias requiere configuración manual en Vercel
 4. **Páginas faltantes**: `/library` y `/label-matching` no implementadas
 5. **Endpoint dashboard**: `GET /api/v1/dashboard` no existe — datos inline en page
+6. **Spotify credentials**: No configuradas en Vercel — Fase 2A requiere `SPOTIFY_CLIENT_ID` + `SPOTIFY_CLIENT_SECRET`
+7. **Dependabot**: 15 vulnerabilidades (2 high, 12 moderate, 1 low) en dependencias npm sin resolver
 
 ---
 
@@ -777,6 +793,7 @@ npx next build
 
 ### API Routes
 - `apps/tios/src/app/api/v1/artists/route.ts`
+- `apps/tios/src/app/api/v1/artists/refresh/route.ts`
 - `apps/tios/src/app/api/v1/chat/route.ts`
 - `apps/tios/src/app/api/v1/market/route.ts`
 - `apps/tios/src/app/api/v1/signings/route.ts`
@@ -812,11 +829,16 @@ npx next build
 - `apps/tios/src/components/workflows/workflow-list.tsx`
 
 ### Librerías Core
-- `apps/tios/src/lib/data-generator.ts` — **36+ exports**
+- `apps/tios/src/lib/data-generator.ts` — **38+ exports** (incluye `ARTIST_POOL` export)
 - `apps/tios/src/lib/chat-knowledge.ts` — **16 FAQ modules + fallback**
 - `apps/tios/src/lib/artist-images.ts` — **Deezer API**
+- `apps/tios/src/lib/artist-cache.ts` — **Cache global Spotify con TTL 24h** (NUEVO Fase 2A)
+- `apps/tios/src/lib/spotify-service.ts` — **Spotify Web API Client** (NUEVO Fase 2A)
 - `apps/tios/src/lib/report-pdf.ts` — **PDF generation**
 - `apps/tios/src/lib/utils.ts` — **cn() utility**
+
+### Config Env
+- `apps/tios/.env.local.example` — **Template con SPOTIFY_CLIENT_ID/SECRET** (NUEVO Fase 2A)
 
 ### Configuración Global
 - `apps/tios/src/app/globals.css` — **Premium design system**
