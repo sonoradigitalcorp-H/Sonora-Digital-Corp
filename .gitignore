@@ -30,3 +30,7 @@ age-key*.txt
 # Event bus operational data (not committed)
 state/events/*.jsonl
 state/events/replay/
+
+# Collector state (auto-generated, per-machine)
+collectors/state/
+

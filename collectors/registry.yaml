@@ -1,0 +1,79 @@
+# Artist Intelligence Network — Registry
+# Define las plataformas activas, schedule, y mapeo de métricas
+
+platforms:
+  spotify:
+    enabled: true
+    schedule: "*/30 * * * *"
+    priority: 1
+    auth_required: false
+    notes: "API publica via Playwright. Auth opcional para datos propios."
+
+  instagram:
+    enabled: true
+    schedule: "*/60 * * * *"
+    priority: 2
+    auth_required: true
+    notes: "Requiere login. Playwright + session cookie."
+
+  tiktok:
+    enabled: true
+    schedule: "*/60 * * * *"
+    priority: 3
+    auth_required: false
+    notes: "Perfil publico via Playwright."
+
+  youtube:
+    enabled: true
+    schedule: "*/60 * * * *"
+    priority: 2
+    auth_required: false
+    notes: "API publica. YouTube Data API key recomendada."
+
+  applemusic:
+    enabled: false
+    schedule: "0 */6 * * *"
+    priority: 4
+    auth_required: false
+    notes: "Widget publico. Implementacion futura."
+
+normalization:
+  spotify:
+    monthly_listeners: streams
+    followers: followers
+    popularity: popularity_score
+    top_track_popularity: top_track_score
+  instagram:
+    followers_count: followers
+    media_count: posts_count
+    avg_likes: avg_likes
+    avg_comments: avg_comments
+  tiktok:
+    followers: followers
+    likes: total_likes
+    videos: posts_count
+    views: total_views
+  youtube:
+    subscribers: followers
+    views: total_views
+    videos: posts_count
+
+artists:
+  - id: "hector-rubio"
+    name: "Hector Rubio"
+    platforms:
+      spotify: "7CH0ezb5AA1Z1Gq4H4YIiQ"
+      instagram: "hectorrubiomx"
+      tiktok: "hectorrubiomx"
+      youtube: "UCHectorRubio"
+  - id: "jesus-urquijo"
+    name: "Jesus Urquijo"
+    platforms:
+      spotify: "6JIkN2LALizJKb4cQFVsVZ"
+      instagram: "jesusurquijomx"
+      tiktok: "jesusurquijomx"
+  - id: "javier-arvayo"
+    name: "Javier Arvayo"
+    platforms:
+      spotify: "2gqT1Hmn4N4zRhmJKMGrbI"
+      instagram: "javierarvayomx"
