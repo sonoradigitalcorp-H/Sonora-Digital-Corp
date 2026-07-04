@@ -6,14 +6,14 @@ TRUTH = Path(__file__).resolve().parent.parent / "truth"
 
 
 def test_all_truth_files_exist():
-    """Verifica que existan 11 truth files"""
+    """Verifica que existan 12 truth files"""
     files = list(TRUTH.glob("*.yaml"))
-    assert len(files) == 11, f"Expected 11 truth files, got {len(files)}"
+    assert len(files) == 12, f"Expected 12 truth files, got {len(files)}"
     expected = [
         "00-index.yaml", "10-principles.yaml", "20-architecture.yaml",
-        "30-security.yaml", "40-infrastructure.yaml", "50-coding.yaml",
-        "60-git.yaml", "70-documentation.yaml", "80-operations.yaml",
-        "85-compliance.yaml", "90-learned.yaml"
+        "30-security.yaml", "40-infrastructure.yaml", "45-execution.yaml",
+        "50-coding.yaml", "60-git.yaml", "70-documentation.yaml",
+        "80-operations.yaml", "85-compliance.yaml", "90-learned.yaml"
     ]
     for name in expected:
         assert (TRUTH / name).exists(), f"Missing: {name}"
@@ -88,8 +88,9 @@ def test_compliance_has_jr_lite():
             assert len(points) == 15, f"JR-Lite should have 15 points, got {len(points)}"
 
 
-def test_learned_is_empty():
-    """90-learned.yaml está vacío inicialmente (se autogenera)"""
+def test_learned_has_rules():
+    """90-learned.yaml tiene reglas aprendidas del sistema"""
     with open(TRUTH / "90-learned.yaml") as f:
         data = yaml.safe_load(f)
-    assert data.get("rules") == [], "90-learned.yaml should start empty"
+    rules = data.get("rules", [])
+    assert len(rules) >= 9, f"Expected 9+ learned rules, got {len(rules)}"
