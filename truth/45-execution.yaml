@@ -1,0 +1,38 @@
+version: 1
+domain: execution
+updated: 2026-07-04T00:00:00Z
+rules:
+  - id: EXEC-001
+    description: "Toda tarea debe tener agent, operation, y priority definidos"
+    category: process
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+  - id: EXEC-002
+    description: "Maximo 2 tareas concurrentes por agente"
+    category: operations
+    severity: error
+    applies_to: ["execution"]
+    enforcement: automated
+
+  - id: EXEC-003
+    description: "Retry backoff: 1s, 5s, 30s, 5min. Max 3 retrys por tarea"
+    category: operations
+    severity: error
+    applies_to: ["execution"]
+    enforcement: automated
+
+  - id: EXEC-004
+    description: "Tareas completadas se limpian despues de 72h"
+    category: operations
+    severity: warning
+    applies_to: ["execution"]
+    enforcement: automated
+
+  - id: EXEC-005
+    description: "Prioridad 0 = normal, 1 = alta, 2 = critica. Mayor numero corre primero"
+    category: process
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated

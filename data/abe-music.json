@@ -1,37 +1,10 @@
 {
-  "metadata": {
-    "label": "ABE Music Inc",
-    "legal_name": "ABE Music Inc",
-    "founded": "2018-01-19",
-    "jurisdiction": "California, USA",
-    "founder": "Abraham Ortega",
-    "founder_role": "President",
-    "status": "Active",
-    "location": "Compton / Torrance, CA",
-    "estimated_revenue": "$4M",
-    "employees": 4,
-    "social": {
-      "instagram": "@abemusicgroup",
-      "instagram_followers": 16000,
-      "twitter": "@abemusicinc",
-      "facebook": "ABEMusicInc",
-      "youtube": "@AbeMusicGroup"
-    },
-    "distribution": {
-      "primary": "Oplaai, LLC",
-      "secondary": "Colonize Media",
-      "oplaai_founded": 2017,
-      "oplaai_location": "Maricopa, Arizona",
-      "oplaai_specialty": "Independent distribution, digital marketing, video production"
-    },
-    "last_research_update": "2026-07-01"
-  },
   "artists": {
     "6727f51e": {
       "id": "6727f51e",
       "nombre": "Hector Rubio",
       "genero": "Regional Mexicano",
-      "pais": "México",
+      "pais": "M\u00e9xico",
       "status": "active",
       "email": "",
       "telefono": "",
@@ -52,7 +25,7 @@
       "distribution": "Oplaai, LLC (exclusive license)",
       "album": "SMOKING",
       "from": "Angostura, Sinaloa",
-      "notable": "Abrió para Peso Pluma en Éxodo Tour 2025",
+      "notable": "Abri\u00f3 para Peso Pluma en \u00c9xodo Tour 2025",
       "latest_release": "Malicia (En Vivo) - Single (2025-07-18)",
       "nb_album": 41,
       "deezer_id": 9814216,
@@ -67,7 +40,7 @@
           "popularity_score": 87932
         },
         {
-          "name": "Un Millón",
+          "name": "Un Millo\u0301n",
           "popularity_score": 189100
         }
       ],
@@ -76,7 +49,7 @@
       "last_sync": "2026-07-03T13:00:03Z",
       "apple_music_id": 1082292215,
       "genres": [
-        "Música Mexicana"
+        "M\u00fasica Mexicana"
       ],
       "bio": "",
       "wikipedia_url": "",
@@ -88,7 +61,7 @@
       "id": "f23cab60",
       "nombre": "Jesus Urquijo",
       "genero": "Regional Mexicano",
-      "pais": "México",
+      "pais": "M\u00e9xico",
       "status": "active",
       "email": "",
       "telefono": "",
@@ -117,7 +90,7 @@
       "last_sync": "2026-07-03T13:00:06Z",
       "apple_music_id": 1319826332,
       "genres": [
-        "Música Mexicana"
+        "M\u00fasica Mexicana"
       ],
       "bio": "",
       "wikipedia_url": "",
@@ -129,7 +102,7 @@
       "id": "00cf4992",
       "nombre": "Javier Arvayo",
       "genero": "Pop Latino",
-      "pais": "México",
+      "pais": "M\u00e9xico",
       "status": "signed",
       "email": "",
       "telefono": "",
@@ -157,7 +130,7 @@
       "last_sync": "2026-07-03T13:00:08Z",
       "apple_music_id": 1519877798,
       "genres": [
-        "Música Mexicana"
+        "M\u00fasica Mexicana"
       ],
       "bio": "",
       "wikipedia_url": "",
@@ -221,6 +194,42 @@
       "bio": "",
       "wikipedia_url": "",
       "youtube_video_count": 3
+    },
+    "0927336b": {
+      "id": "0927336b",
+      "nombre": "Artista Test",
+      "genero": "Reggaeton",
+      "pais": "PR",
+      "status": "development",
+      "email": "",
+      "telefono": "",
+      "created_at": "2026-07-04T01:10:12.768470+00:00",
+      "streams": 0,
+      "revenue": 0.0,
+      "releases_count": 0,
+      "spotify_url": "",
+      "monthly_listeners": 0,
+      "popularity": 0,
+      "genres": [],
+      "last_spotify_sync": null
+    },
+    "df8ada2d": {
+      "id": "df8ada2d",
+      "nombre": "Artista Test",
+      "genero": "Reggaeton",
+      "pais": "PR",
+      "status": "development",
+      "email": "",
+      "telefono": "",
+      "created_at": "2026-07-04T01:10:58.434633+00:00",
+      "streams": 0,
+      "revenue": 0.0,
+      "releases_count": 0,
+      "spotify_url": "",
+      "monthly_listeners": 0,
+      "popularity": 0,
+      "genres": [],
+      "last_spotify_sync": null
     }
   },
   "releases": {
@@ -271,7 +280,7 @@
     "r005": {
       "id": "r005",
       "artist_id": "f23cab60",
-      "titulo": "Ahí La Llevo",
+      "titulo": "Ah\u00ed La Llevo",
       "tipo": "single",
       "genero": "Regional Mexicano",
       "fecha_lanzamiento": "2024-12-05",

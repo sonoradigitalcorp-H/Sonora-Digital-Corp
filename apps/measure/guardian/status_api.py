@@ -29,6 +29,10 @@ class StatusHandler(BaseHTTPRequestHandler):
                 self._handle_events_recent()
             elif self.path == "/api/v1/cost/summary":
                 self._handle_cost_summary()
+            elif self.path == "/api/v1/execution/stats":
+                self._handle_exec_stats()
+            elif self.path == "/api/v1/execution/tasks":
+                self._handle_exec_tasks()
             else:
                 static_file = STATIC_DIR / self.path.lstrip("/")
                 if static_file.exists() and static_file.is_file():
@@ -38,6 +42,25 @@ class StatusHandler(BaseHTTPRequestHandler):
                     self.send_header("Content-Type", "application/json")
                     self.end_headers()
                     self.wfile.write(b'{"error":"not found"}')
+        except Exception:
+            self.send_response(500)
+            self.send_header("Content-Type", "application/json")
+            self.end_headers()
+            self.wfile.write(json.dumps({"error": traceback.format_exc()}).encode())
+
+    def do_POST(self):
+        try:
+            if self.path == "/api/v1/execution/submit":
+                self._handle_exec_submit()
+            elif self.path.startswith("/api/v1/execution/cancel/"):
+                self._handle_exec_cancel()
+            elif self.path.startswith("/api/v1/execution/retry/"):
+                self._handle_exec_retry()
+            else:
+                self.send_response(404)
+                self.send_header("Content-Type", "application/json")
+                self.end_headers()
+                self.wfile.write(b'{"error":"not found"}')
         except Exception:
             self.send_response(500)
             self.send_header("Content-Type", "application/json")
@@ -179,6 +202,100 @@ class StatusHandler(BaseHTTPRequestHandler):
                 body = json.dumps({"totals": {}, "grand_total": {"tokens": 0, "cost": 0}}).encode()
         except Exception as e:
             body = json.dumps({"error": str(e), "totals": {}}).encode()
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _handle_exec_stats(self):
+        try:
+            sys.path.insert(0, str(REPO))
+            from apps.decide.execution.queue import TaskQueue
+            q = TaskQueue()
+            body = json.dumps(q.stats()).encode()
+        except Exception as e:
+            body = json.dumps({"error": str(e)}).encode()
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _handle_exec_tasks(self):
+        try:
+            sys.path.insert(0, str(REPO))
+            import urllib.parse
+            parsed = urllib.parse.urlparse(self.path)
+            qs = urllib.parse.parse_qs(parsed.query)
+            status = qs.get("status", [None])[0]
+            agent = qs.get("agent", [None])[0]
+            limit = int(qs.get("limit", ["20"])[0])
+            from apps.decide.execution.queue import TaskQueue
+            q = TaskQueue()
+            tasks = q.list_tasks(status=status, agent=agent, limit=limit)
+            import json as j
+            body = j.dumps({"tasks": tasks, "count": len(tasks)}).encode()
+        except Exception as e:
+            body = json.dumps({"error": str(e)}).encode()
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _handle_exec_submit(self):
+        try:
+            content_length = int(self.headers.get("Content-Length", 0))
+            post_data = self.rfile.read(content_length) if content_length else b"{}"
+            data = json.loads(post_data)
+            sys.path.insert(0, str(REPO))
+            from apps.decide.execution.queue import TaskQueue
+            q = TaskQueue()
+            result = q.submit(
+                agent=data["agent"],
+                operation=data["operation"],
+                params=data.get("params", {}),
+                priority=data.get("priority", 0),
+                max_retries=data.get("max_retries", 3),
+                spec_id=data.get("spec_id"),
+            )
+            body = json.dumps(result).encode()
+        except Exception as e:
+            body = json.dumps({"error": str(e)}).encode()
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _handle_exec_cancel(self):
+        try:
+            task_id = self.path.split("/")[-1]
+            sys.path.insert(0, str(REPO))
+            from apps.decide.execution.queue import TaskQueue
+            q = TaskQueue()
+            q.cancel(task_id)
+            body = json.dumps({"status": "cancelled", "id": task_id}).encode()
+        except Exception as e:
+            body = json.dumps({"error": str(e)}).encode()
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _handle_exec_retry(self):
+        try:
+            task_id = self.path.split("/")[-1]
+            sys.path.insert(0, str(REPO))
+            from apps.decide.execution.queue import TaskQueue
+            q = TaskQueue()
+            task = q.status(task_id)
+            if not task:
+                body = json.dumps({"error": "task not found"}).encode()
+            elif task["status"] not in ("failed", "cancelled"):
+                body = json.dumps({"error": f"task is {task['status']}, not retryable"}).encode()
+            else:
+                q.fail(task_id, "manual retry via API", retry=True)
+                body = json.dumps({"status": "retry_submitted", "id": task_id}).encode()
+        except Exception as e:
+            body = json.dumps({"error": str(e)}).encode()
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
         self.end_headers()

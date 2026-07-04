@@ -43,6 +43,11 @@ files:
     domain: compliance
     level: 4
     description: "JR-Lite, Score gate, CONDUCT.md gates"
+  - file: "45-execution.yaml"
+    domain: execution
+    level: 2
+    description: "Execution Kernel: cola de tareas, prioridad, retry, concurrencia"
+
   - file: "90-learned.yaml"
     domain: learned
     level: 5
