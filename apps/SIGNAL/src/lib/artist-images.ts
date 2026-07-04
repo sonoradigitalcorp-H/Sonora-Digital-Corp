@@ -1,64 +1,65 @@
 // ───────────────────────────────────────────────
-// Artist Image Fetching Utility
-// Uses Deezer's public API (no API key needed)
+// ⚠️ DEPRECATED — Backward Compatibility Shim
+// Please use getDeezerProvider() or fetchArtistImageByName()
+// from '@/providers/deezer/deezer-provider'
 // ───────────────────────────────────────────────
 
-const ARTIST_IMAGE_CACHE = new Map<string, string | null>();
+import { fetchArtistImageByName, fetchAllArtistImagesByName } from '@/providers/deezer/deezer-provider';
 
+// ── Simple in-memory cache (backward compat) ──
+const legacyCache = new Map<string, string | null>();
+
+/**
+ * Fetch a single artist image from Deezer.
+ */
 export async function fetchArtistImage(artistName: string): Promise<string | null> {
-  // Check cache first
-  if (ARTIST_IMAGE_CACHE.has(artistName)) {
-    return ARTIST_IMAGE_CACHE.get(artistName) ?? null;
+  if (legacyCache.has(artistName)) {
+    return legacyCache.get(artistName) ?? null;
   }
 
   try {
-    const response = await fetch(
-      `https://api.deezer.com/search/artist?q=${encodeURIComponent(artistName)}&limit=1&order=RATING_DESC`,
-      {
-        headers: { Accept: 'application/json' },
-        signal: AbortSignal.timeout(5000),
-      }
-    );
-
-    if (!response.ok) {
-      ARTIST_IMAGE_CACHE.set(artistName, null);
-      return null;
-    }
-
-    const data = await response.json() as { data?: Array<{ picture_medium?: string }> };
-    const imageUrl = data?.data?.[0]?.picture_medium ?? null;
-
-    ARTIST_IMAGE_CACHE.set(artistName, imageUrl);
-    return imageUrl;
+    const images = await fetchArtistImageByName(artistName);
+    const url = images.large ?? images.medium ?? images.small;
+    legacyCache.set(artistName, url);
+    return url;
   } catch {
-    ARTIST_IMAGE_CACHE.set(artistName, null);
+    legacyCache.set(artistName, null);
     return null;
   }
 }
 
+/**
+ * Fetch images for multiple artists from Deezer.
+ */
 export async function fetchAllArtistImages(
   names: string[]
 ): Promise<Record<string, string | null>> {
-  const uncached = names.filter(n => !ARTIST_IMAGE_CACHE.has(n));
+  const result: Record<string, string | null> = {};
 
-  // Process uncached names in batches
+  // Check legacy cache first
+  const uncached = names.filter(n => {
+    if (legacyCache.has(n)) {
+      result[n] = legacyCache.get(n) ?? null;
+      return false;
+    }
+    return true;
+  });
+
   if (uncached.length > 0) {
-    const batchSize = 5;
-    for (let i = 0; i < uncached.length; i += batchSize) {
-      const batch = uncached.slice(i, i + batchSize);
-      await Promise.all(batch.map(name => fetchArtistImage(name)));
-
-      // Rate limiting delay between batches
-      if (i + batchSize < uncached.length) {
-        await new Promise(resolve => setTimeout(resolve, 300));
+    try {
+      const imageMap = await fetchAllArtistImagesByName(uncached);
+      for (const [name, images] of imageMap) {
+        const url = images.large ?? images.medium ?? images.small;
+        legacyCache.set(name, url);
+        result[name] = url;
+      }
+    } catch {
+      for (const name of uncached) {
+        legacyCache.set(name, null);
+        result[name] = null;
       }
     }
   }
 
-  // Build result from cache
-  const result: Record<string, string | null> = {};
-  for (const name of names) {
-    result[name] = ARTIST_IMAGE_CACHE.get(name) ?? null;
-  }
   return result;
 }
