@@ -24,6 +24,7 @@ export default defineConfig({
         'src/providers/**/*.ts',
         'src/app/api/**/*.ts',
         'src/lib/**/*.ts',
+        'src/scoring/**/*.ts',
       ],
       thresholds: {
         statements: 60,
@@ -39,8 +40,7 @@ export default defineConfig({
       concurrent: true,
     },
 
-    // Output
-    verbose: true,
+    // Output (removed verbose — not supported in InlineConfig)
   },
 
   resolve: {
