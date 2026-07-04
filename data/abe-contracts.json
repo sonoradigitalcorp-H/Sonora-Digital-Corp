@@ -1,10 +1,10 @@
 {
   "contracts": {
-    "d7dfbf16": {
-      "id": "d7dfbf16",
+    "1d0ef5cf": {
+      "id": "1d0ef5cf",
       "artist_id": "artist-1",
       "type": "distribution_only",
-      "start_date": "2026-07-03T23:42:12.442776+00:00",
+      "start_date": "2026-07-04T01:06:51.208376+00:00",
       "end_date": null,
       "revenue_splits": {
         "streaming": {
@@ -36,7 +36,7 @@
         "all"
       ],
       "status": "draft",
-      "created_at": "2026-07-03T23:42:12.442804+00:00"
+      "created_at": "2026-07-04T01:06:51.208414+00:00"
     }
   }
 }

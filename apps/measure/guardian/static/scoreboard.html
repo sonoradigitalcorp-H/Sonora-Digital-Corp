@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Scoreboard — Mystic Engine</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'SF Mono','Fira Code',monospace; background: #0d1117; color: #c9d1d9; padding: 20px; }
+h1 { color: #58a6ff; font-size: 22px; margin-bottom: 4px; }
+.sub { color: #8b949e; font-size: 13px; margin-bottom: 16px; }
+.filters { display: flex; gap: 8px; align-items: center; margin-bottom: 16px; flex-wrap: wrap; }
+.filters button { background: #21262d; color: #c9d1d9; border: 1px solid #30363d; padding: 4px 14px; border-radius: 6px; cursor: pointer; font-size: 12px; }
+.filters button.active { background: #1f6feb; border-color: #1f6feb; color: #fff; }
+.filters button:hover { background: #30363d; }
+.filters input { background: #0d1117; color: #c9d1d9; border: 1px solid #30363d; padding: 4px 12px; border-radius: 6px; font-size: 13px; width: 200px; }
+table { border-collapse: collapse; width: 100%; background: #161b22; border-radius: 8px; overflow: hidden; }
+th { background: #21262d; color: #58a6ff; padding: 8px 10px; text-align: left; font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer; user-select: none; }
+th:hover { background: #30363d; }
+td { padding: 6px 10px; border-bottom: 1px solid #21262d; font-size: 12px; }
+tr:hover { background: #1c2128; }
+.loading { text-align: center; padding: 40px; color: #8b949e; }
+.error { text-align: center; padding: 20px; color: #f85149; }
+.badge { display: inline-block; background: #e74c3c; color: #fff; padding: 1px 6px; border-radius: 8px; font-size: 10px; font-weight: bold; }
+.spark { display: inline-flex; align-items: flex-end; gap: 1px; height: 14px; }
+.spark span { display: inline-block; width: 3px; background: #27ae60; border-radius: 1px; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.stat-card { background: #161b22; border-radius: 8px; padding: 16px; border: 1px solid #21262d; }
+.stat-card .num { font-size: 28px; font-weight: bold; color: #58a6ff; }
+.stat-card .label { font-size: 11px; color: #8b949e; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<h1>Agent Scoreboard</h1>
+<p class="sub" id="sub">Cargando...</p>
+
+<div class="stats" id="stats"></div>
+
+<div class="filters">
+  <input id="search" placeholder="Buscar..." oninput="filter()">
+  <button class="active" onclick="filterBy('all')" id="f-all">Todos</button>
+  <button onclick="filterBy('active')" id="f-active">Activos</button>
+  <button onclick="filterBy('unknown')" id="f-unknown">Unknown</button>
+</div>
+
+<div id="content" class="loading">Cargando scoreboard...</div>
+
+<script>
+let data = [];
+let currentFilter = 'all';
+
+async function load() {
+  try {
+    const r = await fetch('/api/v1/scoreboard');
+    const j = await r.json();
+    data = j.scoreboard || [];
+    render();
+  } catch (e) {
+    document.getElementById('content').innerHTML = '<div class="error">Error: ' + e.message + '</div>';
+  }
+}
+
+function render() {
+  const sub = document.getElementById('sub');
+  const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+  sub.textContent = data.length + ' agentes · ' + now;
+
+  // Stats cards
+  const stats = document.getElementById('stats');
+  const totalOps = data.reduce((s, a) => s + a.operations, 0);
+  const totalCost = data.reduce((s, a) => s + a.total_cost_usd, 0);
+  const active = data.filter(a => a.status === 'active').length;
+  const viol = data.reduce((s, a) => s + a.violations, 0);
+  stats.innerHTML = `
+    <div class="stat-card"><div class="num">${data.length}</div><div class="label">Agentes</div></div>
+    <div class="stat-card"><div class="num">${totalOps}</div><div class="label">Operaciones</div></div>
+    <div class="stat-card"><div class="num">$${totalCost.toFixed(2)}</div><div class="label">Costo Total</div></div>
+    <div class="stat-card"><div class="num">${active}</div><div class="label">Activos</div></div>
+    <div class="stat-card"><div class="num" style="color:${viol > 0 ? '#f85149' : '#3fb950'}">${viol}</div><div class="label">Violaciones</div></div>
+  `;
+
+  renderTable();
+}
+
+function renderTable() {
+  const tbody = document.getElementById('tbody');
+  if (!tbody) return;
+
+  const filtered = currentFilter === 'all' ? data : data.filter(a => a.status === currentFilter);
+  const q = (document.getElementById('search').value || '').toLowerCase();
+  const shown = q ? filtered.filter(a => a.agent.toLowerCase().includes(q)) : filtered;
+
+  tbody.innerHTML = shown.map(a => {
+    const dot = {active: '#27ae60', unknown: '#f39c12', inactive: '#e74c3c'}[a.status] || '#95a5a6';
+    const violBadge = a.violations > 0
+      ? `<span class="badge">${a.violations}</span>`
+      : '<span style="color:#555">0</span>';
+    const bars = a.operations > 0
+      ? '<div class="spark">' + Array.from({length: Math.min(a.operations, 10)}, (_, i) =>
+          `<span style="height:${4 + (i % 3) * 2}px"></span>`).join('') + '</div>'
+      : '<span style="color:#555">—</span>';
+    const seen = a.last_seen !== 'never' ? a.last_seen.slice(0, 16) : '<span style="color:#555">nunca</span>';
+
+    return `<tr>
+      <td><strong>${a.agent}</strong></td>
+      <td style="color:#888">${a.role}</td>
+      <td>${a.level}</td>
+      <td><span style="color:${dot};font-size:16px">●</span> ${a.status}</td>
+      <td>${a.operations}</td>
+      <td>$${a.total_cost_usd}</td>
+      <td>${a.avg_cost_per_op}</td>
+      <td>${a.avg_latency_ms}ms</td>
+      <td>${a.total_tokens}</td>
+      <td style="font-size:11px">${a.models_used.slice(0, 2).join(', ') || '<span style="color:#555">—</span>'}</td>
+      <td>${violBadge}</td>
+      <td>${seen}</td>
+      <td>${bars}</td>
+    </tr>`;
+  }).join('');
+}
+
+function filter() { renderTable(); }
+function filterBy(s) {
+  currentFilter = s;
+  document.querySelectorAll('.filters button').forEach(b => b.classList.remove('active'));
+  document.getElementById('f-' + s).classList.add('active');
+  renderTable();
+}
+
+load();
+</script>
+</body>
+</html>
