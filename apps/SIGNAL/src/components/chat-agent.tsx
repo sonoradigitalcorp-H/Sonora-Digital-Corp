@@ -2,7 +2,8 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
-import { MessageCircle, X, Send, Loader2, Sparkles, ChevronDown } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Sparkles, ChevronDown, ThumbsUp, ThumbsDown } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
 
 interface Message {
   role: 'user' | 'agent';
@@ -16,9 +17,11 @@ interface ChatResponse {
 }
 
 const STORAGE_KEY = 'signal-chat-history';
-const WELCOME_MESSAGE = {
-  role: 'agent' as const,
-  content: '👋 Welcome to **SIGNAL Assist**. I\'m your AI intelligence guide for this platform. Ask me anything about the current page, your data, or how things work — I adapt to your experience level.\n\nTry one of these to get started:',
+const WELCOME_MESSAGE: Message = {
+  role: 'agent',
+  content: `**SIGNAL Assist** — Your AI intelligence guide for this platform.
+
+I can help you understand your data, navigate pages, and discover insights. Ask me anything about the current view or try one of the suggestions below.`,
   timestamp: Date.now(),
 };
 
@@ -41,14 +44,42 @@ const PAGE_CONTEXT_HINTS: Record<string, string[]> = {
   '/settings': ['How do I invite team members?', 'What integrations are available?', 'How do I enable 2FA?'],
 };
 
-function formatMessage(text: string): string {
-  // Bold
-  let formatted = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-  // Italic
-  formatted = formatted.replace(/\*(.+?)\*/g, '<em>$1</em>');
-  // Line breaks
-  formatted = formatted.replace(/\n/g, '<br />');
-  return formatted;
+// Simple streaming — fetch SSE-like and accumulate
+async function streamChat(
+  body: object,
+  onChunk: (text: string) => void,
+  onDone: (fullText: string) => void,
+  onError: () => void,
+) {
+  try {
+    const res = await fetch('/api/v1/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    });
+
+    if (!res.ok) { onError(); return; }
+
+    const data: ChatResponse = await res.json();
+    // Simulate streaming by revealing characters gradually
+    const text = data.response;
+    let index = 0;
+    const interval = setInterval(() => {
+      if (index >= text.length) {
+        clearInterval(interval);
+        onDone(text);
+        return data;
+      }
+      // Reveal in chunks
+      const chunkSize = Math.min(3, text.length - index);
+      onChunk(text.substring(index, index + chunkSize));
+      index += chunkSize;
+    }, 15);
+
+    return data;
+  } catch {
+    onError();
+  }
 }
 
 export function ChatAgent() {
@@ -57,12 +88,14 @@ export function ChatAgent() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [streamingContent, setStreamingContent] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [feedback, setFeedback] = useState<Record<number, 'up' | 'down' | null>>({});
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const initialized = useRef(false);
 
-  // Load saved history on mount
+  // Load saved history
   useEffect(() => {
     if (!initialized.current) {
       initialized.current = true;
@@ -72,36 +105,31 @@ export function ChatAgent() {
           const parsed = JSON.parse(saved) as Message[];
           setMessages(parsed);
         }
-      } catch {
-        // Ignore parse errors
-      }
+      } catch { /* ignore */ }
     }
   }, []);
 
-  // Save history when messages change
+  // Save history
   useEffect(() => {
     if (initialized.current && messages.length > 0) {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(messages.slice(-50)));
     }
   }, [messages]);
 
-  // Scroll to bottom when messages change
+  // Scroll to bottom
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, streamingContent]);
 
-  // Focus input when panel opens
+  // Focus input on open
   useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 300);
-    }
+    if (isOpen) setTimeout(() => inputRef.current?.focus(), 300);
   }, [isOpen]);
 
-  // Contextual hints when page changes and panel is open
+  // Contextual hints
   useEffect(() => {
     if (isOpen && messages.length === 0) {
-      const hints = PAGE_CONTEXT_HINTS[pathname] ?? PAGE_CONTEXT_HINTS['/dashboard'];
-      setSuggestions(hints);
+      setSuggestions(PAGE_CONTEXT_HINTS[pathname] ?? PAGE_CONTEXT_HINTS['/dashboard']);
     }
   }, [pathname, isOpen, messages.length]);
 
@@ -111,37 +139,44 @@ export function ChatAgent() {
     setInput('');
     setSuggestions([]);
     setIsLoading(true);
+    setStreamingContent('');
 
-    try {
-      const res = await fetch('/api/v1/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          message: text,
-          page: pathname,
-          history: messages.concat(userMsg).map(m => ({ role: m.role, content: m.content })),
-        }),
-      });
+    let accumulated = '';
 
-      if (!res.ok) throw new Error('API error');
+    await streamChat(
+      {
+        message: text,
+        page: pathname,
+        history: messages.concat(userMsg).map(m => ({ role: m.role, content: m.content })),
+      },
+      (chunk) => {
+        accumulated += chunk;
+        setStreamingContent(accumulated);
+      },
+      (fullText) => {
+        const agentMsg: Message = { role: 'agent', content: fullText, timestamp: Date.now() };
+        setMessages(prev => [...prev, agentMsg]);
+        setStreamingContent('');
 
-      const data: ChatResponse = await res.json();
-      const agentMsg: Message = { role: 'agent', content: data.response, timestamp: Date.now() };
-
-      setMessages(prev => [...prev, agentMsg]);
-      if (data.suggestions && data.suggestions.length > 0) {
+        // Fetch suggestions from the data returned
+        // (suggestions are included in the response)
+      },
+      () => {
+        const errorMsg: Message = {
+          role: 'agent',
+          content: 'I apologize — I encountered an issue processing your request. Please try again or reach out to support@signal.agent for help.',
+          timestamp: Date.now(),
+        };
+        setMessages(prev => [...prev, errorMsg]);
+        setStreamingContent('');
+      },
+    ).then((data?: ChatResponse) => {
+      if (data?.suggestions && data.suggestions.length > 0) {
         setSuggestions(data.suggestions);
       }
-    } catch {
-      const errorMsg: Message = {
-        role: 'agent',
-        content: 'I apologize — I encountered an issue processing your request. Please try again or reach out to support@signal.agent for help.',
-        timestamp: Date.now(),
-      };
-      setMessages(prev => [...prev, errorMsg]);
-    } finally {
-      setIsLoading(false);
-    }
+    });
+
+    setIsLoading(false);
   }, [pathname, messages]);
 
   const handleSubmit = useCallback((e?: React.FormEvent) => {
@@ -171,14 +206,19 @@ export function ChatAgent() {
   const togglePanel = useCallback(() => {
     setIsOpen(prev => {
       if (!prev && messages.length === 0) {
-        // First open — show welcome + contextual hints
         setMessages([WELCOME_MESSAGE]);
-        const hints = PAGE_CONTEXT_HINTS[pathname] ?? PAGE_CONTEXT_HINTS['/dashboard'];
-        setSuggestions(hints);
+        setSuggestions(PAGE_CONTEXT_HINTS[pathname] ?? PAGE_CONTEXT_HINTS['/dashboard']);
       }
       return !prev;
     });
   }, [pathname, messages.length]);
+
+  const handleFeedback = useCallback((index: number, type: 'up' | 'down') => {
+    setFeedback(prev => ({
+      ...prev,
+      [index]: prev[index] === type ? null : type,
+    }));
+  }, []);
 
   return (
     <>
@@ -197,11 +237,12 @@ export function ChatAgent() {
 
       {/* Chat panel */}
       <div
-        className={`fixed bottom-20 right-5 z-50 w-[360px] max-h-[600px] h-[60vh] rounded-xl glass shadow-2xl flex flex-col transition-all duration-200 origin-bottom-right ${
+        className={`fixed bottom-20 right-5 z-50 w-[380px] max-h-[600px] h-[60vh] rounded-xl glass-heavy shadow-2xl flex flex-col transition-all duration-200 origin-bottom-right resize-x overflow-hidden ${
           isOpen
             ? 'opacity-100 scale-100 pointer-events-auto'
             : 'opacity-0 scale-95 pointer-events-none'
         }`}
+        style={{ minWidth: '300px', maxWidth: '500px' }}
       >
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-border shrink-0">
@@ -247,27 +288,79 @@ export function ChatAgent() {
           )}
 
           {messages.map((msg, i) => (
-            <div
-              key={i}
-              className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
-            >
+            <div key={i} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'}`}>
               <div
-                className={`max-w-[85%] rounded-lg px-3 py-2 text-[13px] leading-relaxed ${
+                className={`max-w-[90%] rounded-lg px-3 py-2 text-[13px] leading-relaxed ${
                   msg.role === 'user'
                     ? 'bg-primary text-primary-foreground rounded-br-sm'
                     : 'bg-surface border border-border rounded-bl-sm'
                 }`}
               >
-                <div
-                  dangerouslySetInnerHTML={{ __html: formatMessage(msg.content) }}
-                  className={msg.role === 'user' ? 'text-primary-foreground' : 'text-foreground'}
-                />
+                {msg.role === 'user' ? (
+                  <p className="text-primary-foreground">{msg.content}</p>
+                ) : (
+                  <div className="prose prose-invert prose-xs max-w-none">
+                    <ReactMarkdown
+                      components={{
+                        p: ({ children }) => <p className="text-foreground mb-1 last:mb-0">{children}</p>,
+                        strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
+                        em: ({ children }) => <em className="text-muted-foreground">{children}</em>,
+                        ul: ({ children }) => <ul className="list-disc pl-4 space-y-0.5 my-1">{children}</ul>,
+                        ol: ({ children }) => <ol className="list-decimal pl-4 space-y-0.5 my-1">{children}</ol>,
+                        li: ({ children }) => <li className="text-foreground/80">{children}</li>,
+                        code: ({ children }) => <code className="bg-muted px-1 py-0.5 rounded text-[11px] font-mono">{children}</code>,
+                      }}
+                    >
+                      {msg.content}
+                    </ReactMarkdown>
+                  </div>
+                )}
               </div>
+              {/* Feedback buttons (agent messages only) */}
+              {msg.role === 'agent' && (
+                <div className="flex items-center gap-1 mt-1 opacity-0 hover:opacity-100 transition-opacity">
+                  <button
+                    onClick={() => handleFeedback(i, 'up')}
+                    className={`p-1 rounded transition-colors ${
+                      feedback[i] === 'up' ? 'text-primary bg-primary/10' : 'text-muted-foreground hover:text-foreground hover:bg-surface-hover'
+                    }`}
+                  >
+                    <ThumbsUp className="h-3 w-3" />
+                  </button>
+                  <button
+                    onClick={() => handleFeedback(i, 'down')}
+                    className={`p-1 rounded transition-colors ${
+                      feedback[i] === 'down' ? 'text-rose-400 bg-rose-500/10' : 'text-muted-foreground hover:text-foreground hover:bg-surface-hover'
+                    }`}
+                  >
+                    <ThumbsDown className="h-3 w-3" />
+                  </button>
+                </div>
+              )}
             </div>
           ))}
 
+          {/* Streaming content */}
+          {streamingContent && (
+            <div className="flex justify-start">
+              <div className="bg-surface border border-border rounded-lg rounded-bl-sm px-3 py-2 max-w-[90%]">
+                <div className="prose prose-invert prose-xs max-w-none">
+                  <ReactMarkdown
+                    components={{
+                      p: ({ children }) => <p className="text-foreground mb-1 last:mb-0">{children}</p>,
+                      strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
+                    }}
+                  >
+                    {streamingContent}
+                  </ReactMarkdown>
+                </div>
+                <span className="inline-block w-1.5 h-4 bg-primary ml-0.5 animate-pulse" />
+              </div>
+            </div>
+          )}
+
           {/* Typing indicator */}
-          {isLoading && (
+          {isLoading && !streamingContent && (
             <div className="flex justify-start">
               <div className="bg-surface border border-border rounded-lg rounded-bl-sm px-3 py-2.5">
                 <div className="flex items-center gap-1.5">
