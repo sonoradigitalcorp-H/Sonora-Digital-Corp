@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import useSWR from 'swr';
+import { BarChart3, TrendingUp } from 'lucide-react';
 
 const fetcher = (url: string) => fetch(url).then(r => r.json());
 
@@ -24,7 +25,7 @@ export function ActivityChart() {
   if (error) {
     return (
       <div className="kpi-card p-4">
-        <p className="text-destructive text-xs">Failed to load activity data</p>
+        <p className="text-destructive text-xs">Portfolio trend data unavailable</p>
       </div>
     );
   }
@@ -33,8 +34,8 @@ export function ActivityChart() {
     return (
       <div className="kpi-card animate-pulse">
         <div className="px-4 pt-4 pb-3 border-b border-border">
-          <div className="h-4 w-28 bg-muted rounded" />
-          <div className="h-2.5 w-40 bg-muted rounded mt-1.5" />
+          <div className="h-4 w-32 bg-muted rounded" />
+          <div className="h-2.5 w-44 bg-muted rounded mt-1.5" />
         </div>
         <div className="p-4">
           <div className="flex items-end gap-3 h-40">
@@ -58,7 +59,6 @@ export function ActivityChart() {
       artist.growthHistory.forEach((entry: GrowthMonth) => {
         if (entry.month) {
           const existing = growthMap.get(entry.month) ?? [];
-          // Use a weighted combination for richer data
           existing.push(
             Math.round((entry.followers || 0) * 0.3 + (entry.streams || 0) * 0.5 + (entry.score || 0) * 0.2)
           );
@@ -90,7 +90,7 @@ export function ActivityChart() {
   }
 
   const maxValue = Math.max(...chartData.map(d => d.value)) || 1;
-  const barMaxHeight = 70; // percent
+  const barMaxHeight = 70;
 
   // Calculate trend line (2-point moving average)
   const trendLine = chartData.map((d, i, arr) => {
@@ -107,8 +107,10 @@ export function ActivityChart() {
   return (
     <div className="kpi-card">
       <div className="px-4 pt-4 pb-3 border-b border-border">
-        <h2 className="text-sm font-semibold tracking-tight">Growth Activity</h2>
-        <p className="text-[11px] text-muted-foreground mt-0.5">Average growth across tracked artists</p>
+        <h2 className="text-sm font-semibold tracking-tight">Portfolio Performance</h2>
+        <p className="text-[11px] text-muted-foreground mt-0.5">
+          Combined growth trajectory across tracked artists
+        </p>
       </div>
 
       <div className="p-4">
@@ -165,7 +167,7 @@ export function ActivityChart() {
                   </div>
                 )}
 
-                {/* Animated value label */}
+                {/* Value label */}
                 <span className={`text-[10px] font-medium tabular-nums transition-all duration-200 ${
                   isHovered ? 'text-foreground' : 'text-muted-foreground'
                 }`}>
@@ -183,7 +185,6 @@ export function ActivityChart() {
                     boxShadow: isHovered ? '0 0 12px rgba(59,130,246,0.3)' : 'none',
                   }}
                 >
-                  {/* Shimmer overlay on hover */}
                   {isHovered && (
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent animate-shimmer" />
                   )}

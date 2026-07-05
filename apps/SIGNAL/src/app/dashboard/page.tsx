@@ -1,53 +1,72 @@
 'use client';
 
 import { DashboardLayout } from '@/components/dashboard/layout';
-import { StatsGrid } from '@/components/dashboard/stats-grid';
-import { TopArtists } from '@/components/dashboard/top-artists';
-import { DiscoveryFeed } from '@/components/dashboard/discovery-feed';
+import { ExecutiveBrief } from '@/components/dashboard/executive-brief';
+import { DecisionCards } from '@/components/dashboard/decision-cards';
+import { OpportunityPanel } from '@/components/dashboard/opportunity-panel';
+import { AlertCenter } from '@/components/dashboard/alert-center';
 import { MarketOverview } from '@/components/dashboard/market-overview';
-import { AlertsPanel } from '@/components/dashboard/alerts-panel';
 import { ActivityChart } from '@/components/dashboard/activity-chart';
+import { DiscoveryFeed } from '@/components/dashboard/discovery-feed';
 
 export default function DashboardPage() {
   return (
     <DashboardLayout>
-      <div className="space-y-5 p-5 animate-fade-in">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-xl font-semibold tracking-tight">Mission Control</h1>
-              <span className="badge badge-live">
-                <span className="live-dot" />
-                Live
-              </span>
+      <div className="space-y-5 p-3 sm:p-5 animate-fade-in">
+        {/* ===== SECTION 1: EXECUTIVE BRIEF ===== */}
+        {/* What happened? Why? What should I do? */}
+        <section>
+          <ExecutiveBrief />
+        </section>
+
+        {/* ===== SECTION 2: DECISION CARDS ===== */}
+        {/* Executive KPIs — actionable, not passive */}
+        <section>
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <h2 className="text-sm font-semibold tracking-tight">Executive KPIs</h2>
+              <p className="text-[11px] text-muted-foreground mt-0.5">
+                Actionable metrics driving portfolio decisions
+              </p>
             </div>
-            <p className="text-xs text-muted-foreground mt-1">
-              Real-time intelligence overview
-            </p>
+            <span className="badge badge-blue text-[10px]">
+              Priority Weighted
+            </span>
           </div>
-          <div className="hidden md:flex items-center gap-1.5 text-[11px] text-muted-foreground">
-            <span className="w-1.5 h-1.5 rounded-full bg-primary/60" />
-            {new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-          </div>
-        </div>
+          <DecisionCards />
+        </section>
 
-        {/* KPIs */}
-        <StatsGrid />
-
-        {/* Main Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        {/* ===== SECTION 3: OPPORTUNITIES + ALERTS ===== */}
+        {/* Top Opportunities (primary) + Critical Alerts (secondary) */}
+        <section className="grid grid-cols-1 lg:grid-cols-3 gap-5">
           <div className="lg:col-span-2 space-y-5">
-            <TopArtists />
-            <ActivityChart />
+            <OpportunityPanel />
           </div>
           <div className="space-y-5">
-            <AlertsPanel />
-            <MarketOverview />
+            <AlertCenter />
           </div>
-        </div>
+        </section>
 
-        <DiscoveryFeed />
+        {/* ===== SECTION 4: MARKET + PERFORMANCE ===== */}
+        {/* Supporting context */}
+        <section className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <MarketOverview />
+          <ActivityChart />
+        </section>
+
+        {/* ===== SECTION 5: DISCOVERY ===== */}
+        {/* Pipeline for future opportunities */}
+        <section>
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <h2 className="text-sm font-semibold tracking-tight">Opportunity Pipeline</h2>
+              <p className="text-[11px] text-muted-foreground mt-0.5">
+                Emerging talent and new investment candidates
+              </p>
+            </div>
+          </div>
+          <DiscoveryFeed />
+        </section>
       </div>
     </DashboardLayout>
   );

@@ -1,7 +1,7 @@
 'use client';
 
 import useSWR from 'swr';
-import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
+import { TrendingUp, TrendingDown, Minus, BarChart3, ArrowRight } from 'lucide-react';
 
 const fetcher = (url: string) => fetch(url).then(r => r.json());
 
@@ -29,15 +29,19 @@ export function MarketOverview() {
   const { data, error, isLoading } = useSWR('/api/v1/market', fetcher);
 
   if (error) {
-    return <div className="kpi-card p-4"><p className="text-destructive text-xs">Failed to load market data</p></div>;
+    return (
+      <div className="kpi-card p-4">
+        <p className="text-destructive text-xs">Market data temporarily unavailable</p>
+      </div>
+    );
   }
 
   if (isLoading) {
     return (
       <div className="kpi-card animate-pulse">
         <div className="px-4 pt-4 pb-3 border-b border-border">
-          <div className="h-4 w-24 bg-muted rounded" />
-          <div className="h-2.5 w-28 bg-muted rounded mt-1.5" />
+          <div className="h-4 w-28 bg-muted rounded" />
+          <div className="h-2.5 w-32 bg-muted rounded mt-1.5" />
         </div>
         <div>
           {Array.from({ length: 4 }).map((_, i) => (
@@ -71,14 +75,24 @@ export function MarketOverview() {
   }
 
   if (!items.length) {
-    return <div className="kpi-card p-4"><p className="text-muted-foreground text-xs">No market data available</p></div>;
+    return (
+      <div className="kpi-card text-center py-10">
+        <div className="p-3 rounded-xl bg-muted inline-block mb-3">
+          <BarChart3 className="h-6 w-6 text-muted-foreground" />
+        </div>
+        <p className="text-sm font-medium mb-1">Market Insights Pending</p>
+        <p className="text-xs text-muted-foreground max-w-xs mx-auto leading-relaxed">
+          Market data will appear once SIGNAL begins tracking industry trends and genre performance metrics.
+        </p>
+      </div>
+    );
   }
 
   return (
     <div className="kpi-card">
       <div className="px-4 pt-4 pb-3 border-b border-border">
-        <h2 className="text-sm font-semibold tracking-tight">Market Pulse</h2>
-        <p className="text-[11px] text-muted-foreground mt-0.5">Key market indicators</p>
+        <h2 className="text-sm font-semibold tracking-tight">Market Landscape</h2>
+        <p className="text-[11px] text-muted-foreground mt-0.5">Industry trends and genre positioning</p>
       </div>
 
       <div>
@@ -108,8 +122,8 @@ export function MarketOverview() {
       </div>
 
       <div className="p-3 border-t border-border">
-        <button className="w-full text-center text-xs text-muted-foreground hover:text-foreground transition-colors group">
-          Full Market Report <span className="inline-block transition-transform group-hover:translate-x-0.5">→</span>
+        <button className="w-full text-center text-xs text-muted-foreground hover:text-foreground transition-colors group flex items-center justify-center gap-1">
+          Full Industry Analysis <ArrowRight className="h-3 w-3 inline-block transition-transform group-hover:translate-x-0.5" />
         </button>
       </div>
     </div>
