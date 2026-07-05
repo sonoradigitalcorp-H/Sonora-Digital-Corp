@@ -93,7 +93,7 @@ export async function searchArtist(name: string): Promise<SpotifyArtistData | nu
       followers: 0, // ⚠️ Removed by Spotify Feb 2026
       popularity: 0, // ⚠️ Removed by Spotify Feb 2026
       genres: profile?.genres ?? best.genres,
-      imageUrl: images.large ?? images.medium ?? images.small,
+      imageUrl: (images.large ?? images.medium ?? images.small) ?? null,
       spotifyUrl: profile?.profileUrl ?? `https://open.spotify.com/artist/${best.externalId}`,
     };
   } catch {
@@ -144,11 +144,11 @@ export async function getArtist(spotifyId: string): Promise<SpotifyArtistData | 
 
     return {
       id: spotifyId,
-      name: profile.name,
+      name: profile.name ?? 'Unknown',
       followers: 0,
       popularity: 0,
-      genres: profile.genres,
-      imageUrl: images.large ?? images.medium ?? images.small,
+      genres: profile.genres ?? [],
+      imageUrl: (images.large ?? images.medium ?? images.small) ?? null,
       spotifyUrl: profile.profileUrl ?? `https://open.spotify.com/artist/${spotifyId}`,
     };
   } catch {

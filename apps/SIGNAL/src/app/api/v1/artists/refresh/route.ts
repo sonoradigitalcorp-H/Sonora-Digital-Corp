@@ -5,7 +5,7 @@
 
 import { NextResponse } from 'next/server';
 import { ARTIST_POOL } from '@/lib/data-generator';
-import { isSpotifyConfigured, validateSpotifyCredentials } from '@/providers/spotify/spotify-auth';
+import { isConfigured, validateCredentials } from '@/providers/spotify/spotify-auth';
 import { getSpotifyProvider } from '@/providers/spotify/spotify-provider';
 import { getCacheManager } from '@/providers/cache/cache-manager';
 import { getJobManager, refreshProvider, invalidateCache } from '@/providers/jobs/job-manager';
@@ -16,7 +16,7 @@ import { getJobManager, refreshProvider, invalidateCache } from '@/providers/job
  * Returns immediately with job ID.
  */
 export async function POST() {
-  if (!isSpotifyConfigured()) {
+  if (!isConfigured()) {
     return NextResponse.json({
       success: false,
       error: 'Spotify API not configured. Set SPOTIFY_CLIENT_ID and SPOTIFY_CLIENT_SECRET.',
@@ -52,8 +52,8 @@ export async function POST() {
  * Returns cache status, provider health, and configuration info.
  */
 export async function GET() {
-  const configured = isSpotifyConfigured();
-  const validationError = configured ? null : validateSpotifyCredentials();
+  const configured = isConfigured();
+  const validationError = configured ? null : validateCredentials();
 
   // Get provider health
   const spotifyProvider = getSpotifyProvider();

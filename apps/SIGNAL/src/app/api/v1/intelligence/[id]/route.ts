@@ -127,14 +127,14 @@ export async function GET(
   const scores = registry.getAll();
   if (scores.length === 0) {
     // Register default scores on first call
-    const defaultScores = createDefaultScores();
+    const defaultScores = await createDefaultScores();
     for (const score of defaultScores) {
       registry.register(score);
     }
   }
 
   const engine = getEngine();
-  const engineResult = engine.evaluate(featured.raw);
+  const engineResult = await engine.evaluate(artist);
 
   // 4. Generate insights
   const insights = generateInsights(featured.raw, engineResult);

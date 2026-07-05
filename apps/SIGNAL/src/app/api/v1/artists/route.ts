@@ -8,7 +8,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { generateArtists, generateArtistById } from '@/lib/data-generator';
 import { getIntelligenceEngine } from '@/providers/intelligence/engine';
 import { registerDefaultProviders } from '@/providers/registry';
-import { isSpotifyConfigured } from '@/providers/spotify/spotify-auth';
+import { isConfigured } from '@/providers/spotify/spotify-auth';
 import { fetchAllArtistImagesByName } from '@/providers/deezer/deezer-provider';
 
 // Lazy-init provider system (first call only)
@@ -23,7 +23,7 @@ async function ensureProviders() {
       console.error('[Artists API] Provider init failed:', error);
     }
   }
-  return isSpotifyConfigured();
+  return isConfigured();
 }
 
 export async function GET(request: NextRequest) {
