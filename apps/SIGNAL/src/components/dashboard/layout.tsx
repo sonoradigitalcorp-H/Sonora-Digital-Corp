@@ -1,8 +1,13 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { Sidebar } from './sidebar';
 import { TopBar } from './topbar';
-import { ChatAgent } from '@/components/chat-agent';
+
+const ChatAgent = dynamic(
+  () => import('@/components/chat-agent').then(m => ({ default: m.ChatAgent })),
+  { ssr: false }
+);
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (

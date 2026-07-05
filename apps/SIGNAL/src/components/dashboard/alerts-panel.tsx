@@ -1,6 +1,6 @@
 'use client';
 
-import { AlertTriangle, AlertCircle, Info, CheckCircle2 } from 'lucide-react';
+import { AlertTriangle, AlertCircle, Info, CheckCircle2, TrendingUp } from 'lucide-react';
 import useSWR from 'swr';
 
 const fetcher = (url: string) => fetch(url).then(r => r.json());
@@ -16,11 +16,7 @@ export function AlertsPanel() {
   const { data, error, isLoading } = useSWR('/api/v1/notifications', fetcher);
 
   if (error) {
-    return (
-      <div className="kpi-card p-4">
-        <p className="text-destructive text-xs">Failed to load alerts</p>
-      </div>
-    );
+    return <div className="kpi-card p-4"><p className="text-destructive text-xs">Failed to load alerts</p></div>;
   }
 
   if (isLoading) {
@@ -67,41 +63,37 @@ export function AlertsPanel() {
           <h2 className="text-sm font-semibold tracking-tight">Active Alerts</h2>
           <p className="text-[11px] text-muted-foreground mt-0.5">Requires attention</p>
         </div>
-        <div className="flex items-center gap-1">
-          <AlertTriangle className="h-3.5 w-3.5 text-destructive" />
-          <span className="text-sm font-bold text-destructive">{unread}</span>
+        <div className="flex items-center gap-1.5">
+          <span className="relative flex h-5 w-5 items-center justify-center">
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-destructive/20" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-destructive" />
+          </span>
+          <span className="text-sm font-bold text-destructive tabular-nums">{unread}</span>
         </div>
       </div>
 
       <div>
-        {notifications.map((alert: {
-          id: string;
-          type: string;
-          title: string;
-          description: string;
-          time: string;
-          read: boolean;
-        }) => {
+        {notifications.map((alert: { id: string; type: string; title: string; description: string; time: string; read: boolean }) => {
           const config = typeConfig[alert.type] ?? typeConfig.info;
           const Icon = config.icon;
           return (
-            <div key={alert.id} className={`flex items-start gap-3 px-4 py-3 hover:bg-surface-hover transition-colors cursor-pointer ${!alert.read ? 'bg-primary/5' : ''}`}>
+            <div key={alert.id} className={`flex items-start gap-3 px-4 py-3 data-row cursor-pointer ${!alert.read ? 'bg-primary/[0.02] border-l-2 border-l-primary' : ''}`}>
               <div className={`p-1.5 rounded-md ${config.containerClass} shrink-0`}>
                 <Icon className="h-3 w-3" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-xs font-medium">{alert.title}</p>
                 <p className="text-[11px] text-muted-foreground">{alert.description}</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">{alert.time}</p>
               </div>
-              <span className="text-[10px] text-muted-foreground whitespace-nowrap">{alert.time}</span>
             </div>
           );
         })}
       </div>
 
       <div className="p-3 border-t border-border">
-        <button className="w-full text-center text-xs text-muted-foreground hover:text-foreground transition-colors">
-          View All Alerts →
+        <button className="w-full text-center text-xs text-muted-foreground hover:text-foreground transition-colors group">
+          View All Alerts <span className="inline-block transition-transform group-hover:translate-x-0.5">→</span>
         </button>
       </div>
     </div>
