@@ -19,7 +19,7 @@ export async function fetchArtistImage(artistName: string): Promise<string | nul
 
   try {
     const images = await fetchArtistImageByName(artistName);
-    const url = images.large ?? images.medium ?? images.small;
+    const url = (images.large ?? images.medium ?? images.small) ?? null;
     legacyCache.set(artistName, url);
     return url;
   } catch {
@@ -49,7 +49,7 @@ export async function fetchAllArtistImages(
     try {
       const imageMap = await fetchAllArtistImagesByName(uncached);
       for (const [name, images] of imageMap) {
-        const url = images.large ?? images.medium ?? images.small;
+        const url = (images.large ?? images.medium ?? images.small) ?? null;
         legacyCache.set(name, url);
         result[name] = url;
       }

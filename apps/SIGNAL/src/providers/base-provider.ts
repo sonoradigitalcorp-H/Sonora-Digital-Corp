@@ -133,8 +133,9 @@ export async function withRetry<T>(
 // ── Default Provider Config ──
 
 export function createDefaultConfig(overrides: Partial<ProviderConfig> & { name: string }): ProviderConfig {
+  const { name, ...rest } = overrides;
   return {
-    name: overrides.name,
+    name,
     enabled: true,
     timeoutMs: 10000,
     rateLimitIntervalMs: 200,
@@ -142,7 +143,7 @@ export function createDefaultConfig(overrides: Partial<ProviderConfig> & { name:
     retryBaseDelayMs: 1000,
     healthCheckIntervalMs: 60000,
     cacheTTLMs: 24 * 60 * 60 * 1000, // 24 hours
-    ...overrides,
+    ...rest,
   };
 }
 

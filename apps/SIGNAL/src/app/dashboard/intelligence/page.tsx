@@ -69,6 +69,7 @@ interface ScoreItem {
   id: string;
   name: string;
   category: string;
+  version: string;
   score: number;
   confidence: number;
   summary: string;
