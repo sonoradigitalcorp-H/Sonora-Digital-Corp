@@ -31,3 +31,4 @@
 | 2026-07-04 | 20260704-eca-fase1 | Enterprise Cognitive Architecture: Fase 1 | 3 | 88 | completed | [link](20260704-eca-fase1/LECCION.md) |
 
 > **20260704-eca-fase1**: 40 archivos nuevos, 15 movidos, 0 borrados. Execution Kernel (24 tests), Evolution Loop (19 tests), Artist Intelligence (17 tests). Reorganización apps/ en 7 niveles cognitivos. Stack Lock, Control Plane, Scoreboard Dashboard, GitHub Pages, Vercel Secrets.
+| SPEC-202 | SPEC-20260704-ABE-001 | ... | ... | ... | completed | ... |
