@@ -6,7 +6,7 @@
 ~/sdc/                                      ← ÚNICA FUENTE DE VERDAD
 │
 ├── 📜 CONSTITUCIÓN
-│   ├── sonora-enterprise-os/constitution/  ← OMEGA-PROMPT, 10-RULES, TRUTH, SOUL
+│   ├── constitution/  ← OMEGA-PROMPT, 10-RULES, TRUTH, SOUL
 │   ├── AGENTS.md                           ← Referencia rápida
 │   ├── CLAUDE.md                           ← Protocolo de operación
 │   └── opencode.json                        ← Config del agente (25 agents, 6 instrucciones)

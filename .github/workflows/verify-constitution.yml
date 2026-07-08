@@ -3,10 +3,10 @@ name: Verify — Constitution integrity
 on:
   push:
     paths:
-      - 'sonora-enterprise-os/constitution/**'
+      - 'constitution/**'
   pull_request:
     paths:
-      - 'sonora-enterprise-os/constitution/**'
+      - 'constitution/**'
 
 jobs:
   verify:
@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Verificar checksums de la constitución
         run: |
-          cd sonora-enterprise-os/constitution
+          cd constitution
           if [ -f CHECKSUMS.sha256 ]; then
             sha256sum -c CHECKSUMS.sha256 --quiet || echo "❌ Constitution modificada sin actualizar checksums"
             sha256sum -c CHECKSUMS.sha256 --quiet && echo "✅ Constitution intacta"

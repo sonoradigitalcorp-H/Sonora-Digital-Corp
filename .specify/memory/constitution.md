@@ -27,6 +27,6 @@ ADR, BDD/ATDD, Agent Governance, Security/Observability Gates, Delivery Gate.
 | 6 Gobernanza | Security, Observability, Memory/RAG/MCP Governance, Quality Gates, Delivery Gate |
 | 7 Ciclo SDD v2 | Revenue → Discovery → Spec → BDD/ATDD → ADR → Plan → Tasks → Code → Verify → Delivery → Archive |
 
-Ciclo completo: `sonora-enterprise-os/constitution/MASTER-SYSTEM-PROMPT.md`.
-Plantillas: `sonora-enterprise-os/adr/`.
-Company OS: `sonora-enterprise-os/policies/company-operating-system.md`.
+Ciclo completo: `constitution/MASTER-SYSTEM-PROMPT.md`.
+Plantillas: `constitution/adr/`.
+Company OS: `constitution/policies/company-operating-system.md`.

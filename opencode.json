@@ -7,10 +7,10 @@
   "shell": "/bin/bash",
   "logLevel": "INFO",
   "instructions": [
-    "sonora-enterprise-os/constitution/OMEGA-PROMPT-v10.0.md",
-    "sonora-enterprise-os/constitution/SOUL.md",
-    "sonora-enterprise-os/constitution/TRUTH.md",
-    "sonora-enterprise-os/constitution/10-RULES.md",
+    "constitution/OMEGA-PROMPT.md",
+    "constitution/SOUL.md",
+    "constitution/TRUTH.md",
+    "constitution/10-RULES.md",
     "AGENTS.md",
     "CLAUDE.md",
     "docs/MAPA-SDC.md"
@@ -55,7 +55,7 @@
   },
   "command": {
     "status": { "description": "Estado completo del sistema", "template": "Ejecuta healthcheck completo: JARVIS, Hermes, OpenClaw, Neo4j, Qdrant, n8n, Docker, Systemd" },
-    "backup": { "description": "Backup completo del sistema", "template": "Ejecuta backup: copia sonora-enterprise-os/ apps/ config/ platforms/ a backups/ con timestamp" },
+    "backup": { "description": "Backup completo del sistema", "template": "Ejecuta backup: copia constitution/ capabilities/ memory/ events/ kernel/ agents/ scripts/ a backups/ con timestamp" },
     "brain": { "description": "Brain graph dashboard", "template": "Abre el Command Center con brain graph" },
     "gsd": { "description": "Get Shit Done — flujo completo", "template": "GSD: 1) Estado actual 2) Qué hacer 3) Plan 4) Ejecutar 5) Verificar 6) Documentar", "agent": "builder" },
     "sdd-new": { "description": "Nueva spec SDD", "template": "SDD pipeline: Research→Spec→Design→Tasks→Apply→Verify→Archive", "agent": "mystic" },

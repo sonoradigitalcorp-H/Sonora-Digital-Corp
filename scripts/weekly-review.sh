@@ -5,7 +5,7 @@ set -euo pipefail
 JARVIS_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 EVENTS="$JARVIS_HOME/state/logs/events.jsonl"
 FIN_OPS="$JARVIS_HOME/state/finops.jsonl"
-INITIATIVES_DIR="$JARVIS_HOME/sonora-enterprise-os/initiatives"
+INITIATIVES_DIR="$JARVIS_HOME/initiatives"
 REPORTS_DIR="$JARVIS_HOME/state/reports"
 SKILLS_LOG_DIR="$JARVIS_HOME/state/logs/skills"
 

@@ -50,7 +50,11 @@ backup_file() {
 }
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Backing up directories..." >> "${LOG_FILE}"
-backup_dir "${SOURCE_DIR}/sonora-enterprise-os"
+# sonora-enterprise-os eliminado — content migrated to root dirs
+backup_dir "${SOURCE_DIR}/skills"
+backup_dir "${SOURCE_DIR}/harnesses"
+backup_dir "${SOURCE_DIR}/initiatives"
+backup_dir "${SOURCE_DIR}/metrics"
 backup_dir "${SOURCE_DIR}/apps"
 backup_dir "${SOURCE_DIR}/config"
 backup_dir "${SOURCE_DIR}/platforms"
