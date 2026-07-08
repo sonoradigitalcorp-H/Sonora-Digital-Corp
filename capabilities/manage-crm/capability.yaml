@@ -1,0 +1,27 @@
+# manage-crm capability — HAS-005
+id: manage-crm
+name: Manage CRM
+version: 0.5.0
+status: experimental
+domain: music
+description: "Manage artist CRM: contacts, leads, follow-ups, relationship tracking, opportunity pipeline"
+entry:
+  agent: sales-agent
+  trigger: crm.action.requested
+dependencies:
+  - memory: business
+  - memory: working
+  - memory: semantic
+policies:
+  max_cost: 0.05
+  timeout_seconds: 60
+  allowed_models: ["ollama/qwen3:4b-64k"]
+events:
+  emits:
+    - crm.contact.created
+    - crm.contact.updated
+    - crm.lead.qualified
+    - crm.lead.lost
+  consumes:
+    - crm.action.requested
+    - artist.score.computed

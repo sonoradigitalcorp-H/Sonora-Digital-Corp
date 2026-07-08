@@ -1,0 +1,28 @@
+# generate-video capability — HAS-005
+id: generate-video
+name: Generate Video
+version: 1.0.0
+status: experimental
+domain: music
+description: "Generate talking head or lipsync videos from audio + image using FFmpeg and Remotion"
+entry:
+  agent: video-agent
+  trigger: video.generation.requested
+dependencies:
+  - skill: ffmpeg
+  - skill: remotion
+  - memory: working
+  - memory: business
+policies:
+  max_cost: 0.50
+  timeout_seconds: 600
+  allowed_models: ["ollama/qwen3:4b-64k"]
+events:
+  emits:
+    - video.generation.started
+    - video.generation.progress
+    - video.generation.completed
+    - video.generation.failed
+  consumes:
+    - video.generation.requested
+    - artist.data_sync.completed
