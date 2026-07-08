@@ -1,6 +1,6 @@
 version: 1
 domain: git
-updated: 2026-07-03T16:30:00Z
+updated: 2026-07-08T19:30:00Z
 rules:
   - id: GIT-001
     description: "No commits sin SPEC activa — pre-commit hook bloquea"
@@ -42,3 +42,64 @@ rules:
     severity: warning
     applies_to: ["all_agents"]
     enforcement: manual
+
+  - id: GIT-006
+    description: "Antes de empezar a trabajar, correr git-sync.sh — sincroniza con origin/main"
+    category: process
+    severity: error
+    applies_to: ["all_agents", "luis_daniel", "noel"]
+    enforcement: semi-automated
+    detail: |
+      git-sync.sh verifica:
+        1. No hay rebase/merge interrumpido
+        2. No hay archivos dirty sin commit
+        3. Estamos alineados con origin/main (ni ahead ni behind)
+      Si hay divergencia, pregunta al usuario cómo resolverla (merge vs rebase vs abort).
+
+  - id: GIT-007
+    description: "Nunca dejar un rebase o merge a medias — si se interrumpe, resolver antes de seguir"
+    category: safety
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+    detail: |
+      daily-error-correction.sh aborta automáticamente cualquier rebase
+      que haya estado pausado >30 minutos.
+      Cualquier operación git que quede en estado inconsistent
+      debe resolverse inmediatamente — no se permite trabajar con el repo en estado inestable.
+
+  - id: GIT-008
+    description: "Preferir merge sobre rebase para integrar cambios de origin/main"
+    category: operations
+    severity: warning
+    applies_to: ["all_agents"]
+    enforcement: automated
+    detail: |
+      Rebase reescribe la historia y puede causar conflictos difíciles de resolver.
+      Merge preserva la historia real y es más seguro en entornos multi-usuario.
+      Solo usar rebase para limpiar commits locales ANTES de pushear (nunca después).
+      El script daily-error-correction.sh usa merge, no rebase.
+
+  - id: GIT-009
+    description: "Noel y Luis Daniel deben hacer git pull (merge) ANTES de empezar a trabajar cada día"
+    category: operations
+    severity: error
+    applies_to: ["luis_daniel", "noel"]
+    enforcement: manual
+    detail: |
+      git-sync.sh se encarga de esto automáticamente.
+      Si alguien trabajó sin sincronizar primero y causa divergencia:
+        1. Correr git-sync.sh inmediatamente
+        2. Decidir si merge o rebase según el caso
+        3. NO seguir trabajando hasta que el repo esté estable
+
+  - id: GIT-010
+    description: "Push automático al cerrar sesión — close-session.sh hace git push"
+    category: process
+    severity: warning
+    applies_to: ["all_agents"]
+    enforcement: automated
+    detail: |
+      close-session.sh corre tests → docs → commit → push.
+      Si el push falla por divergencia, close-session.sh aborta y pide correr git-sync.sh primero.
+      Esto asegura que nunca se pierdan cambios locales ni se sobrescriban cambios remotos.

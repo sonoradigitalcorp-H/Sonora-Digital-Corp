@@ -22,6 +22,7 @@ Tier 3:  VDD → EDD → PDD → ODD → SDD → BDD → TDD → ADR → Events 
 
 ## Gates
 
+0. **Sync First (GIT-006)**: Antes de empezar a trabajar, correr `scripts/git-sync.sh` para sincronizar con origin/main. Si hay divergencia (como la del 2026-07-08 entre Luis Daniel y Noel), resolverla ANTES de hacer cualquier cambio. Este gate se ejecuta al inicio del pipeline SDD, no al final.
 1. **Spec First**: No code without an approved spec (except tier 1)
 2. **Score Gate**: Score ≥60 required for tier 2+
 3. **Planning Gate**: `scripts/plan-gate.py` debe generar PLAN.yaml antes de cualquier ejecución (tier 2+). Sin plan aprobado, no hay código.
@@ -31,8 +32,8 @@ Tier 3:  VDD → EDD → PDD → ODD → SDD → BDD → TDD → ADR → Events 
 7. **Coverage Gate**: Overall coverage ≥60% (enforced by pytest-cov). New modules must have ≥70% coverage.
 8. **Event Bus**: Toda operación emite evento via `scripts/emit-event.py` al stream unificado `state/events/events.jsonl`. No más events.jsonl dispersos.
 9. **Truth Compliance**: Todo output debe ser validado contra `truth/` YAML. `scripts/validate-truth.py` corre en CI.
-7. **ADR Filed**: Decisions documented
-8. **Lección Saved**: Learning stored in Engram
+10. **ADR Filed**: Decisions documented
+11. **Lección Saved**: Learning stored in Engram
 
 ## Joaquin Ruiz Lite — 15-Point Compliance
 
