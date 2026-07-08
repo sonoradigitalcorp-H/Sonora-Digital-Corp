@@ -1,0 +1,25 @@
+# search-knowledge capability — HAS-005
+id: search-knowledge
+name: Search Knowledge
+version: 1.0.0
+status: active
+domain: system
+description: "Search across all memory stores (semantic, graph, long-term, working) and return ranked results"
+entry:
+  agent: null
+  trigger: knowledge.search.requested
+dependencies:
+  - memory: semantic
+  - memory: graph
+  - memory: long
+  - memory: working
+policies:
+  max_cost: 0.05
+  timeout_seconds: 30
+  allowed_models: ["ollama/qwen3:4b-64k"]
+events:
+  emits:
+    - knowledge.search.completed
+    - knowledge.search.failed
+  consumes:
+    - knowledge.search.requested

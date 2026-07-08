@@ -1,0 +1,27 @@
+# analyze-artist capability — HAS-005
+id: analyze-artist
+name: Analyze Artist
+version: 1.0.0
+status: active
+domain: music
+description: "Analyze artist performance, trends, and opportunities using multi-provider data"
+entry:
+  agent: research-agent
+  trigger: artist.analysis.requested
+dependencies:
+  - capability: sync-artist-data
+  - memory: business
+  - memory: semantic
+  - memory: graph
+policies:
+  max_cost: 0.15
+  timeout_seconds: 300
+  allowed_models: ["ollama/deepseek-r1:7b-64k"]
+events:
+  emits:
+    - artist.analysis.started
+    - artist.analysis.completed
+    - artist.analysis.failed
+  consumes:
+    - artist.analysis.requested
+    - artist.data_sync.completed

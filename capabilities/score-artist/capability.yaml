@@ -1,0 +1,25 @@
+# score-artist capability — HAS-005
+id: score-artist
+name: Score Artist
+version: 1.0.0
+status: active
+domain: music
+description: "Compute artist scores across dimensions: momentum, virality, tour readiness, engagement, revenue health"
+entry:
+  agent: research-agent
+  trigger: artist.scoring.requested
+dependencies:
+  - capability: analyze-artist
+  - memory: business
+  - memory: long
+policies:
+  max_cost: 0.10
+  timeout_seconds: 120
+  allowed_models: ["ollama/deepseek-r1:7b-64k"]
+events:
+  emits:
+    - artist.score.computed
+    - artist.score.failed
+  consumes:
+    - artist.scoring.requested
+    - artist.analysis.completed

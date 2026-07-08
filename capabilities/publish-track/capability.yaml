@@ -1,0 +1,29 @@
+# publish-track capability — HAS-005
+id: publish-track
+name: Publish Track
+version: 0.5.0
+status: experimental
+domain: music
+description: "Publish tracks to distribution platforms (Spotify, Apple Music, YouTube, TikTok, Deezer)"
+entry:
+  agent: marketing-agent
+  trigger: track.publish.requested
+dependencies:
+  - capability: generate-video
+  - capability: analyze-artist
+  - memory: business
+  - memory: working
+policies:
+  max_cost: 0.30
+  timeout_seconds: 600
+  allowed_models: ["ollama/qwen3:4b-64k"]
+events:
+  emits:
+    - track.publish.started
+    - track.publish.completed
+    - track.publish.failed
+    - track.distribution.started
+  consumes:
+    - track.publish.requested
+    - artist.analysis.completed
+    - video.generation.completed
