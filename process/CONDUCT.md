@@ -1,39 +1,60 @@
-# Pipeline Process — CONDUCT.md
+# Pipeline Process — CONDUCT.md (HAS-007)
 
 ## Overview
 
-Every change to this repo follows a tiered pipeline. The tier determines how much ceremony is required.
+Every change follows the **Hermes Architecture Standard (HAS)** pipeline. The old VDD→TDD pipeline is replaced by **Mission→Evolution** (HAS-007). See `process/has/` for the full specification.
+
+## Pipeline Stages
+
+```
+Tier 0:  Implementation → Verification
+Tier 1:  Research → Implementation → Verification → Observability
+Tier 2:  Architecture → Specification → Implementation → Verification → Observability
+Tier 3:  Mission → Constitution → Research → Architecture → Simulation → Specification → Implementation → Verification → Observability → Evolution
+```
 
 ## Tiers
 
-| Tier | Scope | Requirements | Score Gate |
-|------|-------|-------------|------------|
-| 1 | Quick fix, bug, typo, config | Lección only | No |
-| 2 | Feature, improvement | Spec → Score → Gherkin → TDD → Code → ADR → Lección | ≥60 |
-| 3 | Initiative, platform, product | VDD → EDD → PDD → ODD → SDD → BDD → TDD → ADR → Lección | ≥60 |
-
-## Lifecycle
-
-```
-Tier 1:  Execute → Lección
-Tier 2:  Spec → Score → Gherkin → Tests-First → Code → Tests-Green → Events → ADR → Lección
-Tier 3:  VDD → EDD → PDD → ODD → SDD → BDD → TDD → ADR → Events → Lección
-```
+| Tier | Scope | Pipeline Stages | Gates |
+|------|-------|-----------------|-------|
+| 0 | Typo, config, comment | 7 → 8 | Tests green |
+| 1 | Quick fix, minor bug | 3 → 7 → 8 → 9 | Constitution + Tests |
+| 2 | Feature, improvement | 4 → 6 → 7 → 8 → 9 | Full constitution + Tests + Score ≥60 |
+| 3 | Capability, platform, initiative | 1 → 2 → 3 → 4 → 5 → 6 → 7 → 8 → 9 → 10 | All gates + ADR + Score ≥75 |
 
 ## Gates
 
-0. **Sync First (GIT-006)**: Antes de empezar a trabajar, correr `scripts/git-sync.sh` para sincronizar con origin/main. Si hay divergencia (como la del 2026-07-08 entre Luis Daniel y Noel), resolverla ANTES de hacer cualquier cambio. Este gate se ejecuta al inicio del pipeline SDD, no al final.
-1. **Spec First**: No code without an approved spec (except tier 1)
-2. **Score Gate**: Score ≥60 required for tier 2+
-3. **Planning Gate**: `scripts/plan-gate.py` debe generar PLAN.yaml antes de cualquier ejecución (tier 2+). Sin plan aprobado, no hay código.
-4. **Verification Pipeline**: `scripts/verify-gate.py` ejecuta truth gate + security gate + cost gate después del plan, antes de ejecutar. Si algún gate falla → STOP + EXPLAIN + FIX.
-5. **TDD**: Tests must be written BEFORE code. `tests/` directory MUST have test files for every new module before any implementation commit.
-6. **Tests Green**: All tests must pass before merge. CI enforces this.
-7. **Coverage Gate**: Overall coverage ≥60% (enforced by pytest-cov). New modules must have ≥70% coverage.
-8. **Event Bus**: Toda operación emite evento via `scripts/emit-event.py` al stream unificado `state/events/events.jsonl`. No más events.jsonl dispersos.
-9. **Truth Compliance**: Todo output debe ser validado contra `truth/` YAML. `scripts/validate-truth.py` corre en CI.
-10. **ADR Filed**: Decisions documented
-11. **Lección Saved**: Learning stored in Engram
+0. **Sync First (GIT-006)**: `scripts/git-sync.sh --status` antes de empezar. Repo en sync o no se trabaja.
+1. **Constitution Gate**: `python3 scripts/constitution-gate.py --plan PLAN.yaml` — 6 sub-gates: Policy → Security → Cost → Compliance → Quality → Knowledge. Todos PASS obligatorio.
+2. **Spec First (HAS Stage 6)**: No code without an approved spec (Tier 2+). Specs now use HAS-007 templates.
+3. **Score Gate**: Score ≥60 (Tier 2), ≥75 (Tier 3). `scripts/score-gate.py`.
+4. **TDD**: Tests first, code second. `tests/` must exist before implementation.
+5. **Tests Green**: All tests pass. CI enforces.
+6. **Coverage Gate**: ≥60% overall, ≥70% new modules.
+7. **Event Bus**: Every operation emits event via `scripts/emit-event.py` (HAS-003 schema).
+8. **Constitution Compliance**: Every output validated against `constitution/` YAML (HAS-001).
+9. **ADR Filed**: Architecture decisions documented (Tier 3).
+10. **Lección Saved**: Learning stored in Evolution Engine (HAS-008).
+11. **Observability Gate**: Deploy + monitor + alert configured (Tier 2+).
+
+## Hermes Architecture Standard (HAS)
+
+The full specification lives in `process/has/`:
+
+| Spec | What it defines |
+|---|---|
+| HAS-000 | Index + Glossary |
+| HAS-001 | Constitution Engine (16 YAML files, gates) |
+| HAS-002 | Memory Contracts (MemoryStore interface, 7 types) |
+| HAS-003 | Event Mesh (schema, catalog.yaml, producers/consumers) |
+| HAS-004 | Cognitive Kernel (Context → Planner → Policy → Router → Executor → Reflector) |
+| HAS-005 | Capability Bus (capability.yaml, lifecycle, Workflow Engine) |
+| HAS-006 | Agent Runtime (HermesAgent ABC, registry, lifecycle) |
+| HAS-007 | Pipeline Evolution (Mission→Evolution flow, tiers, gates) |
+| HAS-008 | Evolution Engine (observer, scorecard, proposer, ADR generator, auto-doc) |
+| HAS-009 | Experience Layer (Orb states, channels, Kernel→UI contract) |
+| HAS-010 | Security & Governance (agent auth, secrets, audit) |
+| HAS-011 | Multi-tenancy (tenant_id, isolation levels) |
 
 ## Joaquin Ruiz Lite — 15-Point Compliance
 

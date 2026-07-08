@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# close-session.sh — Post-session cleanup automatizado
+# close-session.sh — Post-session cleanup automatizado (HAS-007/008)
 #
 # Uso:
-#   ./scripts/close-session.sh --spec-id SPEC-20260704-EVOLUTION --title "Evolution Loop" --tier 3
+#   ./scripts/close-session.sh --spec-id HAS-20260708-EVOLUTION --title "Evolution Loop" --tier 3
 #   ./scripts/close-session.sh --dry-run
 #   ./scripts/close-session.sh --interactive
 #
 # Pipeline:
 #   1. Validate git status (no dirty files)
 #   2. Run tests (gate — aborta si fallan)
-#   3. Generate docs via auto-doc.py
+#   3. Generate docs via auto-doc.py + Evolution Engine auto-doc (HAS-008)
 #   4. Move active SPECs → process/completed/<dir>/
 #   5. Update AGENTS.md (paths, test counts, anchored summary)
 #   6. Merge process/CATALOG.md → process/completed/CATALOG.md + remove duplicate
@@ -168,8 +168,8 @@ if [ "$NO_TESTS" = true ]; then
   warn "Tests skipped (--no-tests)"
 else
   if command -v python3 &>/dev/null; then
-    echo "Running: PYTHONPATH=. python3 -m pytest tests/test_truth.py tests/test_abe_service.py tests/test_collectors/ tests/test_execution.py tests/test_evolution.py -q --tb=short 2>&1 | tail -5"
-    test_output=$(PYTHONPATH=. python3 -m pytest tests/test_truth.py tests/test_abe_service.py tests/test_collectors/ tests/test_execution.py tests/test_evolution.py -q --tb=short 2>&1 || true)
+    echo "Running: PYTHONPATH=. python3 -m pytest tests/test_constitution.py tests/test_abe_service.py tests/test_collectors/ tests/test_execution.py tests/test_evolution.py -q --tb=short 2>&1 | tail -5"
+    test_output=$(PYTHONPATH=. python3 -m pytest tests/test_constitution.py tests/test_abe_service.py tests/test_collectors/ tests/test_execution.py tests/test_evolution.py -q --tb=short 2>&1 || true)
     echo "$test_output" | tail -5
     if echo "$test_output" | grep -q "FAILED\|failed"; then
       err "Tests fallaron. Abortando."
@@ -187,7 +187,7 @@ else
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════════
-# STEP 3: Generate docs via auto-doc.py
+# STEP 3: Generate docs via auto-doc.py + Evolution Engine (HAS-008)
 # ═══════════════════════════════════════════════════════════════════════════════
 step "Step 3/8 — Generate documentation"
 AUTODOC_ARGS=(
@@ -214,6 +214,13 @@ if [ -d "$OUTPUT_DIR" ] && [ "$FORCE" = false ]; then
   fi
 else
   python3 scripts/auto-doc.py "${AUTODOC_ARGS[@]}"
+fi
+
+# Also trigger Evolution Engine auto-doc (HAS-008)
+if [ -f "evolution/main.py" ]; then
+  info "Triggering Evolution Engine auto-doc..."
+  python3 -m evolution.main --mode generate --prompt "Close session $SPEC_ID: $TITLE" 2>&1 | tail -3
+  ok "Evolution Engine auto-doc done"
 fi
 
 # ═══════════════════════════════════════════════════════════════════════════════
