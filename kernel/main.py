@@ -4,6 +4,7 @@ Central nervous system of the OS.
 Processes requests through Context → Planner → Policy → Router → Executor → Reflector.
 """
 import argparse
+import asyncio
 import json
 import sys
 from pathlib import Path
@@ -67,7 +68,7 @@ class HermesKernel:
 
 async def main():
     parser = argparse.ArgumentParser(description="Hermes Kernel (HAS-004)")
-    parser.add_argument("--mode", choices=["daemon", "once", "health"], default="once")
+    parser.add_argument("--mode", choices=["once", "health"], default="once")
     parser.add_argument("--input", help="JSON input for once mode")
     parser.add_argument("--config", help="Path to kernel config JSON")
     args = parser.parse_args()
@@ -91,12 +92,25 @@ async def main():
         print(json.dumps(results, indent=2))
         return
 
+
+def cli():
+    """CLI entry point."""
+    parser = argparse.ArgumentParser(description="Hermes Kernel (HAS-004)")
+    parser.add_argument("--mode", choices=["daemon", "once", "health"], default="once")
+    parser.add_argument("--input", help="JSON input for once mode")
+    parser.add_argument("--config", help="Path to kernel config JSON")
+    parser.add_argument("--host", default="127.0.0.1", help="Bind address (daemon mode)")
+    parser.add_argument("--port", type=int, default=8000, help="Bind port (daemon mode)")
+    args, _ = parser.parse_known_args()
+
     if args.mode == "daemon":
-        print("[kernel] Daemon mode not yet implemented — use HTTP listener")
-        # TODO: Start HTTP/WebSocket/Redis listeners
+        import uvicorn
+        print(f"[kernel] Starting daemon on {args.host}:{args.port}")
+        uvicorn.run("kernel.app:app", host=args.host, port=args.port, reload=False, log_level="info")
         return
+
+    asyncio.run(main())
 
 
 if __name__ == "__main__":
-    import asyncio
-    asyncio.run(main())
+    cli()

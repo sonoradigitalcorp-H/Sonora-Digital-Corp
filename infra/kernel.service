@@ -1,0 +1,18 @@
+[Unit]
+Description=Hermes Kernel — AI Native Enterprise OS (HAS-004)
+After=network.target docker.service
+Wants=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+Environment=PYTHONPATH=/home/ubuntu/sonora-digital-corp
+ExecStart=/home/ubuntu/hermes-agent/venv/bin/python -m kernel.main --mode daemon --host 127.0.0.1 --port 8000
+Restart=always
+RestartSec=5
+StandardOutput=append:/home/ubuntu/sonora-digital-corp/state/logs/kernel.log
+StandardError=append:/home/ubuntu/sonora-digital-corp/state/logs/kernel.log
+
+[Install]
+WantedBy=multi-user.target

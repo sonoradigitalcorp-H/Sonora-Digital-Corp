@@ -36,3 +36,7 @@ state/events/replay/
 # Collector state (auto-generated, per-machine)
 collectors/state/
 
+# SvelteKit build output
+experience/web/.svelte-kit/
+experience/web/node_modules/
+
