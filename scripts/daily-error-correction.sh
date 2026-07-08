@@ -49,9 +49,10 @@ echo "[$DATE] Git sync..." | tee -a $LOG
 cd ${BASE_DIR}
 git fetch origin 2>/dev/null
 BEHIND=$(git rev-list HEAD..origin/main --count 2>/dev/null)
+AHEAD=$(git rev-list origin/main..HEAD --count 2>/dev/null)
 if [ "$BEHIND" -gt 0 ]; then
-  echo "  Behind by $BEHIND commits. Pulling..." | tee -a $LOG
-  git pull origin main 2>/dev/null
+  echo "  Behind by $BEHIND commits, ahead by $AHEAD. Pulling (--autostash)..." | tee -a $LOG
+  git pull --rebase --autostash origin main 2>/dev/null || echo "  Git pull failed (exit $?). Skipping." >> $LOG
 fi
 
 # 7. Memory save
