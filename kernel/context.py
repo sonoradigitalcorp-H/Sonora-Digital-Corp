@@ -6,6 +6,8 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from kernel.models import HermesContext
+from memory import MemoryRouter, MemoryRef
+from memory.stores import WorkingMemory, BusinessMemory, LongMemory, SemanticMemory, EventMemory, FileMemory
 
 
 REPO = Path(__file__).resolve().parent.parent
@@ -15,6 +17,17 @@ class ContextEngine:
     def __init__(self):
         self._constitution_cache: list[dict] | None = None
         self._session_store: dict[str, list[dict]] = {}
+        self._memory = MemoryRouter()
+        self._init_memory()
+
+    def _init_memory(self):
+        store_dir = REPO / "state" / "memory"
+        self._memory.register("working", WorkingMemory(store_dir))
+        self._memory.register("long", LongMemory())
+        self._memory.register("business", BusinessMemory(REPO / "state" / "business"))
+        self._memory.register("semantic", SemanticMemory(REPO / "state" / "semantic"))
+        self._memory.register("event", EventMemory())
+        self._memory.register("file", FileMemory(REPO / "state" / "files"))
 
     async def build(self, raw: dict) -> HermesContext:
         ctx = HermesContext(
@@ -27,6 +40,7 @@ class ContextEngine:
         )
         ctx.constitution_rules = self._load_constitution()
         ctx.working_memory = self._get_session(ctx.conversation_id)
+        ctx.memory_router = self._memory
         return ctx
 
     def _load_constitution(self) -> list[dict]:

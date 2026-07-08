@@ -6,6 +6,7 @@ import time
 from datetime import datetime, timezone
 
 from kernel.models import ExecutionResult, KernelTask
+from memory import MemoryRef
 
 
 class Executor:
@@ -20,6 +21,16 @@ class Executor:
             result.status = "success"
             result.output = output
             result.model_used = "ollama/qwen3:4b-64k"
+            ctx = getattr(task, "context", None)
+            if ctx and getattr(ctx, "memory_router", None):
+                await ctx.memory_router.store(
+                    MemoryRef(type="working", key=f"task_{task.id}"),
+                    {"input": ctx.input, "output": output, "agent": agent_id, "status": "success"},
+                )
+                await ctx.memory_router.store(
+                    MemoryRef(type="event", key=f"task_{task.id}"),
+                    {"type": "agent.action.executed", "agent": agent_id, "task_id": task.id, "duration_ms": result.duration_ms},
+                )
         except Exception as e:
             result.status = "failure"
             result.error = str(e)
