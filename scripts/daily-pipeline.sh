@@ -45,6 +45,11 @@ fi
 run "Unit tests" python -m pytest tests/unit/ -q --tb=no
 UNIT_RESULT=$?
 
+# ── 2b. Constitution Gate (HAS-001) ─────────
+if [ -f "process/active/PLAN.yaml" ]; then
+  run "Constitution Gate" python3 scripts/constitution-gate.py --plan process/active/PLAN.yaml
+fi
+
 # ── 3. Healthcheck ───────────────────────────
 SERVICES_UP=0
 SERVICES_DOWN=0

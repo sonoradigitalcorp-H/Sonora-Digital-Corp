@@ -26,6 +26,9 @@ cat > "$CRON_FILE" << 'CRONEOF'
 # Memory auto-save cada hora
 0 * * * * cd /home/mystic/sonora-digital-corp && python3 scripts/automation/memory-save.py >> /home/mystic/sonora-digital-corp/state/logs/auto-save.log 2>&1
 
+# Evolution Engine cada 6 horas (HAS-008)
+0 */6 * * * /home/mystic/sonora-digital-corp/scripts/evolution-cron.sh >> /home/mystic/sonora-digital-corp/state/logs/evolution-cron.log 2>&1
+
 # Disk alert
 */10 * * * * df -h / | awk 'NR==2 {if ($5+0 > 85) print "DISK ALERT: "$5}' >> /var/log/disk-alert.log
 CRONEOF
