@@ -15,6 +15,8 @@ from kernel.policy import PolicyEngine
 from kernel.router import AgentRouter
 from kernel.executor import Executor
 from kernel.reflector import Reflector
+from capabilities.bus import CapabilityBus
+from agents.runtime import AgentRuntime
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -29,6 +31,8 @@ class HermesKernel:
         self.executor = Executor()
         self.reflector = Reflector()
         self.config = config or {}
+        self.bus = CapabilityBus()
+        self.agent_runtime = AgentRuntime()
 
     async def process(self, raw_input: dict) -> list[dict]:
         ctx = await self.context.build(raw_input)
@@ -62,6 +66,9 @@ class HermesKernel:
             "context": self.context.get_stats(),
             "executor": self.executor.get_stats(),
             "agents": len(self.router.list_agents()),
+            "agent_runtime": self.agent_runtime.get_stats(),
+            "capabilities": len(self.bus.list_status()),
+            "capability_list": [c["id"] for c in self.bus.list_status()],
             "config": {"max_cost_per_task": self.config.get("max_cost_per_task", 1.0)},
         }
 
