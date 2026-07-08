@@ -1,0 +1,207 @@
+
+# --- merged from truth/90-learned.yaml ---
+version: 1
+domain: learned
+updated: '2026-07-03T23:48:55Z'
+description: "Heur\xEDsticas aprendidas \u2014 autogenerado desde LECCION.md. Siempre\
+  \ override por niveles superiores."
+rules:
+- id: LRN-001
+  type: error_pattern
+  description: Systemd service stuck
+  source: 20260703-enterprise-agentic-os
+  count: 1
+  learned_at: '2026-07-03T23:48:55Z'
+- id: LRN-002
+  type: error_pattern
+  description: Drift scanner ciclo infinito
+  source: 20260703-enterprise-agentic-os
+  count: 1
+  learned_at: '2026-07-03T23:48:55Z'
+- id: LRN-003
+  type: error_pattern
+  description: Log PermissionError
+  source: 20260703-enterprise-agentic-os
+  count: 1
+  learned_at: '2026-07-03T23:48:55Z'
+- id: LRN-004
+  type: error_pattern
+  description: SSH timeout
+  source: 20260703-enterprise-agentic-os
+  count: 1
+  learned_at: '2026-07-03T23:48:55Z'
+- id: LRN-005
+  type: lesson
+  description: "**Siempre probar edge cases en drift_scanner** \u2014 puertos como\
+    \ dict rompen set comprehension"
+  source: 20260703-enterprise-agentic-os
+  count: 1
+  learned_at: '2026-07-03T23:48:55Z'
+- id: LRN-006
+  type: lesson
+  description: "**No confiar en systemctl restart cuando el servicio est\xE1 stuck**\
+    \ \u2014 kill -9 primero"
+  source: 20260703-enterprise-agentic-os
+  count: 1
+  learned_at: '2026-07-03T23:48:55Z'
+- id: LRN-007
+  type: lesson
+  description: "**SSH commands deben ser cortos y con timeout** \u2014 cadenas largas\
+    \ de pipes timeoutan"
+  source: 20260703-enterprise-agentic-os
+  count: 1
+  learned_at: '2026-07-03T23:48:55Z'
+- id: LRN-008
+  type: lesson
+  description: "**Docker container names incluyen prefijo sdc-** \u2014 fleet.yml\
+    \ debe usar nombres reales de docker ps"
+  source: 20260703-enterprise-agentic-os
+  count: 1
+  learned_at: '2026-07-03T23:48:55Z'
+- id: LRN-009
+  type: lesson
+  description: "**HOST vs HOSTNAME en Next.js** \u2014 Next.js 16 usa `-H` flag, no\
+    \ `HOST` env var"
+  source: 20260703-enterprise-agentic-os
+  count: 1
+  learned_at: '2026-07-03T23:48:55Z'
+
+# --- merged from truth/85-compliance.yaml ---
+version: 1
+domain: compliance
+updated: 2026-07-03T16:30:00Z
+rules:
+  - id: COMP-001
+    description: "Enterprise Score ≥ 60 para aprobar cualquier SPEC"
+    category: quality
+    severity: error
+    applies_to: ["all_specs"]
+    enforcement: automated
+    check: "Score calculado en SCORE.md"
+
+  - id: COMP-002
+    description: "JR-Lite 15-Point obligatorio para Tier 2+"
+    category: quality
+    severity: error
+    applies_to: ["all_specs"]
+    enforcement: automated
+    points:
+      - "1. Objetivo claro en 1 línea"
+      - "2. Value Driver identificado"
+      - "3. FR numerados (≥1)"
+      - "4. Success criteria verificables"
+      - "5. Gherkin scenarios (≥2)"
+      - "6. Edge cases documentados"
+      - "7. Enums tipados (si aplica)"
+      - "8. Data classes frozen (si aplica)"
+      - "9. Módulos < 200 líneas"
+      - "10. Dependencias explícitas"
+      - "11. Eventos definidos"
+      - "12. Kill criteria"
+      - "13. Scale criteria"
+      - "14. Docstrings con FR reference"
+      - "15. Score calculado"
+
+  - id: COMP-003
+    description: "Planning Gate obligatorio antes de toda ejecución"
+    category: process
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+  - id: COMP-004
+    description: "Verification Pipeline obligatorio después de toda ejecución"
+    category: process
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+  - id: COMP-005
+    description: "Event Bus obligatorio — toda operación emite evento"
+    category: observability
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+compliance_checks:
+  - name: "pre-commit"
+    gates: ["truth", "security"]
+  - name: "pre-merge"
+    gates: ["truth", "security", "cost"]
+  - name: "scheduled"
+    interval: "24h"
+    gates: ["truth", "security"]
+
+# --- merged from truth/45-execution.yaml ---
+version: 1
+domain: execution
+updated: 2026-07-04T00:00:00Z
+rules:
+  - id: EXEC-001
+    description: "Toda tarea debe tener agent, operation, y priority definidos"
+    category: process
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+  - id: EXEC-002
+    description: "Maximo 2 tareas concurrentes por agente"
+    category: operations
+    severity: error
+    applies_to: ["execution"]
+    enforcement: automated
+
+  - id: EXEC-003
+    description: "Retry backoff: 1s, 5s, 30s, 5min. Max 3 retrys por tarea"
+    category: operations
+    severity: error
+    applies_to: ["execution"]
+    enforcement: automated
+
+  - id: EXEC-004
+    description: "Tareas completadas se limpian despues de 72h"
+    category: operations
+    severity: warning
+    applies_to: ["execution"]
+    enforcement: automated
+
+  - id: EXEC-005
+    description: "Prioridad 0 = normal, 1 = alta, 2 = critica. Mayor numero corre primero"
+    category: process
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+# --- merged from truth/80-operations.yaml ---
+version: 1
+domain: operations
+updated: 2026-07-03T16:30:00Z
+rules:
+  - id: OPS-001
+    description: "Silence = health — no se envían reportes diarios 'all OK' a menos que algo cambie"
+    category: monitoring
+    severity: warning
+    applies_to: ["truth-guardian"]
+    enforcement: automated
+    source: "Policy P6"
+
+  - id: OPS-002
+    description: "Truth Guardian verifica drifts cada 60s — alerta por Telegram si detecta"
+    category: monitoring
+    severity: error
+    applies_to: ["truth-guardian"]
+    enforcement: automated
+
+  - id: OPS-003
+    description: "Backups diarios via systemd timer — incluyen secrets cifrados"
+    category: backup
+    severity: error
+    applies_to: ["infrastructure"]
+    enforcement: automated
+
+  - id: OPS-004
+    description: "Incident response: detect → alert → diagnose → repair → postmortem"
+    category: incident
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: manual
