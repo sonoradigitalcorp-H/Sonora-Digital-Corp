@@ -15,6 +15,7 @@ class HermesContext:
     constitution_rules: list[dict] = field(default_factory=list)
     working_memory: list[dict] = field(default_factory=list)
     created_at: str = ""
+    memory_router: object | None = None
 
 
 @dataclass

@@ -1,0 +1,263 @@
+# Universal Event Bus — Catalog of all event types (HAS-003)
+# Schema: {id, type, version, timestamp, source, tenant, correlation_id, causation_id, subject, payload, metadata}
+version: 2
+updated: 2026-07-08T20:00:00Z
+
+event_schema:
+  required:
+    - id
+    - type
+    - version
+    - timestamp
+    - source
+    - tenant
+    - subject
+  optional:
+    - correlation_id
+    - causation_id
+    - payload
+    - metadata
+
+categories:
+  artist:
+    description: "Artist data operations"
+    events:
+      - type: artist.data_sync.completed
+        version: 1
+        description: "Artist data synced from all providers"
+        subject_type: artist
+        emitted_by: [collector, sync-cron]
+      - type: artist.data_sync.failed
+        version: 1
+        description: "Artist data sync failed"
+        subject_type: artist
+        emitted_by: [collector, sync-cron]
+
+  track:
+    description: "Track lifecycle"
+    events:
+      - type: track.published
+        version: 1
+        description: "Track published to distribution platforms"
+        subject_type: track
+        emitted_by: [publish-capability]
+
+  video:
+    description: "Video generation"
+    events:
+      - type: video.generated
+        version: 1
+        description: "Video generated"
+        subject_type: video
+        emitted_by: [video-agent]
+
+  revenue:
+    description: "Revenue and financial events"
+    events:
+      - type: revenue.updated
+        version: 1
+        description: "Revenue data updated"
+        subject_type: artist
+        emitted_by: [revenue-pipeline]
+
+  campaign:
+    description: "Marketing campaigns"
+    events:
+      - type: campaign.created
+        version: 1
+        description: "Marketing campaign created"
+        subject_type: campaign
+        emitted_by: [marketing-agent]
+
+  agent:
+    description: "Agent lifecycle"
+    events:
+      - type: agent.action.executed
+        version: 1
+        description: "Agent completed an action"
+        subject_type: system
+        emitted_by: [all_agents]
+      - type: agent.started
+        version: 1
+        subject_type: system
+      - type: agent.completed
+        version: 1
+        subject_type: system
+      - type: agent.failed
+        version: 1
+        subject_type: system
+      - type: agent.scored
+        version: 1
+        subject_type: system
+
+  system:
+    description: "System-level events"
+    events:
+      - type: system.error.occurred
+        version: 1
+        description: "System error occurred"
+        subject_type: system
+        emitted_by: [all_services]
+      - type: system.health.check
+        version: 1
+        subject_type: system
+
+  constitution:
+    description: "Constitution gate events"
+    events:
+      - type: constitution.gate.violation
+        version: 1
+        description: "Constitution gate violated"
+        subject_type: system
+        emitted_by: [constitution-engine]
+      - type: constitution.gate.passed
+        version: 1
+        subject_type: system
+
+  evolution:
+    description: "Evolution Engine events"
+    events:
+      - type: evolution.adr.proposed
+        version: 1
+        description: "Evolution Engine proposes an ADR"
+        subject_type: system
+        emitted_by: [evolution-engine]
+      - type: evolution.improvement_proposed
+        version: 1
+      - type: evolution.simulated
+        version: 1
+      - type: evolution.implemented
+        version: 1
+      - type: evolution.measured
+        version: 1
+
+  memory:
+    description: "Memory system events (HAS-002)"
+    events:
+      - type: memory.stored
+        version: 1
+        description: "Data stored in memory"
+        subject_type: system
+      - type: memory.retrieved
+        version: 1
+        description: "Data retrieved from memory"
+        subject_type: system
+      - type: memory.searched
+        version: 1
+        subject_type: system
+      - type: memory.deleted
+        version: 1
+        subject_type: system
+      - type: memory.error
+        version: 1
+        subject_type: system
+
+  session:
+    description: "Session lifecycle"
+    events:
+      - type: session.started
+        version: 1
+      - type: session.ended
+        version: 1
+      - type: session.checkpoint
+        version: 1
+
+  plan:
+    description: "Planning events"
+    events:
+      - type: plan.created
+        version: 1
+      - type: plan.approved
+        version: 1
+      - type: plan.rejected
+        version: 1
+      - type: plan.decomposed
+        version: 1
+
+  spec:
+    description: "Spec lifecycle"
+    events:
+      - type: spec.created
+        version: 1
+      - type: spec.updated
+        version: 1
+      - type: spec.scored
+        version: 1
+      - type: spec.completed
+        version: 1
+
+  code:
+    description: "Code events"
+    events:
+      - type: code.generated
+        version: 1
+      - type: code.reviewed
+        version: 1
+      - type: code.tested
+        version: 1
+
+  build:
+    description: "Build and deployment"
+    events:
+      - type: build.started
+        version: 1
+      - type: build.completed
+        version: 1
+      - type: build.failed
+        version: 1
+
+  deploy:
+    description: "Deployment lifecycle"
+    events:
+      - type: deploy.started
+        version: 1
+      - type: deploy.completed
+        version: 1
+      - type: deploy.rolled_back
+        version: 1
+
+  security:
+    description: "Security events"
+    events:
+      - type: security.policy_violation
+        version: 1
+      - type: security.access_denied
+        version: 1
+      - type: security.secret_rotated
+        version: 1
+
+  cost:
+    description: "Cost events"
+    events:
+      - type: cost.estimated
+        version: 1
+      - type: cost.incurred
+        version: 1
+      - type: cost.over_budget
+        version: 1
+
+  gate:
+    description: "Pipeline gate events"
+    events:
+      - type: gate.passed
+        version: 1
+      - type: gate.failed
+        version: 1
+      - type: gate.error
+        version: 1
+
+  eventbus:
+    description: "Event Bus lifecycle"
+    events:
+      - type: eventbus.migrated
+        version: 1
+      - type: eventbus.rotated
+        version: 1
+
+  module:
+    description: "Module lifecycle (within a SPEC)"
+    events:
+      - type: module.started
+        version: 1
+      - type: module.completed
+        version: 1
