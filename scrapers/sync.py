@@ -315,5 +315,10 @@ def run_sync_cycle():
     return asyncio.run(_async_sync_cycle())
 
 
+def sync_artist(artist_id: str) -> dict:
+    """Synchronous wrapper for async single-artist sync."""
+    return asyncio.run(sync_artist_async(artist_id))
+
+
 if __name__ == "__main__":
     run_sync_cycle()
