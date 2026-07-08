@@ -72,6 +72,6 @@
     "strategy": { "description": "Strategy OS — score, planificación", "template": "Carga Strategy OS: revisa enterprise score, iniciativas activas", "agent": "mystic" },
     "doc": { "description": "Auto-Doc — genera docs de proceso", "template": "Genera documentacion de proceso siguiendo templates de process/templates/", "agent": "mystic" },
     "plan": { "description": "Planning Gate — descompone objetivo en tareas y genera PLAN.yaml", "template": "Ejecuta plan-gate.py con el objetivo especificado: descomponer en tareas, estimar costo, validar contra truth/. Si no hay objetivo claro, pedir descomposicion primero." },
-    "verify": { "description": "Verification Pipeline — ejecuta truth gate, security gate, cost gate", "template": "Ejecuta verify-gate.py contra el plan activo: truth gate (contradice truth/), security gate (capabilities), cost gate (budget). Reporta resultados." }
+    "verify": { "description": "Constitution Gate — 6 gates: policy, security, cost, compliance, quality, knowledge (HAS-001)", "template": "Ejecuta constitution-gate.py contra el plan activo: policy gate (bind/events), security gate (secrets/network), cost gate (budget), compliance gate (agents/tiers), quality gate (tests/coverage), knowledge gate (learnings). Reporta resultados." }
   }
 }

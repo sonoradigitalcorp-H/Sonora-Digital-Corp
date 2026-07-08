@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Valida todos los truth/ YAML files — schema, conflictos, integridad [FR12]"""
+"""Valida todos los constitution/ YAML files — schema, conflictos, integridad (HAS-001)"""
 import sys
 import yaml
 from pathlib import Path
 
-TRUTH_DIR = Path(__file__).resolve().parent.parent / "truth"
+TRUTH_DIR = Path(__file__).resolve().parent.parent / "constitution"
 errors = []
 warnings = []
 

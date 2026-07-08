@@ -95,21 +95,24 @@ jobs:
           fi
           echo "✓ Score $SCORE/100 passes threshold (≥60)"
 
-      - name: Truth Validation
+      - name: Constitution Validation (HAS-001)
         run: |
           if [ -f "scripts/validate-truth.py" ]; then
             python3 scripts/validate-truth.py
           else
-            echo "ℹ No truth validation script found"
+            echo "ℹ No constitution validation script found"
           fi
 
-      - name: Verify Gate (Truth + Security + Cost)
+      - name: Constitution Gate — 6 Gates (HAS-001)
         if: steps.detect-tier.outputs.tier2 == 'true'
         run: |
-          if [ -f "scripts/verify-gate.py" ] && [ -f "process/active/PLAN.yaml" ]; then
+          if [ -f "scripts/constitution-gate.py" ] && [ -f "process/active/PLAN.yaml" ]; then
+            python3 scripts/constitution-gate.py --plan process/active/PLAN.yaml
+          elif [ -f "scripts/verify-gate.py" ] && [ -f "process/active/PLAN.yaml" ]; then
+            echo "⚠ Fallback to legacy verify-gate.py"
             python3 scripts/verify-gate.py
           else
-            echo "ℹ No plan or verify-gate found — skipping"
+            echo "ℹ No plan or constitution-gate found — skipping"
           fi
 
       - name: Event Emission Check

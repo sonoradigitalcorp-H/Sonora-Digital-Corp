@@ -1,0 +1,68 @@
+# Agent Registry Index — HAS-006
+version: 1
+updated: 2026-07-08
+source: agents/registry.yaml
+
+agents:
+  - id: mystic
+    role: primary-operator
+    class: HermesAgent
+    status: active
+
+  - id: hermes
+    role: gateway
+    class: HermesAgent
+    status: active
+
+  - id: builder
+    role: executor
+    class: HermesAgent
+    status: active
+
+  - id: auditor
+    role: compliance
+    class: HermesAgent
+    status: active
+
+  - id: reviewer
+    role: quality
+    class: HermesAgent
+    status: active
+
+  - id: researcher
+    role: discovery
+    class: HermesAgent
+    status: active
+
+  - id: architect
+    role: architecture
+    class: HermesAgent
+    status: active
+    description: "Designs system architecture and validates HAS compliance"
+    capabilities: ["read.code", "read.docs", "write.architecture", "validate.has"]
+    model: "ollama/deepseek-r1:7b-64k"
+
+  - id: devops
+    role: infrastructure
+    class: HermesAgent
+    status: active
+
+  - id: sales
+    role: business
+    class: HermesAgent
+    status: active
+
+  - id: process-doc
+    role: documentation
+    class: HermesAgent
+    status: active
+
+  - id: execution
+    role: scheduler
+    class: HermesAgent
+    status: active
+
+  - id: evolution
+    role: self-improvement
+    class: HermesAgent
+    status: active
