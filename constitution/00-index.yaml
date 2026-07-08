@@ -1,0 +1,69 @@
+version: 1
+domain: index
+updated: 2026-07-08T19:44:59Z
+description: "Hermes Constitution — single source of organizational truth"
+files:
+  - file: "00-index.yaml"
+    domain: index
+    level: 0
+    description: "Catalog and versioning of constitution files"
+  - file: "01-mission.yaml"
+    domain: mission
+    level: 0
+    description: "Mission statement, north star, purpose"
+  - file: "02-vision.yaml"
+    domain: vision
+    level: 0
+    description: "Long-term vision and success criteria"
+  - file: "10-principles.yaml"
+    domain: principles
+    level: 0
+    description: "Immutable principles — never change"
+  - file: "20-engineering.yaml"
+    domain: engineering
+    level: 2
+    description: "Engineering standards, methodology, code conventions"
+  - file: "30-architecture.yaml"
+    domain: architecture
+    level: 1
+    description: "Architectural decisions, patterns, network policies"
+  - file: "40-security.yaml"
+    domain: security
+    level: 1
+    description: "Secrets, encryption, access, compliance"
+  - file: "50-quality.yaml"
+    domain: quality
+    level: 2
+    description: "Quality standards, test coverage, linting"
+  - file: "60-agents.yaml"
+    domain: agents
+    level: 2
+    description: "Agent behavior rules, capability boundaries"
+  - file: "70-memory.yaml"
+    domain: memory
+    level: 3
+    description: "Memory policies, retention, privacy"
+  - file: "80-events.yaml"
+    domain: events
+    level: 3
+    description: "Event schemas, required fields, catalog"
+  - file: "90-governance.yaml"
+    domain: governance
+    level: 1
+    description: "Constitution Engine gates, policies, audits, lessons"
+  - file: "100-cost.yaml"
+    domain: cost
+    level: 3
+    description: "Cost policies, budgets, model routing"
+  - file: "110-brand.yaml"
+    domain: brand
+    level: 4
+    description: "Brand guidelines, tone, visual identity"
+  - file: "120-ux.yaml"
+    domain: ux
+    level: 4
+    description: "UX principles, Orb states, interaction rules"
+  - file: "130-ethics.yaml"
+    domain: ethics
+    level: 4
+    description: "Ethical boundaries, content policies"

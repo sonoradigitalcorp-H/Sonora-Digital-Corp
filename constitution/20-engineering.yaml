@@ -1,0 +1,208 @@
+
+# --- merged from truth/70-documentation.yaml ---
+version: 1
+domain: documentation
+updated: 2026-07-03T16:30:00Z
+rules:
+  - id: DOC-001
+    description: "Toda sesión con cambios (no solo consulta) genera directorio en process/completed/"
+    category: process
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+    source: "CONDUCT.md"
+
+  - id: DOC-002
+    description: "Tier 2 requiere: SPEC.md, SCORE.md, gherkin, ADR.md, events.jsonl, LECCION.md"
+    category: process
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+  - id: DOC-003
+    description: "Tier 3 requiere: VDD→EDD→PDD→ODD→SDD→BDD→TDD + ADR + events + LECCION"
+    category: process
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+  - id: DOC-004
+    description: "auto-doc.py genera SPEC.md, SCORE.md, ADR.md, LECCION.md, events.jsonl, gherkin/ desde AGENTS.md"
+    category: automation
+    severity: warning
+    applies_to: ["mystic"]
+    enforcement: automated
+
+  - id: DOC-005
+    description: "No crear archivos README.md ni .md documentation a menos que el usuario lo pida explícitamente"
+    category: style
+    severity: warning
+    applies_to: ["all_agents"]
+    enforcement: review
+
+generated_docs:
+  per_feature:
+    - "SPEC.md"
+    - "SCORE.md"
+    - "ADR.md"
+    - "events.jsonl"
+    - "gherkin/"
+    - "LECCION.md"
+
+# --- merged from truth/60-git.yaml ---
+version: 1
+domain: git
+updated: 2026-07-08T19:30:00Z
+rules:
+  - id: GIT-001
+    description: "No commits sin SPEC activa — pre-commit hook bloquea"
+    category: process
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+    check: "pre-commit hook"
+
+  - id: GIT-002
+    description: "Mensajes de commit: verb in imperative + breve descripción"
+    category: style
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: review
+    format: "tipo(scope): mensaje"
+    examples:
+      - "feat(guardian): add drift scanner"
+      - "fix(events): handle rotation edge case"
+      - "docs(spec): add FR21-FR24"
+
+  - id: GIT-003
+    description: "No forzar push (--force) — siempre --force-with-lease"
+    category: safety
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+  - id: GIT-004
+    description: "Secrets nunca se commitan — .gitignore lo enforce"
+    category: security
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+  - id: GIT-005
+    description: "Por cada SPEC completada, git tag con el ID"
+    category: process
+    severity: warning
+    applies_to: ["all_agents"]
+    enforcement: manual
+
+  - id: GIT-006
+    description: "Antes de empezar a trabajar, correr git-sync.sh — sincroniza con origin/main"
+    category: process
+    severity: error
+    applies_to: ["all_agents", "luis_daniel", "noel"]
+    enforcement: semi-automated
+    detail: |
+      git-sync.sh verifica:
+        1. No hay rebase/merge interrumpido
+        2. No hay archivos dirty sin commit
+        3. Estamos alineados con origin/main (ni ahead ni behind)
+      Si hay divergencia, pregunta al usuario cómo resolverla (merge vs rebase vs abort).
+
+  - id: GIT-007
+    description: "Nunca dejar un rebase o merge a medias — si se interrumpe, resolver antes de seguir"
+    category: safety
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+    detail: |
+      daily-error-correction.sh aborta automáticamente cualquier rebase
+      que haya estado pausado >30 minutos.
+      Cualquier operación git que quede en estado inconsistent
+      debe resolverse inmediatamente — no se permite trabajar con el repo en estado inestable.
+
+  - id: GIT-008
+    description: "Preferir merge sobre rebase para integrar cambios de origin/main"
+    category: operations
+    severity: warning
+    applies_to: ["all_agents"]
+    enforcement: automated
+    detail: |
+      Rebase reescribe la historia y puede causar conflictos difíciles de resolver.
+      Merge preserva la historia real y es más seguro en entornos multi-usuario.
+      Solo usar rebase para limpiar commits locales ANTES de pushear (nunca después).
+      El script daily-error-correction.sh usa merge, no rebase.
+
+  - id: GIT-009
+    description: "Noel y Luis Daniel deben hacer git pull (merge) ANTES de empezar a trabajar cada día"
+    category: operations
+    severity: error
+    applies_to: ["luis_daniel", "noel"]
+    enforcement: manual
+    detail: |
+      git-sync.sh se encarga de esto automáticamente.
+      Si alguien trabajó sin sincronizar primero y causa divergencia:
+        1. Correr git-sync.sh inmediatamente
+        2. Decidir si merge o rebase según el caso
+        3. NO seguir trabajando hasta que el repo esté estable
+
+  - id: GIT-010
+    description: "Push automático al cerrar sesión — close-session.sh hace git push"
+    category: process
+    severity: warning
+    applies_to: ["all_agents"]
+    enforcement: automated
+    detail: |
+      close-session.sh corre tests → docs → commit → push.
+      Si el push falla por divergencia, close-session.sh aborta y pide correr git-sync.sh primero.
+      Esto asegura que nunca se pierdan cambios locales ni se sobrescriban cambios remotos.
+
+# --- merged from truth/50-coding.yaml ---
+version: 1
+domain: coding
+updated: 2026-07-03T16:30:00Z
+rules:
+  - id: CODE-001
+    description: "No comentarios en código — el código debe ser auto-documentado"
+    category: style
+    severity: warning
+    applies_to: ["python", "javascript"]
+    enforcement: review
+
+  - id: CODE-002
+    description: "Máximo 3 oraciones por respuesta al usuario — directo, sin explicaciones"
+    category: communication
+    severity: error
+    applies_to: ["all_agents"]
+    enforcement: automated
+
+  - id: CODE-003
+    description: "No emojis en archivos de código — solo en comunicación si el usuario lo pide"
+    category: style
+    severity: warning
+    applies_to: ["all_agents"]
+    enforcement: review
+
+  - id: CODE-004
+    description: "Usar funciones con DOCSTRING que referencia FR correspondiente"
+    category: documentation
+    severity: warning
+    applies_to: ["python"]
+    enforcement: review
+
+model_routing:
+  description: "100% local Ollama — sin dependencia externa"
+  code_generation: "ollama/qwen3:4b-64k"
+  architecture_design: "ollama/deepseek-r1:7b-64k"
+  code_review: "ollama/llama3.2:3b-64k"
+  documentation: "ollama/qwen3:1.7b-32k"
+  research: "ollama/deepseek-r1:7b-64k"
+  security_audit: "ollama/deepseek-r1:7b-64k"
+  planning: "ollama/qwen3:4b-64k"
+  verification: "ollama/llama3.2:3b-64k"
+  embeddings: "ollama/nomic-embed-text"
+  cost_optimization: true
+
+testing:
+  framework: pytest
+  required_coverage: 80
+  ci_command: "pytest tests/ -q && ruff check apps/ scripts/"
