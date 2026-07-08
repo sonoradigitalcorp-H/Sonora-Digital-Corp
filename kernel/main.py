@@ -117,7 +117,7 @@ def cli():
     parser.add_argument("--input", help="JSON input for once mode")
     parser.add_argument("--config", help="Path to kernel config JSON")
     parser.add_argument("--host", default="127.0.0.1", help="Bind address (daemon mode)")
-    parser.add_argument("--port", type=int, default=8000, help="Bind port (daemon mode)")
+    parser.add_argument("--port", type=int, default=8001, help="Bind port (daemon mode)")
     args, _ = parser.parse_known_args()
 
     if args.mode == "daemon":

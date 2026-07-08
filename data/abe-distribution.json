@@ -983,6 +983,30 @@
       "revenue": 0.0,
       "created_at": "2026-07-08T21:06:27.512285+00:00",
       "released_at": "2026-07-08T21:06:27.513211+00:00"
+    },
+    "c0c86a1e": {
+      "id": "c0c86a1e",
+      "artist_id": "artist-1",
+      "title": "Test Song",
+      "type": "single",
+      "genre": "Pop",
+      "upc": "ABEC0C86A1E",
+      "isrc": "MXC0C86A1E00001",
+      "platforms": [
+        "spotify",
+        "apple_music",
+        "deezer",
+        "amazon_music",
+        "youtube_music",
+        "tidal",
+        "pandora",
+        "claro_musica"
+      ],
+      "status": "published",
+      "streams": 0,
+      "revenue": 0.0,
+      "created_at": "2026-07-08T21:11:41.128392+00:00",
+      "released_at": "2026-07-08T21:11:41.129424+00:00"
     }
   }
 }

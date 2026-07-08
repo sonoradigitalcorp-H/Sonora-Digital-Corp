@@ -18,16 +18,20 @@ export type KernelResponse = {
   output?: Record<string, unknown>;
 };
 
+type StateCallback = (msg: KernelMessage) => void;
+type ResultCallback = (result: KernelResponse) => void;
+type ErrorCallback = (err: string) => void;
+
 export class KernelClient {
   private ws: WebSocket | null = null;
   private url: string;
-  private onState: ((msg: KernelMessage) => void) | null = null;
-  private onResult: ((result: KernelResponse) => void) | null = null;
-  private onError: ((err: string) => void) | null = null;
+  private onStateCb: StateCallback | null = null;
+  private onResultCb: ResultCallback | null = null;
+  private onErrorCb: ErrorCallback | null = null;
   private reconnectTimer: ReturnType<typeof setTimeout> | null = null;
-  private connected = $state(false);
+  private _connected = false;
 
-  constructor(url = 'ws://localhost:8000/kernel/ws') {
+  constructor(url = 'ws://localhost:8001/kernel/ws') {
     this.url = url;
   }
 
@@ -35,15 +39,15 @@ export class KernelClient {
     if (this.ws?.readyState === WebSocket.OPEN) return;
     try {
       this.ws = new WebSocket(this.url);
-      this.ws.onopen = () => { this.connected = true; };
-      this.ws.onclose = () => { this.connected = false; this.scheduleReconnect(); };
-      this.ws.onerror = () => { this.connected = false; this.onError?.('WebSocket error'); };
+      this.ws.onopen = () => { this._connected = true; };
+      this.ws.onclose = () => { this._connected = false; this.scheduleReconnect(); };
+      this.ws.onerror = () => { this._connected = false; this.onErrorCb?.('WebSocket error'); };
       this.ws.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
-          if (data.type === 'orb.state') this.onState?.(data as KernelMessage);
-          else this.onResult?.(data as KernelResponse);
-        } catch { this.onError?.('Invalid message'); }
+          if (data.type === 'orb.state') this.onStateCb?.(data as KernelMessage);
+          else this.onResultCb?.(data as KernelResponse);
+        } catch { this.onErrorCb?.('Invalid message'); }
       };
     } catch { this.scheduleReconnect(); }
   }
@@ -53,9 +57,9 @@ export class KernelClient {
     this.ws.send(JSON.stringify({ input, channel: 'web', timestamp: new Date().toISOString() }));
   }
 
-  onStateChange(cb: (msg: KernelMessage) => void) { this.onState = cb; }
-  onResult(cb: (result: KernelResponse) => void) { this.onResult = cb; }
-  onError(cb: (err: string) => void) { this.onError = cb; }
+  onStateChange(cb: StateCallback) { this.onStateCb = cb; }
+  onResult(cb: ResultCallback) { this.onResultCb = cb; }
+  onError(cb: ErrorCallback) { this.onErrorCb = cb; }
 
   private scheduleReconnect() {
     if (this.reconnectTimer) return;
@@ -69,8 +73,8 @@ export class KernelClient {
     if (this.reconnectTimer) clearTimeout(this.reconnectTimer);
     this.ws?.close();
     this.ws = null;
-    this.connected = false;
+    this._connected = false;
   }
 
-  get isConnected() { return this.connected; }
+  get isConnected() { return this._connected; }
 }
