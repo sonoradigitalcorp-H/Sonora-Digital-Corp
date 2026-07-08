@@ -1,85 +1,148 @@
 #!/usr/bin/env python3
 """Evolution Engine — HAS-008
-Observe → Score → Propose → Generate → Update (every 6h via cron)
+8-module pipeline: Observe → Score → Detect → Propose → Generate → Update → Reflect
 """
 import argparse
 import json
 import sys
 from pathlib import Path
 
+from evolution.observer import collect
+from evolution.scorecard import calculate, save, load
+from evolution.error_detector import detect
+from evolution.proposer import propose as run_propose
+from evolution.adr_generator import generate as gen_adr
+from evolution.prompt_updater import update as update_prompts
+from evolution.auto_doc import generate as gen_docs
+from evolution.reflector import reflect
+
 
 REPO = Path(__file__).resolve().parent.parent
-SCORECARD = REPO / "evolution" / "scorecard.json"
 
 
-def observe():
-    """Stage 1: Collect metrics from all subsystems."""
+def run_observe():
     print("[observe] Collecting metrics...")
-    return {"agents": 0, "capabilities": 0, "tests": 0, "violations": 0}
+    metrics = collect()
+    for k, v in metrics.items():
+        print(f"  {k}: {v}")
+    return metrics
 
 
-def score():
-    """Stage 2: Score overall health (0-100)."""
-    data = observe()
-    s = min(100, max(0, 50
-        + data["agents"] * 2
-        + data["capabilities"] * 3
-        + data["tests"] * 1
-        - data["violations"] * 5
-    ))
-    with open(SCORECARD) as f:
-        card = json.load(f)
-    card["overall"] = s
-    card["updated"] = "2026-07-08T20:00:00Z"  # TODO: dynamic timestamp
-    with open(SCORECARD, "w") as f:
-        json.dump(card, f, indent=2)
-    print(f"[score] Overall: {s}/100")
-    return s
+def run_score(metrics):
+    print("[score] Calculating score...")
+    s = calculate(metrics)
+    card = save(s, metrics)
+    print(f"  Overall: {s}/100")
+    return card
 
 
-def propose():
-    """Stage 3: Generate proposals if score < 70."""
-    with open(SCORECARD) as f:
-        card = json.load(f)
-    s = card.get("overall", 100)
-    if s >= 70:
-        print(f"[propose] Score {s} >= 70. No proposals needed.")
-        return
-    print(f"[propose] Score {s} < 70. Generating improvement proposals...")
-    # TODO: analyze subsystems, create ADR proposals
+def run_detect(metrics):
+    print("[detect] Checking for issues...")
+    issues = detect(metrics)
+    if issues:
+        for issue in issues:
+            print(f"  [{issue['severity']}] {issue['subsystem']}: {issue['message']}")
+    else:
+        print("  No issues detected")
+    return issues
 
 
-def generate(prompt=None):
-    """Stage 4: Generate ADR from proposal."""
-    print("[generate] Generating ADR...")
-    # TODO: produce ADR file in evolution/prompts/
+def run_propose_phase(metrics, issues):
+    print("[propose] Generating improvement proposals...")
+    proposals = run_propose(metrics, issues)
+    if proposals:
+        for p in proposals:
+            print(f"  {p['id']}: {p['title']} (impact={p['impact']}, effort={p['effort']})")
+    else:
+        print("  No proposals generated")
+    return proposals
 
 
-def update():
-    """Stage 5: Apply auto-updates."""
-    print("[update] Applying auto-updates...")
-    # TODO: apply accepted proposals
+def run_generate(proposals):
+    print("[generate] Generating ADRs...")
+    for p in proposals:
+        p["status"] = "accepted"
+        path = gen_adr(p)
+        if path:
+            print(f"  ADR generated: {path}")
+
+
+def run_update(proposals):
+    print("[update] Updating prompts...")
+    for p in proposals:
+        updated = update_prompts(p)
+        for u in updated:
+            print(f"  Updated: {u}")
+
+
+def run_docs(spec_id, title, tier, summary):
+    print("[auto-doc] Generating documentation...")
+    path = gen_docs(spec_id, title, tier, summary)
+    print(f"  Generated: {path}")
+    return path
+
+
+def run_reflect(metrics, issues, proposals):
+    print("[reflect] Meta-cognition...")
+    result = reflect(metrics, issues, proposals)
+    print(f"  Health: {result['system_health']}")
+    for rec in result.get("recommendations", []):
+        print(f"  → {rec}")
+    return result
 
 
 def main():
     parser = argparse.ArgumentParser(description="Evolution Engine (HAS-008)")
-    parser.add_argument("--mode", choices=["check", "observe", "score", "propose", "generate", "update", "full"],
+    parser.add_argument("--mode", choices=["check", "observe", "score", "detect", "propose",
+                                            "generate", "update", "auto-doc", "reflect", "full"],
                         default="check", help="Evolution mode")
-    parser.add_argument("--prompt", help="Prompt for generate mode")
+    parser.add_argument("--spec-id", default="SPEC-auto", help="Spec ID for auto-doc")
+    parser.add_argument("--title", default="Evolution Engine", help="Title for auto-doc")
+    parser.add_argument("--tier", type=int, default=2, help="Tier for auto-doc")
+    parser.add_argument("--summary", default="", help="Summary for auto-doc")
     args = parser.parse_args()
 
-    if args.mode == "check" or args.mode == "full":
-        score()
-    if args.mode == "observe":
-        observe()
-    if args.mode == "score":
-        score()
-    if args.mode == "propose":
-        propose()
-    if args.mode == "generate":
-        generate(args.prompt)
-    if args.mode == "update":
-        update()
+    if args.mode == "full":
+        metrics = run_observe()
+        card = run_score(metrics)
+        issues = run_detect(metrics)
+        proposals = run_propose_phase(metrics, issues)
+        run_generate(proposals)
+        run_update(proposals)
+        run_reflect(metrics, issues, proposals)
+    elif args.mode == "check":
+        card = load()
+        print(f"[check] Current score: {card.get('overall', 'N/A')}/100")
+    elif args.mode == "observe":
+        run_observe()
+    elif args.mode == "score":
+        metrics = run_observe()
+        run_score(metrics)
+    elif args.mode == "detect":
+        metrics = run_observe()
+        run_detect(metrics)
+    elif args.mode == "propose":
+        metrics = run_observe()
+        issues = run_detect(metrics)
+        run_propose_phase(metrics, issues)
+    elif args.mode == "generate":
+        proposals_dir = REPO / "evolution" / "proposals"
+        if proposals_dir.exists():
+            for f in sorted(proposals_dir.glob("*.json")):
+                p = json.loads(f.read_text())
+                p["status"] = "accepted"
+                path = gen_adr(p)
+                if path:
+                    print(f"  ADR: {path}")
+    elif args.mode == "update":
+        run_update([])
+    elif args.mode == "auto-doc":
+        run_docs(args.spec_id, args.title, args.tier, args.summary)
+    elif args.mode == "reflect":
+        metrics = run_observe()
+        issues = run_detect(metrics)
+        run_reflect(metrics, issues, [])
+
     print(f"[done] Evolution mode={args.mode}")
 
 

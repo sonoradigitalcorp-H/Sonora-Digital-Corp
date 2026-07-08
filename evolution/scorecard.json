@@ -1,1 +1,22 @@
-{"overall": 0, "by_dimension": {}, "updated": "2026-07-08T20:00:00Z"}
+{
+  "overall": 54,
+  "by_dimension": {
+    "observability": true,
+    "test_health": false,
+    "coverage": false
+  },
+  "metrics": {
+    "agents": 11,
+    "capabilities": 1,
+    "constitution_files": 16,
+    "constitution_rules": 64,
+    "tests_passed": 0,
+    "tests_total": 0,
+    "violations": 0,
+    "memory_count": 0,
+    "events_count": 488,
+    "git_ahead": 0,
+    "git_behind": 0
+  },
+  "updated": "2026-07-08T20:00:00Z"
+}
