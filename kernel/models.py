@@ -16,6 +16,7 @@ class HermesContext:
     working_memory: list[dict] = field(default_factory=list)
     created_at: str = ""
     memory_router: object | None = None
+    tenant_manager: object | None = None
 
 
 @dataclass
