@@ -2,7 +2,8 @@
 
 **One truth**: `sonora-enterprise-os/constitution/OMEGA-PROMPT-v10.0.md`
 **Soul**: `sonora-enterprise-os/constitution/SOUL.md`
-**Governance**: VDD → EDD → PDD → ODD → SDD → BDD → TDD
+**Governance**: HAS-007 Pipeline (Mission → Constitution → Research → Architecture → Simulation → Specification → Implementation → Verification → Observability → Evolution)
+**Architecture**: HAS-000 through HAS-011 in `process/has/`
 
 ---
 
@@ -58,10 +59,14 @@ Luego `ssh sdc-prod` forwards automático. Abrir `http://localhost:8080/` en lap
 | `platforms/whatsapp/` | Bridge |
 | `infra/` | Docker, compose, monitoreo, n8n |
 | `products/` | ABE Music, AZREC, Masterclass |
-| `tests/` | 78 tests (truth 10 + collectors 17 + execution 24 + evolution 19 + ABE 9) |
-| `scripts/` | 50+ DevOps + `close-session.sh` (auto cleanup) |
+| `tests/` | 78 tests (constitution 10 + collectors 17 + execution 24 + evolution 19 + ABE 9) |
+| `scripts/` | 50+ DevOps + `close-session.sh` (auto cleanup) + `constitution-gate.py` (HAS-001) + `evolution-cron.sh` (HAS-008) |
+| `process/has/` | **Hermes Architecture Standard** — 11 specs (HAS-000 through HAS-011) |
 | `process/completed/SPEC-20260701-004/` | Capability Registry + Decision Engine (Score 77) |
 | `process/completed/20260701-live-data-pipeline/` | Live Data Pipeline (Score 84) |
+| `constitution/` | 16 YAML files — source of truth (migrated from truth/) |
+| `truth/ → constitution/` | Backward-compat symlink |
+| `evolution/` | Evolution Engine (HAS-008) — observe, score, propose, generate |
 | `sonora-enterprise-os/` | Enterprise OS completo |
 
 ## Comandos
@@ -71,10 +76,12 @@ PYTHONPATH=. python3 -m pytest tests/ -q          # all tests (78+)
 PYTHONPATH=. python3 -m pytest tests/test_execution.py -v  # Execution (24)
 PYTHONPATH=. python3 -m pytest tests/test_evolution.py -v  # Evolution (19)
 PYTHONPATH=. python3 -m pytest tests/test_collectors/ -v   # Collectors (17)
-PYTHONPATH=. python3 -m pytest tests/test_truth.py -v      # Truth (10)
+PYTHONPATH=. python3 -m pytest tests/test_constitution.py -v  # Constitution (10)
 PYTHONPATH=. python3 -m pytest tests/test_abe_service.py -v  # ABE (9)
-ruff check apps/ collectors/ tests/ truth/  # lint
-python3 scripts/close-session.sh --dry-run   # test close flow
+ruff check apps/ collectors/ tests/ constitution/  # lint
+python3 scripts/constitution-gate.py --plan PLAN.yaml  # 6-gate constitution check
+python3 scripts/evolution-cron.sh                   # Evolution Engine cron
+python3 scripts/close-session.sh --dry-run          # test close flow
 docker compose -f infra/docker-compose.yml up -d
 python -m uvicorn apps.abe-service.main:app --host 127.0.0.1 --port 5180  # ABE Service
 ```
@@ -226,7 +233,9 @@ Arquitectura de 3 fases implementada: Foundations (A), Kernel Separation (B), In
 ### Directorios clave
 | Ruta | Qué es |
 |------|--------|
-| `truth/` | 12 archivos YAML, 46+ reglas — fuente única de verdad |
+| `process/has/` | **Hermes Architecture Standard** — 11 specs (HAS-000 through HAS-011) |
+| `constitution/` | 16 archivos YAML, Niveles 0-5 — fuente única de verdad (HAS-001) |
+| `truth/ → constitution/` | Backward-compat symlink |
 | `agents/registry.yaml` | 11 agentes con capabilities explícitas |
 | `agents/capabilities/` | 8 definiciones de capabilities |
 | `agents/policies/` | 7 policies (deny-all por defecto) |
@@ -248,8 +257,11 @@ Arquitectura de 3 fases implementada: Foundations (A), Kernel Separation (B), In
 | Comando | Qué hace |
 |---------|----------|
 | `/plan` | Planning Gate: descompone objetivo en tareas |
-| `/verify` | Verification Pipeline: 3 gates (truth/security/cost) |
+| `/verify` | Constitution Gate: 6 gates (policy/security/cost/compliance/quality/knowledge) — `scripts/constitution-gate.py` |
+| `/evolve` | Evolution Engine: `python3 -m evolution.main --mode full` |
 | `python3 scripts/check-capability.py <agent> <cap>` | Verifica capability |
+| `python3 scripts/constitution-gate.py --plan PLAN.yaml` | 6-gate constitution check (HAS-001) |
+| `python3 scripts/evolution-cron.sh` | Evolution Engine every 6h (HAS-008) |
 
 ### API (Truth Guardian, :8088)
 | Endpoint | Respuesta |
@@ -274,7 +286,18 @@ Arquitectura de 3 fases implementada: Foundations (A), Kernel Separation (B), In
 
 ### Enterprise Score actual: 88/100
 
-### Última sesión: 2026-07-04 — ECA Fase 1
+### Última sesión: 2026-07-08 — Hermes Architecture Standard (HAS)
+- 11 HAS specification files creados (HAS-000 through HAS-011) en `process/has/`
+- `truth/` → `constitution/` migration completada (16 YAMLs, symlink, 20 tests verdes)
+- `scripts/constitution-gate.py` — 6-gate replacement for verify-gate.py (HAS-001)
+- `scripts/evolution-cron.sh` + `evolution/main.py` — Evolution Engine stub (HAS-008)
+- `process/CONDUCT.md` actualizado con HAS-007 pipeline
+- `scripts/close-session.sh` actualizado con Evolution Engine auto-doc
+- `AGENTS.md` actualizado con HAS architecture, constitution dir, pipeline v2
+- Capabilities scaffold: `capabilities/index.yaml` + `sync-artist-data/` primer capability
+- Git push history: `3df0d48` → `5fe15fb` → `ff0171d` + pending commit
+
+### Sesión anterior: 2026-07-04 — ECA Fase 1
 - 40 archivos nuevos, 15 movidos, 0 borrados
 - 78 tests (5 suites), 0 fallos
 - Stack Lock, Vercel Secrets, GitHub Pages, 7 niveles cognitivos

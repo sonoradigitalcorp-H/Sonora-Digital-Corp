@@ -1,0 +1,31 @@
+# sync-artist-data capability — HAS-005
+id: sync-artist-data
+name: Sync Artist Data
+version: 1.0.0
+domain: music
+description: "Sync artist data from all configured providers (Spotify, YouTube, Deezer, Apple Music, Instagram, TikTok)"
+entry:
+  agent: collector
+  trigger: artist.sync.requested
+dependencies:
+  - skill: spotify
+  - skill: youtube
+  - skill: deezer
+  - skill: apple-music
+  - skill: instagram
+  - skill: tiktok
+  - memory: business
+  - memory: semantic
+  - memory: working
+policies:
+  max_cost: 0.10
+  timeout_seconds: 120
+  allowed_models: ["ollama/qwen3:4b-64k"]
+events:
+  emits:
+    - artist.data_sync.started
+    - artist.data_sync.completed
+    - artist.data_sync.failed
+  consumes:
+    - artist.sync.requested
+    - cron.daily_sync

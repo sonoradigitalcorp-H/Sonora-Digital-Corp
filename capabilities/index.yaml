@@ -1,0 +1,82 @@
+# Capability Registry — HAS-005
+# Every capability the system can execute.
+capabilities:
+  - id: sync-artist-data
+    path: capabilities/sync-artist-data/
+    type: business
+    domain: music
+    version: 1.0.0
+    status: active
+    agent: collector
+    cost_tier: 2
+    description: "Sync artist data from all providers (Spotify, YouTube, Deezer, etc.)"
+
+  - id: analyze-artist
+    path: capabilities/analyze-artist/
+    type: cognitive
+    domain: music
+    version: 1.0.0
+    status: active
+    agent: research-agent
+    cost_tier: 3
+    description: "Analyze artist performance, trends, and opportunities"
+
+  - id: generate-video
+    path: capabilities/generate-video/
+    type: business
+    domain: music
+    version: 1.0.0
+    status: experimental
+    agent: video-agent
+    cost_tier: 4
+    description: "Generate talking head or lipsync videos from audio + image"
+
+  - id: search-knowledge
+    path: capabilities/search-knowledge/
+    type: core
+    domain: system
+    version: 1.0.0
+    status: active
+    agent: null
+    cost_tier: 1
+    description: "Search across all memory stores (semantic, graph, long-term)"
+
+  - id: score-artist
+    path: capabilities/score-artist/
+    type: cognitive
+    domain: music
+    version: 1.0.0
+    status: active
+    agent: research-agent
+    cost_tier: 2
+    description: "Compute artist scores (momentum, virality, tour readiness, etc.)"
+
+  - id: manage-crm
+    path: capabilities/manage-crm/
+    type: business
+    domain: music
+    version: 0.5.0
+    status: experimental
+    agent: sales-agent
+    cost_tier: 2
+    description: "Manage artist CRM, leads, and relationships"
+
+  - id: publish-track
+    path: capabilities/publish-track/
+    type: business
+    domain: music
+    version: 0.5.0
+    status: experimental
+    agent: marketing-agent
+    cost_tier: 3
+    description: "Publish tracks to distribution platforms"
+
+  - id: process-payment
+    path: capabilities/process-payment/
+    type: business
+    domain: finance
+    version: 0.5.0
+    status: experimental
+    agent: finance-agent
+    cost_tier: 1
+    description: "Process payments via Stripe or Mercado Pago"

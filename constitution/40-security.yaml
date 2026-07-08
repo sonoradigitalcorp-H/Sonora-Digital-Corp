@@ -1,40 +1,41 @@
-
-# --- merged from truth/30-security.yaml ---
 version: 1
 domain: security
-updated: 2026-07-03T16:30:00Z
+updated: '2026-07-08T20:00:00Z'
 rules:
-  - id: SEC-001
-    description: "Todos los secrets se cifran con age v1.2.1+ usando X25519"
-    category: encryption
-    severity: error
-    applies_to: ["all_agents"]
-    enforcement: automated
-
-  - id: SEC-002
-    description: "age-key.txt NUNCA se compromete a git — está en .gitignore"
-    category: encryption
-    severity: error
-    applies_to: ["all_agents"]
-    enforcement: automated
-
-  - id: SEC-003
-    description: "Los archivos .env, auth.json, tenants.json deben existir como .age y plano (el plano se usa en runtime)"
-    category: encryption
-    severity: error
-    applies_to: ["infrastructure"]
-    enforcement: semi-automated
-
-  - id: SEC-004
-    description: "No commitear secrets en plaintext — ni siquiera en ramas privadas"
-    category: git
-    severity: error
-    applies_to: ["all_agents"]
-    enforcement: automated
-
-  - id: SEC-005
-    description: "Capability-based security: cada agente tiene capabilities específicas, no permisos genéricos"
-    category: access
-    severity: error
-    applies_to: ["all_agents"]
-    enforcement: automated
+- id: SEC-001
+  description: Todos los secrets se cifran con age v1.2.1+ usando X25519
+  category: encryption
+  severity: error
+  applies_to:
+  - all_agents
+  enforcement: automated
+- id: SEC-002
+  description: age-key.txt NUNCA se compromete a git — está en .gitignore
+  category: encryption
+  severity: error
+  applies_to:
+  - all_agents
+  enforcement: automated
+- id: SEC-003
+  description: Los archivos .env, auth.json, tenants.json deben existir como .age
+    y plano (el plano se usa en runtime)
+  category: encryption
+  severity: error
+  applies_to:
+  - infrastructure
+  enforcement: semi-automated
+- id: SEC-004
+  description: No commitear secrets en plaintext — ni siquiera en ramas privadas
+  category: git
+  severity: error
+  applies_to:
+  - all_agents
+  enforcement: automated
+- id: SEC-005
+  description: 'Capability-based security: cada agente tiene capabilities específicas,
+    no permisos genéricos'
+  category: access
+  severity: error
+  applies_to:
+  - all_agents
+  enforcement: automated
