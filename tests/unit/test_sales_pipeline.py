@@ -4,6 +4,7 @@ import json
 import os
 import tempfile
 from datetime import datetime, timezone
+from unittest.mock import patch
 
 import pytest
 from src.core.sales_pipeline import (
@@ -102,8 +103,9 @@ class TestSalesPipeline:
             assert after > before
 
     def test_auto_qualify_empty_returns_empty_list(self, pipeline):
-        qualified = pipeline.auto_qualify_leads(threshold=10)
-        assert qualified == []  # No leads in Neo4j, graceful degradation
+        with patch.object(pipeline, 'list_leads', return_value=[]):
+            qualified = pipeline.auto_qualify_leads(threshold=10)
+        assert qualified == []  # Graceful degradation when no leads
 
     def test_pipeline_graceful_without_neo4j(self, pipeline):
         lead = pipeline.get_lead("nonexistent")

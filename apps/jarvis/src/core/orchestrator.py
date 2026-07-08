@@ -1,8 +1,16 @@
 """
-JARVIS Agent Orchestrator
+JARVIS Agent Orchestrator — DEPRECATED (HAS-004)
 Multi-agent orchestration system for delegating tasks to specialized agents.
 Now modular — each agent lives in src/core/agents/<name>.py
+
+⚠ This module is deprecated. Use kernel/ modules (HAS-004).
+   See process/has/HAS-004-kernel.md for migration.
 """
+import warnings
+warnings.warn(
+    "orchestrator.py is deprecated. Use kernel/ modules (HAS-004).",
+    DeprecationWarning, stacklevel=2
+)
 
 import asyncio
 import json
