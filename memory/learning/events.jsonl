@@ -126,3 +126,5 @@
 {"type": "lead_generated_from_data", "artist_id": "artist1", "artist_name": "Hector Rubio", "streams": 115093009, "followers": 99999, "reason": "high_value_artist_detected", "timestamp": "2026-07-08T20:54:39Z"}
 {"type": "data_sync_completed", "artists_synced": [{"artist_id": "artist1", "updated": true, "delta": {"followers": 54999, "nb_album": 58}}], "total_artists": 1, "timestamp": "2026-07-08T20:55:09Z"}
 {"type": "lead_generated_from_data", "artist_id": "artist1", "artist_name": "Hector Rubio", "streams": 115093009, "followers": 99999, "reason": "high_value_artist_detected", "timestamp": "2026-07-08T20:55:09Z"}
+{"type": "data_sync_completed", "artists_synced": [{"artist_id": "artist1", "updated": true, "delta": {"followers": 54999, "nb_album": 58}}], "total_artists": 1, "timestamp": "2026-07-08T21:11:44Z"}
+{"type": "lead_generated_from_data", "artist_id": "artist1", "artist_name": "Hector Rubio", "streams": 115093009, "followers": 99999, "reason": "high_value_artist_detected", "timestamp": "2026-07-08T21:11:44Z"}

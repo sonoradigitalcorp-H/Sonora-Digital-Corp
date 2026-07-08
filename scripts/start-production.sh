@@ -11,9 +11,9 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT"
 
-KERNEL_PORT="${KERNEL_PORT:-8000}"
+KERNEL_PORT="${KERNEL_PORT:-8001}"
 WEB_PORT="${WEB_PORT:-5173}"
-KERNEL_LOG="${KERNEL_LOG:-state/logs/kernel.log}"
+KERNEL_LOG="${KERNEL_LOG:-state/logs/kernel-web.log}"
 WEB_LOG="${WEB_LOG:-state/logs/web.log}"
 PID_DIR="${PID_DIR:-state/pids}"
 
@@ -29,7 +29,9 @@ err()   { echo -e "\033[0;31m[ERR]\033[0m   $*"; }
 case "${1:-}" in
   --stop)
     info "Stopping all services..."
-    if [ -f "$KERNEL_PID" ]; then
+    if systemctl is-active --quiet kernel.service 2>/dev/null; then
+      sudo systemctl stop kernel.service && ok "Kernel stopped (systemd)" || err "Kernel stop failed"
+    elif [ -f "$KERNEL_PID" ]; then
       kill "$(cat "$KERNEL_PID")" 2>/dev/null && ok "Kernel stopped" || err "Kernel not running"
       rm -f "$KERNEL_PID"
     fi
@@ -73,12 +75,13 @@ esac
 # ─── Kernel Daemon ────────────────────────────────────────────────────────────
 if [ "$START_KERNEL" = true ]; then
   info "Starting Kernel daemon on 127.0.0.1:$KERNEL_PORT..."
+  touch "$KERNEL_LOG" 2>/dev/null || KERNEL_LOG="/tmp/kernel.log"
   PYTHONPATH="$ROOT" nohup python3 -m uvicorn kernel.app:app \
     --host 127.0.0.1 --port "$KERNEL_PORT" \
     --log-level info \
     >> "$KERNEL_LOG" 2>&1 &
   echo $! > "$KERNEL_PID"
-  sleep 2
+  sleep 3
   if kill -0 "$(cat "$KERNEL_PID")" 2>/dev/null; then
     ok "Kernel running (PID $(cat "$KERNEL_PID"))"
   else

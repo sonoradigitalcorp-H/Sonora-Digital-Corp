@@ -8,7 +8,7 @@ Type=simple
 User=ubuntu
 WorkingDirectory=/home/ubuntu/sonora-digital-corp
 Environment=PYTHONPATH=/home/ubuntu/sonora-digital-corp
-ExecStart=/home/ubuntu/hermes-agent/venv/bin/python -m uvicorn kernel.app:app --host 127.0.0.1 --port 8000 --log-level info
+ExecStart=/home/ubuntu/hermes-agent/venv/bin/python -m uvicorn kernel.app:app --host 127.0.0.1 --port 8001 --log-level info
 Restart=always
 RestartSec=5
 StandardOutput=append:/home/ubuntu/sonora-digital-corp/state/logs/kernel.log
