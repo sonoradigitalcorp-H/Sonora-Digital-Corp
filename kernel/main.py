@@ -17,6 +17,7 @@ from kernel.executor import Executor
 from kernel.reflector import Reflector
 from capabilities.bus import CapabilityBus
 from agents.runtime import AgentRuntime
+from tenants.manager import TenantManager
 
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -24,7 +25,8 @@ ROOT = Path(__file__).resolve().parent.parent
 
 class HermesKernel:
     def __init__(self, config: dict | None = None):
-        self.context = ContextEngine()
+        self.tenants = TenantManager()
+        self.context = ContextEngine(tenant_manager=self.tenants)
         self.planner = Planner()
         self.policy = PolicyEngine(config or {})
         self.router = AgentRouter()
@@ -39,6 +41,13 @@ class HermesKernel:
         tasks = await self.planner.plan(ctx)
         results = []
         for task in tasks:
+            if task.capability and not self.tenants.is_capability_allowed(ctx.tenant, task.capability):
+                results.append({
+                    "task_id": task.id,
+                    "status": "rejected",
+                    "reason": f"Capability '{task.capability}' not allowed for tenant '{ctx.tenant}'",
+                })
+                continue
             gate_results = await self.policy.validate(task)
             if not self.policy.all_passed(gate_results):
                 results.append({
@@ -69,6 +78,7 @@ class HermesKernel:
             "agent_runtime": self.agent_runtime.get_stats(),
             "capabilities": len(self.bus.list_status()),
             "capability_list": [c["id"] for c in self.bus.list_status()],
+            "tenants": self.tenants.get_stats(),
             "config": {"max_cost_per_task": self.config.get("max_cost_per_task", 1.0)},
         }
 

@@ -104,6 +104,11 @@ class CapabilityBus:
         if not cap:
             return ExecutionResult(task_id=capability_id, status="rejected", error=f"Capability '{capability_id}' not found")
 
+        tenant_id = getattr(context, "tenant", "default") if not isinstance(context, dict) else context.get("tenant", "default")
+        tenant_manager = getattr(context, "tenant_manager", None) if not isinstance(context, dict) else None
+        if tenant_manager and not tenant_manager.is_capability_allowed(tenant_id, capability_id):
+            return ExecutionResult(task_id=capability_id, status="rejected", error=f"Capability '{capability_id}' not allowed for tenant '{tenant_id}'")
+
         handler = cap.load_handler()
         if not handler:
             return ExecutionResult(task_id=capability_id, status="rejected", error=f"Capability '{capability_id}' has no handler")
