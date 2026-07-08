@@ -7,7 +7,7 @@ class LeccionesIngestor:
     def ingest(self, brain) -> int:
         paths = [
             Path("products/yami/memory/lecciones.json"),
-            Path("sonora-enterprise-os/memory/lecciones.json"),
+            Path("memory/lecciones.json"),
         ]
         count = 0
         for path in paths:

@@ -223,7 +223,7 @@
     {
       "name": "Joaquin Ruiz Lite",
       "description": "Spec-minimal, feature-branch, homologation: spec → test → code → client sees. 23 specs archived → 4 active specs.",
-      "files": ["sonora-enterprise-os/adr/", "sonora-enterprise-os/roadmap/archive/"]
+      "files": ["process/completed/", "process/active/"]
     },
     {
       "name": "CAVE MAN WISDOM",

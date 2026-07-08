@@ -1,7 +1,7 @@
 # Sonora Digital Corp — Quick Reference
 
-**One truth**: `sonora-enterprise-os/constitution/OMEGA-PROMPT-v10.0.md`
-**Soul**: `sonora-enterprise-os/constitution/SOUL.md`
+**One truth**: `constitution/OMEGA-PROMPT.md`
+**Soul**: `constitution/SOUL.md`
 **Governance**: HAS-007 Pipeline (Mission → Constitution → Research → Architecture → Simulation → Specification → Implementation → Verification → Observability → Evolution)
 **Architecture**: HAS-000 through HAS-011 in `process/has/`
 
@@ -67,7 +67,7 @@ Luego `ssh sdc-prod` forwards automático. Abrir `http://localhost:8080/` en lap
 | `constitution/` | 16 YAML files — source of truth (migrated from truth/) |
 | `truth/ → constitution/` | Backward-compat symlink |
 | `evolution/` | Evolution Engine (HAS-008) — observe, score, propose, generate |
-| `sonora-enterprise-os/` | Enterprise OS completo |
+| `sonora-enterprise-os/` | **(eliminado)** contenido migrado a root |
 
 ## Comandos
 

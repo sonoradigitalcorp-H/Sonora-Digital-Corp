@@ -20,7 +20,7 @@
 | **Hermes state.db** | SQLite + FTS5 | Sessions + messages con FTS5+trigram |
 | **OpenClaw** | SQLite | 66 tablas de estado interno de agentes |
 | **JSON files** | Archivos | 6 sesiones, rules.json, events.jsonl (61 eventos) |
-| **Lecciones** | JSON | lecciones.json en products/ y sonora-enterprise-os/ |
+| **Lecciones** | JSON | lecciones.json en products/ y constitution/ |
 
 ---
 
@@ -264,7 +264,7 @@ Cada regla → KnowledgeNode(type=RULE) con confidence, violations, last_validat
 **Files:**
 - Create: `apps/brain/ingestors/lecciones_ingestor.py`
 
-Leer ambos archivos `products/yami/memory/lecciones.json` y `sonora-enterprise-os/memory/lecciones.json`.
+Leer ambos archivos `products/yami/memory/lecciones.json` y `constitution/memory/lecciones.json`.
 
 ### Task 10: Ingestor de Hermes state.db
 

@@ -78,8 +78,8 @@ fi
 # 8. Lecciones aprendidas (correcciones del usuario)
 echo ""
 echo "═══ Reglas aprendidas ═══"
-if [ -f "$ROOT/sonora-enterprise-os/memory/sdc-rules.md" ]; then
-  head -5 "$ROOT/sonora-enterprise-os/memory/sdc-rules.md"
+if [ -f "$ROOT/memory/sdc-rules.md" ]; then
+  head -5 "$ROOT/memory/sdc-rules.md"
 else
   echo "  (aún no hay reglas aprendidas)"
 fi

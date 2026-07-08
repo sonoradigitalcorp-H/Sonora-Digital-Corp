@@ -13,7 +13,7 @@ from pathlib import Path
 from fastapi import APIRouter
 from pydantic import BaseModel
 
-_LF_PATH = Path(__file__).resolve().parent.parent.parent.parent / "sonora-enterprise-os" / "scripts" / "instrument-langfuse.py"
+_LF_PATH = Path(__file__).resolve().parent.parent.parent.parent / "scripts" / "instrument-langfuse.py"
 if _LF_PATH.exists():
     _spec = importlib.util.spec_from_file_location("instrument_langfuse", str(_LF_PATH))
     _instr = importlib.util.module_from_spec(_spec)

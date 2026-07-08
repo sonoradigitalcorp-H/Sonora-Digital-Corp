@@ -13,7 +13,7 @@ router = APIRouter()
 BASE_DIR = Path(__file__).parent.parent
 ROOT_DIR = (BASE_DIR / ".." / "..").resolve()
 STATE_DIR = ROOT_DIR / "state"
-INITIATIVES_DIR = ROOT_DIR / "sonora-enterprise-os" / "initiatives"
+INITIATIVES_DIR = ROOT_DIR / "initiatives"
 templates = Jinja2Templates(directory=str(BASE_DIR / "templates"))
 
 
