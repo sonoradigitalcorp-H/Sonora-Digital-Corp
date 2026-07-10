@@ -19,6 +19,14 @@ case "${1:-presentacion}" in
     PORT=5174
     URL="http://localhost:5174/"
     ;;
+  open-notebook|on)
+    PORT=8502
+    URL="http://localhost:8502/"
+    ;;
+  open-notebook-api|ona)
+    PORT=5055
+    URL="http://localhost:5055/docs"
+    ;;
   *)
     PORT="${1}"
     URL="http://localhost:${1}/"

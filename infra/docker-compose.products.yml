@@ -1,0 +1,90 @@
+services:
+  content-server:
+    build:
+      context: ..
+      dockerfile: infra/docker/content-server/Dockerfile
+    container_name: sdc-content-server
+    labels:
+      - "sdc.domain=content"
+      - "sdc.service=content-server"
+    ports:
+      - "127.0.0.1:8765:8765"
+      - "127.0.0.1:8766:8766"
+    environment:
+      - FAL_KEY=${FAL_KEY:-a3de020a-b1f5-4d8f-be52-02bd130a4bc3:f70dc7053400ab8eeac8021b78378eb1}
+      - AGNES_API_KEY=${AGNES_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - MUAPI_KEY=${MUAPI_KEY:-7985c023a79170b7663b18e49362d5257c7be6e9c76865cefaf628b60811575c}
+      - REDIS_HOST=sdc-redis
+      - REDIS_PORT=6379
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-IJsa2asL9CYlZDN6HUYl}
+      - CONTENT_DB_DSN=${CONTENT_DB_DSN:-postgresql://sdc:vXLDhhbiSWt3FHK1MZri@sdc-postgres:5432/sdc_content}
+      - CORE_DB_DSN=${CORE_DB_DSN:-postgresql://sdc:vXLDhhbiSWt3FHK1MZri@sdc-postgres:5432/sdc}
+      - PUBLIC_HOST=${PUBLIC_HOST:-149.56.46.173}
+      - STORAGE_BASE=/data/content
+    volumes:
+      - /data/content:/data/content
+    networks:
+      - sdc-network
+    restart: unless-stopped
+    mem_limit: 256m
+    memswap_limit: 256m
+
+  omnivoice:
+    image: ghcr.io/debpalash/omnivoice-studio:stable
+    container_name: sdc-omnivoice
+    labels:
+      - "sdc.domain=content"
+      - "sdc.service=omnivoice"
+    ports:
+      - "127.0.0.1:3900:3900"
+    volumes:
+      - omnivoice_data:/app/omnivoice_data
+      - /home/ubuntu/.cache/huggingface:/root/.cache/huggingface
+    networks:
+      - sdc-network
+    restart: unless-stopped
+    mem_limit: 2g
+    memswap_limit: 3g
+    deploy:
+      resources:
+        reservations:
+          memory: 1g
+
+  open-notebook:
+    image: lfnovo/open_notebook:latest-single
+    container_name: sdc-open-notebook
+    labels:
+      - "sdc.domain=products"
+      - "sdc.service=open-notebook"
+    ports:
+      - "127.0.0.1:8502:8502"
+      - "127.0.0.1:5055:5055"
+    volumes:
+      - open_notebook_data:/app/data
+      - on_surreal_data:/mydata
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    environment:
+      - OPENROUTER_BASE_URL=https://openrouter.ai/api/v1
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-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}
+      - OLLAMA_API_BASE=http://host.docker.internal:11434
+      - SURREAL_USER=root
+      - SURREAL_PASSWORD=root
+      - SURREAL_NAMESPACE=open_notebook
+      - SURREAL_DATABASE=staging
+    networks:
+      - sdc-network
+    restart: unless-stopped
+    mem_limit: 1g
+    memswap_limit: 1g
+
+networks:
+  sdc-network:
+    driver: bridge
+    external: true
+
+volumes:
+  omnivoice_data:
+  open_notebook_data:
+  on_surreal_data:
