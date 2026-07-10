@@ -1,0 +1,56 @@
+{
+  "session_id": "ses_20260710-content-pipeline",
+  "date": "2026-07-10",
+  "spec_id": "SPEC-20260710-001",
+  "tier": 2,
+  "objective": "Unificar content pipeline con storage local, webhooks, fix bugs, limpieza VPS",
+  "errors": [
+    {"file": "edge-tts-server.py", "bug": "hash() no determinista entre procesos", "fix": "hashlib.md5()"},
+    {"file": "edge-tts-server.py", "bug": "return tupla invalida en FastAPI", "fix": "raise HTTPException(404)"},
+    {"file": "edge-tts-server.py", "bug": "URL hardcodeada a localhost", "fix": "PUBLIC_HOST env var"},
+    {"file": "docker-compose.products.yml", "bug": "YAML networks reemplazado por volumes en edit", "fix": "corregir estructura YAML"},
+    {"infra": "docker volumes", "bug": "omnivoice-data duplicado (3GB) + 10 volumes sdc_* huerfanos", "fix": "docker volume rm"}
+  ],
+  "successes": [
+    "storage local persistente con nginx, $0, 0 containers extra",
+    "webhook delivery automatico post-generacion",
+    "26GB recuperados de disco (71% → 44%)",
+    "Open Notebook desplegado (reemplazo open-source de Google NotebookLM)",
+    "Google MCP eliminado completamente"
+  ],
+  "incomplete": [
+    "LoRA real: use_lora flag existe pero nunca se pasa a FAL API",
+    "Voice cloning real: clone_voice() solo inserta en DB, no llama a OmniVoice",
+    "OCR: EasyOCR no instalado, tool no creada",
+    "Image editing: FAL flux-fill-pro no integrado",
+    "Avatar interactivo: pipeline Whisper→DeepSeek→TTS→Muapi no construido"
+  ],
+  "files_created": [
+    "products/content-studio/migrations/002_storage_webhooks.sql",
+    "process/completed/20260710-content-pipeline/SPEC.md",
+    "process/completed/20260710-content-pipeline/LECCION.md",
+    "process/completed/20260710-content-pipeline/events.jsonl"
+  ],
+  "files_modified": [
+    "products/content-studio/server.py",
+    "products/content-studio/edge-tts-server.py",
+    "infra/docker-compose.products.yml",
+    "config/mcp/mcp-ecosystem.json",
+    "AGENTS.md",
+    "scripts/ver.sh"
+  ],
+  "score": {
+    "revenue_impact": 5,
+    "scalability": 7,
+    "reusability": 8,
+    "automation_impact": 9,
+    "knowledge_impact": 6,
+    "reliability": 7,
+    "founder_independence": 8,
+    "operational_simplicity": 6,
+    "customer_value": 5,
+    "finops_efficiency": 9
+  },
+  "total_score": 70,
+  "veredicto": "PASA"
+}
