@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Content Server Dashboard</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a12; color: #e0e0e0; font-family: Inter, sans-serif; padding: 20px; }
+  h1 { color: #FFD700; margin-bottom: 20px; font-size: 1.5rem; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .card { background: #1e1e2e; border-radius: 12px; padding: 16px; border: 1px solid #333; }
+  .card h3 { color: #888; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .card .value { font-size: 1.8rem; font-weight: 700; color: #FFD700; }
+  .card .sub { font-size: 0.8rem; color: #666; margin-top: 4px; }
+  .status-ok { color: #4caf50; }
+  .status-err { color: #f44336; }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+  th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid #333; font-size: 0.85rem; }
+  th { color: #888; text-transform: uppercase; font-size: 0.7rem; letter-spacing: 1px; }
+  .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.75rem; }
+  .tag-ok { background: #1b5e20; color: #81c784; }
+  .tag-err { background: #b71c1c; color: #ef9a9a; }
+  .tag-warn { background: #f57f17; color: #fff9c4; }
+  .refresh { float: right; padding: 6px 16px; background: #FFD700; color: #000; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; }
+  .refresh:hover { opacity: 0.8; }
+  #last-update { color: #666; font-size: 0.75rem; margin-top: 8px; }
+</style>
+</head>
+<body>
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+  <h1>🎛 Content Server Dashboard</h1>
+  <button class="refresh" onclick="refresh()">⟳ Refresh</button>
+</div>
+
+<div class="grid" id="kpi-grid">
+  <div class="card"><h3>Container Status</h3><div class="value" id="container-status">—</div></div>
+  <div class="card"><h3>Storage Used</h3><div class="value" id="storage-used">—</div><div class="sub" id="storage-path"></div></div>
+  <div class="card"><h3>Total Files</h3><div class="value" id="total-files">—</div><div class="sub" id="files-by-type"></div></div>
+  <div class="card"><h3>Disk Free</h3><div class="value" id="disk-free">—</div><div class="sub" id="disk-pct"></div></div>
+</div>
+
+<h2 style="margin:20px 0 12px; font-size:1.1rem;">Servicios</h2>
+<table id="services-table">
+  <thead><tr><th>Servicio</th><th>Puerto</th><th>Estado</th><th>Uptime</th></tr></thead>
+  <tbody id="services-body"></tbody>
+</table>
+
+<h2 style="margin:20px 0 12px; font-size:1.1rem;">Últimas Generaciones</h2>
+<table id="gens-table">
+  <thead><tr><th>ID</th><th>Artista</th><th>Tipo</th><th>Fecha</th><th>Estado</th></tr></thead>
+  <tbody id="gens-body"></tbody>
+</table>
+
+<p id="last-update">⏱ Actualizado: —</p>
+
+<script>
+const API = window.location.origin;
+
+async function refresh() {
+  document.querySelectorAll('.value').forEach(el => el.textContent = '⋯');
+  await Promise.all([
+    loadKPIs(),
+    loadServices(),
+    loadGenerations(),
+  ]);
+  document.getElementById('last-update').textContent = `⏱ Actualizado: ${new Date().toLocaleTimeString()}`;
+}
+
+async function loadKPIs() {
+  try {
+    const r = await fetch('/api/health');
+    const health = await r.json();
+    document.getElementById('container-status').textContent = 'Running';
+    document.getElementById('container-status').className = 'value status-ok';
+  } catch {
+    document.getElementById('container-status').textContent = 'Unknown';
+    document.getElementById('container-status').className = 'value status-err';
+  }
+
+  try {
+    const r = await fetch('http://149.56.46.173:8768/');
+    const text = await r.text();
+  } catch {}
+
+  try {
+    const r = await fetch('/api/storage');
+    const data = await r.json();
+    document.getElementById('storage-used').textContent = data.total_gb ? data.total_gb.toFixed(1) + ' GB' : '—';
+    document.getElementById('storage-path').textContent = data.path || '';
+    document.getElementById('total-files').textContent = data.total_files || '—';
+    const types = data.by_type || {};
+    document.getElementById('files-by-type').textContent = Object.entries(types).map(([k,v]) => `${k}:${v}`).join(', ');
+  } catch {
+    document.getElementById('storage-used').textContent = 'N/A';
+  }
+
+  try {
+    const r = await fetch('http://149.56.46.173:8768/api/disk');
+    const data = await r.json();
+    document.getElementById('disk-free').textContent = data.free_gb ? data.free_gb.toFixed(1) + ' GB' : '—';
+    document.getElementById('disk-pct').textContent = data.used_pct ? data.used_pct + '% usado' : '';
+  } catch {
+    document.getElementById('disk-free').textContent = 'N/A';
+  }
+}
+
+async function loadServices() {
+  const services = [
+    { name: 'Content Server MCP', port: 8765 },
+    { name: 'Edge TTS API', port: 8766 },
+    { name: 'Content Storage (nginx)', port: 8768 },
+    { name: 'OmniVoice', port: 3900 },
+    { name: 'Open Notebook', port: 8502 },
+  ];
+  const tbody = document.getElementById('services-body');
+  tbody.innerHTML = '';
+  for (const svc of services) {
+    const tr = document.createElement('tr');
+    const ok = await checkPort(svc.port);
+    const uptime = ok ? '—' : '—';
+    tr.innerHTML = `<td>${svc.name}</td><td>${svc.port}</td><td><span class="tag ${ok ? 'tag-ok' : 'tag-err'}">${ok ? 'UP' : 'DOWN'}</span></td><td>${uptime}</td>`;
+    tbody.appendChild(tr);
+  }
+}
+
+async function checkPort(port) {
+  try {
+    const controller = new AbortController();
+    const id = setTimeout(() => controller.abort(), 3000);
+    const r = await fetch(`http://149.56.46.173:${port}/`, { signal: controller.signal, mode: 'no-cors' });
+    clearTimeout(id);
+    return true;
+  } catch { return false; }
+}
+
+async function loadGenerations() {
+  try {
+    const r = await fetch('/api/generations/recent');
+    const data = await r.json();
+    const tbody = document.getElementById('gens-body');
+    tbody.innerHTML = '';
+    (data.generations || []).slice(0, 10).forEach(g => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td style="font-family:monospace;font-size:0.75rem;">${(g.id || '').slice(0,8)}…</td>
+        <td>${g.artist_id || g.artist_name || '—'}</td>
+        <td>${g.media_type || '—'}</td>
+        <td>${g.created_at ? new Date(g.created_at).toLocaleString() : '—'}</td>
+        <td><span class="tag ${g.status === 'completed' ? 'tag-ok' : g.status === 'failed' ? 'tag-err' : 'tag-warn'}">${g.status || '—'}</span></td>`;
+      tbody.appendChild(tr);
+    });
+  } catch {}
+}
+
+refresh();
+</script>
+</body>
+</html>
