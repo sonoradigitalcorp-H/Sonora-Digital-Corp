@@ -1,37 +1,46 @@
+import io
 import logging
 import tempfile
 from pathlib import Path
-from typing import AsyncGenerator
+
+import edge_tts
 
 from products.mystik.config import config
 
 logger = logging.getLogger(__name__)
 
+MYSTIK_VOICE = "es-MX-DaliaNeural"
+MYSTIK_VOICE_SPEED = "+10%"
+
 
 class MystikVoice:
     def __init__(self):
         self.whisper = None
-        self.tts = None
-        self._init_models()
+        self._init_whisper()
 
-    def _init_models(self):
+    def _init_whisper(self):
         try:
             from faster_whisper import WhisperModel
             self.whisper = WhisperModel(config.whisper_model, device="cpu", compute_type="int8")
             logger.info("Whisper loaded: %s", config.whisper_model)
         except Exception as e:
-            logger.warning("Whisper not available: %s", e)
+            logger.warning("Whisper not available, STT desactivado: %s", e)
 
+    async def speak(self, text: str, voice: str = MYSTIK_VOICE) -> bytes:
         try:
-            from openvoice import VoiceCloner
-            self.tts = VoiceCloner()
-            logger.info("OpenVoice loaded")
+            communicate = edge_tts.Communicate(text, voice, rate=MYSTIK_VOICE_SPEED)
+            audio = io.BytesIO()
+            async for chunk in communicate.stream():
+                if chunk["type"] == "audio":
+                    audio.write(chunk["data"])
+            return audio.getvalue()
         except Exception as e:
-            logger.warning("OpenVoice not available: %s", e)
+            logger.error("TTS error: %s", e)
+            return b""
 
     async def transcribe(self, audio_bytes: bytes) -> str:
         if not self.whisper:
-            return "(whisper no disponible)"
+            return ""
         with tempfile.NamedTemporaryFile(suffix=".wav", delete=False) as f:
             f.write(audio_bytes)
             tmp_path = f.name
@@ -43,28 +52,6 @@ class MystikVoice:
             return ""
         finally:
             Path(tmp_path).unlink(missing_ok=True)
-
-    async def speak(self, text: str, voice_profile: str = "default") -> bytes:
-        if not self.tts:
-            return await self._fallback_tts(text)
-        try:
-            audio = self.tts.clone_voice(text, voice_profile)
-            return audio
-        except Exception as e:
-            logger.error("TTS error: %s", e)
-            return await self._fallback_tts(text)
-
-    async def _fallback_tts(self, text: str) -> bytes:
-        try:
-            import httpx
-            async with httpx.AsyncClient(timeout=30) as client:
-                resp = await client.post(
-                    "http://127.0.0.1:8766/tts",
-                    json={"text": text, "voice": "es-MX", "format": "wav"},
-                )
-                return resp.content
-        except Exception:
-            return b""
 
     async def clone_voice(self, audio_sample: bytes, name: str = "mystik") -> str:
         try:
@@ -80,7 +67,7 @@ class MystikVoice:
                 logger.info("Voice cloned: %s -> %s", name, profile_id)
                 return profile_id
         except Exception as e:
-            logger.error("Voice cloning failed: %s", e)
+            logger.error("Voice cloning via OmniVoice failed: %s", e)
             return ""
 
 
