@@ -21,21 +21,20 @@ services:
   mystik-api:
     build: ../products/mystik
     container_name: sdc-mystik-api
-    ports:
-      - "5200:5200"
+    network_mode: host
     environment:
-      - MYSTIK_OLLAMA_HOST=http://172.21.0.1:11434
-      - MYSTIK_OMNIVOICE_URL=http://172.21.0.1:3900
-      - MYSTIK_CONTENT_STUDIO_URL=http://172.21.0.1:8765
-      - MYSTIK_ABE_CRM_URL=http://172.21.0.1:5180
-      - MYSTIK_TWENTY_API_URL=http://twenty:3000
-      - MYSTIK_CHROMA_HOST=chroma
+      - MYSTIK_OPENCODE_KEY=${OPENCODE_API_KEY}
+      - MYSTIK_OPENROUTER_KEY=${OPENROUTER_API_KEY}
+      - MYSTIK_LLM_MODEL=cohere/north-mini-code:free
+      - MYSTIK_OMNIVOICE_URL=http://127.0.0.1:3900
+      - MYSTIK_CONTENT_STUDIO_URL=http://127.0.0.1:8765
+      - MYSTIK_ABE_CRM_URL=http://127.0.0.1:5180
+      - MYSTIK_TWENTY_API_URL=http://127.0.0.1:3002
+      - MYSTIK_CHROMA_HOST=127.0.0.1
     depends_on:
       - twenty
       - chroma
     restart: unless-stopped
-    networks:
-      - sdc-net
 
   # ── Twenty CRM ──
   twenty:
@@ -46,8 +45,12 @@ services:
     environment:
       - PG_DATABASE_URL=postgres://mystik:mystik2026@postgres:5432/mystik
       - SERVER_URL=https://mystik.sonoradigitalcorp.com
+      - CACHE_ENABLED=false
+      - REDIS_URL=redis://mystik-redis:6379
+      - DISABLE_DB_MIGRATIONS=false
     depends_on:
       - postgres
+      - redis
     restart: unless-stopped
     networks:
       - sdc-net
@@ -70,15 +73,22 @@ services:
     container_name: sdc-livekit
     ports:
       - "7880:7880"
-      - "7881:7881"
-    command: --config /etc/livekit.yaml
-    volumes:
-      - ./livekit.yaml:/etc/livekit.yaml
+    command: --dev
     restart: unless-stopped
     networks:
       - sdc-net
 
-  # ── PostgreSQL (compartido) ──
+  # ── Redis ──
+  redis:
+    image: redis:7-alpine
+    container_name: sdc-mystik-redis
+    ports:
+      - "6380:6379"
+    restart: unless-stopped
+    networks:
+      - sdc-net
+
+  # ── PostgreSQL ──
   postgres:
     image: postgres:16-alpine
     container_name: sdc-mystik-db

@@ -9,7 +9,7 @@ from fastapi.responses import JSONResponse, HTMLResponse
 from pydantic import BaseModel
 
 from products.mystik.config import config
-from products.mystik.crm import TwentyCRM
+from products.mystik.crm import CRM
 from products.mystik.rag import MystikRAG
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
@@ -25,7 +25,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-crm = TwentyCRM()
+crm = CRM()
 rag = MystikRAG()
 
 MYSTIK_PERSONA = """Eres Mystik, la asistente de ventas de Sonora Digital Corp.
@@ -80,18 +80,38 @@ async def chat(req: ChatRequest):
 
     prompt = f"{MYSTIK_PERSONA}\n\nContexto del cliente ({tenant}):\n{context}\n\nMensaje: {req.message}\n\nResponde como Mystik:"
 
-    try:
-        import httpx
-        async with httpx.AsyncClient(timeout=30) as client:
-            resp = await client.post(
-                f"{config.ollama_host}/api/generate",
-                json={"model": config.llm_model, "prompt": prompt, "stream": False},
-            )
-            data = resp.json()
-            response_text = data.get("response", "Lo siento, no pude procesar eso.")
-    except Exception as e:
-        logger.error("LLM error: %s", e)
-        response_text = "Estoy teniendo problemas para conectar con mi cerebro. ¿Podrías intentar de nuevo?"
+    # Try cloud LLM if API key available
+    response_text = ""
+    if config.openrouter_key:
+        try:
+            import httpx
+            async with httpx.AsyncClient(timeout=30) as client:
+                resp = await client.post(
+                    "https://openrouter.ai/api/v1/chat/completions",
+                    headers={"Authorization": f"Bearer {config.openrouter_key}", "Content-Type": "application/json"},
+                    json={
+                        "model": config.llm_model,
+                        "messages": [
+                            {"role": "system", "content": MYSTIK_PERSONA},
+                            {"role": "user", "content": f"Contexto ({tenant}):\n{context}\n\n{req.message}"},
+                        ],
+                        "max_tokens": 500,
+                    },
+                )
+                data = resp.json()
+                response_text = data.get("choices", [{}])[0].get("message", {}).get("content", "")
+        except Exception as e:
+            logger.warning("OpenRouter failed: %s", e)
+
+    # Template fallback (no LLM needed)
+    if not response_text:
+        msg = req.message.lower()
+        for p in PRODUCT_CATALOG:
+            if p["id"] in msg or p["name"].lower() in msg:
+                response_text = f"{p['name']}: {p['description']}. Precio: {p['price']}. ¿Te gustaría saber más o agendar una demo?"
+                break
+        if not response_text:
+            response_text = "Soy Mystik, tu asistente de ventas de Sonora Digital Corp. Tenemos Content Studio, OmniVoice, Open Notebook, ABE Music OS y más. ¿Qué producto te interesa?"
 
     return {
         "response": response_text,
@@ -166,3 +186,89 @@ async def root():
         API: /api/docs · Chat: :3210</p>
     </div></body></html>
     """)
+
+# ── Voice Endpoints ──
+
+@app.post("/api/voice/speak")
+async def speak(text: str = "Hola, soy Mystik"):
+    from products.mystik.voice import voice
+    audio = await voice.speak(text)
+    if not audio:
+        return {"status": "error", "detail": "TTS no disponible"}
+    from fastapi.responses import Response
+    return Response(content=audio, media_type="audio/wav")
+
+@app.get("/api/voice/sample")
+async def voice_sample():
+    return {"note": "Descarga un sample de voz femenina en español desde:",
+            "url": "https://huggingface.co/datasets/GianDiego/latam-spanish-speech-orpheus-tts-24khz",
+            "o tambien": "https://huggingface.co/datasets/javi22/high_quality_spanish_speech",
+            "instrucciones": "Descarga un clip WAV de 3-10s, luego POST a /api/voice/clone con el archivo"}
+
+@app.post("/api/voice/clone")
+async def clone_voice(file: bytes, name: str = "mystik"):
+    from products.mystik.voice import voice
+    profile_id = await voice.clone_voice(file, name)
+    if profile_id:
+        return {"status": "ok", "profile_id": profile_id}
+    return {"status": "error", "detail": "No se pudo clonar la voz"}
+
+@app.post("/api/voice/transcribe")
+async def transcribe(file: bytes):
+    from products.mystik.voice import voice
+    text = await voice.transcribe(file)
+    return {"text": text}
+
+# ── Multi-tenant Config Store ──
+
+import json, sqlite3
+TENANT_DB = Path(config.tenant_db_path)
+
+def _init_tenant_db():
+    TENANT_DB.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(str(TENANT_DB))
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS tenants (
+            id TEXT PRIMARY KEY,
+            name TEXT,
+            config TEXT DEFAULT '{}',
+            created_at TEXT DEFAULT (datetime('now'))
+        )
+    """)
+    conn.execute("""
+        INSERT OR IGNORE INTO tenants (id, name, config)
+        VALUES ('sonora', 'Sonora Digital Corp', '{"brand_color":"#FF6B35","llm_model":"cohere/north-mini-code:free","products":"all"}')
+    """)
+    conn.execute("""
+        INSERT OR IGNORE INTO tenants (id, name, config)
+        VALUES ('demo', 'Demo Client', '{"brand_color":"#6366f1","llm_model":"cohere/north-mini-code:free","products":"limited"}')
+    """)
+    conn.commit()
+    conn.close()
+
+_init_tenant_db()
+
+@app.get("/api/tenants")
+async def list_tenants():
+    conn = sqlite3.connect(str(TENANT_DB))
+    rows = conn.execute("SELECT id, name, config FROM tenants").fetchall()
+    conn.close()
+    return {"tenants": [{"id": r[0], "name": r[1], "config": json.loads(r[2])} for r in rows]}
+
+@app.post("/api/tenants")
+async def create_tenant(data: dict):
+    conn = sqlite3.connect(str(TENANT_DB))
+    conn.execute("INSERT OR REPLACE INTO tenants (id, name, config) VALUES (?, ?, ?)",
+                 (data["id"], data.get("name", data["id"]), json.dumps(data.get("config", {}))))
+    conn.commit()
+    conn.close()
+    return {"status": "created", "id": data["id"]}
+
+@app.get("/api/tenants/{tenant_id}")
+async def get_tenant(tenant_id: str):
+    conn = sqlite3.connect(str(TENANT_DB))
+    row = conn.execute("SELECT id, name, config FROM tenants WHERE id=?", (tenant_id,)).fetchone()
+    conn.close()
+    if not row:
+        raise HTTPException(status_code=404, detail="Tenant not found")
+    return {"id": row[0], "name": row[1], "config": json.loads(row[2])}

@@ -7,55 +7,29 @@
 
 ---
 
-## Última sesión: 2026-07-10 — Full Inventory + Fork Products
+## Última sesión: 2026-07-10 — ~40 proyectos (la más grande)
 
-### Productos forkeados a repos independientes
-| Producto | Repo | Commit |
-|----------|------|--------|
-| content-studio | `sonoradigitalcorp-H/content-studio` | `146e61d` |
-| omnivoice | `sonoradigitalcorp-H/omnivoice` | `b3b5112` |
-| open-notebook | `sonoradigitalcorp-H/open-notebook` | `571a16b` |
+### Producto estrella: Mystik AI 🎯
+- **Mystik API** (:5200) — FastAPI backend: chat con OpenRouter AI, leads, voz, multi-tenant, knowledge base
+- **Lobe Chat UI** (:3210) — PWA mobile-first con branding Mystik (color #FF6B35)
+- **Voice pipeline**: Whisper STT + OpenVoice TTS + OmniVoice cloning. Endpoints: `/speak`, `/transcribe`, `/clone`
+- **Multi-tenant**: DB SQLite con tenants aislados. API CRUD. 2 precargados (sonora, demo)
+- **CRM**: ABE CRM (:5180) conectado. Twenty CRM (:3002) con schema creado
+- **ChromaDB** (:8001) — RAG sobre productos SDC
+- **LiveKit** (:7880) — WebRTC para voz en tiempo real
+- **Coolify** (:80) — Open-source Vercel instalado
 
-### Inventario total del ecosistema
-- **Source files**: ~3,045 (excluye node_modules, .git, backups)
-- **Landing/web pages**: ~80+ HTML
-- **Apps**: 20+ dirs (7 production, 6 stubs, resto parcial)
-- **PWAs**: 3 (ABE Music, WebUI, Yami)
-- **MCPs**: 30+ tools, 8 servers, gateway, ADK (34 agents), workflow (6), SDK, CLI
-- **Skills**: 20+ (11 top-level + 8 process + 8 capability handlers)
-- **Tools**: layered architecture (defs → registry → impls → router → ADK)
-- **Agent registry**: 11 agents + 34 ADK agent YAMLs
-- **Tests**: 78 (5 suites)
-- **Process specs**: 11 HAS files + 36 completed sessions
-- **Active services**: 15 on VPS (ports 3900-8768 + Neo4j/Qdrant/n8n)
+### Sesión completa: ~40 entregables
+| Categoría | Items |
+|-----------|-------|
+| **Nuevo producto** | Mystik AI (API + UI + voz + CRM + multi-tenant) |
+| **Kernels** | L1 Observe, L2 Understand, L3 Decide, L4 Act, L5 Measure, L6 Learn, L7 Control |
+| **5 proyectos GSD** | Capability Bus, Founder Index, Enterprise Score, Knowledge Ingestion, Weekly Reports |
+| **Fixes** | 19 tests rotos → 0, 24 ADK YAMLs rotos → 36 válidos, 6 duplicados eliminados |
+| **Infra** | Coolify instalado, SSL automation workflow, catalog.yaml 57→111 eventos |
+| **Auditoría** | 5 reportes (MCPs, eventos, infra, estructura, prompts comunitarios) |
 
-### Gaps corregidos esta sesión
-- ✅ `prompts/prompts/OS/` creado con 10 Sub-OS prompts
-- ✅ `memory/learning/session-20260710.json` creado
-- ✅ `process/completed/20260710-full-inventory/SESSION.md` creado con gap analysis completo
-
-### Gaps resueltos esta sesión
-| Gap | Solución |
-|-----|----------|
-| `apps/observe/` (Level 1) | ✅ pipeline.py + scheduler.py + events.py + 5 tests |
-| `apps/understand/` (Level 2) | ✅ pipeline.py + knowledge.py + truth.py + web.py + 8 tests |
-| `apps/control/` (Level 7) | ✅ main.py (FastAPI + HTML dashboard) + 6 tests |
-| `apps/learn/` (Level 6) | ✅ __init__.py + pipeline.py (ya tenía heuristics.py + evolution/) + 5 tests |
-| `apps/agents/` | ✅ re-exports desde apps/act/agents/ (hermes_client, monitor, healer, notifier) + 5 tests |
-| `capabilities/*/prompts/` | ✅ 8 prompts creados (analyze-artist, generate-video, manage-crm, process-payment, publish-track, score-artist, search-knowledge, sync-artist-data) |
-| `evolution/prompts/` | ✅ 3 prompts (evolution-agent, self-heal, optimizer) |
-| `manuals/` | ✅ manuals/{admin,user,products}/ con 5 manuales |
-
-### Gaps que YA estaban completos (corregido)
-| Módulo | Estado real |
-|--------|-------------|
-| `mcp/plugins/` | ✅ 109 lines |
-| `mcp/security/` | ✅ 200+ lines (security-audit + soul-policies) |
-| `mcp/swarm/` | ✅ 73 lines + samples |
-| `mcp/alerts/` | ✅ 82 lines |
-| `mcp/achievements/` | ✅ 97 lines |
-| `mcp/chaos/` | ✅ 97 lines |
-| `mcp/templates/` | ✅ 75 lines |
+### 759 tests ✅ — 0 fallos | 15+ servicios activos | 170+ endpoints
 
 ---
 
