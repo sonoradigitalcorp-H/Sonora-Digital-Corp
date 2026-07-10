@@ -1,0 +1,25 @@
+services:
+  content-server:
+    build:
+      context: ../../
+      dockerfile: infra/docker/content-server/Dockerfile
+    container_name: sdc-content-server
+    ports:
+      - "127.0.0.1:8765:8765"
+      - "127.0.0.1:8766:8766"
+    environment:
+      - FAL_KEY=${FAL_KEY:-}
+      - AGNES_API_KEY=${AGNES_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
+      - MUAPI_KEY=${MUAPI_KEY:-}
+      - REDIS_HOST=${REDIS_HOST:-sdc-redis}
+      - REDIS_PORT=${REDIS_PORT:-6379}
+      - REDIS_PASSWORD=${REDIS_PASSWORD:-}
+      - CONTENT_DB_DSN=${CONTENT_DB_DSN:-postgresql://sdc:${POSTGRES_PASSWORD}@sdc-postgres:5432/sdc}
+    networks:
+      - sdc-network
+    restart: unless-stopped
+
+networks:
+  sdc-network:
+    external: true

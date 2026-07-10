@@ -1,0 +1,47 @@
+[
+  {
+    "nombre": "Hector Rubio",
+    "streams": 115093009,
+    "revenue": 460372.0,
+    "releases": 7,
+    "top_song": "Se Volvieron Locos",
+    "top_song_streams": 16000000,
+    "monthly_listeners": 1100000,
+    "followers": 661,
+    "youtube_views": 117000000,
+    "instagram": "@hector_rubiorr",
+    "spotify_url": "https://open.spotify.com/artist/2uSJ9ywE44eIRoTMatARAy",
+    "pais": "México",
+    "label": "ABE Music + VIZUAL"
+  },
+  {
+    "nombre": "Jesus Urquijo",
+    "streams": 4635222,
+    "revenue": 18540.0,
+    "releases": 11,
+    "top_song": "Power Trae",
+    "top_song_streams": 2125681,
+    "monthly_listeners": 29800,
+    "followers": 73,
+    "youtube_views": 3341069,
+    "instagram": "@jesusurquijo_oficial",
+    "spotify_url": "https://open.spotify.com/artist/1hfrbMUDkM2tlUE85D3dR6",
+    "pais": "México",
+    "label": "ABE Music Inc"
+  },
+  {
+    "nombre": "Javier Arvayo",
+    "streams": 50000,
+    "revenue": 200.0,
+    "releases": 3,
+    "top_song": "GOETT",
+    "top_song_streams": 0,
+    "monthly_listeners": 981,
+    "followers": 10,
+    "youtube_views": 0,
+    "instagram": "",
+    "spotify_url": "https://open.spotify.com/artist/0td9IOgiffWGMbcz3xKy0s",
+    "pais": "México",
+    "label": "ABE Music"
+  }
+]

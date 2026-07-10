@@ -658,9 +658,30 @@ def jarvis_web_fetch(
 
 if __name__ == "__main__":
     import uvicorn
+    from starlette.routing import Route, Mount
+    from starlette.responses import JSONResponse
+
     host = os.environ.get("MCP_HOST", "0.0.0.0")
     port = int(os.environ.get("MCP_PORT", "8000"))
-    print(f"Starting JARVIS MCP Server (SSE) on {host}:{port}...")
+
+    async def health_endpoint(request):
+        return JSONResponse({
+            "status": "ok",
+            "service": "jarvis-mcp",
+            "neo4j": NEO4J_AVAILABLE and neo4j_driver is not None,
+            "qdrant": QDRANT_AVAILABLE and qdrant_client is not None,
+            "embeddings": EMBEDDINGS_AVAILABLE,
+            "timestamp": datetime.now().isoformat(),
+        })
+
+    mcp_app = mcp.http_app()
+    from starlette.applications import Starlette
+    wrapper = Starlette(routes=[
+        Route("/health", endpoint=health_endpoint),
+        Mount("/", app=mcp_app),
+    ])
+
+    print(f"Starting JARVIS MCP Server (SSE + Health) on {host}:{port}...")
     print(f"Neo4j available: {NEO4J_AVAILABLE}")
     print(f"Qdrant available: {QDRANT_AVAILABLE}")
-    mcp.run(transport="sse", host=host, port=port)
+    uvicorn.run(wrapper, host=host, port=port)
