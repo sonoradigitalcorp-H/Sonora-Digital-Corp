@@ -7,7 +7,7 @@ capability: content-production
 maturity: 2-Assisted
 tools:
   - sonora:capability_resolve
-- sonora:media_image
+  - sonora:media_image
   - sonora:media_album_cover
   - sonora:content_generate
 policies:

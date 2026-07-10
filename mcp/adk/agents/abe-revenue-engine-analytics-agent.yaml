@@ -7,7 +7,7 @@ capability: business-intelligence
 maturity: 2-Assisted
 tools:
   - sonora:capability_resolve
-- sonora:enterprise_score
+  - sonora:enterprise_score
   - sonora:enterprise_score_history
   - sonora:learning_stats
 policies:

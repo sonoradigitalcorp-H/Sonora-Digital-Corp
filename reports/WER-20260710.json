@@ -1,0 +1,306 @@
+{
+  "report_id": "WER-20260710",
+  "generated": "2026-07-10T09:22:45.547552+00:00",
+  "period": "weekly",
+  "reports": {
+    "revenue": {
+      "title": "Revenue Report",
+      "generated": "2026-07-10T09:22:42.564093+00:00",
+      "period": "weekly",
+      "artists": [
+        {
+          "name": "Hector Rubio",
+          "streams": 115093009,
+          "revenue": 460372
+        },
+        {
+          "name": "Jesus Urquijo",
+          "streams": 4635222,
+          "revenue": 18540
+        },
+        {
+          "name": "Javier Arvayo",
+          "streams": 50000,
+          "revenue": 200
+        }
+      ],
+      "total_revenue": 479112,
+      "note": "100% Spotify. Oplaai no paga multi-plataforma."
+    },
+    "customers": {
+      "title": "Customer Report",
+      "clients": [
+        {
+          "name": "ABE Music (Abraham Ortega)",
+          "status": "active",
+          "product": "ABE Music OS"
+        },
+        {
+          "name": "Alejandro Zamora Recording",
+          "status": "active",
+          "product": "AZREC landing"
+        }
+      ],
+      "total_clients": 2
+    },
+    "capabilities": {
+      "title": "Capability Report",
+      "total": 8,
+      "active": 4,
+      "experimental": 4,
+      "list": [
+        {
+          "id": "sync-artist-data",
+          "path": "capabilities/sync-artist-data/",
+          "type": "business",
+          "domain": "music",
+          "version": "1.0.0",
+          "status": "active",
+          "agent": "collector",
+          "cost_tier": 2,
+          "description": "Sync artist data from all providers (Spotify, YouTube, Deezer, etc.)"
+        },
+        {
+          "id": "analyze-artist",
+          "path": "capabilities/analyze-artist/",
+          "type": "cognitive",
+          "domain": "music",
+          "version": "1.0.0",
+          "status": "active",
+          "agent": "research-agent",
+          "cost_tier": 3,
+          "description": "Analyze artist performance, trends, and opportunities"
+        },
+        {
+          "id": "generate-video",
+          "path": "capabilities/generate-video/",
+          "type": "business",
+          "domain": "music",
+          "version": "1.0.0",
+          "status": "experimental",
+          "agent": "video-agent",
+          "cost_tier": 4,
+          "description": "Generate talking head or lipsync videos from audio + image"
+        },
+        {
+          "id": "search-knowledge",
+          "path": "capabilities/search-knowledge/",
+          "type": "core",
+          "domain": "system",
+          "version": "1.0.0",
+          "status": "active",
+          "agent": null,
+          "cost_tier": 1,
+          "description": "Search across all memory stores (semantic, graph, long-term)"
+        },
+        {
+          "id": "score-artist",
+          "path": "capabilities/score-artist/",
+          "type": "cognitive",
+          "domain": "music",
+          "version": "1.0.0",
+          "status": "active",
+          "agent": "research-agent",
+          "cost_tier": 2,
+          "description": "Compute artist scores (momentum, virality, tour readiness, etc.)"
+        },
+        {
+          "id": "manage-crm",
+          "path": "capabilities/manage-crm/",
+          "type": "business",
+          "domain": "music",
+          "version": "0.5.0",
+          "status": "experimental",
+          "agent": "sales-agent",
+          "cost_tier": 2,
+          "description": "Manage artist CRM, leads, and relationships"
+        },
+        {
+          "id": "publish-track",
+          "path": "capabilities/publish-track/",
+          "type": "business",
+          "domain": "music",
+          "version": "0.5.0",
+          "status": "experimental",
+          "agent": "marketing-agent",
+          "cost_tier": 3,
+          "description": "Publish tracks to distribution platforms"
+        },
+        {
+          "id": "process-payment",
+          "path": "capabilities/process-payment/",
+          "type": "business",
+          "domain": "finance",
+          "version": "0.5.0",
+          "status": "experimental",
+          "agent": "finance-agent",
+          "cost_tier": 1,
+          "description": "Process payments via Stripe or Mercado Pago"
+        }
+      ]
+    },
+    "agents": {
+      "title": "Agent Report",
+      "registry_agents": 2,
+      "adk_agents": 36,
+      "total": 38
+    },
+    "automation": {
+      "title": "Automation Report",
+      "scripts_total": 104,
+      "cron_jobs": 4,
+      "automated_tests": 0
+    },
+    "risk": {
+      "title": "Risk Report",
+      "risks": [
+        {
+          "name": "Single VPS",
+          "severity": "high",
+          "mitigation": "Backup cron diario + recovery manual"
+        },
+        {
+          "name": "No multi-tenancy",
+          "severity": "medium",
+          "mitigation": "HAS-011 planned"
+        },
+        {
+          "name": "SSH key single-point",
+          "severity": "medium",
+          "mitigation": "HTTPS token backup"
+        }
+      ],
+      "overall_risk": "medium"
+    },
+    "tech_debt": {
+      "title": "Technical Debt Report",
+      "items": [
+        {
+          "area": "apps/observe/",
+          "debt": "resolved",
+          "note": "Now implemented"
+        },
+        {
+          "area": "apps/understand/",
+          "debt": "resolved",
+          "note": "Now implemented"
+        },
+        {
+          "area": "apps/control/",
+          "debt": "resolved",
+          "note": "Now implemented"
+        },
+        {
+          "area": "apps/agents/hermes_client.py",
+          "debt": "partial",
+          "note": "Re-export from act"
+        },
+        {
+          "area": "apps/learning/",
+          "debt": "duplicate",
+          "note": "Merge with apps/learn/"
+        }
+      ],
+      "estimated_hours_to_clear": 4
+    },
+    "founder_dependency": {
+      "title": "Founder Dependency Report",
+      "founder_dependency_index": 18,
+      "autonomy_score": 82,
+      "timestamp": "2026-07-10T09:22:45.547039+00:00",
+      "details": {
+        "sessions_analyzed": 23,
+        "total_manual_events": 13,
+        "total_auto_events": 743,
+        "autonomy_rate_pct": 98.3,
+        "manual_rate_pct": 1.7
+      },
+      "components": {
+        "autonomy_rate_weighted": 68.8,
+        "script_automation": 6.0,
+        "commands_coverage": 7.5
+      },
+      "scripts": {
+        "total": 104,
+        "cron_automated": 4
+      },
+      "commands": {
+        "slash_commands": 25,
+        "auto_commands": [
+          "status",
+          "backup",
+          "brain",
+          "gsd",
+          "sdd-new",
+          "build",
+          "sales",
+          "dev",
+          "support",
+          "agent",
+          "knowledge",
+          "finance",
+          "security",
+          "ops",
+          "quality",
+          "strategy",
+          "presentar",
+          "deploy",
+          "doc",
+          "doc",
+          "doc",
+          "doc",
+          "plan",
+          "verify",
+          "evolve"
+        ]
+      }
+    },
+    "knowledge_growth": {
+      "title": "Knowledge Growth Report",
+      "total_sessions": 37,
+      "sessions_with_lessons": 27,
+      "doc_files": 13
+    },
+    "kill": {
+      "title": "Kill/Scale Report",
+      "recommendations": [
+        {
+          "item": "apps/learning/",
+          "action": "KILL",
+          "reason": "Duplicate of apps/learn/"
+        },
+        {
+          "item": "apps/agent_metrics/",
+          "action": "KILL",
+          "reason": "Absorbed by measure/scoreboard"
+        },
+        {
+          "item": "Capability Bus",
+          "action": "SCALE",
+          "reason": "New, needs adoption"
+        }
+      ]
+    },
+    "scale": {
+      "title": "Scale Report",
+      "scale_candidates": [
+        {
+          "item": "Content Studio",
+          "potential": "high",
+          "next_step": "Multi-tenant MCP tools"
+        },
+        {
+          "item": "OmniVoice",
+          "potential": "high",
+          "next_step": "API marketplace"
+        },
+        {
+          "item": "Capability Bus",
+          "potential": "medium",
+          "next_step": "Adopt across all products"
+        }
+      ]
+    }
+  },
+  "report_count": 11
+}

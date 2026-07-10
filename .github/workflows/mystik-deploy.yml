@@ -1,0 +1,41 @@
+name: Mystik Deploy
+on:
+  push:
+    branches: [main]
+    paths: ["products/mystik/**", "infra/docker-compose.mystik.yml"]
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.14"
+      - run: pip install fastapi uvicorn httpx pydantic-settings
+      - run: PYTHONPATH=. python3 -m pytest products/mystik/test_mystik.py -q
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy Mystik stack to VPS
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: 149.56.46.173
+          username: ubuntu
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd /home/ubuntu/sonora-digital-corp
+            git pull origin main
+
+            # Build and deploy Mystik stack
+            docker compose -f infra/docker-compose.mystik.yml up -d --build
+
+            # SSL
+            sudo certbot --nginx -d mystik.sonoradigitalcorp.com \
+              --non-interactive --agree-tos --email luis@sonoradigitalcorp.com || true
+            sudo systemctl reload nginx || true
+
+            echo "✅ Mystik AI deployed"

@@ -1,56 +1,146 @@
 {
-  "session_id": "ses_20260710-content-pipeline",
-  "date": "2026-07-10",
-  "spec_id": "SPEC-20260710-001",
-  "tier": 2,
-  "objective": "Unificar content pipeline con storage local, webhooks, fix bugs, limpieza VPS",
-  "errors": [
-    {"file": "edge-tts-server.py", "bug": "hash() no determinista entre procesos", "fix": "hashlib.md5()"},
-    {"file": "edge-tts-server.py", "bug": "return tupla invalida en FastAPI", "fix": "raise HTTPException(404)"},
-    {"file": "edge-tts-server.py", "bug": "URL hardcodeada a localhost", "fix": "PUBLIC_HOST env var"},
-    {"file": "docker-compose.products.yml", "bug": "YAML networks reemplazado por volumes en edit", "fix": "corregir estructura YAML"},
-    {"infra": "docker volumes", "bug": "omnivoice-data duplicado (3GB) + 10 volumes sdc_* huerfanos", "fix": "docker volume rm"}
-  ],
-  "successes": [
-    "storage local persistente con nginx, $0, 0 containers extra",
-    "webhook delivery automatico post-generacion",
-    "26GB recuperados de disco (71% → 44%)",
-    "Open Notebook desplegado (reemplazo open-source de Google NotebookLM)",
-    "Google MCP eliminado completamente"
-  ],
-  "incomplete": [
-    "LoRA real: use_lora flag existe pero nunca se pasa a FAL API",
-    "Voice cloning real: clone_voice() solo inserta en DB, no llama a OmniVoice",
-    "OCR: EasyOCR no instalado, tool no creada",
-    "Image editing: FAL flux-fill-pro no integrado",
-    "Avatar interactivo: pipeline Whisper→DeepSeek→TTS→Muapi no construido"
-  ],
-  "files_created": [
-    "products/content-studio/migrations/002_storage_webhooks.sql",
-    "process/completed/20260710-content-pipeline/SPEC.md",
-    "process/completed/20260710-content-pipeline/LECCION.md",
-    "process/completed/20260710-content-pipeline/events.jsonl"
-  ],
-  "files_modified": [
-    "products/content-studio/server.py",
-    "products/content-studio/edge-tts-server.py",
-    "infra/docker-compose.products.yml",
-    "config/mcp/mcp-ecosystem.json",
-    "AGENTS.md",
-    "scripts/ver.sh"
-  ],
-  "score": {
-    "revenue_impact": 5,
-    "scalability": 7,
-    "reusability": 8,
-    "automation_impact": 9,
-    "knowledge_impact": 6,
-    "reliability": 7,
-    "founder_independence": 8,
-    "operational_simplicity": 6,
-    "customer_value": 5,
-    "finops_efficiency": 9
-  },
-  "total_score": 70,
-  "veredicto": "PASA"
+  "session": "2026-07-10",
+  "title": "Full Inventory + Fork Products + Gap Analysis",
+  "type": "inventory",
+  "entries": [
+    {
+      "category": "products_forked",
+      "detail": "content-studio pushed to sonoradigitalcorp-H/content-studio",
+      "commit": "146e61d"
+    },
+    {
+      "category": "products_forked",
+      "detail": "omnivoice pushed to sonoradigitalcorp-H/omnivoice",
+      "commit": "b3b5112"
+    },
+    {
+      "category": "products_forked",
+      "detail": "open-notebook pushed to sonoradigitalcorp-H/open-notebook",
+      "commit": "571a16b"
+    },
+    {
+      "category": "products_forked",
+      "detail": "SSH push failed (key had no access to org repos). Switched to HTTPS with GH_TOKEN"
+    },
+    {
+      "category": "inventory",
+      "detail": "Total source files: ~3,045 (excluding node_modules, .git, backups, venv)"
+    },
+    {
+      "category": "inventory",
+      "detail": "Landing/web pages: ~80+ HTML pages across products, apps, frontends, docs, clients"
+    },
+    {
+      "category": "inventory",
+      "detail": "Apps: 20+ dirs under apps/ (SIGNAL, abe-service, jarvis, guardian, hermes, webui = production; observe/understand/learn/control = stubs)"
+    },
+    {
+      "category": "inventory",
+      "detail": "PWAs: 3 (ABE Music, WebUI/Mystic, Yami)"
+    },
+    {
+      "category": "inventory",
+      "detail": "MCPs: 30+ tools, 8 servers, gateway, auth, registry, scheduler, sandbox, providers, workflow(6), ADK(34 agents), SDK, CLI"
+    },
+    {
+      "category": "inventory",
+      "detail": "CLIs: 2 (sdc, sonora) + 103 scripts"
+    },
+    {
+      "category": "inventory",
+      "detail": "Skills: 20+ (11 top-level + 8 process + 8 capability handlers)"
+    },
+    {
+      "category": "inventory",
+      "detail": "Tools: layered architecture (definitions → registry → 30 implementations → executor router → ADK bridge)"
+    },
+    {
+      "category": "inventory",
+      "detail": "Agent registry: 11 agents in agents/registry.yaml + 34 ADK agents in mcp/adk/agents/"
+    },
+    {
+      "category": "inventory",
+      "detail": "Process specs: 11 HAS files (HAS-000 through HAS-011) + 36 completed sessions"
+    },
+    {
+      "category": "inventory",
+      "detail": "Tests: 78 (5 suites) in core"
+    },
+    {
+      "category": "inventory",
+      "detail": "Revenue tracked: Hector Rubio ($460k), Javier Arvayo ($200), Jesus Urquijo ($18.5k)"
+    },
+    {
+      "category": "critical_gaps",
+      "detail": "prompts/prompts/OS/ directory does NOT exist — 10 Sub-OS prompts missing (Sales, Dev, Support, Agent, Knowledge, Finance, Security, Ops, Quality, Strategy)"
+    },
+    {
+      "category": "critical_gaps",
+      "detail": "AGENTS.md references prompts/prompts/OS/ paths that are broken"
+    },
+    {
+      "category": "critical_gaps",
+      "detail": "capabilities/*/prompts/ — all 8 directories empty"
+    },
+    {
+      "category": "critical_gaps",
+      "detail": "apps/observe/ (Level 1 Kernel) — stub only"
+    },
+    {
+      "category": "critical_gaps",
+      "detail": "apps/understand/ (Level 2 Kernel) — stub only"
+    },
+    {
+      "category": "critical_gaps",
+      "detail": "apps/control/ (Level 7 Kernel) — stub only"
+    },
+    {
+      "category": "critical_gaps",
+      "detail": "apps/learn/ (Level 6 Kernel) — only heuristics.py + evolution/"
+    },
+    {
+      "category": "critical_gaps",
+      "detail": "manuals/ directory does not exist — no user/admin manuals"
+    },
+    {
+      "category": "critical_gaps",
+      "detail": "evolution/prompts/ directory is empty"
+    },
+    {
+      "category": "partial_modules",
+      "detail": "mcp/plugins/, mcp/security/, mcp/swarm/, mcp/alerts/, mcp/achievements/, mcp/chaos/, mcp/templates/ — all partial"
+    },
+    {
+      "category": "partial_modules",
+      "detail": "apps/act/ (Level 4) — has modules but incomplete"
+    },
+    {
+      "category": "partial_modules",
+      "detail": "apps/measure/ (Level 5) — has HTML but incomplete"
+    },
+    {
+      "category": "partial_modules",
+      "detail": "apps/agents/ — stub only"
+    },
+    {
+      "category": "partial_modules",
+      "detail": "apps/voice/ — pipeline partial"
+    },
+    {
+      "category": "lesson",
+      "detail": "SSH key on VPS belongs to user account; for pushing to org repos need HTTPS with token or deploy key with org access"
+    },
+    {
+      "category": "lesson",
+      "detail": "GitHub API (gh) works with OAuth token even when SSH push fails"
+    },
+    {
+      "category": "lesson",
+      "detail": "fork-product.sh script automates extracting any product dir into standalone repo"
+    },
+    {
+      "category": "services",
+      "detail": "15 active services on VPS (ports 3900-8768 + Neo4j, Qdrant, n8n)"
+    }
+  ]
 }

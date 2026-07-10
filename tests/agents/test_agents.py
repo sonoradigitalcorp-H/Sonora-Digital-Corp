@@ -8,7 +8,7 @@ pytestmark = pytest.mark.filterwarnings("ignore")
 
 # ── Monitor Agent ──
 
-@patch("apps.agents.monitor_agent.subprocess.run")
+@patch("apps.act.agents.monitor_agent.subprocess.run")
 def test_monitor_detect_all_healthy(mock_run):
     from apps.agents.monitor_agent import detect_dead_containers
     mock_run.return_value = MagicMock(stdout="sdc-neo4j|Up 8 minutes (healthy)\nsdc-qdrant|Up 24 hours (healthy)\n")
@@ -16,7 +16,7 @@ def test_monitor_detect_all_healthy(mock_run):
     assert result == []
 
 
-@patch("apps.agents.monitor_agent.subprocess.run")
+@patch("apps.act.agents.monitor_agent.subprocess.run")
 def test_monitor_detect_dead_container(mock_run):
     from apps.agents.monitor_agent import detect_dead_containers
     mock_run.return_value = MagicMock(stdout="sdc-neo4j|Up 8 minutes (healthy)\nsdc-broken|Up 2 hours\n")
@@ -25,7 +25,7 @@ def test_monitor_detect_dead_container(mock_run):
     assert result == []
 
 
-@patch("apps.agents.monitor_agent.subprocess.run")
+@patch("apps.act.agents.monitor_agent.subprocess.run")
 def test_monitor_detect_truly_down(mock_run):
     from apps.agents.monitor_agent import detect_dead_containers
     mock_run.return_value = MagicMock(stdout="sdc-neo4j|Up 8 minutes (healthy)\nsdc-dead|Exited (137) 5 minutes ago\n")
@@ -34,7 +34,7 @@ def test_monitor_detect_truly_down(mock_run):
     assert result[0]["container"] == "sdc-dead"
 
 
-@patch("apps.agents.monitor_agent.subprocess.run")
+@patch("apps.act.agents.monitor_agent.subprocess.run")
 def test_monitor_docker_timeout(mock_run):
     from apps.agents.monitor_agent import detect_dead_containers
     mock_run.side_effect = __import__("subprocess").TimeoutExpired(cmd="docker", timeout=15)
@@ -44,7 +44,7 @@ def test_monitor_docker_timeout(mock_run):
 
 # ── Healer Agent ──
 
-@patch("apps.agents.healer_agent.neo4j_query")
+@patch("apps.act.agents.healer_agent.neo4j_query")
 def test_healer_get_dependencies(mock_neo4j):
     from apps.agents.healer_agent import get_dependencies
     mock_neo4j.return_value = [{"name": "ABE Service"}, {"name": "JARVIS Web UI"}]
@@ -53,7 +53,7 @@ def test_healer_get_dependencies(mock_neo4j):
     assert "ABE Service" in result
 
 
-@patch("apps.agents.healer_agent.neo4j_query")
+@patch("apps.act.agents.healer_agent.neo4j_query")
 def test_healer_no_dependencies(mock_neo4j):
     from apps.agents.healer_agent import get_dependencies
     mock_neo4j.return_value = []
@@ -65,11 +65,10 @@ def test_healer_no_dependencies(mock_neo4j):
 
 @patch("httpx.post")
 def test_notifier_send_telegram(mock_post):
-    from apps.agents.notifier_agent import send_telegram
+    from apps.act.agents.notifier_agent import load_credentials, send_telegram
     import os
     with patch.dict(os.environ, {"ABE_FENIX_BOT_TOKEN": "test:token", "ABE_TELEGRAM_CHAT": "12345"}):
-        import apps.agents.notifier_agent as na
-        na.load_credentials()
+        load_credentials()
         mock_post.return_value = MagicMock(status_code=200)
-        na.send_telegram("sdc-test", "container_critical", "test details")
+        send_telegram("sdc-test", "container_critical", "test details")
         assert mock_post.called

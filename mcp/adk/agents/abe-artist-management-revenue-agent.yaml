@@ -7,7 +7,7 @@ capability: financial-operations
 maturity: 2-Assisted
 tools:
   - sonora:capability_resolve
-- sonora:billing_plan
+  - sonora:billing_plan
   - sonora:billing_invoice
   - sonora:finops_summary
 policies:

@@ -1,263 +1,158 @@
-# Universal Event Bus — Catalog of all event types (HAS-003)
-# Schema: {id, type, version, timestamp, source, tenant, correlation_id, causation_id, subject, payload, metadata}
-version: 2
-updated: 2026-07-08T20:00:00Z
-
-event_schema:
+version: 3
+updated: '2026-07-10'
+description: "Event Catalog \u2014 auto-generado desde c\xF3digo. Todos los eventos\
+  \ que el sistema emite, consume, o trackea."
+schema:
   required:
-    - id
-    - type
-    - version
-    - timestamp
-    - source
-    - tenant
-    - subject
+  - id
+  - type
+  - version
+  - timestamp
+  - source
   optional:
-    - correlation_id
-    - causation_id
-    - payload
-    - metadata
-
+  - correlation_id
+  - causation_id
+  - payload
+  - metadata
+  - tenant
+  - subject
 categories:
-  artist:
-    description: "Artist data operations"
-    events:
-      - type: artist.data_sync.completed
-        version: 1
-        description: "Artist data synced from all providers"
-        subject_type: artist
-        emitted_by: [collector, sync-cron]
-      - type: artist.data_sync.failed
-        version: 1
-        description: "Artist data sync failed"
-        subject_type: artist
-        emitted_by: [collector, sync-cron]
-
-  track:
-    description: "Track lifecycle"
-    events:
-      - type: track.published
-        version: 1
-        description: "Track published to distribution platforms"
-        subject_type: track
-        emitted_by: [publish-capability]
-
-  video:
-    description: "Video generation"
-    events:
-      - type: video.generated
-        version: 1
-        description: "Video generated"
-        subject_type: video
-        emitted_by: [video-agent]
-
-  revenue:
-    description: "Revenue and financial events"
-    events:
-      - type: revenue.updated
-        version: 1
-        description: "Revenue data updated"
-        subject_type: artist
-        emitted_by: [revenue-pipeline]
-
-  campaign:
-    description: "Marketing campaigns"
-    events:
-      - type: campaign.created
-        version: 1
-        description: "Marketing campaign created"
-        subject_type: campaign
-        emitted_by: [marketing-agent]
-
   agent:
-    description: "Agent lifecycle"
-    events:
-      - type: agent.action.executed
-        version: 1
-        description: "Agent completed an action"
-        subject_type: system
-        emitted_by: [all_agents]
-      - type: agent.started
-        version: 1
-        subject_type: system
-      - type: agent.completed
-        version: 1
-        subject_type: system
-      - type: agent.failed
-        version: 1
-        subject_type: system
-      - type: agent.scored
-        version: 1
-        subject_type: system
-
-  system:
-    description: "System-level events"
-    events:
-      - type: system.error.occurred
-        version: 1
-        description: "System error occurred"
-        subject_type: system
-        emitted_by: [all_services]
-      - type: system.health.check
-        version: 1
-        subject_type: system
-
+  - agent_health_report
+  - agent_manifest_created
+  - orchestrator_updated
+  - skill_execution
+  - skill_marketplace
+  analytics:
+  - score_calculated
+  - score_dashboard_created
+  architecture:
+  - domain_architecture_defined
+  artist:
+  - artist.analysis.completed
+  - artist.analysis.failed
+  - artist.analysis.requested
+  - artist.analysis.started
+  - artist.data_sync.completed
+  - artist.data_sync.failed
+  - artist.data_sync.started
+  - artist.score.computed
+  - artist.score.failed
+  - artist.scoring.requested
+  - artist.sync.requested
+  capability:
+  - capability_registered
+  cicd:
+  - pipeline_completed
+  - pipeline_events_dual
+  - pipeline_initialized
+  - pipeline_operational
+  collector:
+  - instagram_api_failed_try_browser
+  - instagram_api_success
+  - instagram_browser_success
+  - instagram_profile_not_found
+  - spotify_scrape_failed
+  - spotify_scrape_success
+  - youtube_artist_found
+  - youtube_artist_not_found
+  - youtube_search_completed
+  - youtube_search_failed
   constitution:
-    description: "Constitution gate events"
-    events:
-      - type: constitution.gate.violation
-        version: 1
-        description: "Constitution gate violated"
-        subject_type: system
-        emitted_by: [constitution-engine]
-      - type: constitution.gate.passed
-        version: 1
-        subject_type: system
-
-  evolution:
-    description: "Evolution Engine events"
-    events:
-      - type: evolution.adr.proposed
-        version: 1
-        description: "Evolution Engine proposes an ADR"
-        subject_type: system
-        emitted_by: [evolution-engine]
-      - type: evolution.improvement_proposed
-        version: 1
-      - type: evolution.simulated
-        version: 1
-      - type: evolution.implemented
-        version: 1
-      - type: evolution.measured
-        version: 1
-
-  memory:
-    description: "Memory system events (HAS-002)"
-    events:
-      - type: memory.stored
-        version: 1
-        description: "Data stored in memory"
-        subject_type: system
-      - type: memory.retrieved
-        version: 1
-        description: "Data retrieved from memory"
-        subject_type: system
-      - type: memory.searched
-        version: 1
-        subject_type: system
-      - type: memory.deleted
-        version: 1
-        subject_type: system
-      - type: memory.error
-        version: 1
-        subject_type: system
-
-  session:
-    description: "Session lifecycle"
-    events:
-      - type: session.started
-        version: 1
-      - type: session.ended
-        version: 1
-      - type: session.checkpoint
-        version: 1
-
-  plan:
-    description: "Planning events"
-    events:
-      - type: plan.created
-        version: 1
-      - type: plan.approved
-        version: 1
-      - type: plan.rejected
-        version: 1
-      - type: plan.decomposed
-        version: 1
-
-  spec:
-    description: "Spec lifecycle"
-    events:
-      - type: spec.created
-        version: 1
-      - type: spec.updated
-        version: 1
-      - type: spec.scored
-        version: 1
-      - type: spec.completed
-        version: 1
-
-  code:
-    description: "Code events"
-    events:
-      - type: code.generated
-        version: 1
-      - type: code.reviewed
-        version: 1
-      - type: code.tested
-        version: 1
-
-  build:
-    description: "Build and deployment"
-    events:
-      - type: build.started
-        version: 1
-      - type: build.completed
-        version: 1
-      - type: build.failed
-        version: 1
-
+  - governance_hardened
+  crm:
+  - crm.action.requested
+  - crm.contact.created
+  - crm.contact.updated
+  - crm.lead.lost
+  - crm.lead.qualified
   deploy:
-    description: "Deployment lifecycle"
-    events:
-      - type: deploy.started
-        version: 1
-      - type: deploy.completed
-        version: 1
-      - type: deploy.rolled_back
-        version: 1
-
-  security:
-    description: "Security events"
-    events:
-      - type: security.policy_violation
-        version: 1
-      - type: security.access_denied
-        version: 1
-      - type: security.secret_rotated
-        version: 1
-
-  cost:
-    description: "Cost events"
-    events:
-      - type: cost.estimated
-        version: 1
-      - type: cost.incurred
-        version: 1
-      - type: cost.over_budget
-        version: 1
-
-  gate:
-    description: "Pipeline gate events"
-    events:
-      - type: gate.passed
-        version: 1
-      - type: gate.failed
-        version: 1
-      - type: gate.error
-        version: 1
-
+  - deployment_completed
   eventbus:
-    description: "Event Bus lifecycle"
-    events:
-      - type: eventbus.migrated
-        version: 1
-      - type: eventbus.rotated
-        version: 1
-
-  module:
-    description: "Module lifecycle (within a SPEC)"
-    events:
-      - type: module.started
-        version: 1
-      - type: module.completed
-        version: 1
+  - consumer_groups_created
+  - eventbus.migrated
+  evolution:
+  - adr_created
+  - evolution.completed
+  - evolution.improvement_proposed
+  - evolution.measured
+  - evolution.simulated
+  - evolution.started
+  finance:
+  - financial_summary
+  - invoice.generated
+  - payment.failed
+  - payment.process.requested
+  - payment.processed
+  - payment.reconciled
+  - payment.refunded
+  git:
+  - branch_protection_enabled
+  - commit
+  infra:
+  - docker_build_completed
+  - docker_build_started
+  - migration_docker_active
+  - migration_systemd_shutdown
+  - redis_stream_created
+  knowledge:
+  - graph.populated
+  - knowledge.indexed
+  - knowledge.search.completed
+  - knowledge.search.failed
+  - knowledge.search.requested
+  - knowledge.session_ingested
+  - knowledge_stored
+  - knowledge_updated
+  memory:
+  - engram_bridge_created
+  - engram_upgraded
+  monitoring:
+  - health_review_completed
+  other:
+  - asset_id
+  - changes
+  - count
+  - fields_added
+  - files
+  - id
+  - specs_archived
+  quality:
+  - quality_pass
+  sales:
+  - customer_onboarded
+  - deal_created
+  - deal_lost
+  - deal_won
+  - lead_qualified
+  - lead_received
+  - proposal_accepted
+  - proposal_generated
+  - sales_agent_registered
+  - sales_pipeline_created
+  scheduler:
+  - cron.daily_sync
+  security:
+  - security_scan_completed
+  session:
+  - completion_archived
+  - session.started
+  - session_auto_start_implemented
+  spec:
+  - gherkin_created
+  - spec_completed
+  - spec_created
+  testing:
+  - tests_passed
+  track:
+  - track.distribution.started
+  - track.publish.completed
+  - track.publish.failed
+  - track.publish.requested
+  - track.publish.started
+  video:
+  - video.generation.completed
+  - video.generation.failed
+  - video.generation.progress
+  - video.generation.requested
+  - video.generation.started

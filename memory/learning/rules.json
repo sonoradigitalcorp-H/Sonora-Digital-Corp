@@ -1,7 +1,7 @@
 {
-  "version": "2.0.0",
-  "updated": "2026-07-01",
-  "session": "Native Agent OS Complete Build",
+  "version": "2.1.0",
+  "updated": "2026-07-10",
+  "session": "Full Inventory + Fork Products",
   "rules": [
     {
       "id": "R-001",
@@ -72,6 +72,27 @@
       "confidence": 4,
       "violations": 2,
       "last_validated": "2026-07-01"
+    },
+    {
+      "id": "R-011",
+      "rule": "Para pushear a GitHub org repos, usar HTTPS con token en vez de SSH: `git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/org/repo.git`",
+      "confidence": 5,
+      "violations": 1,
+      "last_validated": "2026-07-10"
+    },
+    {
+      "id": "R-012",
+      "rule": "AGENTS.md referencia paths de prompts que deben existir fisicamente antes de referenciarlos",
+      "confidence": 4,
+      "violations": 1,
+      "last_validated": "2026-07-10"
+    },
+    {
+      "id": "R-013",
+      "rule": "Todo nuevo producto debe tener API.md y fork-product.sh compatible",
+      "confidence": 3,
+      "violations": 0,
+      "last_validated": "2026-07-10"
     }
   ]
 }

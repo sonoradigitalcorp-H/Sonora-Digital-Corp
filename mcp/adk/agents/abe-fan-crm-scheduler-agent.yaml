@@ -7,7 +7,7 @@ capability: agent-operations
 maturity: 2-Assisted
 tools:
   - sonora:capability_resolve
-- sonora:scheduler_list
+  - sonora:scheduler_list
   - sonora:scheduler_add
   - sonora:alerts_check
 policies:

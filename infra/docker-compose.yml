@@ -186,7 +186,7 @@ services:
       - "sdc.service=telegram"
     ports:
       - "127.0.0.1:3003:3003"
-    env_file: ../.env
+    env_file: ../config/secrets/.env
     environment:
       - ABE_TELEGRAM_TOKEN=${ABE_TELEGRAM_TOKEN}
       - ABE_TELEGRAM_CHAT=${ABE_TELEGRAM_CHAT}
@@ -270,7 +270,7 @@ services:
       - "sdc.service=webui"
     ports:
       - "127.0.0.1:5174:5174"
-    env_file: ../.env
+    env_file: ../config/secrets/.env
     environment:
       - NEO4J_URI=bolt://sdc-neo4j:7687
       - NEO4J_PASSWORD=${NEO4J_PASSWORD:-RezBcUz5ufu7AUXg1hZ3}
