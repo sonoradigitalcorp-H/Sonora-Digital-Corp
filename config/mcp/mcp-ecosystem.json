@@ -1,5 +1,5 @@
 {
-  "ecosystem": "Sonora Digital Corp — MCP Ecosystem v1.0",
+  "ecosystem": "Sonora Digital Corp — MCP Ecosystem v2.0",
   "gateway": {
     "name": "sonora-mcp-gateway",
     "type": "stdio",
@@ -49,11 +49,40 @@
       "name": "Plausible MCP",
       "type": "http",
       "endpoint": "http://127.0.0.1:3006/mcp"
+    },
+    {
+      "id": "sdc-content",
+      "name": "SDC Content Server",
+      "type": "sse",
+      "endpoint": "http://127.0.0.1:8765/sse",
+      "tools": 11,
+      "description": "Content generation pipeline: images, TTS, talking head, queue"
+    },
+    {
+      "id": "sdc-edge-tts",
+      "name": "SDC Edge TTS",
+      "type": "http",
+      "endpoint": "http://127.0.0.1:8766",
+      "description": "Free TTS via Microsoft Edge (646 voices)"
+    },
+    {
+      "id": "sdc-omnivoice",
+      "name": "SDC OmniVoice Studio",
+      "type": "http",
+      "endpoint": "http://127.0.0.1:3900",
+      "description": "Voice cloning + TTS via OmniVoice Studio (free, 646 languages, CPU)"
+    },
+    {
+      "id": "sdc-open-notebook",
+      "name": "SDC Open Notebook",
+      "type": "http",
+      "endpoint": "http://127.0.0.1:5055",
+      "description": "Open-source NotebookLM: RAG with PDFs, web, YouTube, podcast gen, multi-speaker TTS"
     }
   ],
   "bindings": {
-    "hermes": ["sonora-mcp-gateway"],
+    "hermes": ["sonora-mcp-gateway", "sdc-content", "sdc-edge-tts", "sdc-omnivoice", "sdc-open-notebook"],
     "openclaw": ["paperclip", "n8n", "metabase", "uptime", "dashy"],
-    "mystic": ["sonora-mcp-gateway"]
+    "mystic": ["sonora-mcp-gateway", "sdc-content", "sdc-edge-tts", "sdc-omnivoice", "sdc-open-notebook"]
   }
 }

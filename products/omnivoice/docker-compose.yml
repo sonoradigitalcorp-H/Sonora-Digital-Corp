@@ -1,0 +1,21 @@
+services:
+  omnivoice:
+    image: ghcr.io/debpalash/omnivoice-studio:stable
+    container_name: sdc-omnivoice
+    ports:
+      - "127.0.0.1:3900:3900"
+    volumes:
+      - omnivoice_data:/app/omnivoice_data
+      - /home/ubuntu/.cache/huggingface:/root/.cache/huggingface
+    networks:
+      - sdc-network
+    restart: unless-stopped
+    mem_limit: 2g
+    memswap_limit: 3g
+
+volumes:
+  omnivoice_data:
+
+networks:
+  sdc-network:
+    external: true

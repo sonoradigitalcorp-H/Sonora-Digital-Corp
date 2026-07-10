@@ -37,37 +37,38 @@ Host sdc-prod
   LocalForward 8080 localhost:8080
   LocalForward 5180 localhost:5180
   LocalForward 5174 localhost:5174
+  LocalForward 8502 localhost:8502
+  LocalForward 5055 localhost:5055
 ```
-Luego `ssh sdc-prod` forwards automático. Abrir `http://localhost:8080/` en laptop.
+Luego `ssh sdc-prod` forwards automático. Abrir en laptop:
+- `http://localhost:8080/` — Evolution Dashboard
+- `http://localhost:5174/` — Web UI
+- `http://localhost:8502/` — Open Notebook (RAG con documentos)
 
 ---
 
 ## Structure
 
-| Ruta | Qué es |
-|------|--------|
-| `apps/jarvis/` | 18 agentes, RAG, Neo4j, Qdrant |
-| `apps/webui/` | FastAPI frontend + WebSocket |
-| `apps/voice/` | Whisper + TTS |
-| `apps/hermes/` | MCP bridge + servicios |
-| `apps/abe-service/` | **ABE Music OS** — canal interno PWA con voz, avatar, contratos, revenue, CRM |
-| `planner/` | Capability Registry + Decision Engine — 7 módulos, 70 tests |
-| `scrapers/` | 8 colectores (Deezer, Apple Music, YouTube, Wikipedia, TikTok, Spotify, Instagram, Facebook) |
-| `scrapers/sync.py` | Sync orchestrator migrado a decision engine |
-| `config/registry.json` | Registry v2: 3 capabilities, 10 providers |
-| `platforms/telegram/` | Bot + 97 skills |
-| `platforms/whatsapp/` | Bridge |
-| `infra/` | Docker, compose, monitoreo, n8n |
-| `products/` | ABE Music, AZREC, Masterclass |
-| `tests/` | 78 tests (constitution 10 + collectors 17 + execution 24 + evolution 19 + ABE 9) |
-| `scripts/` | 50+ DevOps + `close-session.sh` (auto cleanup) + `constitution-gate.py` (HAS-001) + `evolution-cron.sh` (HAS-008) |
-| `process/has/` | **Hermes Architecture Standard** — 11 specs (HAS-000 through HAS-011) |
-| `process/completed/SPEC-20260701-004/` | Capability Registry + Decision Engine (Score 77) |
-| `process/completed/20260701-live-data-pipeline/` | Live Data Pipeline (Score 84) |
-| `constitution/` | 16 YAML files — source of truth (migrated from truth/) |
-| `truth/ → constitution/` | Backward-compat symlink |
-| `evolution/` | Evolution Engine (HAS-008) — observe, score, propose, generate |
-| `sonora-enterprise-os/` | **(eliminado)** contenido migrado a root |
+**Core OS** — `apps/`, `infra/`, `constitution/`, `process/`, `config/`, `scrapers/`, `platforms/`, `scripts/`
+**Productos** — `products/<name>/`
+
+| Ruta | Qué es | Dominio |
+|------|--------|---------|
+| `apps/jarvis/src/core/` | Core OS — módulos backend (neo4j_store, brain_graph, rag, llm) | Core |
+| `apps/webui/` | FastAPI frontend + WebSocket (:5174) | Core |
+| `apps/voice/` | Whisper + TTS | Core |
+| `apps/hermes/` | MCP bridge + publisher + thumbnails | Core |
+| `apps/abe_service/` | **ABE Music OS** — PWA, contratos, revenue, CRM | Core |
+| `apps/observe→control/` | Niveles 1-7 Cognitive Kernel | Core |
+| `planner/` | Capability Registry + Decision Engine | Core |
+| `scrapers/` | 8 colectores artísticos | Core |
+| `platforms/` | Telegram bot, WhatsApp bridge | Core |
+| `products/content-studio/` | Content gen: images, TTS, talking heads, queue | **Producto** |
+| `products/omnivoice/` | Voice cloning (Docker image, :3900) | **Producto** |
+| `products/open-notebook/` | Open-source NotebookLM: RAG, PDFs, web, podcast (Docker) | **Producto** |
+| `infra/` | Docker, compose, monitoreo | Core |
+| `tests/` | 78 tests (5 suites) | Core |
+| `scripts/` | DevOps + close-session + constitution-gate | Core |
 
 ## Comandos
 
@@ -82,28 +83,37 @@ ruff check apps/ collectors/ tests/ constitution/  # lint
 python3 scripts/constitution-gate.py --plan PLAN.yaml  # 6-gate constitution check
 python3 scripts/evolution-cron.sh                   # Evolution Engine cron
 python3 scripts/close-session.sh --dry-run          # test close flow
-docker compose -f infra/docker-compose.yml up -d
-python -m uvicorn apps.abe-service.main:app --host 127.0.0.1 --port 5180  # ABE Service
+scripts/up.sh                          # start all (core + products)
+docker compose -f infra/docker-compose.yml up -d    # core only
+docker compose -f infra/docker-compose.products.yml up -d  # products only
+python -m uvicorn apps.abe_service.main:app --host 127.0.0.1 --port 5180  # ABE Service
 ```
 
 ## Servicios
 
-| Puerto | Servicio | Systemd |
-|--------|----------|---------|
-| 5174 | Web UI | `jarvis-webui.service` --user |
-| 8000 | Hermes MCP | `hermes-gateway.service` --user |
-| 18789 | OpenClaw Gateway | `openclaw-gateway.service` |
-| 6333 | Qdrant | Docker |
-| 7687 | Neo4j | Docker |
-| 5678 | n8n | Docker (33 workflows) |
-| 5180 | **ABE Service** | `abe-service.service` --user |
-| 8080 | Evolucion Dashboard | `evolucion-dashboard.service` --user |
+| Puerto | Servicio | Dominio | Systemd |
+|--------|----------|---------|---------|
+| 5174 | Web UI | Core | `jarvis-webui.service` --user |
+| 8000 | Hermes MCP | Core | `hermes-gateway.service` --user |
+| 18789 | OpenClaw Gateway | Core | `openclaw-gateway.service` |
+| 6333 | Qdrant | Core | Docker |
+| 7687 | Neo4j | Core | Docker |
+| 5678 | n8n | Core | Docker (33 workflows) |
+| 5180 | **ABE Service** | Core | `abe-service.service` --user |
+| 8080 | Evolution Dashboard | Core | `evolucion-dashboard.service` --user |
+| 8765 | **Content Server MCP** | **Producto** | Docker |
+| 8766 | **Edge TTS API** | **Producto** | Docker |
+| 8768 | **Content Storage (nginx)** | **Producto** | Host |
+| 8502 | **Open Notebook UI** | **Producto** | Docker |
+| 5055 | **Open Notebook API** | **Producto** | Docker |
+| 3900 | **OmniVoice** | **Producto** | Docker |
 
 ## Comandos utiles
 
 ```bash
 bash scripts/ver.sh presentacion  # muestra como abrir presentacion en laptop
 bash scripts/ver.sh abe           # muestra como abrir ABE Service en laptop
+bash scripts/ver.sh open-notebook # muestra como abrir Open Notebook en laptop
 bash scripts/deploy.sh            # genera + despliega presentacion
 tmux attach -t presentacion       # ver presentacion en terminal
 ssh -L 8080:localhost:8080 ubuntu@149.56.46.173  # forwarding para laptop
@@ -136,7 +146,7 @@ Leer antes de empezar cualquier tarea nueva.
 ## Session HTML
 
 Estado completo desplegado en:
-- `apps/abe-service/pwa/estado.html` (via ABE Service :5180/pwa/estado.html)
+- `apps/abe_service/pwa/estado.html` (via ABE Service :5180/pwa/estado.html)
 - `docs/SONORA-EVOLUTION.html` (via python http.server :9090)
 - `memory/learning/session-20260701.json` (memoria de agentes)
 
