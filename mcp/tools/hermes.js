@@ -90,7 +90,7 @@ const tools = {
     description: 'Estado del agente Hermes',
     inputSchema: { type: 'object', properties: {} },
     handler: async () => {
-      return await hermesGet('/api/hermes/health');
+      return await hermesGet('/health');
     },
   },
 

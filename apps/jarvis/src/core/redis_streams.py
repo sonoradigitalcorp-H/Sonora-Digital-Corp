@@ -42,7 +42,11 @@ def get_redis():
         _client.ping()
         log.info(f"Redis connected: {REDIS_HOST}:{REDIS_PORT}")
         return _client
-    except redis.AuthenticationError:
+    except ModuleNotFoundError:
+        log.warning("Redis module not installed, falling back")
+        _fallback = True
+        return None
+    except Exception:
         log.warning("Redis auth failed, trying without password")
         try:
             _client = redis.Redis(

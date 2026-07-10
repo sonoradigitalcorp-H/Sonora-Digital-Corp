@@ -1,0 +1,104 @@
+# Mystik AI Stack — Asistente de ventas inteligente
+version: "3.8"
+
+services:
+  # ── Lobe Chat (UI) ──
+  lobe-chat:
+    image: lobehub/lobe-chat:latest
+    container_name: sdc-lobe-chat
+    ports:
+      - "3210:3210"
+    env_file: ../products/mystik/lobe-config.env
+    environment:
+      - DATABASE_URL=postgresql://mystik:mystik2026@postgres:5432/mystik
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - sdc-net
+
+  # ── Mystik Backend ──
+  mystik-api:
+    build: ../products/mystik
+    container_name: sdc-mystik-api
+    ports:
+      - "5200:5200"
+    environment:
+      - MYSTIK_OLLAMA_HOST=http://172.21.0.1:11434
+      - MYSTIK_OMNIVOICE_URL=http://172.21.0.1:3900
+      - MYSTIK_CONTENT_STUDIO_URL=http://172.21.0.1:8765
+      - MYSTIK_ABE_CRM_URL=http://172.21.0.1:5180
+      - MYSTIK_TWENTY_API_URL=http://twenty:3000
+      - MYSTIK_CHROMA_HOST=chroma
+    depends_on:
+      - twenty
+      - chroma
+    restart: unless-stopped
+    networks:
+      - sdc-net
+
+  # ── Twenty CRM ──
+  twenty:
+    image: twentycrm/twenty:latest
+    container_name: sdc-twenty
+    ports:
+      - "3002:3000"
+    environment:
+      - PG_DATABASE_URL=postgres://mystik:mystik2026@postgres:5432/mystik
+      - SERVER_URL=https://mystik.sonoradigitalcorp.com
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - sdc-net
+
+  # ── ChromaDB ──
+  chroma:
+    image: chromadb/chroma:latest
+    container_name: sdc-chroma
+    ports:
+      - "8001:8000"
+    volumes:
+      - chroma-data:/chroma/data
+    restart: unless-stopped
+    networks:
+      - sdc-net
+
+  # ── LiveKit (voz) ──
+  livekit:
+    image: livekit/livekit-server:latest
+    container_name: sdc-livekit
+    ports:
+      - "7880:7880"
+      - "7881:7881"
+    command: --config /etc/livekit.yaml
+    volumes:
+      - ./livekit.yaml:/etc/livekit.yaml
+    restart: unless-stopped
+    networks:
+      - sdc-net
+
+  # ── PostgreSQL (compartido) ──
+  postgres:
+    image: postgres:16-alpine
+    container_name: sdc-mystik-db
+    environment:
+      POSTGRES_USER: mystik
+      POSTGRES_PASSWORD: mystik2026
+      POSTGRES_DB: mystik
+    ports:
+      - "5433:5432"
+    volumes:
+      - mystik-db:/var/lib/postgresql/data
+    restart: unless-stopped
+    networks:
+      - sdc-net
+
+volumes:
+  chroma-data:
+  mystik-db:
+
+networks:
+  sdc-net:
+    external: true
+    name: sdc_default

@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const http = require('http');
 
-const REGISTRY_PATH = path.join(__dirname, '..', '..', 'sonora-enterprise-os', 'capabilities', 'REGISTRY.md');
+const REGISTRY_PATH = path.join(__dirname, '..', '..', 'capabilities', 'REGISTRY.md');
 const QDRANT_HOST = '127.0.0.1';
 const QDRANT_PORT = 6333;
 const CACHE_TTL = 60000;

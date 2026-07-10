@@ -7,7 +7,7 @@ capability: client-onboarding
 maturity: 2-Assisted
 tools:
   - sonora:capability_resolve
-- sonora:intake_query
+  - sonora:intake_query
   - sonora:intake_stats
   - sonora:enterprise_score
 policies:

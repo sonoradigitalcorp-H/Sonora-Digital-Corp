@@ -35,7 +35,7 @@ networking:
         - "127.0.0.1:8111"  # ABE API
         - "127.0.0.1:5174"  # Web UI
     - domain: "mystika.sonoradigitalcorp.com"
-      ssl: false
+      ssl: true
       upstreams:
         - "127.0.0.1:3001"  # Mystika Web
         - "127.0.0.1:4000"  # Mystika API

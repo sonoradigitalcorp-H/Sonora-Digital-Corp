@@ -7,6 +7,58 @@
 
 ---
 
+## Última sesión: 2026-07-10 — Full Inventory + Fork Products
+
+### Productos forkeados a repos independientes
+| Producto | Repo | Commit |
+|----------|------|--------|
+| content-studio | `sonoradigitalcorp-H/content-studio` | `146e61d` |
+| omnivoice | `sonoradigitalcorp-H/omnivoice` | `b3b5112` |
+| open-notebook | `sonoradigitalcorp-H/open-notebook` | `571a16b` |
+
+### Inventario total del ecosistema
+- **Source files**: ~3,045 (excluye node_modules, .git, backups)
+- **Landing/web pages**: ~80+ HTML
+- **Apps**: 20+ dirs (7 production, 6 stubs, resto parcial)
+- **PWAs**: 3 (ABE Music, WebUI, Yami)
+- **MCPs**: 30+ tools, 8 servers, gateway, ADK (34 agents), workflow (6), SDK, CLI
+- **Skills**: 20+ (11 top-level + 8 process + 8 capability handlers)
+- **Tools**: layered architecture (defs → registry → impls → router → ADK)
+- **Agent registry**: 11 agents + 34 ADK agent YAMLs
+- **Tests**: 78 (5 suites)
+- **Process specs**: 11 HAS files + 36 completed sessions
+- **Active services**: 15 on VPS (ports 3900-8768 + Neo4j/Qdrant/n8n)
+
+### Gaps corregidos esta sesión
+- ✅ `prompts/prompts/OS/` creado con 10 Sub-OS prompts
+- ✅ `memory/learning/session-20260710.json` creado
+- ✅ `process/completed/20260710-full-inventory/SESSION.md` creado con gap analysis completo
+
+### Gaps resueltos esta sesión
+| Gap | Solución |
+|-----|----------|
+| `apps/observe/` (Level 1) | ✅ pipeline.py + scheduler.py + events.py + 5 tests |
+| `apps/understand/` (Level 2) | ✅ pipeline.py + knowledge.py + truth.py + web.py + 8 tests |
+| `apps/control/` (Level 7) | ✅ main.py (FastAPI + HTML dashboard) + 6 tests |
+| `apps/learn/` (Level 6) | ✅ __init__.py + pipeline.py (ya tenía heuristics.py + evolution/) + 5 tests |
+| `apps/agents/` | ✅ re-exports desde apps/act/agents/ (hermes_client, monitor, healer, notifier) + 5 tests |
+| `capabilities/*/prompts/` | ✅ 8 prompts creados (analyze-artist, generate-video, manage-crm, process-payment, publish-track, score-artist, search-knowledge, sync-artist-data) |
+| `evolution/prompts/` | ✅ 3 prompts (evolution-agent, self-heal, optimizer) |
+| `manuals/` | ✅ manuals/{admin,user,products}/ con 5 manuales |
+
+### Gaps que YA estaban completos (corregido)
+| Módulo | Estado real |
+|--------|-------------|
+| `mcp/plugins/` | ✅ 109 lines |
+| `mcp/security/` | ✅ 200+ lines (security-audit + soul-policies) |
+| `mcp/swarm/` | ✅ 73 lines + samples |
+| `mcp/alerts/` | ✅ 82 lines |
+| `mcp/achievements/` | ✅ 97 lines |
+| `mcp/chaos/` | ✅ 97 lines |
+| `mcp/templates/` | ✅ 75 lines |
+
+---
+
 ## People
 
 | Persona | Rol | Nota |
@@ -108,6 +160,25 @@ python -m uvicorn apps.abe_service.main:app --host 127.0.0.1 --port 5180  # ABE 
 | 5055 | **Open Notebook API** | **Producto** | Docker |
 | 3900 | **OmniVoice** | **Producto** | Docker |
 
+## SSL Automation
+
+`scripts/ssl-auto.sh` + `.github/workflows/ssl-auto.yml` automatizan SSL para nuevos dominios.
+
+### Desde GitHub (recomendado)
+Ir a Actions → SSL Auto → Run workflow → ingresar dominio, puerto, email.
+
+### Desde VPS
+```bash
+bash scripts/ssl-auto.sh client.sonoradigitalcorp.com 3001 email@example.com
+```
+
+El workflow usa `secrets.VPS_SSH_KEY` para conectar al VPS y:
+1. Obtiene certificado Let's Encrypt via certbot
+2. Genera config nginx en `/etc/nginx/sites-enabled/ssl-auto-{domain}.conf`
+3. Recarga nginx
+
+El nginx principal incluye automáticamente: `include /etc/nginx/sites-enabled/ssl-auto-*.conf`
+
 ## Comandos utiles
 
 ```bash
@@ -129,14 +200,19 @@ ssh -L 8080:localhost:8080 ubuntu@149.56.46.173  # forwarding para laptop
 
 **→ 100% Spotify. Oplaai no paga multi-plataforma.**
 
-## Key Learnings (SPEC-20260701-004)
+## Key Learnings
 
+### SPEC-20260701-004
 - Capability-first abstractions: registry fuerza todas las abstracciones
 - SDK executor bridge necesario para conectar engine con collectors multi-step
 - Fallback por weight > health-first (más robusto)
 - Browser scraping frágil pero necesario sin API keys
 - Instagram bloqueado (login wall) — Wikipedia bloqueado (datacenter 403)
-- Sync cron no instalado aún — script en `scripts/install-sync-cron.sh`
+
+### SPEC-20260710 (Fork Products)
+- SSH key en VPS auth al user account, NO a org repos. Para pushear a org repos usar HTTPS con token: `git remote set-url origin https://x-access-token:${GH_TOKEN}@github.com/sonoradigitalcorp-H/<repo>.git`
+- GitHub API (`gh`) funciona con OAuth token aun si SSH push falla
+- `scripts/fork-product.sh` automatiza extract + standalone repo creation
 
 ## Protocolo de Construccion
 

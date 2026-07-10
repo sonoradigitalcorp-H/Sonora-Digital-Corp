@@ -7,7 +7,7 @@ capability: support-operations
 maturity: 2-Assisted
 tools:
   - sonora:capability_resolve
-- sonora:sessions_list
+  - sonora:sessions_list
   - sonora:incident_report
   - sonora:health_all
 policies:
