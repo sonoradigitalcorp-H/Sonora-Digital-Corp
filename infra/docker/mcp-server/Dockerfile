@@ -17,6 +17,7 @@ ENV PATH=/root/.local/bin:$PATH
 # Copiar código
 COPY server.py .
 COPY config.py .
+COPY embeddings.py .
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \

@@ -1,0 +1,22 @@
+services:
+  google-mcp:
+    build:
+      context: ../../
+      dockerfile: infra/docker/google-mcp/Dockerfile
+    container_name: sdc-google-mcp
+    ports:
+      - "127.0.0.1:8767:8767"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY:-}
+    volumes:
+      - google_mcp_data:/root/.google_mcp
+    networks:
+      - sdc-network
+    restart: unless-stopped
+
+volumes:
+  google_mcp_data:
+
+networks:
+  sdc-network:
+    external: true

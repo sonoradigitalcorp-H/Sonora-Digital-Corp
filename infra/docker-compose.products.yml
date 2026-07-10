@@ -22,6 +22,7 @@ services:
       - CORE_DB_DSN=${CORE_DB_DSN:-postgresql://sdc:vXLDhhbiSWt3FHK1MZri@sdc-postgres:5432/sdc}
       - PUBLIC_HOST=${PUBLIC_HOST:-149.56.46.173}
       - STORAGE_BASE=/data/content
+      - OMNIVOICE_URL=http://omnivoice:3900
     volumes:
       - /data/content:/data/content
     networks:

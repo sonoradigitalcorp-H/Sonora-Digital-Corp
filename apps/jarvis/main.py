@@ -77,14 +77,19 @@ def start_orchestrator():
 
 def webui_health():
     """Verifica que la Web UI esté respondiendo."""
-    for port in [5174, 8000]:
-        for path in ["/health", "/status"]:
+    targets = [
+        ("localhost", 5174),
+        ("sdc-jarvis-webui", 5174),
+        ("localhost", 8000),
+    ]
+    for hostname, port in targets:
+        for path in ["/health", "/status", "/api/enterprise-score"]:
             try:
                 resp = urllib.request.urlopen(
-                    f"http://localhost:{port}{path}", timeout=3
+                    f"http://{hostname}:{port}{path}", timeout=3
                 )
                 data = json.loads(resp.read())
-                return {"status": "online", "port": port, **data}
+                return {"status": "online", "host": hostname, "port": port, **data}
             except Exception:
                 continue
     return {"status": "offline"}

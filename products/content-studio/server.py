@@ -5,7 +5,6 @@ import os
 import uuid
 from pathlib import Path
 
-
 import asyncpg
 import httpx
 import redis.asyncio as aioredis
@@ -24,6 +23,7 @@ REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
 REDIS_PASSWORD = os.getenv("REDIS_PASSWORD", "")
 PUBLIC_HOST = os.getenv("PUBLIC_HOST", "149.56.46.173")
 STORAGE_BASE = Path(os.getenv("STORAGE_BASE", "/data/content"))
+OMNIVOICE_URL = os.getenv("OMNIVOICE_URL", "http://localhost:3900")
 
 _pool: asyncpg.Pool | None = None
 _core_pool: asyncpg.Pool | None = None
@@ -79,6 +79,19 @@ async def _download_to_local(url: str, subdir: str, artist_id: str, ext: str = "
     return public_url
 
 
+async def _download_bytes(url: str) -> bytes | None:
+    if not url:
+        return None
+    try:
+        async with httpx.AsyncClient(timeout=120) as cl:
+            r = await cl.get(url)
+            if r.status_code == 200:
+                return r.content
+    except Exception:
+        return None
+    return None
+
+
 @mcp.tool()
 async def generate_image(
     prompt: str,
@@ -93,7 +106,7 @@ async def generate_image(
     if AGNES_API_KEY:
         return await _generate_agnes(prompt, negative_prompt, width, height, aid)
     if FAL_KEY:
-        return await _generate_fal(prompt, negative_prompt, aid)
+        return await _generate_fal(prompt, negative_prompt, aid, use_lora)
     return {"error": "No API key configured (set AGNES_API_KEY or FAL_KEY)"}
 
 
@@ -117,17 +130,92 @@ async def _generate_agnes(prompt: str, neg: str, w: int, h: int, artist_id: str 
         return {"provider": "agnes", "url": local_url or url, "cost": 0, "model": "flux-schnell"}
 
 
-async def _generate_fal(prompt: str, neg: str, artist_id: str = "") -> dict:
+async def _generate_fal(prompt: str, neg: str, artist_id: str = "", use_lora: bool = False) -> dict:
+    payload: dict = {"prompt": prompt, "negative_prompt": neg, "num_images": 1}
+    endpoint = f"{FAL_API_BASE}/fal-ai/flux/schnell"
+
+    if use_lora:
+        endpoint = f"{FAL_API_BASE}/fal-ai/flux-lora"
+        rows = await _db(
+            "SELECT path, scale FROM lora_weights WHERE artist_id = $1 AND active = TRUE ORDER BY created_at DESC LIMIT 5;",
+            artist_id,
+        )
+        if rows:
+            payload["lora_weights"] = [{"path": r["path"], "scale": float(r["scale"])} for r in rows]
+
     async with httpx.AsyncClient(timeout=120) as cl:
         r = await cl.post(
-            f"{FAL_API_BASE}/fal-ai/flux/schnell",
+            endpoint,
             headers={"Authorization": f"Key {FAL_KEY}"},
-            json={"prompt": prompt, "negative_prompt": neg, "num_images": 1},
+            json=payload,
         )
         data = r.json()
         url = data.get("images", [{}])[0].get("url", "")
         local_url = await _download_to_local(url, "images", artist_id, "jpg")
-        return {"provider": "fal", "url": local_url or url, "cost": 0, "model": "flux-schnell"}
+        return {"provider": "fal", "url": local_url or url, "cost": 0, "model": "flux-lora" if use_lora else "flux-schnell"}
+
+
+@mcp.tool()
+async def register_lora_weights(
+    artist_id: str,
+    path: str,
+    scale: float = 0.8,
+    name: str = "default",
+) -> dict:
+    sql = """
+        INSERT INTO lora_weights (artist_id, name, path, scale)
+        VALUES ($1, $2, $3, $4) RETURNING id;
+    """
+    try:
+        rows = await _db(sql, artist_id, name, path, scale)
+        return {"lora_weight_id": str(rows[0]["id"]), "status": "active"}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+@mcp.tool()
+async def list_lora_weights(artist_id: str | None = None) -> list[dict]:
+    if artist_id:
+        rows = await _db(
+            "SELECT id, name, path, scale, active, created_at FROM lora_weights WHERE artist_id = $1 ORDER BY created_at DESC;",
+            artist_id,
+        )
+    else:
+        rows = await _db(
+            "SELECT id, artist_id, name, path, scale, active, created_at FROM lora_weights ORDER BY created_at DESC;"
+        )
+    return [dict(r) for r in rows]
+
+
+@mcp.tool()
+async def delete_lora_weights(weight_id: str) -> dict:
+    await _db("UPDATE lora_weights SET active = FALSE WHERE id = $1;", weight_id)
+    return {"status": "deleted"}
+
+
+@mcp.tool()
+async def edit_image(
+    prompt: str,
+    image_url: str,
+    mask_url: str | None = None,
+    artist_id: str | None = None,
+) -> dict:
+    aid = artist_id or "unknown"
+    if not FAL_KEY:
+        return {"error": "FAL key not configured"}
+    payload: dict = {"prompt": prompt, "image_url": image_url, "num_images": 1}
+    if mask_url:
+        payload["mask_url"] = mask_url
+    async with httpx.AsyncClient(timeout=120) as cl:
+        r = await cl.post(
+            f"{FAL_API_BASE}/fal-ai/flux-pro/v1/fill",
+            headers={"Authorization": f"Key {FAL_KEY}"},
+            json=payload,
+        )
+        data = r.json()
+        url = data.get("images", [{}])[0].get("url", "")
+        local_url = await _download_to_local(url, "images", aid, "jpg")
+        return {"provider": "fal", "url": local_url or url, "cost": 0, "model": "flux-fill-pro"}
 
 
 @mcp.tool()
@@ -251,17 +339,102 @@ async def clone_voice(
     name: str = "default",
     language: str = "es",
 ) -> dict:
-    voice_id = str(uuid.uuid4())
+    if not audio_urls:
+        return {"error": "At least one audio_url required"}
+    audio_bytes = await _download_bytes(audio_urls[0])
+    if not audio_bytes:
+        return {"error": f"Failed to download audio from {audio_urls[0]}"}
+    audio_ext = os.path.splitext(audio_urls[0].split("?")[0])[1] or ".wav"
+    if audio_ext not in (".wav", ".mp3", ".ogg", ".m4a", ".flac"):
+        audio_ext = ".wav"
+    try:
+        async with httpx.AsyncClient(timeout=300) as cl:
+            files = {
+                "ref_audio": (f"ref{audio_ext}", audio_bytes, "audio/wav"),
+            }
+            data = {
+                "name": name,
+                "ref_text": "",
+                "language": language,
+                "kind": "clone",
+            }
+            r = await cl.post(
+                f"{OMNIVOICE_URL}/profiles",
+                data=data,
+                files=files,
+            )
+            if r.status_code not in (200, 201):
+                body = r.text[:500]
+                return {"error": f"OmniVoice API returned {r.status_code}: {body}"}
+            profile = r.json()
+    except Exception as e:
+        return {"error": f"OmniVoice API call failed: {str(e)}"}
+
+    profile_id = profile.get("id", "")
+    if not profile_id:
+        return {"error": "OmniVoice did not return a profile id"}
     sql = """
         INSERT INTO voice_profiles (artist_id, name, provider, voice_id, language, is_cloned, sample_audio_url)
         VALUES ($1, $2, 'omnivoice', $3, $4, TRUE, $5)
         RETURNING id;
     """
     try:
-        rows = await _db(sql, artist_id, name, voice_id, language, json.dumps(audio_urls))
-        return {"voice_profile_id": str(rows[0]["id"]), "voice_id": voice_id}
+        rows = await _db(sql, artist_id, name, profile_id, language, json.dumps(audio_urls))
+        return {
+            "voice_profile_id": str(rows[0]["id"]),
+            "voice_id": profile_id,
+            "provider": "omnivoice",
+            "status": "cloned",
+        }
     except Exception as e:
-        return {"error": str(e)}
+        return {"error": f"DB insert failed: {str(e)}", "omnivoice_profile_id": profile_id}
+
+
+@mcp.tool()
+async def ocr_image(
+    image_url: str,
+    language: str = "es",
+    artist_id: str | None = None,
+) -> dict:
+    image_bytes = await _download_bytes(image_url)
+    if not image_bytes:
+        return {"error": "Failed to download image"}
+    tmp_dir = STORAGE_BASE / "tmp"
+    tmp_dir.mkdir(parents=True, exist_ok=True)
+    tmp_path = tmp_dir / f"ocr_{uuid.uuid4().hex}.jpg"
+    loop = asyncio.get_running_loop()
+    await loop.run_in_executor(None, tmp_path.write_bytes, image_bytes)
+    try:
+        import easyocr
+        reader = await loop.run_in_executor(
+            None,
+            lambda: easyocr.Reader([language], gpu=False),
+        )
+        results = await loop.run_in_executor(None, lambda: reader.readtext(str(tmp_path)))
+        text_parts = []
+        entries = []
+        for bbox, text, confidence in results:
+            text_parts.append(text)
+            entries.append({"text": text, "confidence": round(confidence, 3), "bbox": bbox})
+        full_text = "\n".join(text_parts)
+        ext = ".txt"
+        ocr_dir = STORAGE_BASE / "ocr" / (artist_id or "unknown")
+        ocr_dir.mkdir(parents=True, exist_ok=True)
+        ocr_path = ocr_dir / f"{uuid.uuid4().hex}{ext}"
+        await loop.run_in_executor(None, ocr_path.write_text, full_text)
+        return {
+            "text": full_text,
+            "entries": entries,
+            "language": language,
+            "char_count": len(full_text),
+        }
+    except ImportError:
+        return {"error": "easyocr not installed. Install with: pip install easyocr"}
+    except Exception as e:
+        return {"error": f"OCR failed: {str(e)}"}
+    finally:
+        if tmp_path.exists():
+            await loop.run_in_executor(None, tmp_path.unlink)
 
 
 @mcp.tool()

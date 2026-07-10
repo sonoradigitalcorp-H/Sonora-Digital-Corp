@@ -34,4 +34,4 @@
 | SPEC-202 | SPEC-20260704-ABE-001 | ... | ... | ... | completed | ... |
 | 2026-07-08 | 20260708-evolution | ... | ... | ... | completed | ... |
 
-| 2026-07-08 | SPEC-20260708-HAS-FULL | HAS Architecture Complete — All 11 Phases Implemented | 3 | 50 | completed | [link](20260708-has-full/LECCION.md) |
+| 2026-07-08 | SPEC-20260708-HAS-FULL | HAS Architecture Complete — All 11 Phases Implemented | 3 | 50 | completed | [link](20260708-has-full/LECCION.md) || 2026-07-10 | 20260710-content-pipeline | ... | ... | ... | completed | ... |

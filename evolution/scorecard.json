@@ -1,22 +1,22 @@
 {
-  "overall": 54,
+  "overall": 68,
   "by_dimension": {
     "observability": true,
-    "test_health": false,
-    "coverage": false
+    "test_health": true,
+    "coverage": true
   },
   "metrics": {
     "agents": 11,
-    "capabilities": 1,
+    "capabilities": 8,
     "constitution_files": 16,
     "constitution_rules": 64,
-    "tests_passed": 0,
-    "tests_total": 0,
+    "tests_passed": 78,
+    "tests_total": 78,
     "violations": 0,
-    "memory_count": 0,
+    "memory_count": 488,
     "events_count": 488,
     "git_ahead": 0,
     "git_behind": 0
   },
-  "updated": "2026-07-08T20:00:00Z"
+  "updated": "2026-07-09T14:00:00Z"
 }

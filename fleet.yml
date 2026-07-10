@@ -190,7 +190,7 @@ services:
     protocol: http
     docker: true
     proxy: false
-    notes: LangFuse observability (unhealthy)
+    notes: LangFuse observability
 
   - name: sdc-langfuse-db
     machine: sdc-prod
