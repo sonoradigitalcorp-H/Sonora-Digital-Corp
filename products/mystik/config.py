@@ -9,8 +9,9 @@ class MystikConfig(BaseSettings):
     host: str = "0.0.0.0"
     port: int = 5200
 
-    ollama_host: str = "http://127.0.0.1:11434"
-    llm_model: str = "deepseek-r1:7b"
+    opencode_key: str = ""
+    openrouter_key: str = ""
+    llm_model: str = "cohere/north-mini-code:free"
 
     whisper_model: str = "base"
     openvoice_model: str = "base"
