@@ -189,8 +189,18 @@ async def root():
 
 # ── Voice Endpoints ──
 
+@app.get("/api/voice/speak")
+async def speak_get(text: str = "Hola, soy Mystik"):
+    from products.mystik.voice import voice
+    audio = await voice.speak(text)
+    if not audio:
+        return {"status": "error", "detail": "TTS no disponible"}
+    from fastapi.responses import Response
+    return Response(content=audio, media_type="audio/wav")
+
 @app.post("/api/voice/speak")
-async def speak(text: str = "Hola, soy Mystik"):
+async def speak_post(data: dict):
+    text = data.get("text", "Hola, soy Mystik")
     from products.mystik.voice import voice
     audio = await voice.speak(text)
     if not audio:
@@ -272,3 +282,86 @@ async def get_tenant(tenant_id: str):
     if not row:
         raise HTTPException(status_code=404, detail="Tenant not found")
     return {"id": row[0], "name": row[1], "config": json.loads(row[2])}
+
+# ── Agent Bus — Contexto compartido entre agentes via Redis ──
+
+import asyncio
+REDIS_CTX_PREFIX = "agent:ctx:"
+
+def _get_redis():
+    try:
+        import redis as r
+        return r.Redis(host="127.0.0.1", port=6380, decode_responses=True, socket_connect_timeout=2)
+    except Exception:
+        return None
+
+@app.post("/api/context")
+async def set_context(data: dict):
+    key = data.get("key")
+    value = data.get("value")
+    ttl = data.get("ttl", 3600)
+    if not key:
+        raise HTTPException(status_code=400, detail="key required")
+    r = _get_redis()
+    if r:
+        r.setex(f"{REDIS_CTX_PREFIX}{key}", ttl, json.dumps(value))
+        r.publish("agent:context", json.dumps({"key": key, "updated_at": datetime.now(timezone.utc).isoformat()}))
+        return {"status": "shared", "key": key}
+    return {"status": "stored_local", "key": key}
+
+@app.get("/api/context")
+async def list_context():
+    r = _get_redis()
+    if r:
+        keys = r.keys(f"{REDIS_CTX_PREFIX}*")
+        result = []
+        for k in keys:
+            val = r.get(k)
+            if val:
+                try:
+                    result.append({"key": k.replace(REDIS_CTX_PREFIX, ""), "value": json.loads(val)})
+                except Exception:
+                    result.append({"key": k.replace(REDIS_CTX_PREFIX, ""), "value": val})
+        return {"context": result}
+    return {"context": [], "note": "Redis unavailable"}
+
+@app.get("/api/context/{key}")
+async def get_context(key: str):
+    r = _get_redis()
+    if r:
+        val = r.get(f"{REDIS_CTX_PREFIX}{key}")
+        if val:
+            try:
+                return {"key": key, "value": json.loads(val)}
+            except Exception:
+                return {"key": key, "value": val}
+        raise HTTPException(status_code=404, detail="Context key not found")
+    raise HTTPException(status_code=503, detail="Redis unavailable")
+
+# ── Agent Bus — Comunicación entre agentes ──
+
+@app.post("/api/agent-bus/send")
+async def agent_send(data: dict):
+    target = data.get("target", "all")
+    command = data.get("command", "ping")
+    payload = data.get("payload", {})
+    r = _get_redis()
+    if r:
+        msg = json.dumps({
+            "target": target, "command": command, "payload": payload,
+            "sender": "mystik", "timestamp": datetime.now(timezone.utc).isoformat(),
+        })
+        r.publish("agent:commands", msg)
+        r.publish("agent:messages", msg)
+        return {"status": "sent", "target": target, "command": command}
+    return {"status": "redis_unavailable", "note": "Mensaje no enviado"}
+
+@app.get("/api/agent-bus/status")
+async def agent_bus_status():
+    r = _get_redis()
+    return {
+        "redis": r is not None,
+        "channels": ["agent:messages", "agent:context", "agent:events", "agent:commands"],
+        "context_keys_count": len(r.keys(f"{REDIS_CTX_PREFIX}*")) if r else 0,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    }

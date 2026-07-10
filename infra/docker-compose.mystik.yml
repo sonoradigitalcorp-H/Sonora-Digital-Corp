@@ -47,7 +47,8 @@ services:
       - SERVER_URL=https://mystik.sonoradigitalcorp.com
       - CACHE_ENABLED=false
       - REDIS_URL=redis://mystik-redis:6379
-      - DISABLE_DB_MIGRATIONS=false
+      - DISABLE_DB_MIGRATIONS=true
+    entrypoint: ["node", "dist/main"]
     depends_on:
       - postgres
       - redis

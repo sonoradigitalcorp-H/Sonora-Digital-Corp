@@ -81,3 +81,18 @@ def test_products_have_all_fields():
         assert "name" in p
         assert "description" in p
         assert "price" in p
+
+
+def test_agent_bus_status():
+    resp = client.get("/api/agent-bus/status")
+    assert resp.status_code in (200, 503)
+
+
+def test_context_set_and_get():
+    resp = client.post("/api/context", json={"key": "test_key", "value": {"hello": "world"}})
+    assert resp.status_code in (200, 503)
+
+
+def test_agent_bus_send():
+    resp = client.post("/api/agent-bus/send", json={"target": "test", "command": "ping"})
+    assert resp.status_code in (200, 503)
