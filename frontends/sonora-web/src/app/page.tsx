@@ -1,267 +1,229 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { Bot, Mic, Image, Radio, Music, Cloud, LogIn, UserPlus, Check, Star, ArrowRight } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Bot, Send, Sparkles, Mic, LogIn, UserPlus, ArrowRight, Check } from "lucide-react";
 
-const PLANS = [
-  {
-    name: "Starter",
-    price: "$0",
-    period: "/mes",
-    desc: "Perfecto para probar las capacidades de SDC.",
-    features: ["1 agente AI", "100 chats/mes", "API REST", "Community support"],
-    cta: "Comenzar gratis",
-    popular: false,
-  },
-  {
-    name: "Pro",
-    price: "$49",
-    period: "/mes",
-    desc: "Para negocios que quieren automatizar ventas.",
-    features: ["3 agentes AI", "10,000 chats/mes", "Voz + TTS", "CRM integrado", "Multi-tenant", "Soporte prioritario"],
-    cta: "Elegir Pro",
-    popular: true,
-  },
-  {
-    name: "Enterprise",
-    price: "$199",
-    period: "/mes",
-    desc: "Para empresas con necesidades avanzadas.",
-    features: ["Agentes ilimitados", "Chats ilimitados", "Voz clonada", "CRM + ERP", "Multi-tenant aislado", "On-premise option", "Soporte 24/7", "SLA 99.9%"],
-    cta: "Contactar",
-    popular: false,
-  },
+const API = "https://abe.sonoradigitalcorp.com/api";
+
+const WELCOME_MSG = {
+  role: "assistant",
+  content: "¡Hola! Soy **Mystik**, tu asistente de Sonora Digital Corp. 🚀\n\nPuedo ayudarte a:\n\n• Conocer nuestros **servicios AI** (chat, voz, imágenes, RAG)\n• Elegir el **plan** ideal para tu negocio\n• **Crear una cuenta** y empezar a usar las herramientas\n\n¿Por dónde quieres empezar?"
+};
+
+const QUICK_REPLIES = [
+  "¿Qué servicios tienen?",
+  "¿Cuánto cuesta?",
+  "Quiero crear una cuenta",
+  "¿Qué es Mystik AI?",
 ];
 
-const SERVICES = [
-  {
-    id: "mystik-ai",
-    name: "Mystik AI",
-    tagline: "Asistente de ventas con voz",
-    desc: "AI conversacional que califica leads, presenta productos y cierra ventas. Multi-tenant, CRM integrado, voz natural.",
-    icon: Bot,
-    color: "#FF6B35",
-    features: ["Chat con IA", "Voz (STT + TTS)", "CRM multi-tenant", "Knowledge base RAG", "Analytics"],
-    starter: true, pro: true, enterprise: true,
-  },
-  {
-    id: "content-studio",
-    name: "Content Studio",
-    tagline: "Generación de contenido AI",
-    desc: "Crea imágenes, TTS, talking heads, OCR y edición via MCP. 20+ herramientas de generación.",
-    icon: Image,
-    color: "#b388ff",
-    features: ["Imágenes AI", "Text-to-Speech", "Talking Heads", "OCR", "20+ MCP tools"],
-    starter: false, pro: true, enterprise: true,
-  },
-  {
-    id: "omnivoice",
-    name: "OmniVoice",
-    tagline: "Clonación de voz profesional",
-    desc: "Clona cualquier voz con 10 segundos de audio. Síntesis multi-idioma con API REST.",
-    icon: Mic,
-    color: "#00ccff",
-    features: ["Clonación zero-shot", "Multi-idioma", "API REST", "Perfiles de voz"],
-    starter: false, pro: true, enterprise: true,
-  },
-  {
-    id: "open-notebook",
-    name: "Open Notebook",
-    tagline: "Knowledge base con RAG",
-    desc: "Alternativa open-source a NotebookLM. Sube PDFs, URLs, documentos. Chat con tu knowledge base.",
-    icon: Radio,
-    color: "#ff6b6b",
-    features: ["RAG sobre PDFs", "Web scraping", "Generación de podcasts", "API REST"],
-    starter: false, pro: false, enterprise: true,
-  },
-  {
-    id: "abe-music",
-    name: "ABE Music OS",
-    tagline: "Gestión para industria musical",
-    desc: "Plataforma completa para sellos discográficos: revenue, contratos, CRM de fans, distribución.",
-    icon: Music,
-    color: "#00ff88",
-    features: ["Revenue ledger", "Contratos inteligentes", "CRM de fans", "Distribución", "Bot Telegram"],
-    starter: false, pro: false, enterprise: true,
-  },
-];
-
-function Navbar() {
-  return (
-    <nav className="fixed top-0 w-full z-50 glass">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-        <a href="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#FF6B35] to-[#00ccff] flex items-center justify-center text-black font-bold text-sm">SD</div>
-          <span className="font-bold">Sonora<span className="text-[#FF6B35]">.</span></span>
-        </a>
-        <div className="hidden md:flex items-center gap-6 text-sm">
-          <a href="#servicios" className="text-gray-400 hover:text-white transition">Servicios</a>
-          <a href="#planes" className="text-gray-400 hover:text-white transition">Planes</a>
-          <a href="/login" className="text-gray-400 hover:text-white transition flex items-center gap-1"><LogIn className="w-4 h-4" /> Iniciar sesión</a>
-          <a href="/signup" className="px-4 py-2 rounded-full bg-gradient-to-r from-[#FF6B35] to-[#00ccff] text-black font-semibold text-sm hover:scale-105 transition-transform flex items-center gap-1">
-            <UserPlus className="w-4 h-4" /> Crear cuenta
-          </a>
-        </div>
-      </div>
-    </nav>
-  );
-}
-
-function Hero() {
-  return (
-    <section className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden gradient-bg px-4">
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-[#FF6B35] rounded-full blur-[128px]" />
-        <div className="absolute bottom-1/3 right-1/3 w-96 h-96 bg-[#00ccff] rounded-full blur-[128px]" />
-      </div>
-      <motion.div className="relative z-10 text-center max-w-4xl"
-        initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm text-gray-300 mb-8">
-          <Star className="w-4 h-4 text-[#FF6B35]" />
-          Plataforma AI para empresas
-        </div>
-        <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-          Inteligencia Artificial para <br />
-          <span className="gradient-text">tu negocio</span>
-        </h1>
-        <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-          Asistentes AI, generación de contenido, clonación de voz y más.
-          Todo en una plataforma multi-tenant, segura y lista para empresas.
-        </p>
-        <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="/signup"
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold
-            bg-gradient-to-r from-[#FF6B35] to-[#00ccff] text-black hover:scale-105 transition-transform">
-            Crear cuenta gratis <ArrowRight className="w-4 h-4" />
-          </a>
-          <a href="#servicios"
-            className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold glass text-white hover:bg-white/10 transition-all">
-            Ver servicios
-          </a>
-        </div>
-      </motion.div>
-    </section>
-  );
-}
-
-function ServicesSection() {
-  return (
-    <section id="servicios" className="py-32 px-4">
-      <div className="max-w-7xl mx-auto">
-        <motion.div className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <h2 className="text-4xl font-bold mb-4">Nuestros <span className="gradient-text">Servicios</span></h2>
-          <p className="text-gray-400 max-w-xl mx-auto">Cada servicio funciona independientemente o integrado. Todos via API, MCP o web.</p>
-        </motion.div>
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {SERVICES.map((svc, i) => (
-            <motion.div key={svc.id}
-              className="glass rounded-2xl p-6 gradient-border hover:border-transparent transition-all duration-300"
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-              <svc.icon className="w-10 h-10 mb-4" style={{ color: svc.color }} />
-              <h3 className="text-lg font-semibold mb-1">{svc.name}</h3>
-              <p className="text-sm text-gray-500 mb-1">{svc.tagline}</p>
-              <p className="text-sm text-gray-400 mb-4 leading-relaxed">{svc.desc}</p>
-              <div className="flex flex-wrap gap-1.5 mb-4">
-                {svc.features.map((f) => (
-                  <span key={f} className="text-xs px-2 py-1 rounded-full bg-white/5 text-gray-300">{f}</span>
-                ))}
-              </div>
-              <div className="flex gap-2 text-xs text-gray-500">
-                {svc.starter && <span className="text-gray-400">✓ Starter</span>}
-                {svc.pro && <span className="text-[#FF6B35]">✓ Pro</span>}
-                {svc.enterprise && <span className="text-[#00ccff]">✓ Enterprise</span>}
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function PlansSection() {
-  return (
-    <section id="planes" className="py-32 px-4 relative">
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-0 left-0 w-96 h-96 bg-[#00ff88] rounded-full blur-[100px]" />
-      </div>
-      <div className="max-w-7xl mx-auto relative">
-        <motion.div className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-          <h2 className="text-4xl font-bold mb-4">Planes <span className="gradient-text">Flexibles</span></h2>
-          <p className="text-gray-400 max-w-xl mx-auto">Todos los planes incluyen API, SSL, y multi-tenant. Escala cuando quieras.</p>
-        </motion.div>
-        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-          {PLANS.map((plan, i) => (
-            <motion.div key={plan.name}
-              className={`relative rounded-2xl p-8 ${plan.popular ? 'gradient-border' : 'glass'}`}
-              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
-              {plan.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-[#FF6B35] to-[#00ccff] text-black text-xs font-semibold">
-                  Más popular
-                </div>
-              )}
-              <div className={plan.popular ? '' : ''}>
-                <h3 className="text-xl font-bold">{plan.name}</h3>
-                <div className="mt-4 mb-6">
-                  <span className="text-4xl font-bold">{plan.price}</span>
-                  <span className="text-gray-500">{plan.period}</span>
-                </div>
-                <p className="text-sm text-gray-400 mb-6">{plan.desc}</p>
-                <ul className="space-y-3 mb-8">
-                  {plan.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-sm text-gray-300">
-                      <Check className="w-4 h-4 text-[#00ff88] mt-0.5 shrink-0" />
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-                <a href={plan.name === "Enterprise" ? "/contact" : "/signup"}
-                  className={`block text-center py-3 rounded-xl font-semibold text-sm transition-all ${
-                    plan.popular
-                      ? 'bg-gradient-to-r from-[#FF6B35] to-[#00ccff] text-black hover:scale-105'
-                      : 'glass text-white hover:bg-white/10'
-                  }`}>
-                  {plan.cta}
-                </a>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function Footer() {
-  return (
-    <footer className="glass border-t border-white/5 py-12 px-4">
-      <div className="max-w-7xl mx-auto text-center">
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <div className="w-6 h-6 rounded bg-gradient-to-br from-[#FF6B35] to-[#00ccff] flex items-center justify-center text-black font-bold text-xs">SD</div>
-          <span className="font-bold">Sonora<span className="text-[#FF6B35]">.</span></span>
-        </div>
-        <p className="text-sm text-gray-500 mb-4">© 2026 Sonora Digital Corp. All rights reserved.</p>
-        <div className="flex justify-center gap-4 text-sm text-gray-600">
-          <a href="/login" className="hover:text-white transition">Iniciar sesión</a>
-          <a href="/signup" className="hover:text-white transition">Crear cuenta</a>
-          <a href="/terms" className="hover:text-white transition">Términos</a>
-          <a href="/privacy" className="hover:text-white transition">Privacidad</a>
-        </div>
-      </div>
-    </footer>
-  );
-}
+const QUICK_RESPONSES: Record<string, string> = {
+  "¿Qué servicios tienen?": "Tenemos **5 servicios** principales:\n\n1. **Mystik AI** — Asistente de ventas con voz y texto\n2. **Content Studio** — Generación de imágenes, TTS, video\n3. **OmniVoice** — Clonación de voz profesional\n4. **Open Notebook** — Knowledge base con RAG\n5. **ABE Music OS** — Gestión para industria musical\n\n¿Quieres ver los planes y precios?",
+  "¿Cuánto cuesta?": "Tenemos **3 planes**:\n\n| Plan | Precio | Servicios |\n|------|--------|-----------|\n| **Starter** | **$0/mes** | Mystik AI |\n| **Pro** | **$49/mes** | Mystik AI + Content Studio + OmniVoice |\n| **Enterprise** | **$199/mes** | Todos los servicios |\n\n👉 [Ver planes completos](/pricing) o [crear cuenta gratis](/signup)",
+  "Quiero crear una cuenta": "¡Excelente decisión! 🎉\n\nCrea tu cuenta gratis y empieza con Mystik AI:\n\n👉 [Crear cuenta gratis →](/signup)\n\nYa incluye:\n✓ Asistente AI con voz\n✓ 100 chats/mes\n✓ API REST\n✓ Multi-tenant",
+  "¿Qué es Mystik AI?": "Soy **Mystik AI** 🤖 — un asistente de ventas inteligente con:\n\n• **Chat** con IA en tiempo real\n• **Voz** natural (STT + TTS) 🎤\n• **CRM** integrado multi-tenant\n• **Knowledge base** con RAG 🧠\n• **Integración** con Mercado Pago 💳\n\nEstoy aquí para ayudarte a vender más. ¿Empezamos?",
+};
 
 export default function Home() {
+  const [messages, setMessages] = useState<{role: string; content: string}[]>([WELCOME_MSG]);
+  const [input, setInput] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [showChat, setShowChat] = useState(false);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => { bottomRef.current?.scrollIntoView({ behavior: "smooth" }); }, [messages]);
+
+  const handleSend = async (text: string) => {
+    const msg = text || input;
+    if (!msg.trim() || loading) return;
+    setInput("");
+    setMessages(prev => [...prev, { role: "user", content: msg }]);
+    setLoading(true);
+
+    // Check quick responses first
+    if (QUICK_RESPONSES[msg]) {
+      setTimeout(() => {
+        setMessages(prev => [...prev, { role: "assistant", content: QUICK_RESPONSES[msg] }]);
+        setLoading(false);
+      }, 500);
+      return;
+    }
+
+    // Fallback to API
+    try {
+      const res = await fetch(`${API}/chat`, {
+        method: "POST", headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({ message: msg }),
+      });
+      const data = await res.json();
+      setMessages(prev => [...prev, { role: "assistant", content: data.response || "Lo siento, no pude procesar eso." }]);
+    } catch {
+      setMessages(prev => [...prev, { role: "assistant", content: "Lo siento, tengo problemas de conexión. ¿Puedes intentar de nuevo?" }]);
+    }
+    setLoading(false);
+  };
+
+  // Hero section with Mystik
+  if (!showChat) {
+    return (
+      <div className="min-h-screen gradient-bg flex flex-col">
+        <nav className="glass border-b border-white/5 px-6 py-4">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#FF6B35] to-[#00ccff] flex items-center justify-center text-black font-bold text-sm">SD</div>
+              <span className="font-bold">Sonora<span className="text-[#FF6B35]">.</span></span>
+            </div>
+            <div className="flex items-center gap-4">
+              <a href="/login" className="text-sm text-gray-400 hover:text-white transition flex items-center gap-1"><LogIn className="w-4 h-4" /> Entrar</a>
+              <a href="/signup" className="px-4 py-2 rounded-full bg-gradient-to-r from-[#FF6B35] to-[#00ccff] text-black font-semibold text-sm hover:scale-105 transition-transform flex items-center gap-1">
+                <UserPlus className="w-4 h-4" /> Crear cuenta
+              </a>
+            </div>
+          </div>
+        </nav>
+
+        <div className="flex-1 flex items-center justify-center px-4">
+          <motion.div className="text-center max-w-3xl" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <motion.div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm mb-8"
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2 }}>
+              <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 3, ease: "linear" }}>
+                <Sparkles className="w-4 h-4 text-[#FF6B35]" />
+              </motion.div>
+              Asistente AI · Voz · Imágenes · RAG
+            </motion.div>
+
+            <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+              Tu <span className="gradient-text">asistente AI</span> para<br />
+              hacer crecer tu negocio
+            </h1>
+
+            <p className="text-lg md:text-xl text-gray-400 mb-10 max-w-xl mx-auto">
+              Mystik te guía, responde y te ayuda a elegir el plan ideal. Desde el primer clic.
+            </p>
+
+            <motion.button onClick={() => setShowChat(true)}
+              className="inline-flex items-center gap-3 px-8 py-4 rounded-full font-semibold text-lg
+              bg-gradient-to-r from-[#FF6B35] to-[#00ccff] text-black hover:scale-105 transition-transform animate-glow"
+              whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <Bot className="w-6 h-6" /> Hablar con Mystik
+            </motion.button>
+
+            <div className="flex items-center justify-center gap-8 mt-12 text-sm text-gray-500">
+              <span className="flex items-center gap-1"><Check className="w-4 h-4 text-[#00ff88]" /> Sin tarjeta</span>
+              <span className="flex items-center gap-1"><Check className="w-4 h-4 text-[#00ff88]" /> Multi-tenant</span>
+              <span className="flex items-center gap-1"><Check className="w-4 h-4 text-[#00ff88]" /> API incluida</span>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
+  // Chat interface
   return (
-    <main className="min-h-screen">
-      <Navbar />
-      <Hero />
-      <ServicesSection />
-      <PlansSection />
-      <Footer />
-    </main>
+    <div className="min-h-screen gradient-bg flex flex-col">
+      <nav className="glass border-b border-white/5 px-6 py-3">
+        <div className="max-w-4xl mx-auto flex items-center justify-between">
+          <button onClick={() => setShowChat(false)} className="flex items-center gap-2 text-gray-400 hover:text-white transition">
+            <Bot className="w-5 h-5 text-[#FF6B35]" />
+            <span className="font-semibold">Mystik AI</span>
+          </button>
+          <div className="flex items-center gap-3">
+            <a href="/signup" className="px-4 py-1.5 rounded-full bg-gradient-to-r from-[#FF6B35] to-[#00ccff] text-black font-semibold text-xs flex items-center gap-1">
+              <UserPlus className="w-3 h-3" /> Crear cuenta
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      <div className="flex-1 overflow-y-auto px-4 py-6">
+        <div className="max-w-3xl mx-auto space-y-4">
+          <AnimatePresence>
+            {messages.map((msg, i) => (
+              <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}
+                className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+                <div className={`max-w-[85%] rounded-2xl px-5 py-3 ${
+                  msg.role === "user"
+                    ? "bg-gradient-to-r from-[#FF6B35] to-[#00ccff] text-black"
+                    : "glass"
+                }`}>
+                  <div className="text-sm leading-relaxed whitespace-pre-line [&_a]:text-[#FF6B35] [&_a]:underline">
+                    {msg.role === "assistant" ? parseMarkdown(msg.content) : msg.content}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+
+          {loading && (
+            <div className="flex justify-start">
+              <div className="glass rounded-2xl px-5 py-3">
+                <div className="flex gap-1">
+                  <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 1.5 }}>
+                    <div className="w-2 h-2 rounded-full bg-[#FF6B35]" />
+                  </motion.div>
+                  <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.2 }}>
+                    <div className="w-2 h-2 rounded-full bg-[#FF6B35]" />
+                  </motion.div>
+                  <motion.div animate={{ y: [0, -5, 0] }} transition={{ repeat: Infinity, duration: 1.5, delay: 0.4 }}>
+                    <div className="w-2 h-2 rounded-full bg-[#FF6B35]" />
+                  </motion.div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Quick replies */}
+          {messages.length === 1 && (
+            <div className="flex flex-wrap gap-2 justify-center mt-4">
+              {QUICK_REPLIES.map((q) => (
+                <button key={q} onClick={() => handleSend(q)}
+                  className="px-4 py-2 rounded-xl glass text-sm text-gray-300 hover:text-white hover:bg-white/10 transition-all">
+                  {q}
+                </button>
+              ))}
+            </div>
+          )}
+
+          <div ref={bottomRef} />
+        </div>
+      </div>
+
+      <div className="glass border-t border-white/5 px-4 py-4">
+        <div className="max-w-3xl mx-auto flex gap-3">
+          <input value={input} onChange={e => setInput(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && handleSend(input)}
+            className="flex-1 px-5 py-3 rounded-xl bg-white/5 border border-white/10 text-white focus:outline-none focus:border-[#FF6B35] transition-colors"
+            placeholder="Escribe tu mensaje..." disabled={loading} />
+          <button onClick={() => handleSend(input)} disabled={loading || !input.trim()}
+            className="px-5 py-3 rounded-xl bg-gradient-to-r from-[#FF6B35] to-[#00ccff] text-black disabled:opacity-30 transition-all">
+            <Send className="w-5 h-5" />
+          </button>
+        </div>
+      </div>
+    </div>
   );
+}
+
+function parseMarkdown(text: string) {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={i} className="font-semibold text-white">{part.slice(2, -2)}</strong>;
+    }
+    if (part.startsWith("|") && part.includes("---")) return null;
+    if (part.startsWith("|")) {
+      const cells = part.split("|").filter(Boolean).map(c => c.trim());
+      return <span key={i} className="block text-sm">{cells.join(" · ")}</span>;
+    }
+    if (part.startsWith("•")) {
+      return <span key={i} className="block text-sm ml-2">{part}</span>;
+    }
+    if (part.startsWith("👉") || part.startsWith("!")) {
+      return <span key={i} className="block text-sm">{part}</span>;
+    }
+    if (part.startsWith("\n")) return <br key={i} />;
+    return <span key={i}>{part}</span>;
+  });
 }

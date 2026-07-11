@@ -380,7 +380,12 @@ async def signup(req: SignupRequest):
         conn.execute("INSERT INTO users (email, password_hash, name, tenant_id) VALUES (?, ?, ?, ?)",
                      (req.email, _hash_password(req.password), req.name, tenant_id))
         conn.commit()
-        return {"status": "ok", "tenant_id": tenant_id, "plan": req.plan, "services": PLANS[req.plan]["services"]}
+        # Auto-login: generar token inmediatamente
+        user_row = conn.execute("SELECT id, tenant_id FROM users WHERE email=?", (req.email,)).fetchone()
+        token = _generate_token()
+        conn.execute("INSERT INTO tokens (token, user_id, tenant_id, expires_at) VALUES (?, ?, ?, datetime('now', '+24 hours'))",
+                     (token, user_row[0], user_row[1]))
+        return {"status": "ok", "token": token, "tenant_id": tenant_id, "plan": req.plan, "services": PLANS[req.plan]["services"]}
     except sqlite3.IntegrityError:
         raise HTTPException(status_code=409, detail="Email ya registrado")
     finally:
