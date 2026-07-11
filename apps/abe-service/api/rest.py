@@ -23,7 +23,8 @@ async def health():
     mcp = await mcp_health()
     return {
         "status": "ok",
-        "service": "ABE Service",
+        "service": "ABE Music OS",
+        "powered_by": "Sonora Digital Corp",
         "mcp_gateway": mcp.get("status", "unavailable"),
     }
 
