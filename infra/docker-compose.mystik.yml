@@ -26,10 +26,12 @@ services:
     build: ../products/production/mystik
     container_name: sdc-mystik-api
     network_mode: host
+    volumes:
+      - /home/ubuntu/sonora-digital-corp/state:/home/ubuntu/sonora-digital-corp/state
     environment:
       - MYSTIK_OPENCODE_KEY=${OPENCODE_API_KEY}
       - MYSTIK_OPENROUTER_KEY=${OPENROUTER_API_KEY}
-      - MYSTIK_LLM_MODEL=cohere/north-mini-code:free
+      - MYSTIK_LLM_MODEL=deepseek/deepseek-chat
       - MYSTIK_OMNIVOICE_URL=http://127.0.0.1:3900
       - MYSTIK_CONTENT_STUDIO_URL=http://127.0.0.1:8765
       - MYSTIK_ABE_CRM_URL=http://127.0.0.1:5180

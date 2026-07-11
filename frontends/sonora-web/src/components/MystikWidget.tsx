@@ -14,8 +14,9 @@ const QUICK_ACTIONS = [
 
 export default function MystikWidget() {
   const [open, setOpen] = useState(false);
+  const [sessionId] = useState(() => `web-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`);
   const [messages, setMessages] = useState<{role:string; content:string}[]>([
-    {role:"assistant", content:"¡Hola! Soy Mystik 🤖\n\nPuedo ayudarte a crear contenido, generar imágenes con IA, clonar tu voz, o poner un bot de Telegram para tu música.\n\n¿Qué necesitas?"},
+    {role:"assistant", content:"¡Hola! Soy Mystik 🤖\n\nEstoy conectada a Neo4j, ChromaDB y tengo memoria persistente.\n\nPuedo ayudarte con:\n• Información sobre tus artistas (desde Neo4j)\n• Crear contenido AI (imágenes, videos, voz)\n• Consultar documentos (ChromaDB)\n• Vender y gestionar tu música\n\n¿Qué necesitas?"},
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -29,7 +30,7 @@ export default function MystikWidget() {
     try {
       const res = await fetch(`${API}/chat`, {
         method:"POST", headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({message: msg}),
+        body: JSON.stringify({message: msg, session_id: sessionId}),
       });
       const data = await res.json();
       setMessages(prev => [...prev, {role:"assistant", content: data.response || "Lo siento, no pude procesar eso."}]);

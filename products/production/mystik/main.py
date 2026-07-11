@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -77,11 +78,103 @@ if not os.environ.get("TESTING"):
 crm = CRM()
 rag = MystikRAG()
 
+# ── Neo4j Connection ──
+NEO4J_URI = "bolt://127.0.0.1:7687"
+NEO4J_USER = "neo4j"
+NEO4J_PASS = "jarvis2026"
+neo4j_driver = None
+
+def _init_neo4j():
+    global neo4j_driver
+    try:
+        from neo4j import GraphDatabase
+        neo4j_driver = GraphDatabase.driver(NEO4J_URI, auth=(NEO4J_USER, NEO4J_PASS))
+        neo4j_driver.verify_connectivity()
+        logger.info("Neo4j connected: %s", NEO4J_URI)
+    except Exception as e:
+        logger.warning("Neo4j not available: %s", e)
+
+_init_neo4j()
+
+def query_neo4j(query: str, params: dict = None) -> list:
+    if not neo4j_driver:
+        return []
+    try:
+        with neo4j_driver.session() as session:
+            result = session.run(query, params or {})
+            return [r.data() for r in result]
+    except Exception as e:
+        logger.error("Neo4j query error: %s", e)
+        return []
+
+def get_neo4j_context(tenant: str, limit: int = 5) -> str:
+    rows = query_neo4j(
+        "MATCH (n) WHERE n.tenant = $tenant OR n.tenant IS NULL RETURN n LIMIT $limit",
+        {"tenant": tenant, "limit": limit}
+    )
+    if not rows:
+        return ""
+    return "\n".join([json.dumps(r.get("n", r), default=str) for r in rows])
+
+# ── Engram Memory ──
+ENGRAM_PATH = Path("/home/ubuntu/sonora-digital-corp/state/engram.db")
+engram_conn = None
+
+def _init_engram():
+    global engram_conn
+    try:
+        engram_conn = sqlite3.connect(str(ENGRAM_PATH))
+        engram_conn.execute("""
+            CREATE TABLE IF NOT EXISTS conversations (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                session_id TEXT,
+                role TEXT,
+                content TEXT,
+                created_at TEXT DEFAULT (datetime('now'))
+            )
+        """)
+        engram_conn.execute("""
+            CREATE TABLE IF NOT EXISTS knowledge (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                key TEXT UNIQUE,
+                value TEXT,
+                source TEXT,
+                created_at TEXT DEFAULT (datetime('now'))
+            )
+        """)
+        engram_conn.commit()
+        logger.info("Engram initialized")
+    except Exception as e:
+        logger.warning("Engram not available: %s", e)
+
+_init_engram()
+
+def save_conversation(session_id: str, role: str, content: str):
+    if not engram_conn:
+        logger.warning("Engram not available, conversation not saved")
+        return
+    try:
+        engram_conn.execute("INSERT INTO conversations (session_id, role, content) VALUES (?, ?, ?)",
+                            (session_id, role, content))
+        engram_conn.commit()
+    except Exception as e:
+        logger.error("Engram save failed: %s", e)
+
+def get_conversation_history(session_id: str, limit: int = 10) -> list:
+    if not engram_conn:
+        return []
+    rows = engram_conn.execute(
+        "SELECT role, content FROM conversations WHERE session_id=? ORDER BY id DESC LIMIT ?",
+        (session_id, limit)).fetchall()
+    return [{"role": r[0], "content": r[1]} for r in reversed(rows)]
+
 MYSTIK_PERSONA = """Eres Mystik, la asistente de ventas de Sonora Digital Corp.
 Eres directa, conocedora, y ligeramente irreverente pero profesional.
 Conoces todos los productos de SDC al detalle.
 Tu misión es calificar leads, presentar productos, y cerrar ventas.
-Hablas español natural, como una ejecutiva de ventas mexicana."""
+Hablas español natural, como una ejecutiva de ventas mexicana.
+Tienes acceso a Neo4j (knowledge graph), ChromaDB (vectores), Engram (memoria persistente).
+Usas el contexto disponible para responder con datos reales del sistema."""
 
 
 class ChatRequest(BaseModel):
@@ -123,19 +216,44 @@ async def list_products():
 
 
 @app.post("/api/chat")
-@limiter.limit("10/minute")
+@limiter.limit("30/minute")
 async def chat(req: ChatRequest, request: Request):
     blocked = check_prompt_injection(req.message)
     if blocked:
-        logger.warning("Prompt injection blocked: %s", blocked)
         return {"response": "No puedo procesar esa solicitud. Por favor, haz una pregunta sobre nuestros productos o servicios."}
 
+    session_id = req.session_id or f"session-{secrets.token_hex(4)}"
     tenant = req.tenant or config.default_tenant
-    context = rag.search(req.message, tenant)
 
-    prompt = f"{MYSTIK_PERSONA}\n\nContexto del cliente ({tenant}):\n{context}\n\nMensaje: {req.message}\n\nResponde como Mystik:"
+    # 1. Obtener contexto de Neo4j (knowledge graph)
+    neo4j_ctx = get_neo4j_context(tenant)
 
-    # Try cloud LLM if API key available
+    # 2. Obtener contexto de ChromaDB (RAG)
+    chroma_ctx = rag.search(req.message, tenant)
+
+    # 3. Obtener historial de conversación de Engram
+    history = get_conversation_history(session_id)
+
+    # 4. Guardar mensaje del usuario
+    save_conversation(session_id, "user", req.message)
+
+    # 5. Construir mensajes para el LLM
+    messages = [
+        {"role": "system", "content": MYSTIK_PERSONA},
+    ]
+
+    if neo4j_ctx:
+        messages.append({"role": "system", "content": f"Datos de Neo4j (knowledge graph):\n{neo4j_ctx[:1000]}"})
+
+    if chroma_ctx:
+        messages.append({"role": "system", "content": f"Contexto de documentos (ChromaDB):\n{chroma_ctx[:1000]}"})
+
+    for h in history[-6:]:
+        messages.append({"role": h["role"], "content": h["content"]})
+
+    messages.append({"role": "user", "content": req.message})
+
+    # 6. Llamar a OpenRouter con DeepSeek
     response_text = ""
     if config.openrouter_key:
         try:
@@ -145,18 +263,25 @@ async def chat(req: ChatRequest, request: Request):
                     "https://openrouter.ai/api/v1/chat/completions",
                     headers={"Authorization": f"Bearer {config.openrouter_key}", "Content-Type": "application/json"},
                     json={
-                        "model": config.llm_model,
-                        "messages": [
-                            {"role": "system", "content": MYSTIK_PERSONA},
-                            {"role": "user", "content": f"Contexto ({tenant}):\n{context}\n\n{req.message}"},
-                        ],
-                        "max_tokens": 500,
+                        "model": "deepseek/deepseek-chat",
+                        "messages": messages,
+                        "max_tokens": 800,
                     },
                 )
                 data = resp.json()
                 response_text = data.get("choices", [{}])[0].get("message", {}).get("content", "")
         except Exception as e:
             logger.warning("OpenRouter failed: %s", e)
+
+    # 7. Guardar respuesta
+    if response_text:
+        save_conversation(session_id, "assistant", response_text)
+
+    return {
+        "response": response_text,
+        "session_id": session_id,
+        "sources": {"neo4j": bool(neo4j_ctx), "chroma": bool(chroma_ctx), "history": len(history)},
+    }
 
     # Template fallback (no LLM needed)
     if not response_text:
@@ -287,7 +412,6 @@ async def transcribe(file: bytes):
 
 # ── Multi-tenant Config Store ──
 
-import json, sqlite3
 TENANT_DB = Path(config.tenant_db_path)
 
 import hashlib, secrets
@@ -751,11 +875,11 @@ async def payments_config():
 
 import zipfile, io, uuid
 
-UPLOAD_DIR = Path("state/uploads")
+UPLOAD_DIR = Path("/home/ubuntu/sonora-digital-corp/state/uploads")
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
-LORA_DIR = Path("state/lora")
+LORA_DIR = Path("/home/ubuntu/sonora-digital-corp/state/lora")
 LORA_DIR.mkdir(parents=True, exist_ok=True)
-CONTENT_DIR = Path("state/content")
+CONTENT_DIR = Path("/home/ubuntu/sonora-digital-corp/state/content")
 CONTENT_DIR.mkdir(parents=True, exist_ok=True)
 
 @app.post("/api/content/train-lora")
