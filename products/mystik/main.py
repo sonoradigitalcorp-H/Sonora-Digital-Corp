@@ -290,6 +290,8 @@ async def transcribe(file: bytes):
 import json, sqlite3
 TENANT_DB = Path(config.tenant_db_path)
 
+import hashlib, secrets
+
 def _init_tenant_db():
     TENANT_DB.parent.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(str(TENANT_DB))
@@ -297,22 +299,150 @@ def _init_tenant_db():
         CREATE TABLE IF NOT EXISTS tenants (
             id TEXT PRIMARY KEY,
             name TEXT,
+            plan TEXT DEFAULT 'starter',
             config TEXT DEFAULT '{}',
             created_at TEXT DEFAULT (datetime('now'))
         )
     """)
     conn.execute("""
-        INSERT OR IGNORE INTO tenants (id, name, config)
-        VALUES ('sonora', 'Sonora Digital Corp', '{"brand_color":"#FF6B35","llm_model":"cohere/north-mini-code:free","products":"all"}')
+        CREATE TABLE IF NOT EXISTS tokens (
+            token TEXT PRIMARY KEY,
+            user_id INTEGER,
+            tenant_id TEXT,
+            created_at TEXT DEFAULT (datetime('now')),
+            expires_at TEXT
+        )
     """)
     conn.execute("""
-        INSERT OR IGNORE INTO tenants (id, name, config)
-        VALUES ('demo', 'Demo Client', '{"brand_color":"#6366f1","llm_model":"cohere/north-mini-code:free","products":"limited"}')
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            email TEXT UNIQUE NOT NULL,
+            password_hash TEXT NOT NULL,
+            name TEXT NOT NULL,
+            tenant_id TEXT NOT NULL,
+            role TEXT DEFAULT 'owner',
+            created_at TEXT DEFAULT (datetime('now')),
+            FOREIGN KEY (tenant_id) REFERENCES tenants(id)
+        )
+    """)
+    conn.execute("""
+        INSERT OR IGNORE INTO tenants (id, name, plan, config)
+        VALUES ('sonora', 'Sonora Digital Corp', 'enterprise', '{"brand_color":"#FF6B35","products":"all"}')
+    """)
+    conn.execute("""
+        INSERT OR IGNORE INTO tenants (id, name, plan, config)
+        VALUES ('demo', 'Demo Client', 'starter', '{"brand_color":"#6366f1","products":"limited"}')
     """)
     conn.commit()
     conn.close()
 
+SERVICES = [
+    {"id": "mystik-ai", "name": "Mystik AI", "tagline": "Asistente de ventas con voz", "starter": True, "pro": True, "enterprise": True},
+    {"id": "content-studio", "name": "Content Studio", "tagline": "Generación de contenido AI", "starter": False, "pro": True, "enterprise": True},
+    {"id": "omnivoice", "name": "OmniVoice", "tagline": "Clonación de voz profesional", "starter": False, "pro": True, "enterprise": True},
+    {"id": "open-notebook", "name": "Open Notebook", "tagline": "Knowledge base con RAG", "starter": False, "pro": False, "enterprise": True},
+    {"id": "abe-music", "name": "ABE Music OS", "tagline": "Gestión para industria musical", "starter": False, "pro": False, "enterprise": True},
+]
+
+PLANS = {
+    "starter": {"name": "Starter", "price": 0, "services": ["mystik-ai"]},
+    "pro": {"name": "Pro", "price": 49, "services": ["mystik-ai", "content-studio", "omnivoice"]},
+    "enterprise": {"name": "Enterprise", "price": 199, "services": ["mystik-ai", "content-studio", "omnivoice", "open-notebook", "abe-music"]},
+}
+
+# ── Auth ──
+
+class SignupRequest(BaseModel):
+    email: str
+    password: str
+    name: str
+    plan: str = "starter"
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+def _hash_password(password: str) -> str:
+    return hashlib.sha256(password.encode()).hexdigest()
+
+def _generate_token() -> str:
+    return secrets.token_hex(32)
+
+@app.post("/api/auth/signup")
+async def signup(req: SignupRequest):
+    if req.plan not in PLANS:
+        raise HTTPException(status_code=400, detail="Plan inválido")
+    conn = sqlite3.connect(str(TENANT_DB))
+    try:
+        tenant_id = f"tenant-{secrets.token_hex(4)}"
+        conn.execute("INSERT INTO tenants (id, name, plan, config) VALUES (?, ?, ?, ?)",
+                     (tenant_id, req.name, req.plan, json.dumps({"services": PLANS[req.plan]["services"]})))
+        conn.execute("INSERT INTO users (email, password_hash, name, tenant_id) VALUES (?, ?, ?, ?)",
+                     (req.email, _hash_password(req.password), req.name, tenant_id))
+        conn.commit()
+        return {"status": "ok", "tenant_id": tenant_id, "plan": req.plan, "services": PLANS[req.plan]["services"]}
+    except sqlite3.IntegrityError:
+        raise HTTPException(status_code=409, detail="Email ya registrado")
+    finally:
+        conn.close()
+
+@app.post("/api/auth/login")
+async def login(req: LoginRequest):
+    conn = sqlite3.connect(str(TENANT_DB))
+    row = conn.execute("SELECT u.id, u.name, u.tenant_id, u.role, t.plan FROM users u JOIN tenants t ON u.tenant_id = t.id WHERE u.email = ? AND u.password_hash = ?",
+                       (req.email, _hash_password(req.password))).fetchone()
+    conn.close()
+    if not row:
+        raise HTTPException(status_code=401, detail="Credenciales inválidas")
+    token = _generate_token()
+    conn = sqlite3.connect(str(TENANT_DB))
+    conn.execute("INSERT INTO tokens (token, user_id, tenant_id, expires_at) VALUES (?, ?, ?, datetime('now', '+24 hours'))",
+                 (token, row[0], row[2]))
+    conn.commit()
+    conn.close()
+    return {"token": token, "user": {"id": row[0], "name": row[1]}, "tenant_id": row[2], "role": row[3], "plan": row[4]}
+
+def get_current_user(request: Request):
+    auth = request.headers.get("Authorization", "")
+    token = auth.replace("Bearer ", "") if auth.startswith("Bearer ") else ""
+    if not token:
+        raise HTTPException(status_code=401, detail="Token requerido")
+    conn = sqlite3.connect(str(TENANT_DB))
+    row = conn.execute("SELECT u.id, u.name, u.email, u.tenant_id, u.role, t.plan FROM tokens tk JOIN users u ON tk.user_id = u.id JOIN tenants t ON u.tenant_id = t.id WHERE tk.token = ? AND tk.expires_at > datetime('now')", (token,)).fetchone()
+    conn.close()
+    if not row:
+        raise HTTPException(status_code=401, detail="Token inválido o expirado")
+    return {"user_id": row[0], "name": row[1], "email": row[2], "tenant_id": row[3], "role": row[4], "plan": row[5]}
+
+@app.get("/api/me")
+async def get_me(request: Request):
+    return get_current_user(request)
+
+@app.get("/api/dashboard")
+async def get_dashboard(request: Request):
+    user = get_current_user(request)
+    conn = sqlite3.connect(str(TENANT_DB))
+    row = conn.execute("SELECT id, name, plan, config FROM tenants WHERE id=?", (user["tenant_id"],)).fetchone()
+    conn.close()
+    tenant_config = json.loads(row[3]) if row and row[3] else {}
+    services = PLANS.get(user["plan"], PLANS["starter"])["services"]
+    service_details = [s for s in SERVICES if s["id"] in services]
+    return {
+        "tenant": {"id": row[0], "name": row[1], "plan": row[2]},
+        "user": user,
+        "services": service_details,
+        "stats": {"api_calls": 0, "storage_mb": 0, "active_chats": 0},
+    }
+
 _init_tenant_db()
+
+@app.get("/api/plans")
+async def list_plans():
+    return {"plans": {k: {"name": v["name"], "price": v["price"], "services": [s for s in SERVICES if s["id"] in v["services"]]} for k, v in PLANS.items()}}
+
+@app.get("/api/services")
+async def list_services():
+    return {"services": SERVICES}
 
 @app.get("/api/tenants")
 async def list_tenants():
