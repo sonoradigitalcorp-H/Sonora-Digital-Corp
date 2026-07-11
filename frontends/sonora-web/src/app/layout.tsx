@@ -4,7 +4,7 @@ import MystikWidget from "@/components/MystikWidget";
 
 export const metadata: Metadata = {
   title: "ABE Music Group — Ecosistema Musical Inteligente",
-  description: "Plataforma de inteligencia artificial para la industria musical. ABE Music Group, Mystik AI, generación de contenido.",
+  description: "ABE Music Group. Gestión de carrera, producción, distribución y ventas para artistas. Hub en Hermosillo.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
