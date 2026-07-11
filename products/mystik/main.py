@@ -1,12 +1,17 @@
 import json
 import logging
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from fastapi.responses import JSONResponse, HTMLResponse
 from pydantic import BaseModel
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.util import get_remote_address
+from slowapi.errors import RateLimitExceeded
 
 from products.mystik.config import config
 from products.mystik.crm import CRM
@@ -15,15 +20,40 @@ from products.mystik.rag import MystikRAG
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 logger = logging.getLogger(__name__)
 
+limiter = Limiter(key_func=get_remote_address, default_limits=["200/minute", "20/minute"])
 app = FastAPI(title="Mystik AI", version="1.0.0", docs_url="/api/docs")
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+ALLOWED_ORIGINS = [
+    "https://mystik.sonoradigitalcorp.com",
+    "http://mystik.sonoradigitalcorp.com",
+    "http://127.0.0.1:3210",
+    "http://localhost:3210",
+    "http://127.0.0.1:5200",
+    "http://localhost:5200",
+]
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_headers=["Authorization", "Content-Type", "X-Tenant-ID"],
 )
+
+if not os.environ.get("TESTING"):
+    app.add_middleware(
+        TrustedHostMiddleware,
+        allowed_hosts=[
+            "mystik.sonoradigitalcorp.com",
+            "*.sonoradigitalcorp.com",
+            "127.0.0.1",
+            "localhost",
+            "testserver",
+            "testclient",
+        ],
+    )
 
 crm = CRM()
 rag = MystikRAG()
@@ -74,7 +104,8 @@ async def list_products():
 
 
 @app.post("/api/chat")
-async def chat(req: ChatRequest):
+@limiter.limit("10/minute")
+async def chat(req: ChatRequest, request: Request):
     tenant = req.tenant or config.default_tenant
     context = rag.search(req.message, tenant)
 
@@ -121,7 +152,8 @@ async def chat(req: ChatRequest):
 
 
 @app.post("/api/leads")
-async def create_lead(req: LeadRequest):
+@limiter.limit("30/minute")
+async def create_lead(req: LeadRequest, request: Request):
     try:
         lead = crm.create_lead(req.model_dump())
         return {"status": "created", "lead": lead}
