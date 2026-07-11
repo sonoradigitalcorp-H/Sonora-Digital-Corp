@@ -133,6 +133,27 @@ export default function ArtistPage() {
         <section className="px-4 pb-24">
           <div className="max-w-6xl mx-auto">
 
+            {/* Gallery */}
+            <div className="mb-12">
+              <h2 className="font-display text-2xl font-light mb-6 flex items-center gap-2"><Image className="w-5 h-5 text-gold" /> Galería</h2>
+              <p className="text-muted-foreground text-sm mb-6">Imágenes generadas con ABE Films + IA.</p>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                {[0, 1].map(i => (
+                  <div key={i} className="glass rounded-xl overflow-hidden aspect-[4/3]">
+                    <img src={`/images/artists/${slug}/gallery-${i}.jpg`} alt=""
+                      className="w-full h-full object-cover"
+                      onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                  </div>
+                ))}
+                <div className="glass rounded-xl aspect-[4/3] flex items-center justify-center text-center p-4">
+                  <div>
+                    <Image className="w-6 h-6 text-gold mx-auto mb-2" />
+                    <p className="text-xs text-muted-foreground">Más imágenes con <span className="text-gold">ABE Films</span></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
             {/* Fan Services */}
             <div className="mb-12">
               <h2 className="font-display text-2xl font-light mb-6 flex items-center gap-2"><Sparkles className="w-5 h-5 text-gold" /> Experiencias exclusivas</h2>

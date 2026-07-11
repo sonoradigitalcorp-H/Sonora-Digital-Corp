@@ -58,8 +58,29 @@ export default function ABEFilmsPage() {
           </div>
         </Reveal>
 
-        {/* FEATURES GRID */}
+        {/* DEMO GALLERY */}
         <Reveal delay={0.1}>
+          <div className="mb-16">
+            <h2 className="font-display text-3xl font-light mb-6">Contenido generado con <span className="text-gradient-gold italic">ABE Films</span></h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {[
+                { src: "/images/gallery/hector-rubio/flux-0.jpg", label: "Concierto" },
+                { src: "/images/gallery/hector-rubio/flux-1.jpg", label: "Studio" },
+                { src: "/images/demo/merch/flux-0.jpg", label: "Merch" },
+                { src: "/images/demo/concert/flux-0.jpg", label: "Evento" },
+              ].map((img, i) => (
+                <div key={i} className="glass rounded-xl overflow-hidden aspect-[4/3]">
+                  <img src={img.src} alt={img.label}
+                    className="w-full h-full object-cover"
+                    onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                </div>
+              ))}
+            </div>
+          </div>
+        </Reveal>
+
+        {/* FEATURES GRID */}
+        <Reveal delay={0.2}>
           <h2 className="font-display text-3xl font-light mb-8">Lo que incluye tu membresía</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16">
             {ARTIST_FEATURES.map((f, i) => (
