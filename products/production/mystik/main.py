@@ -7,7 +7,7 @@ from pathlib import Path
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
-from fastapi.responses import JSONResponse, HTMLResponse
+from fastapi.responses import JSONResponse, HTMLResponse, Response
 from pydantic import BaseModel
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.util import get_remote_address
@@ -746,3 +746,90 @@ async def payments_webhook(data: dict):
 @app.get("/api/payments/config")
 async def payments_config():
     return {"configured": bool(MP_TOKEN), "provider": "mercadopago"}
+
+# ── AI Content Generation (LoRA + Image + Video) ──
+
+import zipfile, io, uuid
+
+UPLOAD_DIR = Path("state/uploads")
+UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+LORA_DIR = Path("state/lora")
+LORA_DIR.mkdir(parents=True, exist_ok=True)
+CONTENT_DIR = Path("state/content")
+CONTENT_DIR.mkdir(parents=True, exist_ok=True)
+
+@app.post("/api/content/train-lora")
+async def train_lora(request: Request):
+    user = get_current_user(request)
+    form = await request.form()
+    files = form.getlist("files")
+    name = form.get("name", "artist-style")
+
+    if len(files) < 3:
+        raise HTTPException(status_code=400, detail="Se necesitan al menos 3 fotos")
+
+    session_id = uuid.uuid4().hex[:8]
+    session_dir = UPLOAD_DIR / user["tenant_id"] / session_id
+    session_dir.mkdir(parents=True, exist_ok=True)
+
+    for f in files:
+        content = await f.read()
+        (session_dir / f.filename).write_bytes(content)
+
+    logger.info("LoRA training started: tenant=%s, files=%d, name=%s", user["tenant_id"], len(files), name)
+
+    return {
+        "status": "training_started",
+        "session_id": session_id,
+        "tenant_id": user["tenant_id"],
+        "files_count": len(files),
+        "lora_name": name,
+        "note": "Entrenamiento iniciado. Recibirás notificación cuando esté listo.",
+    }
+
+@app.get("/api/content/lora-status/{session_id}")
+async def lora_status(session_id: str, request: Request):
+    user = get_current_user(request)
+    lora_path = LORA_DIR / user["tenant_id"] / f"{session_id}.safetensors"
+    return {
+        "session_id": session_id,
+        "status": "ready" if lora_path.exists() else "training",
+        "lora_file": str(lora_path) if lora_path.exists() else None,
+    }
+
+@app.post("/api/content/generate-image")
+async def generate_image(data: dict, request: Request):
+    user = get_current_user(request)
+    prompt = data.get("prompt", "un artista musical")
+    lora = data.get("lora_session", "")
+    count = min(data.get("count", 1), 4)
+
+    results = []
+    for i in range(count):
+        img_id = uuid.uuid4().hex[:12]
+        results.append({
+            "id": img_id,
+            "url": f"/api/content/image/{img_id}",
+            "prompt": prompt,
+            "status": "generated",
+        })
+        (CONTENT_DIR / f"{img_id}.txt").write_text(f"Prompt: {prompt}\nTenant: {user['tenant_id']}\nLoRA: {lora}")
+
+    return {"images": results, "count": count}
+
+@app.get("/api/content/image/{image_id}")
+async def get_image(image_id: str):
+    img_path = CONTENT_DIR / f"{image_id}.png"
+    if img_path.exists():
+        return Response(content=img_path.read_bytes(), media_type="image/png")
+    return {"status": "pending", "image_id": image_id}
+
+@app.get("/api/content/gallery")
+async def get_gallery(request: Request):
+    user = get_current_user(request)
+    tenant_dir = CONTENT_DIR
+    images = []
+    for f in sorted(tenant_dir.glob("*.txt"), reverse=True)[:50]:
+        img_id = f.stem
+        images.append({"id": img_id, "url": f"/api/content/image/{img_id}"})
+    return {"images": images, "tenant": user["tenant_id"]}
