@@ -38,7 +38,7 @@ services:
 
   # ── Twenty CRM ──
   twenty:
-    image: twentycrm/twenty:latest
+    build: ../infra/twenty
     container_name: sdc-twenty
     ports:
       - "3002:3000"
@@ -47,8 +47,7 @@ services:
       - SERVER_URL=https://mystik.sonoradigitalcorp.com
       - CACHE_ENABLED=false
       - REDIS_URL=redis://mystik-redis:6379
-      - DISABLE_DB_MIGRATIONS=true
-    entrypoint: ["node", "dist/main"]
+      - TIMEOUT=30
     depends_on:
       - postgres
       - redis
