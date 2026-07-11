@@ -1,96 +1,105 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import {
-  Sparkles, Music, Bot, Globe, Wallet, Mic, Zap, ChevronDown,
-  ArrowRight, ExternalLink, Shield, Cpu, Cloud, Radio, CodeXml,
-} from "lucide-react";
-import { useRef } from "react";
+import { motion } from "framer-motion";
+import { Bot, Mic, Image, Radio, Music, Cloud, LogIn, UserPlus, Check, Star, ArrowRight } from "lucide-react";
 
-
-
-// ── Productos ──
-const PRODUCTS = [
+const PLANS = [
   {
-    id: "abe-music",
-    name: "ABE Music OS",
-    desc: "Gestión inteligente para la industria musical. Revenue, contratos, CRM de fans, distribución multi-plataforma.",
-    icon: Music,
-    color: "#00ff88",
-    href: "http://149.56.46.173:5180",
-    tags: ["API REST", "WebSocket", "PWA"],
+    name: "Starter",
+    price: "$0",
+    period: "/mes",
+    desc: "Perfecto para probar las capacidades de SDC.",
+    features: ["1 agente AI", "100 chats/mes", "API REST", "Community support"],
+    cta: "Comenzar gratis",
+    popular: false,
   },
   {
-    id: "mystik",
+    name: "Pro",
+    price: "$49",
+    period: "/mes",
+    desc: "Para negocios que quieren automatizar ventas.",
+    features: ["3 agentes AI", "10,000 chats/mes", "Voz + TTS", "CRM integrado", "Multi-tenant", "Soporte prioritario"],
+    cta: "Elegir Pro",
+    popular: true,
+  },
+  {
+    name: "Enterprise",
+    price: "$199",
+    period: "/mes",
+    desc: "Para empresas con necesidades avanzadas.",
+    features: ["Agentes ilimitados", "Chats ilimitados", "Voz clonada", "CRM + ERP", "Multi-tenant aislado", "On-premise option", "Soporte 24/7", "SLA 99.9%"],
+    cta: "Contactar",
+    popular: false,
+  },
+];
+
+const SERVICES = [
+  {
+    id: "mystik-ai",
     name: "Mystik AI",
-    desc: "Asistente de ventas con voz y texto. Multi-tenant, CRM integrado, clonación de voz, knowledge base RAG.",
+    tagline: "Asistente de ventas con voz",
+    desc: "AI conversacional que califica leads, presenta productos y cierra ventas. Multi-tenant, CRM integrado, voz natural.",
     icon: Bot,
     color: "#FF6B35",
-    href: "http://149.56.46.173:5200",
-    tags: ["AI", "Voz", "Chat"],
+    features: ["Chat con IA", "Voz (STT + TTS)", "CRM multi-tenant", "Knowledge base RAG", "Analytics"],
+    starter: true, pro: true, enterprise: true,
   },
   {
     id: "content-studio",
     name: "Content Studio",
-    desc: "Generación de contenido AI: imágenes, TTS, talking heads, OCR, edición. 20+ herramientas MCP.",
-    icon: Zap,
+    tagline: "Generación de contenido AI",
+    desc: "Crea imágenes, TTS, talking heads, OCR y edición via MCP. 20+ herramientas de generación.",
+    icon: Image,
     color: "#b388ff",
-    href: "/products/content-studio",
-    tags: ["MCP", "Imágenes", "TTS"],
+    features: ["Imágenes AI", "Text-to-Speech", "Talking Heads", "OCR", "20+ MCP tools"],
+    starter: false, pro: true, enterprise: true,
   },
   {
     id: "omnivoice",
     name: "OmniVoice",
-    desc: "Clonación de voz AI. API de síntesis multi-idioma. Perfiles de voz personalizados.",
+    tagline: "Clonación de voz profesional",
+    desc: "Clona cualquier voz con 10 segundos de audio. Síntesis multi-idioma con API REST.",
     icon: Mic,
     color: "#00ccff",
-    href: "/products/omnivoice",
-    tags: ["Voz", "API", "Clonación"],
+    features: ["Clonación zero-shot", "Multi-idioma", "API REST", "Perfiles de voz"],
+    starter: false, pro: true, enterprise: true,
   },
   {
     id: "open-notebook",
     name: "Open Notebook",
-    desc: "Alternativa open-source a NotebookLM. RAG sobre PDFs, web, documentos. Genera podcasts.",
+    tagline: "Knowledge base con RAG",
+    desc: "Alternativa open-source a NotebookLM. Sube PDFs, URLs, documentos. Chat con tu knowledge base.",
     icon: Radio,
     color: "#ff6b6b",
-    href: "/products/open-notebook",
-    tags: ["RAG", "PDF", "Podcast"],
+    features: ["RAG sobre PDFs", "Web scraping", "Generación de podcasts", "API REST"],
+    starter: false, pro: false, enterprise: true,
   },
   {
-    id: "abe-bot",
-    name: "ABE Telegram Bot",
-    desc: "Bot de Telegram con 98 skills. Gestión musical, reportes, revenue, contratos desde Telegram.",
-    icon: Bot,
-    color: "#26a5e4",
-    href: "https://t.me/abe_music_bot",
-    tags: ["Telegram", "98 skills"],
+    id: "abe-music",
+    name: "ABE Music OS",
+    tagline: "Gestión para industria musical",
+    desc: "Plataforma completa para sellos discográficos: revenue, contratos, CRM de fans, distribución.",
+    icon: Music,
+    color: "#00ff88",
+    features: ["Revenue ledger", "Contratos inteligentes", "CRM de fans", "Distribución", "Bot Telegram"],
+    starter: false, pro: false, enterprise: true,
   },
 ];
 
-// ── Stats ──
-const STATS = [
-  { label: "Revenue Gestionado", value: "$479K", icon: Wallet },
-  { label: "Streams Procesados", value: "120M", icon: Radio },
-  { label: "Servicios Activos", value: "15+", icon: Cpu },
-  { label: "Tests Pasando", value: "759", icon: Shield },
-];
-
-// ── Componentes ──
 function Navbar() {
   return (
     <nav className="fixed top-0 w-full z-50 glass">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         <a href="/" className="flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-[#FF6B35]" />
-          <span className="font-bold text-lg">Sonora<span className="text-[#FF6B35]">.</span>Digital</span>
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#FF6B35] to-[#00ccff] flex items-center justify-center text-black font-bold text-sm">SD</div>
+          <span className="font-bold">Sonora<span className="text-[#FF6B35]">.</span></span>
         </a>
-        <div className="hidden md:flex items-center gap-6 text-sm text-gray-400">
-          <a href="#productos" className="hover:text-white transition">Productos</a>
-          <a href="#ecosistema" className="hover:text-white transition">Ecosistema</a>
-          <a href="http://149.56.46.173:5200" className="hover:text-white transition">Mystik AI</a>
-          <a href="http://149.56.46.173:5180" className="hover:text-white transition">ABE Music</a>
-          <a href="https://github.com/sonoradigitalcorp-H" className="hover:text-white transition flex items-center gap-1">
-            <CodeXml className="w-4 h-4" /> GitHub
+        <div className="hidden md:flex items-center gap-6 text-sm">
+          <a href="#servicios" className="text-gray-400 hover:text-white transition">Servicios</a>
+          <a href="#planes" className="text-gray-400 hover:text-white transition">Planes</a>
+          <a href="/login" className="text-gray-400 hover:text-white transition flex items-center gap-1"><LogIn className="w-4 h-4" /> Iniciar sesión</a>
+          <a href="/signup" className="px-4 py-2 rounded-full bg-gradient-to-r from-[#FF6B35] to-[#00ccff] text-black font-semibold text-sm hover:scale-105 transition-transform flex items-center gap-1">
+            <UserPlus className="w-4 h-4" /> Crear cuenta
           </a>
         </div>
       </div>
@@ -100,116 +109,70 @@ function Navbar() {
 
 function Hero() {
   return (
-    <section className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden gradient-bg">
-      <div className="absolute inset-0 opacity-30">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#FF6B35] rounded-full blur-[128px]" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[#00ccff] rounded-full blur-[128px]" />
+    <section className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden gradient-bg px-4">
+      <div className="absolute inset-0 opacity-20">
+        <div className="absolute top-1/3 left-1/3 w-96 h-96 bg-[#FF6B35] rounded-full blur-[128px]" />
+        <div className="absolute bottom-1/3 right-1/3 w-96 h-96 bg-[#00ccff] rounded-full blur-[128px]" />
       </div>
-      <motion.div
-        className="relative z-10 text-center px-4 max-w-4xl"
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        <motion.div
-          className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm text-gray-300 mb-8"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.2 }}
-        >
-          <Sparkles className="w-4 h-4 text-[#FF6B35]" />
-          Ecosistema AI open-source
-        </motion.div>
+      <motion.div className="relative z-10 text-center max-w-4xl"
+        initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8 }}>
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass text-sm text-gray-300 mb-8">
+          <Star className="w-4 h-4 text-[#FF6B35]" />
+          Plataforma AI para empresas
+        </div>
         <h1 className="text-5xl md:text-7xl font-bold mb-6 leading-tight">
-          El futuro de la{" "}
-          <span className="gradient-text">música y los negocios</span>
-          <br />con Inteligencia Artificial
+          Inteligencia Artificial para <br />
+          <span className="gradient-text">tu negocio</span>
         </h1>
         <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto mb-10">
-          Sonora Digital Corp construye sistemas anti-frágiles, auto-mejorables y multi-tenant
-          para la industria musical y empresarial. 100% open-source.
+          Asistentes AI, generación de contenido, clonación de voz y más.
+          Todo en una plataforma multi-tenant, segura y lista para empresas.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <a href="#productos"
-            className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full font-semibold
+          <a href="/signup"
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold
             bg-gradient-to-r from-[#FF6B35] to-[#00ccff] text-black hover:scale-105 transition-transform">
-            Ver productos <ArrowRight className="w-4 h-4" />
+            Crear cuenta gratis <ArrowRight className="w-4 h-4" />
           </a>
-          <a href="http://149.56.46.173:5200"
-            className="inline-flex items-center justify-center gap-2 px-8 py-3 rounded-full font-semibold
-            glass text-white hover:bg-white/10 transition-all">
-            Hablar con Mystik <Bot className="w-4 h-4" />
+          <a href="#servicios"
+            className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-semibold glass text-white hover:bg-white/10 transition-all">
+            Ver servicios
           </a>
         </div>
-      </motion.div>
-
-      {/* Stats */}
-      <motion.div
-        className="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-6 mt-20 max-w-4xl mx-auto px-4"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 0.6 }}
-      >
-        {STATS.map((stat) => (
-          <div key={stat.label} className="glass rounded-xl p-4 text-center">
-            <stat.icon className="w-5 h-5 mx-auto mb-2 text-[#FF6B35]" />
-            <div className="text-xl font-bold gradient-text">{stat.value}</div>
-            <div className="text-xs text-gray-500 mt-1">{stat.label}</div>
-          </div>
-        ))}
-      </motion.div>
-
-      <motion.div className="absolute bottom-8" animate={{ y: [0, 8, 0] }} transition={{ repeat: Infinity, duration: 2 }}>
-        <ChevronDown className="w-6 h-6 text-gray-500" />
       </motion.div>
     </section>
   );
 }
 
-function ProductsSection() {
+function ServicesSection() {
   return (
-    <section id="productos" className="py-32 px-4">
+    <section id="servicios" className="py-32 px-4">
       <div className="max-w-7xl mx-auto">
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-4xl font-bold mb-4">Productos del <span className="gradient-text">Ecosistema</span></h2>
-          <p className="text-gray-400 max-w-xl mx-auto">
-            Cada producto es una capability independiente. Todos se comunican via MCP, Redis y APIs REST.
-          </p>
+        <motion.div className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <h2 className="text-4xl font-bold mb-4">Nuestros <span className="gradient-text">Servicios</span></h2>
+          <p className="text-gray-400 max-w-xl mx-auto">Cada servicio funciona independientemente o integrado. Todos via API, MCP o web.</p>
         </motion.div>
-
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {PRODUCTS.map((product, i) => (
-            <motion.a
-              key={product.id}
-              href={product.href}
-              target={product.href.startsWith("http") ? "_blank" : undefined}
-              className="card-3d group"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <div className="card-3d-inner glass rounded-2xl p-6 h-full gradient-border hover:border-transparent transition-all duration-300">
-                <product.icon className="w-10 h-10 mb-4" style={{ color: product.color }} />
-                <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
-                <p className="text-sm text-gray-400 mb-4 leading-relaxed">{product.desc}</p>
-                <div className="flex flex-wrap gap-2">
-                  {product.tags.map((tag) => (
-                    <span key={tag} className="text-xs px-2 py-1 rounded-full" style={{
-                      background: `${product.color}15`,
-                      color: product.color,
-                    }}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+          {SERVICES.map((svc, i) => (
+            <motion.div key={svc.id}
+              className="glass rounded-2xl p-6 gradient-border hover:border-transparent transition-all duration-300"
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+              <svc.icon className="w-10 h-10 mb-4" style={{ color: svc.color }} />
+              <h3 className="text-lg font-semibold mb-1">{svc.name}</h3>
+              <p className="text-sm text-gray-500 mb-1">{svc.tagline}</p>
+              <p className="text-sm text-gray-400 mb-4 leading-relaxed">{svc.desc}</p>
+              <div className="flex flex-wrap gap-1.5 mb-4">
+                {svc.features.map((f) => (
+                  <span key={f} className="text-xs px-2 py-1 rounded-full bg-white/5 text-gray-300">{f}</span>
+                ))}
               </div>
-            </motion.a>
+              <div className="flex gap-2 text-xs text-gray-500">
+                {svc.starter && <span className="text-gray-400">✓ Starter</span>}
+                {svc.pro && <span className="text-[#FF6B35]">✓ Pro</span>}
+                {svc.enterprise && <span className="text-[#00ccff]">✓ Enterprise</span>}
+              </div>
+            </motion.div>
           ))}
         </div>
       </div>
@@ -217,45 +180,52 @@ function ProductsSection() {
   );
 }
 
-function EcosystemSection() {
+function PlansSection() {
   return (
-    <section id="ecosistema" className="py-32 px-4 relative overflow-hidden">
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-[#00ff88] rounded-full blur-[100px]" />
+    <section id="planes" className="py-32 px-4 relative">
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-0 left-0 w-96 h-96 bg-[#00ff88] rounded-full blur-[100px]" />
       </div>
       <div className="max-w-7xl mx-auto relative">
-        <motion.div
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-        >
-          <h2 className="text-4xl font-bold mb-4">Arquitectura del <span className="gradient-text">Sistema</span></h2>
-          <p className="text-gray-400 max-w-xl mx-auto">
-            7 kernels cognitivos · MCP nativo · Redis Agent Bus · 759 tests · Todo open-source
-          </p>
+        <motion.div className="text-center mb-16"
+          initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+          <h2 className="text-4xl font-bold mb-4">Planes <span className="gradient-text">Flexibles</span></h2>
+          <p className="text-gray-400 max-w-xl mx-auto">Todos los planes incluyen API, SSL, y multi-tenant. Escala cuando quieras.</p>
         </motion.div>
-
-        <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-          {[
-            { icon: Cpu, title: "7 Kernels Cognitivos", desc: "L1 Observe → L7 Control. Pipeline completo de datos, decisiones, acciones y aprendizaje." },
-            { icon: Cloud, title: "MCP Nativo", desc: "188 tools MCP expuestas via Gateway. Mystik, Hermes, OpenClaw y más como tools." },
-            { icon: Radio, title: "Redis Agent Bus", desc: "4 canales: messages, context, events, commands. Agentes se comunican en tiempo real." },
-            { icon: Shield, title: "Seguridad por Capas", desc: "Rate limiting, CORS restrictivo, PostgreSQL scram-sha-256, Redis ACL, prompt injection guard." },
-            { icon: Globe, title: "Multi-Tenant", desc: "Cada cliente aislado en su propio tenant. CRM, config, y knowledge base independientes." },
-            { icon: Zap, title: "Auto-Mejora", desc: "Founder Dependency Index (81/100), Enterprise Score (60/100), Weekly Reports automáticos." },
-          ].map((item, i) => (
-            <motion.div
-              key={item.title}
-              className="glass rounded-xl p-6"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <item.icon className="w-8 h-8 text-[#FF6B35] mb-3" />
-              <h3 className="font-semibold mb-2">{item.title}</h3>
-              <p className="text-sm text-gray-400">{item.desc}</p>
+        <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+          {PLANS.map((plan, i) => (
+            <motion.div key={plan.name}
+              className={`relative rounded-2xl p-8 ${plan.popular ? 'gradient-border' : 'glass'}`}
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: i * 0.1 }}>
+              {plan.popular && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-[#FF6B35] to-[#00ccff] text-black text-xs font-semibold">
+                  Más popular
+                </div>
+              )}
+              <div className={plan.popular ? '' : ''}>
+                <h3 className="text-xl font-bold">{plan.name}</h3>
+                <div className="mt-4 mb-6">
+                  <span className="text-4xl font-bold">{plan.price}</span>
+                  <span className="text-gray-500">{plan.period}</span>
+                </div>
+                <p className="text-sm text-gray-400 mb-6">{plan.desc}</p>
+                <ul className="space-y-3 mb-8">
+                  {plan.features.map((f) => (
+                    <li key={f} className="flex items-start gap-2 text-sm text-gray-300">
+                      <Check className="w-4 h-4 text-[#00ff88] mt-0.5 shrink-0" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <a href={plan.name === "Enterprise" ? "/contact" : "/signup"}
+                  className={`block text-center py-3 rounded-xl font-semibold text-sm transition-all ${
+                    plan.popular
+                      ? 'bg-gradient-to-r from-[#FF6B35] to-[#00ccff] text-black hover:scale-105'
+                      : 'glass text-white hover:bg-white/10'
+                  }`}>
+                  {plan.cta}
+                </a>
+              </div>
             </motion.div>
           ))}
         </div>
@@ -269,17 +239,15 @@ function Footer() {
     <footer className="glass border-t border-white/5 py-12 px-4">
       <div className="max-w-7xl mx-auto text-center">
         <div className="flex items-center justify-center gap-2 mb-4">
-          <Sparkles className="w-5 h-5 text-[#FF6B35]" />
-          <span className="font-bold">Sonora<span className="text-[#FF6B35]">.</span>Digital</span>
+          <div className="w-6 h-6 rounded bg-gradient-to-br from-[#FF6B35] to-[#00ccff] flex items-center justify-center text-black font-bold text-xs">SD</div>
+          <span className="font-bold">Sonora<span className="text-[#FF6B35]">.</span></span>
         </div>
-        <p className="text-sm text-gray-500 mb-4">
-          Hecho con ♥ en Hermosillo, Sonora · 100% open-source · Apache 2.0
-        </p>
+        <p className="text-sm text-gray-500 mb-4">© 2026 Sonora Digital Corp. All rights reserved.</p>
         <div className="flex justify-center gap-4 text-sm text-gray-600">
-          <a href="https://github.com/sonoradigitalcorp-H" className="hover:text-white transition">GitHub</a>
-          <a href="http://149.56.46.173:5200" className="hover:text-white transition">Mystik AI</a>
-          <a href="http://149.56.46.173:5180" className="hover:text-white transition">ABE Music</a>
-          <a href="http://149.56.46.173:8001" className="hover:text-white transition">Coolify</a>
+          <a href="/login" className="hover:text-white transition">Iniciar sesión</a>
+          <a href="/signup" className="hover:text-white transition">Crear cuenta</a>
+          <a href="/terms" className="hover:text-white transition">Términos</a>
+          <a href="/privacy" className="hover:text-white transition">Privacidad</a>
         </div>
       </div>
     </footer>
@@ -291,8 +259,8 @@ export default function Home() {
     <main className="min-h-screen">
       <Navbar />
       <Hero />
-      <ProductsSection />
-      <EcosystemSection />
+      <ServicesSection />
+      <PlansSection />
       <Footer />
     </main>
   );
