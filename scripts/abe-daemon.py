@@ -105,11 +105,10 @@ class AbeDaemon:
 
         # JARVIS caído
         if not status.get('jarvis', False):
-            log.warning("JARVIS caído — intentando restart")
-            # Try docker restart first
-            subprocess.run(['docker', 'restart', 'jarvis-neo4j', 'hermes_api'],
+            log.warning("JARVIS caído — intentando restart via Docker")
+            subprocess.run(['docker', 'restart', 'sdc-jarvis-webui', 'sdc-mcp-server'],
                          capture_output=True, timeout=30)
-            fixes.append("restarted containers")
+            fixes.append("restarted JARVIS containers")
 
         # Bot caído
         if not status.get('bot_ok', False):
@@ -118,12 +117,12 @@ class AbeDaemon:
                           "Regenera token en BotFather.")
             fixes.append("ALERT: bot token dead")
 
-        # ABE Service caído
+        # ABE Service caído — restart via Docker
         if not status.get('abe_service', False):
-            log.warning("ABE Service caído — intentando restart via systemd")
-            subprocess.run(['systemctl', '--user', 'restart', 'abe-service'],
+            log.warning("ABE Service caído — intentando restart via Docker")
+            subprocess.run(['docker', 'restart', 'sdc-abe-service'],
                          capture_output=True, timeout=30)
-            fixes.append("restarted abe-service")
+            fixes.append("restarted sdc-abe-service via Docker")
 
         return fixes
 

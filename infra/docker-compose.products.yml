@@ -80,6 +80,40 @@ services:
     mem_limit: 1g
     memswap_limit: 1g
 
+  avatar-engine:
+    build:
+      context: /home/ubuntu/avatar-engine
+      dockerfile: Dockerfile
+    container_name: ae-engine
+    labels:
+      - "sdc.domain=avatar"
+      - "sdc.service=avatar-engine"
+    ports:
+      - "8008:8008"
+      - "127.0.0.1:8090:8090"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://mystik:mystik2026@postgres:5432/avatardb
+      - DATABASE_URL_SYNC=postgresql://mystik:mystik2026@postgres:5432/avatardb
+      - NEO4J_URI=bolt://neo4j:7687
+      - NEO4J_USER=neo4j
+      - NEO4J_PASSWORD=${NEO4J_PASSWORD:-RezBcUz5ufu7AUXg1hZ3}
+      - REDIS_URL=redis://:${REDIS_PASSWORD:-IJsa2asL9CYlZDN6HUYl}@redis:6379/0
+      - FAL_API_KEY=${FAL_KEY:-a3de020a-b1f5-4d8f-be52-02bd130a4bc3:f70dc7053400ab8eeac8021b78378eb1}
+      - FALLBACK_PROVIDER=fal
+      - VIDEO_PROVIDER=fal
+      - N8N_WEBHOOK_URL=http://n8n:5678/webhook
+      - AVATAR_ENGINE_URL=http://localhost:8008
+      - WEBHOOK_SECRET=whsec_dev
+    volumes:
+      - /home/ubuntu/nsfw-ai-studio/output:/output
+    depends_on:
+      - postgres
+      - neo4j
+      - redis
+    restart: unless-stopped
+    networks:
+      - sdc-network
+
 networks:
   sdc-network:
     driver: bridge
