@@ -11,7 +11,17 @@ import {
   Sparkles, Gift, Phone, Mic, Crown, Trophy,
 } from "lucide-react";
 
-const FALLBACK = { id: "", name: "", total_streams: 0, total_revenue: 0, telegram_handle: "", genre: "", bio: "" };
+const FALLBACK = { id: "", name: "", total_streams: 0, total_revenue: 0, telegram_handle: "", genre: "", bio: "", spotify_id: "", instagram_handle: "" };
+
+const SPOTIFY_IDS: Record<string, string> = {
+  "hector-rubio": "2uSJ9ywE44eIRoTMatARAy",
+  "jesus-urquijo": "1hfrbMUDkM2tlUE85D3dR6",
+  "javier-arvayo": "0td9IOgiffWGMbcz3xKy0s",
+};
+
+const INSTAGRAM_HANDLES: Record<string, string> = {
+  "hector-rubio": "hector_rubiorr",
+};
 
 const MERCH_ITEMS = [
   { name: "Playera edición limitada", price: "$35", img: "👕", colors: ["Negra", "Dorada", "Blanca"] },
@@ -76,9 +86,9 @@ export default function ArtistPage() {
               </div>
               <div className="flex flex-wrap gap-3 justify-center md:justify-start">
                 {[
-                  { icon: Music, url: `https://open.spotify.com/artist/2uSJ9ywE44eIRoTMatARAy`, label: "Spotify" },
-                  { icon: Camera, url: `https://instagram.com/hector_rubiorr`, label: "Instagram" },
-                  { icon: Globe, url: `https://facebook.com/hectorrubiomx`, label: "Facebook" },
+                  { icon: Music, url: `https://open.spotify.com/artist/${SPOTIFY_IDS[slug] || slug}`, label: "Spotify" },
+                  { icon: Camera, url: `https://instagram.com/${INSTAGRAM_HANDLES[slug] || slug}`, label: "Instagram" },
+                  { icon: Globe, url: `https://facebook.com/${slug}`, label: "Facebook" },
                 ].map(s => (
                   <a key={s.label} href={s.url} target="_blank"
                     className="flex items-center gap-1.5 px-3 py-1.5 rounded-full glass text-xs text-muted-foreground hover:text-gold transition">
@@ -285,17 +295,17 @@ export default function ArtistPage() {
             <div className="glass rounded-2xl p-8">
               <h2 className="font-display text-2xl font-light mb-4">Redes</h2>
               <div className="flex flex-wrap gap-3">
-                <a href="https://open.spotify.com/artist/2uSJ9ywE44eIRoTMatARAy" target="_blank"
+                <a href={`https://open.spotify.com/artist/${SPOTIFY_IDS[slug] || slug}`} target="_blank"
                   className="flex items-center gap-2 px-4 py-2 rounded-full glass text-sm hover:text-gold transition">
                   <Music className="w-4 h-4" /> Spotify
                 </a>
-                <a href="https://instagram.com/hector_rubiorr" target="_blank"
+                <a href={`https://instagram.com/${INSTAGRAM_HANDLES[slug] || slug}`} target="_blank"
                   className="flex items-center gap-2 px-4 py-2 rounded-full glass text-sm hover:text-gold transition">
                   <Camera className="w-4 h-4" /> Instagram
                 </a>
-                <a href="https://vizualreleas.es/smoking" target="_blank"
+                <a href={`https://facebook.com/${slug}`} target="_blank"
                   className="flex items-center gap-2 px-4 py-2 rounded-full glass text-sm hover:text-gold transition">
-                  <Music2 className="w-4 h-4" /> Escuchar "FUMANDO"
+                  <Globe className="w-4 h-4" /> Facebook
                 </a>
                 <a href={`https://t.me/${artist.telegram_handle || 'abeassistant_bot'}`} target="_blank"
                   className="flex items-center gap-2 px-4 py-2 rounded-full glass text-sm hover:text-gold transition">
