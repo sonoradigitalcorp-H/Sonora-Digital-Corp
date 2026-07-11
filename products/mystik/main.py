@@ -20,6 +20,25 @@ from products.mystik.rag import MystikRAG
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
 logger = logging.getLogger(__name__)
 
+# ── Prompt Injection Guard ──
+PROMPT_INJECTION_PATTERNS = [
+    "ignore previous instructions", "ignore all instructions", "ignore all previous",
+    "forget everything", "forget all previous", "you are now", "act as if",
+    "you are free", "you have been", "new instructions", "override",
+    "system prompt", "your system prompt", "your instructions are",
+    "say the words", "repeat the words", "output the following",
+    "DAN", "jailbreak", "jail broken", "jail broken",
+    "you must", "you will obey", "you are required to",
+    "pretend", "imagine you are", "from now on",
+]
+
+def check_prompt_injection(text: str) -> str | None:
+    text_lower = text.lower()
+    for pattern in PROMPT_INJECTION_PATTERNS:
+        if pattern in text_lower:
+            return pattern
+    return None
+
 limiter = Limiter(key_func=get_remote_address, default_limits=["200/minute", "20/minute"])
 app = FastAPI(title="Mystik AI", version="1.0.0", docs_url="/api/docs")
 app.state.limiter = limiter
@@ -106,6 +125,11 @@ async def list_products():
 @app.post("/api/chat")
 @limiter.limit("10/minute")
 async def chat(req: ChatRequest, request: Request):
+    blocked = check_prompt_injection(req.message)
+    if blocked:
+        logger.warning("Prompt injection blocked: %s", blocked)
+        return {"response": "No puedo procesar esa solicitud. Por favor, haz una pregunta sobre nuestros productos o servicios."}
+
     tenant = req.tenant or config.default_tenant
     context = rag.search(req.message, tenant)
 
