@@ -1,0 +1,13 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+node_modules/
+.env
+config/secrets/
+*.age
+*.log
+dist/
+build/
+.next/

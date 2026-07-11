@@ -1,0 +1,196 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "name": "Sonora Platform",
+  "model": "opencode/deepseek-v4-flash-free",
+  "small_model": "opencode/mimo-v2.5-free",
+  "default_agent": "mystic",
+  "shell": "/bin/bash",
+  "logLevel": "INFO",
+  "instructions": ["AGENTS.md"],
+  "plugin": [
+    "superpowers@git+https://github.com/obra/superpowers.git",
+    "opencode-power-pack@git+https://github.com/waybarrios/opencode-power-pack.git",
+    "opencode-background-agents",
+    "opencode-skillful"
+  ],
+  "mcp": {
+    "stripe": {
+      "type": "local",
+      "command": ["npx", "-y", "@stripe/mcp"],
+      "enabled": false
+    },
+    "github": {
+      "type": "local",
+      "command": ["npx", "-y", "@github/github-mcp-server"],
+      "enabled": false
+    },
+    "postgres": {
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-postgres"],
+      "environment": { "DATABASE_URL": "{env:DATABASE_URL}" },
+      "enabled": false
+    },
+    "neo4j": {
+      "type": "local",
+      "command": ["npx", "-y", "@alanse/mcp-neo4j-server"],
+      "environment": {
+        "NEO4J_URI": "bolt://127.0.0.1:7687",
+        "NEO4J_USER": "{env:NEO4J_USER}",
+        "NEO4J_PASSWORD": "{env:NEO4J_PASSWORD}"
+      },
+      "enabled": false
+    },
+    "qdrant": {
+      "type": "local",
+      "command": ["npx", "-y", "mcp-server-qdrant"],
+      "environment": { "QDRANT_URL": "http://127.0.0.1:6333" },
+      "enabled": false
+    },
+    "telegram": {
+      "type": "local",
+      "command": ["npx", "-y", "mcp-server-telegram"],
+      "environment": { "TELEGRAM_BOT_TOKEN": "{env:TELEGRAM_BOT_TOKEN}" },
+      "enabled": false
+    },
+    "playwright": {
+      "type": "local",
+      "command": ["npx", "-y", "@playwright/mcp"],
+      "enabled": false
+    },
+    "abe-service": {
+      "type": "local",
+      "command": ["node", "mcp/abe-service.js"],
+      "enabled": false
+    }
+  },
+  "agent": {
+    "mystic": {
+      "mode": "primary",
+      "description": "Orquestador principal de Sonora Platform. Delega tareas a subagentes especializados.",
+      "model": "opencode/deepseek-v4-flash-free",
+      "permission": {
+        "*": "ask",
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "webfetch": "allow",
+        "websearch": "allow",
+        "skill": "allow",
+        "task": "allow",
+        "todowrite": "allow"
+      },
+      "color": "#7b2ff7"
+    },
+    "voice-manager": {
+      "mode": "subagent",
+      "description": "Router de voz. Recibe texto de STT, decide qué subagente llama, y devuelve respuesta para TTS.",
+      "model": "opencode/deepseek-v4-flash-free",
+      "permission": {
+        "read": "allow",
+        "skill": { "analyze-revenue": "allow", "index-knowledge": "allow" },
+        "abe-service_*": "allow",
+        "bash": { "curl *": "allow", "*": "deny" }
+      },
+      "color": "#00d4ff"
+    },
+    "sales-agent": {
+      "mode": "subagent",
+      "description": "Gestiona CRM de ABE Music: consulta artistas, regalías, contratos, fans y leads.",
+      "permission": {
+        "read": "allow",
+        "skill": { "analyze-revenue": "allow" },
+        "abe-service_*": "allow",
+        "neo4j_*": "allow",
+        "edit": "deny"
+      },
+      "color": "#FF6B35"
+    },
+    "support-agent": {
+      "mode": "subagent",
+      "description": "Soporte a artistas y clientes. Resuelve dudas, busca en knowledge base, escala si es necesario.",
+      "permission": {
+        "read": "allow",
+        "skill": { "index-knowledge": "allow" },
+        "qdrant_*": "allow",
+        "abe-service_search_*": "allow",
+        "edit": "deny"
+      },
+      "color": "#10b981"
+    },
+    "calendar-agent": {
+      "mode": "subagent",
+      "description": "Gestiona agenda y reservas del ABE Music Hub (ensayo, estudio, eventos).",
+      "permission": {
+        "read": "allow",
+        "postgres_*": "allow",
+        "abe-service_booking_*": "allow",
+        "edit": "deny"
+      },
+      "color": "#f59e0b"
+    },
+    "knowledge-agent": {
+      "mode": "subagent",
+      "description": "Indexa y busca en la base de conocimiento del sello. RAG sobre documentos, contratos, políticas.",
+      "permission": {
+        "read": "allow",
+        "qdrant_*": "allow",
+        "neo4j_*": "allow",
+        "skill": { "index-knowledge": "allow" }
+      },
+      "color": "#6366f1"
+    },
+    "devops-agent": {
+      "mode": "subagent",
+      "description": "Mantenimiento de infraestructura. Docker, systemd, monitoreo, backups.",
+      "hidden": true,
+      "permission": {
+        "bash": {
+          "systemctl *": "allow",
+          "docker *": "allow",
+          "journalctl *": "allow",
+          "df *": "allow",
+          "free *": "allow",
+          "*": "deny"
+        }
+      },
+      "color": "#ef4444"
+    }
+  },
+  "command": {
+    "status": {
+      "description": "Healthcheck completo del sistema",
+      "template": "Verifica estado de: ABE Service :5180, Neo4j :7687, Qdrant :6333, PostgreSQL, Telegram, n8n. Reporta salud de cada uno."
+    },
+    "revenue": {
+      "description": "Reporte de regalías del mes",
+      "template": "@sales-agent Genera reporte completo de regalías del mes actual para todos los artistas del sello ABE Music."
+    },
+    "onboard": {
+      "description": "Onboarding nuevo artista",
+      "template": "@mystic Carga skill onboard-artist y guía el proceso de registro de nuevo artista."
+    },
+    "brainstorm": {
+      "description": "Inicia sesión de diseño con superpowers",
+      "template": "Activa superpowers: modo brainstorming para diseñar la solución."
+    }
+  },
+  "permission": {
+    "*": "ask",
+    "read": "allow",
+    "glob": "allow",
+    "grep": "allow",
+    "edit": "ask",
+    "bash": {
+      "*": "ask",
+      "git *": "allow",
+      "curl *": "allow",
+      "grep *": "allow",
+      "ls *": "allow",
+      "cat *": "allow"
+    },
+    "skill": "allow",
+    "task": "allow",
+    "webfetch": "allow",
+    "websearch": "allow"
+  }
+}
