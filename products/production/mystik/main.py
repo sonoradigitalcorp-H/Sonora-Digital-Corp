@@ -1032,3 +1032,62 @@ async def abe_stats():
     streams = _query_abe("SELECT COALESCE(SUM(total_streams),0) as total FROM artists")[0]["total"]
     releases = _query_abe("SELECT COUNT(*) as total FROM releases")[0]["total"]
     return {"artists": artists, "revenue": float(revenue), "streams": float(streams), "releases": releases}
+
+# ── Admin endpoints (solo Abraham / CEO) ──
+
+ADMIN_EMAILS = ["sonoradigitalcorp@gmail.com", "abraham@abemusic.com"]
+
+def require_admin(request: Request):
+    user = get_current_user(request)
+    if user["email"] not in ADMIN_EMAILS:
+        raise HTTPException(status_code=403, detail="Solo administradores")
+    return user
+
+@app.get("/api/admin/artists")
+async def admin_artists(request: Request):
+    require_admin(request)
+    rows = _query_abe("""
+        SELECT a.*, c.type as contract_type, c.revenue_share, c.status as contract_status,
+               COUNT(r.id) as releases_count
+        FROM artists a
+        LEFT JOIN contracts c ON a.id = c.artist_id AND c.status = 'active'
+        LEFT JOIN releases r ON a.id = r.artist_id
+        GROUP BY a.id, c.type, c.revenue_share, c.status
+        ORDER BY a.total_revenue DESC
+    """)
+    return {"artists": rows}
+
+@app.get("/api/admin/stats")
+async def admin_stats(request: Request):
+    require_admin(request)
+    artists = _query_abe("SELECT id, name, total_revenue, total_streams, spotify_monthly_listeners FROM artists ORDER BY total_revenue DESC")
+    total_rev = sum(a["total_revenue"] for a in artists)
+    total_str = sum(a["total_streams"] for a in artists)
+    return {
+        "total_revenue": float(total_rev),
+        "total_streams": float(total_str),
+        "artist_count": len(artists),
+        "artists": artists,
+        "avg_revenue_per_artist": float(total_rev / max(len(artists), 1)),
+    }
+
+# ── Subscription gating middleware ──
+
+PLAN_LIMITS = {
+    "starter": {"max_artists": 1, "features": ["mystik_chat"]},
+    "pro": {"max_artists": 3, "features": ["mystik_chat", "content_gen", "voice", "abe_films"]},
+    "enterprise": {"max_artists": 999, "features": ["mystik_chat", "content_gen", "voice", "abe_films", "digital_clone", "abe_bot", "distribution"]},
+}
+
+def check_feature_access(tenant_plan: str, feature: str) -> bool:
+    return feature in PLAN_LIMITS.get(tenant_plan, {}).get("features", [])
+
+@app.get("/api/subscription/features")
+async def get_features(request: Request):
+    user = get_current_user(request)
+    plan = user.get("plan", "starter")
+    return {
+        "plan": plan,
+        "features": PLAN_LIMITS.get(plan, {}).get("features", []),
+        "limits": PLAN_LIMITS.get(plan, {}),
+    }
