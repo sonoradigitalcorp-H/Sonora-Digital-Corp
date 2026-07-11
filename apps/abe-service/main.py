@@ -4,6 +4,7 @@ from pathlib import Path
 
 from fastapi import FastAPI, WebSocket
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 
 BASE = Path(__file__).resolve().parent.parent.parent
@@ -45,6 +46,10 @@ AVATAR_DIR = Path(__file__).resolve().parent / "avatar"
 if AVATAR_DIR.exists():
     app.mount("/avatar", StaticFiles(directory=str(AVATAR_DIR), html=True), name="avatar")
 
+WEB_DIR = Path(__file__).resolve().parent / "web"
+if WEB_DIR.exists():
+    app.mount("/web", StaticFiles(directory=str(WEB_DIR), html=True), name="web")
+
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
@@ -67,6 +72,9 @@ async def shutdown():
 
 @app.get("/")
 async def root():
+    web_index = WEB_DIR / "index.html"
+    if web_index.exists():
+        return HTMLResponse(web_index.read_text())
     return {
         "service": "ABE Music OS",
         "version": "1.0.0",
