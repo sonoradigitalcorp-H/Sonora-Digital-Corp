@@ -674,3 +674,70 @@ async def agent_bus_status():
         "context_keys_count": len(r.keys(f"{REDIS_CTX_PREFIX}*")) if r else 0,
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
+
+# ── Mercado Pago Payments ──
+
+import httpx as _httpx
+MP_TOKEN = os.environ.get("MERCADO_PAGO_ACCESS_TOKEN", "")
+MP_API = "https://api.mercadopago.com"
+
+@app.post("/api/payments/create_preference")
+async def create_preference(data: dict):
+    if not MP_TOKEN:
+        return {"error": "Mercado Pago no configurado"}
+    preference = {
+        "items": [{
+            "title": data.get("title", "Plan SDC"),
+            "unit_price": float(data.get("price", 0)),
+            "quantity": data.get("quantity", 1),
+            "currency_id": "MXN",
+        }],
+        "payer": {"email": data.get("email", "")},
+        "back_urls": {
+            "success": f"https://abe.sonoradigitalcorp.com/dashboard?plan={data.get('plan_id','')}&status=success",
+            "failure": "https://abe.sonoradigitalcorp.com/pricing?status=failure",
+            "pending": f"https://abe.sonoradigitalcorp.com/dashboard?plan={data.get('plan_id','')}&status=pending",
+        },
+        "auto_return": "approved",
+        "external_reference": json.dumps({"plan_id": data.get("plan_id"), "tenant_id": data.get("tenant_id", "")}),
+        "notification_url": "https://abe.sonoradigitalcorp.com/api/payments/webhook",
+    }
+    async with _httpx.AsyncClient() as client:
+        resp = await client.post(f"{MP_API}/checkout/preferences", json=preference,
+            headers={"Authorization": f"Bearer {MP_TOKEN}", "X-Idempotency-Key": secrets.token_hex(16)})
+        result = resp.json()
+    if "id" in result:
+        return {"id": result["id"], "init_point": result.get("init_point"), "sandbox_init_point": result.get("sandbox_init_point")}
+    return {"error": result}
+
+@app.post("/api/payments/webhook")
+async def payments_webhook(data: dict):
+    event_type = data.get("type", "")
+    event_data = data.get("data", {})
+    data_id = event_data.get("id", "")
+    logger.info("MP Webhook: type=%s id=%s", event_type, data_id)
+    if event_type == "payment" and data_id:
+        async with _httpx.AsyncClient() as client:
+            payment = await client.get(f"{MP_API}/v1/payments/{data_id}",
+                headers={"Authorization": f"Bearer {MP_TOKEN}"})
+            pdata = payment.json()
+            status = pdata.get("status", "")
+            external_ref = pdata.get("external_reference", "{}")
+            try:
+                ref = json.loads(external_ref)
+                plan_id = ref.get("plan_id", "")
+                tenant_id = ref.get("tenant_id", "")
+                if status == "approved" and plan_id and tenant_id:
+                    conn = sqlite3.connect(str(TENANT_DB))
+                    conn.execute("UPDATE tenants SET plan=? WHERE id=?", (plan_id, tenant_id))
+                    conn.execute("UPDATE users SET role='active' WHERE tenant_id=?", (tenant_id,))
+                    conn.commit()
+                    conn.close()
+                    logger.info("Plan %s activado para tenant %s", plan_id, tenant_id)
+            except Exception as e:
+                logger.error("Webhook processing error: %s", e)
+    return {"status": "ok"}
+
+@app.get("/api/payments/config")
+async def payments_config():
+    return {"configured": bool(MP_TOKEN), "provider": "mercadopago"}

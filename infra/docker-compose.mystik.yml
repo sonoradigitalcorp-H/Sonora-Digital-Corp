@@ -23,7 +23,7 @@ services:
 
   # ── Mystik Backend ──
   mystik-api:
-    build: ../products/mystik
+    build: ../products/production/mystik
     container_name: sdc-mystik-api
     network_mode: host
     environment:
