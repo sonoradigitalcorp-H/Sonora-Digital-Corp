@@ -11,7 +11,7 @@ class MystikConfig(BaseSettings):
 
     opencode_key: str = ""
     openrouter_key: str = ""
-    llm_model: str = "cohere/north-mini-code:free"
+    llm_model: str = "deepseek/deepseek-chat"
 
     whisper_model: str = "base"
     openvoice_model: str = "base"
