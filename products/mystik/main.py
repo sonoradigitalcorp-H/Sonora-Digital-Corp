@@ -339,6 +339,129 @@ async def get_tenant(tenant_id: str):
         raise HTTPException(status_code=404, detail="Tenant not found")
     return {"id": row[0], "name": row[1], "config": json.loads(row[2])}
 
+@app.get("/onboard", response_class=HTMLResponse)
+async def onboard_page():
+    return HTMLResponse(ONBOARD_HTML)
+
+ONBOARD_HTML = """<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Mystik AI — Onboarding</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0a0a0f; color:#e0e0e0; font-family:-apple-system,sans-serif; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:1rem; }
+  .card { background:#12121a; border:1px solid #2a2a3a; border-radius:16px; padding:2rem; max-width:500px; width:100%; }
+  h1 { color:#FF6B35; font-size:1.5rem; margin-bottom:0.25rem; }
+  .sub { color:#888; font-size:0.85rem; margin-bottom:1.5rem; }
+  label { display:block; font-size:0.8rem; color:#aaa; margin:1rem 0 0.25rem; }
+  input, select { width:100%; padding:0.75rem; background:#1a1a2e; border:1px solid #2a2a3a; border-radius:8px; color:#fff; font-size:0.9rem; }
+  input:focus, select:focus { outline:none; border-color:#FF6B35; }
+  .btn { width:100%; padding:0.85rem; background:#FF6B35; color:#fff; border:none; border-radius:8px; font-size:1rem; font-weight:600; cursor:pointer; margin-top:1.5rem; }
+  .btn:hover { background:#e85d2a; }
+  .btn:disabled { opacity:0.5; cursor:not-allowed; }
+  .msg { margin-top:1rem; padding:0.75rem; border-radius:8px; font-size:0.85rem; display:none; }
+  .msg.ok { background:#1a3a2a; color:#00ff88; display:block; }
+  .msg.err { background:#3a1a1a; color:#ff4444; display:block; }
+  .list { margin-top:1.5rem; }
+  .list-item { padding:0.75rem; background:#1a1a2e; border-radius:8px; margin-bottom:0.5rem; display:flex; justify-content:space-between; align-items:center; }
+  .list-item .name { color:#e0e0e0; }
+  .list-item .id { color:#666; font-size:0.75rem; }
+</style>
+</head>
+<body>
+<div class="card">
+  <h1>✦ Mystik AI</h1>
+  <p class="sub">Onboarding de nuevos clientes</p>
+
+  <form id="onboardForm">
+    <label>Nombre de la empresa</label>
+    <input type="text" id="companyName" placeholder="Ej: Empresa SA de CV" required>
+
+    <label>ID del tenant</label>
+    <input type="text" id="tenantId" placeholder="Ej: empresa-sa" required>
+
+    <label>Email de contacto</label>
+    <input type="email" id="contactEmail" placeholder="cliente@empresa.com" required>
+
+    <label>Productos habilitados</label>
+    <select id="productTier">
+      <option value="all">Todos los productos</option>
+      <option value="limited">Solo chat + CRM</option>
+      <option value="voice">Chat + CRM + Voz</option>
+    </select>
+
+    <button type="submit" class="btn" id="submitBtn">→ Crear tenant</button>
+  </form>
+
+  <div id="msg" class="msg"></div>
+
+  <div class="list" id="tenantList"></div>
+</div>
+
+<script>
+async function loadTenants() {
+  const res = await fetch('/api/tenants');
+  const data = await res.json();
+  const list = document.getElementById('tenantList');
+  list.innerHTML = '<h3 style="color:#888;font-size:0.8rem;margin-bottom:0.5rem">TENANTS ACTIVOS</h3>';
+  data.tenants.forEach(t => {
+    const div = document.createElement('div');
+    div.className = 'list-item';
+    div.innerHTML = '<span><span class="name">' + t.name + '</span><br><span class="id">' + t.id + '</span></span>';
+    list.appendChild(div);
+  });
+}
+
+document.getElementById('onboardForm').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  const btn = document.getElementById('submitBtn');
+  const msg = document.getElementById('msg');
+  btn.disabled = true;
+  btn.textContent = 'Creando...';
+
+  const id = document.getElementById('tenantId').value.toLowerCase().replace(/\\s+/g, '-');
+  const data = {
+    id: id,
+    name: document.getElementById('companyName').value,
+    config: {
+      contact_email: document.getElementById('contactEmail').value,
+      product_tier: document.getElementById('productTier').value,
+      brand_color: '#6366f1',
+      created_via: 'onboarding-ui',
+    }
+  };
+
+  try {
+    const res = await fetch('/api/tenants', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(data),
+    });
+    const result = await res.json();
+    if (result.status === 'created') {
+      msg.className = 'msg ok';
+      msg.textContent = '✅ Tenant ' + id + ' creado. Configuración lista.';
+      document.getElementById('onboardForm').reset();
+      loadTenants();
+    } else {
+      msg.className = 'msg err';
+      msg.textContent = '❌ Error: ' + JSON.stringify(result);
+    }
+  } catch(err) {
+    msg.className = 'msg err';
+    msg.textContent = '❌ Error de conexión: ' + err.message;
+  }
+  btn.disabled = false;
+  btn.textContent = '→ Crear tenant';
+});
+
+loadTenants();
+</script>
+</body>
+</html>"""
+
 # ── Agent Bus — Contexto compartido entre agentes via Redis ──
 
 import asyncio
