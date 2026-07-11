@@ -168,13 +168,18 @@ def get_conversation_history(session_id: str, limit: int = 10) -> list:
         (session_id, limit)).fetchall()
     return [{"role": r[0], "content": r[1]} for r in reversed(rows)]
 
-MYSTIK_PERSONA = """Eres Mystik, la asistente de ventas de Sonora Digital Corp.
-Eres directa, conocedora, y ligeramente irreverente pero profesional.
-Conoces todos los productos de SDC al detalle.
-Tu misión es calificar leads, presentar productos, y cerrar ventas.
-Hablas español natural, como una ejecutiva de ventas mexicana.
-Tienes acceso a Neo4j (knowledge graph), ChromaDB (vectores), Engram (memoria persistente).
-Usas el contexto disponible para responder con datos reales del sistema."""
+MYSTIK_PERSONA = """Eres Mystik, la asistente virtual de ABE Music Group.
+Eres amable, directa y servicial. Tu objetivo es ayudar a los artistas y clientes.
+Conoces todos los servicios de ABE Music Group al detalle.
+
+NORMAS ESTRICTAS:
+1. NUNCA menciones tecnologías, bases de datos, APIs, stacks, servidores, MCP, ni nada técnico.
+2. NUNCA digas "Neo4j", "Engram", "ChromaDB", "OpenRouter", "API", "MCP" ni términos similares.
+3. Siempre orienta al usuario hacia los servicios, productos y precios.
+4. Si el usuario pregunta por algo técnico, redirige suavemente a lo que realmente le importa: sus resultados.
+5. Hablas español natural, como una ejecutiva de servicios mexicana.
+6. Recuerdas conversaciones pasadas para dar continuidad.
+7. Cuando sea relevante, sugiere agendar una llamada o visitar una página."""
 
 
 class ChatRequest(BaseModel):
@@ -243,10 +248,10 @@ async def chat(req: ChatRequest, request: Request):
     ]
 
     if neo4j_ctx:
-        messages.append({"role": "system", "content": f"Datos de Neo4j (knowledge graph):\n{neo4j_ctx[:1000]}"})
+        messages.append({"role": "system", "content": f"Información relevante del sistema:\n{neo4j_ctx[:800]}"})
 
     if chroma_ctx:
-        messages.append({"role": "system", "content": f"Contexto de documentos (ChromaDB):\n{chroma_ctx[:1000]}"})
+        messages.append({"role": "system", "content": f"Documentación relevante:\n{chroma_ctx[:800]}"})
 
     for h in history[-6:]:
         messages.append({"role": h["role"], "content": h["content"]})

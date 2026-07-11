@@ -6,17 +6,17 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const API = "https://abe.sonoradigitalcorp.com/api";
 const QUICK_ACTIONS = [
-  "Quiero crear contenido para mi música",
-  "Necesito fotos profesionales",
-  "Quiero un bot de Telegram",
-  "Cómo empiezo a vender?",
+  "Qué servicios ofrecen?",
+  "Cuánto cuesta?",
+  "Quiero crear contenido",
+  "Cómo vender mi música?",
 ];
 
 export default function MystikWidget() {
   const [open, setOpen] = useState(false);
   const [sessionId] = useState(() => `web-${Date.now()}-${Math.random().toString(36).substring(2, 6)}`);
   const [messages, setMessages] = useState<{role:string; content:string}[]>([
-    {role:"assistant", content:"¡Hola! Soy Mystik 🤖\n\nEstoy conectada a Neo4j, ChromaDB y tengo memoria persistente.\n\nPuedo ayudarte con:\n• Información sobre tus artistas (desde Neo4j)\n• Crear contenido AI (imágenes, videos, voz)\n• Consultar documentos (ChromaDB)\n• Vender y gestionar tu música\n\n¿Qué necesitas?"},
+    {role:"assistant", content:"🎵 ¡Hola! Soy Mystik, tu asistente de ABE Music Group.\n\n¿En qué puedo ayudarte hoy?\n\n• Conocer nuestros **servicios** para artistas\n• Ver **planes y precios**\n• Información sobre **artistas**\n• Crear **contenido** con IA\n• **Vender** tu música\n\nSolo dime qué necesitas."},
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
