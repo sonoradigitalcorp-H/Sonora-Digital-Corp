@@ -962,3 +962,73 @@ async def get_gallery(request: Request):
         img_id = f.stem
         images.append({"id": img_id, "url": f"/api/content/image/{img_id}"})
     return {"images": images, "tenant": user["tenant_id"]}
+
+# ── ABE Music Database API (PostgreSQL) ──
+
+ABE_DB = "postgresql://mystik:mystik2026@127.0.0.1:5433/mystik"
+
+def _query_abe(query: str, params: tuple = ()) -> list:
+    try:
+        import psycopg2
+        conn = psycopg2.connect(ABE_DB)
+        cur = conn.cursor()
+        cur.execute(query, params)
+        rows = cur.fetchall()
+        cols = [desc[0] for desc in cur.description] if cur.description else []
+        conn.close()
+        return [dict(zip(cols, row)) for row in rows]
+    except Exception as e:
+        logger.error("ABE DB query error: %s", e)
+        return []
+
+@app.get("/api/abe/artists")
+async def abe_artists():
+    rows = _query_abe("SELECT id, name, genre, total_streams, total_revenue, spotify_monthly_listeners as monthly_listeners, telegram_handle FROM artists ORDER BY total_revenue DESC")
+    return {"artists": rows}
+
+@app.get("/api/abe/artists/{artist_id}")
+async def abe_artist(artist_id: str):
+    rows = _query_abe("SELECT * FROM artists WHERE id = %s", (artist_id,))
+    if not rows:
+        raise HTTPException(status_code=404)
+    return {"artist": rows[0]}
+
+@app.get("/api/abe/artists/{artist_id}/kpi")
+async def abe_artist_kpi(artist_id: str):
+    rows = _query_abe("""
+        SELECT a.id as artist_id, a.total_streams, a.total_revenue,
+               a.spotify_monthly_listeners as monthly_listeners,
+               a.spotify_followers as followers,
+               COALESCE(r.total, 0) as releases_count
+        FROM artists a
+        LEFT JOIN (SELECT artist_id, COUNT(*) as total FROM releases GROUP BY artist_id) r ON a.id = r.artist_id
+        WHERE a.id = %s
+    """, (artist_id,))
+    return rows[0] if rows else {}
+
+@app.get("/api/abe/revenue")
+async def abe_revenue():
+    rows = _query_abe("SELECT id, name, total_revenue as revenue FROM artists ORDER BY total_revenue DESC")
+    total = sum(r["revenue"] for r in rows)
+    return {"total": float(total), "by_artist": rows, "by_platform": [{"platform": "Spotify", "revenue": float(total)}]}
+
+@app.get("/api/abe/releases")
+async def abe_releases(artist_id: str = None):
+    if artist_id:
+        rows = _query_abe("SELECT * FROM releases WHERE artist_id = %s ORDER BY release_date DESC", (artist_id,))
+    else:
+        rows = _query_abe("SELECT r.*, a.name as artist_name FROM releases r JOIN artists a ON r.artist_id = a.id ORDER BY r.release_date DESC")
+    return {"releases": rows}
+
+@app.get("/api/abe/contracts")
+async def abe_contracts():
+    rows = _query_abe("SELECT c.*, a.name as artist_name FROM contracts c JOIN artists a ON c.artist_id = a.id")
+    return {"contracts": rows}
+
+@app.get("/api/abe/stats")
+async def abe_stats():
+    artists = _query_abe("SELECT COUNT(*) as total FROM artists")[0]["total"]
+    revenue = _query_abe("SELECT COALESCE(SUM(total_revenue),0) as total FROM artists")[0]["total"]
+    streams = _query_abe("SELECT COALESCE(SUM(total_streams),0) as total FROM artists")[0]["total"]
+    releases = _query_abe("SELECT COUNT(*) as total FROM releases")[0]["total"]
+    return {"artists": artists, "revenue": float(revenue), "streams": float(streams), "releases": releases}

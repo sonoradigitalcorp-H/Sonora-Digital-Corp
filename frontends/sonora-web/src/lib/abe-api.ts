@@ -1,69 +1,54 @@
 const ABE_API = "https://abe.sonoradigitalcorp.com/api";
 
 export interface Artist {
-  id: string;
-  name: string;
-  image?: string;
-  genre?: string;
-  streams?: number;
-  revenue?: number;
-  monthly_listeners?: number;
-  social?: { platform: string; url: string }[];
-}
-
-export interface Release {
-  id: string;
-  title: string;
-  type: "single" | "album" | "ep";
-  release_date: string;
-  cover?: string;
-}
-
-export interface ArtistKPI {
-  artist_id: string;
-  total_streams: number;
-  total_revenue: number;
-  monthly_listeners: number;
-  followers: number;
-  growth: number;
-}
-
-export interface Revenue {
-  total: number;
-  by_artist: { artist_id: string; name: string; revenue: number }[];
-  by_platform: { platform: string; revenue: number }[];
-}
-
-async function fetchAPI<T>(path: string): Promise<T | null> {
-  try {
-    const res = await fetch(`${ABE_API}${path}`);
-    if (!res.ok) return null;
-    return await res.json();
-  } catch {
-    return null;
-  }
+  id: string; name: string; genre?: string;
+  total_streams: number; total_revenue: number;
+  monthly_listeners?: number; spotify_followers?: number;
+  telegram_handle?: string;
 }
 
 export async function getArtists(): Promise<Artist[]> {
-  const data = await fetchAPI<{ artists?: Artist[] }>("/artists");
-  return data?.artists || [
-    { id: "hector-rubio", name: "Hector Rubio", streams: 115093009, revenue: 460372 },
-    { id: "jesus-urquijo", name: "Jesus Urquijo", streams: 4635222, revenue: 18540 },
-    { id: "javier-arvayo", name: "Javier Arvayo", streams: 50000, revenue: 200 },
-  ];
+  try {
+    const res = await fetch(`${ABE_API}/abe/artists`);
+    if (!res.ok) throw new Error("API error");
+    const data = await res.json();
+    return data.artists || [];
+  } catch {
+    return [];
+  }
 }
 
 export async function getArtist(slug: string): Promise<Artist | null> {
-  const data = await fetchAPI<{ artist?: Artist }>(`/artists/${slug}`);
-  return data?.artist || null;
+  try {
+    const res = await fetch(`${ABE_API}/abe/artists/${slug}`);
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.artist || null;
+  } catch { return null; }
 }
 
-export async function getArtistKPI(slug: string): Promise<ArtistKPI | null> {
-  return await fetchAPI<ArtistKPI>(`/artists/${slug}/kpi`);
+export async function getArtistKPI(slug: string) {
+  try {
+    const res = await fetch(`${ABE_API}/abe/artists/${slug}/kpi`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch { return null; }
 }
 
-export async function getRevenue(): Promise<Revenue | null> {
-  return await fetchAPI<Revenue>("/revenue");
+export async function getRevenue() {
+  try {
+    const res = await fetch(`${ABE_API}/abe/revenue`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch { return null; }
+}
+
+export async function getStats() {
+  try {
+    const res = await fetch(`${ABE_API}/abe/stats`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch { return null; }
 }
 
 export async function getServices() {
