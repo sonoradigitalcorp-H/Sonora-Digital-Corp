@@ -1,4 +1,8 @@
 # Mystik AI Stack — Asistente de ventas inteligente
+# Coolify: http://149.56.46.173:8081 (crear cuenta admin en browser)
+# Nota: Coolify se instaló aparte via script, no via este compose.
+# Credenciales Coolify DB: user=coolify, pass=hZded+BAIGBAC2fnHrCb1tBfdmYspUParTMrnbs9kxY=
+# Credenciales Coolify Redis: password=+PgnDxFyXX/0fpS7440satq3cL6X1pXNhvi0sJz/ajA=
 version: "3.8"
 
 services:
@@ -68,6 +72,7 @@ services:
       - sdc-net
 
   # ── LiveKit (voz) ──
+
   livekit:
     image: livekit/livekit-server:latest
     container_name: sdc-livekit

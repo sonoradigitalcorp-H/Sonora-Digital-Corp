@@ -7,7 +7,7 @@ set -euo pipefail
 
 DOMAIN="${1:?Uso: ssl-auto.sh <dominio> [puerto] [email]}"
 PORT="${2:-3001}"
-EMAIL="${3:-luis@sonoradigitalcorp.com}"
+EMAIL="${3:-sonoradigitalcorp@gmail.com}"
 NGINX_CONF="/etc/nginx/sites-enabled/ssl-auto-${DOMAIN}.conf"
 
 echo "=== SSL Auto: $DOMAIN → :$PORT ==="

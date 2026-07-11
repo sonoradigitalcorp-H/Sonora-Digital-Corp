@@ -35,7 +35,7 @@ jobs:
 
             # SSL
             sudo certbot --nginx -d mystik.sonoradigitalcorp.com \
-              --non-interactive --agree-tos --email luis@sonoradigitalcorp.com || true
+              --non-interactive --agree-tos --email sonoradigitalcorp@gmail.com || true
             sudo systemctl reload nginx || true
 
             echo "✅ Mystik AI deployed"
