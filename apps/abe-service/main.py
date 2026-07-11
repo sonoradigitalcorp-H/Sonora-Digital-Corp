@@ -76,7 +76,7 @@ async def root():
     if web_index.exists():
         return HTMLResponse(web_index.read_text())
     return {
-        "service": "ABE Music OS",
+        "service": "ABE Music OS", "powered_by": "Sonora Digital Corp",
         "version": "1.0.0",
         "docs": "/docs",
         "health": "/api/health",
