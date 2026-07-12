@@ -7,6 +7,11 @@ from ..bridges import neo4j as neo4j_bridge
 from ..bridges.mcp import call_tool as mcp_call
 from .rag_engine import RAGEngine
 
+# Import OpenCode bridge for LLM-powered responses
+import sys
+sys.path.insert(0, "/home/ubuntu/sonora-platform")
+from src.abe.opencode_bridge import bridge as opencode_bridge
+
 log = logging.getLogger("abe.chat")
 
 
@@ -38,8 +43,25 @@ class ChatEngine:
         }
 
         intent = self._classify(text)
-        response = await self._route(intent, enriched)
-        response_text = response.get("text", response.get("result", response.get("error", "OK")))
+
+        # Route CRM/revenue intents to MCP tools, everything else to OpenCode mystic agent
+        tool_map = {
+            "streams": "abe_record_stream",
+            "revenue": "abe_record_revenue",
+            "dashboard": "abe_ceo_dashboard",
+        }
+        tool = tool_map.get(intent)
+        if tool:
+            response = await mcp_call(tool, enriched)
+            response_text = response.get("text", response.get("result", "OK"))
+            source = "mcp"
+        else:
+            # Use OpenCode mystic agent for all other queries
+            opencode_result = await opencode_bridge.process(
+                text, session_id=session_id, context=enriched
+            )
+            response_text = opencode_result.get("text", "")
+            source = "opencode"
 
         neo4j_bridge.add_message(session_id, "user", text)
         neo4j_bridge.add_message(session_id, "assistant", str(response_text)[:1000])
@@ -57,7 +79,7 @@ class ChatEngine:
             "text": response_text,
             "session_id": session_id,
             "intent": intent,
-            "source": response.get("source", "local"),
+            "source": source,
         }
 
     def _classify(self, text: str) -> str:
@@ -79,27 +101,3 @@ class ChatEngine:
         if any(w in t for w in ["fan", "seguidor", "contacto"]):
             return "fan"
         return "general"
-
-    async def _route(self, intent: str, enriched: dict) -> dict[str, Any]:
-        tool_map = {
-            "streams": "abe_record_stream",
-            "revenue": "abe_record_revenue",
-            "dashboard": "abe_ceo_dashboard",
-            "contract": None,
-            "release": None,
-            "artist": None,
-            "distribution": None,
-            "fan": None,
-            "general": None,
-        }
-
-        tool = tool_map.get(intent)
-        if tool:
-            result = await mcp_call(tool, enriched)
-            return {**result, "source": "mcp"}
-
-        return {
-            "text": f"Clasificado como: {intent}. Procesaré tu solicitud en breve.",
-            "intent": intent,
-            "source": "local",
-        }
