@@ -1,0 +1,9 @@
+{
+  "title": "Pipelines — Status & History",
+  "panels": [
+    {"title": "Daily Content Status", "type": "stat", "targets": [{"expr": "pipeline_last_status{pipeline='daily-content'}"}]},
+    {"title": "Pipeline Duration (7d)", "type": "timeseries", "targets": [{"expr": "pipeline_duration_seconds{pipeline='daily-content'}[7d]"}]},
+    {"title": "Failures (24h)", "type": "stat", "targets": [{"expr": "increase(pipeline_failures_total[24h])"}]},
+    {"title": "Watchdog Incidents", "type": "table", "targets": [{"expr": "engram_search('sdc', 'incident_*')"}]}
+  ]
+}

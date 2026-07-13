@@ -1,5 +1,0 @@
-# Default Policy — Deny-all
-version: 1
-agent: "*"
-policy: deny-all
-description: "Por defecto, ningún agente tiene capabilities. Cada agente debe tener una policy explícita."

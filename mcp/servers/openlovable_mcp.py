@@ -1,151 +1,171 @@
-#!/usr/bin/env python3
-"""OpenLovable MCP Server — design generation and code export via Lovable [Design].
+"""Open Lovable MCP Server — Generate React code via OpenRouter LLM.
 
-This server wraps Lovable's capabilities. In production it should call the
-Lovable API or use Playwright MCP to drive the Lovable web UI. Until official
-API credentials are available, it provides a structured prompt generator and
-fallback to Playwright browser automation.
+Uses OpenRouter (DeepSeek V4 Flash) directly with Firecrawl for cloning.
+No dependency on the Open Lovable Next.js UI.
 """
 
 import json
 import os
+import httpx
 
-LOVABLE_API_KEY = os.getenv("LOVABLE_API_KEY", "")
-LOVABLE_API_URL = os.getenv("LOVABLE_API_URL", "https://api.lovable.dev")
-
-# Tenant-aware design system tokens
-TENANT_DESIGN_SYSTEMS = {
-    "abe": {
-        "brand": "ABE Music Group",
-        "colors": {"primary": "#FFD700", "secondary": "#FF3B5C", "background": "#0a0a0f"},
-        "font": "Outfit",
-        "tone": "premium, artístico, cercano",
-        "audience": "artistas y músicos independientes",
-    },
-    "sonora": {
-        "brand": "Sonora Digital Corp",
-        "colors": {"primary": "#8b5cf6", "secondary": "#3b82f6", "background": "#0a0a0f"},
-        "font": "Outfit",
-        "tone": "tecnológico, profesional, innovador",
-        "audience": "empresas que quieren adoptar IA",
-    },
-}
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", os.getenv("OPENAI_API_KEY", ""))
+OPENROUTER_BASE = "https://openrouter.ai/api/v1"
+FIRECRAWL_API_KEY = os.getenv("FIRECRAWL_API_KEY", "")
+LOVABLE_URL = "http://localhost:3030"
 
 
-def _get_design_system(tenant: str) -> dict:
-    return TENANT_DESIGN_SYSTEMS.get(tenant, TENANT_DESIGN_SYSTEMS["sonora"])
-
-
-async def openlovable_generate_prompt(tenant: str, page_type: str, description: str) -> str:
-    """Generate a structured Lovable prompt for a given tenant and page."""
-    ds = _get_design_system(tenant)
-    prompt = f"""Create a {page_type} page for {ds['brand']}.
-
-Brand Design System:
-- Primary color: {ds['colors']['primary']}
-- Secondary/accent color: {ds['colors']['secondary']}
-- Background: {ds['colors']['background']}
-- Font: {ds['font']}
-- Tone: {ds['tone']}
-- Target audience: {ds['audience']}
-
-Page requirements:
-{description}
-
-Deliverables:
-- Responsive Next.js + Tailwind CSS page
-- Dark mode by default
-- Use the brand colors above
-- Include a clear CTA
-- Accessible and performant
-"""
-    return json.dumps({"prompt": prompt, "tenant": tenant, "page_type": page_type})
-
-
-async def openlovable_create_page(tenant: str, page_type: str, description: str) -> str:
-    """Create a page design via Lovable (placeholder for API / Playwright integration)."""
-    ds = _get_design_system(tenant)
-    if not LOVABLE_API_KEY:
-        return json.dumps({
-            "status": "placeholder",
-            "message": "LOVABLE_API_KEY not configured. Returning structured prompt for manual use or Playwright automation.",
-            "tenant": tenant,
-            "brand": ds["brand"],
-            "page_type": page_type,
-            "description": description,
-            "next_step": "Set LOVABLE_API_KEY or use playwright_mcp to navigate https://lovable.dev and paste the prompt.",
-        })
-
-    # Real API call placeholder
-    async with __import__("httpx").AsyncClient() as client:
-        resp = await client.post(
-            f"{LOVABLE_API_URL}/v1/projects/prompt",
-            json={"prompt": (await openlovable_generate_prompt(tenant, page_type, description)),
-                  "tenant": tenant},
-            headers={"Authorization": f"Bearer {LOVABLE_API_KEY}"},
-            timeout=120,
-        )
-        return json.dumps(resp.json())
-
-
-async def openlovable_list_components(tenant: str) -> str:
-    """List available components for a tenant's design system."""
-    ds = _get_design_system(tenant)
-    components = {
-        "abe": ["Hero3D", "ArtistCard", "RotatingPhrases", "VoiceWidget", "PricingCard", "FOMOSection"],
-        "sonora": ["Hero3D", "ServiceCard", "PricingCard", "VoiceWidget", "StatsBar", "CTASection"],
+async def _call_llm(system_prompt: str, user_prompt: str, model: str = "opencode/deepseek-v4-flash-free", fallback: str = "openrouter/free") -> str:
+    headers = {
+        "Authorization": f"Bearer {OPENROUTER_API_KEY}",
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://sdc.ai",
     }
-    return json.dumps({
-        "tenant": tenant,
-        "brand": ds["brand"],
-        "components": components.get(tenant, components["sonora"]),
-    })
+    last_error = ""
+    async with httpx.AsyncClient() as client:
+        for attempt, m in enumerate([model, fallback]):
+            try:
+                resp = await client.post(
+                    f"{OPENROUTER_BASE}/chat/completions",
+                    json={
+                        "model": m,
+                        "messages": [
+                            {"role": "system", "content": system_prompt},
+                            {"role": "user", "content": user_prompt},
+                        ],
+                        "temperature": 0.7,
+                        "max_tokens": 8000,
+                    },
+                    headers=headers,
+                    timeout=120,
+                )
+                data = resp.json()
+                if "choices" in data and len(data["choices"]) > 0:
+                    content = data["choices"][0]["message"]["content"]
+                    return json.dumps({"content": content, "model": m})
+                last_error = str(data.get("error", "unknown"))
+            except Exception as e:
+                last_error = str(e)
+                if attempt == 0:
+                    continue
+    return json.dumps({"error": last_error})
+
+
+async def lovable_generate_page(prompt: str, model: str = "opencode/deepseek-v4-flash-free") -> str:
+    system = """You are an expert React developer. Generate complete, production-ready React code.
+Output each file in this XML format:
+<file path="src/App.jsx">
+// code here
+</file>
+<file path="src/components/Example.jsx">
+// code here
+</file>
+
+Rules:
+- Use Tailwind CSS for ALL styling (NO inline styles, NO CSS files except index.css)
+- ALWAYS include src/index.css with: @tailwind base; @tailwind components; @tailwind utilities;
+- Include a Navigation/Header, Hero section, and Footer
+- NEVER truncate files - always return complete code
+- Use lucide-react for icons when needed
+- Return ONLY the XML file blocks, no other text"""
+    return await _call_llm(system, prompt, model)
+
+
+async def lovable_clone_site(url: str, model: str = "opencode/deepseek-v4-flash-free") -> str:
+    scraped = ""
+    if FIRECRAWL_API_KEY:
+        try:
+            async with httpx.AsyncClient() as client:
+                r = await client.post(
+                    "https://api.firecrawl.dev/v1/scrape",
+                    json={"url": url, "formats": ["markdown"]},
+                    headers={"Authorization": f"Bearer {FIRECRAWL_API_KEY}"},
+                    timeout=30,
+                )
+                if r.status_code == 200:
+                    scraped = r.json().get("data", {}).get("markdown", "")[:5000]
+        except Exception:
+            scraped = ""
+    system = "You clone websites into React code. Recreate the EXACT look and feel using Tailwind CSS."
+    user = f"Clone this website: {url}\n\nScraped content:\n{scraped}\n\nRecreate it as a complete React app with all sections."
+    return await _call_llm(system, user, model)
+
+
+async def lovable_extract_brand(url: str) -> str:
+    if not FIRECRAWL_API_KEY:
+        return json.dumps({"error": "FIRECRAWL_API_KEY not set"})
+    try:
+        async with httpx.AsyncClient() as client:
+            r = await client.post(
+                "https://api.firecrawl.dev/v1/scrape",
+                json={"url": url, "formats": ["markdown"]},
+                headers={"Authorization": f"Bearer {FIRECRAWL_API_KEY}"},
+                timeout=30,
+            )
+            data = r.json().get("data", {})
+            return json.dumps({
+                "url": url,
+                "content_preview": data.get("markdown", "")[:2000],
+                "metadata": data.get("metadata", {}),
+            }, indent=2)
+    except Exception as e:
+        return json.dumps({"error": str(e)})
+
+
+async def lovable_edit_page(prompt: str, current_code: str = "") -> str:
+    system = f"""You are editing an existing React app. Apply ONLY the requested changes.
+Current code:
+{current_code[:3000]}
+
+Output ONLY the modified files as <file path="..."> blocks. Include each file completely."""
+    return await _call_llm(system, prompt)
 
 
 MCP_TOOLS = {
-    "openlovable_generate_prompt": {
-        "description": "Generate a structured Lovable prompt for a tenant page",
+    "lovable_generate_page": {
+        "description": "Generate a complete React page/app from a description using AI",
         "input_schema": {
             "type": "object",
             "properties": {
-                "tenant": {"type": "string", "description": "Tenant slug (abe or sonora)"},
-                "page_type": {"type": "string", "description": "Type of page (landing, pricing, contact, dashboard)"},
-                "description": {"type": "string", "description": "Page requirements"},
+                "prompt": {"type": "string", "description": "Description of the page/app to generate"},
+                "model": {"type": "string", "description": "Model override (optional)"},
             },
-            "required": ["tenant", "page_type", "description"],
+            "required": ["prompt"],
         },
-        "handler": lambda args: openlovable_generate_prompt(
-            args.get("tenant", "sonora"),
-            args["page_type"],
-            args["description"],
-        ),
+        "handler": lambda args: lovable_generate_page(args["prompt"], args.get("model", "opencode/deepseek-v4-flash-free")),
     },
-    "openlovable_create_page": {
-        "description": "Create a page design in Lovable for a tenant",
+    "lovable_clone_site": {
+        "description": "Clone any website URL into a React app",
         "input_schema": {
             "type": "object",
             "properties": {
-                "tenant": {"type": "string", "description": "Tenant slug (abe or sonora)"},
-                "page_type": {"type": "string", "description": "Type of page"},
-                "description": {"type": "string", "description": "Page requirements"},
+                "url": {"type": "string", "description": "Website URL to clone"},
+                "model": {"type": "string", "description": "Model override (optional)"},
             },
-            "required": ["tenant", "page_type", "description"],
+            "required": ["url"],
         },
-        "handler": lambda args: openlovable_create_page(
-            args.get("tenant", "sonora"),
-            args["page_type"],
-            args["description"],
-        ),
+        "handler": lambda args: lovable_clone_site(args["url"], args.get("model", "opencode/deepseek-v4-flash-free")),
     },
-    "openlovable_list_components": {
-        "description": "List available components for a tenant design system",
+    "lovable_extract_brand": {
+        "description": "Extract brand content/styles from a website URL",
         "input_schema": {
             "type": "object",
             "properties": {
-                "tenant": {"type": "string", "description": "Tenant slug (abe or sonora)"},
+                "url": {"type": "string", "description": "Website URL to analyze"},
             },
-            "required": ["tenant"],
+            "required": ["url"],
         },
-        "handler": lambda args: openlovable_list_components(args.get("tenant", "sonora")),
+        "handler": lambda args: lovable_extract_brand(args["url"]),
+    },
+    "lovable_edit_page": {
+        "description": "Modify existing generated code with a description of changes",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "prompt": {"type": "string", "description": "Description of changes"},
+                "current_code": {"type": "string", "description": "Current code to edit"},
+            },
+            "required": ["prompt"],
+        },
+        "handler": lambda args: lovable_edit_page(args["prompt"], args.get("current_code", "")),
     },
 }

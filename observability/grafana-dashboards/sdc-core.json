@@ -1,0 +1,11 @@
+{
+  "title": "SDC Core",
+  "panels": [
+    {"title": "MCP Gateway Health", "type": "stat", "targets": [{"expr": "probe_success{job='mcp-gateway'}"}]},
+    {"title": "Tools Count", "type": "stat", "targets": [{"expr": "mcp_tools_total"}]},
+    {"title": "Hasura Health", "type": "stat", "targets": [{"expr": "probe_success{job='hasura'}"}]},
+    {"title": "CPU Usage", "type": "gauge", "targets": [{"expr": "100 - (avg by (instance) (rate(node_cpu_seconds_total{mode='idle'}[5m])) * 100)"}]},
+    {"title": "Memory Usage", "type": "gauge", "targets": [{"expr": "node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes"}]},
+    {"title": "Disk Usage", "type": "gauge", "targets": [{"expr": "100 - (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100"}]}
+  ]
+}

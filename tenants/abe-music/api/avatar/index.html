@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABE Avatar</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a12; overflow: hidden; font-family: Inter, sans-serif; }
+  #canvas-container { width: 100vw; height: 100vh; }
+  #status {
+    position: absolute; top: 12px; left: 50%; transform: translateX(-50%);
+    color: #888; font-size: 0.8rem; background: rgba(0,0,0,0.7);
+    padding: 4px 12px; border-radius: 12px; display: flex; align-items: center; gap: 6px;
+  }
+  #ws-dot {
+    width: 8px; height: 8px; border-radius: 50%; display: inline-block;
+  }
+  #ws-dot.connected { background: #4caf50; box-shadow: 0 0 6px #4caf50; }
+  #ws-dot.disconnected { background: #f44336; box-shadow: 0 0 6px #f44336; }
+  #speech-bubble {
+    position: absolute; top: 60px; left: 50%; transform: translateX(-50%);
+    background: #1e1e2e; color: #e0e0e0; padding: 12px 20px; white-space: pre-wrap;
+    border-radius: 16px; max-width: 500px; min-width: 200px; text-align: center;
+    border: 1px solid #FFD70044; display: none; z-index: 10;
+    font-size: 0.9rem; line-height: 1.5;
+  }
+  #controls {
+    position: absolute; bottom: 30px; left: 50%; transform: translateX(-50%);
+    display: flex; gap: 12px; align-items: center;
+  }
+  #controls button {
+    width: 48px; height: 48px; border: none; border-radius: 50%;
+    font-size: 1.2rem; cursor: pointer; display: flex; align-items: center;
+    justify-content: center; transition: all 0.2s;
+  }
+  #mic-btn {
+    background: #FFD700; color: #000; width: 64px; height: 64px; font-size: 1.5rem;
+  }
+  #mic-btn.mic-recording {
+    background: #f44336; color: #fff; animation: pulse 1s infinite;
+  }
+  @keyframes pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244,67,54,0.7); }
+    50% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(244,67,54,0); }
+    100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(244,67,54,0); }
+  }
+  #reset-cam {
+    background: #333; color: #fff;
+  }
+  #reset-cam:hover { background: #555; }
+  #hint {
+    position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%);
+    color: #666; font-size: 0.75rem; text-align: center;
+  }
+</style>
+</head>
+<body>
+<div id="status"><span id="ws-dot" class="disconnected"></span> Iniciando...</div>
+<div id="speech-bubble"></div>
+<div id="canvas-container"></div>
+<div id="hint">Presiona el micrófono y habla</div>
+<div id="controls">
+  <button id="mic-btn" title="Hablar">🎤</button>
+  <button id="reset-cam" title="Resetear cámara">⟲</button>
+</div>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.163.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.163.0/examples/jsm/"
+  }
+}
+</script>
+<script type="module" src="manager.js"></script>
+</body>
+</html>

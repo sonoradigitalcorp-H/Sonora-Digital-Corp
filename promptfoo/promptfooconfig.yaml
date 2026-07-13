@@ -1,0 +1,29 @@
+description: "SDC Content Pipeline — Template Validation"
+providers:
+  - openrouter:opencode/deepseek-v4-flash-free
+
+prompts:
+  - "Eres un asistente de ABE Music. Genera un script para un video de 60 segundos sobre {{artist}}. Incluye un CTA al final."
+
+tests:
+  - vars:
+      artist: "Hector Rubio"
+    assert:
+      - type: contains
+        value: "CTA"
+      - type: latency
+        max_ms: 30000
+  - vars:
+      artist: "Jesus Urquijo"
+    assert:
+      - type: contains
+        value: "Jesus"
+      - type: latency
+        max_ms: 30000
+  - vars:
+      artist: "Javier Arvayo"
+    assert:
+      - type: contains
+        value: "artista"
+      - type: latency
+        max_ms: 30000

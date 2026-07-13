@@ -1,9 +1,0 @@
-{
-  "framework": null,
-  "buildCommand": "",
-  "outputDirectory": ".",
-  "routes": [
-    { "src": "/api/(.*)", "dest": "https://api.sonoradigitalcorp.com/api/$1" },
-    { "src": "/(.*)", "dest": "/index.html" }
-  ]
-}

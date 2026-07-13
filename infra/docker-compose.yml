@@ -21,6 +21,31 @@ services:
     restart: unless-stopped
     mem_limit: 512m
     memswap_limit: 512m
+  # ── Observability ──
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: sdc-prometheus
+    ports: ["127.0.0.1:9090:9090"]
+    volumes:
+      - /home/ubuntu/sonora-digital-corp/observability/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - sdc-network
+    restart: unless-stopped
+    mem_limit: 256m
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: sdc-grafana
+    ports: ["127.0.0.1:3031:3000"]
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=sdc-admin-2026
+    volumes:
+      - grafana_data:/var/lib/grafana
+    networks:
+      - sdc-network
+    restart: unless-stopped
+    mem_limit: 256m
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U sdc"]
       interval: 10s
@@ -194,7 +219,7 @@ services:
     networks:
       - sdc-network
     restart: unless-stopped
-    mem_limit: 128m
+    mem_limit: 256m
     memswap_limit: 128m
     healthcheck:
       test: ["CMD-SHELL", "timeout 3 nc -z 127.0.0.1 3003"]
@@ -303,6 +328,8 @@ networks:
     external: true
 
 volumes:
+  prometheus_data:
+  grafana_data:
   pg_data:
   redis_data:
   neo4j_data:

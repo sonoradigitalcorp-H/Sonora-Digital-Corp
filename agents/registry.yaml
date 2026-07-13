@@ -1,94 +1,74 @@
-# Agent Registry — Catálogo central de agentes
-version: 1
-updated: 2026-07-03T16:55:00Z
-
 agents:
-  - name: mystic
-    role: primary-operator
-    level: L1
-    model: "opencode-go"
-    status: active
-    description: "AI principal — coordina todo el sistema"
-    capabilities: ["*"]
+  # ── SDC Core Agents ──
+  - name: creator-agent
+    tenant: sdc
+    role: Build and deploy complete agent-native companies
+    tools: [lovable_generate_page, hasura_query, hasura_mutate, upload_file, engram_save, omnivoice_clone]
+    memory: engram_sdc
+    channel: agent:creator
+    triggers: [command:/crear-empresa, command:/agregar-artista]
 
-  - name: hermes
-    role: gateway
-    level: L1
-    model: "ollama/qwen3:4b-64k"
-    status: active
-    description: "Gateway multi-canal (Telegram, WhatsApp, Desktop)"
-    capabilities: ["read.infra", "write.docs", "notify.telegram"]
+  - name: quality-agent
+    tenant: sdc
+    role: Evaluate and certify prompts and pipelines
+    tools: [llm_chat, engram_search, rag_search]
+    memory: engram_sdc
+    channel: agent:quality
+    triggers: [event:system:pipeline:end, cron:sunday:12:00]
 
-  - name: builder
-    role: executor
-    level: L2
-    model: "ollama/llama3.2:3b-64k"
-    status: active
-    description: "Ejecuta tareas de implementación"
-    capabilities: ["build.docker", "write.code", "read.git", "run.tests"]
+  - name: monitor-agent
+    tenant: sdc
+    role: System self-care and auto-repair
+    tools: [engram_save, telegram_notify]
+    memory: engram_sdc
+    channel: agent:monitor
+    triggers: [cron:*/5, event:system:alert]
 
-  - name: auditor
-    role: compliance
-    level: L2
-    model: "ollama/deepseek-r1:7b-64k"
-    status: active
-    description: "Audita compliance, truth, y seguridad"
-    capabilities: ["read.infra", "read.code", "read.secrets", "audit.compliance"]
-    never: ["write.*", "deploy.*", "git.push"]
+  # ── ABE Music Agents ──
+  - name: ceo-agent
+    tenant: abe-music
+    role: Business owner — revenue, KPIs, decisions
+    tools: [hasura_query, engram_get, rag_search, llm_chat]
+    memory: engram_abe_music
+    channel: agent:ceo
+    triggers: [command:/dashboard, command:/report]
 
-  - name: reviewer
-    role: quality
-    level: L1
-    model: "ollama/qwen3:4b-64k"
-    status: active
-    description: "Revisa código y documentación"
-    capabilities: ["read.code", "read.docs", "write.reviews"]
+  - name: marketing-agent
+    tenant: abe-music
+    role: Brand strategy, campaigns, trends
+    tools: [rag_search, llm_chat, engram_save, firecrawl_crawl]
+    memory: engram_abe_music
+    channel: agent:marketing
+    triggers: [cron:08:00, command:/campaña]
 
-  - name: researcher
-    role: discovery
-    level: L1
-    model: "ollama/deepseek-r1:7b-64k"
-    status: active
-    description: "Investigación y descubrimiento"
-    capabilities: ["read.infra", "read.code", "fetch.web"]
+  - name: content-agent
+    tenant: abe-music
+    role: Daily content factory — videos, reels, podcasts
+    tools: [rag_search, llm_chat, generate_video, export_video, tts_generate, whisper_transcribe, engram_save, upload_file]
+    memory: engram_abe_music
+    channel: agent:content
+    triggers: [cron:06:00, command:/generar]
 
-  - name: devops
-    role: infrastructure
-    level: L2
-    model: "ollama/qwen3:4b-64k"
-    status: active
-    description: "Operaciones e infraestructura"
-    capabilities: ["read.infra", "docker.*", "systemctl.*", "deploy.staging"]
-    never: ["deploy.production"]
+  - name: sales-agent
+    tenant: abe-music
+    role: Sell products, process payments, upsell
+    tools: [stripe_create_checkout, stripe_create_payment, stripe_create_product, supabase_upload_file, upload_file, engram_save]
+    memory: engram_abe_music
+    channel: agent:sales
+    triggers: [event:webhook:stripe, command:/vender]
 
-  - name: sales
-    role: business
-    level: L1
-    model: "ollama/qwen3:4b-64k"
-    status: active
-    description: "Pipeline de ventas"
-    capabilities: ["read.crm", "write.crm", "notify.email"]
+  - name: support-agent
+    tenant: abe-music
+    role: Customer service, FAQ, issue resolution
+    tools: [rag_search, engram_search, llm_chat, omnivoice_speak]
+    memory: engram_abe_music
+    channel: agent:support
+    triggers: [event:ticket:new, command:/soporte]
 
-  - name: process-doc
-    role: documentation
-    level: L1
-    model: "ollama/deepseek-r1:7b-64k"
-    status: active
-    description: "Auto-Doc — genera documentación de proceso"
-    capabilities: ["read.code", "write.docs", "read.git"]
-
-  - name: execution
-    role: scheduler
-    level: L1
-    model: "ollama/qwen3:4b-64k"
-    status: active
-    description: "Execution Kernel — gestiona cola de tareas, prioridad, retry, y ejecucion"
-    capabilities: ["execution.queue.*", "execution.execute.*"]
-
-  - name: evolution
-    role: self-improvement
-    level: L1
-    model: "ollama/deepseek-r1:7b-64k"
-    status: active
-    description: "Self-Evolution Loop — propone, simula, e implementa mejoras del sistema"
-    capabilities: ["read.metrics", "read.learned", "write.proposals", "simulate.change"]
+  - name: voice-agent
+    tenant: abe-music
+    role: Voice interface for the smart app
+    tools: [omnivoice_speak, omnivoice_clone, omnivoice_list_voices, whisper_transcribe, llm_chat, rag_search]
+    memory: engram_abe_music
+    channel: agent:voice
+    triggers: [always:available:in-app]
