@@ -1,0 +1,11 @@
+{
+  "id": "PROP-20260712-120001",
+  "status": "proposed",
+  "subsystem": "git",
+  "severity": "medium",
+  "title": "Sync with origin/main",
+  "description": "Repository is 6 ahead, 283 behind",
+  "impact": "medium",
+  "effort": "low",
+  "created": "2026-07-12T12:00:01.905796"
+}
