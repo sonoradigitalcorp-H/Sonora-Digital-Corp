@@ -9,7 +9,9 @@ from .rag_engine import RAGEngine
 
 # Import OpenCode bridge for LLM-powered responses
 import sys
-sys.path.insert(0, "/home/ubuntu/sonora-platform")
+for _repo_path in ["/home/ubuntu/sonora-platform", "/sonora-platform"]:
+    if _repo_path not in sys.path and __import__("os").path.isdir(_repo_path):
+        sys.path.insert(0, _repo_path)
 from src.abe.opencode_bridge import bridge as opencode_bridge
 
 log = logging.getLogger("abe.chat")
@@ -31,7 +33,7 @@ class ChatEngine:
             neo4j_bridge.create_session(session_id, title=f"Chat: {text[:40]}")
 
         engram_results = engram_bridge.query(text, limit=3)
-        rag_results = self.rag.search(text, limit=3)
+        rag_results = await self.rag.search(text, limit=3)
 
         enriched = {
             "text": text,

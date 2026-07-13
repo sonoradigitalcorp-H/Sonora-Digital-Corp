@@ -1,0 +1,8 @@
+{"id":"evt_001","type":"spec:created","spec":"SPEC-20260712-SONORA-001","timestamp":"2026-07-12T00:00:00Z","author":"luis-daniel"}
+{"id":"evt_002","type":"migration:created","file":"infra/migrations/010_sonora_os.sql","tables":16,"timestamp":"2026-07-12T00:10:00Z"}
+{"id":"evt_003","type":"gherkin:created","file":"process/active/gherkin/SPEC-20260712-SONORA-001.feature","scenarios":23,"timestamp":"2026-07-12T00:20:00Z"}
+{"id":"evt_004","type":"test:created","files":["test_sonora_schema.py","test_sonora_telegram.py","test_sonora_router.py","test_sonora_tenant.py","test_sonora_scraping.py"],"count":73,"timestamp":"2026-07-12T01:00:00Z"}
+{"id":"evt_005","type":"implementation:created","apps":["sonora_bot","sonora_engine","sonora_scraper"],"files":16,"timestamp":"2026-07-12T02:00:00Z"}
+{"id":"evt_006","type":"docker:updated","file":"infra/docker-compose.products.yml","services":["hasura","sonora-bot","sonora-engine"],"timestamp":"2026-07-12T02:30:00Z"}
+{"id":"evt_007","type":"test:passed","suite":"sonora-os","passed":73,"skipped":6,"failed":0,"timestamp":"2026-07-12T03:00:00Z"}
+{"id":"evt_008","type":"score:calculated","spec":"SPEC-20260712-SONORA-001","score":82,"threshold":60,"veredict":"APROBADO","timestamp":"2026-07-12T03:10:00Z"}
