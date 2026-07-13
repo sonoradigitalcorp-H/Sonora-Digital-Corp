@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import MystikWidget from "@/components/MystikWidget";
+import VoiceWidget from "@/components/VoiceWidget";
 
 export const metadata: Metadata = {
   title: "ABE Music Group — Ecosistema Musical Inteligente",
@@ -13,6 +14,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body className="antialiased">
         {children}
         <MystikWidget />
+        <VoiceWidget tenant="abe" />
       </body>
     </html>
   );
