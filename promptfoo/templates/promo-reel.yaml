@@ -1,0 +1,61 @@
+# Template: Promo Reel
+# Video promocional de 30s sobre producto/merch
+
+name: promo-reel
+description: Genera un script para reel promocional de 30s
+
+prompt:
+  system: |
+    Eres un asistente de ventas para ABE Music.
+    Genera un SCRIPT para un reel de EXACTAMENTE 30 segundos.
+    
+    Producto: {{product_name}} — ${{price}}
+    Artista: {{artist_name}}
+    Stats: {{streams}} streams
+    
+    El script debe:
+    1. Hook inicial (3s) — llama la atención
+    2. Beneficio del producto (15s)
+    3. Prueba social con stats (7s)
+    4. CTA claro (5s) — "link en bio" o "compra ya en abe.sonoracorp.com"
+    
+    Tono: energético, moderno, juvenil.
+    Idioma: Español (MX)
+
+  user: "Genera un reel promocional para {{product_name}} de {{artist_name}}"
+
+tests:
+  - vars:
+      artist_name: "Hector Rubio"
+      product_name: "Foto personalizada con Hector"
+      price: "5"
+      streams: "115M"
+    assert:
+      - type: contains
+        value: "CTA"
+      - type: contains
+        value: "foto"
+      - type: latency
+        max_ms: 10000
+
+  - vars:
+      artist_name: "Jesus Urquijo"
+      product_name: "Playera oficial"
+      price: "25"
+      streams: "4.6M"
+    assert:
+      - type: contains
+        value: "playera"
+      - type: contains
+        value: "Jesus"
+
+  - vars:
+      artist_name: "Javier Arvayo"
+      product_name: "Video de saludo personalizado"
+      price: "10"
+      streams: "50K"
+    assert:
+      - type: contains
+        value: "video"
+      - type: latency
+        max_ms: 10000

@@ -1,0 +1,50 @@
+# Template: Podcast Clip
+# Clip de 2 minutos estilo entrevista
+
+name: podcast-clip
+description: Genera un guión para clip de podcast de 2 min
+
+prompt:
+  system: |
+    Eres un asistente de contenido para ABE Music.
+    Genera un GUIÓN para un clip de podcast de EXACTAMENTE 2 MINUTOS.
+    
+    Artista: {{artist_name}}
+    Pregunta del fan: {{question}}
+    Stats: {{streams}} streams
+    Contexto adicional: {{context}}
+    
+    El guión debe:
+    1. Saludo y presentación (10s)
+    2. Anécdota personal relacionada (60s)
+    3. Responder la pregunta del fan (40s)
+    4. Mencionar stats/logro reciente (5s)
+    5. CTA: mención a foto personalizada o merch (5s)
+    
+    Tono: conversacional, auténtico, sin edits.
+    Idioma: Español (MX)
+
+  user: "Genera guión de podcast de {{artist_name}} respondiendo: {{question}}"
+
+tests:
+  - vars:
+      artist_name: "Hector Rubio"
+      question: "¿Cómo empezaste en la música?"
+      streams: "115M"
+      context: "Nuevo álbum en camino"
+    assert:
+      - type: contains
+        value: "Hector"
+      - type: latency
+        max_ms: 10000
+
+  - vars:
+      artist_name: "Jesus Urquijo"
+      question: "¿Cuál es tu canción favorita que has grabado?"
+      streams: "4.6M"
+      context: "Gira por México este año"
+    assert:
+      - type: contains
+        value: "Jesus"
+      - type: latency
+        max_ms: 10000

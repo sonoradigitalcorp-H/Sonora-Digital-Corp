@@ -1,17 +1,26 @@
-# Tools — Catálogo
+# Tool Registry
 
-Este directorio organiza las tools por dominio de negocio. Los archivos `.js` reales permanecen en `mcp/tools/` para compatibilidad. Este directorio contiene referencias (`.md`) que describen cada tool y su ubicación real.
+Cada herramienta MCP tiene su propia documentación en este directorio.
 
-## Estructura
+## Cómo agregar una nueva tool
 
+1. Crear el MCP server en `core/mcp/servers/{name}_mcp.py`
+2. Agregar `tools/{name}.md` con la documentación
+3. Ejecutar `scripts/generate-tool-registry.py` para actualizar `registry.json`
+
+## Formato de cada doc
+
+```markdown
+# {Nombre}
+- **MCP Server**: {server_name}
+- **Tools**: {tool1}, {tool2}, ...
+- **Input**: descripción de los parámetros
+- **Output**: descripción de la respuesta
+- **Ejemplo**: curl :8180/mcp/execute -d '{...}'
+- **Permisos**: qué se necesita para usarla
+- **Endpoint**: POST /mcp/execute
 ```
-tools/
-├── mcp/       → Tools del gateway MCP (hermes, openclaw, brain, skills, agent-converse)
-├── system/    → Tools del sistema (files, commands, voice, memory, mcp, healthcheck, search, tests, docker, user)
-├── business/  → Tools de negocio (payments, sales, content, media, music, viral, mystikverse, zamora, approvals, billing, store, design-tools, generator, intake, webhooks, score, music-providers)
-└── abe/       → Tools de ABE Music (abe, abe-connect, abe-hub, abe-store)
-```
 
-## Referencia cruzada
+## Tools disponibles
 
-Cada tool en `tools/X/Y.md` referencia su archivo `.js` en `mcp/tools/` o su implementación Python en `apps/`.
+Ver `registry.json` para la lista completa y actualizada.

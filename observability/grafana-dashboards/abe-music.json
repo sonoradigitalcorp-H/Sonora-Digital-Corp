@@ -1,0 +1,9 @@
+{
+  "title": "ABE Music — Business Metrics",
+  "panels": [
+    {"title": "Artists", "type": "table", "targets": [{"expr": "hasura_query('{ artists { name streams revenue } }')"}]},
+    {"title": "Revenue (MTD)", "type": "stat", "targets": [{"expr": "hasura_query('{ transactions_aggregate { aggregate { sum { amount } } } }')"}]},
+    {"title": "Content Generated Today", "type": "stat", "targets": [{"expr": "engram_search('abe-music', 'content_*_today')"}]},
+    {"title": "Pipeline Success Rate", "type": "gauge", "targets": [{"expr": "rate(pipeline_success_total[7d]) / rate(pipeline_total[7d]) * 100"}]}
+  ]
+}

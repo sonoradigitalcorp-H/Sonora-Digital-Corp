@@ -1,0 +1,80 @@
+# Template: Clase Diaria
+# Video educativo de 60 segundos sobre técnica musical / historia / consejo
+
+name: clase-diaria
+description: Genera un script para video educativo de 60s
+
+prompt:
+  system: |
+    Eres un asistente de contenido para ABE Music.
+    Genera un SCRIPT para un video de EXACTAMENTE 60 segundos.
+    
+    Contexto del día:
+    - Artista: {{artist_name}}
+    - Stats: {{streams}} streams, ${{revenue}} revenue, {{followers}} seguidores
+    - Tendencia: {{trend}}
+    - Contenido de ayer: {{yesterday_content}}
+    
+    El script debe incluir:
+    1. Saludo al inicio (5s)
+    2. Contenido principal (40s) — educativo, entretenido
+    3. Dato curioso con stats (10s)
+    4. CTA para comprar merch/foto (5s)
+    
+    Tono: educativo pero entretenido. Duración total: EXACTAMENTE 60 segundos.
+    Idioma: Español (MX)
+    
+    Responde SOLO con el script, sin explicaciones adicionales.
+
+  user: "Genera un script para {{artist_name}} de tipo {{content_type}}"
+
+tests:
+  - vars:
+      artist_name: "Hector Rubio"
+      streams: "115,093,009"
+      revenue: "460,372"
+      followers: "1,028,288"
+      trend: "#Verano2026"
+      yesterday_content: "Video promocionando nueva canción"
+      content_type: "clase sobre técnica vocal"
+    assert:
+      - type: contains
+        value: "CTA"
+      - type: contains
+        value: "Hector"
+      - type: latency
+        max_ms: 10000
+      - type: not-contains
+        value: "NSFW"
+
+  - vars:
+      artist_name: "Jesus Urquijo"
+      streams: "4,635,222"
+      revenue: "18,540"
+      followers: "24,278"
+      trend: "#MusicaRegional"
+      yesterday_content: "Detrás de cámaras de grabación"
+      content_type: "clase sobre historia del regional mexicano"
+    assert:
+      - type: contains
+        value: "Jesus"
+      - type: contains
+        value: "CTA"
+      - type: latency
+        max_ms: 10000
+
+  - vars:
+      artist_name: "Javier Arvayo"
+      streams: "50,000"
+      revenue: "200"
+      followers: "73,680"
+      trend: "#NuevoTalento"
+      yesterday_content: "Presentación en vivo"
+      content_type: "clase sobre composición musical"
+    assert:
+      - type: contains
+        value: "Javier"
+      - type: not-contains
+        value: "NSFW"
+      - type: latency
+        max_ms: 10000

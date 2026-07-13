@@ -1,0 +1,455 @@
+{
+  "tools": [
+    {
+      "name": "generate_video",
+      "server": "content_mcp",
+      "has_doc": true,
+      "doc_file": "generate_video.md"
+    },
+    {
+      "name": "engram_save",
+      "server": "engram_mcp",
+      "has_doc": true,
+      "doc_file": "engram.md"
+    },
+    {
+      "name": "engram_get",
+      "server": "engram_mcp",
+      "has_doc": true,
+      "doc_file": "engram.md"
+    },
+    {
+      "name": "engram_search",
+      "server": "engram_mcp",
+      "has_doc": true,
+      "doc_file": "engram.md"
+    },
+    {
+      "name": "engram_list_layers",
+      "server": "engram_mcp",
+      "has_doc": true,
+      "doc_file": "engram.md"
+    },
+    {
+      "name": "ffmpeg_convert",
+      "server": "ffmpeg_mcp",
+      "has_doc": true,
+      "doc_file": "ffmpeg_convert.md"
+    },
+    {
+      "name": "ffmpeg_multiformat",
+      "server": "ffmpeg_mcp",
+      "has_doc": true,
+      "doc_file": "ffmpeg_multiformat.md"
+    },
+    {
+      "name": "firecrawl_crawl",
+      "server": "firecrawl_mcp",
+      "has_doc": true,
+      "doc_file": "firecrawl_crawl.md"
+    },
+    {
+      "name": "firecrawl_scrape",
+      "server": "firecrawl_mcp",
+      "has_doc": true,
+      "doc_file": "firecrawl_scrape.md"
+    },
+    {
+      "name": "hasura_query",
+      "server": "hasura_mcp",
+      "has_doc": true,
+      "doc_file": "hasura.md"
+    },
+    {
+      "name": "hasura_mutate",
+      "server": "hasura_mcp",
+      "has_doc": true,
+      "doc_file": "hasura.md"
+    },
+    {
+      "name": "hasura_track_table",
+      "server": "hasura_mcp",
+      "has_doc": true,
+      "doc_file": "hasura.md"
+    },
+    {
+      "name": "llm_chat",
+      "server": "llm_mcp",
+      "has_doc": true,
+      "doc_file": "llm.md"
+    },
+    {
+      "name": "llm_complete",
+      "server": "llm_mcp",
+      "has_doc": true,
+      "doc_file": "llm.md"
+    },
+    {
+      "name": "train_lora",
+      "server": "lora_mcp",
+      "has_doc": true,
+      "doc_file": "train_lora.md"
+    },
+    {
+      "name": "list_loras",
+      "server": "lora_mcp",
+      "has_doc": true,
+      "doc_file": "list_loras.md"
+    },
+    {
+      "name": "omnivoice_speak",
+      "server": "omnivoice_mcp",
+      "has_doc": true,
+      "doc_file": "omnivoice.md"
+    },
+    {
+      "name": "omnivoice_clone",
+      "server": "omnivoice_mcp",
+      "has_doc": true,
+      "doc_file": "omnivoice.md"
+    },
+    {
+      "name": "omnivoice_list_voices",
+      "server": "omnivoice_mcp",
+      "has_doc": true,
+      "doc_file": "omnivoice.md"
+    },
+    {
+      "name": "lovable_generate_page",
+      "server": "openlovable_mcp",
+      "has_doc": true,
+      "doc_file": "lovable.md"
+    },
+    {
+      "name": "lovable_clone_site",
+      "server": "openlovable_mcp",
+      "has_doc": true,
+      "doc_file": "lovable.md"
+    },
+    {
+      "name": "lovable_extract_brand",
+      "server": "openlovable_mcp",
+      "has_doc": true,
+      "doc_file": "lovable.md"
+    },
+    {
+      "name": "lovable_edit_page",
+      "server": "openlovable_mcp",
+      "has_doc": true,
+      "doc_file": "lovable.md"
+    },
+    {
+      "name": "stripe_create_checkout",
+      "server": "payments_mcp",
+      "has_doc": true,
+      "doc_file": "stripe.md"
+    },
+    {
+      "name": "stripe_create_payment",
+      "server": "payments_mcp",
+      "has_doc": true,
+      "doc_file": "stripe.md"
+    },
+    {
+      "name": "stripe_create_product",
+      "server": "payments_mcp",
+      "has_doc": true,
+      "doc_file": "stripe.md"
+    },
+    {
+      "name": "stripe_list_products",
+      "server": "payments_mcp",
+      "has_doc": true,
+      "doc_file": "stripe.md"
+    },
+    {
+      "name": "browser_navigate",
+      "server": "playwright_mcp",
+      "has_doc": true,
+      "doc_file": "browser.md"
+    },
+    {
+      "name": "browser_screenshot",
+      "server": "playwright_mcp",
+      "has_doc": true,
+      "doc_file": "browser.md"
+    },
+    {
+      "name": "browser_extract",
+      "server": "playwright_mcp",
+      "has_doc": true,
+      "doc_file": "browser.md"
+    },
+    {
+      "name": "rag_search",
+      "server": "rag_mcp",
+      "has_doc": true,
+      "doc_file": "rag.md"
+    },
+    {
+      "name": "rag_index",
+      "server": "rag_mcp",
+      "has_doc": true,
+      "doc_file": "rag.md"
+    },
+    {
+      "name": "rag_list_collections",
+      "server": "rag_mcp",
+      "has_doc": true,
+      "doc_file": "rag.md"
+    },
+    {
+      "name": "supabase_signup",
+      "server": "supabase_mcp",
+      "has_doc": true,
+      "doc_file": "supabase.md"
+    },
+    {
+      "name": "supabase_login",
+      "server": "supabase_mcp",
+      "has_doc": true,
+      "doc_file": "supabase.md"
+    },
+    {
+      "name": "supabase_get_user",
+      "server": "supabase_mcp",
+      "has_doc": true,
+      "doc_file": "supabase.md"
+    },
+    {
+      "name": "supabase_list_users",
+      "server": "supabase_mcp",
+      "has_doc": true,
+      "doc_file": "supabase.md"
+    },
+    {
+      "name": "supabase_list_buckets",
+      "server": "supabase_mcp",
+      "has_doc": true,
+      "doc_file": "supabase.md"
+    },
+    {
+      "name": "supabase_create_bucket",
+      "server": "supabase_mcp",
+      "has_doc": true,
+      "doc_file": "supabase.md"
+    },
+    {
+      "name": "supabase_list_files",
+      "server": "supabase_mcp",
+      "has_doc": true,
+      "doc_file": "supabase.md"
+    },
+    {
+      "name": "supabase_upload_file",
+      "server": "supabase_mcp",
+      "has_doc": true,
+      "doc_file": "supabase.md"
+    },
+    {
+      "name": "supabase_delete_file",
+      "server": "supabase_mcp",
+      "has_doc": true,
+      "doc_file": "supabase.md"
+    },
+    {
+      "name": "supabase_get_public_url",
+      "server": "supabase_mcp",
+      "has_doc": true,
+      "doc_file": "supabase.md"
+    },
+    {
+      "name": "upload_file",
+      "server": "upload_mcp",
+      "has_doc": true,
+      "doc_file": "upload.md"
+    },
+    {
+      "name": "get_file_url",
+      "server": "upload_mcp",
+      "has_doc": true,
+      "doc_file": "get_file_url.md"
+    },
+    {
+      "name": "list_files",
+      "server": "upload_mcp",
+      "has_doc": true,
+      "doc_file": "list_files.md"
+    },
+    {
+      "name": "delete_file",
+      "server": "upload_mcp",
+      "has_doc": true,
+      "doc_file": "delete_file.md"
+    },
+    {
+      "name": "whisper_transcribe",
+      "server": "whisper_mcp",
+      "has_doc": true,
+      "doc_file": "whisper_transcribe.md"
+    },
+    {
+      "name": "whisper_list_models",
+      "server": "whisper_mcp",
+      "has_doc": true,
+      "doc_file": "whisper_list_models.md"
+    }
+  ],
+  "servers": [
+    {
+      "name": "content_mcp",
+      "file": "content_mcp.py",
+      "tool_count": 1,
+      "tools": [
+        "generate_video"
+      ]
+    },
+    {
+      "name": "engram_mcp",
+      "file": "engram_mcp.py",
+      "tool_count": 4,
+      "tools": [
+        "engram_save",
+        "engram_get",
+        "engram_search",
+        "engram_list_layers"
+      ]
+    },
+    {
+      "name": "ffmpeg_mcp",
+      "file": "ffmpeg_mcp.py",
+      "tool_count": 2,
+      "tools": [
+        "ffmpeg_convert",
+        "ffmpeg_multiformat"
+      ]
+    },
+    {
+      "name": "firecrawl_mcp",
+      "file": "firecrawl_mcp.py",
+      "tool_count": 2,
+      "tools": [
+        "firecrawl_crawl",
+        "firecrawl_scrape"
+      ]
+    },
+    {
+      "name": "hasura_mcp",
+      "file": "hasura_mcp.py",
+      "tool_count": 3,
+      "tools": [
+        "hasura_query",
+        "hasura_mutate",
+        "hasura_track_table"
+      ]
+    },
+    {
+      "name": "llm_mcp",
+      "file": "llm_mcp.py",
+      "tool_count": 2,
+      "tools": [
+        "llm_chat",
+        "llm_complete"
+      ]
+    },
+    {
+      "name": "lora_mcp",
+      "file": "lora_mcp.py",
+      "tool_count": 2,
+      "tools": [
+        "train_lora",
+        "list_loras"
+      ]
+    },
+    {
+      "name": "omnivoice_mcp",
+      "file": "omnivoice_mcp.py",
+      "tool_count": 3,
+      "tools": [
+        "omnivoice_speak",
+        "omnivoice_clone",
+        "omnivoice_list_voices"
+      ]
+    },
+    {
+      "name": "openlovable_mcp",
+      "file": "openlovable_mcp.py",
+      "tool_count": 4,
+      "tools": [
+        "lovable_generate_page",
+        "lovable_clone_site",
+        "lovable_extract_brand",
+        "lovable_edit_page"
+      ]
+    },
+    {
+      "name": "payments_mcp",
+      "file": "payments_mcp.py",
+      "tool_count": 4,
+      "tools": [
+        "stripe_create_checkout",
+        "stripe_create_payment",
+        "stripe_create_product",
+        "stripe_list_products"
+      ]
+    },
+    {
+      "name": "playwright_mcp",
+      "file": "playwright_mcp.py",
+      "tool_count": 3,
+      "tools": [
+        "browser_navigate",
+        "browser_screenshot",
+        "browser_extract"
+      ]
+    },
+    {
+      "name": "rag_mcp",
+      "file": "rag_mcp.py",
+      "tool_count": 3,
+      "tools": [
+        "rag_search",
+        "rag_index",
+        "rag_list_collections"
+      ]
+    },
+    {
+      "name": "supabase_mcp",
+      "file": "supabase_mcp.py",
+      "tool_count": 10,
+      "tools": [
+        "supabase_signup",
+        "supabase_login",
+        "supabase_get_user",
+        "supabase_list_users",
+        "supabase_list_buckets",
+        "supabase_create_bucket",
+        "supabase_list_files",
+        "supabase_upload_file",
+        "supabase_delete_file",
+        "supabase_get_public_url"
+      ]
+    },
+    {
+      "name": "upload_mcp",
+      "file": "upload_mcp.py",
+      "tool_count": 4,
+      "tools": [
+        "upload_file",
+        "get_file_url",
+        "list_files",
+        "delete_file"
+      ]
+    },
+    {
+      "name": "whisper_mcp",
+      "file": "whisper_mcp.py",
+      "tool_count": 2,
+      "tools": [
+        "whisper_transcribe",
+        "whisper_list_models"
+      ]
+    }
+  ],
+  "generated_at": "2026-07-13T20:10:30.828332"
+}

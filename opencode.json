@@ -39,18 +39,15 @@
       "permission": { "read": "allow", "edit": "allow", "bash": { "git *": "allow", "pip *": "allow", "npm *": "allow", "*": "ask" } }
     }
   },
+  "skills": {
+    "paths": [".opencode/skills", "skills"]
+  },
   "mcp": {
-    "hermes": {
+    "sonora-mcp": {
       "type": "remote",
-      "url": "http://localhost:8643",
+      "url": "http://127.0.0.1:8180",
       "enabled": true,
-      "description": "Hermes API — comunicación multi-canal (Telegram, WhatsApp, Desktop)"
-    },
-    "openclaw": {
-      "type": "remote",
-      "url": "http://localhost:18789",
-      "enabled": true,
-      "description": "OpenClaw Gateway — 42 skills (browser, payments, social, media)"
+      "description": "SDC MCP Gateway — 49 tools (Hasura, Engram, Supabase, OmniVoice, FAL, RAG, etc)"
     }
   },
   "command": {
@@ -70,6 +67,7 @@
     "ops": { "description": "Ops OS — infraestructura", "template": "Carga Ops OS: revisa salud de servicios, uso de disco, containers", "agent": "mystic" },
     "quality": { "description": "Quality OS — tests, evaluaciones", "template": "Carga Quality OS: revisa pass rate de tests, scores, auditorías", "agent": "mystic" },
     "strategy": { "description": "Strategy OS — score, planificación", "template": "Carga Strategy OS: revisa enterprise score, iniciativas activas", "agent": "mystic" },
+    "design": { "description": "Generar componentes UI premium con shadcn/ui, three.js, Tailwind", "template": "Usa el skill design en skills/design/SKILL.md. Genera componentes React/TypeScript individuales con shadcn/ui, @react-three/drei, framer-motion, y Tailwind CSS. NO generar apps completas. NO usar inline styles. Un componente por archivo. $ARGUMENTS", "agent": "mystic" },
     "doc": { "description": "Auto-Doc — genera docs de proceso", "template": "Genera documentacion de proceso siguiendo templates de process/templates/", "agent": "mystic" },
     "plan": { "description": "Planning Gate — descompone objetivo en tareas y genera PLAN.yaml", "template": "Ejecuta plan-gate.py con el objetivo especificado: descomponer en tareas, estimar costo, validar contra truth/. Si no hay objetivo claro, pedir descomposicion primero." },
     "verify": { "description": "Constitution Gate — 6 gates: policy, security, cost, compliance, quality, knowledge (HAS-001)", "template": "Ejecuta constitution-gate.py contra el plan activo: policy gate (bind/events), security gate (secrets/network), cost gate (budget), compliance gate (agents/tiers), quality gate (tests/coverage), knowledge gate (learnings). Reporta resultados." }

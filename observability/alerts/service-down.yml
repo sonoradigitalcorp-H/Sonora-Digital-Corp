@@ -1,0 +1,47 @@
+groups:
+  - name: sdc-core
+    rules:
+      - alert: MCPGatewayDown
+        expr: probe_success{job="mcp-gateway"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "MCP Gateway is down"
+          description: "MCP Gateway at :8180 has been unreachable for >1m"
+
+      - alert: HasuraDown
+        expr: probe_success{job="hasura"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Hasura is down"
+          description: "Hasura at :8082 has been unreachable for >1m"
+
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Disk space below 10%"
+          description: "Available disk space is <10%"
+
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes) * 100 < 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage"
+          description: "Available memory is <10%"
+
+      - alert: PipelineFailure
+        expr: increase(pipeline_failures_total[1h]) > 3
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Pipeline failing frequently"
+          description: "Content pipeline has failed 3+ times in the last hour"

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ABE Music OS — API Reference</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0a0a0f; color:#e0e0e0; font-family:-apple-system,sans-serif; padding:2rem; }
+  h1 { color:#00ff88; font-size:1.5rem; margin-bottom:0.5rem; }
+  .sub { color:#888; font-size:0.85rem; margin-bottom:2rem; }
+  .endpoint { background:#12121a; border:1px solid #2a2a3a; border-radius:8px; margin-bottom:0.75rem; overflow:hidden; }
+  .endpoint summary { padding:1rem; cursor:pointer; display:flex; align-items:center; gap:1rem; font-family:monospace; }
+  .endpoint summary::-webkit-details-marker { color:#555; }
+  .method { display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.7rem; font-weight:600; min-width:50px; text-align:center; }
+  .get { background:#1a3a2a; color:#00ff88; }
+  .post { background:#2a1a3a; color:#b388ff; }
+  .path { color:#e0e0e0; font-size:0.9rem; }
+  .desc { color:#888; font-size:0.8rem; margin-left:auto; }
+  .details { padding:0 1rem 1rem; border-top:1px solid #1a1a2e; }
+  .details pre { background:#1a1a2e; padding:0.75rem; border-radius:4px; font-size:0.8rem; overflow-x:auto; margin-top:0.5rem; }
+  .details code { color:#00ff88; }
+</style>
+</head>
+<body>
+<h1>ABE Music OS — API Reference</h1>
+<p class="sub">Endpoints disponibles en <code>http://149.56.46.173:5180</code> · <a href="/" style="color:#00ff88">← Volver al inicio</a></p>
+
+<details class="endpoint" open>
+<summary><span class="method get">GET</span><span class="path">/api/health</span><span class="desc">Estado del servicio</span></summary>
+<div class="details">
+  <p>Health check del servidor ABE Music OS.</p>
+  <pre>curl http://149.56.46.173:5180/api/health</pre>
+</div>
+</details>
+
+<details class="endpoint">
+<summary><span class="method get">GET</span><span class="path">/api/artists</span><span class="desc">Lista de artistas</span></summary>
+<div class="details">
+  <p>Obtiene la lista de todos los artistas registrados.</p>
+  <pre>curl http://149.56.46.173:5180/api/artists</pre>
+</div>
+</details>
+
+<details class="endpoint">
+<summary><span class="method get">GET</span><span class="path">/api/artists/{artist_id}</span><span class="desc">Detalle del artista</span></summary>
+<div class="details">
+  <p>Obtiene información detallada de un artista específico.</p>
+  <pre>curl http://149.56.46.173:5180/api/artists/hector-rubio</pre>
+</div>
+</details>
+
+<details class="endpoint">
+<summary><span class="method get">GET</span><span class="path">/api/artists/{artist_id}/kpi</span><span class="desc">KPIs del artista</span></summary>
+<div class="details">
+  <p>Métricas de rendimiento del artista: streams, revenue, crecimiento.</p>
+</div>
+</details>
+
+<details class="endpoint">
+<summary><span class="method get">GET</span><span class="path">/api/artists/{artist_id}/releases</span><span class="desc">Lanzamientos</span></summary>
+<div class="details">
+  <p>Lista de lanzamientos del artista.</p>
+</div>
+</details>
+
+<details class="endpoint">
+<summary><span class="method post">POST</span><span class="path">/api/artists/{artist_id}/streams</span><span class="desc">Registrar streams</span></summary>
+<div class="details">
+  <p>Registra datos de streaming para un artista.</p>
+  <pre>curl -X POST http://149.56.46.173:5180/api/artists/hector-rubio/streams \
+  -H 'Content-Type: application/json' \
+  -d '{"streams": 1000000, "platform": "spotify"}'</pre>
+</div>
+</details>
+
+<details class="endpoint">
+<summary><span class="method get">GET</span><span class="path">/api/revenue</span><span class="desc">Revenue total</span></summary>
+<div class="details">
+  <p>Reporte de revenue agregado por artista y plataforma.</p>
+</div>
+</details>
+
+<details class="endpoint">
+<summary><span class="method post">POST</span><span class="path">/api/revenue/record</span><span class="desc">Registrar revenue</span></summary>
+<div class="details">
+  <p>Registra un pago o ingreso en el ledger.</p>
+</div>
+</details>
+
+<details class="endpoint">
+<summary><span class="method get">GET</span><span class="path">/api/contracts</span><span class="desc">Lista de contratos</span></summary>
+<div class="details">
+  <p>Obtiene todos los contratos registrados.</p>
+</div>
+</details>
+
+<details class="endpoint">
+<summary><span class="method post">POST</span><span class="path">/api/contracts</span><span class="desc">Crear contrato</span></summary>
+<div class="details">
+  <p>Crea un nuevo contrato para un artista.</p>
+</div>
+</details>
+
+<details class="endpoint">
+<summary><span class="method get">GET</span><span class="path">/api/contracts/{contract_id}</span><span class="desc">Detalle del contrato</span></summary>
+<div class="details">
+  <p>Obtiene información de un contrato específico.</p>
+</div>
+</details>
+
+<details class="endpoint">
+<summary><span class="method post">POST</span><span class="path">/api/contracts/{contract_id}/sign</span><span class="desc">Firmar contrato</span></summary>
+<div class="details">
+  <p>Firma digital de un contrato.</p>
+</div>
+</details>
+
+<details class="endpoint">
+<summary><span class="method get">GET</span><span class="path">/api/crm/fans</span><span class="desc">CRM de fans</span></summary>
+<div class="details">
+  <p>Lista de fans registrados en el CRM.</p>
+</div>
+</details>
+
+<details class="endpoint">
+<summary><span class="method post">POST</span><span class="path">/api/chat</span><span class="desc">Chat con IA</span></summary>
+<div class="details">
+  <p>Chat con el asistente IA de ABE Music.</p>
+  <pre>curl -X POST http://149.56.46.173:5180/api/chat \
+  -H 'Content-Type: application/json' \
+  -d '{"message": "cómo van las regalías?"}'</pre>
+</div>
+</details>
+
+<details class="endpoint">
+<summary><span class="method get">GET</span><span class="path">/api/distribution/releases</span><span class="desc">Distribución</span></summary>
+<div class="details">
+  <p>Estado de distribución de lanzamientos a plataformas.</p>
+</div>
+</details>
+
+<details class="endpoint">
+<summary><span class="method get">GET</span><span class="path">/api/sync/status</span><span class="desc">Estado de sincronización</span></summary>
+<div class="details">
+  <p>Estado del sincronizador de datos multi-plataforma.</p>
+</div>
+</details>
+
+<p style="margin-top:2rem;color:#555;font-size:0.8rem">
+  Documentación interactiva: <a href="/docs" style="color:#00ff88">Swagger UI</a> · 
+  <a href="/redoc" style="color:#00ff88">ReDoc</a>
+</p>
+</body>
+</html>
