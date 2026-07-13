@@ -8,10 +8,23 @@ from .middleware import verify_token
 log = logging.getLogger("abe.ws")
 
 
+def _tenant_from_headers(websocket) -> str:
+    """Detect tenant from Origin/Host headers to keep data isolated."""
+    origin = websocket.headers.get("origin", "")
+    host = websocket.headers.get("host", "")
+    combined = f"{origin} {host}".lower()
+    if "abe." in combined or "abe-music" in combined:
+        return "abe"
+    if "sonoradigital" in combined or "sonora" in combined:
+        return "sonora"
+    return "sonora"
+
+
 async def handle_websocket(websocket):
     await websocket.accept()
     session_id = None
     user_info = {"role": "fan", "user_id": "anonymous"}
+    tenant = _tenant_from_headers(websocket)
 
     try:
         while True:
@@ -34,7 +47,11 @@ async def handle_websocket(websocket):
                 result = await abe_service.chat.process(
                     text,
                     session_id=data.get("session_id"),
-                    context={"role": user_info["role"], "user_id": user_info["user_id"]},
+                    context={
+                        "role": user_info["role"],
+                        "user_id": user_info["user_id"],
+                        "tenant": data.get("tenant") or tenant,
+                    },
                 )
                 session_id = result.get("session_id", session_id)
                 await websocket.send_json({

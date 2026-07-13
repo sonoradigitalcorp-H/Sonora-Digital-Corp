@@ -41,10 +41,7 @@ class ABEConfig:
 
     @property
     def mcp_client_secret(self) -> str:
-        val = os.environ.get("MCP_CLIENT_SECRET")
-        if not val:
-            raise RuntimeError("MCP_CLIENT_SECRET environment variable is required")
-        return val
+        return os.environ.get("MCP_CLIENT_SECRET", "")
 
     @property
     def qdrant_url(self) -> str:
