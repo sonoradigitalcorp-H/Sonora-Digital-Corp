@@ -8,12 +8,6 @@ from ..bridges.mcp import call_tool as mcp_call
 from .rag_engine import RAGEngine
 
 # Import OpenCode bridge for LLM-powered responses
-import sys
-for _repo_path in ["/home/ubuntu/sonora-platform", "/sonora-platform"]:
-    if _repo_path not in sys.path and __import__("os").path.isdir(_repo_path):
-        sys.path.insert(0, _repo_path)
-from src.abe.opencode_bridge import bridge as opencode_bridge
-
 log = logging.getLogger("abe.chat")
 
 
@@ -46,7 +40,7 @@ class ChatEngine:
 
         intent = self._classify(text)
 
-        # Route CRM/revenue intents to MCP tools, everything else to OpenCode mystic agent
+        # Route CRM/revenue intents to MCP tools, everything else to LLM MCP
         tool_map = {
             "streams": "abe_record_stream",
             "revenue": "abe_record_revenue",
@@ -58,12 +52,26 @@ class ChatEngine:
             response_text = response.get("text", response.get("result", "OK"))
             source = "mcp"
         else:
-            # Use OpenCode mystic agent for all other queries
-            opencode_result = await opencode_bridge.process(
-                text, session_id=session_id, context=enriched
+            # Use LLM MCP for general queries
+            tenant = ctx.get("tenant", "sonora")
+            system_prompt = self._system_prompt_for_tenant(tenant)
+            llm_result = await mcp_call(
+                "llm_complete",
+                {
+                    "prompt": text,
+                    "system": system_prompt,
+                },
             )
-            response_text = opencode_result.get("text", "")
-            source = "opencode"
+            if isinstance(llm_result, str):
+                try:
+                    llm_result = json.loads(llm_result)
+                except json.JSONDecodeError:
+                    llm_result = {"text": llm_result}
+            # Gateway may wrap the tool output under "result"
+            if "result" in llm_result and isinstance(llm_result["result"], dict):
+                llm_result = llm_result["result"]
+            response_text = llm_result.get("text", "No pude generar una respuesta.")
+            source = "llm_mcp"
 
         neo4j_bridge.add_message(session_id, "user", text)
         neo4j_bridge.add_message(session_id, "assistant", str(response_text)[:1000])
@@ -83,6 +91,22 @@ class ChatEngine:
             "intent": intent,
             "source": source,
         }
+
+    def _system_prompt_for_tenant(self, tenant: str) -> str:
+        if tenant == "abe":
+            return (
+                "Eres Abe, el asistente oficial de ABE Music Group. "
+                "Ayudas a artistas y músicos con su carrera, distribución, revenue y comunidad. "
+                "Responde en español, con tono cercano y profesional. "
+                "Si no sabes algo, di que un humano del equipo ABE puede contactarlo."
+            )
+        return (
+            "Eres Sona, el asistente oficial de Sonora Digital Corp. "
+            "Ayudas a empresas a entender y contratar servicios de IA: clonación de voz, "
+            "clonación de imagen, voice agents 24/7 y consultoría. "
+            "Responde en español, con tono profesional y vendedor. "
+            "Si el usuario quiere una demo o más información, ofrécele agendar una llamada."
+        )
 
     def _classify(self, text: str) -> str:
         t = text.lower()
