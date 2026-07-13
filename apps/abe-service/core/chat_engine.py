@@ -1,14 +1,49 @@
 import logging
+import os
 import uuid
 from typing import Any
+
+import httpx
 
 from ..bridges import engram as engram_bridge
 from ..bridges import neo4j as neo4j_bridge
 from ..bridges.mcp import call_tool as mcp_call
 from .rag_engine import RAGEngine
 
-# Import OpenCode bridge for LLM-powered responses
 log = logging.getLogger("abe.chat")
+
+HASURA_URL = os.getenv("HASURA_URL", "http://localhost:8080/v1/graphql")
+HASURA_ADMIN_SECRET = os.getenv("HASURA_ADMIN_SECRET", "")
+HASURA_ENABLED = os.getenv("HASURA_ENABLED", "false").lower() in ("true", "1", "yes")
+
+# Tenant slug → UUID mapping for Hasura foreign keys
+TENANT_UUIDS = {
+    "abe": "bb3b0838-6e53-4d12-af37-0b69ab40c1b3",
+    "sonora": "2edccb13-3357-40b3-8227-560f397ae585",
+}
+
+INSERT_CONVERSATION_MUTATION = """
+mutation InsertConversation(
+  $tenant_id: uuid!,
+  $user_identifier: String!,
+  $session_id: String!,
+  $role: String!,
+  $content: String!,
+  $metadata: jsonb
+) {
+  insert_conversations_one(object: {
+    tenant_id: $tenant_id,
+    user_identifier: $user_identifier,
+    session_id: $session_id,
+    role: $role,
+    content: $content,
+    metadata: $metadata
+  }) {
+    id
+    created_at
+  }
+}
+"""
 
 
 class ChatEngine:
@@ -37,6 +72,15 @@ class ChatEngine:
             "rag_context": rag_results,
             "user_id": ctx.get("user_id", "anonymous"),
         }
+
+        tenant = ctx.get("tenant", "sonora")
+        user_id = ctx.get("user_id", "anonymous")
+
+        # Persist user message before processing
+        await self._store_conversation(
+            TENANT_UUIDS.get(tenant, tenant), user_id, session_id, "user", text,
+            metadata={"source": "web_widget", "intent": None},
+        )
 
         intent = self._classify(text)
 
@@ -73,6 +117,12 @@ class ChatEngine:
             response_text = llm_result.get("text", "No pude generar una respuesta.")
             source = "llm_mcp"
 
+        # Persist assistant message
+        await self._store_conversation(
+            TENANT_UUIDS.get(tenant, tenant), user_id, session_id, "assistant", str(response_text),
+            metadata={"source": source, "intent": intent},
+        )
+
         neo4j_bridge.add_message(session_id, "user", text)
         neo4j_bridge.add_message(session_id, "assistant", str(response_text)[:1000])
 
@@ -91,6 +141,41 @@ class ChatEngine:
             "intent": intent,
             "source": source,
         }
+
+    async def _store_conversation(
+        self,
+        tenant_id: str,
+        user_id: str,
+        session_id: str,
+        role: str,
+        content: str,
+        metadata: dict | None = None,
+    ) -> None:
+        """Store a message in Hasura conversations table, isolated by tenant."""
+        if not HASURA_ENABLED:
+            return
+        try:
+            headers = {"Content-Type": "application/json"}
+            if HASURA_ADMIN_SECRET:
+                headers["x-hasura-admin-secret"] = HASURA_ADMIN_SECRET
+            async with httpx.AsyncClient(timeout=10) as client:
+                await client.post(
+                    HASURA_URL,
+                    json={
+                        "query": INSERT_CONVERSATION_MUTATION,
+                        "variables": {
+                            "tenant_id": tenant_id,
+                            "user_identifier": user_id,
+                            "session_id": session_id,
+                            "role": role,
+                            "content": content[:4000],
+                            "metadata": metadata or {},
+                        },
+                    },
+                    headers=headers,
+                )
+        except Exception as e:
+            log.warning(f"Hasura conversation store error: {e}")
 
     def _system_prompt_for_tenant(self, tenant: str) -> str:
         if tenant == "abe":
