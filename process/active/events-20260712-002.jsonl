@@ -1,0 +1,6 @@
+{"id":"evt_101","type":"spec:created","spec":"SPEC-20260712-SONORA-002","timestamp":"2026-07-12T04:00:00Z","author":"luis-daniel"}
+{"id":"evt_102","type":"gherkin:created","file":"process/active/gherkin/SPEC-20260712-SONORA-002.feature","scenarios":24,"timestamp":"2026-07-12T04:10:00Z"}
+{"id":"evt_103","type":"test:created","files":["test_sonora_gamification.py","test_sonora_payments.py","test_sonora_dashboard.py"],"count":47,"timestamp":"2026-07-12T04:30:00Z"}
+{"id":"evt_104","type":"implementation:created","apps":["gamification.py","payments.py","dashboard.py"],"timestamp":"2026-07-12T05:00:00Z"}
+{"id":"evt_105","type":"test:passed","suite":"sonora-os-phase-2-3-4","passed":120,"skipped":8,"failed":0,"timestamp":"2026-07-12T05:10:00Z"}
+{"id":"evt_106","type":"score:calculated","spec":"SPEC-20260712-SONORA-002","score":82,"threshold":60,"veredict":"APROBADO","timestamp":"2026-07-12T05:15:00Z"}

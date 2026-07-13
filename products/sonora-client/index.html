@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Sonora OS — Cliente</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+  <!-- Login -->
+  <div id="view-login" class="view">
+    <div class="login-box">
+      <div class="logo">◈ <span>Sonora OS</span></div>
+      <p class="sub">Plataforma para tus clientes</p>
+      <div id="login-error" class="error-msg"></div>
+      <button class="btn btn-google" onclick="loginGoogle()">Continuar con Google</button>
+      <div class="divider"><span>o</span></div>
+      <input type="email" id="login-email" placeholder="correo@ejemplo.com">
+      <input type="password" id="login-pass" placeholder="contraseña">
+      <button class="btn btn-primary" onclick="loginEmail()">Iniciar Sesión</button>
+      <p class="register-link">¿No tienes cuenta? <a href="#" onclick="showRegister()">Regístrate</a></p>
+    </div>
+  </div>
+
+  <!-- Register -->
+  <div id="view-register" class="view" style="display:none">
+    <div class="login-box">
+      <div class="logo">◈ <span>Sonora OS</span></div>
+      <p class="sub">Crea tu cuenta</p>
+      <div id="register-error" class="error-msg"></div>
+      <input type="text" id="reg-name" placeholder="Nombre">
+      <input type="email" id="reg-email" placeholder="correo@ejemplo.com">
+      <input type="password" id="reg-pass" placeholder="contraseña">
+      <button class="btn btn-primary" onclick="registerEmail()">Crear Cuenta</button>
+      <p class="register-link">¿Ya tienes cuenta? <a href="#" onclick="showLogin()">Inicia sesión</a></p>
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div id="view-app" class="view" style="display:none">
+    <aside class="sidebar">
+      <div class="logo">◈ <span>Sonora OS</span></div>
+      <nav>
+        <a href="#" class="active" data-page="dashboard">📊 Dashboard</a>
+        <a href="#" data-page="revenue">💰 Revenue</a>
+        <a href="#" data-page="greetings">🎤 Saludos</a>
+        <a href="#" data-page="knowledge">📚 Conocimiento</a>
+        <a href="#" data-page="settings">⚙️ Configuración</a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-info" id="user-info"><span id="user-email"></span></div>
+        <button class="btn btn-small" onclick="logout()">Cerrar Sesión</button>
+      </div>
+    </aside>
+    <main>
+      <div id="page-dashboard" class="page active-page">
+        <h1>Dashboard</h1>
+        <div class="grid-4" id="dash-cards"></div>
+        <div class="dual">
+          <div class="card"><div class="label">Revenue 7 días</div><div class="bar-chart" id="revenue-chart"></div></div>
+          <div class="card"><div class="label">$BEAT Circulation</div><div id="beat-3d" style="height:250px"></div></div>
+        </div>
+        <div class="card"><div class="label">Leaderboard</div><table><thead><tr><th>#</th><th>Usuario</th><th>XP</th><th>$BEAT</th><th>Nivel</th></tr></thead><tbody id="lb-table"></tbody></table></div>
+      </div>
+      <div id="page-revenue" class="page" style="display:none">
+        <h1>Revenue</h1><div class="card" id="revenue-detail"></div>
+      </div>
+      <div id="page-greetings" class="page" style="display:none">
+        <h1>Saludos</h1>
+        <div class="grid-4" id="greeting-cards"></div>
+        <div class="card"><table><thead><tr><th>ID</th><th>Artista</th><th>Mensaje</th><th>Estado</th></tr></thead><tbody id="greeting-table"></tbody></table></div>
+      </div>
+      <div id="page-knowledge" class="page" style="display:none">
+        <h1>Base de Conocimiento</h1>
+        <div class="card">
+          <div class="label">Documentos indexados en RAG</div>
+          <div id="rag-status"></div>
+          <div style="margin-top:12px;display:flex;gap:8px">
+            <input type="text" id="rag-query" placeholder="Pregunta a tu knowledge base..." style="flex:1">
+            <button class="btn btn-primary" onclick="queryRAG()">Buscar</button>
+          </div>
+          <div id="rag-results" style="margin-top:12px"></div>
+        </div>
+      </div>
+      <div id="page-settings" class="page" style="display:none">
+        <h1>Configuración</h1>
+        <div class="card"><div class="label">Tenant</div><p id="settings-tenant"></p></div>
+        <div class="card"><div class="label">Pricing</div><div id="settings-pricing"></div></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script src="js/app.js"></script>
+</body>
+</html>

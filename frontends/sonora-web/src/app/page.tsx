@@ -157,7 +157,7 @@ export default function ABELanding() {
                 </div>
                 <h3 className="font-display text-xl font-medium mb-2">{a.name}</h3>
                 <div className="text-2xl font-bold text-gradient-gold">${Number(a.total_revenue || 0).toLocaleString()}</div>
-                <div className="text-sm text-muted-foreground">{(a.total_streams || 0).toLocaleString()} streams</div>
+                <div className="text-sm text-muted-foreground">{(a.total_streams || 0).toLocaleString()} reproducciones</div>
                 <div className="mt-4 text-sm text-gold opacity-0 group-hover:opacity-100 transition-opacity">Ver perfil →</div>
               </motion.a>
             ))}
@@ -232,7 +232,7 @@ export default function ABELanding() {
               <h2 className="font-display text-3xl md:text-4xl font-light mb-4">Crea contenido con <span className="text-gradient-gold italic">IA</span></h2>
               <p className="text-muted-foreground mb-6">Videos profesionales, conciertos virtuales, saludos para fans. Todo desde tu navegador.</p>
               <ul className="space-y-2 mb-6">
-                {["Videos AI con tu rostro", "Conciertos virtuales", "Saludos personalizados"].map(f => (
+                {["Videos con IA de tu rostro", "Conciertos virtuales", "Saludos personalizados"].map(f => (
                   <li key={f} className="flex items-center gap-2 text-sm"><Check className="w-4 h-4 text-gold" />{f}</li>
                 ))}
               </ul>

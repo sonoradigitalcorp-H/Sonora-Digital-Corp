@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonora OS — Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+:root {
+  --bg: #0a0a0f;
+  --surface: #13131a;
+  --card: #1a1a24;
+  --border: #2a2a3e;
+  --primary: #6366f1;
+  --primary-glow: rgba(99,102,241,.25);
+  --accent: #22d3ee;
+  --green: #10b981;
+  --yellow: #f59e0b;
+  --red: #ef4444;
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --radius: 12px;
+}
+body { font-family: Inter, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.app { display: flex; min-height: 100vh; }
+
+/* ─── Sidebar ─── */
+.sidebar {
+  width: 240px; background: var(--surface); border-right: 1px solid var(--border);
+  padding: 24px 16px; display: flex; flex-direction: column; flex-shrink: 0;
+}
+.sidebar .logo { font-size: 20px; font-weight: 800; margin-bottom: 32px; display: flex; align-items: center; gap: 10px; }
+.sidebar .logo span { color: var(--primary); }
+.sidebar .logo small { font-size: 10px; font-weight: 400; color: var(--text-dim); display: block; }
+.sidebar nav { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.sidebar nav a {
+  padding: 10px 14px; border-radius: 8px; text-decoration: none; color: var(--text-dim);
+  font-size: 14px; font-weight: 500; transition: .2s; display: flex; align-items: center; gap: 10px;
+}
+.sidebar nav a:hover, .sidebar nav a.active { background: var(--card); color: var(--text); }
+.sidebar nav a.active { border-left: 3px solid var(--primary); }
+.sidebar .status {
+  padding: 12px; background: var(--card); border-radius: var(--radius); margin-top: auto;
+  font-size: 12px; color: var(--text-dim); display: flex; align-items: center; gap: 8px;
+}
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); display: inline-block; animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+/* ─── Main ─── */
+.main { flex: 1; padding: 24px 32px; overflow-y: auto; }
+.main h1 { font-size: 24px; font-weight: 700; margin-bottom: 4px; }
+.main .subtitle { color: var(--text-dim); font-size: 14px; margin-bottom: 24px; }
+.main .subtitle .tenant-name { color: var(--primary); font-weight: 600; }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px; transition: .2s;
+}
+.card:hover { border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); }
+.card .label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.card .value { font-size: 28px; font-weight: 700; }
+.card .change { font-size: 13px; margin-top: 4px; }
+.card .change.up { color: var(--green); }
+.card .change.down { color: var(--red); }
+
+.section { margin-bottom: 32px; }
+.section h2 { font-size: 18px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.section h2 .badge { font-size: 12px; background: var(--primary); color: #fff; padding: 2px 10px; border-radius: 12px; font-weight: 500; }
+
+.dual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+@media(max-width:1024px){ .dual-grid { grid-template-columns: 1fr; } }
+
+/* ─── Three.js ─── */
+#three-container {
+  width: 100%; height: 300px; border-radius: var(--radius); overflow: hidden;
+  background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0f 100%);
+  position: relative;
+}
+#three-container .overlay-label {
+  position: absolute; bottom: 16px; left: 16px; font-size: 12px; color: var(--text-dim);
+  background: rgba(0,0,0,.6); padding: 6px 12px; border-radius: 6px;
+}
+
+/* ─── Table ─── */
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
+tr:hover td { background: rgba(99,102,241,.04); }
+td .rank { display: inline-flex; width: 24px; height: 24px; align-items: center; justify-content: center; border-radius: 50%; font-weight: 700; font-size: 12px; background: var(--surface); }
+td .rank.gold { background: #f59e0b33; color: var(--yellow); }
+td .rank.silver { background: #94a3b833; color: #cbd5e1; }
+td .rank.bronze { background: #b4530933; color: #d97706; }
+
+/* ─── Progress bar ─── */
+.progress { height: 6px; background: var(--surface); border-radius: 3px; overflow: hidden; margin: 8px 0; }
+.progress-bar { height: 100%; border-radius: 3px; transition: width .6s ease; }
+.progress-bar.green { background: var(--green); }
+.progress-bar.primary { background: var(--primary); }
+.progress-bar.accent { background: var(--accent); }
+
+/* ─── Event log ─── */
+.event-log { max-height: 200px; overflow-y: auto; font-size: 12px; }
+.event-log div { padding: 6px 8px; border-bottom: 1px solid var(--border); display: flex; gap: 8px; }
+.event-log .time { color: var(--text-dim); flex-shrink: 0; }
+.event-log .type { color: var(--primary); font-weight: 500; }
+.event-log .msg { color: var(--text-dim); }
+
+/* ─── Status badges ─── */
+.status-badge {
+  display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;
+}
+.status-badge.approved { background: #10b98133; color: var(--green); }
+.status-badge.pending { background: #f59e0b33; color: var(--yellow); }
+.status-badge.rejected { background: #ef444433; color: var(--red); }
+.status-badge.pending_approval { background: #6366f133; color: var(--primary); }
+
+/* ─── Empty ─── */
+.empty { text-align: center; padding: 40px; color: var(--text-dim); }
+.empty .icon { font-size: 48px; margin-bottom: 12px; opacity: .4; }
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo">
+      <span>◈</span>
+      <div>Sonora OS <small>dashboard</small></div>
+    </div>
+    <nav>
+      <a href="#" class="active" data-section="overview">📊 Visión General</a>
+      <a href="#" data-section="tokens">🪙 Tokens</a>
+      <a href="#" data-section="greetings">🎤 Saludos</a>
+      <a href="#" data-section="quests">🎮 Quests</a>
+      <a href="#" data-section="leaderboard">🏆 Leaderboard</a>
+      <a href="#" data-section="events">⚡ Eventos</a>
+    </nav>
+    <div class="status"><span class="status-dot"></span> Conectado <span id="ws-status">en vivo</span></div>
+  </aside>
+
+  <main class="main">
+    <h1>Dashboard <span id="section-title">Visión General</span></h1>
+    <div class="subtitle"><span class="tenant-name" id="tenant-name">abe-music</span> · actualizado <span id="last-update">hace un momento</span></div>
+
+    <!-- Overview -->
+    <div id="section-overview" class="section active-section">
+      <div class="grid" id="overview-cards"></div>
+      <div class="dual-grid">
+        <div class="card">
+          <div class="label">Circulación de Tokens</div>
+          <div id="three-container"><div class="overlay-label">$BEAT · 3D</div></div>
+        </div>
+        <div class="card">
+          <div class="label">Revenue (7 días)</div>
+          <div id="revenue-chart" style="height:260px;display:flex;align-items:flex-end;gap:8px;padding-top:20px;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tokens -->
+    <div id="section-tokens" class="section" style="display:none">
+      <div class="grid" id="token-cards"></div>
+      <div class="card">
+        <div class="label">Pool Status</div>
+        <div id="pool-detail"></div>
+      </div>
+    </div>
+
+    <!-- Greetings -->
+    <div id="section-greetings" class="section" style="display:none">
+      <div class="grid" id="greeting-cards"></div>
+      <div class="card"><table><thead><tr><th>ID</th><th>Artista</th><th>Mensaje</th><th>Estado</th></tr></thead><tbody id="greeting-table"></tbody></table></div>
+    </div>
+
+    <!-- Quests -->
+    <div id="section-quests" class="section" style="display:none">
+      <div class="grid" id="quest-cards"></div>
+      <div class="card"><div class="label">Esta Semana</div><table><thead><tr><th>Categoría</th><th>Completadas</th><th>$BEAT</th><th>%</th></tr></thead><tbody id="quest-breakdown"></tbody></table></div>
+    </div>
+
+    <!-- Leaderboard -->
+    <div id="section-leaderboard" class="section" style="display:none">
+      <div style="display:flex;gap:12px;margin-bottom:16px">
+        <button class="lb-toggle active" data-metric="xp">🏆 Por XP</button>
+        <button class="lb-toggle" data-metric="beat">🪙 Por $BEAT</button>
+      </div>
+      <div class="card"><table><thead><tr><th>#</th><th>Usuario</th><th>XP</th><th>$BEAT</th><th>Nivel</th></tr></thead><tbody id="leaderboard-table"></tbody></table></div>
+    </div>
+
+    <!-- Events -->
+    <div id="section-events" class="section" style="display:none">
+      <div class="card"><div class="label">Eventos en Tiempo Real</div><div class="event-log" id="event-log"><div class="empty"><div class="icon">⚡</div>Esperando eventos...</div></div></div>
+    </div>
+  </main>
+</div>
+
+<script>
+// ─── Config ───
+const TENANT = 'abe-music';
+const API = `http://localhost:5100`;
+const WS_URL = `ws://localhost:5100/ws/${TENANT}`;
+
+// ─── State ───
+let ws = null;
+let eventCount = 0;
+
+// ─── Navigation ───
+document.querySelectorAll('.sidebar nav a').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    document.querySelectorAll('.sidebar nav a').forEach(x => x.classList.remove('active'));
+    a.classList.add('active');
+    document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+    document.getElementById(`section-${a.dataset.section}`).style.display = '';
+    document.getElementById('section-title').textContent = a.textContent.trim();
+  });
+});
+
+document.querySelectorAll('.lb-toggle').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.lb-toggle').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    loadLeaderboard(btn.dataset.metric);
+  });
+});
+
+// ─── Fetch ───
+async function fetchJSON(path) {
+  try { const r = await fetch(`${API}${path}`); return await r.json(); }
+  catch(e) { console.warn('fetch failed:', path, e); return null; }
+}
+
+function $(id) { return document.getElementById(id); }
+
+// ─── Overview Cards ───
+function renderOverviewCards(data) {
+  if (!data) return;
+  const cards = [
+    { label: 'Revenue Total', value: `$${data.total_revenue?.toLocaleString() || '0'}`, change: '+12.3%', cls:'up' },
+    { label: 'Transacciones', value: data.transaction_count || 0, change: '+8 este mes', cls:'up' },
+    { label: 'Quests Completadas', value: data.quests?.total_completed || 0, change: '' },
+    { label: 'Usuarios Activos', value: data.quests?.active_users || 0, change: '+5 hoy', cls:'up' },
+  ];
+  $('overview-cards').innerHTML = cards.map(c => `
+    <div class="card">
+      <div class="label">${c.label}</div>
+      <div class="value">${c.value}</div>
+      ${c.change ? `<div class="change ${c.cls||''}">${c.change}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+// ─── Revenue Bar Chart ───
+function renderRevenueChart(data) {
+  const days = data?.daily_breakdown || [
+    {date:'2026-07-06',amount:340},{date:'2026-07-07',amount:450},
+    {date:'2026-07-08',amount:380},{date:'2026-07-09',amount:520},
+    {date:'2026-07-10',amount:610},{date:'2026-07-11',amount:480},
+    {date:'2026-07-12',amount:390},
+  ];
+  const max = Math.max(...days.map(d => d.amount));
+  $('revenue-chart').innerHTML = days.map(d => {
+    const pct = (d.amount / max) * 100;
+    const day = d.date.slice(-2);
+    return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;height:100%">
+      <div style="font-size:10px;color:var(--text-dim);margin-bottom:4px">$${d.amount}</div>
+      <div style="width:100%;height:${pct}%;background:linear-gradient(to top,var(--primary),var(--accent));border-radius:4px 4px 0 0;min-height:4px;transition:height.6s"></div>
+      <div style="font-size:10px;color:var(--text-dim);margin-top:4px">${day}</div>
+    </div>`;
+  }).join('');
+}
+
+// ─── Three.js Token Visualization ───
+function initThree() {
+  const container = $('three-container');
+  const w = container.clientWidth, h = 300;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, w/h, .1, 100);
+  camera.position.set(0, 2, 6);
+
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setSize(w, h);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.appendChild(renderer.domElement);
+
+  // Particles (circulating tokens)
+  const count = 400;
+  const positions = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    const r = 1.5 + Math.random() * 1.5;
+    positions[i*3] = r * Math.sin(phi) * Math.cos(theta);
+    positions[i*3+1] = r * Math.cos(phi);
+    positions[i*3+2] = r * Math.sin(phi) * Math.sin(theta);
+    const c = new THREE.Color().setHSL(.67 + Math.random() * .1, .8, .5 + Math.random() * .3);
+    colors[i*3] = c.r; colors[i*3+1] = c.g; colors[i*3+2] = c.b;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  const mat = new THREE.PointsMaterial({ size: .08, vertexColors: true, transparent: true, opacity: .8, blending: THREE.AdditiveBlending });
+  const particles = new THREE.Points(geo, mat);
+  scene.add(particles);
+
+  // Center glow
+  const glowGeo = new THREE.SphereGeometry(.4, 16, 16);
+  const glowMat = new THREE.MeshBasicMaterial({ color: 0x6366f1, transparent: true, opacity: .3 });
+  const glow = new THREE.Mesh(glowGeo, glowMat);
+  scene.add(glow);
+
+  // Ring
+  const ringGeo = new THREE.TorusGeometry(1.8, .02, 16, 64);
+  const ringMat = new THREE.MeshBasicMaterial({ color: 0x6366f1, transparent: true, opacity: .15 });
+  const ring = new THREE.Mesh(ringGeo, ringMat);
+  ring.rotation.x = Math.PI / 3;
+  scene.add(ring);
+
+  let t = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    t += .003;
+    particles.rotation.y = t * .3;
+    particles.rotation.x = Math.sin(t * .1) * .1;
+    ring.rotation.z += .005;
+    glow.scale.setScalar(1 + Math.sin(t * 2) * .1);
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    const w2 = container.clientWidth;
+    camera.aspect = w2 / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w2, h);
+  });
+}
+
+// ─── Token Cards ───
+function renderTokenCards(data) {
+  if (!data) return;
+  $('token-cards').innerHTML = [
+    { label: 'Supply Total', value: (data.total_supply || 0).toLocaleString(), cls: 'primary' },
+    { label: 'En Circulación', value: (data.circulating || 0).toLocaleString(), cls: 'accent' },
+    { label: 'Quemados', value: (data.burned || 0).toLocaleString(), cls: 'down' },
+    { label: 'Ganados Hoy', value: (data.earned_today || 0).toLocaleString(), cls: 'up' },
+  ].map(c => `<div class="card"><div class="label">${c.label}</div><div class="value" style="color:var(--${c.cls})">${c.value}</div></div>`).join('');
+
+  const total = data.total_supply || 1000000;
+  const circ = data.circulating || 0;
+  const burned = data.burned || 0;
+  const circPct = (circ / total * 100).toFixed(1);
+  const burnedPct = (burned / total * 100).toFixed(1);
+  $('pool-detail').innerHTML = `
+    <div style="margin:12px 0"><span style="color:var(--accent)">Circulando</span> ${circPct}%<div class="progress"><div class="progress-bar accent" style="width:${circPct}%"></div></div></div>
+    <div style="margin:12px 0"><span style="color:var(--red)">Quemado</span> ${burnedPct}%<div class="progress"><div class="progress-bar green" style="width:${burnedPct}%"></div></div></div>
+    <div style="margin:12px 0"><span style="color:var(--text-dim)">Disponible</span> ${(100 - circPct - burnedPct).toFixed(1)}%<div class="progress"><div class="progress-bar" style="width:${100-circPct-burnedPct}%;background:var(--text-dim)"></div></div></div>
+  `;
+}
+
+// ─── Greetings ───
+function renderGreetings(data) {
+  if (!data) return;
+  $('greeting-cards').innerHTML = [
+    { label: 'Total', value: data.total || 0 },
+    { label: 'Aprobados', value: data.approved || 0, cls: 'green' },
+    { label: 'Pendientes', value: (data.pending||0)+(data.pending_approval||0), cls: 'down' },
+    { label: 'Rechazados', value: data.rejected || 0, cls: 'down' },
+  ].map(c => `<div class="card"><div class="label">${c.label}</div><div class="value" ${c.cls?`style="color:var(--${c.cls})"`:''}>${c.value}</div></div>`).join('');
+}
+
+// ─── Quests ───
+function renderQuests(data) {
+  if (!data) return;
+  const total = data.total_completed || 0;
+  $('quest-cards').innerHTML = [
+    { label: 'Completadas', value: total.toLocaleString() },
+    { label: '$BEAT Distribuidos', value: (data.beat_rewarded || 0).toLocaleString(), cls: 'accent' },
+    { label: 'XP Generada', value: (data.xp_rewarded || 0).toLocaleString(), cls: 'primary' },
+    { label: 'Usuarios Activos', value: data.active_users || 0, cls: 'green' },
+  ].map(c => `<div class="card"><div class="label">${c.label}</div><div class="value" ${c.cls?`style="color:var(--${c.cls})"`:''}>${c.value}</div></div>`).join('');
+
+  const byCat = data.by_category || { play: 0, work: 0, learn: 0 };
+  const catTotal = Object.values(byCat).reduce((a,b) => a+b, 0) || 1;
+  const colors = { play: 'var(--primary)', work: 'var(--green)', learn: 'var(--accent)' };
+  $('quest-breakdown').innerHTML = Object.entries(byCat).map(([cat, count]) => `
+    <tr><td style="text-transform:capitalize;color:${colors[cat]||'var(--text)'}">${cat}</td>
+    <td>${count}</td><td>${(count * 5)}</td>
+    <td><div style="display:flex;align-items:center;gap:8px"><div class="progress" style="flex:1"><div class="progress-bar primary" style="width:${(count/catTotal*100).toFixed(0)}%;background:${colors[cat]||'var(--primary)'}"></div></div>${(count/catTotal*100).toFixed(0)}%</div></td></tr>
+  `).join('');
+}
+
+// ─── Leaderboard ───
+async function loadLeaderboard(metric = 'xp') {
+  const data = await fetchJSON(`/api/v1/dashboard/leaderboard?tenant_id=${TENANT}&metric=${metric}&limit=10`);
+  if (!data || !data.length) {
+    $('leaderboard-table').innerHTML = '<tr><td colspan="5" class="empty"><div class="icon">🏆</div>Sin datos aún — completa quests para aparecer aquí</td></tr>';
+    return;
+  }
+  const tierColors = { 1:'bronze', 2:'silver', 3:'gold', 4:'gold' };
+  $('leaderboard-table').innerHTML = data.map((u, i) => `
+    <tr>
+      <td><span class="rank ${i<3?['gold','silver','bronze'][i]:''}">${u.rank||i+1}</span></td>
+      <td><strong>${u.user_id || `Fan #${i+1}`}</strong></td>
+      <td>${(u.xp||0).toLocaleString()} XP</td>
+      <td>${(u.beat||0).toLocaleString()} $BEAT</td>
+      <td><span class="status-badge approved">${u.level||'bronze'}</span></td>
+    </tr>
+  `).join('');
+}
+
+// ─── WebSocket ───
+function connectWS() {
+  ws = new WebSocket(WS_URL);
+  ws.onopen = () => { $('ws-status').textContent = '· en vivo'; $('ws-status').style.color = 'var(--green)'; };
+  ws.onclose = () => { $('ws-status').textContent = '· reconectando'; $('ws-status').style.color = 'var(--red)'; setTimeout(connectWS, 2000); };
+  ws.onmessage = e => {
+    try {
+      const evt = JSON.parse(e.data);
+      addEvent(evt);
+      // Refresh data on relevant events
+      if (evt.event_type?.startsWith('payment') || evt.event_type?.startsWith('gamification')) {
+        loadAll();
+      }
+    } catch(_) {}
+  };
+}
+
+function addEvent(evt) {
+  eventCount++;
+  const log = $('event-log');
+  if (eventCount === 1) log.innerHTML = '';
+  const time = new Date().toLocaleTimeString();
+  const type = evt.event_type || evt.type || 'event';
+  const payload = evt.payload ? JSON.stringify(evt.payload).slice(0, 80) : '';
+  log.insertAdjacentHTML('afterbegin', `<div><span class="time">${time}</span><span class="type">${type}</span><span class="msg">${payload}</span></div>`);
+  if (log.children.length > 50) log.removeChild(log.lastChild);
+}
+
+// ─── Load All ───
+async function loadAll() {
+  const [revenue, tokens, greetings, quests, streams] = await Promise.all([
+    fetchJSON(`/api/v1/dashboard/revenue?tenant_id=${TENANT}`),
+    fetchJSON(`/api/v1/dashboard/tokens?tenant_id=${TENANT}`),
+    fetchJSON(`/api/v1/dashboard/greetings?tenant_id=${TENANT}`),
+    fetchJSON(`/api/v1/dashboard/quests?tenant_id=${TENANT}`),
+    fetchJSON(`/api/v1/dashboard/streams?tenant_id=${TENANT}`),
+  ]);
+  renderOverviewCards({...revenue, quests});
+  renderRevenueChart(revenue);
+  renderTokenCards(tokens);
+  renderGreetings(greetings);
+  renderQuests(quests);
+  loadLeaderboard('xp');
+  $('last-update').textContent = 'ahora';
+}
+
+// ─── Init ───
+$('tenant-name').textContent = TENANT;
+initThree();
+connectWS();
+loadAll();
+setInterval(loadAll, 15000); // Refresh every 15s
+</script>
+</body>
+</html>
