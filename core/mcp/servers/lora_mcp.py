@@ -32,6 +32,7 @@ async def train_lora(artist_name: str, photos: list[str], trigger_word: str = ""
             resp = await client.post(
                 "https://fal.run/fal-ai/flux-lora",
                 json={
+                    "prompt": f"a photo of {trigger} person",
                     "images": photos,
                     "trigger_word": trigger,
                     "name": f"{artist_name}_lora",
