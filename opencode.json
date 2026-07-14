@@ -1,75 +1,123 @@
 {
-  "$schema": "./config/schema.json",
-  "username": "Mystic — Sonora Digital Corp (open+fal)",
+  "$schema": "https://opencode.ai/config.json",
+  "username": "Mystic — SDC Agent OS v1.0",
   "model": "opencode/deepseek-v4-flash-free",
   "small_model": "opencode/mimo-v2.5-free",
   "default_agent": "mystic",
   "shell": "/bin/bash",
-  "logLevel": "INFO",
+  "logLevel": "DEBUG",
   "instructions": [
-    "constitution/OMEGA-PROMPT.md",
-    "constitution/SOUL.md",
-    "constitution/TRUTH.md",
-    "constitution/10-RULES.md",
     "AGENTS.md",
-    "CLAUDE.md",
-    "docs/MAPA-SDC.md"
+    "docs/SESSION-20260713-SDC-AGENT-OS.md"
   ],
+
+  "skills": {
+    "paths": [
+      ".opencode/skills",
+      "skills"
+    ]
+  },
+
   "agent": {
     "mystic": {
       "mode": "primary",
       "model": "opencode/deepseek-v4-flash-free",
-      "description": "Mystic — alma de Sonora Digital Corp. Asistente personal con identidad, voz y propósito.",
-      "permission": { "read": "allow", "edit": "ask", "bash": "ask", "glob": "allow", "grep": "allow", "todowrite": "allow", "webfetch": "allow", "task": "ask" }
-    },
-    "hermes": {
-      "mode": "subagent",
-      "description": "Hermes Agent — gateway multi-canal (Telegram, WhatsApp, Desktop)",
-      "permission": { "read": "allow", "bash": "deny" }
-    },
-    "openclaw": {
-      "mode": "subagent",
-      "description": "OpenClaw Gateway — 42 skills especializadas (browser, payments, social, media)",
-      "permission": { "read": "allow", "bash": "deny" }
+      "description": "Mystic — operador del SDC Agent OS. Construye empresas agent-native.",
+      "permission": {
+        "read": "allow",
+        "edit": "ask",
+        "bash": "ask",
+        "glob": "allow",
+        "grep": "allow",
+        "todowrite": "allow",
+        "webfetch": "allow",
+        "task": "allow"
+      }
     },
     "builder": {
       "mode": "subagent",
       "model": "opencode/north-mini-code-free",
-      "description": "Builder — ejecuta tareas de implementación y construcción siguiendo el pipeline SDD",
-      "permission": { "read": "allow", "edit": "allow", "bash": { "git *": "allow", "pip *": "allow", "npm *": "allow", "*": "ask" } }
+      "description": "Builder — ejecuta implementación siguiendo SDD pipeline",
+      "permission": {
+        "read": "allow",
+        "edit": "allow",
+        "bash": {
+          "git *": "allow",
+          "pip *": "allow",
+          "npm *": "allow",
+          "*": "ask"
+        }
+      }
+    },
+    "explore": {
+      "mode": "subagent",
+      "description": "Explorador de código y búsqueda",
+      "permission": {
+        "read": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "bash": "deny"
+      }
     }
   },
-  "skills": {
-    "paths": [".opencode/skills", "skills"]
-  },
+
   "mcp": {
     "sonora-mcp": {
       "type": "remote",
       "url": "http://127.0.0.1:8180",
       "enabled": true,
-      "description": "SDC MCP Gateway — 49 tools (Hasura, Engram, Supabase, OmniVoice, FAL, RAG, etc)"
+      "description": "SDC MCP Gateway — 53 tools (Hasura, Engram, Supabase, OmniVoice, FAL, MP, RAG)"
+    },
+    "supabase": {
+      "type": "remote",
+      "url": "https://mcp.supabase.com/mcp?project_ref=jibalggzudkflwzdndqz",
+      "enabled": true,
+      "headers": {
+        "x-supabase-anon-key": "sb_publisible_2n9gZ64cIbtrhK9s3hClgQ_chzhTtjK",
+        "x-supabase-service-key": "{env:SUPABASE_SERVICE_KEY}"
+      },
+      "description": "Supabase MCP — DB directa"
     }
   },
+
   "command": {
-    "status": { "description": "Estado completo del sistema", "template": "Ejecuta healthcheck completo: JARVIS, Hermes, OpenClaw, Neo4j, Qdrant, n8n, Docker, Systemd" },
-    "backup": { "description": "Backup completo del sistema", "template": "Ejecuta backup: copia constitution/ capabilities/ memory/ events/ kernel/ agents/ scripts/ a backups/ con timestamp" },
-    "brain": { "description": "Brain graph dashboard", "template": "Abre el Command Center con brain graph" },
-    "gsd": { "description": "Get Shit Done — flujo completo", "template": "GSD: 1) Estado actual 2) Qué hacer 3) Plan 4) Ejecutar 5) Verificar 6) Documentar", "agent": "builder" },
-    "sdd-new": { "description": "Nueva spec SDD", "template": "SDD pipeline: Research→Spec→Design→Tasks→Apply→Verify→Archive", "agent": "mystic" },
-    "build": { "description": "Construir feature", "template": "Analiza requerimiento y construye solución completa siguiendo SDD pipeline", "agent": "builder" },
-    "sales": { "description": "Sales OS — pipeline de ventas", "template": "Carga Sales OS: revisa leads activos, genera reporte de pipeline", "agent": "mystic" },
-    "dev": { "description": "Dev OS — CI/CD, deploys", "template": "Carga Dev OS: revisa builds, deployments pendientes, issues activos", "agent": "mystic" },
-    "support": { "description": "Support OS — tickets, SLAs", "template": "Carga Support OS: revisa tickets abiertos, SLAs próximos a vencer", "agent": "mystic" },
-    "agent": { "description": "Agent OS — harnesses, skills", "template": "Carga Agent OS: revisa estado de harnesses, skills, salud de agentes", "agent": "mystic" },
-    "knowledge": { "description": "Knowledge OS — memoria, ADRs", "template": "Carga Knowledge OS: revisa ADRs pendientes, captura conocimiento reciente", "agent": "mystic" },
-    "finance": { "description": "Finance OS — FinOps, revenue", "template": "Carga Finance OS: revisa costos, ingresos del período, ROI", "agent": "mystic" },
-    "security": { "description": "Security OS — auditoría", "template": "Carga Security OS: revisa secrets, alertas activas, última auditoría", "agent": "mystic" },
-    "ops": { "description": "Ops OS — infraestructura", "template": "Carga Ops OS: revisa salud de servicios, uso de disco, containers", "agent": "mystic" },
-    "quality": { "description": "Quality OS — tests, evaluaciones", "template": "Carga Quality OS: revisa pass rate de tests, scores, auditorías", "agent": "mystic" },
-    "strategy": { "description": "Strategy OS — score, planificación", "template": "Carga Strategy OS: revisa enterprise score, iniciativas activas", "agent": "mystic" },
-    "design": { "description": "Generar componentes UI premium con shadcn/ui, three.js, Tailwind", "template": "Usa el skill design en skills/design/SKILL.md. Genera componentes React/TypeScript individuales con shadcn/ui, @react-three/drei, framer-motion, y Tailwind CSS. NO generar apps completas. NO usar inline styles. Un componente por archivo. $ARGUMENTS", "agent": "mystic" },
-    "doc": { "description": "Auto-Doc — genera docs de proceso", "template": "Genera documentacion de proceso siguiendo templates de process/templates/", "agent": "mystic" },
-    "plan": { "description": "Planning Gate — descompone objetivo en tareas y genera PLAN.yaml", "template": "Ejecuta plan-gate.py con el objetivo especificado: descomponer en tareas, estimar costo, validar contra truth/. Si no hay objetivo claro, pedir descomposicion primero." },
-    "verify": { "description": "Constitution Gate — 6 gates: policy, security, cost, compliance, quality, knowledge (HAS-001)", "template": "Ejecuta constitution-gate.py contra el plan activo: policy gate (bind/events), security gate (secrets/network), cost gate (budget), compliance gate (agents/tiers), quality gate (tests/coverage), knowledge gate (learnings). Reporta resultados." }
+    "status": {
+      "description": "Estado completo del sistema",
+      "template": "Ejecuta healthcheck completo: MCP Gateway, Hasura, Redis, Qdrant, Docker, Systemd"
+    },
+    "design": {
+      "description": "Generar componentes UI premium con shadcn/ui, three.js, Tailwind",
+      "template": "Usa el skill design en skills/design/SKILL.md. Genera componentes React/TypeScript individuales con shadcn/ui, @react-three/drei, framer-motion, y Tailwind CSS. $ARGUMENTS",
+      "agent": "mystic"
+    },
+    "gsd": {
+      "description": "Get Shit Done — flujo completo de implementación",
+      "template": "GSD: 1) Estado actual 2) Qué hacer 3) Plan 4) Ejecutar 5) Verificar 6) Documentar",
+      "agent": "builder"
+    },
+    "crear": {
+      "description": "Crear empresa agent-native completa",
+      "template": "Usa el skill creator en skills/creator/SKILL.md. Crea tenant, 6 agentes, smart app. $ARGUMENTS",
+      "agent": "mystic"
+    },
+    "plan": {
+      "description": "Planning Gate — descompone en tareas",
+      "template": "Planifica siguiendo SDD pipeline: Research→Spec→Design→Tasks→Apply→Verify→Archive. $ARGUMENTS"
+    }
+  },
+
+  "references": {
+    "ablueprint": {
+      "path": "tenants/sdc/blueprint",
+      "description": "SDC Smart App Blueprint — hooks y componentes reutilizables"
+    },
+    "core": {
+      "path": "core",
+      "description": "SDC Core — infraestructura del sistema"
+    },
+    "agents": {
+      "path": "agents",
+      "description": "Registro de agentes por tenant"
+    }
   }
 }

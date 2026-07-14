@@ -8,6 +8,7 @@
     "start": "next start -p 3032"
   },
   "dependencies": {
+    "@supabase/server": "^1.3.0",
     "next": "^15",
     "react": "^19",
     "react-dom": "^19"

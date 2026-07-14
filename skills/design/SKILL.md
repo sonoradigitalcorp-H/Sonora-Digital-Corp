@@ -1,6 +1,8 @@
 ---
 name: design
 description: Generate premium UI components with shadcn/ui, three.js, Tailwind CSS. Use when the user asks to create a design, landing page, dashboard, hero section, or UI component. NOT for generating full apps — use lovable for that.
+version: 1.0.0
+updated: 2026-07-14
 ---
 
 # Design Skill

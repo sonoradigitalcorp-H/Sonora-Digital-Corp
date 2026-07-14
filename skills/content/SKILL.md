@@ -1,6 +1,8 @@
 ---
 name: content
 description: Operate the daily content factory. Use when the user asks to generate content, run the pipeline, or check content status.
+version: 1.0.0
+updated: 2026-07-14
 ---
 
 # Content Skill

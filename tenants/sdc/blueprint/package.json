@@ -1,0 +1,16 @@
+{
+  "name": "@sdc/blueprint",
+  "version": "1.0.0",
+  "description": "SDC Smart App Blueprint \u2014 hooks and components for AI-native apps",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "dependencies": {
+    "react": "^19",
+    "react-dom": "^19",
+    "lucide-react": "^0.344"
+  },
+  "peerDependencies": {
+    "react": "^18 || ^19",
+    "react-dom": "^18 || ^19"
+  }
+}
