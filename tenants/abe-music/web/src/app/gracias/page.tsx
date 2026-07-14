@@ -1,9 +1,13 @@
 "use client";
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 
-export default function GraciasPage() {
+export default function GraciasPageWrapper() {
+  return <Suspense fallback={<div className="min-h-screen flex items-center justify-center bg-gray-950"><p className="text-gray-500">Cargando...</p></div>}><GraciasPage /></Suspense>;
+}
+
+function GraciasPage() {
   const params = useSearchParams();
   const status = params.get("status") || "approved";
   const [photoUrl, setPhotoUrl] = useState("");

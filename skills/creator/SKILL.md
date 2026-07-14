@@ -1,6 +1,8 @@
 ---
 name: creator
 description: Build and deploy complete agent-native companies. Use when the user asks to create a company, add an artist, or onboard a new tenant.
+version: 1.0.0
+updated: 2026-07-14
 ---
 
 # Creator Skill

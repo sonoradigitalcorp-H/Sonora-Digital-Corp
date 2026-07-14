@@ -3,12 +3,13 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Mic, MicOff, X, MessageSquare, Trash2, Send } from "lucide-react";
 import AudioViz from "./AudioViz";
+import BotAvatar from "./BotAvatar";
 
 type Message = { role: "user" | "assistant"; text: string };
 
-const CONFIG: Record<string, { name: string; color: string }> = {
-  abe: { name: "Abe", color: "#FFD700" },
-  sonora: { name: "Sona", color: "#8b5cf6" },
+const CONFIG: Record<string, { name: string; color: string; tenant: "abe" | "sdc" }> = {
+  abe: { name: "Abe", color: "#FFD700", tenant: "abe" },
+  sonora: { name: "Sona", color: "#8b5cf6", tenant: "sdc" },
 };
 
 export default function VoiceWidget({ tenant = "abe" }: { tenant?: string }) {
@@ -137,28 +138,25 @@ export default function VoiceWidget({ tenant = "abe" }: { tenant?: string }) {
           bottom: "2rem",
           right: "2rem",
           zIndex: 200,
-          width: "4rem",
-          height: "4rem",
-          borderRadius: "50%",
-          background: `linear-gradient(135deg, ${cfg.color}, ${cfg.color}dd)`,
+          background: "none",
           border: "none",
           cursor: "pointer",
           display: open ? "none" : "flex",
           alignItems: "center",
           justifyContent: "center",
-          boxShadow: `0 4px 25px ${cfg.color}55`,
           transition: "all 0.4s cubic-bezier(.25,.46,.45,.94)",
+          filter: "drop-shadow(0 0 20px rgba(255,215,0,0.3))",
         }}
         onMouseEnter={(e) => {
-          e.currentTarget.style.transform = "scale(1.12)";
-          e.currentTarget.style.boxShadow = `0 8px 40px ${cfg.color}77`;
+          e.currentTarget.style.transform = "scale(1.15)";
+          e.currentTarget.style.filter = "drop-shadow(0 0 30px rgba(255,215,0,0.5))";
         }}
         onMouseLeave={(e) => {
           e.currentTarget.style.transform = "scale(1)";
-          e.currentTarget.style.boxShadow = `0 4px 25px ${cfg.color}55`;
+          e.currentTarget.style.filter = "drop-shadow(0 0 20px rgba(255,215,0,0.3))";
         }}
       >
-        <Mic size={24} color="#000" />
+        <BotAvatar name={cfg.name} tenant={cfg.tenant} size={64} pulse={true} />
       </button>
 
       <div
