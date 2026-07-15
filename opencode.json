@@ -100,6 +100,31 @@
       "template": "Usa el skill creator en skills/creator/SKILL.md. Crea tenant, 6 agentes, smart app. $ARGUMENTS",
       "agent": "mystic"
     },
+    "generar": {
+      "description": "Generar contenido diario para artistas",
+      "template": "Usa el skill content en skills/content/SKILL.md. Ejecuta daily-content-pipeline.sh. $ARGUMENTS",
+      "agent": "mystic"
+    },
+    "report": {
+      "description": "Reporte de revenue y métricas de negocio",
+      "template": "Usa el skill analytics en skills/analytics/SKILL.md. Consulta Hasura + Engram y genera reporte. $ARGUMENTS",
+      "agent": "mystic"
+    },
+    "tendencias": {
+      "description": "Analizar tendencias del momento para contenido",
+      "template": "Usa el skill social en skills/social/SKILL.md. Busca tendencias vía Firecrawl/Playwright. $ARGUMENTS",
+      "agent": "mystic"
+    },
+    "reconciliar": {
+      "description": "Revisar y reconciliar pagos pendientes",
+      "template": "Usa el skill payments en skills/payments/SKILL.md. Verifica transacciones MP. $ARGUMENTS",
+      "agent": "mystic"
+    },
+    "deploy": {
+      "description": "Deployar nueva app o landing page",
+      "template": "Usa el skill deploy en skills/deploy/SKILL.md. Lovable genera → nginx → systemd. $ARGUMENTS",
+      "agent": "builder"
+    },
     "plan": {
       "description": "Planning Gate — descompone en tareas",
       "template": "Planifica siguiendo SDD pipeline: Research→Spec→Design→Tasks→Apply→Verify→Archive. $ARGUMENTS"
