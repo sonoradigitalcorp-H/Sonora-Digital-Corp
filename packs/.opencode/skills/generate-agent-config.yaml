@@ -1,0 +1,30 @@
+name: generate-agent-config
+description: Genera la configuración de un agente del pack
+inputs:
+  pack_name: string
+  agent_name: string
+  agent_role: string
+  skills: string[]
+  channels: string[]
+  model: string
+outputs:
+  agent_path: string
+
+prompt: |
+  Genera la configuración del agente {{agent_name}} (rol: {{agent_role}})
+  para el pack {{pack_name}}.
+
+  Skills: {{skills}}
+  Canales: {{channels}}
+  Modelo: {{model}}
+
+  Crea en agents/{{agent_name}}.yaml:
+  1. Configuración completa del agente
+  2. System prompt adaptado al rol
+  3. Skills permitidas
+  4. Canales habilitados
+  5. Handoff conditions
+  6. Memory config
+  7. Temperature y max_tokens
+
+  Usa el template en templates/agent-config.yaml como base.

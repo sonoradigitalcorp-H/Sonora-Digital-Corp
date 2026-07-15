@@ -1,0 +1,26 @@
+# Template: Docker Compose
+# Variables: {{pack_name}}, {{port}}, {{channels}}, {{services}}
+
+version: "3.8"
+
+services:
+  {{pack_name}}-api:
+    build: .
+    container_name: {{pack_name}}-api
+    ports:
+      - "{{port}}:8000"
+    environment:
+      - TENANT_ID=${TENANT_ID}
+      - HASURA_URL=${HASURA_URL}
+      - QDRANT_URL=${QDRANT_URL}
+      - REDIS_URL=${REDIS_URL}
+      - WHATSAPP_API_KEY=${WHATSAPP_API_KEY}
+      - VOICE_API_KEY=${VOICE_API_KEY}
+    volumes:
+      - ./data:/data
+    networks:
+      - sdc-network
+
+networks:
+  sdc-network:
+    external: true

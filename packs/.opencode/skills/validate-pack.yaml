@@ -1,0 +1,33 @@
+name: validate-pack
+description: Valida la estructura y sintaxis de un pack
+inputs:
+  pack_path: string
+outputs:
+  validation_report: string
+
+prompt: |
+  Valida el pack en {{pack_path}}.
+
+  Verificar:
+
+  1. Estructura obligatoria:
+     - [ ] manifest.yaml existe y es YAML válido
+     - [ ] manifest.yaml tiene: id, name, industry, skills, agents
+     - [ ] skills/ tiene al menos 3 skills
+     - [ ] agents/ tiene al menos 3 agents
+     - [ ] tests/features/ tiene archivos .feature
+     - [ ] prompts/system/ tiene al menos 1 prompt
+
+  2. Sintaxis:
+     - [ ] YAMLs válidos
+     - [ ] Python compila (python3 -m py_compile)
+     - [ ] SQL no tiene errores de sintaxis
+
+  3. Estándares Sonora:
+     - [ ] IDs usan namespace del pack (e.g., barbershop.booking)
+     - [ ] Tools MCP referenciadas correctamente
+     - [ ] RLS configurada en schemas
+     - [ ] Variables de entorno usadas (no hardcode)
+     - [ ] Tenant isolation presente
+
+  Devuelve un reporte con PASS/FAIL por ítem.

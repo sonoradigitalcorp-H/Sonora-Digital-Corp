@@ -1,0 +1,66 @@
+# Seed data por defecto para industria musical
+# Se carga al crear un nuevo tenant de ABE Music
+
+config:
+  currency: MXN
+  locale: es_MX
+  timezone: America/Mexico_City
+  country: mx
+
+services:
+  - name: Presentación Básica
+    description: Set acústico de 45 min
+    duration: 45
+    price: 25000
+    category: presentaciones
+  - name: Presentación Completa
+    description: Set completo con banda de 90 min
+    duration: 90
+    price: 50000
+    category: presentaciones
+  - name: Presentación Premium
+    description: Show completo + soundcheck + meet & greet
+    duration: 120
+    price: 85000
+    category: presentaciones
+  - name: Workshop Musical
+    description: Taller de composición o producción
+    duration: 180
+    price: 15000
+    category: educacion
+
+staff_roles:
+  - manager
+  - booking_agent
+  - social_media
+  - sound_engineer
+
+business_hours:
+  - day: 1  # lunes
+    open: "10:00"
+    close: "18:00"
+    active: true
+  - day: 2
+    open: "10:00"
+    close: "18:00"
+    active: true
+  - day: 3
+    open: "10:00"
+    close: "18:00"
+    active: true
+  - day: 4
+    open: "10:00"
+    close: "18:00"
+    active: true
+  - day: 5
+    open: "10:00"
+    close: "18:00"
+    active: true
+  - day: 6
+    open: "10:00"
+    close: "14:00"
+    active: true
+  - day: 7
+    open: "00:00"
+    close: "00:00"
+    active: false

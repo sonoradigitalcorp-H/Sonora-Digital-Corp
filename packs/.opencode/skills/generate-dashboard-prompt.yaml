@@ -1,0 +1,31 @@
+name: generate-dashboard-prompt
+description: Genera un prompt para Lovable que crea el dashboard del pack
+inputs:
+  pack_name: string
+  nicho: string
+  agents: string[]
+  skills: string[]
+  colors: string[]
+  deploy_target: string
+outputs:
+  dashboard_prompt_path: string
+
+prompt: |
+  Genera un prompt optimizado para Open Lovable que cree
+  el dashboard del pack {{pack_name}} ({{nicho}}).
+
+  Agents: {{agents}}
+  Skills: {{skills}}
+  Colores: {{colors}}
+  Deploy target: {{deploy_target}}
+
+  Guarda en dashboard/lovable-prompt.md
+
+  El prompt debe incluir:
+  1. Descripción del negocio (nicho)
+  2. Páginas necesarias (dashboard, citas, clientes, inventario)
+  3. Componentes por página
+  4. Tech stack (Next.js, shadcn/ui, Hasura GraphQL)
+  5. Branding (colores, font, idioma)
+  6. Cada agente necesita su vista
+  7. Deploy en {{deploy_target}}

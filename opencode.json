@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "username": "Mystic — SDC Agent OS v1.0",
+  "username": "Mystic \u2014 SDC Agent OS v1.0",
   "model": "opencode/deepseek-v4-flash-free",
   "small_model": "opencode/mimo-v2.5-free",
   "default_agent": "mystic",
@@ -10,19 +10,17 @@
     "AGENTS.md",
     "docs/SESSION-20260713-SDC-AGENT-OS.md"
   ],
-
   "skills": {
     "paths": [
       ".opencode/skills",
       "skills"
     ]
   },
-
   "agent": {
     "mystic": {
       "mode": "primary",
       "model": "opencode/deepseek-v4-flash-free",
-      "description": "Mystic — operador del SDC Agent OS. Construye empresas agent-native.",
+      "description": "Mystic \u2014 operador del SDC Agent OS. Construye empresas agent-native.",
       "permission": {
         "read": "allow",
         "edit": "ask",
@@ -37,7 +35,7 @@
     "builder": {
       "mode": "subagent",
       "model": "opencode/north-mini-code-free",
-      "description": "Builder — ejecuta implementación siguiendo SDD pipeline",
+      "description": "Builder \u2014 ejecuta implementaci\u00f3n siguiendo SDD pipeline",
       "permission": {
         "read": "allow",
         "edit": "allow",
@@ -51,7 +49,7 @@
     },
     "explore": {
       "mode": "subagent",
-      "description": "Explorador de código y búsqueda",
+      "description": "Explorador de c\u00f3digo y b\u00fasqueda",
       "permission": {
         "read": "allow",
         "glob": "allow",
@@ -60,13 +58,12 @@
       }
     }
   },
-
   "mcp": {
     "sonora-mcp": {
       "type": "remote",
       "url": "http://127.0.0.1:8180",
       "enabled": true,
-      "description": "SDC MCP Gateway — 53 tools (Hasura, Engram, Supabase, OmniVoice, FAL, MP, RAG)"
+      "description": "SDC MCP Gateway \u2014 53 tools (Hasura, Engram, Supabase, OmniVoice, FAL, MP, RAG)"
     },
     "supabase": {
       "type": "remote",
@@ -76,10 +73,9 @@
         "x-supabase-anon-key": "sb_publisible_2n9gZ64cIbtrhK9s3hClgQ_chzhTtjK",
         "x-supabase-service-key": "{env:SUPABASE_SERVICE_KEY}"
       },
-      "description": "Supabase MCP — DB directa"
+      "description": "Supabase MCP \u2014 DB directa"
     }
   },
-
   "command": {
     "status": {
       "description": "Estado completo del sistema",
@@ -91,8 +87,8 @@
       "agent": "mystic"
     },
     "gsd": {
-      "description": "Get Shit Done — flujo completo de implementación",
-      "template": "GSD: 1) Estado actual 2) Qué hacer 3) Plan 4) Ejecutar 5) Verificar 6) Documentar",
+      "description": "Get Shit Done \u2014 flujo completo de implementaci\u00f3n",
+      "template": "GSD: 1) Estado actual 2) Qu\u00e9 hacer 3) Plan 4) Ejecutar 5) Verificar 6) Documentar",
       "agent": "builder"
     },
     "crear": {
@@ -106,13 +102,13 @@
       "agent": "mystic"
     },
     "report": {
-      "description": "Reporte de revenue y métricas de negocio",
+      "description": "Reporte de revenue y m\u00e9tricas de negocio",
       "template": "Usa el skill analytics en skills/analytics/SKILL.md. Consulta Hasura + Engram y genera reporte. $ARGUMENTS",
       "agent": "mystic"
     },
     "tendencias": {
       "description": "Analizar tendencias del momento para contenido",
-      "template": "Usa el skill social en skills/social/SKILL.md. Busca tendencias vía Firecrawl/Playwright. $ARGUMENTS",
+      "template": "Usa el skill social en skills/social/SKILL.md. Busca tendencias v\u00eda Firecrawl/Playwright. $ARGUMENTS",
       "agent": "mystic"
     },
     "reconciliar": {
@@ -122,27 +118,34 @@
     },
     "deploy": {
       "description": "Deployar nueva app o landing page",
-      "template": "Usa el skill deploy en skills/deploy/SKILL.md. Lovable genera → nginx → systemd. $ARGUMENTS",
+      "template": "Usa el skill deploy en skills/deploy/SKILL.md. Lovable genera \u2192 nginx \u2192 systemd. $ARGUMENTS",
       "agent": "builder"
     },
     "plan": {
-      "description": "Planning Gate — descompone en tareas",
-      "template": "Planifica siguiendo SDD pipeline: Research→Spec→Design→Tasks→Apply→Verify→Archive. $ARGUMENTS"
+      "description": "Planning Gate \u2014 descompone en tareas",
+      "template": "Planifica siguiendo SDD pipeline: Research\u2192Spec\u2192Design\u2192Tasks\u2192Apply\u2192Verify\u2192Archive. $ARGUMENTS"
     }
   },
-
   "references": {
     "ablueprint": {
       "path": "tenants/sdc/blueprint",
-      "description": "SDC Smart App Blueprint — hooks y componentes reutilizables"
+      "description": "SDC Smart App Blueprint \u2014 hooks y componentes reutilizables"
     },
     "core": {
       "path": "core",
-      "description": "SDC Core — infraestructura del sistema"
+      "description": "SDC Core \u2014 infraestructura del sistema"
     },
     "agents": {
       "path": "agents",
       "description": "Registro de agentes por tenant"
+    },
+    "packs": {
+      "path": "packs",
+      "description": "SDC Packs \u2014 productos agent-native para empresas (music-label, agent-crm, content-factory)"
+    },
+    "abe-music": {
+      "path": "packs/abe-music",
+      "description": "ABE Music Pack \u2014 sello discogr\u00e1fico agent-native"
     }
   }
 }

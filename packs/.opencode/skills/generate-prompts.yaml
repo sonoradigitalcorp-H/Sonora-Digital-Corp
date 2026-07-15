@@ -1,0 +1,48 @@
+name: generate-prompts
+description: Genera todos los prompts del pack
+inputs:
+  pack_name: string
+  agents: object[]
+  skills: string[]
+  brand_tone: string
+  language: string
+outputs:
+  prompts_path: string
+
+prompt: |
+  Genera los prompts para el pack {{pack_name}}.
+
+  Agents: {{agents}}
+  Skills: {{skills}}
+  Tono: {{brand_tone}}
+  Idioma: {{language}}
+
+  Crea en prompts/:
+
+  1. system/ para cada agente
+     - system/sales-agent.txt
+     - system/production-agent.txt
+     - etc.
+
+  2. skill-router.txt
+     - Enruta mensajes a la skill correcta
+     - Extrae parámetros
+     - Formato: JSON output
+
+  3. memory-injection.txt
+     - Template para inyectar memoria relevante
+
+  4. response-formatter.txt
+     - Formatea respuestas según el canal
+     - Mantiene consistencia de marca
+
+  5. onboarding.txt
+     - Secuencia de onboarding de 7 preguntas
+
+  6. daily-briefing.txt
+     - Template del briefing diario
+
+  7. promptfooconfig.yaml
+     - Evals para cada prompt
+
+  Idioma: {{language}} | Tono: {{brand_tone}}

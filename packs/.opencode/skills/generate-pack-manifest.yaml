@@ -1,0 +1,23 @@
+name: generate-pack-manifest
+description: Genera el manifest.yaml del pack basado en el input del usuario
+inputs:
+  nombre: string
+  nicho: string
+  pais: string
+  moneda: string
+  canales: string[]
+  agents: string[]
+  skills: string[]
+outputs:
+  manifest_path: string
+
+prompt: |
+  Genera el archivo manifest.yaml para el pack {{nombre}}.
+  Nicho: {{nicho}}
+  País: {{pais}}
+  Canales: {{canales}}
+  Agents: {{agents}}
+  Skills: {{skills}}
+
+  Usa el template en templates/pack-manifest.yaml como base.
+  Rellena todas las variables y guarda en generated/{{nombre}}/manifest.yaml.

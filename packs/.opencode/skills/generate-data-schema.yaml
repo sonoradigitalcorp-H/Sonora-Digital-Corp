@@ -1,0 +1,25 @@
+name: generate-data-schema
+description: Genera el schema SQL y metadata de Hasura para el pack
+inputs:
+  pack_name: string
+  nicho: string
+  entities: string[]
+outputs:
+  schema_path: string
+  hasura_metadata_path: string
+
+prompt: |
+  Genera el schema de datos para el pack {{pack_name}} (nicho: {{nicho}}).
+
+  Entidades necesarias: {{entities}}
+
+  Crea:
+  1. migrations/001_{{pack_name}}_schema.sql
+     - Tablas con tenant_id y RLS
+     - Enums del nicho
+     - Índices
+     - Políticas de RLS para Hasura
+  2. hasura/tables.yaml
+  3. hasura/relationships.yaml
+
+  Las tablas deben heredar de la migración 010_sonora_os.sql

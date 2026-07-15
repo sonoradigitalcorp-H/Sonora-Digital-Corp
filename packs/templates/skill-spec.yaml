@@ -1,0 +1,49 @@
+# Template: Skill Spec
+# Variables: {{pack_name}}, {{skill_name}}, {{description}}, {{tools}}, {{actions}}
+
+nexus_skill_spec: "1.0"
+id: {{pack_name}}.{{skill_name}}
+name: {{skill_name | capitalize}}
+version: 1.0.0
+description: {{description}}
+
+runtime:
+  language: python
+  entrypoint: skill.py
+  timeout: 10s
+
+inputs:
+  action:
+    type: enum
+    values: [{{#actions}}{{.}},{{/actions}}]
+    required: true
+{{#params}}
+  {{name}}:
+    type: {{type}}
+    required: {{required}}
+{{/params}}
+
+outputs:
+  success: { type: boolean }
+  data: { type: object }
+  message: { type: string }
+
+tools_required:
+{{#tools}}
+  - id: {{.}}
+    reason: {{reason}}
+{{/tools}}
+
+permissions:
+  roles: [admin, manager, staff]
+
+cost:
+  per_call_usd: 0.002
+  avg_latency_ms: 500
+
+memory:
+  reads_from: [tenant_kb, session]
+  writes_to: [session]
+
+events:
+  emits: [{{skill_name}}.{{#actions}}{{.}},{{/actions}}]

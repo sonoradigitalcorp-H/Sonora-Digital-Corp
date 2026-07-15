@@ -1,0 +1,31 @@
+name: generate-seed-data
+description: Genera datos base del nicho para poblar el pack
+inputs:
+  pack_name: string
+  nicho: string
+  pais: string
+  moneda: string
+  servicios_default: object[]
+  productos_default: object[]
+outputs:
+  seed_path: string
+
+prompt: |
+  Genera seed data para el pack {{pack_name}} de {{nicho}} en {{pais}}.
+
+  Servicios por defecto: {{servicios_default}}
+  Productos por defecto: {{productos_default}}
+
+  Crea:
+  1. seed/industry_defaults.yaml
+     - Servicios con nombre, duración, precio por defecto
+     - Productos con nombre, categoría, precio
+     - Roles de staff
+     - Horarios por defecto
+     - Preguntas frecuentes (FAQ)
+  2. seed/services.sql (INSERT INTO services...)
+  3. seed/products.sql
+  4. seed/staff.sql
+  5. seed/faq.yaml
+
+  Usa {{moneda}} como moneda por defecto.
