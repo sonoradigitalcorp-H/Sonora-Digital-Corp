@@ -1,0 +1,50 @@
+client: abe-music
+name: "ABE Music Group"
+assistant_name: "Abe"
+language: es
+timezone: America/Hermosillo
+owner: "Abraham Ortega"
+phone: "+13238192000"
+
+capabilities:
+  voice: true
+  crm: true
+  revenue: true
+  telegram: true
+  whatsapp: false
+  content: true
+  booking: true
+
+voice:
+  stt_provider: whisper
+  tts_provider: openai
+  wake_word: "Hey Abe"
+  channels: [web, telegram]
+  language: es
+
+crm:
+  database: neo4j
+  collections: [artists, fans, contacts]
+
+revenue:
+  split:
+    artist: 70
+    label: 20
+    reserve: 10
+  platforms: [spotify, youtube]
+
+artists:
+  - id: hector-rubio
+    name: "Hector Rubio"
+    status: active
+  - id: jesus-urquijo
+    name: "Jesus Urquijo"
+    status: active
+  - id: javier-arvayo
+    name: "Javier Arvayo"
+    status: active
+
+branding:
+  primary_color: "#FF6B35"
+  logo: clients/abe-music/branding/logo.png
+  voice_id: "abe"

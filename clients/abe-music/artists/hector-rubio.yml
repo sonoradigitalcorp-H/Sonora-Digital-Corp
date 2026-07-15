@@ -1,0 +1,17 @@
+id: hector-rubio
+name: "Hector Rubio"
+real_name: "Hector Rubio"
+genre: "Regional Mexicano"
+status: active
+split:
+  artist: 70
+  label: 20
+  reserve: 10
+signed_date: 2024-01-01
+social:
+  spotify_id: ""
+  youtube_id: ""
+  instagram: "@hectorrubio"
+voice_assistant: true
+monthly_streams: 2150000
+monthly_revenue: 8600

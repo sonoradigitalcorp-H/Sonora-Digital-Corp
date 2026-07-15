@@ -1,0 +1,17 @@
+id: jesus-urquijo
+name: "Jesus Urquijo"
+real_name: "Jesus Urquijo"
+genre: "Regional Mexicano"
+status: active
+split:
+  artist: 70
+  label: 20
+  reserve: 10
+signed_date: 2024-06-01
+social:
+  spotify_id: ""
+  youtube_id: ""
+  instagram: "@jesusurquijo"
+voice_assistant: false
+monthly_streams: 380000
+monthly_revenue: 1520

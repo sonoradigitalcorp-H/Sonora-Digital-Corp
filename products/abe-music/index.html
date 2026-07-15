@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ABE Music Group — Ecosistema Musical Inteligente</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --gold: #FFD700; --gold-light: #FFE44D; --gold-dark: #B8960F;
+      --bg: #0a0a0f; --surface: rgba(255,255,255,.04); --surface-hover: rgba(255,255,255,.08);
+      --border: rgba(255,255,255,.08); --text: #f0f0f0; --text-secondary: rgba(255,255,255,.45);
+      --purple: #7c5cfc; --green: #34d399; --gradient: linear-gradient(135deg, #FFD700, #7c5cfc);
+      --radius: 20px; --radius-sm: 12px;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; overflow-x: hidden; }
+    ::selection { background: var(--gold); color: #000; }
+    .gold { color: var(--gold); }
+    .gradient-text { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+    canvas#three-bg { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 0; pointer-events: none; }
+
+    .glass { background: var(--surface); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid var(--border); }
+    .glass-hover:hover { background: var(--surface-hover); border-color: rgba(255,215,0,.25); }
+
+    nav { position: fixed; top: 0; width: 100%; z-index: 100; background: rgba(10,10,15,.75); backdrop-filter: blur(32px); border-bottom: 1px solid var(--border); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+    nav .logo { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 700; letter-spacing: -.02em; }
+    nav .nav-links { display: flex; gap: 2rem; align-items: center; }
+    nav .nav-links a { color: var(--text-secondary); text-decoration: none; font-size: .875rem; font-weight: 400; transition: color .3s; letter-spacing: .02em; }
+    nav .nav-links a:hover { color: var(--gold); }
+    .btn { padding: .75rem 1.75rem; border-radius: 50px; border: none; font-weight: 600; cursor: pointer; transition: all .4s cubic-bezier(.25,.46,.45,.94); text-decoration: none; display: inline-block; font-size: .9rem; letter-spacing: .01em; }
+    .btn-primary { background: var(--gradient); color: #000; }
+    .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 35px rgba(255,215,0,.25); }
+    .btn-outline { background: transparent; border: 1px solid rgba(255,215,0,.3); color: var(--gold); }
+    .btn-outline:hover { background: rgba(255,215,0,.08); border-color: var(--gold); transform: translateY(-2px); }
+
+    section { position: relative; z-index: 1; padding: 8rem 2rem; }
+    .container { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+    .section-tag { display: inline-flex; align-items: center; gap: .5rem; padding: .35rem 1.1rem; background: rgba(255,215,0,.08); border: 1px solid rgba(255,215,0,.2); border-radius: 50px; font-size: .75rem; color: var(--gold); margin-bottom: 1rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
+    .section-title { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 4.5vw, 3.2rem); font-weight: 500; margin-bottom: 1rem; line-height: 1.15; letter-spacing: -.02em; }
+    .section-sub { color: var(--text-secondary); font-size: 1.1rem; max-width: 600px; margin-bottom: 3.5rem; font-weight: 300; line-height: 1.7; }
+
+    .hero { min-height: 100vh; display: flex; align-items: flex-end; justify-content: flex-start; padding: 0; position: relative; z-index: 1; overflow: hidden; }
+    .hero-bg { position: absolute; inset: 0; z-index: 0; }
+    .hero-bg img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; }
+    .hero-bg .overlay { position: absolute; inset: 0; background: linear-gradient(90deg, rgba(10,10,15,.85) 0%, rgba(10,10,15,.4) 50%, transparent 70%); }
+    .hero-bg .overlay-bottom { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(10,10,15,1) 0%, transparent 40%); }
+    .hero-content { position: relative; z-index: 2; max-width: 700px; padding: 8rem 3rem 5rem; }
+    .hero-tag { display: inline-block; padding: .35rem 1.1rem; background: rgba(255,215,0,.15); border: 1px solid rgba(255,215,0,.25); border-radius: 50px; font-size: .75rem; color: var(--gold); margin-bottom: 1.5rem; text-transform: uppercase; letter-spacing: .08em; font-weight: 600; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.8rem, 6vw, 5rem); font-weight: 500; line-height: 1.08; letter-spacing: -.02em; margin-bottom: .5rem; }
+    .hero h1 .artist-name { color: var(--gold); }
+    .hero p { font-size: 1rem; color: var(--text-secondary); max-width: 560px; font-weight: 300; line-height: 1.7; margin-bottom: .5rem; }
+    .hero-meta { font-size: .85rem; color: var(--text-secondary); font-weight: 300; display: flex; gap: 1.5rem; flex-wrap: wrap; }
+    .hero-meta span { display: flex; align-items: center; gap: .35rem; }
+    .hero-nav { display: flex; gap: .5rem; margin: 2rem 0; }
+    .hero-nav button { width: 10px; height: 10px; border-radius: 50%; border: 1px solid rgba(255,255,255,.3); background: transparent; cursor: pointer; padding: 0; transition: all .3s; }
+    .hero-nav button.active { background: var(--gold); border-color: var(--gold); }
+    .hero-nav button:hover { border-color: var(--gold); }
+
+    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.5rem; }
+    .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+    .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem; }
+
+    .card { background: var(--surface); backdrop-filter: blur(24px); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; transition: all .5s cubic-bezier(.25,.46,.45,.94); position: relative; overflow: hidden; }
+    .card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, rgba(255,215,0,.3), transparent); opacity: 0; transition: opacity .5s; }
+    .card:hover { transform: translateY(-6px); border-color: rgba(255,215,0,.2); background: rgba(255,255,255,.06); }
+    .card:hover::before { opacity: 1; }
+    .card .icon { font-size: 2.2rem; margin-bottom: 1.2rem; display: block; }
+    .card h3 { font-size: 1.2rem; font-weight: 600; margin-bottom: .6rem; letter-spacing: -.01em; }
+    .card p { color: var(--text-secondary); font-size: .9rem; line-height: 1.7; font-weight: 300; }
+    .card .price { margin-top: 1rem; font-size: 1.8rem; font-weight: 300; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .card .price span { font-size: .85rem; color: var(--text-secondary); font-weight: 400; -webkit-text-fill-color: var(--text-secondary); }
+    .card .features { margin-top: 1.2rem; }
+    .card .features li { list-style: none; padding: .4rem 0; font-size: .875rem; color: var(--text-secondary); font-weight: 300; display: flex; align-items: center; gap: .5rem; }
+    .card .features li::before { content: '\2713'; color: var(--green); font-weight: 700; }
+
+    .voice-hero { background: linear-gradient(135deg, rgba(124,92,252,.05), rgba(255,215,0,.05)); border: 1px solid var(--border); border-radius: var(--radius); padding: 3.5rem; overflow: hidden; position: relative; }
+    .voice-hero::after { content: ''; position: absolute; top: -50%; right: -20%; width: 300px; height: 300px; border-radius: 50%; background: rgba(255,215,0,.03); pointer-events: none; }
+    .voice-hero h3 { font-size: 1.6rem; font-weight: 500; margin-bottom: .8rem; }
+    .voice-hero p { color: var(--text-secondary); max-width: 680px; line-height: 1.8; font-weight: 300; }
+
+    .artist-card { text-align: center; padding: 2.5rem 2rem; }
+    .artist-card .avatar-frame { width: 130px; height: 130px; border-radius: 50%; margin: 0 auto 1.2rem; overflow: hidden; border: 2px solid rgba(255,215,0,.2); position: relative; transition: all .5s; }
+    .artist-card:hover .avatar-frame { border-color: var(--gold); transform: scale(1.05); }
+    .artist-card .avatar-frame img { width: 100%; height: 100%; object-fit: cover; }
+    .artist-card .streams { font-size: 1.4rem; font-weight: 300; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-top: .5rem; }
+    .artist-card .streams span { font-size: .8rem; font-weight: 400; -webkit-text-fill-color: var(--text-secondary); color: var(--text-secondary); }
+
+    .plan-card { background: var(--surface); backdrop-filter: blur(24px); border: 1px solid var(--border); border-radius: var(--radius); padding: 2.5rem 2rem; transition: all .5s cubic-bezier(.25,.46,.45,.94); position: relative; text-align: center; }
+    .plan-card:hover { transform: translateY(-6px); border-color: rgba(255,215,0,.2); }
+    .plan-card.featured { border-color: rgba(255,215,0,.3); background: linear-gradient(180deg, rgba(255,215,0,.04), transparent); }
+    .plan-card.featured::before { content: 'M\u00c1S POPULAR'; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--gradient); color: #000; padding: .2rem 1.5rem; border-radius: 50px; font-size: .7rem; font-weight: 700; letter-spacing: .06em; }
+    .plan-card h3 { font-size: 1.3rem; font-weight: 500; }
+    .plan-card .plan-price { font-size: 3rem; font-weight: 200; margin: 1rem 0; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .plan-card .plan-price span { font-size: 1rem; font-weight: 400; -webkit-text-fill-color: var(--text-secondary); }
+    .plan-card ul { margin: 1.5rem 0; text-align: left; }
+    .plan-card ul li { list-style: none; padding: .5rem 0; font-size: .875rem; color: var(--text-secondary); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: .5rem; }
+    .plan-card ul li:last-child { border: none; }
+    .plan-card ul li::before { content: '\2713'; color: var(--green); font-weight: 700; }
+
+    .token-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+    @media (max-width:768px) { .token-grid { grid-template-columns: 1fr; } }
+    .token-category h4 { font-size: 1.1rem; font-weight: 500; margin-bottom: 1.2rem; display: flex; align-items: center; gap: .5rem; }
+    .token-item { display: flex; justify-content: space-between; padding: .7rem 0; border-bottom: 1px solid var(--border); font-size: .9rem; font-weight: 300; }
+    .token-item:last-child { border: none; }
+    .token-item .value { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 600; }
+
+    .cta-section { text-align: center; background: linear-gradient(135deg, rgba(124,92,252,.06), rgba(255,215,0,.06)); border: 1px solid var(--border); border-radius: var(--radius); padding: 5rem 2rem; position: relative; overflow: hidden; }
+    .cta-section::before { content: ''; position: absolute; top: -50%; left: -20%; width: 400px; height: 400px; border-radius: 50%; background: rgba(255,215,0,.03); pointer-events: none; }
+    .cta-section h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 500; margin-bottom: 1rem; font-family: 'Playfair Display', serif; }
+    .cta-section p { color: var(--text-secondary); max-width: 560px; margin: 0 auto 2.5rem; font-size: 1.1rem; font-weight: 300; }
+
+    footer { border-top: 1px solid var(--border); padding: 3rem 2rem; text-align: center; color: var(--text-secondary); font-size: .875rem; font-weight: 300; position: relative; z-index: 1; }
+    footer .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem; }
+    footer .footer-links a { color: var(--text-secondary); text-decoration: none; transition: color .3s; }
+    footer .footer-links a:hover { color: var(--gold); }
+    footer .footer-brand { font-family: 'Playfair Display', serif; font-size: 1.2rem; color: var(--gold); margin-bottom: .5rem; }
+
+    .fade-in { opacity: 0; transform: translateY(40px); transition: all .8s cubic-bezier(.25,.46,.45,.94); }
+    .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+    .voice-fab { position: fixed; bottom: 2rem; right: 2rem; z-index: 200; width: 4rem; height: 4rem; border-radius: 50%; background: var(--gradient); border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; color: #000; box-shadow: 0 4px 25px rgba(255,215,0,.35); transition: all .4s cubic-bezier(.25,.46,.45,.94); }
+    .voice-fab:hover { transform: scale(1.12); box-shadow: 0 8px 40px rgba(255,215,0,.45); }
+    .voice-fab.recording { animation: fab-pulse 1.2s infinite; }
+    @keyframes fab-pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(255,215,0,.5); } 50% { box-shadow: 0 0 0 25px rgba(255,215,0,0); } }
+
+    .voice-panel { position: fixed; bottom: 7rem; right: 2rem; z-index: 199; width: 400px; max-width: calc(100vw - 2rem); background: rgba(10,10,15,.92); backdrop-filter: blur(32px); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; transform: translateY(30px); opacity: 0; pointer-events: none; transition: all .4s cubic-bezier(.25,.46,.45,.94); box-shadow: 0 20px 60px rgba(0,0,0,.5); }
+    .voice-panel.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+    .voice-panel .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .voice-panel .header h3 { font-size: 1rem; font-weight: 500; }
+    .voice-panel .header .close-btn { background: none; border: none; color: var(--text-secondary); cursor: pointer; font-size: 1.2rem; padding: .25rem; transition: color .3s; }
+    .voice-panel .header .close-btn:hover { color: var(--text); }
+
+    #three-viz { width: 100%; height: 100px; border-radius: var(--radius-sm); margin-bottom: .5rem; }
+
+    .voice-status { text-align: center; font-size: .8rem; color: var(--text-secondary); margin-bottom: .8rem; font-weight: 300; letter-spacing: .03em; }
+    .voice-status.listening { color: var(--gold); }
+
+    .voice-conversation { max-height: 200px; overflow-y: auto; margin-bottom: 1rem; display: flex; flex-direction: column; gap: .6rem; padding-right: .25rem; }
+    .voice-conversation::-webkit-scrollbar { width: 3px; }
+    .voice-conversation::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    .voice-msg { padding: .7rem 1rem; border-radius: var(--radius-sm); font-size: .875rem; line-height: 1.5; font-weight: 300; max-width: 85%; }
+    .voice-msg.user { background: rgba(255,215,0,.1); align-self: flex-end; }
+    .voice-msg.abe { background: var(--surface); align-self: flex-start; }
+    .voice-msg.abe .name { color: var(--gold); font-weight: 600; font-size: .75rem; margin-bottom: .2rem; }
+
+    .voice-controls { display: flex; gap: .5rem; }
+    .voice-controls button { flex: 1; padding: .7rem; border-radius: var(--radius-sm); border: 1px solid var(--border); background: var(--surface); color: var(--text); cursor: pointer; transition: all .3s; font-size: .85rem; font-weight: 400; }
+    .voice-controls button:hover { background: var(--surface-hover); border-color: rgba(255,215,0,.3); }
+    .voice-controls .talk-btn { background: var(--gradient); color: #000; font-weight: 600; border: none; }
+    .voice-controls .talk-btn.listening { background: #ff3b5c; }
+
+    @media (max-width: 768px) {
+      nav .nav-links { display: none; }
+      section { padding: 5rem 1.25rem; }
+      .hero h1 { font-size: 2.8rem; }
+      .hero-stat .num { font-size: 2rem; }
+      .voice-panel { right: 1rem; width: calc(100vw - 2rem); bottom: 6rem; }
+      .voice-fab { width: 3.5rem; height: 3.5rem; font-size: 1.4rem; bottom: 1.5rem; right: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="three-bg"></canvas>
+
+<nav>
+  <div class="logo"><span class="gold">ABE</span> Music</div>
+  <div class="nav-links">
+    <a href="#voice">Voz</a>
+    <a href="#hub">Hub</a>
+    <a href="#products">Productos</a>
+    <a href="#artists">Artistas</a>
+    <a href="#plans">Planes</a>
+    <a href="#token">$RESO</a>
+    <a href="#" class="btn btn-primary" onclick="toggleVoicePanel();return false">Habla con Abe</a>
+  </div>
+</nav>
+
+<section class="hero" id="hero">
+  <div class="hero-bg" id="heroBg">
+    <img src="/images/artists/hector.webp" alt="H\u00e9ctor Rubio" id="heroImg">
+    <div class="overlay"></div>
+    <div class="overlay-bottom"></div>
+  </div>
+  <div class="hero-content">
+    <div class="hero-tag">\u00a9 2026 ABE Music Group</div>
+    <h1><span class="artist-name" id="heroName">H\u00e9ctor Rubio</span></h1>
+    <p id="heroDesc">Angostura, Sinaloa \u00b7 115M streams \u00b7 $460K revenue</p>
+    <div class="hero-meta">
+      <span>\ud83c\udfb5 Regional Mexicano</span>
+      <span>\ud83d\udcc8 1.1M oyentes/mes</span>
+      <span>\u2b50 Split 70/20/10</span>
+    </div>
+    <div class="hero-nav" id="heroNav">
+      <button class="active" data-index="0" onclick="showArtist(0)"></button>
+      <button data-index="1" onclick="showArtist(1)"></button>
+      <button data-index="2" onclick="showArtist(2)"></button>
+    </div>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap">
+      <a href="#voice" class="btn btn-primary" onclick="toggleVoicePanel();return false">\ud83c\udfa4 Habla con Abe</a>
+      <a href="#plans" class="btn btn-outline">Ver Planes</a>
+    </div>
+  </div>
+</section>
+
+<section id="voice">
+  <div class="container">
+    <div class="section-tag">\ud83c\udfa4 Asistente de Voz</div>
+    <h2 class="section-title">Conoce a <span class="gradient-text">Abe</span></h2>
+    <p class="section-sub">Preg\u00fantale sobre regal\u00edas, agenda, contratos y m\u00e1s. Todo por voz, en tiempo real.</p>
+    <div class="voice-hero">
+      <h3>\ud83e\udd16 Asistente Inteligente ABE</h3>
+      <p>"Abe, \u00bfc\u00f3mo van las regal\u00edas de H\u00e9ctor?" \u2014 "Abe, agenda una sesi\u00f3n para ma\u00f1ana" \u2014 "Abe, \u00bfqu\u00e9 dice el contrato de Jes\u00fas?" No solo responde: ejecuta. Conectado a CRM, revenue, contratos y calendario del sello.</p>
+    </div>
+    <div class="grid-3">
+      <div class="card"><span class="icon">\ud83d\udcc8</span><h3>Regal\u00edas</h3><p>Revenue de cualquier artista al instante. Split 70/20/10 calculado en tiempo real desde el sistema.</p></div>
+      <div class="card"><span class="icon">\ud83d\udcc5</span><h3>Agenda</h3><p>Reserva salas, estudio o eventos por voz. Sin abrir ninguna app. Conectado al Hub f\u00edsico.</p></div>
+      <div class="card"><span class="icon">\ud83d\udcdd</span><h3>Contratos</h3><p>Accede a t\u00e9rminos, splits y cl\u00e1usulas de cualquier artista al instante.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="hub">
+  <div class="container">
+    <div class="section-tag">\ud83c\udfe2 Espacio F\u00edsico</div>
+    <h2 class="section-title">ABE Music <span class="gradient-text">Hub</span></h2>
+    <p class="section-sub">M\u00e1s que un estudio. Un ecosistema creativo en Hermosillo, Sonora.</p>
+    <div class="grid-3">
+      <div class="card"><span class="icon">\ud83c\udfb5</span><h3>Estudio de Grabaci\u00f3n</h3><p>Profesional con equipo de clase mundial para producci\u00f3n musical.</p></div>
+      <div class="card"><span class="icon">\ud83e\udd41</span><h3>Salas de Ensayo</h3><p>Espacios ac\u00fasticos para que los artistas perfeccionen su sonido.</p></div>
+      <div class="card"><span class="icon">\ud83c\udf99\ufe0f</span><h3>Podcast Studio</h3><p>Estudio dedicado para grabaci\u00f3n de podcasts y contenido spoken word.</p></div>
+      <div class="card"><span class="icon">\ud83c\udfb9</span><h3>Clases de M\u00fasica</h3><p>Producci\u00f3n, instrumentos, teor\u00eda musical. De principiante a avanzado.</p></div>
+      <div class="card"><span class="icon">\ud83d\udcaa</span><h3>Zona Gym</h3><p>\u00c1rea fitness para artistas. Mente sana en cuerpo sano.</p></div>
+      <div class="card"><span class="icon">\ud83e\udd7d</span><h3>VR Cabinas</h3><p>10 cabinas de realidad virtual para experiencias inmersivas.</p></div>
+      <div class="card"><span class="icon">\ud83c\udfa4</span><h3>Mini Shows</h3><p>Presentaciones \u00edntimas en vivo dentro del hub.</p></div>
+      <div class="card"><span class="icon">\ud83c\udf89</span><h3>Eventos Privados</h3><p>Lanzamientos, showcases y eventos exclusivos.</p></div>
+      <div class="card"><span class="icon">\ud83d\udcf8</span><h3>Creaci\u00f3n de Contenido</h3><p>Set dise\u00f1ado para fotos, videos y contenido para redes.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="products">
+  <div class="container">
+    <div class="section-tag">\ud83d\udce6 SaaS</div>
+    <h2 class="section-title">Productos <span class="gradient-text">ABE</span></h2>
+    <p class="section-sub">M\u00f3dulos que potencian tu sello. \u00dasalos juntos o por separado.</p>
+    <div class="grid-3">
+      <div class="card"><span class="icon">\ud83c\udfa4</span><h3>ABE Voice</h3><p>Asistente de voz con reconocimiento, s\u00edntesis y avatar 3D con lip sync.</p><div class="price">$199 <span>/mes</span></div></div>
+      <div class="card"><span class="icon">\ud83d\udcca</span><h3>ABE Pulse</h3><p>Anal\u00edticas en tiempo real: streams, revenue, CEO dashboard, alertas.</p><div class="price">$99 <span>/mes</span></div></div>
+      <div class="card"><span class="icon">\ud83d\udcdd</span><h3>ABE Contracts</h3><p>Smart contracts con splits din\u00e1micos, 7 tipos, firma digital.</p><div class="price">$149 <span>/mes</span></div></div>
+      <div class="card"><span class="icon">\ud83d\udce1</span><h3>ABE Distro</h3><p>Distribuci\u00f3n multi-plataforma con UPC/ISRC y tracking de regal\u00edas.</p><div class="price">$49 <span>/mes</span></div></div>
+      <div class="card"><span class="icon">\ud83e\udd1d</span><h3>ABE Connect</h3><p>CRM de fans + comunicaci\u00f3n directa artista-fan, broadcasting.</p><div class="price">$79 <span>/mes</span></div></div>
+      <div class="card" style="border-color:rgba(255,215,0,.3)"><span class="icon">\ud83c\udfea</span><h3>ABE Hub</h3><p>Portal unificado de todos los servicios. Soporte prioritario.</p><div class="price">$299 <span>/mes</span></div></div>
+    </div>
+    <div class="voice-hero" style="margin-top:2.5rem">
+      <h3>\ud83c\udfac ABE Studio</h3>
+      <p>Generaci\u00f3n de video con IA. De texto a video, foto a video, sincronizado con m\u00fasica.</p>
+      <div class="grid-4" style="margin-top:1.5rem">
+        <div class="glass" style="padding:.7rem 1.2rem;border-radius:var(--radius-sm);text-align:center;font-size:.85rem">\ud83d\udcdd Prompt \u2192 Video</div>
+        <div class="glass" style="padding:.7rem 1.2rem;border-radius:var(--radius-sm);text-align:center;font-size:.85rem">\ud83d\udcf8 Foto \u2192 Video</div>
+        <div class="glass" style="padding:.7rem 1.2rem;border-radius:var(--radius-sm);text-align:center;font-size:.85rem">\ud83c\udfb5 Beat Sync</div>
+        <div class="glass" style="padding:.7rem 1.2rem;border-radius:var(--radius-sm);text-align:center;font-size:.85rem">\ud83e\uddd1\u200d\ud83c\udfa8 Clone Studio</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="artists">
+  <div class="container">
+    <div class="section-tag">\ud83c\udfb5 Roster</div>
+    <h2 class="section-title">Nuestros <span class="gradient-text">Artistas</span></h2>
+    <p class="section-sub">Talento de Sinaloa y Sonora que representa la esencia del regional mexicano.</p>
+    <div class="grid-3">
+      <div class="card artist-card">
+        <div class="avatar-frame"><img src="/images/artists/hector.webp" alt="H\u00e9ctor Rubio" loading="lazy"></div>
+        <h3>H\u00e9ctor Rubio</h3>
+        <p style="color:var(--text-secondary);font-size:.85rem">Angostura, Sinaloa \u00b7 Regional Mexicano</p>
+        <div class="streams">115M <span>streams</span></div>
+        <p style="color:var(--text-secondary);font-size:.8rem;margin-top:.3rem">$460K revenue \u00b7 1.1M oyentes/mes</p>
+        <div style="margin-top:.8rem;display:flex;gap:.5rem;justify-content:center">
+          <a href="https://open.spotify.com/artist/2uSJ9ywE44eIRoTMatARAy" target="_blank" style="color:var(--green);text-decoration:none;font-size:.8rem">Spotify</a>
+          <a href="https://www.instagram.com/hector_rubiorr" target="_blank" style="color:var(--purple);text-decoration:none;font-size:.8rem">Instagram</a>
+          <a href="https://www.tiktok.com/@thor_rubio" target="_blank" style="color:var(--text-secondary);text-decoration:none;font-size:.8rem">TikTok</a>
+        </div>
+      </div>
+      <div class="card artist-card">
+        <div class="avatar-frame"><img src="/images/artists/jesus.webp" alt="Jes\u00fas Urquijo" loading="lazy"></div>
+        <h3>Jes\u00fas Urquijo</h3>
+        <p style="color:var(--text-secondary);font-size:.85rem">Hermosillo, Sonora \u00b7 Sierre\u00f1o / Pop Latino</p>
+        <div class="streams">4.6M <span>streams</span></div>
+        <p style="color:var(--text-secondary);font-size:.8rem;margin-top:.3rem">$18.5K revenue \u00b7 29.8K oyentes/mes</p>
+        <div style="margin-top:.8rem;display:flex;gap:.5rem;justify-content:center">
+          <a href="https://open.spotify.com/artist/1hfrbMUDkM2tlUE85D3dR6" target="_blank" style="color:var(--green);text-decoration:none;font-size:.8rem">Spotify</a>
+          <a href="https://www.instagram.com/jesusurquijo_oficial" target="_blank" style="color:var(--purple);text-decoration:none;font-size:.8rem">Instagram</a>
+        </div>
+      </div>
+      <div class="card artist-card">
+        <div class="avatar-frame"><img src="/images/artists/javier.webp" alt="Javier Arvayo" loading="lazy"></div>
+        <h3>Javier Arvayo</h3>
+        <p style="color:var(--text-secondary);font-size:.85rem">Hermosillo, Sonora \u00b7 Urbano / Latin Pop</p>
+        <div class="streams">50K <span>streams</span></div>
+        <p style="color:var(--text-secondary);font-size:.8rem;margin-top:.3rem">$200 revenue \u00b7 73.7K oyentes/mes</p>
+        <div style="margin-top:.8rem;display:flex;gap:.5rem;justify-content:center">
+          <a href="https://open.spotify.com/artist/0td9IOgiffWGMbcz3Ky0s" target="_blank" style="color:var(--green);text-decoration:none;font-size:.8rem">Spotify</a>
+          <a href="https://music.apple.com/artist/1519877798" target="_blank" style="color:var(--purple);text-decoration:none;font-size:.8rem">Apple Music</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="plans">
+  <div class="container">
+    <div class="section-tag">\ud83d\udcb0 Planes</div>
+    <h2 class="section-title">Elige tu <span class="gradient-text">Plan</span></h2>
+    <p class="section-sub">Desde empezar tu carrera hasta gestionar un sello completo.</p>
+    <div class="grid-3">
+      <div class="plan-card"><h3>B\u00e1sico</h3><p style="color:var(--text-secondary);font-size:.9rem;font-weight:300">Para empezar</p><div class="plan-price">$99 <span>MXN/mes</span></div><ul><li>100 $RESO/mes</li><li>Dashboard b\u00e1sico</li><li>5 reels IA/mes</li><li>Perfil de artista</li><li>1 canci\u00f3n en cat\u00e1logo</li></ul><a href="#" class="btn btn-outline" style="width:100%;text-align:center">Empezar</a></div>
+      <div class="plan-card featured"><h3>Pro</h3><p style="color:var(--text-secondary);font-size:.9rem;font-weight:300">Para crecer</p><div class="plan-price">$299 <span>MXN/mes</span></div><ul><li>400 $RESO/mes</li><li>Clon IA b\u00e1sico</li><li>20 reels IA/mes</li><li>Cat\u00e1logo ilimitado</li><li>Distribuci\u00f3n 3 plataformas</li><li>10% descuento merch</li></ul><a href="#" class="btn btn-primary" style="width:100%;text-align:center">Lo Quiero</a></div>
+      <div class="plan-card"><h3>\u00c9lite</h3><p style="color:var(--text-secondary);font-size:.9rem;font-weight:300">Para dominar</p><div class="plan-price">$999 <span>MXN/mes</span></div><ul><li>1,200 $RESO/mes</li><li>Clon IA avanzado</li><li>Reels IA ilimitados</li><li>Distribuci\u00f3n 12+ plataformas</li><li>ISRC &amp; UPC incluidos</li><li>Soporte 24/7</li></ul><a href="#" class="btn btn-outline" style="width:100%;text-align:center">Lo Quiero</a></div>
+    </div>
+  </div>
+</section>
+
+<section id="token">
+  <div class="container">
+    <div class="section-tag">\ud83c\udfae Gamificaci\u00f3n</div>
+    <h2 class="section-title">Token <span class="gradient-text">$RESO</span></h2>
+    <p class="section-sub">Gana $RESO por participar en el ecosistema. Canjea por servicios, merch y experiencias.</p>
+    <div class="token-grid">
+      <div class="token-category"><h4>\ud83c\udfaf Ganar $RESO</h4><div class="token-item"><span>Meme validado del artista</span><span class="value">+25</span></div><div class="token-item"><span>Dueto/stitch de reel</span><span class="value">+15</span></div><div class="token-item"><span>Referido que se suscribe</span><span class="value">+200</span></div><div class="token-item"><span>Asistir a live virtual</span><span class="value">+50</span></div><div class="token-item"><span>Completar curso</span><span class="value">+150</span></div><div class="token-item"><span>Login diario</span><span class="value">+5</span></div><div class="token-item"><span>Referir amigo</span><span class="value">+75</span></div></div>
+      <div class="token-category"><h4>\ud83d\udd25 Quemar $RESO</h4><div class="token-item"><span>Hora extra de ensayo</span><span class="value">100 $RESO</span></div><div class="token-item"><span>Eventos flash</span><span class="value">Precio din\u00e1mico</span></div><div class="token-item"><span>Merch exclusivo</span><span class="value">Variable</span></div><div class="token-item"><span>Acceso VR cabinas</span><span class="value">Variable</span></div><div class="token-category" style="margin-top:2rem"><h4>\ud83c\udfc6 Niveles</h4><div class="token-item"><span>\u2b06\ufe0f EMERGENTE</span><span class="value">0 $RESO</span></div><div class="token-item"><span>\u2b06\ufe0f LOCAL</span><span class="value">500 $RESO</span></div><div class="token-item"><span>\u2b06\ufe0f REGIONAL</span><span class="value">2,000 $RESO</span></div><div class="token-item"><span>\u2b06\ufe0f NACIONAL</span><span class="value">5,000 $RESO</span></div></div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="container">
+    <div class="cta-section">
+      <h2>\u00bfListo para <span class="gradient-text">transformar</span> tu m\u00fasica?</h2>
+      <p>Abraham y su equipo est\u00e1n listos para llevarte al siguiente nivel. \u00danete a ABE Music Group.</p>
+      <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+        <a href="#" class="btn btn-primary" onclick="toggleVoicePanel();return false">\ud83c\udfa4 Habla con Abe</a>
+        <a href="https://t.me/abemusicbot" target="_blank" class="btn btn-outline">Telegram Bot</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">ABE Music Group</div>
+  <div class="footer-links">
+    <a href="#voice">Voz</a>
+    <a href="#hub">Hub</a>
+    <a href="#products">Productos</a>
+    <a href="#artists">Artistas</a>
+    <a href="#plans">Planes</a>
+  </div>
+  <p>\u00a9 2026 ABE Music Group \u00b7 Una compa\u00f1\u00eda de Sonora Digital Corp</p>
+  <p style="margin-top:.5rem;font-size:.8rem">Compton, CA \u00b7 Hermosillo, Sonora \u00b7 <a href="tel:+13238192000" style="color:var(--gold);text-decoration:none">(323) 819-2000</a></p>
+</footer>
+
+<button class="voice-fab" id="voiceFab" onclick="toggleVoicePanel()">\ud83c\udfa4</button>
+<div class="voice-panel" id="voicePanel">
+  <div class="header">
+    <h3>\ud83c\udfa4 <span class="gradient-text">Abe</span> \u2014 Asistente de Voz</h3>
+    <button class="close-btn" onclick="toggleVoicePanel()">\u2715</button>
+  </div>
+  <canvas id="three-viz"></canvas>
+  <div class="voice-status" id="voiceStatus">Presiona "Hablar" y dime algo</div>
+  <div class="voice-conversation" id="voiceConversation"></div>
+  <div class="voice-controls">
+    <button class="talk-btn" id="talkBtn" onclick="toggleRecording()">\ud83c\udfa4 Hablar</button>
+    <button onclick="sendText()">\u270f\ufe0f Escribir</button>
+    <button onclick="clearConversation()">\ud83d\uddd1\ufe0f Limpiar</button>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function() {
+  const canvas = document.getElementById('three-bg');
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, .1, 1000);
+  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  const particles = new THREE.BufferGeometry();
+  const count = 2000;
+  const pos = new Float32Array(count * 3);
+  const sizes = new Float32Array(count);
+  for(let i = 0; i < count * 3; i++) {
+    pos[i] = (Math.random() - .5) * 20;
+    if(i % 3 === 2) pos[i] = (Math.random() - .5) * 10;
+  }
+  for(let i = 0; i < count; i++) sizes[i] = Math.random() * 3 + 1;
+  particles.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  particles.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+  const texture = (function() {
+    const c = document.createElement('canvas');
+    c.width = 32; c.height = 32;
+    const ctx = c.getContext('2d');
+    const grd = ctx.createRadialGradient(16,16,0,16,16,16);
+    grd.addColorStop(0,'rgba(255,215,0,1)');
+    grd.addColorStop(.5,'rgba(255,215,0,.5)');
+    grd.addColorStop(1,'rgba(255,215,0,0)');
+    ctx.fillStyle = grd; ctx.fillRect(0,0,32,32);
+    return new THREE.CanvasTexture(c);
+  })();
+
+  const material = new THREE.PointsMaterial({
+    map: texture, size: .08, transparent: true, blending: THREE.AdditiveBlending,
+    depthWrite: false, color: new THREE.Color('#FFD700'), opacity: .6
+  });
+  const particleSystem = new THREE.Points(particles, material);
+  scene.add(particleSystem);
+
+  camera.position.z = 8;
+  let mouseX = 0, mouseY = 0;
+  document.addEventListener('mousemove', function(e) {
+    mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+    mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+  });
+
+  function animate() {
+    requestAnimationFrame(animate);
+    particleSystem.rotation.x += .0003;
+    particleSystem.rotation.y += .0005;
+    particleSystem.rotation.x += (mouseY * .05 - particleSystem.rotation.x) * .01;
+    particleSystem.rotation.y += (mouseX * .05 - particleSystem.rotation.y) * .01;
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', function() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+})();
+
+(function() {
+  var canvas = document.getElementById('three-viz');
+  if(!canvas) return;
+  var scene = new THREE.Scene();
+  var camera = new THREE.PerspectiveCamera(60, canvas.clientWidth/canvas.clientHeight||1, .1, 100);
+  var renderer = new THREE.WebGLRenderer({ canvas: canvas, alpha: true });
+  renderer.setSize(canvas.clientWidth, canvas.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+  var bars = [];
+  var barCount = 32;
+  var barGeo = new THREE.BoxGeometry(.15, 1, .15);
+  var barMat = new THREE.MeshPhysicalMaterial({
+    color: new THREE.Color('#FFD700'), metalness: .3, roughness: .4,
+    clearcoat: .3, emissive: new THREE.Color('#FFD700'), emissiveIntensity: .1
+  });
+
+  for(var i = 0; i < barCount; i++) {
+    var bar = new THREE.Mesh(barGeo, barMat.clone());
+    var angle = (i / barCount) * Math.PI * 2;
+    var radius = 1.8;
+    bar.position.x = Math.cos(angle) * radius;
+    bar.position.z = Math.sin(angle) * radius;
+    bar.lookAt(0,0,0);
+    bar.userData = { angle: angle, baseHeight: .3 + Math.random() * .5, speed: .5 + Math.random() };
+    scene.add(bar);
+    bars.push(bar);
+  }
+
+  camera.position.z = 4; camera.position.y = .5;
+  camera.lookAt(0,0,0);
+
+  var isActive = false;
+  var time = 0;
+  window.__vizActive = function(active) { isActive = active; };
+
+  function animateViz() {
+    requestAnimationFrame(animateViz);
+    time += .02;
+    bars.forEach(function(bar) {
+      var height = isActive
+        ? .3 + Math.abs(Math.sin(time * bar.userData.speed + bar.userData.angle)) * 2
+        : bar.userData.baseHeight;
+      bar.scale.y = height;
+      bar.position.y = height / 2;
+    });
+    camera.position.x = Math.sin(time * .2) * .3;
+    camera.lookAt(0,0,0);
+    renderer.render(scene, camera);
+  }
+  animateViz();
+
+  var resizeViz = function() {
+    if(!canvas.parentElement) return;
+    var w = canvas.parentElement.clientWidth;
+    var h = 100;
+    renderer.setSize(w, h);
+    camera.aspect = w / h;
+    camera.updateProjectionMatrix();
+  };
+  window.addEventListener('resize', resizeViz);
+  setTimeout(resizeViz, 100);
+})();
+
+var observer = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e) { if(e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: .08 });
+document.querySelectorAll('.card, .plan-card, .voice-hero, .hero, .cta-section, .artist-card').forEach(function(el) {
+  el.classList.add('fade-in');
+  observer.observe(el);
+});
+
+var ws = null, isRecording = false;
+var conversationId = 'abe-' + Date.now();
+
+function toggleVoicePanel() {
+  var p = document.getElementById('voicePanel');
+  var f = document.getElementById('voiceFab');
+  p.classList.toggle('open');
+  f.style.display = p.classList.contains('open') ? 'none' : 'flex';
+  if(p.classList.contains('open') && !ws) connectWS();
+}
+
+function connectWS() {
+  var proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  ws = new WebSocket(proto + '//' + location.host + '/ws');
+  ws.onopen = function() { setStatus('Conectado. Presiona "Hablar"', ''); };
+  ws.onmessage = function(e) {
+    var d = JSON.parse(e.data);
+    if(d.type === 'chat_response' || d.type === 'audio_response') {
+      if(d.text) addMsg('user', d.text);
+      if(d.response) addMsg('abe', d.response);
+      if(d.audio) { (new Audio('data:audio/mp3;base64,' + d.audio)).play().catch(function(){}); }
+      setStatus('Presiona "Hablar"', '');
+    }
+    if(d.type === 'error') setStatus('Error: ' + d.error, '');
+  };
+  ws.onclose = function() { ws = null; setStatus('Desconectado', ''); };
+  ws.onerror = function() { setStatus('Error de conexi\u00f3n', ''); };
+}
+
+function setStatus(text, cls) {
+  var el = document.getElementById('voiceStatus');
+  el.textContent = text;
+  el.className = 'voice-status' + (cls ? ' ' + cls : '');
+}
+
+function addMsg(role, text) {
+  var el = document.getElementById('voiceConversation');
+  var msg = document.createElement('div');
+  msg.className = 'voice-msg ' + role;
+  if(role === 'abe') msg.innerHTML = '<div class="name">Abe</div>' + text;
+  else msg.textContent = text;
+  el.appendChild(msg);
+  el.scrollTop = el.scrollHeight;
+}
+
+function toggleRecording() {
+  var btn = document.getElementById('talkBtn');
+  if(isRecording) {
+    isRecording = false;
+    btn.textContent = '\ud83c\udfa4 Hablar';
+    btn.classList.remove('listening');
+    setStatus('Procesando...', '');
+    window.__vizActive(false);
+    return;
+  }
+  if(!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    setStatus('Usa Telegram o escribe tu mensaje', '');
+    return;
+  }
+  if(!ws) connectWS();
+  var SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  var r = new SR();
+  r.lang = 'es-MX';
+  r.interimResults = false;
+  r.continuous = false;
+  r.onstart = function() {
+    isRecording = true;
+    btn.textContent = '\u23f9\ufe0f Detener';
+    btn.classList.add('listening');
+    setStatus('Escuchando...', 'listening');
+    window.__vizActive(true);
+  };
+  r.onresult = function(e) {
+    var text = e.results[0][0].transcript;
+    addMsg('user', text);
+    if(ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({type:'chat',text:text,session_id:conversationId}));
+    } else {
+      setTimeout(function() { addMsg('abe', 'Conectando al asistente...'); }, 300);
+    }
+    window.__vizActive(false);
+  };
+  r.onerror = function() {
+    setStatus('Presiona "Hablar"', '');
+    window.__vizActive(false);
+  };
+  r.onend = function() {
+    isRecording = false;
+    btn.textContent = '\ud83c\udfa4 Hablar';
+    btn.classList.remove('listening');
+  };
+  r.start();
+}
+
+function sendText() {
+  var text = prompt('\u00bfQu\u00e9 quieres preguntarle a Abe?');
+  if(text && text.trim()) {
+    addMsg('user', text);
+    if(ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({type:'chat',text:text,session_id:conversationId}));
+    } else {
+      setTimeout(function() { addMsg('abe', 'Conectando...'); }, 300);
+    }
+  }
+}
+
+function clearConversation() {
+  document.getElementById('voiceConversation').innerHTML = '';
+  setStatus('Presiona "Hablar" y dime algo', '');
+}
+
+var artists = [
+  { name: 'H\u00e9ctor Rubio', img: '/images/artists/hector.webp', desc: 'Angostura, Sinaloa \u00b7 115M streams \u00b7 $460K revenue', tags: '\ud83c\udfb5 Regional Mexicano \u00b7 \ud83d\udcc8 1.1M oyentes/mes \u00b7 \u2b50 Split 70/20/10' },
+  { name: 'Jes\u00fas Urquijo', img: '/images/artists/jesus.webp', desc: 'Hermosillo, Sonora \u00b7 4.6M streams \u00b7 $18.5K revenue', tags: '\ud83c\udfb5 Sierre\u00f1o / Pop Latino \u00b7 \ud83d\udcc8 29.8K oyentes/mes \u00b7 \u2b50 Split 70/20/10' },
+  { name: 'Javier Arvayo', img: '/images/artists/javier.webp', desc: 'Hermosillo, Sonora \u00b7 50K streams \u00b7 $200 revenue', tags: '\ud83c\udfb5 Urbano / Latin Pop \u00b7 \ud83d\udcc8 73.7K oyentes/mes \u00b7 \u2b50 Split 70/20/10' },
+];
+
+function showArtist(index) {
+  var a = artists[index];
+  document.getElementById('heroImg').src = a.img;
+  document.getElementById('heroName').textContent = a.name;
+  document.getElementById('heroDesc').textContent = a.desc;
+  document.getElementById('heroNav').querySelectorAll('button').forEach(function(b, i) {
+    b.classList.toggle('active', i === index);
+  });
+}
+</script>
+</body>
+</html>
