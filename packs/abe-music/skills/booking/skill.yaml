@@ -1,0 +1,48 @@
+nexus_skill_spec: "1.0"
+id: abe-music.booking
+name: Booking
+version: 1.0.0
+description: Gestión de agenda, cotizaciones y confirmación de fechas para presentaciones
+
+runtime:
+  language: python
+  entrypoint: skill.py
+  timeout: 10s
+
+inputs:
+  action:
+    type: enum
+    values: [consultar_disponibilidad, cotizar, confirmar, cancelar, listar_eventos]
+    required: true
+  fecha:
+    type: string
+    required: false
+  lugar:
+    type: string
+    required: false
+  fee:
+    type: number
+    required: false
+
+outputs:
+  success: { type: boolean }
+  data: { type: object }
+  message: { type: string }
+
+tools_required:
+  - id: hasura.query
+    reason: Consultar disponibilidad del artista en la agenda
+  - id: hasura.mutate
+    reason: Registrar eventos confirmados y cotizaciones
+  - id: llm.chat
+    reason: Redactar contratos y propuestas en español formal
+
+permissions:
+  roles: [admin, manager]
+
+cost:
+  per_call_usd: 0.005
+  avg_latency_ms: 700
+
+events:
+  emits: [evento.cotizado, evento.confirmado, evento.cancelado]

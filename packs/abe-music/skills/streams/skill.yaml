@@ -1,0 +1,43 @@
+nexus_skill_spec: "1.0"
+id: abe-music.streams
+name: Streams
+version: 1.0.0
+description: Consulta y análisis de reproducciones en Spotify, Apple Music, YouTube
+
+runtime:
+  language: python
+  entrypoint: skill.py
+  timeout: 10s
+
+inputs:
+  action:
+    type: enum
+    values: [consultar, analizar, reportar]
+    required: true
+  plataforma:
+    type: string
+    required: false
+  periodo:
+    type: string
+    required: false
+
+outputs:
+  success: { type: boolean }
+  data: { type: object }
+  message: { type: string }
+
+tools_required:
+  - id: hasura.query
+    reason: Consultar historial de streams desde la base de datos del tenant
+  - id: qdrant.search
+    reason: Buscar reportes previos y tendencias en la知识 base del artista
+
+permissions:
+  roles: [admin, manager, staff]
+
+cost:
+  per_call_usd: 0.002
+  avg_latency_ms: 800
+
+events:
+  emits: [streams.consultadas, streams.reporte_generado]

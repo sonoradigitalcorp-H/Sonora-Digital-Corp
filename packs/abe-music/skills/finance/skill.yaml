@@ -1,0 +1,49 @@
+nexus_skill_spec: "1.0"
+id: abe-music.finance
+name: Finance
+version: 1.0.0
+description: Registro de ingresos y gastos, reportes financieros, conciliación con Contpaqi
+
+runtime:
+  language: python
+  entrypoint: skill.py
+  timeout: 10s
+
+inputs:
+  action:
+    type: enum
+    values: [registrar_ingreso, registrar_gasto, reporte_mensual, conciliar, resumen]
+    required: true
+  monto:
+    type: number
+    required: false
+  concepto:
+    type: string
+    required: false
+  categoria:
+    type: string
+    required: false
+  periodo:
+    type: string
+    required: false
+
+outputs:
+  success: { type: boolean }
+  data: { type: object }
+  message: { type: string }
+
+tools_required:
+  - id: hasura.mutate
+    reason: Registrar transacciones financieras del artista
+  - id: hasura.query
+    reason: Consultar historial financiero y generar reportes
+
+permissions:
+  roles: [admin]
+
+cost:
+  per_call_usd: 0.002
+  avg_latency_ms: 500
+
+events:
+  emits: [ingreso.registrado, gasto.registrado, reporte.generado]

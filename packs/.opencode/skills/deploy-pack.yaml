@@ -1,0 +1,40 @@
+name: deploy-pack
+description: Despliega un pack validado en la infraestructura del core
+inputs:
+  pack_path: string
+  tenant_name: string
+  whatsapp: string
+  voice: string
+  telegram_bot: string
+  deploy_dashboard: string
+outputs:
+  deploy_report: string
+
+prompt: |
+  Despliega el pack validado en {{pack_path}} para el tenant {{tenant_name}}.
+
+  Canales:
+  - WhatsApp: {{whatsapp}}
+  - Voz: {{voice}}
+  - Telegram: {{telegram_bot}}
+  - Dashboard: {{deploy_dashboard}}
+
+  Pasos:
+
+  1. Validar pack (llamar validate-pack)
+  2. Crear tenant en core via API
+  3. Aplicar migraciones SQL
+  4. Cargar seed data
+  5. Registrar skills en Skill Registry
+  6. Desplegar agents
+  7. Conectar canales:
+     - WhatsApp Business API
+     - Voz (Twilio/Telnyx + OmniVoice)
+     - Telegram Bot personal
+  8. Generar dashboard desde Lovable
+  9. Deploy dashboard a {{deploy_dashboard}}
+  10. Enviar mensaje de bienvenida
+  11. Configurar daily briefing
+  12. Schedule primera junta de onboarding
+
+  Devuelve reporte de deploy con URLs y estado.

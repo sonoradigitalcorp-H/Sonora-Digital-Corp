@@ -1,0 +1,37 @@
+name: generate-gherkin-tests
+description: Genera tests Gherkin BDD para las skills del pack
+inputs:
+  pack_name: string
+  skills: object[]
+  language: string
+outputs:
+  tests_path: string
+
+prompt: |
+  Genera tests Gherkin para las skills del pack {{pack_name}}.
+
+  Skills: {{skills}}
+  Idioma: {{language}}
+
+  Crea en tests/features/:
+
+  Por cada skill, crea un archivo .feature con:
+  - Feature description
+  - Background (given común)
+  - Scenario: happy path
+  - Scenario: error cases
+  - Scenario: edge cases (empty, null, overflow)
+  - Scenario: permission denied
+
+  Formato Gherkin estándar:
+  ```gherkin
+  Feature: {{skill_name}}
+    As a {{actor}}
+    I want to {{action}}
+    So that {{benefit}}
+
+    Scenario: {{scenario_name}}
+      Given {{precondition}}
+      When {{action}}
+      Then {{expected_result}}
+  ```

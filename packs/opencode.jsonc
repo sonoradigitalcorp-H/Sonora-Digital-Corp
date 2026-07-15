@@ -1,0 +1,26 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "opencode/deepseek-v4-flash-free",
+  "shell": "/bin/bash",
+  "logLevel": "INFO",
+
+  "models": {
+    "default": "opencode/deepseek-v4-flash-free",
+    "complex": "opencode/kimi-k2.6"
+  },
+
+  "skillsDir": ".opencode/skills",
+  "agentsDir": ".opencode/agents",
+
+  "projectContext": {
+    "root": ".",
+    "docs": [
+      "core-reference/AGENTS.md",
+      "core-reference/SKILL-SPEC.md",
+      "core-reference/AGENT-SPEC.md"
+    ],
+    "examples": [
+      "core-reference/examples/abe-music/"
+    ]
+  }
+}

@@ -1,0 +1,43 @@
+# Template: Pack Manifest
+# Variables: {{name}}, {{industry}}, {{country}}, {{currency}}
+
+nexus_pack_spec: "1.0"
+id: {{name}}
+name: {{name | capitalize}} OS
+version: 1.0.0
+industry: {{industry}}
+country: {{country}}
+currency: {{currency}}
+
+skills:
+{{#skills}}
+  - {{../name}}.{{id}}
+{{/skills}}
+
+agents:
+{{#agents}}
+  - id: {{name}}
+    name: {{name | capitalize}}
+    skills: [{{#skills}}{{../name}}.{{id}}{{/skills}}]
+    channels: [{{#channels}}{{.}}{{/channels}}]
+{{/agents}}
+
+data:
+  migrations:
+    - migrations/001_{{name}}_schema.sql
+  hasura_metadata:
+    - hasura/tables.yaml
+    - hasura/relationships.yaml
+
+dashboard:
+  builder: open-lovable
+  prompt_path: dashboard/lovable-prompt.md
+
+channels:
+{{#channels}}
+  - {{.}}
+{{/channels}}
+
+pricing:
+  monthly_usd: 299
+  setup_usd: 499

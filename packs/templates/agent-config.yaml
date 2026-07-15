@@ -1,0 +1,45 @@
+# Template: Agent Config
+# Variables: {{pack_name}}, {{agent_name}}, {{agent_role}}, {{skills}}, {{channels}}, {{model}}
+
+nexus_agent_spec: "1.0"
+id: {{pack_name}}.{{agent_name}}
+name: {{agent_name | capitalize}}
+role: {{agent_role}}
+version: 1.0.0
+type: conversational
+
+runtime:
+  model: {{model}}
+  temperature: 0.7
+  max_tokens: 2048
+
+system_prompt: |
+  Eres el agente de {{agent_name}} para {{pack_name}}.
+  {{agent_role_description}}
+
+  Reglas:
+  - Siempre saluda al usuario por su nombre
+  - Usa español natural
+  - Si no sabes algo, pregunta antes de inventar
+  - Deriva a otro agente si es necesario
+
+skills:
+{{#skills}}
+  - {{.}}
+{{/skills}}
+
+channels:
+{{#channels}}
+  - {{.}}
+{{/channels}}
+
+memory:
+  working: true
+  short_term: true
+  long_term: true
+
+handoff:
+{{#handoffs}}
+  to: {{target}}
+  condition: "{{condition}}"
+{{/handoffs}}

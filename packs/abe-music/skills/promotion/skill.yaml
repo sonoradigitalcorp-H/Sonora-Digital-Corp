@@ -1,0 +1,46 @@
+nexus_skill_spec: "1.0"
+id: abe-music.promotion
+name: Promotion
+version: 1.0.0
+description: Campañas de promoción y publicidad para lanzamientos
+
+runtime:
+  language: python
+  entrypoint: skill.py
+  timeout: 15s
+
+inputs:
+  action:
+    type: enum
+    values: [crear_campania, pausar_campania, medir_roi, listar_campanias]
+    required: true
+  nombre:
+    type: string
+    required: false
+  presupuesto:
+    type: number
+    required: false
+  plataforma_ads:
+    type: string
+    required: false
+
+outputs:
+  success: { type: boolean }
+  data: { type: object }
+  message: { type: string }
+
+tools_required:
+  - id: hasura.query
+    reason: Consultar campañas previas y métricas históricas
+  - id: hasura.mutate
+    reason: Crear y actualizar campañas en la base de datos
+
+permissions:
+  roles: [admin, manager]
+
+cost:
+  per_call_usd: 0.004
+  avg_latency_ms: 1000
+
+events:
+  emits: [campania.creada, campania.pausada, roi.calculado]

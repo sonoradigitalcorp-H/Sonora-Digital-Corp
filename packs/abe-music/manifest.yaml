@@ -1,0 +1,73 @@
+nexus_pack_spec: "1.0"
+id: abe-music
+name: ABE Music OS
+version: 1.0.0
+industry: music
+country: mx
+currency: MXN
+
+skills:
+  - abe-music.streams
+  - abe-music.releases
+  - abe-music.promotion
+  - abe-music.booking
+  - abe-music.finance
+
+agents:
+  - id: executive-agent
+    name: Asistente Ejecutivo
+    skills:
+      - abe-music.finance
+      - abe-music.promotion
+    channels: [whatsapp, telegram, voz]
+    model: opencode/kimi-k2.6
+    handoff:
+      - to: abe-music.booking-agent
+        condition: "cliente solicita contratación o cotización"
+      - to: abe-music.marketing-agent
+        condition: "cliente pregunta sobre campañas o releases"
+
+  - id: marketing-agent
+    name: Marketing
+    skills:
+      - abe-music.promotion
+      - abe-music.releases
+    channels: [whatsapp, telegram]
+    model: opencode/deepseek-v4-flash-free
+    handoff:
+      - to: abe-music.executive-agent
+        condition: "presupuesto o autorización requerida"
+
+  - id: booking-agent
+    name: Booking
+    skills:
+      - abe-music.booking
+    channels: [voz, whatsapp]
+    model: opencode/deepseek-v4-flash-free
+    handoff:
+      - to: abe-music.executive-agent
+        condition: "fee fuera del rango autorizado"
+
+channels:
+  - whatsapp
+  - voz
+  - telegram
+
+data:
+  migrations:
+    - data/migrations/001_abe_music_schema.sql
+
+dashboard:
+  builder: open-lovable
+  prompt_path: dashboard/lovable-prompt.md
+
+pricing:
+  monthly_usd: 299
+  setup_usd: 499
+  features:
+    - 3 agents inteligentes
+    - 5 skills operativas
+    - WhatsApp + Voz + Telegram
+    - Daily briefing 8:00 AM
+    - Dashboard en Coolify
+    - Migraciones automáticas

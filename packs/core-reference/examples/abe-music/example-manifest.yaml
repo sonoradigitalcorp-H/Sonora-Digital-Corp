@@ -1,0 +1,59 @@
+# Ejemplo: ABE Music Pack Manifest
+# Este es el pack de referencia para el generador
+
+nexus_pack_spec: "1.0"
+id: abe-music
+name: ABE Music OS
+version: 1.0.0
+industry: music
+country: mx
+currency: MXN
+
+skills:
+  - abe-music.streams
+  - abe-music.releases
+  - abe-music.promotion
+  - abe-music.booking
+  - abe-music.finance
+
+agents:
+  - id: executive-agent
+    name: Asistente Ejecutivo
+    skills:
+      - abe-music.finance
+      - abe-music.promotion
+    channels: [whatsapp, telegram, voz]
+
+  - id: marketing-agent
+    name: Marketing
+    skills: [abe-music.promotion, abe-music.releases]
+    channels: [whatsapp, telegram]
+
+  - id: booking-agent
+    name: Booking
+    skills: [abe-music.booking]
+    channels: [voz, whatsapp]
+
+channels:
+  - whatsapp
+  - voz
+  - telegram
+
+data:
+  migrations:
+    - migrations/001_abe_music_schema.sql
+    - migrations/002_abe_music_tables.sql
+
+dashboard:
+  builder: open-lovable
+  prompt_path: dashboard/lovable-prompt.md
+
+pricing:
+  monthly_usd: 299
+  setup_usd: 499
+  features:
+    - 3 agents
+    - 5 skills
+    - WhatsApp + Voz + Telegram
+    - Daily briefing
+    - Dashboard en Coolify

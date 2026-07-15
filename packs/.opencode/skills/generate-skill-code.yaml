@@ -1,0 +1,31 @@
+name: generate-skill-code
+description: Genera el código funcional de una skill individual
+inputs:
+  pack_name: string
+  skill_name: string
+  skill_spec: object
+  language: string
+outputs:
+  skill_path: string
+
+prompt: |
+  Genera el código funcional de la skill {{skill_name}} para el pack {{pack_name}}.
+
+  Spec: {{skill_spec}}
+  Language: {{language}}
+
+  Crea en skills/{{skill_name}}/:
+  1. skill.yaml (spec)
+  2. skill.py (implementación con fastmcp)
+  3. requirements.txt
+  4. tests/test_skill.py
+  5. tests/features/{{skill_name}}.feature
+
+  Reglas:
+  - Usar Python 3.12+ con fastmcp
+  - @mcp.tool() para cada tool
+  - Type hints en todas las funciones
+  - Manejo de errores con try/except y logging
+  - tenant_id en headers de cada request
+  - Emitir métricas de uso (costo, latencia)
+  - Tests con pytest-asyncio
