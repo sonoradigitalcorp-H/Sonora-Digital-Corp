@@ -7,7 +7,13 @@
       "period_seconds": 60,
       "max_tokens_monthly": -1,
       "qdrant_collection": "jarvis_knowledge",
-      "features": ["chat", "agents", "rag", "voice", "content"],
+      "features": [
+        "chat",
+        "agents",
+        "rag",
+        "voice",
+        "content"
+      ],
       "status": "active"
     },
     "abe-fenix": {
@@ -17,7 +23,13 @@
       "period_seconds": 60,
       "max_tokens_monthly": 500000,
       "qdrant_collection": "jarvis_knowledge",
-      "features": ["chat", "agents", "rag", "music", "booking"],
+      "features": [
+        "chat",
+        "agents",
+        "rag",
+        "music",
+        "booking"
+      ],
       "status": "active"
     },
     "free": {
@@ -27,8 +39,26 @@
       "period_seconds": 60,
       "max_tokens_monthly": 10000,
       "qdrant_collection": "jarvis_knowledge",
-      "features": ["chat"],
+      "features": [
+        "chat"
+      ],
       "status": "active"
+    },
+    "joyeria_el-joyero": {
+      "name": "El Joyero",
+      "tier": "basic",
+      "rate_limit": 50,
+      "period_seconds": 60,
+      "max_tokens_monthly": 100000,
+      "qdrant_collection": "jarvis_knowledge",
+      "features": [
+        "chat",
+        "agents",
+        "rag"
+      ],
+      "status": "active",
+      "pack": "joyeria",
+      "created": "2026-07-15"
     }
   },
   "defaults": {

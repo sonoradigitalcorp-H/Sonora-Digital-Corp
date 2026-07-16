@@ -1,0 +1,168 @@
+version: 1
+updated: 2026-07-15T19:00:00Z
+description: "Catálogo central de todas las tools disponibles en el ecosistema SDC"
+
+tools:
+  # ─── MCP Servers ───────────────────────────────────────
+  mcp-gateway:
+    type: mcp
+    endpoint: "http://localhost:18989"
+    description: "MCP Gateway — resuelve capabilities, ruteo de agentes"
+    auth: none
+    rate_limit: 100/min
+    health: GET /health
+    actions:
+      resolve-capability: POST /api/capability/resolve
+      list-capabilities: GET /api/capability/list
+      execute: POST /api/execute
+
+  hermes-gateway:
+    type: mcp
+    endpoint: "http://localhost:8643"
+    description: "Hermes Gateway — comunicación multi-canal (Telegram, WhatsApp)"
+    auth: none
+    rate_limit: 60/min
+    health: GET /health
+    actions:
+      send-telegram: POST /api/telegram/send
+      send-whatsapp: POST /api/whatsapp/send
+      notify: POST /api/notify
+
+  openclaw-gateway:
+    type: mcp
+    endpoint: "http://localhost:18789"
+    description: "OpenClaw Gateway — 42 skills especializadas"
+    auth: none
+    rate_limit: 60/min
+    health: GET /health
+    actions:
+      execute-skill: POST /api/skill/execute
+      list-skills: GET /api/skill/list
+
+  # ─── Data Stores ──────────────────────────────────────
+  neo4j-bridge:
+    type: service
+    endpoint: "bolt://localhost:7687"
+    description: "Neo4j graph database — relaciones, conocimiento, grafos"
+    auth: internal
+    rate_limit: 200/min
+    health: bolt ping
+    actions:
+      run-query: cypher
+      create-node: cypher
+      create-relation: cypher
+
+  qdrant-bridge:
+    type: service
+    endpoint: "http://localhost:6333"
+    description: "Qdrant vector store — embeddings, búsqueda semántica, RAG"
+    auth: internal
+    rate_limit: 300/min
+    health: GET /health
+    actions:
+      search: POST /collections/{collection}/points/search
+      store: PUT /collections/{collection}/points
+      delete: POST /collections/{collection}/points/delete
+
+  postgres-bridge:
+    type: service
+    endpoint: "postgresql://localhost:5432/sdc"
+    description: "PostgreSQL — datos relacionales multi-tenant"
+    auth: internal
+    rate_limit: 200/min
+    health: pg_isready
+    actions:
+      query: sql
+      insert: sql
+      update: sql
+      delete: sql
+
+  redis-bridge:
+    type: service
+    endpoint: "redis://localhost:6379"
+    description: "Redis — caché, rate limiting, sesiones, colas"
+    auth: internal
+    rate_limit: 500/min
+    health: redis ping
+    actions:
+      get: redis
+      set: redis
+      rate-limit: redis + lua
+
+  # ─── AI / LLM ─────────────────────────────────────────
+  ollama-api:
+    type: service
+    endpoint: "http://localhost:11434"
+    description: "Ollama local — modelos open source (embeddings, inferencia)"
+    auth: none
+    rate_limit: 30/min
+    health: GET /api/tags
+    actions:
+      generate: POST /api/generate
+      chat: POST /api/chat
+      embeddings: POST /api/embeddings
+      list-models: GET /api/tags
+
+  openrouter-api:
+    type: service
+    endpoint: "https://openrouter.ai/api/v1"
+    description: "OpenRouter — gateway multi-modelo cloud (modelos :free)"
+    auth: api-key
+    rate_limit: 50/day
+    health: GET /models
+    actions:
+      chat: POST /chat/completions
+      list-models: GET /models
+
+  # ─── Infraestructura ──────────────────────────────────
+  truth-guardian:
+    type: service
+    endpoint: "http://localhost:8088"
+    description: "Truth Guardian — monitoreo de drifts, health, compliance"
+    auth: internal
+    rate_limit: 60/min
+    health: GET /api/v1/health
+    actions:
+      status: GET /api/v1/status
+      drifts: GET /api/v1/drift
+      scoreboard: GET /api/v1/scoreboard
+      submit-task: POST /api/v1/execution/submit
+
+  n8n:
+    type: service
+    endpoint: "http://localhost:5678"
+    description: "n8n — automatización de workflows (33 workflows)"
+    auth: internal
+    rate_limit: 30/min
+    health: GET /health
+    actions:
+      execute-workflow: POST /webhook/{workflow_id}
+      trigger: POST /webhook/trigger/{event}
+
+  # ─── Externos ─────────────────────────────────────────
+  shopify-api:
+    type: external
+    description: "Shopify Admin API — gestión de tiendas ecommerce"
+    auth: api-key
+    rate_limit: 40/min
+    docs: "https://shopify.dev/docs/api/admin"
+    actions:
+      list-products: GET /admin/api/2024-07/products.json
+      create-product: POST /admin/api/2024-07/products.json
+      list-orders: GET /admin/api/2024-07/orders.json
+
+  whatsapp-api:
+    type: external
+    description: "WhatsApp Business API — mensajería, catálogos"
+    auth: api-key
+    actions:
+      send-message: POST /v1/messages
+      send-catalog: POST /v1/catalog
+
+  lovable-api:
+    type: external
+    description: "Lovable — generación de web apps full-stack desde prompt"
+    auth: api-key
+    actions:
+      generate-app: POST /api/generate
+      deploy: POST /api/deploy

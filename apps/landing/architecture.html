@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sonora Digital Corp — Architecture Diagram</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'JetBrains Mono', monospace;
+      background: #020617;
+      min-height: 100vh;
+      padding: 2rem;
+      color: white;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    .header { margin-bottom: 2rem; }
+    .header-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 0.5rem; }
+    .pulse-dot {
+      width: 12px; height: 12px; background: #22d3ee;
+      border-radius: 50%; animation: pulse 2s infinite;
+    }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+    h1 { font-size: 1.5rem; font-weight: 700; letter-spacing: -0.025em; }
+    .subtitle { color: #94a3b8; font-size: 0.875rem; margin-left: 1.75rem; }
+    .diagram-container {
+      background: rgba(15, 23, 42, 0.5); border-radius: 1rem;
+      border: 1px solid #1e293b; padding: 1.5rem; overflow-x: auto;
+    }
+    svg { width: 100%; min-width: 1050px; display: block; }
+    .cards {
+      display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem; margin-top: 2rem;
+    }
+    .card {
+      background: rgba(15, 23, 42, 0.5); border-radius: 0.75rem;
+      border: 1px solid #1e293b; padding: 1.25rem;
+    }
+    .card-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .card-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .card-dot.cyan { background: #22d3ee; }
+    .card-dot.emerald { background: #34d399; }
+    .card-dot.violet { background: #a78bfa; }
+    .card-dot.amber { background: #fbbf24; }
+    .card-dot.rose { background: #fb7185; }
+    .card h3 { font-size: 0.875rem; font-weight: 600; }
+    .card ul { list-style: none; color: #94a3b8; font-size: 0.75rem; }
+    .card li { margin-bottom: 0.375rem; }
+    .footer { text-align: center; margin-top: 1.5rem; color: #475569; font-size: 0.75rem; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="header-row">
+        <div class="pulse-dot"></div>
+        <h1>Sonora Digital Corp — System Architecture</h1>
+      </div>
+      <p class="subtitle">MVP v1.0 • OVH VPS Self-Hosted • 2026-07-15</p>
+    </div>
+
+    <div class="diagram-container">
+      <svg viewBox="0 0 1060 820">
+        <defs>
+          <marker id="arrow" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+          </marker>
+          <marker id="arrow-dashed" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#fb7185" />
+          </marker>
+          <marker id="arrow-db" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" fill="#a78bfa" />
+          </marker>
+          <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" stroke-width="0.5"/>
+          </pattern>
+        </defs>
+
+        <rect width="100%" height="100%" fill="url(#grid)" />
+
+        <!-- ===== INTERNET (External) ===== -->
+        <rect x="30" y="60" width="140" height="55" rx="8" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="100" y="82" fill="white" font-size="11" font-weight="600" text-anchor="middle">Users</text>
+        <text x="100" y="98" fill="#94a3b8" font-size="8" text-anchor="middle">Browser / Mobile</text>
+
+        <rect x="200" y="60" width="140" height="55" rx="8" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="270" y="82" fill="white" font-size="11" font-weight="600" text-anchor="middle">Admin Laptop</text>
+        <text x="270" y="98" fill="#94a3b8" font-size="8" text-anchor="middle">SSH Tunnel :8085</text>
+
+        <!-- Arrow: Users → VPS -->
+        <line x1="170" y1="87" x2="198" y2="87" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <text x="184" y="81" fill="#94a3b8" font-size="7" text-anchor="middle">HTTP</text>
+
+        <!-- ===== VPS BOUNDARY ===== -->
+        <rect x="30" y="140" width="1000" height="340" rx="12" fill="rgba(251, 191, 36, 0.04)" stroke="#fbbf24" stroke-width="1" stroke-dasharray="8,4"/>
+        <text x="42" y="158" fill="#fbbf24" font-size="10" font-weight="600">OVH VPS — sdc-prod (149.56.46.173)</text>
+
+        <!-- ===== FRONTEND LAYER ===== -->
+
+        <!-- Landing Page -->
+        <rect x="50" y="175" width="180" height="75" rx="8" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="140" y="198" fill="white" font-size="11" font-weight="600" text-anchor="middle">Landing Pública</text>
+        <text x="140" y="214" fill="#94a3b8" font-size="8" text-anchor="middle">HTML + Tailwind CDN</text>
+        <text x="140" y="234" fill="#22d3ee" font-size="7" text-anchor="middle">GET /</text>
+
+        <!-- Dashboard SPA -->
+        <rect x="50" y="270" width="180" height="90" rx="8" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1.5"/>
+        <text x="140" y="293" fill="white" font-size="11" font-weight="600" text-anchor="middle">Dashboard SPA</text>
+        <text x="140" y="309" fill="#94a3b8" font-size="8" text-anchor="middle">React + Vite + shadcn/ui</text>
+        <text x="140" y="325" fill="#94a3b8" font-size="8" text-anchor="middle">TanStack Query + Router</text>
+        <text x="140" y="345" fill="#22d3ee" font-size="7" text-anchor="middle">/dashboard/*</text>
+
+        <!-- ===== BACKEND LAYER ===== -->
+
+        <!-- Pack Gateway -->
+        <rect x="280" y="175" width="220" height="130" rx="8" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="390" y="195" fill="white" font-size="12" font-weight="600" text-anchor="middle">Pack Gateway</text>
+        <text x="390" y="213" fill="#94a3b8" font-size="8" text-anchor="middle">FastAPI + Uvicorn</text>
+        <text x="390" y="233" fill="#94a3b8" font-size="8" text-anchor="middle">main.py · chat.py · auth.py</text>
+        <text x="390" y="253" fill="#94a3b8" font-size="8" text-anchor="middle">security.py · models.py</text>
+        <text x="390" y="273" fill="#94a3b8" font-size="8" text-anchor="middle">supabase_client.py</text>
+        <text x="390" y="293" fill="#34d399" font-size="7" text-anchor="middle">:8085 — systemd</text>
+
+        <!-- ===== SECURITY LAYER ===== -->
+
+        <!-- Auth Module -->
+        <rect x="550" y="175" width="200" height="75" rx="8" fill="rgba(136, 19, 55, 0.4)" stroke="#fb7185" stroke-width="1.5"/>
+        <text x="650" y="195" fill="white" font-size="11" font-weight="600" text-anchor="middle">Auth &amp; Security</text>
+        <text x="650" y="213" fill="#94a3b8" font-size="8" text-anchor="middle">JWT Validation (PyJWT)</text>
+        <text x="650" y="233" fill="#94a3b8" font-size="8" text-anchor="middle">7 Security Headers</text>
+
+        <!-- Admin API -->
+        <rect x="550" y="270" width="200" height="55" rx="8" fill="rgba(136, 19, 55, 0.25)" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="4,4"/>
+        <text x="650" y="292" fill="white" font-size="11" font-weight="600" text-anchor="middle">Admin API</text>
+        <text x="650" y="310" fill="#94a3b8" font-size="8" text-anchor="middle">Leads CRUD</text>
+
+        <!-- ===== EXTERNAL SERVICES ===== -->
+
+        <!-- OpenRouter -->
+        <rect x="800" y="175" width="200" height="55" rx="8" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="900" y="195" fill="white" font-size="11" font-weight="600" text-anchor="middle">OpenRouter API</text>
+        <text x="900" y="213" fill="#94a3b8" font-size="8" text-anchor="middle">LLM Inference (Free models)</text>
+
+        <!-- Pack Registry -->
+        <rect x="800" y="250" width="200" height="55" rx="8" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1.5"/>
+        <text x="900" y="270" fill="white" font-size="11" font-weight="600" text-anchor="middle">Pack Registry</text>
+        <text x="900" y="288" fill="#94a3b8" font-size="8" text-anchor="middle">2 packs · YAML config</text>
+
+        <!-- ===== ARROWS (Backend ↔ External) ===== -->
+
+        <!-- Pack Gateway → OpenRouter -->
+        <line x1="500" y1="205" x2="798" y2="205" stroke="#94a3b8" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <text x="650" y="199" fill="#94a3b8" font-size="7" text-anchor="middle">chat completions</text>
+
+        <!-- Auth → Supabase Auth -->
+        <path d="M 550 215 L 490 215 Q 470 215 470 235 L 470 370" fill="none" stroke="#fb7185" stroke-width="1.5" stroke-dasharray="5,5" marker-end="url(#arrow-dashed)"/>
+        <text x="485" y="295" fill="#fb7185" font-size="7">JWT verify</text>
+
+        <!-- Frontend → Backend -->
+        <line x1="230" y1="215" x2="278" y2="215" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <text x="254" y="209" fill="#94a3b8" font-size="7" text-anchor="middle">fetch + JWT</text>
+
+        <line x1="230" y1="315" x2="278" y2="315" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+        <!-- Backend → Auth -->
+        <line x1="500" y1="215" x2="548" y2="215" stroke="#fb7185" stroke-width="1.5" marker-end="url(#arrow-dashed)"/>
+        <text x="524" y="208" fill="#fb7185" font-size="7">validate</text>
+
+        <!-- ===== SUPABASE LAYER ===== -->
+
+        <rect x="30" y="390" width="1000" height="270" rx="12" fill="rgba(76, 29, 149, 0.06)" stroke="#a78bfa" stroke-width="1" stroke-dasharray="8,4"/>
+        <text x="42" y="410" fill="#a78bfa" font-size="10" font-weight="600">Supabase Self-Hosted (Docker Compose — 10 containers)</text>
+
+        <!-- Kong -->
+        <rect x="50" y="425" width="140" height="50" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="120" y="448" fill="white" font-size="11" font-weight="600" text-anchor="middle">Kong</text>
+        <text x="120" y="464" fill="#94a3b8" font-size="8" text-anchor="middle">API Gateway :8000</text>
+
+        <!-- Arrow: VPS → Kong -->
+        <line x1="390" y1="305" x2="390" y2="360" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <line x1="390" y1="360" x2="120" y2="360" stroke="#34d399" stroke-width="1.5"/>
+        <line x1="120" y1="360" x2="120" y2="423" stroke="#34d399" stroke-width="1.5" marker-end="url(#arrow)"/>
+        <text x="255" y="354" fill="#94a3b8" font-size="7">REST via ANON_KEY / SERVICE_KEY</text>
+
+        <!-- GoTrue -->
+        <rect x="50" y="495" width="140" height="50" rx="6" fill="rgba(136, 19, 55, 0.35)" stroke="#fb7185" stroke-width="1.5"/>
+        <text x="120" y="518" fill="white" font-size="11" font-weight="600" text-anchor="middle">GoTrue</text>
+        <text x="120" y="534" fill="#94a3b8" font-size="8" text-anchor="middle">Auth Service</text>
+
+        <!-- PostgREST -->
+        <rect x="220" y="425" width="140" height="50" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="290" y="448" fill="white" font-size="11" font-weight="600" text-anchor="middle">PostgREST</text>
+        <text x="290" y="464" fill="#94a3b8" font-size="8" text-anchor="middle">RESTful API</text>
+
+        <!-- PostgreSQL -->
+        <rect x="220" y="495" width="140" height="50" rx="6" fill="rgba(76, 29, 149, 0.5)" stroke="#a78bfa" stroke-width="1.5"/>
+        <text x="290" y="518" fill="white" font-size="11" font-weight="600" text-anchor="middle">PostgreSQL 17</text>
+        <text x="290" y="534" fill="#94a3b8" font-size="8" text-anchor="middle">:5433</text>
+
+        <!-- Realtime -->
+        <rect x="400" y="425" width="140" height="50" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="470" y="448" fill="white" font-size="11" font-weight="600" text-anchor="middle">Realtime</text>
+        <text x="470" y="464" fill="#94a3b8" font-size="8" text-anchor="middle">WebSocket</text>
+
+        <!-- Storage -->
+        <rect x="400" y="495" width="140" height="50" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="470" y="518" fill="white" font-size="11" font-weight="600" text-anchor="middle">Storage</text>
+        <text x="470" y="534" fill="#94a3b8" font-size="8" text-anchor="middle">File/Image</text>
+
+        <!-- Studio -->
+        <rect x="570" y="425" width="140" height="50" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="640" y="448" fill="white" font-size="11" font-weight="600" text-anchor="middle">Studio</text>
+        <text x="640" y="464" fill="#94a3b8" font-size="8" text-anchor="middle">Supabase UI</text>
+
+        <!-- Imgproxy -->
+        <rect x="570" y="495" width="140" height="50" rx="6" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1.5"/>
+        <text x="640" y="518" fill="white" font-size="11" font-weight="600" text-anchor="middle">Imgproxy</text>
+        <text x="640" y="534" fill="#94a3b8" font-size="8" text-anchor="middle">Image Opt.</text>
+
+        <!-- PostgreSQL → PostgREST -->
+        <line x1="290" y1="475" x2="290" y2="493" stroke="#a78bfa" stroke-width="1" marker-end="url(#arrow-db)"/>
+
+        <!-- Kong → PostgREST -->
+        <line x1="190" y1="450" x2="218" y2="450" stroke="#34d399" stroke-width="1" marker-end="url(#arrow)"/>
+
+        <!-- ===== TABLES ===== -->
+
+        <rect x="30" y="590" width="1000" height="60" rx="8" fill="rgba(76, 29, 149, 0.1)" stroke="#a78bfa" stroke-width="1"/>
+        <text x="50" y="610" fill="white" font-size="9" font-weight="600">Tables:</text>
+
+        <!-- Table boxes -->
+        <rect x="50" y="620" width="135" height="20" rx="4" fill="rgba(76, 29, 149, 0.2)" stroke="#a78bfa" stroke-width="0.8"/>
+        <text x="117" y="633" fill="#a78bfa" font-size="7" text-anchor="middle">chat_history</text>
+
+        <rect x="195" y="620" width="100" height="20" rx="4" fill="rgba(76, 29, 149, 0.2)" stroke="#a78bfa" stroke-width="0.8"/>
+        <text x="245" y="633" fill="#a78bfa" font-size="7" text-anchor="middle">leads ★</text>
+
+        <rect x="305" y="620" width="100" height="20" rx="4" fill="rgba(76, 29, 149, 0.2)" stroke="#a78bfa" stroke-width="0.8"/>
+        <text x="355" y="633" fill="#a78bfa" font-size="7" text-anchor="middle">niches ★</text>
+
+        <rect x="415" y="620" width="110" height="20" rx="4" fill="rgba(76, 29, 149, 0.2)" stroke="#a78bfa" stroke-width="0.8"/>
+        <text x="470" y="633" fill="#a78bfa" font-size="7" text-anchor="middle">product_packs ★</text>
+
+        <rect x="535" y="620" width="150" height="20" rx="4" fill="rgba(76, 29, 149, 0.2)" stroke="#a78bfa" stroke-width="0.8"/>
+        <text x="610" y="633" fill="#a78bfa" font-size="7" text-anchor="middle">joyeria_productos</text>
+
+        <rect x="695" y="620" width="155" height="20" rx="4" fill="rgba(76, 29, 149, 0.2)" stroke="#a78bfa" stroke-width="0.8"/>
+        <text x="772" y="633" fill="#a78bfa" font-size="7" text-anchor="middle">joyeria_cotizaciones</text>
+
+        <text x="50" y="643" fill="#fbbf24" font-size="7">★ = creadas hoy (2026-07-15)</text>
+
+        <!-- ===== LEGEND ===== -->
+        <text x="770" y="158" fill="white" font-size="10" font-weight="600">Legend</text>
+
+        <rect x="770" y="170" width="14" height="9" rx="2" fill="rgba(8, 51, 68, 0.4)" stroke="#22d3ee" stroke-width="1"/>
+        <text x="790" y="178" fill="#94a3b8" font-size="7">Frontend</text>
+
+        <rect x="770" y="186" width="14" height="9" rx="2" fill="rgba(6, 78, 59, 0.4)" stroke="#34d399" stroke-width="1"/>
+        <text x="790" y="194" fill="#94a3b8" font-size="7">Backend</text>
+
+        <rect x="770" y="202" width="14" height="9" rx="2" fill="rgba(76, 29, 149, 0.5)" stroke="#a78bfa" stroke-width="1"/>
+        <text x="790" y="210" fill="#94a3b8" font-size="7">Database</text>
+
+        <rect x="770" y="218" width="14" height="9" rx="2" fill="rgba(136, 19, 55, 0.4)" stroke="#fb7185" stroke-width="1"/>
+        <text x="790" y="226" fill="#94a3b8" font-size="7">Security</text>
+
+        <rect x="770" y="234" width="14" height="9" rx="2" fill="rgba(30, 41, 59, 0.5)" stroke="#94a3b8" stroke-width="1"/>
+        <text x="790" y="242" fill="#94a3b8" font-size="7">External</text>
+
+        <line x1="770" y1="252" x2="784" y2="252" stroke="#fb7185" stroke-width="1" stroke-dasharray="3,3"/>
+        <text x="790" y="255" fill="#94a3b8" font-size="7">Auth Flow</text>
+      </svg>
+    </div>
+
+    <!-- Info Cards -->
+    <div class="cards">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot cyan"></div>
+          <h3>Frontend</h3>
+        </div>
+        <ul>
+          <li>• React 18 + Vite 5 + TypeScript</li>
+          <li>• shadcn/ui + Tailwind + Design Tokens SDC</li>
+          <li>• TanStack Query v5 + react-router-dom v6</li>
+          <li>• Zod v4 + react-hook-form</li>
+          <li>• Landing: HTML + Tailwind CDN (sin framework)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot emerald"></div>
+          <h3>Backend</h3>
+        </div>
+        <ul>
+          <li>• FastAPI + Uvicorn (systemd, puerto 8085)</li>
+          <li>• 14 endpoints públicos + protegidos</li>
+          <li>• JWT validation (PyJWT + HS256)</li>
+          <li>• 7 security headers (CSP, XSS, XFO, etc.)</li>
+          <li>• OpenRouter integration (free LLMs)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-dot violet"></div>
+          <h3>Data &amp; Infrastructure</h3>
+        </div>
+        <ul>
+          <li>• Supabase self-hosted (10 Docker containers)</li>
+          <li>• PostgreSQL 17 (6 tablas, RLS policies)</li>
+          <li>• OVH VPS (Ubuntu 26.04, 5.8GB RAM)</li>
+          <li>• 2 packs registrados (joyeria, musica)</li>
+          <li>• 4 nichos + 4 packs en catálogo público</li>
+        </ul>
+      </div>
+    </div>
+
+    <p class="footer">
+      Sonora Digital Corp • MVP 2026-07-15 • Built with React + FastAPI + Supabase
+    </p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sonora Digital Corp — Agentes IA para tu negocio</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            primary: '#c85a3e', secondary: '#d4a34a', accent: '#e87a30',
+            surface: 'rgba(245,230,211,0.04)', background: '#120c0a', 'surface-hover': 'rgba(245,230,211,0.08)',
+            text: '#f5e6d3', 'text-muted': 'rgba(245,230,211,0.55)', 'text-dim': 'rgba(245,230,211,0.3)',
+            border: 'rgba(245,230,211,0.08)', 'border-hover': 'rgba(200,90,62,0.3)',
+            success: '#4ade80', warning: '#facc15', error: '#ef4444',
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * { font-family: 'Inter', sans-serif; }
+    .gradient-text { background: linear-gradient(135deg, #c85a3e, #d4a34a); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .btn-primary { background: linear-gradient(135deg, #c85a3e, #d4a34a); }
+    .card-pack { transition: all 0.3s ease; }
+    .card-pack:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(0,212,255,0.1); }
+  </style>
+</head>
+<body class="bg-background text-text">
+  <nav class="fixed top-0 w-full z-50 bg-background/80 backdrop-blur-lg border-b border-border">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="h-8 w-8 rounded-xl btn-primary flex items-center justify-center">
+          <span class="text-white font-bold text-sm">SDC</span>
+        </div>
+        <span class="font-bold text-lg">Sonora Digital Corp</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="#packs" class="text-sm text-text-muted hover:text-text transition-colors">Packs</a>
+        <a href="#cotizar" class="text-sm px-4 py-2 rounded-lg btn-primary text-white font-medium">Cotizar</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="pt-32 pb-20 px-4 text-center">
+    <div class="max-w-4xl mx-auto">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary/10 border border-primary/20 text-primary text-sm font-medium mb-6">
+        🚀 Lanzamos nuevos packs de IA
+      </div>
+      <h1 class="text-5xl md:text-7xl font-extrabold leading-tight mb-6">
+        Agentes de IA para<br>
+        <span class="gradient-text">tu negocio</span>
+      </h1>
+      <p class="text-xl text-text-muted max-w-2xl mx-auto mb-10">
+        Automatiza atención al cliente, captación de leads y ventas con agentes IA especializados por industria. 24/7, desde WhatsApp y web.
+      </p>
+      <div class="flex items-center justify-center gap-4">
+        <a href="#packs" class="px-8 py-3 rounded-xl btn-primary text-white font-semibold text-lg hover:opacity-90 transition-opacity">
+          Ver Packs
+        </a>
+        <a href="#cotizar" class="px-8 py-3 rounded-xl border border-border text-text font-semibold text-lg hover:bg-surface transition-colors">
+          Cotizar
+        </a>
+      </div>
+      <div class="mt-16 grid grid-cols-3 gap-8 max-w-2xl mx-auto">
+        <div class="text-center"><div class="text-3xl mb-2">⚡</div><p class="text-sm text-text-muted">Respuesta en segundos</p></div>
+        <div class="text-center"><div class="text-3xl mb-2">🔌</div><p class="text-sm text-text-muted">Sin código</p></div>
+        <div class="text-center"><div class="text-3xl mb-2">📊</div><p class="text-sm text-text-muted">Dashboard en vivo</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="packs" class="py-20 px-4">
+    <div class="max-w-6xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">Packs por Industria</h2>
+      <p class="text-text-muted text-center mb-12 max-w-xl mx-auto">Cada pack incluye un agente IA entrenado específicamente para tu industria</p>
+      <div id="packs-grid" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="col-span-full text-center py-12 text-text-muted">Cargando packs...</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="cotizar" class="py-20 px-4 bg-surface/50">
+    <div class="max-w-xl mx-auto">
+      <h2 class="text-3xl md:text-4xl font-bold text-center mb-4">Cotiza tu Pack</h2>
+      <p class="text-text-muted text-center mb-10">Cuéntanos qué necesitas y te contactamos en menos de 24h</p>
+      <form id="lead-form" class="space-y-4">
+        <div id="form-error" class="hidden p-3 rounded-lg bg-error/10 border border-error/20 text-sm text-error"></div>
+        <div id="form-success" class="hidden p-6 rounded-xl bg-success/10 border border-success/20 text-center">
+          <div class="text-4xl mb-3">✅</div>
+          <p class="text-success font-semibold text-lg">¡Recibimos tu solicitud!</p>
+          <p class="text-text-muted text-sm mt-1">Te contactaremos en menos de 24 horas.</p>
+        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <input name="name" placeholder="Nombre completo" required class="col-span-2 sm:col-span-1 h-12 px-4 rounded-xl bg-background border border-border text-text placeholder:text-text-dim focus:outline-none focus:ring-2 focus:ring-primary">
+          <input name="email" type="email" placeholder="Email" required class="col-span-2 sm:col-span-1 h-12 px-4 rounded-xl bg-background border border-border text-text placeholder:text-text-dim focus:outline-none focus:ring-2 focus:ring-primary">
+        </div>
+        <input name="company" placeholder="Empresa" class="w-full h-12 px-4 rounded-xl bg-background border border-border text-text placeholder:text-text-dim focus:outline-none focus:ring-2 focus:ring-primary">
+        <input name="phone" placeholder="Teléfono" class="w-full h-12 px-4 rounded-xl bg-background border border-border text-text placeholder:text-text-dim focus:outline-none focus:ring-2 focus:ring-primary">
+        <textarea name="message" placeholder="Cuéntanos qué necesitas..." rows="3" class="w-full px-4 py-3 rounded-xl bg-background border border-border text-text placeholder:text-text-dim focus:outline-none focus:ring-2 focus:ring-primary resize-none"></textarea>
+        <button type="submit" class="w-full h-12 rounded-xl btn-primary text-white font-semibold hover:opacity-90 transition-opacity disabled:opacity-50" id="submit-btn">Enviar Cotización</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="py-8 px-4 border-t border-border text-center text-sm text-text-muted">
+    <p>© 2026 Sonora Digital Corp. Todos los derechos reservados.</p>
+  </footer>
+
+  <script>
+    // Load packs from API
+    fetch('/api/public/packs')
+      .then(r => r.json())
+      .then(packs => {
+        const grid = document.getElementById('packs-grid');
+        grid.innerHTML = packs.map(pack => {
+          const features = Array.isArray(pack.features) ? pack.features : [];
+          return '<div class="card-pack rounded-2xl border border-border bg-surface p-6 flex flex-col">' +
+            '<div class="text-3xl mb-3">🤖</div>' +
+            '<h3 class="text-lg font-bold mb-1">' + pack.name + '</h3>' +
+            '<p class="text-sm text-text-muted mb-3">' + (pack.tagline || '') + '</p>' +
+            '<div class="flex-1">' +
+            features.map(f => '<div class="flex items-center gap-2 text-sm text-text-muted mb-1.5"><span class="text-primary">✓</span>' + f + '</div>').join('') +
+            '</div>' +
+            '<div class="mt-4 pt-4 border-t border-border flex items-center justify-between">' +
+            '<span class="text-primary font-bold">' + (pack.price_range || 'Consultar') + '</span>' +
+            '<a href="#cotizar" class="text-sm text-secondary hover:underline font-medium">Cotizar →</a>' +
+            '</div></div>';
+        }).join('');
+      })
+      .catch(() => {
+        document.getElementById('packs-grid').innerHTML = '<div class="col-span-full text-center py-8 text-text-muted">Error al cargar packs</div>';
+      });
+
+    // Submit lead form
+    document.getElementById('lead-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submit-btn');
+      const errDiv = document.getElementById('form-error');
+      const successDiv = document.getElementById('form-success');
+      errDiv.classList.add('hidden');
+      successDiv.classList.add('hidden');
+      btn.disabled = true; btn.textContent = 'Enviando...';
+
+      const fd = new FormData(e.target);
+      const data = { name: fd.get('name'), email: fd.get('email'), company: fd.get('company'), phone: fd.get('phone'), message: fd.get('message') };
+
+      try {
+        const res = await fetch('/api/public/leads', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+        if (!res.ok) throw new Error(await res.text());
+        e.target.reset();
+        successDiv.classList.remove('hidden');
+      } catch (err) {
+        errDiv.textContent = 'Error al enviar. Intenta de nuevo.';
+        errDiv.classList.remove('hidden');
+      } finally {
+        btn.disabled = false; btn.textContent = 'Enviar Cotización';
+      }
+    });
+  </script>
+</body>
+</html>

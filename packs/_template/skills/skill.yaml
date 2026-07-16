@@ -1,0 +1,30 @@
+name: "{business_type}/{skill-name}"
+description: "{descripción de lo que hace}"
+version: 1
+
+inputs:
+  - name: "{input-1}"
+    type: string
+    description: "{descripción}"
+  - name: "{input-2}"
+    type: string
+    description: "{descripción}"
+
+outputs:
+  - name: "{output-1}"
+    type: string
+    description: "{descripción}"
+
+prompt: |
+  Eres un experto en {skill-name} para {business_type}.
+  {instructions}
+
+tools_required:
+  - "{tool-1}"
+
+agents_allowed:
+  - "{agent-name}"
+
+eval_criteria:
+  - accuracy
+  - latency

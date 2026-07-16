@@ -1,0 +1,10 @@
+{
+  "pack": "joyeria",
+  "tenant": "vps-test",
+  "date": "2026-07-15T20:59:34Z",
+  "passed": 18,
+  "total": 18,
+  "score": 100,
+  "threshold": 80,
+  "status": "approved"
+}

@@ -1,0 +1,25 @@
+name: "{agent-name}"
+role: "{role}"
+description: "{descripción}"
+model: "opencode/deepseek-v4-flash-free"
+provider: opencode-go
+status: active
+
+capabilities:
+  - "{capability-1}"
+  - "{capability-2}"
+
+skills:
+  - "{skill-1}"
+  - "{skill-2}"
+
+tools:
+  - "{tool-1}"
+
+prompt: |
+  Eres {agent-name}, {role} especializado en {business_type}.
+  {instructions}
+
+never:
+  - "deploy.*"
+  - "secrets.*"
