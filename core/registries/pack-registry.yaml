@@ -1,0 +1,88 @@
+version: 1
+updated: 2026-07-15T19:00:00Z
+description: "Registro maestro de todos los packs verticales disponibles"
+
+packs:
+  joyeria:
+    name: "Joyería"
+    description: "Tienda de joyería con ecommerce Shopify, CRM de clientes, catálogo digital, WhatsApp bot"
+    tier: basic
+    price_monthly: 299
+    status: mvp
+    created: 2026-07-15
+    agents:
+      - sales-joyeria
+    skills:
+      - joyeria/catalogar-producto
+      - joyeria/cotizar
+      - joyeria/atender-cliente
+    tools:
+      - shopify-api
+      - whatsapp-api
+      - truth-guardian
+      - openrouter-api
+    use_cases:
+      - venta
+      - cotizacion
+      - atencion-cliente
+    services:
+      web: true
+      crm: true
+      ecommerce: true
+      whatsapp: true
+    requirements:
+      qdrant_collection: true
+      neo4j_labels: true
+      postgres_schema: true
+
+  musica:
+    name: "Música (ABE Music)"
+    description: "Sello discográfico con distribución digital, regalías, CRM artistas, pipeline reels IA"
+    tier: pro
+    price_monthly: 499
+    status: active
+    created: 2026-05-01
+    agents:
+      - abe-agent
+      - revenue-agent
+      - crm-agent
+    skills:
+      - musica/distribucion
+      - musica/regalias
+      - musica/promocion
+    tools:
+      - spotify-api
+      - deezer-api
+      - apple-music-api
+    use_cases:
+      - onboarding-artista
+      - reporte-semanal
+      - distribucion
+    services:
+      web: true
+      crm: true
+      streaming: true
+      whatsapp: false
+    requirements:
+      qdrant_collection: true
+      neo4j_labels: true
+      postgres_schema: true
+
+  _template:
+    name: "Template Base"
+    description: "Usar como base para crear nuevos packs"
+    tier: template
+    status: template
+    agents: []
+    skills: []
+    tools: []
+    use_cases: []
+    services:
+      web: false
+      crm: false
+      ecommerce: false
+      whatsapp: false
+    requirements:
+      qdrant_collection: false
+      neo4j_labels: false
+      postgres_schema: false

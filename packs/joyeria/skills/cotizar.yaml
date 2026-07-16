@@ -1,0 +1,45 @@
+name: joyeria/cotizar
+description: "Cotiza productos de joyería con markup, descuentos y tiempos de entrega"
+version: 1
+
+inputs:
+  - name: producto_id
+    type: string
+    description: "ID del producto en Shopify"
+  - name: cantidad
+    type: integer
+    default: 1
+  - name: personalizacion
+    type: string
+    description: "Grabado, talla especial, cambio de piedra"
+  - name: cliente_id
+    type: string
+    description: "ID del cliente (si existe)"
+
+outputs:
+  - name: precio_total
+    type: number
+    description: "Precio con markup y descuentos"
+  - name: tiempo_entrega
+    type: string
+    description: "Tiempo estimado de entrega"
+  - name: opciones_pago
+    type: array
+    description: "Opciones de pago disponibles"
+
+prompt: |
+  Eres un cotizador de joyería fina.
+  Calcula precio: base + markup (30-50% para joyería fina) + personalización.
+  Si el cliente tiene historial, aplica descuento por fidelidad (5-15%).
+  Tiempos: joyería estándar 3-5 días hábiles, personalizada 10-15 días.
+
+tools_required:
+  - shopify-api
+  - whatsapp-api
+
+agents_allowed:
+  - sales-joyeria
+
+eval_criteria:
+  - accuracy: "precios correctos"
+  - latency: "< 3s"

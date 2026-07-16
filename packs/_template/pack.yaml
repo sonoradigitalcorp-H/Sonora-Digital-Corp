@@ -1,0 +1,37 @@
+name: "Nombre del Pack"
+description: "Descripción del negocio vertical"
+tier: basic
+price_monthly: 299
+version: 1
+created: 2026-07-15
+status: draft
+
+agents:
+  - nombre-agente: "Descripción"
+
+skills:
+  - categoria/nombre-skill
+
+tools:
+  - tool-name
+
+use_cases:
+  - caso-de-uso
+
+services:
+  web: true
+  crm: true
+  ecommerce: false
+  whatsapp: true
+
+prompts:
+  primary: |
+    Eres el agente principal de {business_name}.
+    Tu rol es ayudar al cliente con {descripcion}.
+    Usa un tono {tone}.
+    Tus herramientas disponibles son: {tools_list}.
+
+requirements:
+  qdrant_collection: false
+  neo4j_labels: false
+  postgres_schema: false

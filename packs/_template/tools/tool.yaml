@@ -1,0 +1,15 @@
+name: "{tool-name}"
+type: external
+description: "{descripción}"
+auth: api-key
+rate_limit: 30/min
+
+actions:
+  - name: "{action-1}"
+    method: POST
+    endpoint: "{endpoint}"
+    description: "{descripción}"
+  - name: "{action-2}"
+    method: GET
+    endpoint: "{endpoint}"
+    description: "{descripción}"

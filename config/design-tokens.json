@@ -1,25 +1,29 @@
 {
-  "version": "1.0.0",
-  "name": "Sonora Digital Corp Design System",
+  "version": "1.1.0",
+  "name": "Sonora Digital Corp Design System — Cálido",
   "colors": {
-    "primary": "#00d4ff",
-    "secondary": "#7b2ff7",
-    "accent": "#ff6b35",
+    "primary": "#c85a3e",
+    "primary-hover": "#d46b4f",
+    "secondary": "#d4a34a",
+    "secondary-hover": "#deb55e",
+    "accent": "#e87a30",
     "success": "#4ade80",
     "warning": "#facc15",
-    "error": "#f87171",
-    "background": "#0a0a1a",
-    "surface": "rgba(255,255,255,0.03)",
-    "surface-hover": "rgba(255,255,255,0.06)",
-    "text": "#e0e0e0",
-    "text-muted": "rgba(255,255,255,0.5)",
-    "text-dim": "rgba(255,255,255,0.3)",
-    "border": "rgba(255,255,255,0.08)",
-    "border-hover": "rgba(0,212,255,0.3)"
+    "error": "#ef4444",
+    "background": "#120c0a",
+    "surface": "rgba(245,230,211,0.04)",
+    "surface-hover": "rgba(245,230,211,0.08)",
+    "text": "#f5e6d3",
+    "text-muted": "rgba(245,230,211,0.55)",
+    "text-dim": "rgba(245,230,211,0.3)",
+    "border": "rgba(245,230,211,0.08)",
+    "border-hover": "rgba(200,90,62,0.3)",
+    "bg-card": "rgba(245,230,211,0.03)",
+    "bg-surface-alt": "rgba(245,230,211,0.02)"
   },
   "typography": {
-    "font-family": "'Segoe UI', system-ui, -apple-system, sans-serif",
-    "font-mono": "'Fira Code', 'JetBrains Mono', monospace",
+    "font-family": "'Inter', system-ui, -apple-system, sans-serif",
+    "font-mono": "'JetBrains Mono', 'Fira Code', monospace",
     "weights": { "light": 300, "regular": 400, "medium": 500, "semibold": 600, "bold": 700, "extrabold": 800 },
     "scale": [1, 1.25, 1.563, 1.953, 2.441, 3.052, 3.815],
     "line-height": 1.6
@@ -36,11 +40,11 @@
     "full": 9999
   },
   "shadows": {
-    "sm": "0 2px 8px rgba(0,0,0,0.3)",
-    "md": "0 4px 16px rgba(0,0,0,0.4)",
-    "lg": "0 8px 32px rgba(0,0,0,0.5)",
-    "glow-primary": "0 0 20px rgba(0,212,255,0.3)",
-    "glow-secondary": "0 0 20px rgba(123,47,247,0.3)"
+    "sm": "0 2px 8px rgba(0,0,0,0.5)",
+    "md": "0 4px 16px rgba(0,0,0,0.6)",
+    "lg": "0 8px 32px rgba(0,0,0,0.7)",
+    "glow-primary": "0 0 20px rgba(200,90,62,0.25)",
+    "glow-secondary": "0 0 20px rgba(212,163,74,0.2)"
   },
   "transitions": {
     "fast": "0.15s ease",
@@ -64,25 +68,25 @@
   },
   "components": {
     "card": {
-      "background": "rgba(255,255,255,0.03)",
-      "border": "1px solid rgba(255,255,255,0.08)",
+      "background": "rgba(245,230,211,0.03)",
+      "border": "1px solid rgba(245,230,211,0.08)",
       "border-radius": 16,
       "padding": 24,
-      "hover": { "border-color": "rgba(0,212,255,0.3)", "transform": "translateY(-4px)" }
+      "hover": { "border-color": "rgba(200,90,62,0.3)", "transform": "translateY(-4px)" }
     },
     "button": {
-      "primary": { "background": "linear-gradient(135deg, #00d4ff, #7b2ff7)", "color": "#fff" },
-      "secondary": { "background": "rgba(255,255,255,0.05)", "border": "1px solid rgba(255,255,255,0.1)", "color": "#fff" },
+      "primary": { "background": "linear-gradient(135deg, #c85a3e, #d4a34a)", "color": "#fff" },
+      "secondary": { "background": "rgba(245,230,211,0.05)", "border": "1px solid rgba(245,230,211,0.1)", "color": "#f5e6d3" },
       "border-radius": 12,
       "padding": "16px 32px",
       "font-weight": 600
     },
     "input": {
-      "background": "rgba(255,255,255,0.05)",
-      "border": "1px solid rgba(255,255,255,0.1)",
+      "background": "rgba(245,230,211,0.05)",
+      "border": "1px solid rgba(245,230,211,0.1)",
       "border-radius": 8,
       "padding": "12px 16px",
-      "color": "#e0e0e0"
+      "color": "#f5e6d3"
     }
   }
 }
