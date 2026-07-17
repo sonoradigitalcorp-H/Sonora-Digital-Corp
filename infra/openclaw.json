@@ -1,0 +1,14 @@
+{
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "auth": "token"
+  },
+  "plugins": {
+    "allow": ["whatsapp", "telegram", "github", "browser"]
+  },
+  "memory": {
+    "backend": "engram",
+    "engram_url": "http://sdc-engram:7437"
+  }
+}

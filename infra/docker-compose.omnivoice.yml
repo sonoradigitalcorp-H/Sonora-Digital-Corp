@@ -1,0 +1,135 @@
+services:
+  # ── OmniVoice Core ──
+  openclaw-gateway:
+    image: node:24-slim
+    container_name: sdc-openclaw-gateway
+    labels:
+      - "sdc.domain=core"
+      - "sdc.service=gateway"
+    ports:
+      - "127.0.0.1:18789:18789"
+    environment:
+      - OPENCLAW_GATEWAY_PORT=18789
+      - OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN}
+      - OPENAI_API_KEY=${OPENROUTER_API_KEY}
+      - OPENAI_BASE_URL=https://openrouter.ai/api/v1
+    volumes:
+      - openclaw_config:/root/.openclaw
+      - openclaw_extensions:/root/.openclaw/extensions
+      - openclaw_memory:/root/.openclaw/memory
+    working_dir: /root
+    command: >
+      sh -c "npm install -g openclaw@latest &&
+             openclaw gateway run --port 18789 --auth token"
+    restart: unless-stopped
+    mem_limit: 512m
+    memswap_limit: 512m
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:18789/"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - sdc-network
+
+  engram-server:
+    image: gentlemanprogramming/engram:latest
+    container_name: sdc-engram
+    labels:
+      - "sdc.domain=core"
+      - "sdc.service=memory"
+    ports:
+      - "127.0.0.1:7437:7437"
+    environment:
+      - ENGRAM_PORT=7437
+      - ENGRAM_DATA_DIR=/data
+    volumes:
+      - engram_data:/data
+    command: ["engram", "serve"]
+    restart: unless-stopped
+    mem_limit: 128m
+    memswap_limit: 128m
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:7437/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    networks:
+      - sdc-network
+
+  # ── OmniVoice Voice AI ──
+  voice-server:
+    image: python:3.12-slim
+    container_name: sdc-voice-server
+    labels:
+      - "sdc.domain=ai"
+      - "sdc.service=voice"
+    ports:
+      - "127.0.0.1:8765:8765"
+    environment:
+      - OPENAI_API_KEY=${OPENROUTER_API_KEY}
+      - OPENAI_BASE_URL=https://openrouter.ai/api/v1
+    volumes:
+      - voice_models:/root/.cache/huggingface
+    working_dir: /root
+    command: >
+      sh -c "pip install speech-to-speech &&
+             speech-to-speech --mode realtime
+               --llm_backend responses-api
+               --model_name openai/gpt-4o-mini
+               --responses_api_base_url https://openrouter.ai/api/v1
+               --responses_api_api_key ${OPENROUTER_API_KEY}
+               --responses_api_stream"
+    restart: unless-stopped
+    mem_limit: 1g
+    memswap_limit: 1g
+    depends_on:
+      openclaw-gateway:
+        condition: service_started
+    healthcheck:
+      test: ["CMD-SHELL", "timeout 3 bash -c '</dev/tcp/127.0.0.1/8765' 2>/dev/null || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - sdc-network
+
+  # ── OmniVoice WhatsApp Bridge ──
+  whatsapp-bridge:
+    build:
+      context: ..
+      dockerfile: infra/docker/wacli/Dockerfile
+    container_name: sdc-whatsapp
+    labels:
+      - "sdc.domain=ux"
+      - "sdc.service=whatsapp"
+    ports:
+      - "127.0.0.1:9090:9090"
+    volumes:
+      - wacli_data:/home/wacli/.wacli
+      - wacli_media:/home/wacli/media
+    environment:
+      - WACLI_STORE_DIR=/home/wacli/.wacli
+      - WACLI_HTTP_PORT=9090
+      - WACLI_AUTH_TOKEN=${WACLI_AUTH_TOKEN}
+    restart: unless-stopped
+    mem_limit: 256m
+    memswap_limit: 256m
+    networks:
+      - sdc-network
+
+volumes:
+  openclaw_config:
+  openclaw_extensions:
+  openclaw_memory:
+  engram_data:
+  voice_models:
+  wacli_data:
+  wacli_media:
+
+networks:
+  sdc-network:
+    external: true
