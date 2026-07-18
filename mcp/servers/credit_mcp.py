@@ -9,7 +9,9 @@ import sqlite3
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent.parent
-DB_PATH = Path(os.environ.get("DB_PATH", str(REPO / "data" / "clone_service.db")))
+
+def _get_db_path() -> Path:
+    return Path(os.environ.get("DB_PATH", str(REPO / "data" / "clone_service.db")))
 
 PACKS = {
     "basic": {"photo": 10, "video": 3, "tts": 10, "training": 1},
@@ -19,8 +21,9 @@ PACKS = {
 
 
 def _get_db() -> sqlite3.Connection:
-    os.makedirs(DB_PATH.parent, exist_ok=True)
-    conn = sqlite3.connect(str(DB_PATH))
+    db_path = _get_db_path()
+    os.makedirs(db_path.parent, exist_ok=True)
+    conn = sqlite3.connect(str(db_path))
     conn.row_factory = sqlite3.Row
     return conn
 
