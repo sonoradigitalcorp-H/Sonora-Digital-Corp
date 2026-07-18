@@ -1,0 +1,52 @@
+# Cost Rates — Proveedores del ecosistema SDC
+# Versión: 1.0.0
+# Fuente: costos reales de FAL.ai + OpenRouter + Supabase al 2026-07-18
+
+llm:
+  openrouter:
+    gpt-4o-mini:
+      input_per_1k: 0.00015
+      output_per_1k: 0.00060
+    gpt-4o:
+      input_per_1k: 0.00250
+      output_per_1k: 0.01000
+    claude-3.5-sonnet:
+      input_per_1k: 0.00300
+      output_per_1k: 0.01500
+    gemini-2.5-flash:
+      input_per_1k: 0.00010
+      output_per_1k: 0.00040
+    deepseek-v4-flash:
+      input_per_1k: 0.00020
+      output_per_1k: 0.00080
+
+fal_ai:
+  flux_lora_train:
+    per_training: 4.00
+    estimated_time_min: 10
+  flux_lora_inference:
+    per_image: 0.01
+  flux_dev:
+    per_image: 0.015
+  flux_schnell:
+    per_image: 0.003
+  live_portrait:
+    per_video_5s: 0.05
+  kling_video_pro:
+    per_video_5s: 0.10
+  seedance:
+    per_video_5s: 0.08
+  veed_lipsync:
+    per_sync: 0.05
+  minimax_voice_clone:
+    per_clone: 1.00
+  minimax_tts:
+    per_char: 0.00002
+
+supabase:
+  storage_per_gb: 0.02
+  bandwidth_per_gb: 0.01
+
+infra:
+  vps_ovh_monthly: 15.00
+  dominio_yearly: 12.00
