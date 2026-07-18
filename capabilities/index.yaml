@@ -80,3 +80,13 @@ capabilities:
     agent: finance-agent
     cost_tier: 1
     description: "Process payments via Stripe or Mercado Pago"
+
+  - id: clone-person
+    path: capabilities/clone-person/
+    type: business
+    domain: marketing
+    version: 1.0.0
+    status: active
+    agent: clone-agent
+    cost_tier: 3
+    description: "Train facial LoRA + voice clone from client photos/audio, generate advertising content with their identity"
