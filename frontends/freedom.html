@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tu Clone Digital — Libertad | Sonora Digital Corp</title>
+<meta name="description" content="Imagina lo que tu clone puede hacer por ti. Prueba gratis 24h.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Outfit',sans-serif;background:#06060e;color:#e2e8f0;overflow-x:hidden}
+canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:6rem 2rem;position:relative;z-index:1}
+.hero h1{font-size:clamp(2.8rem,8vw,6rem);font-weight:900;line-height:1.05;letter-spacing:-.03em;max-width:900px}
+.hero h1 .grad{background:linear-gradient(135deg,#a855f7,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero h1 .light{color:rgba(255,255,255,.15)}
+.hero p{font-size:1.2rem;color:#94a3b8;max-width:600px;line-height:1.7;margin:2rem auto}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1.2rem;background:rgba(124,58,237,.1);border:1px solid rgba(124,58,237,.2);border-radius:100px;font-size:.75rem;color:#a855f7;letter-spacing:.12em;text-transform:uppercase;margin-bottom:2rem;font-weight:600}
+.btn-primary{padding:.9rem 2.5rem;background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;border-radius:100px;color:white;font-weight:700;font-size:1rem;cursor:pointer;transition:all .4s;text-decoration:none;display:inline-flex;align-items:center;gap:.6rem}
+.btn-primary:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 0 60px rgba(124,58,237,.4)}
+.btn-secondary{padding:.9rem 2.5rem;background:transparent;border:1px solid rgba(255,255,255,.08);border-radius:100px;color:#94a3b8;font-weight:600;font-size:1rem;cursor:pointer;transition:all .3s;text-decoration:none}
+.btn-secondary:hover{background:rgba(255,255,255,.04);border-color:rgba(124,58,237,.3);color:white}
+.glow-orb{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;opacity:.1}
+.glow-orb:nth-child(1){width:600px;height:600px;background:#a855f7;top:-20%;left:-10%;animation:drift 25s ease-in-out infinite}
+.glow-orb:nth-child(2){width:400px;height:400px;background:#fbbf24;bottom:-15%;right:-10%;animation:drift 30s ease-in-out infinite reverse}
+.glow-orb:nth-child(3){width:300px;height:300px;background:#7c3aed;top:50%;left:60%;animation:drift 20s ease-in-out infinite 5s}
+@keyframes drift{0%,100%{transform:translate(0,0)scale(1)}25%{transform:translate(50px,-50px)scale(1.1)}50%{transform:translate(-30px,30px)scale(.95)}75%{transform:translate(40px,20px)scale(1.05)}}
+section{padding:6rem 2rem;position:relative;z-index:1}
+.container{max-width:1100px;margin:0 auto}
+h2{font-size:clamp(2rem,5vw,3.5rem);font-weight:800;line-height:1.1;margin-bottom:1rem}
+h2 .grad{background:linear-gradient(135deg,#a855f7,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub{color:#94a3b8;font-size:1.05rem;max-width:600px;line-height:1.7;margin-bottom:3rem}
+
+/* Imagina seccion */
+.imagina-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem}
+.imagina-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:24px;padding:2.5rem 2rem;transition:all .5s;text-align:center}
+.imagina-card:hover{transform:translateY(-6px);border-color:rgba(124,58,237,.2);background:rgba(124,58,237,.04)}
+.imagina-card .icon{font-size:3rem;margin-bottom:1rem}
+.imagina-card h3{font-size:1.3rem;font-weight:700;margin-bottom:.5rem}
+.imagina-card p{font-size:.9rem;color:#94a3b8;line-height:1.6}
+
+/* Pricing */
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem}
+.price-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:24px;padding:2.5rem;position:relative;transition:all .5s}
+.price-card:hover{transform:translateY(-4px);border-color:rgba(124,58,237,.2)}
+.price-card.featured{border-color:rgba(251,191,36,.2);background:rgba(251,191,36,.02)}
+.price-card.featured::after{content:'🔥 MÁS POPULAR';position:absolute;top:1.2rem;right:1.2rem;padding:.25rem .8rem;background:linear-gradient(135deg,#fbbf24,#f59e0b);border-radius:100px;font-size:.6rem;font-weight:700;color:#06060e;letter-spacing:.05em}
+.price-card .icon{font-size:2rem;margin-bottom:.8rem}
+.price-card h3{font-size:1.2rem;font-weight:700;margin-bottom:.5rem}
+.price-card .desc{font-size:.85rem;color:#94a3b8;margin-bottom:1.5rem}
+.price-card .price{font-size:2.8rem;font-weight:900;font-family:'JetBrains Mono',monospace}
+.price-card .price span{font-size:.9rem;color:#94a3b8;font-weight:400;font-family:'Outfit',sans-serif}
+.price-card ul{list-style:none;padding:0;margin:1.5rem 0}
+.price-card ul li{padding:.4rem 0;font-size:.85rem;color:#94a3b8;display:flex;align-items:center;gap:.6rem}
+.price-card ul li::before{content:'✦';color:#a855f7;font-size:.65rem}
+.price-card .cta{width:100%;padding:.8rem 0;text-align:center;border-radius:100px;background:linear-gradient(135deg,#7c3aed,#a855f7);border:none;color:white;font-weight:600;font-size:.85rem;cursor:pointer;transition:all .4s;margin-top:1.5rem}
+.price-card .cta:hover{transform:scale(1.02);box-shadow:0 0 30px rgba(124,58,237,.3)}
+.price-card .cta.outline{background:transparent;border:1px solid rgba(255,255,255,.1);color:#94a3b8}
+.price-card .cta.outline:hover{background:rgba(255,255,255,.04);border-color:rgba(124,58,237,.3);color:white}
+
+/* Rewards / Gamificacion */
+.rewards-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.5rem}
+.reward-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:20px;padding:2rem;text-align:center;transition:all .4s}
+.reward-card:hover{border-color:rgba(251,191,36,.2);transform:translateY(-3px)}
+.reward-card .level{font-size:2.5rem;font-weight:900;font-family:'JetBrains Mono',monospace;background:linear-gradient(135deg,#a855f7,#fbbf24);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.5rem}
+.reward-card h4{font-size:1.1rem;font-weight:700;margin-bottom:.5rem}
+.reward-card p{font-size:.85rem;color:#94a3b8;line-height:1.5}
+
+/* Free trial banner */
+.trial-banner{text-align:center;padding:5rem 2rem;position:relative;z-index:1}
+.trial-banner h2{font-size:clamp(2rem,4vw,3rem);margin-bottom:1rem}
+.trial-banner p{color:#94a3b8;max-width:500px;margin:0 auto 2rem;font-size:1.05rem}
+.trial-banner .badge-free{display:inline-flex;align-items:center;gap:.5rem;padding:.6rem 2rem;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);border-radius:100px;color:#22c55e;font-weight:600;font-size:.9rem;margin-bottom:2rem}
+
+footer{padding:4rem 2rem;border-top:1px solid rgba(255,255,255,.05);text-align:center;position:relative;z-index:1;color:#64748b;font-size:.85rem}
+footer .powered{color:#a855f7;font-weight:600}
+@media(max-width:768px){.hero h1{font-size:2.2rem}.pricing-grid,.imagina-grid,.rewards-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div class="glow-orb"></div><div class="glow-orb"></div><div class="glow-orb"></div>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">✦ ABRE TU MENTE</div>
+  <h1>
+    <span class="light">¿Qué harías si tu</span><br>
+    <span class="grad">Clone Digital</span><br>
+    <span class="light">trabajara por ti?</span>
+  </h1>
+  <p>Imagina viajar mientras tu clon genera contenido. Imagina despertar con 10 leads nuevos. Imagina tu negocio funcionando 24/7 sin ti. Eso no es futuro. Es hoy.</p>
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center">
+    <a href="#probar" class="btn-primary">✨ Prueba 24h gratis →</a>
+    <a href="#planes" class="btn-secondary">Ver planes</a>
+  </div>
+  <p style="font-size:.8rem;color:#64748b;margin-top:2rem">Sin tarjeta. Sin compromiso. 24 horas de poder ilimitado.</p>
+</section>
+
+<!-- Imagina -->
+<section class="container">
+  <div style="text-align:center;margin-bottom:3rem">
+    <div class="hero-badge" style="margin:0 auto 1rem">✦ IMAGINA</div>
+    <h2>Mira lo que tu <span class="grad">Clone</span> puede hacer por ti</h2>
+    <p class="sub" style="margin:1rem auto 0">Mientras tú vives, tu clon trabaja. Marketing, contenido, ventas, automatización.</p>
+  </div>
+  <div class="imagina-grid">
+    <div class="imagina-card">
+      <div class="icon">✈️</div>
+      <h3>Tú viajas</h3>
+      <p>Estás en la playa. Tu clon está generando fotos tuyas con paisajes increíbles para tu feed. El contenido se publica solo.</p>
+    </div>
+    <div class="imagina-card">
+      <div class="icon">🎬</div>
+      <h3>Tu clon crea</h3>
+      <p>Dejas 3 ideas de video. Tu clon las produce con tu cara y voz. Las publica en todas las plataformas. Tú solo aprobabas.</p>
+    </div>
+    <div class="imagina-card">
+      <div class="icon">💰</div>
+      <h3>Tú ganas</h3>
+      <p>Mientras duermes, tu clon atiende clientes, cierra ventas, genera contenido. Tu negocio no para. Tus ingresos crecen solos.</p>
+    </div>
+    <div class="imagina-card">
+      <div class="icon">🎯</div>
+      <h3>Libertad total</h3>
+      <p>Tu presencia digital funciona sin ti. Tu clon es tu mejor empleado. Nunca se cansa. Nunca pide aumento. Nunca se va.</p>
+    </div>
+    <div class="imagina-card">
+      <div class="icon">🚀</div>
+      <h3>Escala sin límite</h3>
+      <p>Un clon puede ser 10. 10 pueden ser 100. Tu capacidad de generar contenido y ventas crece sin contratar a nadie.</p>
+    </div>
+    <div class="imagina-card">
+      <div class="icon">🔄</div>
+      <h3>Nuevas monetizaciones</h3>
+      <p>Vende clones a otros. Sé embajador. Cada persona que refieras te genera ingresos recurrentes. Tu red crece sola.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Free Trial -->
+<section id="probar" class="trial-banner container">
+  <div class="badge-free">🎁 24 HORAS GRATIS</div>
+  <h2>Pruébalo <span class="grad">un día</span></h2>
+  <p>Te damos acceso completo por 24 horas. Genera fotos, videos, voz. Ve lo que tu clon puede hacer por ti. Te va a volar la cabeza.</p>
+  <a href="#" class="btn-primary" style="display:inline-flex">✨ Quiero probar mi clone →</a>
+  <p style="font-size:.8rem;color:#64748b;margin-top:1rem">No necesitas tarjeta. Solo tu imaginación.</p>
+</section>
+
+<!-- Planes -->
+<section id="planes" class="container">
+  <div style="text-align:center;margin-bottom:3rem">
+    <div class="hero-badge" style="margin:0 auto 1rem">✦ PLANES</div>
+    <h2>Tu clone, <span class="grad">tu precio</span></h2>
+    <p class="sub" style="margin:1rem auto 0">Desde $0 hasta lo que quieras cobrarle a tus clientes. Tú pones el markup. Nosotros la tecnología.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="icon">🎁</div>
+      <h3>Free 24h</h3>
+      <div class="desc">Para que te vuelvas loco con lo que puede hacer tu clone.</div>
+      <div class="price">$0</div>
+      <ul>
+        <li>Clone Service completo 24h</li>
+        <li>3 fotos generadas</li>
+        <li>1 video de prueba</li>
+        <li>Voz clonada</li>
+        <li>Sin compromiso</li>
+      </ul>
+      <a href="#" class="cta">✨ Probar gratis →</a>
+    </div>
+    <div class="price-card featured">
+      <div class="icon">⭐</div>
+      <h3>Pro Clone</h3>
+      <div class="desc">Para los que quieren su clon trabajando 24/7 sin limites.</div>
+      <div class="price">$29<span>/mes</span></div>
+      <ul>
+        <li>Clone Service ilimitado</li>
+        <li>100 fotos/mes con tu cara</li>
+        <li>30 videos/mes con tu identidad</li>
+        <li>Voz clonada + TTS ilimitado</li>
+        <li>Export multi-plataforma</li>
+      </ul>
+      <a href="#" class="cta">🔥 Quiero mi clone →</a>
+    </div>
+    <div class="price-card">
+      <div class="icon">👑</div>
+      <h3>Business</h3>
+      <div class="desc">Para agencias y revendedores. Todo lo que necesitas para vender clones.</div>
+      <div class="price">$99<span>/mes</span></div>
+      <ul>
+        <li>5 asientos (tú + 4 clones)</li>
+        <li>500 fotos/mes</li>
+        <li>150 videos/mes</li>
+        <li>Dashboard de clientes</li>
+        <li>API + white-label</li>
+      </ul>
+      <a href="#" class="cta">🚀 Quiero revender →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Sea Embajador -->
+<section style="background:linear-gradient(180deg,transparent,rgba(124,58,237,.03),transparent);padding:6rem 2rem" class="container">
+  <div style="text-align:center;margin-bottom:3rem">
+    <div class="hero-badge" style="margin:0 auto 1rem">🤝 SÉ EMBajador</div>
+    <h2>Gana con <span class="grad">tu red</span></h2>
+    <p class="sub" style="margin:1rem auto 0">Compartes un link. Ganas comisiones. Tu red crece. Tus ingresos también. Sin limites. Sin techo.</p>
+  </div>
+  <div class="rewards-grid">
+    <div class="reward-card">
+      <div class="level">1</div>
+      <h4>Hunter</h4>
+      <p>5 clientes directos → 20% comisión + acceso a dashboard de referidos</p>
+      <p style="font-size:.75rem;color:#64748b;margin-top:.5rem">Gana ~$29/mes por cada cliente Pro activo</p>
+    </div>
+    <div class="reward-card">
+      <div class="level">2</div>
+      <h4>Ammo</h4>
+      <p>15 clientes directos o 50 en tu red → 25% comisión + bono de $200</p>
+      <p style="font-size:.75rem;color:#64748b;margin-top:.5rem">Bono único al alcanzar la meta</p>
+    </div>
+    <div class="reward-card">
+      <div class="level">3</div>
+      <h4>Warrior</h4>
+      <p>50 clientes directos o 200 en tu red → 30% comisión + bono de $500</p>
+      <p style="font-size:.75rem;color:#64748b;margin-top:.5rem">Bono único al alcanzar la meta</p>
+    </div>
+    <div class="reward-card">
+      <div class="level">4</div>
+      <h4>Legend</h4>
+      <p>100+ clientes directos o 500+ en tu red → 35% comisión + bono de $1,500</p>
+      <p style="font-size:.75rem;color:#64748b;margin-top:.5rem">Bono único + viaje todo pagado</p>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:2rem">
+    <a href="#" class="btn-primary">🔥 Quiero ser embajador →</a>
+    <p style="font-size:.8rem;color:#64748b;margin-top:1rem">Sin inversión inicial. Solo compartes tu link. Nosotros hacemos el resto.</p>
+  </div>
+</section>
+
+<!-- Play, Work, Learn to Earn -->
+<section class="container">
+  <div style="text-align:center;margin-bottom:3rem">
+    <div class="hero-badge" style="margin:0 auto 1rem">🎮 GAMIFICATION</div>
+    <h2>Juega, Trabaja, Aprende, <span class="grad">Gana</span></h2>
+    <p class="sub" style="margin:1rem auto 0">Cada acción suma puntos. Cada nivel desbloquea beneficios. Cada logro tiene recompensa.</p>
+  </div>
+  <div class="rewards-grid">
+    <div class="reward-card">
+      <div class="level">🎯</div>
+      <h4>Play — Refiere</h4>
+      <p>Compartes tu link. Cada persona que se registra con tu código te da puntos y comisión inmediata.</p>
+    </div>
+    <div class="reward-card">
+      <div class="level">⚡</div>
+      <h4>Work — Vende</h4>
+      <p>Cada venta que cierras sube tu nivel. Más ventas = mejor comisión. A más vendes, más ganas por todo.</p>
+    </div>
+    <div class="reward-card">
+      <div class="level">📚</div>
+      <h4>Learn — Capacítate</h4>
+      <p>Completas cursos, ves tutoriales, aprendes a vender mejor. Cada curso completado te da bonos y herramientas.</p>
+    </div>
+    <div class="reward-card">
+      <div class="level">🏆</div>
+      <h4>Earn — Gana</h4>
+      <p>Comisiones, bonos por metas, revenue share, viajes, y más. Mientras más crece tu red, más ganas sin hacer nada.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p style="margin-bottom:.5rem">© 2026 Sonora Digital Corp</p>
+  <p>Hecho en México — <span class="powered">Powered by SDC</span></p>
+</footer>
+
+<script>
+const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d');
+let p=[];
+function resize(){canvas.width=window.innerWidth;canvas.height=document.body.scrollHeight}
+resize();window.addEventListener('resize',resize);
+class P{
+  constructor(){this.reset()}
+  reset(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.size=Math.random()*2+.3;this.sx=(Math.random()-.5)*.2;this.sy=(Math.random()-.5)*.2;this.o=Math.random()*.3+.05;this.c=Math.random()>.5?'168,85,247':'251,191,36'}
+  update(){this.x+=this.sx;this.y+=this.sy;if(this.x<0||this.x>canvas.width||this.y<0||this.y>canvas.height)this.reset()}
+  draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fillStyle=`rgba(${this.c},${this.o})`;ctx.fill()}
+}
+for(let i=0;i<60;i++)p.push(new P());
+function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);p.forEach(q=>{q.update();q.draw()});requestAnimationFrame(animate)}
+animate();
+window.addEventListener('scroll',()=>{canvas.height=document.body.scrollHeight});
+</script>
+</body>
+</html>
