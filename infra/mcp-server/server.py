@@ -339,39 +339,62 @@ def jarvis_status() -> dict:
 @mcp.tool()
 def jarvis_execute(command: str) -> dict:
     """
-    Ejecutar comandos del sistema (con restricciones de seguridad)
+    Executar comandos del sistema (con restricciones de seguridad)
+
+    SECURITY: Usa shell=False, whitelist de comandos completos,
+    sin interpolación de shell. Bloquea shell metacharacters.
 
     Args:
-        command: Comando a ejecutar
+        command: Comando a ejecutar (solo argumentos separados)
 
     Returns:
         Dict con resultado del comando
     """
     import subprocess
+    import shlex
 
-    # Lista blanca de comandos permitidos
-    ALLOWED_COMMANDS = [
-        "ls",
-        "pwd",
-        "date",
-        "whoami",
-        "uptime",
-        "docker ps",
-        "systemctl status",
-    ]
+    # Lista blanca de comandos permitidos (comando + args exactos)
+    ALLOWED_COMMANDS = {
+        "ls", "pwd", "date", "whoami", "uptime",
+    }
 
-    # Verificar si el comando está permitido
-    base_command = command.split()[0] if command else ""
-    if base_command not in [cmd.split()[0] for cmd in ALLOWED_COMMANDS]:
+    ALLOWED_PREFIXES = {
+        "docker ps", "docker stats",
+        "systemctl status", "systemctl is-active",
+    }
+
+    # Split command into args safely
+    try:
+        args = shlex.split(command)
+    except ValueError:
+        return {"status": "error", "message": "Invalid command syntax"}
+
+    if not args:
+        return {"status": "error", "message": "Empty command"}
+
+    # Reject shell metacharacters in any argument
+    metachars = set(";&|`$(){}[]<>!\\")
+    for arg in args:
+        if any(c in arg for c in metachars):
+            return {"status": "error", "message": f"Shell metacharacters not allowed: {arg[:50]}"}
+
+    cmd_str = " ".join(args)
+
+    # Check exact command match
+    if args[0] in ALLOWED_COMMANDS:
+        pass  # OK
+    elif cmd_str in ALLOWED_PREFIXES or any(cmd_str.startswith(p) for p in ALLOWED_PREFIXES):
+        pass  # OK
+    else:
         return {
             "status": "error",
-            "message": f"Command not allowed: {base_command}",
-            "allowed_commands": ALLOWED_COMMANDS,
+            "message": f"Command not allowed: {args[0]}",
+            "allowed_commands": sorted(ALLOWED_COMMANDS | ALLOWED_PREFIXES),
         }
 
     try:
         result = subprocess.run(
-            command, shell=True, capture_output=True, text=True, timeout=10
+            args, shell=False, capture_output=True, text=True, timeout=10
         )
         return {
             "status": "success" if result.returncode == 0 else "error",
