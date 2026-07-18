@@ -1,0 +1,16 @@
+prompts:
+  - prompts/call_agent.txt
+  - prompts/objection_handler.txt
+  - prompts/lead_scoring.txt
+
+providers:
+  - id: openrouter:openai/gpt-4o-mini
+    config:
+      apiKey: "{{env.OPENROUTER_API_KEY}}"
+
+tests:
+  - prompts/call_agent_test.yaml
+  - prompts/objection_test.yaml
+  - prompts/scoring_test.yaml
+
+outputPath: ./results.json

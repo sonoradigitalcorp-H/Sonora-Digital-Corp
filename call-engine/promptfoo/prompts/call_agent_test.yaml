@@ -1,0 +1,29 @@
+- vars:
+    lead_name: "Nathaly"
+    company: "Hermosillo"
+    objective: "Ofrecer servicios agenticos de SDC"
+    context: "Novia del CEO, contacto cálido, conoce la empresa"
+    tone: "cálido, profesional, directo"
+    history: "Sin llamadas previas"
+  assert:
+    - type: contains-all
+      value: ["Sonora Digital Corp", "beneficio"]
+    - type: regex
+      value: "(?i)(te ayudo|podemos|solución|beneficio)"
+    - type: not-contains
+      value: ["pagar ahora", "solo hoy", "comprometerse"]
+    - type: llm-rubric
+      value: "El agente se presenta y explica por qué llama de forma natural"
+
+- vars:
+    lead_name: "Carlos"
+    company: "Agencia Creativa XYZ"
+    objective: "Vender pack de agente de atención al cliente"
+    context: "Lead frío, dueño de agencia, 10 empleados"
+    tone: "profesional"
+    history: "Sin llamadas previas"
+  assert:
+    - type: contains-all
+      value: ["Sonora Digital Corp", "agente"]
+    - type: llm-rubric
+      value: "El agente investiga las necesidades del lead antes de vender"

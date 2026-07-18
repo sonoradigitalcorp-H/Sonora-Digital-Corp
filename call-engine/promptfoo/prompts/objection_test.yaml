@@ -1,0 +1,19 @@
+- vars:
+    objection: "No tengo tiempo para esto"
+    context: "Dueño de negocio ocupado, 3 empleados"
+    relationship: "Lead frío"
+    attempt: "1"
+  assert:
+    - type: llm-rubric
+      value: "El agente valida la objeción antes de responder"
+    - type: not-contains
+      value: ["insisto", "obligado", "tienes que"]
+
+- vars:
+    objection: "Ya tengo un proveedor"
+    context: "Agencia de marketing con 5 empleados"
+    relationship: "Lead caliente, referido"
+    attempt: "2"
+  assert:
+    - type: llm-rubric
+      value: "El agente pregunta qué le gusta de su proveedor actual antes de ofrecer alternativas"
