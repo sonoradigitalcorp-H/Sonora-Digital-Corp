@@ -1,5 +1,4 @@
 node_modules/
-.next/
 __pycache__/
 *.pyc
 .venv/
@@ -20,11 +19,11 @@ cache/
 data/generated/
 apps/webui/data/
 credentials/
-# .env files: .env is real secrets, .env.example templates are committed
+# .env files: .env is real secrets, .env.ci is CI stub (committed)
 .env
-.env.*
-!.env*.example
+AUDITORIA-COMPLETA.md
 .vercel
+.env*
 .age/
 age-key.txt
 age-key*.txt
@@ -36,46 +35,3 @@ state/events/replay/
 # Collector state (auto-generated, per-machine)
 collectors/state/
 
-# SvelteKit build output
-experience/web/.svelte-kit/
-experience/web/node_modules/
-
-
-# Archives (moved dead code)
-archive/
-
-# Dependencies
-node_modules/
-.pnp
-.pnp.js
-
-# Environment
-.env
-.env.local
-.env.*.local
-
-# Build output
-.next/
-dist/
-build/
-
-# Logs
-logs/
-*.log
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Python
-__pycache__/
-*.py[cod]
-*$py.class
-venv/
-.venv/
-
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo

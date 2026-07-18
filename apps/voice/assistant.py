@@ -31,14 +31,57 @@ def process_command(text: str) -> str:
     if "quien eres" in text_lower or "who are you" in text_lower:
         return "Soy JARVIS, tu asistente personal de Sonora Digital Corp."
     
+    # WhatsApp commands
+    if any(cmd in text_lower for cmd in ["envia whatsapp", "manda whatsapp", "manda mensaje", "dile a", "enviale a"]):
+        return _handle_whatsapp_command(text)
+    
     # Default: try LLM
     try:
+        sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(__file__)), "jarvis", "src"))
         from src.core.llm import query_llm
         response = query_llm(text, system="Eres JARVIS, asistente de Sonora Digital Corp. Responde en español, breve y util.")
         return response[:500] if response else "No pude procesar eso ahora."
     except Exception as e:
         log.warning(f"LLM unavailable: {e}")
         return f"Recibi tu mensaje: {text}. Pero el modulo de IA no esta disponible en este momento."
+
+
+def _handle_whatsapp_command(text: str) -> str:
+    """Handle WhatsApp-related voice commands."""
+    try:
+        from voice.whatsapp_agent import send_text
+        
+        # Parse recipient and message
+        parts = text.split(",", 1)
+        if len(parts) < 2:
+            return "Dime a quién y qué mensaje. Ej: 'manda mensaje a César, nos vemos mañana'"
+        
+        recipient_part = parts[0].lower()
+        message = parts[1].strip()
+        
+        contact_map = {
+            "cesar": "5216621072254@s.whatsapp.net",
+            "cesar holguin": "5216621072254@s.whatsapp.net",
+            "nathaly": "5216622681111@s.whatsapp.net",
+            "nathaly hermosillo": "5216622681111@s.whatsapp.net",
+            "noel": "5216622681111@s.whatsapp.net",
+            "noel nichols": "5216622681111@s.whatsapp.net",
+        }
+        
+        jid = None
+        for name, j in contact_map.items():
+            if name in recipient_part:
+                jid = j
+                break
+        
+        if not jid:
+            return f"No reconozco a '{recipient_part}'. Contactos disponibles: César, Nathaly, Noel"
+        
+        send_text(jid, message)
+        return f"Mensaje enviado a {recipient_part}"
+    except Exception as e:
+        log.warning(f"WhatsApp command error: {e}")
+        return "No pude enviar el mensaje de WhatsApp."
 
 
 def interactive_mode():
