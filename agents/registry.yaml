@@ -72,3 +72,11 @@ agents:
     memory: engram_abe_music
     channel: agent:voice
     triggers: [always:available:in-app]
+
+  - name: clone-agent
+    tenant: sdc
+    role: Clone publicitario — entrenar LoRA facial + voz, generar contenido con identidad del cliente
+    tools: [validate_photos, train_lora, check_face_quality, validate_audio, clone_voice, list_voices, generate_tts, gen_photo, gen_video, gen_tts, ffmpeg_convert, ffmpeg_assemble, ffmpeg_multiformat, create_pack, consume_credit, get_credits]
+    memory: engram_sdc
+    channel: agent:clone
+    triggers: [command:/clonar, event:clone:client_registered, event:clone:photos_collected]

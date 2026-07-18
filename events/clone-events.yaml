@@ -1,0 +1,72 @@
+# Clone Service Events — Catálogo de eventos del servicio de clon publicitario
+
+events:
+  - id: clone.client_registered
+    description: Cliente compra un pack de clon publicitario
+    payload:
+      client_id: string
+      pack_type: string
+      credits: object
+    emitted_by: credit_mcp.create_pack
+    consumers: [clone-agent]
+
+  - id: clone.photos_collected
+    description: Cliente completa el mínimo de fotos requerido (15+)
+    payload:
+      client_id: string
+      count: integer
+    emitted_by: clone_pipeline.cmd_validate
+    consumers: [clone-agent]
+
+  - id: clone.photos_rejected
+    description: Foto no pasa validación (sin rostro, borrosa, formato inválido)
+    payload:
+      client_id: string
+      reason: string
+      photo_url: string
+    emitted_by: lora_mcp.validate_photos
+    consumers: [clone-agent]
+
+  - id: clone.training_started
+    description: Inicia el entrenamiento de LoRA facial
+    payload:
+      client_id: string
+      photos_count: integer
+    emitted_by: clone_pipeline.cmd_train
+    consumers: [monitor-agent]
+
+  - id: clone.lora_trained
+    description: LoRA facial entrenado exitosamente
+    payload:
+      client_id: string
+      weight_id: string
+      face_similarity: float
+    emitted_by: lora_mcp.train_lora
+    consumers: [clone-agent, monitor-agent]
+
+  - id: clone.voice_cloned
+    description: Voz del cliente clonada exitosamente
+    payload:
+      client_id: string
+      voice_id: string
+    emitted_by: voice_clone_mcp.clone_voice
+    consumers: [clone-agent]
+
+  - id: clone.generated
+    description: Asset generado (foto, video, o TTS)
+    payload:
+      client_id: string
+      asset_type: string
+      url: string
+      credits_used: integer
+    emitted_by: generate_mcp / clone_pipeline
+    consumers: [clone-agent, monitor-agent]
+
+  - id: clone.credits_low
+    description: Créditos del cliente por debajo del 20%
+    payload:
+      client_id: string
+      remaining: integer
+      asset_type: string
+    emitted_by: credit_mcp.consume_credit
+    consumers: [clone-agent]
