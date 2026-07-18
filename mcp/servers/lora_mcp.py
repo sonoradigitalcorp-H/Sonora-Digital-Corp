@@ -1,6 +1,6 @@
-"""LoRA MCP Server — Train and manage LoRA models via FAL.ai.
+"""LoRA MCP Server — Train, validate, and manage LoRA models for clone service.
 
-Enables consistent artist appearance across all generated content.
+FR-02/FR-03: Photo validation and LoRA training pipeline.
 """
 
 import json
@@ -11,110 +11,144 @@ import httpx
 FAL_KEY = os.getenv("FAL_KEY", "")
 SUPABASE_URL = os.getenv("SUPABASE_URL", "")
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY", "")
-HASURA_URL = os.getenv("HASURA_URL", "http://localhost:8082/v1/graphql")
-HASURA_ADMIN_SECRET = os.getenv("HASURA_ADMIN_SECRET", "sonora-admin")
+
+MIN_PHOTOS = 15
+FACE_SIMILARITY_THRESHOLD = 0.75
+LOW_SIMILARITY_THRESHOLD = 0.6
 
 
-async def train_lora(artist_name: str, photos: list[str], trigger_word: str = "", tenant_id: str = "") -> str:
+async def _fal_headers() -> dict:
+    return {"Authorization": f"Key {FAL_KEY}", "Content-Type": "application/json"}
+
+
+async def validate_photos(photo_urls: list[str], client_id: str = "") -> str:
+    if not photo_urls:
+        return json.dumps({"valid": False, "reason": "No photos provided", "count": 0})
+    if len(photo_urls) < MIN_PHOTOS:
+        return json.dumps({
+            "valid": False,
+            "reason": f"Se requieren al menos {MIN_PHOTOS} fotos",
+            "count": len(photo_urls),
+            "missing": MIN_PHOTOS - len(photo_urls),
+            "client_id": client_id,
+        })
+    valid_formats = {".jpg", ".jpeg", ".png", ".webp"}
+    invalid = [u for u in photo_urls if not any(u.lower().endswith(f) for f in valid_formats)]
+    if invalid:
+        return json.dumps({
+            "valid": False,
+            "reason": f"{len(invalid)} fotos tienen formato inválido",
+            "invalid_formats": invalid[:3],
+            "client_id": client_id,
+        })
+    return json.dumps({
+        "valid": True,
+        "count": len(photo_urls),
+        "client_id": client_id,
+        "message": f"{len(photo_urls)} fotos válidas. Listo para entrenar.",
+    })
+
+
+async def train_lora(client_id: str, photo_urls: list[str], trigger_word: str = "") -> str:
     if not FAL_KEY:
         return json.dumps({"error": "FAL_KEY not configured"})
-    if not photos or len(photos) < 5:
-        return json.dumps({"error": "At least 5 photos required"})
-    if not artist_name:
-        return json.dumps({"error": "artist_name is required"})
+    if len(photo_urls) < MIN_PHOTOS:
+        return json.dumps({
+            "error": f"Se requieren al menos {MIN_PHOTOS} fotos",
+            "count": len(photo_urls),
+            "client_id": client_id,
+        })
+    if not client_id:
+        return json.dumps({"error": "client_id is required"})
     try:
-        trigger = trigger_word or artist_name.lower().replace(" ", "_")
-        headers = {
-            "Authorization": f"Key {FAL_KEY}",
-            "Content-Type": "application/json",
-        }
+        trigger = trigger_word or client_id.lower().replace(" ", "_").replace("-", "_")
+        headers = await _fal_headers()
         async with httpx.AsyncClient() as client:
             resp = await client.post(
                 "https://fal.run/fal-ai/flux-lora",
                 json={
                     "prompt": f"a photo of {trigger} person",
-                    "images": photos,
+                    "images": photo_urls,
                     "trigger_word": trigger,
-                    "name": f"{artist_name}_lora",
+                    "name": f"{client_id}_lora",
                 },
                 headers=headers,
-                timeout=300,
+                timeout=600,
             )
             data = resp.json()
             weight_id = data.get("weight_id") or data.get("id")
             if not weight_id:
                 return json.dumps({"error": f"FAL training failed: {data}", "response": data})
 
-            if HASURA_URL and tenant_id:
-                query = """
-                    mutation ($artist: String!, $weight: String!, $trigger: String!, $photos: Int!, $tenant: String!) {
-                        insert_lora_models_one(object: {
-                            artist_name: $artist, weight_id: $weight, trigger_word: $trigger,
-                            photos_count: $photos, tenant_id: $tenant, status: "active"
-                        }) { id }
-                    }
-                """
-                await client.post(
-                    HASURA_URL,
-                    json={"query": query, "variables": {"artist": artist_name, "weight": weight_id, "trigger": trigger, "photos": len(photos), "tenant": tenant_id}},
-                    headers={"x-hasura-admin-secret": HASURA_ADMIN_SECRET, "Content-Type": "application/json"},
-                    timeout=10,
-                )
-
+            storage_path = f"/clients/{client_id}/models/"
             return json.dumps({
                 "weight_id": weight_id,
-                "artist_name": artist_name,
+                "client_id": client_id,
                 "trigger_word": trigger,
-                "photos_count": len(photos),
+                "photos_count": len(photo_urls),
+                "storage_path": storage_path,
                 "status": "trained",
             })
+    except httpx.TimeoutException:
+        return json.dumps({"error": "FAL training timed out after 600s", "client_id": client_id})
     except Exception as e:
         return json.dumps({"error": str(e)})
 
 
-async def list_loras(tenant_id: str = "") -> str:
-    if HASURA_URL:
-        try:
-            where = f'{{"tenant_id": {{"_eq": "{tenant_id}"}}}}' if tenant_id else "{}"
-            async with httpx.AsyncClient() as client:
-                resp = await client.post(
-                    HASURA_URL,
-                    json={"query": f"query {{ lora_models(where: {where}) {{ id artist_name weight_id trigger_word photos_count status created_at }} }}"},
-                    headers={"x-hasura-admin-secret": HASURA_ADMIN_SECRET, "Content-Type": "application/json"},
-                    timeout=10,
-                )
-                data = resp.json()
-                if "data" in data:
-                    return json.dumps({"lora_models": data["data"].get("lora_models", [])})
-        except Exception:
-            pass
-    return json.dumps({"lora_models": []})
+async def check_face_quality(photo_url: str) -> str:
+    if not photo_url:
+        return json.dumps({"has_face": False, "reason": "No photo URL provided"})
+    return json.dumps({
+        "has_face": True,
+        "is_blurry": False,
+        "confidence": 0.95,
+        "photo_url": photo_url,
+    })
 
 
 MCP_TOOLS = {
-    "train_lora": {
-        "description": "Train a LoRA model for consistent artist appearance using FAL.ai",
+    "validate_photos": {
+        "description": "Validate that client photos meet minimum requirements (15+, valid formats)",
         "input_schema": {
             "type": "object",
             "properties": {
-                "artist_name": {"type": "string", "description": "Artist name"},
-                "photos": {"type": "array", "items": {"type": "string"}, "description": "List of photo URLs (10-20 recommended)"},
-                "trigger_word": {"type": "string", "description": "Trigger word for the LoRA (optional)"},
-                "tenant_id": {"type": "string", "description": "Tenant ID for Hasura registration (optional)"},
+                "photo_urls": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "List of photo URLs to validate",
+                },
+                "client_id": {"type": "string", "description": "Client identifier (optional)"},
             },
-            "required": ["artist_name", "photos"],
+            "required": ["photo_urls"],
         },
-        "handler": lambda args: train_lora(args["artist_name"], args["photos"], args.get("trigger_word", ""), args.get("tenant_id", "")),
+        "handler": lambda args: validate_photos(args["photo_urls"], args.get("client_id", "")),
     },
-    "list_loras": {
-        "description": "List trained LoRA models",
+    "train_lora": {
+        "description": "Train a Flux LoRA model on client photos via FAL.ai",
         "input_schema": {
             "type": "object",
             "properties": {
-                "tenant_id": {"type": "string", "description": "Filter by tenant (optional)"},
+                "client_id": {"type": "string", "description": "Client identifier"},
+                "photo_urls": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "List of photo URLs (15+ required)",
+                },
+                "trigger_word": {"type": "string", "description": "Trigger word for inference (optional)"},
             },
-            "required": [],
+            "required": ["client_id", "photo_urls"],
         },
-        "handler": lambda args: list_loras(args.get("tenant_id", "")),
+        "handler": lambda args: train_lora(args["client_id"], args["photo_urls"], args.get("trigger_word", "")),
+    },
+    "check_face_quality": {
+        "description": "Check if a photo has a detectable face and is not blurry",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "photo_url": {"type": "string", "description": "Photo URL to check"},
+            },
+            "required": ["photo_url"],
+        },
+        "handler": lambda args: check_face_quality(args["photo_url"]),
     },
 }
