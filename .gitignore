@@ -58,3 +58,4 @@ collectors/state/
 
 products/mystika/web/.next/
 apps/voice/*.vpsbak
+scripts/sync-brain-vault.sh
