@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WhatsApp Automation — SDC Enterprise</title>
+<meta name="description" content="Automatiza WhatsApp para tu negocio. Chatbot AI, onboarding, broadcasting, ventas 24/7.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Outfit',sans-serif;background:#06060e;color:#e2e8f0;overflow-x:hidden}
+.container{max-width:1200px;margin:0 auto;padding:0 2rem;position:relative;z-index:1}
+.glow{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;opacity:.1;z-index:0}
+.glow-1{width:600px;height:600px;background:#a855f7;top:-15%;left:-5%;animation:float 25s ease-in-out infinite}
+.glow-2{width:400px;height:400px;background:#22c55e;bottom:-10%;right:-5%;animation:float 30s ease-in-out infinite reverse}
+@keyframes float{0%,100%{transform:translate(0,0)scale(1)}25%{transform:translate(50px,-50px)scale(1.1)}50%{transform:translate(-30px,30px)scale(.95)}75%{transform:translate(40px,20px)scale(1.05)}}
+.hero{min-height:90vh;display:flex;flex-direction:column;justify-content:center;padding:6rem 0;position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1.2rem;background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);border-radius:100px;font-size:.75rem;color:#22c55e;letter-spacing:.12em;text-transform:uppercase;margin-bottom:2rem;font-weight:600}
+.hero h1{font-size:clamp(2.5rem,6vw,4.5rem);font-weight:900;line-height:1.05;letter-spacing:-.02em;margin-bottom:1.5rem}
+.hero h1 span{background:linear-gradient(135deg,#22c55e,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:1.15rem;color:#94a3b8;max-width:600px;line-height:1.7;margin-bottom:2.5rem}
+.btn-primary{padding:.9rem 2.5rem;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;border-radius:100px;color:white;font-weight:700;font-size:.95rem;cursor:pointer;transition:all .4s;text-decoration:none;display:inline-flex;align-items:center;gap:.6rem}
+.btn-primary:hover{transform:translateY(-3px);box-shadow:0 0 40px rgba(34,197,94,.3)}
+.btn-secondary{padding:.9rem 2.5rem;background:transparent;border:1px solid rgba(255,255,255,.08);border-radius:100px;color:#94a3b8;font-weight:600;font-size:.95rem;cursor:pointer;transition:all .3s;text-decoration:none}
+.btn-secondary:hover{background:rgba(255,255,255,.04);border-color:rgba(34,197,94,.3);color:white}
+section{padding:5rem 0;position:relative;z-index:1}
+h2{font-size:clamp(2rem,4vw,3rem);font-weight:800;line-height:1.1;margin-bottom:1rem}
+h2 span{background:linear-gradient(135deg,#22c55e,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub{color:#94a3b8;font-size:1.05rem;max-width:600px;line-height:1.7;margin-bottom:3rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem}
+.card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:20px;padding:2rem;transition:all .4s}
+.card:hover{transform:translateY(-4px);border-color:rgba(34,197,94,.2);background:rgba(34,197,94,.03)}
+.card .icon{font-size:2rem;margin-bottom:.8rem}
+.card h3{font-size:1.15rem;font-weight:700;margin-bottom:.5rem}
+.card p{font-size:.85rem;color:#94a3b8;line-height:1.6}
+.price-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-top:2rem}
+.price-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:24px;padding:2.5rem;position:relative;transition:all .5s}
+.price-card:hover{transform:translateY(-4px);border-color:rgba(34,197,94,.2)}
+.price-card.featured{border:1px solid rgba(34,197,94,.25);background:rgba(34,197,94,.03)}
+.price-card.featured::after{content:'🔥 RECOMENDADO';position:absolute;top:1rem;right:1rem;padding:.25rem .8rem;background:linear-gradient(135deg,#22c55e,#16a34a);border-radius:100px;font-size:.6rem;font-weight:700;color:white}
+.price-card .price{font-size:2.8rem;font-weight:900;font-family:'JetBrains Mono',monospace;margin:1rem 0}
+.price-card .price span{font-size:.9rem;color:#94a3b8;font-weight:400;font-family:'Outfit',sans-serif}
+.price-card ul{list-style:none;padding:0;margin:1.5rem 0}
+.price-card ul li{padding:.4rem 0;font-size:.85rem;color:#94a3b8;display:flex;align-items:center;gap:.6rem}
+.price-card ul li::before{content:'✓';color:#22c55e;font-weight:700}
+.price-card .cta{width:100%;padding:.85rem 0;background:linear-gradient(135deg,#22c55e,#16a34a);border:none;border-radius:100px;color:white;font-weight:600;font-size:.9rem;cursor:pointer;transition:all .4s;margin-top:1rem}
+.price-card .cta:hover{transform:scale(1.02);box-shadow:0 0 30px rgba(34,197,94,.3)}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem;counter-reset:step;margin-top:2rem}
+.step{text-align:center;padding:2rem 1rem}
+.step .num{width:50px;height:50px;margin:0 auto 1rem;background:linear-gradient(135deg,#22c55e,#16a34a);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.3rem;font-weight:800;color:white}
+.step h4{font-weight:600;margin-bottom:.5rem}
+.step p{font-size:.8rem;color:#94a3b8}
+@media(max-width:768px){.price-grid,.grid,.steps{grid-template-columns:1fr}.hero h1{font-size:2rem}}
+footer{padding:3rem 2rem;border-top:1px solid rgba(255,255,255,.05);text-align:center;position:relative;z-index:1;color:#64748b;font-size:.85rem}
+</style>
+</head>
+<body>
+<div class="glow glow-1"></div><div class="glow glow-2"></div>
+
+<section class="hero container">
+  <div class="hero-badge">💬 WHATSAPP AUTOMATION</div>
+  <h1>Tu negocio en <span>WhatsApp 24/7</span></h1>
+  <p>Chatbot AI que vende, soporta, y automatiza. Onboarding de clientes, broadcasting, ventas. Sin que levantes un dedo.</p>
+  <div style="display:flex;gap:1rem;flex-wrap:wrap">
+    <a href="#planes" class="btn-primary">🔥 Probar gratis 7 días →</a>
+    <a href="#como-funciona" class="btn-secondary">Cómo funciona</a>
+  </div>
+  <div style="display:flex;gap:2rem;margin-top:3rem;flex-wrap:wrap">
+    <div><div style="font-size:2rem;font-weight:800;color:#22c55e">24/7</div><div style="font-size:.8rem;color:#64748b">Atención continua</div></div>
+    <div><div style="font-size:2rem;font-weight:800;color:#22c55e">93%</div><div style="font-size:.8rem;color:#64748b">Tasa de apertura</div></div>
+    <div><div style="font-size:2rem;font-weight:800;color:#22c55e">5×</div><div style="font-size:.8rem;color:#64748b">Más conversión que email</div></div>
+    <div><div style="font-size:2rem;font-weight:800;color:#22c55e">0</div><div style="font-size:.8rem;color:#64748b">Configuración técnica</div></div>
+  </div>
+</section>
+
+<section id="que-incluye" class="container">
+  <div style="text-align:center;margin-bottom:3rem">
+    <div class="hero-badge" style="margin:0 auto 1rem">⚡ TODO INCLUIDO</div>
+    <h2>Tu WhatsApp <span>Superpoderoso</span></h2>
+    <p class="sub" style="margin:0 auto">Todo lo que necesitas para automatizar tu negocio en WhatsApp. Sin código. Sin complicaciones.</p>
+  </div>
+  <div class="grid">
+    <div class="card"><div class="icon">🤖</div><h3>Chatbot AI 24/7</h3><p>Responde clientes, vende productos, da soporte. Como tener 10 empleados en una sola línea.</p></div>
+    <div class="card"><div class="icon">🎉</div><h3>Onboarding automático</h3><p>Cuando alguien escribe por primera vez, recibe bienvenida, catálogo, y asistencia inmediata.</p></div>
+    <div class="card"><div class="icon">📢</div><h3>Broadcasting</h3><p>Envía promociones, ofertas, y contenido a todos tus clientes. Segmentado por comportamiento.</p></div>
+    <div class="card"><div class="icon">📊</div><h3>Reportes semanales</h3><p>Cuántos clientes, qué preguntan, cuánto vendiste. Todo medido y reportado.</p></div>
+    <div class="card"><div class="icon">🔄</div><h3>Flujos de venta</h3><p>Crea embudos completos: saludo → preguntas → catálogo → pago → seguimiento.</p></div>
+    <div class="card"><div class="icon">📱</div><h3>Multi-red social</h3><p>Instagram, TikTok, Facebook, LinkedIn. Publica y responde desde un solo lugar.</p></div>
+  </div>
+</section>
+
+<section id="como-funciona" class="container">
+  <div style="text-align:center;margin-bottom:3rem">
+    <div class="hero-badge" style="margin:0 auto 1rem">🚀 SETUP</div>
+    <h2>Listo en <span>5 minutos</span></h2>
+    <p class="sub" style="margin:0 auto">Nos dices tu negocio. Nosotros configuramos todo. Tu empiezas a recibir clientes.</p>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="num">1</div><h4>Nos dices tu negocio</h4><p>Nombre, productos, horarios, FAQs. 5 minutos.</p></div>
+    <div class="step"><div class="num">2</div><h4>Conectas WhatsApp</h4><p>Escaneas un QR. Tu número queda conectado.</p></div>
+    <div class="step"><div class="num">3</div><h4>Activamos</h4><p>El bot empieza a responder. Tú solo observas.</p></div>
+    <div class="step"><div class="num">4</div><h4>Vendes más</h4><p>Clientes felices, ventas automáticas, tú tranquilo.</p></div>
+  </div>
+</section>
+
+<section id="planes" class="container">
+  <div style="text-align:center;margin-bottom:3rem">
+    <div class="hero-badge" style="margin:0 auto 1rem">💰 PLANES</div>
+    <h2>Para todo <span>negocio</span></h2>
+    <p class="sub" style="margin:0 auto">Desde el negocio local hasta la empresa grande. Todos se benefician.</p>
+  </div>
+  <div class="price-grid">
+    <div class="price-card">
+      <div style="font-size:2rem;margin-bottom:.5rem">🚀</div>
+      <h3>Starter</h3>
+      <div class="price">$49<span>/mes</span></div>
+      <ul>
+        <li>Chatbot AI 24/7</li>
+        <li>Respuestas rápidas ilimitadas</li>
+        <li>Broadcasting básico</li>
+        <li>Dashboard de conversaciones</li>
+        <li>Soporte email</li>
+      </ul>
+      <div style="font-size:.8rem;color:#64748b;text-align:center">Setup: $99</div>
+      <button class="cta">Lo quiero →</button>
+    </div>
+    <div class="price-card featured">
+      <div style="font-size:2rem;margin-bottom:.5rem">🔥</div>
+      <h3>Pro</h3>
+      <div class="price">$99<span>/mes</span></div>
+      <ul>
+        <li>Todo lo de Starter</li>
+        <li>Onboarding automático de clientes</li>
+        <li>Flujos conversacionales avanzados</li>
+        <li>Integración CRM</li>
+        <li>Analítica semanal</li>
+        <li>Soporte 24/7</li>
+      </ul>
+      <div style="font-size:.8rem;color:#64748b;text-align:center">Setup: $199</div>
+      <button class="cta">🔥 Lo quiero →</button>
+    </div>
+    <div class="price-card">
+      <div style="font-size:2rem;margin-bottom:.5rem">🏢</div>
+      <h3>Enterprise</h3>
+      <div class="price">$299<span>/mes</span></div>
+      <ul>
+        <li>Todo lo de Pro</li>
+        <li>Multi-agente (AI + humanos)</li>
+        <li>Pagos por WhatsApp</li>
+        <li>Social Media automation</li>
+        <li>Contenido con clone service</li>
+        <li>Gerente de cuenta dedicado</li>
+      </ul>
+      <div style="font-size:.8rem;color:#64748b;text-align:center">Setup: $499</div>
+      <button class="cta">Quiero Enterprise →</button>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:2rem;padding:2rem;background:rgba(255,255,255,.02);border-radius:20px;border:1px solid rgba(255,255,255,.05)">
+    <p style="font-size:1.1rem;font-weight:600">¿Quieres <span style="color:#22c55e">redes sociales automáticas</span> también?</p>
+    <p style="font-size:.85rem;color:#94a3b8;margin:.5rem 0 1rem">Add-on: Social Media Auto — $49/mes. Publica en Instagram, TikTok, Facebook, LinkedIn automáticamente.</p>
+    <a href="#" class="btn-secondary" style="display:inline-flex">Incluir Social Media →</a>
+  </div>
+</section>
+
+<section class="container" style="text-align:center;padding:6rem 2rem">
+  <div class="hero-badge" style="margin:0 auto 1rem">🎁 PRUEBA GRATIS</div>
+  <h2>7 días <span>gratis</span></h2>
+  <p class="sub" style="margin:0 auto 2rem">Prueba WhatsApp Pro por 7 días sin costo. Sin tarjeta. Sin compromiso. Si no te encanta, lo cancelamos.</p>
+  <a href="#" class="btn-primary" style="display:inline-flex">✨ Quiero probar →</a>
+</section>
+
+<footer>
+  <p>© 2026 Sonora Digital Corp — <span style="color:#22c55e">WhatsApp Automation</span> by SDC</p>
+  <p style="margin-top:.5rem;color:#64748b">Hecho en México — Powered by SDC</p>
+</footer>
+</body>
+</html>

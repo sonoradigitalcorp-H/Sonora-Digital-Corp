@@ -14,6 +14,7 @@
     { "src": "/war-room.html", "dest": "/landing/war-room.html" },
     { "src": "/abe-blueprint.html", "dest": "/landing/abe-blueprint.html" },
     { "src": "/freedom.html", "dest": "/freedom.html" },
+    { "src": "/whatsapp.html", "dest": "/whatsapp.html" },
     { "src": "/(.*)", "dest": "/$1" }
   ],
   "headers": [

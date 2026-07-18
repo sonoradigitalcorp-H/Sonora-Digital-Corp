@@ -1,0 +1,211 @@
+# WhatsApp + Social Media Automation — SDC Product
+# Version: 1.0.0
+
+# ═══════════════════════════════════════════════════════════════
+# PRODUCT DESCRIPTION
+# ═══════════════════════════════════════════════════════════════
+name: "WhatsApp Automation"
+tagline: "Tu negocio en WhatsApp 24/7. Clientes, ventas, soporte, onboarding — todo automatico."
+description: "Sistema completo de automatización de WhatsApp + redes sociales para empresas. 
+  Incluye chatbot AI, respuestas automaticas, broadcasting, onboarding de clientes, 
+  y analítica de conversaciones. Corre sobre la plataforma SDC."
+
+# ═══════════════════════════════════════════════════════════════
+# FEATURES
+# ═══════════════════════════════════════════════════════════════
+features:
+  core:
+    - name: "Chatbot AI 24/7"
+      description: "Responde clientes al instante con AI. Ventas, soporte, FAQs."
+    - name: "Onboarding automatico"
+      description: "Cuando un cliente se registra, recibe bienvenida + tutorial por WhatsApp."
+    - name: "Broadcasting segmentado"
+      description: "Envía promociones, ofertas, contenido a segmentos especificos."
+    - name: "Respuestas rapidas"
+      description: "Plantillas para preguntas frecuentes con un solo clic."
+    - name: "Analítica de conversaciones"
+      description: "Reportes semanales: volumen, temas, sentimiento, conversion."
+
+  advanced:
+    - name: "Flujos conversacionales"
+      description: "Crea embudos de venta completos dentro de WhatsApp."
+    - name: "Integración CRM"
+      description: "Cada conversacion se guarda en tu CRM automaticamente."
+    - name: "Pagos por WhatsApp"
+      description: "Genera links de pago y cobra dentro de la conversacion."
+    - name: "Multi-agente"
+      description: "Varios agentes humanos + AI trabajando juntos."
+    - name: "API abierta"
+      description: "Conecta con n8n, HubSpot, Shopify, lo que necesites."
+
+  social_media:
+    - name: "Publicación automática"
+      description: "Programa y publica en Instagram, TikTok, Facebook, LinkedIn."
+    - name: "Contenido con tu clone"
+      description: "Fotos y videos generados por AI con tu identidad para redes."
+    - name: "Analítica multiplataforma"
+      description: "Un dashboard para todas tus redes sociales."
+    - name: "Respuesta automatica en redes"
+      description: "Comentarios y DMs respondidos automaticamente."
+    - name: "Giveaways y promociones"
+      description: "Crea sorteos, descuentos, campañas virales automaticas."
+
+# ═══════════════════════════════════════════════════════════════
+# WHAT THE CLIENT PROVIDES
+# ═══════════════════════════════════════════════════════════════
+what_client_provides:
+  - "Numero de WhatsApp Business API (o usamos el nuestro como gateway)"
+  - "Acceso a sus redes sociales (Instagram, TikTok, Facebook)"
+  - "Informacion de su negocio: productos, precios, horarios, FAQs"
+  - "Logos, colores, identidad visual para el bot"
+  - "Base de clientes inicial (opcional, para broadcasting)"
+  - "Objetivos de venta: que quieren vender, a quien, cuanto"
+
+what_sdc_provides:
+  - "Numero WhatsApp + gateway configurado"
+  - "Bot AI entrenado con su negocio"
+  - "Onboarding flow automatico"
+  - "Dashboard de conversaciones"
+  - "Reportes semanales"
+  - "Soporte 24/7"
+
+# ═══════════════════════════════════════════════════════════════
+# PRICING
+# ═══════════════════════════════════════════════════════════════
+pricing:
+  whatsapp_starter:
+    name: "WhatsApp Starter"
+    price: 49
+    setup: 99
+    features:
+      - "Chatbot AI 24/7"
+      - "Respuestas rapidas ilimitadas"
+      - "Broadcasting basico"
+      - "Dashboard de conversaciones"
+      - "Soporte email"
+    ideal_for: "Pequeños negocios, autonomos"
+
+  whatsapp_pro:
+    name: "WhatsApp Pro"
+    price: 99
+    setup: 199
+    features:
+      - "Todo lo de Starter"
+      - "Onboarding automatico de clientes"
+      - "Flujos conversacionales avanzados"
+      - "Integracion CRM"
+      - "Analítica semanal"
+      - "Soporte 24/7"
+    ideal_for: "PYMES, tiendas online"
+
+  whatsapp_enterprise:
+    name: "WhatsApp Enterprise"
+    price: 299
+    setup: 499
+    features:
+      - "Todo lo de Pro"
+      - "Multi-agente (AI + humanos)"
+      - "Pagos por WhatsApp"
+      - "API + n8n integration"
+      - "Social Media automation"
+      - "Contenido con clone service"
+      - "Giveaways y promociones automaticas"
+      - "Gerente de cuenta dedicado"
+    ideal_for: "Empresas, agencias"
+
+# ═══════════════════════════════════════════════════════════════
+# SOCIAL MEDIA AUTOMATION (add-on)
+# ═══════════════════════════════════════════════════════════════
+social_addon:
+  name: "Social Media Auto"
+  price: 49
+  description: "Add-on para automatizar Instagram, TikTok, Facebook, LinkedIn"
+  features:
+    - "Publicacion automatica en todas las plataformas"
+    - "Contenido generado por AI con clone service"
+    - "Respuesta automatica a comentarios y DMs"
+    - "Analítica multiplataforma"
+    - "Programacion semanal de contenido"
+
+# ═══════════════════════════════════════════════════════════════
+# AUTOMATIC SALES SYSTEM (engine)
+# ═══════════════════════════════════════════════════════════════
+auto_sales:
+  hot_sales:
+    description: "Ventas relampago automaticas via WhatsApp a clientes calificados"
+    triggers:
+      - "Cliente inactivo >7 dias → oferta especial"
+      - "Cliente cerca de limite de plan → upgrade suggest"
+      - "Cliente que pregunto por X y no compro → seguimiento"
+      - "Cliente feliz → referral request"
+    frequency: "Diario (analisis 3AM + ejecución 9AM)"
+
+  giveaways:
+    description: "Sorteos y promociones automaticas para engagement"
+    triggers:
+      - "Embajador nuevo → giveaway de bienvenida"
+      - "Cliente cumple meses → descuento especial"
+      - "Red social alcanza meta → sorteo automatico"
+    frequency: "Semanal"
+
+  promotions:
+    description: "Promociones segmentadas por comportamiento"
+    triggers:
+      - "Alto uso de fotos → descuento en pack de videos"
+      - "Cliente Pro por 6 meses → upgrade gratis 1 mes"
+      - "Embajador top → bono especial"
+    frequency: "Quincenal"
+
+# ═══════════════════════════════════════════════════════════════
+# ONBOARDING FLOW (automatico)
+# ═══════════════════════════════════════════════════════════════
+onboarding_flow:
+  step_1_welcome:
+    delay: "inmediato"
+    action: "send_whatsapp"
+    message: "¡Bienvenido a [nombre_empresa]! 🎉 Soy tu asistente virtual. Estoy aqui para ayudarte."
+  
+  step_2_setup:
+    delay: "5 min"
+    action: "send_whatsapp"
+    message: "Para empezar, cuentame sobre tu negocio: ¿que vendes? ¿a quien? ¿horarios?"
+  
+  step_3_training:
+    delay: "1 hora"
+    action: "send_whatsapp"
+    message: "Genial. Ya se sobre tu negocio. ¿Quieres que te muestre lo que puedo hacer? Prueba preguntandome: '¿Que productos tienes?'"
+  
+  step_4_activation:
+    delay: "24 horas"
+    action: "send_whatsapp"
+    message: "¿Como va todo? Si necesitas algo, solo dime. PD: Tus clientes ya pueden escribirme 🤖"
+  
+  step_5_report:
+    delay: "7 dias"
+    action: "send_whatsapp + send_email"
+    message: "Tu primera semana conmigo: [stats]. Has recibido X consultas, respondi Y, Z se convirtieron en ventas."
+
+# ═══════════════════════════════════════════════════════════════
+# SDC'S OWN SOCIAL MEDIA AUTOMATION
+# ═══════════════════════════════════════════════════════════════
+sdc_own_social:
+  platforms:
+    - instagram: "@sonoradigitalcorp"
+    - tiktok: "@sonoradigitalcorp"
+    - linkedin: "/company/sonoradigitalcorp"
+    - twitter: "@SDC_Sonora"
+  
+  content_calendar:
+    monday: "Demo de producto (video con clone service)"
+    tuesday: "Tip de negocio (carrusel)"
+    wednesday: "Testimonio de cliente (video)"
+    thursday: "Detras del creador (foto + texto)"
+    friday: "Promocion / Oferta especial"
+    saturday: "Contenido viral / tendencia"
+    sunday: "Giveaway / Sorteo semanal"
+  
+  auto_generate:
+    - "Lunes: video de 30s presentando funcion con clone service"
+    - "Miercoles: testimonial generado con IA"
+    - "Viernes: oferta especial diseñada automaticamente"
+    - "Domingo: sorteo automatico entre seguidores"
