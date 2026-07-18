@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDC Enterprise — Productos | Sonora Digital Corp</title>
+<meta name="description" content="Plataforma enterprise de clonación digital, cerebro corporativo e identidad AI para empresas.">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+:root{--bg:#06060e;--surface:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.06);--purple:#7c3aed;--purple2:#a855f7;--gold:#fbbf24;--text:#e2e8f0;--text2:#64748b;--radius:20px}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.bg-grid{background-image:radial-gradient(rgba(124,58,237,0.06) 1px,transparent 1px);background-size:40px 40px}
+.glow{position:absolute;border-radius:50%;filter:blur(120px);pointer-events:none;opacity:.12}
+.glow-1{width:700px;height:700px;background:var(--purple);top:-20%;left:-10%;animation:float 25s ease-in-out infinite}
+.glow-2{width:500px;height:500px;background:var(--gold);bottom:-15%;right:-10%;animation:float 30s ease-in-out infinite reverse}
+.glow-3{width:400px;height:400px;background:var(--purple2);top:40%;left:60%;animation:float 20s ease-in-out infinite 5s}
+@keyframes float{0%,100%{transform:translate(0,0)scale(1)}25%{transform:translate(60px,-60px)scale(1.1)}50%{transform:translate(-40px,40px)scale(.95)}75%{transform:translate(50px,30px)scale(1.05)}}
+.container{max-width:1280px;margin:0 auto;padding:0 2rem;position:relative;z-index:1}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:1rem 2rem;background:rgba(6,6,14,.8);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-weight:800;font-size:1.25rem;background:linear-gradient(135deg,var(--purple2),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.nav-links{display:flex;gap:2rem;align-items:center}
+.nav-links a{color:var(--text2);text-decoration:none;font-size:.85rem;font-weight:500;transition:color .3s;letter-spacing:.02em}
+.nav-links a:hover{color:var(--text)}
+.nav-cta{padding:.6rem 1.5rem;background:linear-gradient(135deg,var(--purple),var(--purple2));border:none;border-radius:100px;color:white;font-weight:600;font-size:.85rem;cursor:pointer;transition:all .4s}
+.nav-cta:hover{transform:scale(1.05);box-shadow:0 0 40px rgba(124,58,237,.4)}
+.hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:8rem 0 4rem;position:relative}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1.2rem;background:rgba(124,58,237,.12);border:1px solid rgba(124,58,237,.25);border-radius:100px;font-size:.75rem;color:var(--purple2);letter-spacing:.12em;text-transform:uppercase;margin-bottom:2rem;font-weight:600}
+.hero h1{font-size:clamp(2.5rem,6vw,5rem);font-weight:800;line-height:1.05;margin-bottom:1.5rem;letter-spacing:-.02em}
+.hero h1 span{background:linear-gradient(135deg,var(--purple2),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:1.1rem;color:var(--text2);max-width:600px;line-height:1.7;margin-bottom:2.5rem}
+.hero-btns{display:flex;gap:1rem;flex-wrap:wrap}
+.btn-primary{padding:.85rem 2rem;background:linear-gradient(135deg,var(--purple),var(--purple2));border:none;border-radius:100px;color:white;font-weight:600;font-size:.9rem;cursor:pointer;transition:all .4s;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 0 50px rgba(124,58,237,.4)}
+.btn-secondary{padding:.85rem 2rem;background:transparent;border:1px solid var(--border);border-radius:100px;color:var(--text);font-weight:500;font-size:.9rem;cursor:pointer;transition:all .3s;text-decoration:none}
+.btn-secondary:hover{background:rgba(255,255,255,.05);border-color:rgba(124,58,237,.3)}
+.hero-stats{display:flex;gap:3rem;margin-top:4rem;flex-wrap:wrap}
+.hero-stat{text-align:left}
+.hero-stat-num{font-size:2.5rem;font-weight:800;font-family:'JetBrains Mono',monospace;background:linear-gradient(135deg,var(--purple2),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-stat-label{font-size:.85rem;color:var(--text2);margin-top:.25rem}
+.section{padding:6rem 0}
+.section-tag{display:inline-flex;align-items:center;gap:.5rem;padding:.4rem 1rem;background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.15);border-radius:100px;font-size:.7rem;color:var(--purple2);letter-spacing:.1em;text-transform:uppercase;margin-bottom:1rem;font-weight:600}
+.section h2{font-size:clamp(2rem,4vw,3rem);font-weight:700;margin-bottom:1rem;line-height:1.15}
+.section h2 span{color:var(--purple2)}
+.section-sub{color:var(--text2);font-size:1.05rem;max-width:650px;line-height:1.7;margin-bottom:3rem}
+.products-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(350px,1fr));gap:1.5rem}
+.product-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:2.5rem;position:relative;overflow:hidden;transition:all .5s cubic-bezier(.175,.885,.32,1.275)}
+.product-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--purple2),transparent);opacity:0;transition:opacity .5s}
+.product-card:hover::before{opacity:1}
+.product-card:hover{transform:translateY(-6px);border-color:rgba(124,58,237,.25);box-shadow:0 20px 80px rgba(124,58,237,.08)}
+.product-card .icon{font-size:2.5rem;margin-bottom:1.2rem}
+.product-card h3{font-size:1.3rem;font-weight:700;margin-bottom:.75rem}
+.product-card p{font-size:.9rem;color:var(--text2);line-height:1.6;margin-bottom:1.5rem}
+.product-card .features{list-style:none;padding:0}
+.product-card .features li{padding:.4rem 0;font-size:.85rem;color:var(--text2);display:flex;align-items:center;gap:.6rem}
+.product-card .features li::before{content:'✦';color:var(--purple2);font-size:.7rem}
+.product-card .price{font-size:2rem;font-weight:800;margin:1.5rem 0 .5rem;font-family:'JetBrains Mono',monospace}
+.product-card .price span{font-size:.85rem;color:var(--text2);font-weight:400;font-family:'Outfit',sans-serif}
+.product-card.badge-gold{border-color:rgba(251,191,36,.2)}
+.product-card.badge-gold::after{content:'MÁS POPULAR';position:absolute;top:1.5rem;right:1.5rem;padding:.25rem .75rem;background:var(--gold);color:var(--bg);border-radius:100px;font-size:.65rem;font-weight:700;letter-spacing:.08em}
+.product-card .cta-card{margin-top:1.5rem;padding:.75rem 0;text-align:center;border-radius:100px;background:linear-gradient(135deg,var(--purple),var(--purple2));color:white;font-weight:600;font-size:.85rem;cursor:pointer;transition:all .4s;border:none;width:100%}
+.product-card .cta-card:hover{transform:scale(1.02);box-shadow:0 0 30px rgba(124,58,237,.3)}
+.tech-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1rem;margin-top:2rem}
+.tech-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:1.5rem;text-align:center;transition:all .3s}
+.tech-item:hover{border-color:rgba(124,58,237,.2)}
+.tech-item .t-icon{font-size:1.8rem;margin-bottom:.5rem}
+.tech-item .t-name{font-size:.8rem;color:var(--text2);font-weight:500}
+.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:2rem;counter-reset:step}
+.how-step{text-align:center;padding:2rem}
+.how-step .num{width:60px;height:60px;margin:0 auto 1rem;background:linear-gradient(135deg,var(--purple),var(--purple2));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:800;font-family:'JetBrains Mono',monospace;color:white}
+.how-step h3{font-size:1.1rem;font-weight:600;margin-bottom:.5rem}
+.how-step p{font-size:.85rem;color:var(--text2);line-height:1.6}
+.cta-section{text-align:center;padding:6rem 2rem;position:relative}
+.cta-section h2{font-size:clamp(2rem,4vw,3.5rem);margin-bottom:1rem}
+.cta-section p{color:var(--text2);max-width:500px;margin:0 auto 2rem}
+.footer{padding:4rem 2rem;border-top:1px solid var(--border);position:relative;z-index:1}
+.footer-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:2rem;margin-bottom:3rem}
+.footer-col h4{font-size:.85rem;font-weight:600;margin-bottom:1rem;color:var(--text)}
+.footer-col a{display:block;color:var(--text2);text-decoration:none;font-size:.8rem;padding:.35rem 0;transition:color .3s}
+.footer-col a:hover{color:var(--text)}
+.footer-bottom{text-align:center;padding-top:2rem;border-top:1px solid var(--border);font-size:.8rem;color:var(--text2)}
+.footer-bottom .powered{color:var(--purple2);font-weight:600}
+@media(max-width:768px){.nav-links{display:none}.hero-stats{gap:1.5rem}.products-grid{grid-template-columns:1fr}.hero h1{font-size:2rem}}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div class="glow glow-1"></div><div class="glow glow-2"></div><div class="glow glow-3"></div>
+<div class="bg-grid" style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:0"></div>
+
+<!-- Nav -->
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">✦ SDC</div>
+    <div class="nav-links">
+      <a href="#productos">Productos</a>
+      <a href="#como-funciona">Cómo funciona</a>
+      <a href="#tecnologia">Tecnología</a>
+      <a href="#precios">Precios</a>
+      <a href="https://sonoradigitalcorp.com">Volver</a>
+      <a href="/panel"><button class="nav-cta">Demo →</button></a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero container">
+  <div class="hero-badge">✦ PLATAFORMA ENTERPRISE</div>
+  <h1>El Cerebro Digital<br>de tu <span>Empresa</span></h1>
+  <p>Clonación facial, voz sintética, memoria corporativa y automatización AI — todo en una plataforma white-label que tus clientes creerán que es tuya.</p>
+  <div class="hero-btns">
+    <a href="#productos" class="btn-primary">Ver productos ↓</a>
+    <a href="/panel" class="btn-secondary">Dashboard →</a>
+  </div>
+  <div class="hero-stats">
+    <div class="hero-stat"><div class="hero-stat-num">99.8%</div><div class="hero-stat-label">Margen operativo</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">&lt;5s</div><div class="hero-stat-label">Provisioning</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">215</div><div class="hero-stat-label">Tests de calidad</div></div>
+    <div class="hero-stat"><div class="hero-stat-num">10</div><div class="hero-stat-label">Pipelines activos</div></div>
+  </div>
+</section>
+
+<!-- Productos -->
+<section id="productos" class="section container">
+  <div class="section-tag">✦ PRODUCTOS</div>
+  <h2>Tu <span>Stack Completo</span> para Revender</h2>
+  <p class="section-sub">Todo lo que necesitas para ofrecer cerebros digitales enterprise a tus clientes. Infraestructura, clones, memoria y automatización — 100% white-label.</p>
+  <div class="products-grid">
+    <!-- Clone Service -->
+    <div class="product-card badge-gold">
+      <div class="icon">🎭</div>
+      <h3>Clone Service</h3>
+      <p>Clonación facial y vocal para marketing. Tus clientes envían 15 fotos + 30s de audio y reciben contenido con su identidad.</p>
+      <ul class="features">
+        <li>LoRA facial con Flux (FAL.ai)</li>
+        <li>Clon de voz con OmniVoice</li>
+        <li>Fotos, videos y TTS con su identidad</li>
+        <li>Export multi-formato (TikTok, Reels, YouTube)</li>
+        <li>Post-procesamiento con FFmpeg</li>
+      </ul>
+      <div class="price">$2,500<span>/mes</span></div>
+      <button class="cta-card" onclick="document.getElementById('precios').scrollIntoView()">Ver plan →</button>
+    </div>
+    <!-- Digital Brain -->
+    <div class="product-card">
+      <div class="icon">🧠</div>
+      <h3>Digital Brain</h3>
+      <p>Memoria corporativa persistente. Cada decisión, cada conversación, cada aprendizaje queda guardado y accesible.</p>
+      <ul class="features">
+        <li>Memoria 3-capas: Working / Project / Knowledge</li>
+        <li>Búsqueda semántica con Qdrant (vectores)</li>
+        <li>Relaciones con Neo4j (grafos)</li>
+        <li>Export a Obsidian vault</li>
+        <li>Context recovery: "¿Qué pasó la semana pasada?"</li>
+      </ul>
+      <div class="price">$5,000<span>/mes</span></div>
+      <button class="cta-card" onclick="document.getElementById('precios').scrollIntoView()">Ver plan →</button>
+    </div>
+    <!-- Enterprise Platform -->
+    <div class="product-card">
+      <div class="icon">🏢</div>
+      <h3>Enterprise Platform</h3>
+      <p>La plataforma completa para partners y revendedores. Multi-tenant, white-label, API pública.</p>
+      <ul class="features">
+        <li>Multi-tenant con aislamiento total</li>
+        <li>White-label: tu marca, nuestra tecnología</li>
+        <li>Powered by SDC con descuentos por visibilidad</li>
+        <li>API de provisioning en segundos</li>
+        <li>Dashboard de clientes y comisiones</li>
+      </ul>
+      <div class="price">$15,000<span>/mes</span></div>
+      <button class="cta-card" onclick="document.getElementById('precios').scrollIntoView()">Ver plan →</button>
+    </div>
+  </div>
+</section>
+
+<!-- Cómo funciona -->
+<section id="como-funciona" class="section container">
+  <div class="section-tag">⚙ FLUJO</div>
+  <h2>Cómo <span>Funciona</span></h2>
+  <p class="section-sub">Desde que tu cliente paga hasta que recibe su cerebro digital funcionando. Todo automático.</p>
+  <div class="how-grid">
+    <div class="how-step"><div class="num">1</div><h3>Vendes</h3><p>Tú pones el precio. Setup desde $0. Tu markup es tuyo. Nosotros facturamos wholesale.</p></div>
+    <div class="how-step"><div class="num">2</div><h3>Provisionamos</h3><p>En 5 segundos tu cliente tiene su cerebro digital: Engram, Qdrant, Neo4j, Supabase, OpenClaw. Todo listo.</p></div>
+    <div class="how-step"><div class="num">3</div><h3>Entrenan</h3><p>El cliente sube 15 fotos + audio. Entrenamos LoRA facial + clon de voz vía FAL.ai + OmniVoice.</p></div>
+    <div class="how-step"><div class="num">4</div><h3>Generan</h3><p>El cliente pide fotos, videos o audio con su identidad. Todo se entrega en Supabase en multi-formato.</p></div>
+  </div>
+</section>
+
+<!-- Tecnología -->
+<section id="tecnologia" class="section container">
+  <div class="section-tag">⚡ TECH STACK</div>
+  <h2>Infraestructura <span>Invisible</span></h2>
+  <p class="section-sub">Tu cliente nunca sabrá cómo funciona. Solo ve resultados. Todo corre sobre nuestro stack enterprise auditado.</p>
+  <div class="tech-grid">
+    <div class="tech-item"><div class="t-icon">🧠</div><div class="t-name">Engram Memory</div></div>
+    <div class="tech-item"><div class="t-icon">🔮</div><div class="t-name">Qdrant Vectors</div></div>
+    <div class="tech-item"><div class="t-icon">🕸</div><div class="t-name">Neo4j Graph</div></div>
+    <div class="tech-item"><div class="t-icon">🎭</div><div class="t-name">FAL.ai GPU</div></div>
+    <div class="tech-item"><div class="t-icon">🎙</div><div class="t-name">OmniVoice</div></div>
+    <div class="tech-item"><div class="t-icon">📦</div><div class="t-name">Supabase</div></div>
+    <div class="tech-item"><div class="t-icon">💬</div><div class="t-name">OpenClaw Gateway</div></div>
+    <div class="tech-item"><div class="t-icon">🤖</div><div class="t-name">21 MCP Servers</div></div>
+    <div class="tech-item"><div class="t-icon">🛡</div><div class="t-name">Prompt Filter AI</div></div>
+    <div class="tech-item"><div class="t-icon">📊</div><div class="t-name">215 Tests</div></div>
+  </div>
+</section>
+
+<!-- Precios -->
+<section id="precios" class="section container">
+  <div class="section-tag">💰 PRICING</div>
+  <h2>Planes <span>Enterprise</span></h2>
+  <p class="section-sub">Precios wholesale. Tú le pones tu markup al cliente. Nosotros facturamos por debajo.</p>
+  <div class="products-grid">
+    <div class="product-card">
+      <div class="icon">🚀</div>
+      <h3>Medium</h3>
+      <p>Para empresas que quieren empezar con cerebro digital.</p>
+      <ul class="features">
+        <li>Setup desde $1,500</li>
+        <li>5 asientos</li>
+        <li>10,000 interacciones/mes</li>
+        <li>2 LoRAs/año + 10 videos/mes</li>
+        <li>Soporte email 12h</li>
+      </ul>
+      <div class="price">$5,000<span>/mes wholesale</span></div>
+      <div style="font-size:.8rem;color:var(--text2);text-align:center;margin-top:.5rem">Markup sugerido: 50-100%</div>
+    </div>
+    <div class="product-card badge-gold">
+      <div class="icon">⭐</div>
+      <h3>Premium</h3>
+      <p>El plan que vendes siempre. El que conviene.</p>
+      <ul class="features">
+        <li>Setup desde $2,500</li>
+        <li>15 asientos</li>
+        <li>30,000 interacciones/mes</li>
+        <li>5 LoRAs/año + 30 videos/mes</li>
+        <li>Soporte 24/7 prioritario</li>
+      </ul>
+      <div class="price">$7,500<span>/mes wholesale</span></div>
+      <div style="font-size:.8rem;color:var(--gold);text-align:center;margin-top:.5rem">🔥 Recomendado — mejor margen</div>
+    </div>
+    <div class="product-card">
+      <div class="icon">👑</div>
+      <h3>Enterprise</h3>
+      <p>Para grandes corporaciones. Infraestructura dedicada.</p>
+      <ul class="features">
+        <li>Setup desde $5,000</li>
+        <li>50+ asientos</li>
+        <li>100,000+ interacciones/mes</li>
+        <li>LoRAs ilimitados + videos</li>
+        <li>Gerente dedicado 24/7 + SLA 99.99%</li>
+        <li>Revenue share en contratos grandes</li>
+      </ul>
+      <div class="price">$15,000<span>/mes wholesale</span></div>
+      <div style="font-size:.8rem;color:var(--text2);text-align:center;margin-top:.5rem">+7% rev share en deals >$50k</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section container">
+  <div class="section-tag" style="margin:0 auto 1rem">🤝 HABLEMOS</div>
+  <h2>¿Listo para <span>Revender</span>?</h2>
+  <p>Únete como partner. Sin setup fee. Sin riesgo. Tu markup es tuyo.</p>
+  <a href="mailto:partners@sonoradigitalcorp.com" class="btn-primary" style="display:inline-flex">Soy partner →</a>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>✦ SDC Enterprise</h4>
+        <a href="#productos">Productos</a>
+        <a href="#precios">Precios wholesale</a>
+        <a href="#tecnologia">Tecnología</a>
+      </div>
+      <div class="footer-col">
+        <h4>Partners</h4>
+        <a href="mailto:partners@sonoradigitalcorp.com">Hazte partner</a>
+        <a href="mailto:partners@sonoradigitalcorp.com">Soporte a partners</a>
+        <a href="mailto:partners@sonoradigitalcorp.com">Documentación</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="#">Términos</a>
+        <a href="#">Privacidad</a>
+        <a href="#">Seguridad</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contacto</h4>
+        <a href="mailto:hello@sonoradigitalcorp.com">hello@sonoradigitalcorp.com</a>
+        <a href="https://sonoradigitalcorp.com">sonoradigitalcorp.com</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Sonora Digital Corp. Todos los derechos reservados.</p>
+      <p style="margin-top:.5rem">Hecho en México — <span class="powered">Powered by SDC Neural Engine</span></p>
+    </div>
+  </div>
+</footer>
+
+<script>
+const canvas = document.getElementById('particles');
+const ctx = canvas.getContext('2d');
+let particles = [];
+function resize(){canvas.width=window.innerWidth;canvas.height=document.body.scrollHeight}
+resize();window.addEventListener('resize',resize);
+
+class Particle{
+  constructor(){this.reset()}
+  reset(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.size=Math.random()*2+.5;this.speedX=(Math.random()-.5)*.3;this.speedY=(Math.random()-.5)*.3;this.opacity=Math.random()*.4+.1;this.color=Math.random()>.5?'124,58,237':'168,85,247'}
+  update(){this.x+=this.speedX;this.y+=this.speedY;if(this.x<0||this.x>canvas.width||this.y<0||this.y>canvas.height)this.reset()}
+  draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fillStyle=`rgba(${this.color},${this.opacity})`;ctx.fill()}
+}
+for(let i=0;i<80;i++)particles.push(new Particle());
+
+function animate(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{p.update();p.draw()});
+  for(let i=0;i<particles.length;i++)for(let j=i+1;j<particles.length;j++){const dx=particles[i].x-particles[j].x,dy=particles[i].y-particles[j].y,dist=Math.sqrt(dx*dx+dy*dy);if(dist<120){ctx.beginPath();ctx.moveTo(particles[i].x,particles[i].y);ctx.lineTo(particles[j].x,particles[j].y);ctx.strokeStyle=`rgba(124,58,237,${.08*(1-dist/120)})`;ctx.lineWidth=.5;ctx.stroke()}}
+  requestAnimationFrame(animate)
+}
+animate();
+window.addEventListener('scroll',()=>{canvas.height=document.body.scrollHeight});
+</script>
+</body>
+</html>
