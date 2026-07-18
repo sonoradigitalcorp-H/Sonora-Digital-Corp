@@ -35,3 +35,5 @@ state/events/replay/
 # Collector state (auto-generated, per-machine)
 collectors/state/
 
+products/mystika/web/.next/
+apps/voice/*.vpsbak
