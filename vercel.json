@@ -13,6 +13,7 @@
     { "src": "/", "dest": "/landing/index.html" },
     { "src": "/war-room.html", "dest": "/landing/war-room.html" },
     { "src": "/abe-blueprint.html", "dest": "/landing/abe-blueprint.html" },
+    { "src": "/freedom.html", "dest": "/freedom.html" },
     { "src": "/(.*)", "dest": "/$1" }
   ],
   "headers": [

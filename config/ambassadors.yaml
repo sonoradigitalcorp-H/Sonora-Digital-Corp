@@ -1,0 +1,180 @@
+# SDC Ambassador Program — Gamified Multi-Level Rewards System
+# Play. Work. Learn. Earn.
+# Version: 1.0.0
+
+# ═══════════════════════════════════════════════════════════════
+# 1. NIVELES DE EMBAJADOR (suben por ventas + red)
+# ═══════════════════════════════════════════════════════════════
+levels:
+  hunter:
+    name: "Hunter 🎯"
+    min_direct_clients: 0
+    min_network_clients: 0
+    commission_pct: 20
+    bonus_usd: 0
+    benefits:
+      - "20% de comisión en cada venta directa"
+      - "Dashboard de referidos"
+      - "Link de afiliado personal"
+
+  ammo:
+    name: "Ammo ⚡"
+    min_direct_clients: 15
+    min_network_clients: 50
+    commission_pct: 25
+    bonus_usd: 200
+    benefits:
+      - "25% de comisión en ventas directas"
+      - "5% de comisión en ventas de tu red (nivel 1)"
+      - "Bono único de $200 al alcanzar"
+      - "Acceso a contenido exclusivo de ventas"
+
+  warrior:
+    name: "Warrior 🔥"
+    min_direct_clients: 50
+    min_network_clients: 200
+    commission_pct: 30
+    bonus_usd: 500
+    benefits:
+      - "30% de comisión en ventas directas"
+      - "8% de comisión en ventas de tu red (nivel 1)"
+      - "3% de comisión en ventas de tu red (nivel 2)"
+      - "Bono único de $500 al alcanzar"
+      - "Badge de Warrior Embajador"
+      - "Acceso anticipado a features"
+
+  legend:
+    name: "Legend 👑"
+    min_direct_clients: 100
+    min_network_clients: 500
+    commission_pct: 35
+    bonus_usd: 1500
+    benefits:
+      - "35% de comisión en ventas directas"
+      - "10% de comisión en ventas de tu red (nivel 1)"
+      - "5% de comisión en ventas de tu red (nivel 2)"
+      - "2% de comisión en ventas de tu red (nivel 3)"
+      - "Bono único de $1,500 al alcanzar"
+      - "Viaje todo pagado anual"
+      - "Membresía Legend vitalicia"
+      - "Asistente personal SDC"
+
+# ═══════════════════════════════════════════════════════════════
+# 2. PRODUCTOS QUE VENDEN
+# ═══════════════════════════════════════════════════════════════
+products:
+  free_trial:
+    name: "Free 24h"
+    price: 0
+    trial_days: 1
+    commission_pct: 0  # No paga comision, pero cuenta para nivel
+    features:
+      - "Clone Service completo por 24h"
+      - "3 fotos generadas"
+      - "1 video de prueba"
+      - "Voz clonada"
+
+  pro_clone:
+    name: "Pro Clone"
+    price: 29
+    setup: 0
+    type: subscription
+    commission_pct: 20  # Base, sube segun nivel
+    features:
+      - "Clone Service ilimitado"
+      - "100 fotos/mes con tu cara"
+      - "30 videos/mes con tu identidad"
+      - "Voz clonada + TTS ilimitado"
+      - "Export multi-plataforma"
+    commission_example: "Embajador Hunter gana $5.80/cliente/mes → Legend gana $10.15/cliente/mes"
+
+  business:
+    name: "Business"
+    price: 99
+    setup: 0
+    type: subscription
+    commission_pct: 20
+    features:
+      - "5 asientos (tu + 4 clones)"
+      - "500 fotos/mes"
+      - "150 videos/mes"
+      - "Dashboard de clientes"
+      - "API + white-label básico"
+
+  enterprise:
+    name: "Enterprise"
+    price: "A cotizar"
+    setup: "A cotizar"
+    type: custom
+    commission_pct: 15  # Revenue share directo
+    features:
+      - "Cliente personalizado"
+      - "Infraestructura dedicada"
+      - "SLA 99.99%"
+      - "Revenue share 7% en contratos grandes"
+
+# ═══════════════════════════════════════════════════════════════
+# 3. GAMIFICATION — Puntos por acciones
+# ═══════════════════════════════════════════════════════════════
+gamification:
+  points:
+    referral_signup: 10        # Alguien se registra con tu link
+    referral_trial_start: 50   # Alguien activa su trial
+    referral_trial_converted: 200  # El trial se convierte en pago
+    direct_sale: 500           # Venta directa cerrada
+    network_sale_level_1: 100  # Venta de tu red directa
+    network_sale_level_2: 50   # Venta de red nivel 2
+    course_completed: 100      # Completa curso de ventas
+    social_share: 20           # Comparte en redes con su link
+    daily_login: 5             # Entra al dashboard cada día
+
+  achievements:
+    first_sale:
+      name: "Primera venta 🎉"
+      points: 1000
+      unlocks: "Badge de Hunter"
+    network_10:
+      name: "Red de 10 🌱"
+      points: 2000
+      unlocks: "10% más de comisión por 1 mes"
+    network_50:
+      name: "Red de 50 🌿"
+      points: 5000
+      unlocks: "Bono de $100 + 15% más de comisión por 1 mes"
+    network_100:
+      name: "Red de 100 🌳"
+      points: 10000
+      unlocks: "Bono de $300 + nivel automático a Warrior"
+
+# ═══════════════════════════════════════════════════════════════
+# 4. EJEMPLO DE GANANCIAS
+# ═══════════════════════════════════════════════════════════════
+examples:
+  hunter_level:
+    scenario: "Vendes 5 Pro Clone ($29 c/u) en un mes"
+    commission_pct: 20
+    direct_commission: 29.00  # 5 × $29 × 20%
+    network_commission: 0
+    bonus: 0
+    total_month: 29.00
+    note: "Empiezas. Bajo pero sin invertir nada."
+
+  warrior_level:
+    scenario: "Vendes 10 Pro Clone directo + tu red vende 20 más"
+    commission_pct: 30
+    direct_commission: 87.00  # 10 × $29 × 30%
+    network_commission: 46.40  # 20 × $29 × 8%
+    bonus: 0
+    total_month: 133.40
+    note: "Tu red empieza a trabajar por ti."
+
+  legend_level:
+    scenario: "Vendes 20 Pro Clone directo + red vende 100 más en 3 niveles"
+    commission_pct: 35
+    direct_commission: 203.00
+    network_commission_level_1: 290.00  # 100 × $29 × 10%
+    network_commission_level_2: 72.50   # calculado
+    network_commission_level_3: 29.00
+    bonus: 0
+    total_month: 594.50
+    note: "Tu red es una máquina de generar ingresos pasivos."
