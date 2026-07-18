@@ -9,7 +9,6 @@ import asyncio
 import logging
 import os
 import sys
-import time
 from datetime import datetime
 from pathlib import Path
 
@@ -99,8 +98,8 @@ CARD = """  <div class="card">
 
 
 async def get_health_data():
-    from planner.registry import load_registry
     from planner.health import check_provider_health, get_provider_health
+    from planner.registry import load_registry
 
     registry = load_registry()
     providers = []

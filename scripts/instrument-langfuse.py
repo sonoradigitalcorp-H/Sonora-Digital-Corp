@@ -13,9 +13,8 @@ Uso:
 """
 
 import os
-import json
+from collections.abc import Callable
 from functools import wraps
-from typing import Optional, Callable, Any
 
 LANGFUSE_PUBLIC_KEY = os.getenv("LANGFUSE_PUBLIC_KEY", "pk-lf-sdc-2026")
 LANGFUSE_SECRET_KEY = os.getenv("LANGFUSE_SECRET_KEY", "sk-lf-sdc-2026-secret")

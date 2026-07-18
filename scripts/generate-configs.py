@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Config Unification — fleet.yml genera configs de servicios + truth/40-infrastructure.yaml [FR11-FR13]"""
 import json
-import os
 import sys
-import yaml
 from datetime import datetime, timezone
 from pathlib import Path
+
+import yaml
 
 REPO = Path(__file__).resolve().parent.parent
 FLEET = REPO / "fleet.yml"

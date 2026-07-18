@@ -9,7 +9,6 @@ Modo interactivo:
 """
 import argparse
 import json
-import os
 import re
 import sys
 from datetime import datetime
@@ -428,7 +427,7 @@ def autofill(args: dict):
     args.setdefault("description", summary[:200] if summary else "Implementacion completada.")
     args.setdefault("events", [
         {"name": "session.start", "desc": f"Inicio de {title}"},
-        {"name": "spec.created", "desc": f"Spec creada"},
+        {"name": "spec.created", "desc": "Spec creada"},
         {"name": "work.completed", "desc": "Implementacion completada"},
     ])
     args.setdefault("gherkin_scenarios", [

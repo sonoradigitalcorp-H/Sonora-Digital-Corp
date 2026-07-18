@@ -1,0 +1,85 @@
+# Onboarding Codes Configuration
+# Version: 1.0.0
+
+code_format:
+  prefix: "SDC"
+  separator: "-"
+  length: 6
+  chars: "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"  # No I,O,0,1 (legibility)
+  case: upper
+
+validity:
+  hours: 6
+  max_uses: 1
+  renewal_allowed: true
+
+# Onboarding Flow — 5 pasos automáticos
+flow:
+  step_1_immediate:
+    delay: "0s"
+    channel: whatsapp
+    message: "¡Bienvenido {client_name}! Soy tu asistente digital de {partner_name}. Estoy aquí para ayudarte con lo que necesites. ¿Por dónde quieres empezar? 🚀"
+
+  step_2_tutorial:
+    delay: "5m"
+    channel: whatsapp
+    condition: "no_activity_since_welcome"
+    message: "¿Sabías que puedo crear fotos y videos con tu cara? 🎭 Solo necesitas enviarme 15 fotos tuyas y 30 segundos de tu voz. ¿Quieres probar?"
+
+  step_3_first_use:
+    delay: "0s"
+    channel: whatsapp
+    trigger: "first_message"
+    message: "¡Genial! Hagamos algo increíble juntos. Puedes pedirme: \n📸 Una foto tuya en cualquier lugar\n🎬 Un video presentándote\n🗣 Un mensaje de voz con tu tono\n\n¿Qué te gustaría crear?"
+
+  step_4_24h_followup:
+    delay: "24h"
+    channel: whatsapp
+    condition: "low_activity"
+    message: "¿Cómo va todo, {client_name}? Recuerda que tu asistente está aquí 24/7. Si necesitas algo, solo escríbeme. ¿Quieres que te muestre algo nuevo? ✨"
+
+  step_5_weekly_report:
+    delay: "7d"
+    channel: whatsapp
+    message: "¡Tu primera semana con nosotros! 🎉\n\nAquí tienes un resumen:\n📸 Fotos creadas: {photos_count}\n🎬 Videos generados: {videos_count}\n💬 Conversaciones: {chat_count}\n\n¿Listo para la siguiente semana? 🚀"
+
+# Agentic Skills por tipo de tenant
+agentic_skills:
+  cliente:
+    openclaw:
+      - clone-service
+      - wacli
+      - taskflow
+      - healthcheck
+    hermes:
+      - whatsapp
+    opencode:
+      - sales
+      - support
+      - knowledge
+
+  partner:
+    openclaw:
+      - clone-service
+      - wacli
+      - supabase
+      - stripe
+      - taskflow
+      - github
+      - gh-issues
+      - agent-evolver
+    hermes:
+      - whatsapp
+      - telegram
+    opencode:
+      - sales
+      - support
+      - knowledge
+      - finance
+      - security
+      - ops
+
+  admin:
+    openclaw: all
+    hermes: all
+    opencode: all

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Motor único de generación desde templates — reemplaza escritura manual de docs [FR17]"""
 import json
-import os
 import re
 import sys
 from datetime import datetime

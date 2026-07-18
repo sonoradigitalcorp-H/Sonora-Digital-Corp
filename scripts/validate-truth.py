@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """Valida todos los constitution/ YAML files — schema, conflictos, integridad (HAS-001)"""
 import sys
-import yaml
 from pathlib import Path
+
+import yaml
 
 TRUTH_DIR = Path(__file__).resolve().parent.parent / "constitution"
 errors = []

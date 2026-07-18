@@ -13,7 +13,9 @@ warnings.filterwarnings("ignore", category=UserWarning, module="qdrant_client")
 
 from qdrant_client import QdrantClient
 from qdrant_client.models import (
-    Distance, PointStruct, VectorParams,
+    Distance,
+    PointStruct,
+    VectorParams,
 )
 
 logging.basicConfig(level=logging.INFO)

@@ -7,10 +7,10 @@ Usage:
   python3 scripts/constitution-gate.py --plan PLAN.yaml --gate security
 """
 import json
-import os
 import sys
-import yaml
 from pathlib import Path
+
+import yaml
 
 REPO = Path(__file__).resolve().parent.parent
 CONSTITUTION_DIR = REPO / "constitution"

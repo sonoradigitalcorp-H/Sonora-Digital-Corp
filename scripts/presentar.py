@@ -9,9 +9,6 @@ Crea un HTML autónomo en ~/evolucion/presentacion-YYYYMMDD.html
 """
 import argparse
 import json
-import os
-import re
-import sys
 from datetime import date
 from pathlib import Path
 

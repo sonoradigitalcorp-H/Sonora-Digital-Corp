@@ -9,6 +9,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 
 import sys
+
 sys.path.insert(0, str(REPO))
 
 _TEST_DB = Path(tempfile.mkdtemp()) / "test_commissions.db"
@@ -52,7 +53,7 @@ class TestPartners:
 class TestDeals:
     def test_adds_deal(self):
         _setup()
-        from scripts.commissions import add_partner, add_deal
+        from scripts.commissions import add_deal, add_partner
         add_partner("aztrotech", "César")
         result = json.loads(add_deal("aztrotech", "Corp ABC", "business", 15000, 7500, 28000, 14000))
         assert result["deal_id"] >= 1
@@ -63,7 +64,7 @@ class TestDeals:
 
     def test_deal_year_projection(self):
         _setup()
-        from scripts.commissions import add_partner, add_deal
+        from scripts.commissions import add_deal, add_partner
         add_partner("aztrotech", "César")
         result = json.loads(add_deal("aztrotech", "Corp ABC", "business", 15000, 7500, 28000, 14000))
         proj = result["year_1_projection"]
@@ -78,7 +79,7 @@ class TestDeals:
 
     def test_rejects_invalid_plan(self):
         _setup()
-        from scripts.commissions import add_partner, add_deal
+        from scripts.commissions import add_deal, add_partner
         add_partner("aztrotech", "César")
         result = json.loads(add_deal("aztrotech", "Corp", "platinum", 1000, 500, 2000, 1000))
         assert "error" in result
@@ -87,7 +88,7 @@ class TestDeals:
 class TestPoweredByDiscount:
     def test_footer_discount_applied(self):
         _setup()
-        from scripts.commissions import add_partner, add_deal
+        from scripts.commissions import add_deal, add_partner
         add_partner("aztrotech", "César")
         result = json.loads(add_deal("aztrotech", "Corp", "business", 15000, 7500, 28000, 14000, "footer_only"))
         assert result["powered_by"]["discount_pct"] == 5
@@ -96,7 +97,7 @@ class TestPoweredByDiscount:
 
     def test_full_branding_discount(self):
         _setup()
-        from scripts.commissions import add_partner, add_deal
+        from scripts.commissions import add_deal, add_partner
         add_partner("aztrotech", "César")
         result = json.loads(add_deal("aztrotech", "Corp", "business", 15000, 7500, 28000, 14000, "full_branding"))
         assert result["powered_by"]["discount_pct"] == 10
@@ -104,7 +105,7 @@ class TestPoweredByDiscount:
 
     def test_hidden_no_discount(self):
         _setup()
-        from scripts.commissions import add_partner, add_deal
+        from scripts.commissions import add_deal, add_partner
         add_partner("aztrotech", "César")
         result = json.loads(add_deal("aztrotech", "Corp", "business", 15000, 7500, 28000, 14000, "hidden"))
         assert result["powered_by"]["discount_pct"] == 0
@@ -114,7 +115,7 @@ class TestPoweredByDiscount:
 class TestSummary:
     def test_partner_summary(self):
         _setup()
-        from scripts.commissions import add_partner, add_deal, get_partner_summary
+        from scripts.commissions import add_deal, add_partner, get_partner_summary
         add_partner("aztrotech", "César")
         add_deal("aztrotech", "Client A", "business", 15000, 7500, 28000, 14000)
         add_deal("aztrotech", "Client B", "starter", 5000, 2500, 10000, 5000)
@@ -135,7 +136,7 @@ class TestSummary:
 class TestProjection:
     def test_projection_12_months(self):
         _setup()
-        from scripts.commissions import add_partner, add_deal, get_projection
+        from scripts.commissions import add_deal, add_partner, get_projection
         add_partner("aztrotech", "César")
         add_deal("aztrotech", "Corp", "business", 15000, 7500, 28000, 14000)
         result = json.loads(get_projection("aztrotech", 12))

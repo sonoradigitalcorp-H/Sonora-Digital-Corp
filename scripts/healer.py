@@ -175,7 +175,7 @@ def main():
 
             ok = docker_restart(container)
             if not ok:
-                log.warning(f"  docker restart command failed")
+                log.warning("  docker restart command failed")
                 continue
 
             # Poll for health

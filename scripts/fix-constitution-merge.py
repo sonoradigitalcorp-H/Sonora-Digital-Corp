@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Fix merged constitution files — semantically merge rules from old truth/ files."""
-import yaml
 from pathlib import Path
+
+import yaml
 
 REPO = Path(__file__).resolve().parent.parent
 OLD = REPO / "truth.bak"
@@ -83,7 +84,7 @@ def merge():
     index_data["updated"] = "2026-07-08T20:00:00Z"
     with open(index_path, "w") as f:
         yaml.dump(index_data, f, default_flow_style=False, sort_keys=False, allow_unicode=True)
-    print(f"  WROTE 00-index.yaml (updated timestamp)")
+    print("  WROTE 00-index.yaml (updated timestamp)")
 
 if __name__ == "__main__":
     merge()

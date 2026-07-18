@@ -1,4 +1,4 @@
-"""Event emitter for Decision Engine events — writes to state/logs/events.jsonl."""
+"""Event emitter for Decision Engine events — writes to state/events/events.jsonl."""
 from __future__ import annotations
 
 import json
@@ -12,7 +12,7 @@ from planner.models import CapabilityResult
 log = logging.getLogger("planner.events")
 
 BASE = Path(__file__).resolve().parent.parent
-EVENTS_PATH = BASE / "state" / "logs" / "events.jsonl"
+EVENTS_PATH = BASE / "state" / "events" / "events.jsonl"
 
 
 def _emit(event: str, payload: dict[str, Any]):

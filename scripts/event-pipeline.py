@@ -10,7 +10,6 @@ Uso: python3 scripts/event-pipeline.py [--all] [--watch] [--rotate]
 import json
 import logging
 import shutil
-import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -196,10 +195,10 @@ def main():
         if args.json:
             print(json.dumps(result, indent=2))
         else:
-            print(f"\n=== Event Pipeline ===")
+            print("\n=== Event Pipeline ===")
             print(f"Status: {result['status']}")
             print(f"Total: {result['total']} events")
-            print(f"\nBy kernel level:")
+            print("\nBy kernel level:")
             for level, count in sorted(result.get("levels", {}).items()):
                 print(f"  {level}: {count} events")
 

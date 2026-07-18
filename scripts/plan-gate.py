@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """Planning Gate — descompone objetivos en tareas, genera PLAN.yaml, valida contra truth/ [FR21-FR24]"""
 import json
-import os
-import sys
-import yaml
 import subprocess
+import sys
 from datetime import datetime
 from pathlib import Path
+
+import yaml
 
 REPO = Path(__file__).resolve().parent.parent
 PLAN_FILE = REPO / "process" / "active" / "PLAN.yaml"
