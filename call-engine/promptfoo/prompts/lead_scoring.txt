@@ -1,0 +1,17 @@
+Analiza esta transcripción de llamada de ventas y clasifica el lead.
+
+TRANSCRIPCIÓN:
+{{transcript}}
+
+DURACIÓN: {{duration}}
+OBJETIVO: {{objective}}
+
+Responde en JSON:
+{
+  "score": "cold" | "warm" | "hot",
+  "summary": "resumen de 1 línea",
+  "next_step": "qué hacer después",
+  "follow_up_days": días para follow-up (0 si hot, 3 si warm, 7 si cold),
+  "objections": ["lista de objeciones encontradas"],
+  "key_points": ["puntos clave de la conversación"]
+}

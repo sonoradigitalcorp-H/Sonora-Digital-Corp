@@ -1,0 +1,20 @@
+[Unit]
+Description=Engram Auto-Capture System — Memory Persistence Service
+Documentation=https://engram.ai/docs/autocapture
+After=network.target
+Wants=engram-mcp.service
+
+[Service]
+Type=simple
+User=%i
+ExecStartPre=/usr/bin/env python3 -c "import engram; print('Engram OK:', engram.__version__)"
+ExecStart=/usr/bin/env python3 /home/mystic/sonora-digital-corp/scripts/engram_autocapture.py --snapshot env --snapshot git --snapshot processes
+Restart=on-failure
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+Environment=PYTHONUNBUFFERED=1
+Environment=ENGRAM_AUTOCAPTURE_INTERVAL=300
+
+[Install]
+WantedBy=default.target

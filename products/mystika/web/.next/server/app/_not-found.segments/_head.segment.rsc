@@ -1,0 +1,6 @@
+1:"$Sreact.fragment"
+2:I[89601,["/_next/static/chunks/14svzl-3mccx6.js","/_next/static/chunks/2o180chaokq9x.js"],"ViewportBoundary"]
+3:I[89601,["/_next/static/chunks/14svzl-3mccx6.js","/_next/static/chunks/2o180chaokq9x.js"],"MetadataBoundary"]
+4:"$Sreact.suspense"
+5:I[69732,["/_next/static/chunks/14svzl-3mccx6.js","/_next/static/chunks/2o180chaokq9x.js"],"IconMark"]
+0:{"rsc":["$","$1","h",{"children":[["$","meta",null,{"name":"robots","content":"noindex"}],["$","$L2",null,{"children":[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]}],["$","div",null,{"hidden":true,"children":["$","$L3",null,{"children":["$","$4",null,{"name":"Next.Metadata","children":[["$","title","0",{"children":"Mystika — El Ritual Musical"}],["$","meta","1",{"name":"description","content":"Donde el sonido despierta el alma. Aprende música con Lilith Mystika."}],["$","link","2",{"rel":"icon","href":"/favicon.ico?favicon.2vob68tjqpejf.ico","sizes":"256x256","type":"image/x-icon"}],["$","link","3",{"rel":"icon","href":"/favicon.svg"}],["$","$L5","4",{}]]}]}]}],null]}],"isPartial":false,"staleTime":300,"varyParams":null,"buildId":"_tFxEW8pSjRFN-6EHRX7v"}

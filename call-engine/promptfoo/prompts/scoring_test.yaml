@@ -1,0 +1,17 @@
+- vars:
+    transcript: "Cliente: Me interesa mucho. ¿Cuándo podemos empezar? Agente: Podemos activar tu agente hoy mismo."
+    duration: "5m"
+    objective: "Vender pack agente atención al cliente"
+  assert:
+    - type: is-json
+    - type: contains
+      value: "hot"
+
+- vars:
+    transcript: "Cliente: Lo voy a pensar. Agente: Te envío información por WhatsApp."
+    duration: "3m"
+    objective: "Vender pack agente atención al cliente"
+  assert:
+    - type: is-json
+    - type: contains
+      value: "warm"
