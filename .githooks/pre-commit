@@ -1,0 +1,41 @@
+#!/bin/bash
+# Pre-commit hook — SDC Security: Detects secrets before committing
+# Install: cp .githooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
+
+BLOCKED_PATTERN='sk-[a-zA-Z0-9]{20,}|ghp_[a-zA-Z0-9]{36,}|gho_[a-zA-Z0-9]{36,}|ghu_[a-zA-Z0-9]{36,}|ghr_[a-zA-Z0-9]{36,}|xox[baprs]-[0-9a-zA-Z-]{10,}|FAL_KEY|SERVICE_KEY|BEGIN RSA|BEGIN DSA|BEGIN EC|BEGIN PGP'
+BLOCKED_FILES='\.env$|\.env\.local|\.env\.production|\.env\.dev|credentials\.json|service-account\.json|id_rsa|id_dsa|\.pem$|\.key$|keystore|\.p12$|\.pfx$'
+
+echo "--- SDC Security: Scanning staged files for secrets..."
+
+STAGED=$(git diff --cached --name-only 2>/dev/null)
+
+if [ -z "$STAGED" ]; then
+    echo "  No staged files to check"
+    exit 0
+fi
+
+for FILE in $STAGED; do
+    if echo "$FILE" | grep -qE "$BLOCKED_FILES"; then
+        echo "  BLOCKED: '$FILE' matches blocked file pattern"
+        echo "     Use .env.example instead."
+        exit 1
+    fi
+done
+
+for FILE in $STAGED; do
+    # Skip self (the pre-commit hook itself contains the pattern as a variable)
+    if echo "$FILE" | grep -q "\.githooks/pre-commit"; then
+        continue
+    fi
+    if [ -f "$FILE" ]; then
+        MATCHES=$(git show :"$FILE" 2>/dev/null | grep -E "$BLOCKED_PATTERN" || true)
+        if [ -n "$MATCHES" ]; then
+            echo "  BLOCKED: '$FILE' contains potential secrets"
+            echo "  $MATCHES"
+            exit 1
+        fi
+    fi
+done
+
+echo "  Security check passed"
+exit 0

@@ -28,6 +28,27 @@ AUDITORIA-COMPLETA.md
 age-key.txt
 age-key*.txt
 
+# SECURITY: Secrets that should NEVER be committed
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+credentials.json
+service-account.json
+service_account.json
+*.age
+age-key.txt
+age-key*.txt
+**/.env
+**/.env.local
+**/.env.production
+**/.env.development
+/.env
+.env
+.env*
+!.env.example
+
 # Event bus operational data (not committed)
 state/events/*.jsonl
 state/events/replay/
