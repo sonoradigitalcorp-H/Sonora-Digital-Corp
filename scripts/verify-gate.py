@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Verification Pipeline — Truth Gate, Security Gate, Cost Gate [FR25-FR30]"""
 import json
-import os
-import sys
-import yaml
 import subprocess
+import sys
 from pathlib import Path
+
+import yaml
 
 REPO = Path(__file__).resolve().parent.parent
 PLAN_FILE = REPO / "process" / "active" / "PLAN.yaml"
@@ -92,7 +92,7 @@ def cost_gate(plan):
         violations.append({
             "gate": "cost", "rule": "COST-001", "severity": "warning",
             "detail": f"Estimated cost ({estimated}) exceeds budget ({budget})",
-            "fix": f"Increase budget or reduce task complexity"
+            "fix": "Increase budget or reduce task complexity"
         })
 
     return violations

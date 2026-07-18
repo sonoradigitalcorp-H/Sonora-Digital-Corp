@@ -10,7 +10,6 @@ Inyecta:
 Uso: python3 scripts/seed-neo4j-arquitectura.py [--recreate]
 """
 import argparse
-import json
 import logging
 import warnings
 from pathlib import Path

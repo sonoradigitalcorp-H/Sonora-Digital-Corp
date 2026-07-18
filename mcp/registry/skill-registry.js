@@ -5,10 +5,12 @@
  * Unifica 4 silos de skills en un solo registry MCP.
  * Skills como MCP resources: discoverables, instalables, versionables.
  *
- * Silo 1: Telegram (98 skills, JSON, platforms/telegram/skills/)
- * Silo 2: Enterprise OS (10 skills, .skill.md, sonora-enterprise-os/skills/)
- * Silo 3: opencode (9 skills, SKILL.md, .opencode/skills/)
- * Silo 4: Registry (11 entries, JSON, config/registry.json)
+ * Silo 1: Telegram (JSON, platforms/telegram/skills/)
+ * Silo 2: SDC skills (.skill.md + SKILL.md, skills/)
+ * Silo 3: Hermes skills (SKILL.md, ~/.hermes/skills/)
+ * Silo 4: OpenClaw plugin-skills (SKILL.md, ~/.openclaw/plugin-skills/)
+ * Silo 5: opencode (SKILL.md, .opencode/skills/)
+ * Silo 6: Registry (JSON, config/registry.json)
  * ═══════════════════════════════════════════════════════════════
  */
 
@@ -16,8 +18,11 @@ const fs = require('fs');
 const path = require('path');
 
 const SDC_DIR = path.join(__dirname, '..', '..');
+const HOME_DIR = process.env.HOME || '/home/mystic';
 const TELEGRAM_SKILLS_DIR = path.join(SDC_DIR, 'platforms', 'telegram', 'skills');
-const ENTERPRISE_SKILLS_DIR = path.join(SDC_DIR, 'sonora-enterprise-os', 'skills');
+const SDC_SKILLS_DIR = path.join(SDC_DIR, 'skills');
+const HERMES_SKILLS_DIR = path.join(HOME_DIR, '.hermes', 'skills');
+const OPENCLAW_SKILLS_DIR = path.join(HOME_DIR, '.openclaw', 'plugin-skills');
 const OPENCODE_SKILLS_DIR = path.join(SDC_DIR, '.opencode', 'skills');
 const REGISTRY_FILE = path.join(SDC_DIR, 'config', 'registry.json');
 const SKILLS_DB = path.join(SDC_DIR, 'state', 'skill-registry.json');
@@ -57,28 +62,99 @@ class SkillRegistry {
       }
     }
 
-    // Silo 2: Enterprise OS skills
-    if (fs.existsSync(ENTERPRISE_SKILLS_DIR)) {
-      const files = fs.readdirSync(ENTERPRISE_SKILLS_DIR).filter(f => f.endsWith('.skill.md'));
-      for (const file of files) {
+    // Silo 2: SDC skills (.skill.md files + SKILL.md directories)
+    if (fs.existsSync(SDC_SKILLS_DIR)) {
+      const entries = fs.readdirSync(SDC_SKILLS_DIR, { withFileTypes: true });
+      for (const entry of entries) {
         try {
-          const content = fs.readFileSync(path.join(ENTERPRISE_SKILLS_DIR, file), 'utf-8');
-          const name = file.replace('.skill.md', '');
-          const descMatch = content.match(/Business Objective[^]*?(?:\n##|\n$)/);
-          const osMatch = content.match(/Parent OS[^]*?(?:\n##|\n$)/);
+          const fullPath = path.join(SDC_SKILLS_DIR, entry.name);
+          let name, filePath, content;
+          if (entry.isFile() && entry.name.endsWith('.skill.md')) {
+            name = entry.name.replace('.skill.md', '');
+            filePath = `skills/${entry.name}`;
+            content = fs.readFileSync(fullPath, 'utf-8');
+          } else if (entry.isDirectory()) {
+            const skillFile = path.join(fullPath, 'SKILL.md');
+            if (fs.existsSync(skillFile)) {
+              name = entry.name;
+              filePath = `skills/${entry.name}/SKILL.md`;
+              content = fs.readFileSync(skillFile, 'utf-8');
+            } else continue;
+          } else continue;
+
+          const descMatch = content.match(/(?:Business Objective|description):\s*(.+?)[\n\r]/);
+          const catMatch = content.match(/(?:category|Parent OS):\s*(.+?)[\n\r]/);
           skills.push({
-            id: `enterprise:${name}`,
+            id: `sdc:${name}`,
             name,
-            source: 'enterprise',
-            type: 'spec',
-            description: descMatch ? descMatch[0].replace(/Business Objective\n/g, '').trim().slice(0, 200) : '',
+            source: 'sdc',
+            type: 'skill',
+            description: descMatch ? descMatch[1].trim().slice(0, 200) : '',
             triggers: [],
             priority: 5,
             version: '1.0.0',
-            category: osMatch ? osMatch[0].replace('Parent OS\n', '').trim() : 'enterprise',
-            format: '.skill.md',
-            path: `sonora-enterprise-os/skills/${file}`,
+            category: catMatch ? catMatch[1].trim() : 'general',
+            path: filePath,
           });
+        } catch (e) { /* skip */ }
+      }
+    }
+
+    // Silo 3: Hermes skills (~/.hermes/skills/)
+    if (fs.existsSync(HERMES_SKILLS_DIR)) {
+      const dirs = fs.readdirSync(HERMES_SKILLS_DIR, { withFileTypes: true }).filter(d => d.isDirectory());
+      for (const dir of dirs) {
+        try {
+          const skillFile = path.join(HERMES_SKILLS_DIR, dir.name, 'SKILL.md');
+          const descFile = path.join(HERMES_SKILLS_DIR, dir.name, 'DESCRIPTION.md');
+          let description = '';
+          let content = '';
+          if (fs.existsSync(skillFile)) {
+            content = fs.readFileSync(skillFile, 'utf-8');
+            const d = content.match(/description:\s*(.+?)[\n\r]/);
+            if (d) description = d[1].trim().slice(0, 200);
+          }
+          if (!description && fs.existsSync(descFile)) {
+            description = fs.readFileSync(descFile, 'utf-8').trim().slice(0, 200);
+          }
+          skills.push({
+            id: `hermes:${dir.name}`,
+            name: dir.name,
+            source: 'hermes',
+            type: 'skill',
+            description: description || '',
+            triggers: [],
+            priority: 5,
+            version: '1.0.0',
+            category: 'hermes',
+            path: `.hermes/skills/${dir.name}`,
+          });
+        } catch (e) { /* skip */ }
+      }
+    }
+
+    // Silo 4: OpenClaw plugin-skills
+    if (fs.existsSync(OPENCLAW_SKILLS_DIR)) {
+      const dirs = fs.readdirSync(OPENCLAW_SKILLS_DIR, { withFileTypes: true }).filter(d => d.isDirectory());
+      for (const dir of dirs) {
+        try {
+          const skillFile = path.join(OPENCLAW_SKILLS_DIR, dir.name, 'SKILL.md');
+          if (fs.existsSync(skillFile)) {
+            const content = fs.readFileSync(skillFile, 'utf-8');
+            const descMatch = content.match(/description:\s*(.+?)[\n\r]/);
+            skills.push({
+              id: `openclaw:${dir.name}`,
+              name: dir.name,
+              source: 'openclaw',
+              type: 'plugin',
+              description: descMatch ? descMatch[1].trim().slice(0, 200) : '',
+              triggers: [],
+              priority: 5,
+              version: '1.0.0',
+              category: 'plugin',
+              path: `.openclaw/plugin-skills/${dir.name}/SKILL.md`,
+            });
+          }
         } catch (e) { /* skip */ }
       }
     }

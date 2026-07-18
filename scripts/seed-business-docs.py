@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 """Seed business docs into Qdrant + Engram for ABE Service RAG."""
 import hashlib
-import json
-import sys
 from pathlib import Path
 
 import httpx

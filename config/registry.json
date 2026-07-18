@@ -8,30 +8,92 @@
       "input_schema": {
         "type": "object",
         "properties": {
-          "artist_name": { "type": "string", "description": "Artist name to search for" },
-          "platform": { "type": "string", "enum": ["deezer", "apple", "youtube", "spotify", "instagram", "tiktok"], "description": "Preferred platform (optional)" }
+          "artist_name": {
+            "type": "string",
+            "description": "Artist name to search for"
+          },
+          "platform": {
+            "type": "string",
+            "enum": [
+              "deezer",
+              "apple",
+              "youtube",
+              "spotify",
+              "instagram",
+              "tiktok"
+            ],
+            "description": "Preferred platform (optional)"
+          }
         },
-        "required": ["artist_name"]
+        "required": [
+          "artist_name"
+        ]
       },
       "output_schema": {
         "type": "object",
         "properties": {
-          "source": { "type": "string" },
-          "artist_name": { "type": "string" },
-          "followers": { "type": "integer" },
-          "monthly_listeners": { "type": "integer" },
-          "top_tracks": { "type": "array" },
-          "genres": { "type": "array" },
-          "picture": { "type": "string" },
-          "url": { "type": "string" },
-          "fetched_at": { "type": "string" }
+          "source": {
+            "type": "string"
+          },
+          "artist_name": {
+            "type": "string"
+          },
+          "followers": {
+            "type": "integer"
+          },
+          "monthly_listeners": {
+            "type": "integer"
+          },
+          "top_tracks": {
+            "type": "array"
+          },
+          "genres": {
+            "type": "array"
+          },
+          "picture": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          },
+          "fetched_at": {
+            "type": "string"
+          }
         }
       },
       "providers": [
-        { "id": "deezer-api", "contract_type": "sdk", "weight": 1, "enabled": true, "cost_per_call": 0, "rate_limit": 50, "health_url": "https://api.deezer.com/artist/0", "config": { "executor_module": "scrapers.collectors.deezer", "timeout": 10 } },
-        { "id": "apple-music-api", "contract_type": "sdk", "weight": 2, "enabled": true, "cost_per_call": 0, "rate_limit": 20, "health_url": null, "config": { "executor_module": "scrapers.collectors.apple_music", "timeout": 10 } }
+        {
+          "id": "deezer-api",
+          "contract_type": "sdk",
+          "weight": 1,
+          "enabled": true,
+          "cost_per_call": 0,
+          "rate_limit": 50,
+          "health_url": "https://api.deezer.com/artist/0",
+          "config": {
+            "executor_module": "scrapers.collectors.deezer",
+            "timeout": 10
+          }
+        },
+        {
+          "id": "apple-music-api",
+          "contract_type": "sdk",
+          "weight": 2,
+          "enabled": true,
+          "cost_per_call": 0,
+          "rate_limit": 20,
+          "health_url": null,
+          "config": {
+            "executor_module": "scrapers.collectors.apple_music",
+            "timeout": 10
+          }
+        }
       ],
-      "tags": ["artist", "metadata", "dsp"]
+      "tags": [
+        "artist",
+        "metadata",
+        "dsp"
+      ]
     },
     "search-artist": {
       "id": "search-artist",
@@ -40,24 +102,73 @@
       "input_schema": {
         "type": "object",
         "properties": {
-          "artist_name": { "type": "string" },
-          "limit": { "type": "integer", "default": 5 }
+          "artist_name": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "integer",
+            "default": 5
+          }
         },
-        "required": ["artist_name"]
+        "required": [
+          "artist_name"
+        ]
       },
       "output_schema": {
         "type": "object",
         "properties": {
-          "source": { "type": "string" },
-          "results": { "type": "array" },
-          "total_views": { "type": "integer" }
+          "source": {
+            "type": "string"
+          },
+          "results": {
+            "type": "array"
+          },
+          "total_views": {
+            "type": "integer"
+          }
         }
       },
       "providers": [
-        { "id": "youtube-search", "contract_type": "cli", "weight": 1, "enabled": true, "cost_per_call": 0, "rate_limit": 10, "health_url": null, "config": { "binary": "yt-dlp", "args": ["ytsearch5:{artist_name}", "--skip-download", "--no-warnings", "--flat-playlist", "--print-json"], "timeout": 30 } },
-        { "id": "wikipedia-api", "contract_type": "http", "weight": 2, "enabled": true, "cost_per_call": 0, "rate_limit": 100, "health_url": "https://en.wikipedia.org/api/rest_v1/page/summary/Test", "config": { "base_url": "https://en.wikipedia.org/api/rest_v1", "timeout": 10 } }
+        {
+          "id": "youtube-search",
+          "contract_type": "cli",
+          "weight": 1,
+          "enabled": true,
+          "cost_per_call": 0,
+          "rate_limit": 10,
+          "health_url": null,
+          "config": {
+            "binary": "yt-dlp",
+            "args": [
+              "ytsearch5:{artist_name}",
+              "--skip-download",
+              "--no-warnings",
+              "--flat-playlist",
+              "--print-json"
+            ],
+            "timeout": 30
+          }
+        },
+        {
+          "id": "wikipedia-api",
+          "contract_type": "http",
+          "weight": 2,
+          "enabled": true,
+          "cost_per_call": 0,
+          "rate_limit": 100,
+          "health_url": "https://en.wikipedia.org/api/rest_v1/page/summary/Test",
+          "config": {
+            "base_url": "https://en.wikipedia.org/api/rest_v1",
+            "timeout": 10
+          }
+        }
       ],
-      "tags": ["artist", "search", "youtube", "wikipedia"]
+      "tags": [
+        "artist",
+        "search",
+        "youtube",
+        "wikipedia"
+      ]
     },
     "browse-artist": {
       "id": "browse-artist",
@@ -66,44 +177,1265 @@
       "input_schema": {
         "type": "object",
         "properties": {
-          "platform": { "type": "string", "enum": ["instagram", "tiktok", "spotify", "facebook"] },
-          "username": { "type": "string" },
-          "url": { "type": "string" }
+          "platform": {
+            "type": "string",
+            "enum": [
+              "instagram",
+              "tiktok",
+              "spotify",
+              "facebook"
+            ]
+          },
+          "username": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string"
+          }
         },
-        "required": ["platform"]
+        "required": [
+          "platform"
+        ]
       },
       "output_schema": {
         "type": "object",
         "properties": {
-          "source": { "type": "string" },
-          "followers": { "type": "integer" },
-          "following": { "type": "integer" },
-          "posts": { "type": "integer" },
-          "bio": { "type": "string" },
-          "verified": { "type": "boolean" },
-          "fetched_at": { "type": "string" }
+          "source": {
+            "type": "string"
+          },
+          "followers": {
+            "type": "integer"
+          },
+          "following": {
+            "type": "integer"
+          },
+          "posts": {
+            "type": "integer"
+          },
+          "bio": {
+            "type": "string"
+          },
+          "verified": {
+            "type": "boolean"
+          },
+          "fetched_at": {
+            "type": "string"
+          }
         }
       },
       "providers": [
-        { "id": "instagram-browser", "contract_type": "browser", "weight": 1, "enabled": true, "cost_per_call": 0.001, "rate_limit": 3, "health_url": null, "config": { "url_template": "https://www.instagram.com/{username}/", "timeout": 20 } },
-        { "id": "tiktok-browser", "contract_type": "browser", "weight": 2, "enabled": true, "cost_per_call": 0.001, "rate_limit": 5, "health_url": null, "config": { "url_template": "https://www.tiktok.com/@{username}", "timeout": 20 } },
-        { "id": "spotify-browser", "contract_type": "browser", "weight": 3, "enabled": true, "cost_per_call": 0.001, "rate_limit": 5, "health_url": null, "config": { "url_template": "https://open.spotify.com/artist/{artist_id}", "timeout": 20 } },
-        { "id": "facebook-browser", "contract_type": "browser", "weight": 4, "enabled": false, "cost_per_call": 0.001, "rate_limit": 3, "health_url": null, "config": { "url_template": "https://www.facebook.com/{username}", "timeout": 20 } }
+        {
+          "id": "instagram-browser",
+          "contract_type": "browser",
+          "weight": 1,
+          "enabled": true,
+          "cost_per_call": 0.001,
+          "rate_limit": 3,
+          "health_url": null,
+          "config": {
+            "url_template": "https://www.instagram.com/{username}/",
+            "timeout": 20
+          }
+        },
+        {
+          "id": "tiktok-browser",
+          "contract_type": "browser",
+          "weight": 2,
+          "enabled": true,
+          "cost_per_call": 0.001,
+          "rate_limit": 5,
+          "health_url": null,
+          "config": {
+            "url_template": "https://www.tiktok.com/@{username}",
+            "timeout": 20
+          }
+        },
+        {
+          "id": "spotify-browser",
+          "contract_type": "browser",
+          "weight": 3,
+          "enabled": true,
+          "cost_per_call": 0.001,
+          "rate_limit": 5,
+          "health_url": null,
+          "config": {
+            "url_template": "https://open.spotify.com/artist/{artist_id}",
+            "timeout": 20
+          }
+        },
+        {
+          "id": "facebook-browser",
+          "contract_type": "browser",
+          "weight": 4,
+          "enabled": false,
+          "cost_per_call": 0.001,
+          "rate_limit": 3,
+          "health_url": null,
+          "config": {
+            "url_template": "https://www.facebook.com/{username}",
+            "timeout": 20
+          }
+        }
       ],
-      "tags": ["artist", "browser", "profile", "social"]
+      "tags": [
+        "artist",
+        "browser",
+        "profile",
+        "social"
+      ]
     }
   },
   "skills": {
-    "research": { "description": "Búsqueda y síntesis de información", "category": "core", "mcp_server": null, "command": "/research" },
-    "code": { "description": "Análisis y generación de código", "category": "core", "mcp_server": null, "command": "/code" },
-    "explore": { "description": "Navegación de sistema de archivos y exploratorio", "category": "core", "mcp_server": null, "command": "/explore" },
-    "memory": { "description": "Gestión de memoria y contexto", "category": "core", "mcp_server": null, "command": "/memory" },
-    "skill": { "description": "Ejecución de habilidades MCP", "category": "core", "mcp_server": null, "command": "/skill" },
-    "voice": { "description": "Procesamiento de voz", "category": "core", "mcp_server": null, "command": "/voice" },
-    "review": { "description": "Revisión de código y verificación", "category": "core", "mcp_server": null, "command": "/review" },
-    "hermes": { "description": "Integración con Hermes para mensajería", "category": "external", "mcp_server": "hermes", "command": "/hermes" },
-    "openclaw": { "description": "Gateway de agentes OpenClaw", "category": "external", "mcp_server": "openclaw", "command": "/openclaw" },
-    "gbrain": { "description": "Motor de razonamiento y síntesis", "category": "core", "mcp_server": null, "command": "/gbrain" },
-    "engram": { "description": "Memoria contextual persistente", "category": "core", "mcp_server": null, "command": "/engram" }
-  }
+    "research": {
+      "description": "Búsqueda y síntesis de información",
+      "category": "core",
+      "mcp_server": null,
+      "command": "/research"
+    },
+    "code": {
+      "description": "Análisis y generación de código",
+      "category": "core",
+      "mcp_server": null,
+      "command": "/code"
+    },
+    "explore": {
+      "description": "Navegación de sistema de archivos y exploratorio",
+      "category": "core",
+      "mcp_server": null,
+      "command": "/explore"
+    },
+    "memory": {
+      "description": "Gestión de memoria y contexto",
+      "category": "core",
+      "mcp_server": null,
+      "command": "/memory"
+    },
+    "skill": {
+      "description": "Ejecución de habilidades MCP",
+      "category": "core",
+      "mcp_server": null,
+      "command": "/skill"
+    },
+    "voice": {
+      "description": "Procesamiento de voz",
+      "category": "core",
+      "mcp_server": null,
+      "command": "/voice"
+    },
+    "review": {
+      "description": "Revisión de código y verificación",
+      "category": "core",
+      "mcp_server": null,
+      "command": "/review"
+    },
+    "hermes": {
+      "description": "Integración con Hermes para mensajería",
+      "category": "external",
+      "mcp_server": "hermes",
+      "command": "/hermes"
+    },
+    "openclaw": {
+      "description": "Gateway de agentes OpenClaw",
+      "category": "external",
+      "mcp_server": "openclaw",
+      "command": "/openclaw"
+    },
+    "gbrain": {
+      "description": "Motor de razonamiento y síntesis",
+      "category": "core",
+      "mcp_server": null,
+      "command": "/gbrain"
+    },
+    "engram": {
+      "description": "Memoria contextual persistente",
+      "category": "core",
+      "mcp_server": null,
+      "command": "/engram"
+    }
+  },
+  "agents": [
+    {
+      "name": "abe-agent",
+      "version": "1.0.0",
+      "description": "Agente de ABE Music — gestión de artistas, releases, streams, revenue y KPIs",
+      "model": "qwen3:4b",
+      "provider": "ollama",
+      "capability": "music-production",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:abe_list_artists",
+        "sonora:abe_get_artist",
+        "sonora:abe_create_artist",
+        "sonora:abe_create_release",
+        "sonora:abe_record_stream",
+        "sonora:abe_record_revenue",
+        "sonora:abe_ceo_dashboard",
+        "sonora:abe_artist_kpi",
+        "sonora:enterprise_score",
+        "sonora:skills_system",
+        "sonora:incident_report"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.266Z"
+    },
+    {
+      "name": "abe-analytics-agent",
+      "version": "1.0.0",
+      "description": "Analítica y reportes — KPIs, tendencias, predicciones, dashboards automáticos",
+      "model": "deepseek-r1:7b",
+      "provider": "ollama",
+      "capability": "business-intelligence",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:abe_ceo_dashboard",
+        "sonora:abe_artist_kpi",
+        "sonora:abe_list_artists",
+        "sonora:enterprise_score",
+        "sonora:enterprise_score_history",
+        "sonora:finops_summary",
+        "sonora:intake_stats",
+        "sonora:intake_query",
+        "sonora:workflow_list",
+        "sonora:learning_stats"
+      ],
+      "policies": {},
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": 1
+      },
+      "registeredAt": "2026-07-18T23:39:56.293Z"
+    },
+    {
+      "name": "abe-artist-management-analytics-agent",
+      "version": "1.0.0",
+      "description": "analytics agent for ABE Artist Management",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "business-intelligence",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:enterprise_score",
+        "sonora:enterprise_score_history",
+        "sonora:learning_stats"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.293Z"
+    },
+    {
+      "name": "abe-artist-management-crm-agent",
+      "version": "1.0.0",
+      "description": "crm agent for ABE Artist Management",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "client-onboarding",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:intake_query",
+        "sonora:intake_stats",
+        "sonora:enterprise_score"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-artist-management-marketing-agent",
+      "version": "1.0.0",
+      "description": "marketing agent for ABE Artist Management",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "content-production",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:media_image",
+        "sonora:media_album_cover",
+        "sonora:content_generate"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-artist-management-revenue-agent",
+      "version": "1.0.0",
+      "description": "revenue agent for ABE Artist Management",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "financial-operations",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:billing_plan",
+        "sonora:billing_invoice",
+        "sonora:finops_summary"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-artist-management-scheduler-agent",
+      "version": "1.0.0",
+      "description": "scheduler agent for ABE Artist Management",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "agent-operations",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:scheduler_list",
+        "sonora:scheduler_add",
+        "sonora:alerts_check"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-content-factory-analytics-agent",
+      "version": "1.0.0",
+      "description": "analytics agent for ABE Content Factory",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "business-intelligence",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:enterprise_score",
+        "sonora:enterprise_score_history",
+        "sonora:learning_stats"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-content-factory-crm-agent",
+      "version": "1.0.0",
+      "description": "crm agent for ABE Content Factory",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "client-onboarding",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:intake_query",
+        "sonora:intake_stats",
+        "sonora:enterprise_score"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-content-factory-marketing-agent",
+      "version": "1.0.0",
+      "description": "marketing agent for ABE Content Factory",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "content-production",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:media_image",
+        "sonora:media_album_cover",
+        "sonora:content_generate"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-content-factory-scheduler-agent",
+      "version": "1.0.0",
+      "description": "scheduler agent for ABE Content Factory",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "agent-operations",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:scheduler_list",
+        "sonora:scheduler_add",
+        "sonora:alerts_check"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-content-factory-support-agent",
+      "version": "1.0.0",
+      "description": "support agent for ABE Content Factory",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "support-operations",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:sessions_list",
+        "sonora:incident_report",
+        "sonora:health_all"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-crm-agent",
+      "version": "1.0.0",
+      "description": "CRM de artistas — gestión de contactos, contratos, y relaciones con artistas ABE",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "client-onboarding",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:abe_list_artists",
+        "sonora:abe_get_artist",
+        "sonora:abe_create_artist",
+        "sonora:abe_ceo_dashboard",
+        "sonora:approvals_list",
+        "sonora:intake_query",
+        "sonora:intake_stats",
+        "sonora:enterprise_score"
+      ],
+      "policies": {},
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": 1
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-fan-crm-analytics-agent",
+      "version": "1.0.0",
+      "description": "analytics agent for ABE Fan CRM",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "business-intelligence",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:enterprise_score",
+        "sonora:enterprise_score_history",
+        "sonora:learning_stats"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-fan-crm-crm-agent",
+      "version": "1.0.0",
+      "description": "crm agent for ABE Fan CRM",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "client-onboarding",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:intake_query",
+        "sonora:intake_stats",
+        "sonora:enterprise_score"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-fan-crm-marketing-agent",
+      "version": "1.0.0",
+      "description": "marketing agent for ABE Fan CRM",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "content-production",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:media_image",
+        "sonora:media_album_cover",
+        "sonora:content_generate"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-fan-crm-scheduler-agent",
+      "version": "1.0.0",
+      "description": "scheduler agent for ABE Fan CRM",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "agent-operations",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:scheduler_list",
+        "sonora:scheduler_add",
+        "sonora:alerts_check"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-marketing-agent",
+      "version": "1.0.0",
+      "description": "Marketing y contenido — generación de contenido, campañas, redes sociales",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "content-production",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:content_generate",
+        "sonora:content_deliver",
+        "sonora:skills_system",
+        "sonora:skills_search",
+        "sonora:enterprise_score",
+        "sonora:abe_list_artists"
+      ],
+      "policies": {},
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": 1
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-music-saas-analytics-agent",
+      "version": "1.0.0",
+      "description": "analytics agent for ABE Music SaaS",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "business-intelligence",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:enterprise_score",
+        "sonora:enterprise_score_history",
+        "sonora:learning_stats"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-music-saas-crm-agent",
+      "version": "1.0.0",
+      "description": "crm agent for ABE Music SaaS",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "client-onboarding",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:intake_query",
+        "sonora:intake_stats",
+        "sonora:enterprise_score"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-music-saas-revenue-agent",
+      "version": "1.0.0",
+      "description": "revenue agent for ABE Music SaaS",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "financial-operations",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:billing_plan",
+        "sonora:billing_invoice",
+        "sonora:finops_summary"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-music-saas-scheduler-agent",
+      "version": "1.0.0",
+      "description": "scheduler agent for ABE Music SaaS",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "agent-operations",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:scheduler_list",
+        "sonora:scheduler_add",
+        "sonora:alerts_check"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-music-saas-support-agent",
+      "version": "1.0.0",
+      "description": "support agent for ABE Music SaaS",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "support-operations",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:sessions_list",
+        "sonora:incident_report",
+        "sonora:health_all"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-revenue-agent",
+      "version": "1.0.0",
+      "description": "Revenue y royalties — tracking de ingresos, splits, pagos a artistas",
+      "model": "qwen3:4b",
+      "provider": "ollama",
+      "capability": "financial-operations",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:abe_record_revenue",
+        "sonora:abe_record_stream",
+        "sonora:abe_ceo_dashboard",
+        "sonora:abe_artist_kpi",
+        "sonora:billing_plan",
+        "sonora:billing_invoice",
+        "sonora:finops_summary",
+        "sonora:enterprise_score"
+      ],
+      "policies": {},
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": 1
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-revenue-engine-analytics-agent",
+      "version": "1.0.0",
+      "description": "analytics agent for ABE Revenue Engine",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "business-intelligence",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:enterprise_score",
+        "sonora:enterprise_score_history",
+        "sonora:learning_stats"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-revenue-engine-crm-agent",
+      "version": "1.0.0",
+      "description": "crm agent for ABE Revenue Engine",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "client-onboarding",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:intake_query",
+        "sonora:intake_stats",
+        "sonora:enterprise_score"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-revenue-engine-revenue-agent",
+      "version": "1.0.0",
+      "description": "revenue agent for ABE Revenue Engine",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "financial-operations",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:billing_plan",
+        "sonora:billing_invoice",
+        "sonora:finops_summary"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-revenue-engine-scheduler-agent",
+      "version": "1.0.0",
+      "description": "scheduler agent for ABE Revenue Engine",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "agent-operations",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:scheduler_list",
+        "sonora:scheduler_add",
+        "sonora:alerts_check"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-revenue-engine-support-agent",
+      "version": "1.0.0",
+      "description": "support agent for ABE Revenue Engine",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "support-operations",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:sessions_list",
+        "sonora:incident_report",
+        "sonora:health_all"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "abe-scheduler-agent",
+      "version": "1.0.0",
+      "description": "Automatización — programación de tareas, recordatorios, sync automático",
+      "model": "qwen3:1.7b",
+      "provider": "ollama",
+      "capability": "agent-operations",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:scheduler_list",
+        "sonora:scheduler_add",
+        "sonora:scheduler_tick",
+        "sonora:artist_sync",
+        "sonora:artist_sync_all",
+        "sonora:workflow_run",
+        "sonora:workflow_list",
+        "sonora:alerts_check",
+        "sonora:auto_heal"
+      ],
+      "policies": {},
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": 1
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "booking-agent",
+      "version": "1.0.0",
+      "description": "Agente de reservas — gestiona citas, consultas y booking de servicios",
+      "model": "qwen2.5:1.5b",
+      "provider": "ollama",
+      "capability": "client-onboarding",
+      "maturity": "1-Manual",
+      "tools": [
+        "sonora:sessions_create",
+        "sonora:sessions_list",
+        "sonora:app_register",
+        "sonora:app_dashboard",
+        "sonora:capability_resolve"
+      ],
+      "policies": {
+        "max_tokens_per_call": "2048",
+        "timeout_seconds": "30"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "15m",
+        "max_concurrent": "5"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "content-agent",
+      "version": "1.0.0",
+      "description": "Agente de contenido — genera, revisa y publica contenido multi-formato",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "content-production",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:content_generate",
+        "sonora:content_deliver",
+        "sonora:content_list",
+        "sonora:store_products",
+        "sonora:skills_system",
+        "sonora:enterprise_score"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60",
+        "requires_review": "content_generate"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "onboarding-agent",
+      "version": "1.0.0",
+      "description": "Agente de onboarding — registro, KYC, configuración y activación de clientes",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "client-onboarding",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:sdc_onboarding",
+        "sonora:sdc_onboarding_mystic",
+        "sonora:sdc_plans",
+        "sonora:app_register",
+        "sonora:app_login",
+        "sonora:app_dashboard",
+        "sonora:mysticverse_kyc_age",
+        "sonora:mysticverse_kyc_status",
+        "sonora:payments_plans",
+        "sonora:payments_create",
+        "sonora:enterprise_score"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60",
+        "requires_kyc": "true"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "research-agent",
+      "version": "1.0.0",
+      "description": "Agente de investigación — busca información, sintetiza, analiza",
+      "model": "gemini-2.5-flash",
+      "provider": "openrouter",
+      "capability": "strategic-intelligence",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:enterprise_score",
+        "sonora:health_all"
+      ],
+      "policies": {
+        "max_tokens_per_call": "8192",
+        "timeout_seconds": "120"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "15m",
+        "max_concurrent": "3"
+      },
+      "registeredAt": "2026-07-18T23:39:56.294Z"
+    },
+    {
+      "name": "sales-agent",
+      "version": "1.0.0",
+      "description": "Agente de ventas — califica leads, genera propuestas, cierra deals",
+      "model": "deepseek-v4-flash",
+      "provider": "opencode-go",
+      "capability": "sales-execution",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:sales_capture_lead",
+        "sonora:sales_get_lead",
+        "sonora:sales_list_leads",
+        "sonora:sales_qualify_lead",
+        "sonora:sales_generate_proposal",
+        "sonora:sales_accept_proposal",
+        "sonora:sales_close_won",
+        "sonora:sales_close_lost",
+        "sonora:sales_dashboard",
+        "sonora:capability_resolve",
+        "sonora:enterprise_score"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60",
+        "requires_human_approval": "close_won, close_lost"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "5"
+      },
+      "registeredAt": "2026-07-18T23:39:56.295Z"
+    },
+    {
+      "name": "support-agent",
+      "version": "1.0.0",
+      "description": "Agente de soporte — tickets, consultas, escalamiento y resolución",
+      "model": "llama3.2:3b",
+      "provider": "ollama",
+      "capability": "support-operations",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:sessions_list",
+        "sonora:sessions_search",
+        "sonora:sessions_get",
+        "sonora:capability_resolve",
+        "sonora:enterprise_score",
+        "sonora:skills_system",
+        "sonora:health_all",
+        "sonora:webhook_healthcheck",
+        "sonora:approvals_list",
+        "sonora:incident_report"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60",
+        "requires_escalation": "true"
+      },
+      "events": {
+        "emits": [],
+        "listens": []
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": "5"
+      },
+      "registeredAt": "2026-07-18T23:39:56.295Z"
+    }
+  ]
 }

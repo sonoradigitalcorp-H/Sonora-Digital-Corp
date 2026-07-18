@@ -10,7 +10,7 @@ Uso: python3 scripts/weekly-executive-report.py [--json] [--output DIR]
 import json
 import logging
 import sys
-from datetime import datetime, timezone, timedelta
+from datetime import datetime, timezone
 from pathlib import Path
 
 logging.basicConfig(level=logging.INFO, format="%(levelname)s %(message)s")
@@ -210,7 +210,7 @@ def main():
             print(output)
     else:
         print(f"\n{'='*60}")
-        print(f"WEEKLY EXECUTIVE REPORT")
+        print("WEEKLY EXECUTIVE REPORT")
         print(f"{all_reports['report_id']} | {all_reports['generated']}")
         print(f"{'='*60}")
         for name, report in all_reports["reports"].items():

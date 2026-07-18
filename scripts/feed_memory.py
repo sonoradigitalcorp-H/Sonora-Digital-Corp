@@ -11,15 +11,12 @@ Usage:
   python3 scripts/feed_memory.py --status           # Ver estado de todas las memorias
 """
 
-import hashlib
 import json
 import os
 import sqlite3
 import sys
-import time
 from datetime import datetime
 from pathlib import Path
-from typing import Optional
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
@@ -417,7 +414,7 @@ def query_graph(relation: str = "", category: str = "") -> list:
 def show_status():
     """Show status of all memory systems."""
     print(f"\n{'═'*60}")
-    print(f"  🧠  MEMORY SYSTEMS STATUS")
+    print("  🧠  MEMORY SYSTEMS STATUS")
     print(f"  {datetime.now().isoformat()}")
     print(f"{'═'*60}\n")
 
@@ -427,7 +424,7 @@ def show_status():
         resp = httpx.get("http://localhost:7437/health", timeout=3)
         print(f"  🟢 Engram (port 7437):      ✅ Running — {resp.json().get('status', 'ok')}")
     except Exception:
-        print(f"  🔴 Engram (port 7437):      ❌ Not responding")
+        print("  🔴 Engram (port 7437):      ❌ Not responding")
 
     # Vector memory
     if VECTOR_DB_PATH.exists():
@@ -439,7 +436,7 @@ def show_status():
         for c in cats[:5]:
             print(f"       {c[0]}: {c[1]}")
     else:
-        print(f"  ⚪ Vector Memory (SQLite):   📭 Empty")
+        print("  ⚪ Vector Memory (SQLite):   📭 Empty")
 
     # Graph memory
     if GRAPH_DB_PATH.exists():
@@ -452,21 +449,21 @@ def show_status():
         for c in cats[:5]:
             print(f"       {c[0]}: {c[1]}")
     else:
-        print(f"  ⚪ Graph Memory (SQLite):    📭 Empty")
+        print("  ⚪ Graph Memory (SQLite):    📭 Empty")
 
     # Qdrant (remote)
     try:
         resp = httpx.get("http://localhost:6333/", timeout=3)
-        print(f"  🟢 Qdrant (port 6333):       ✅ Running")
+        print("  🟢 Qdrant (port 6333):       ✅ Running")
     except Exception:
-        print(f"  ⚪ Qdrant (port 6333):       📭 Not available locally")
+        print("  ⚪ Qdrant (port 6333):       📭 Not available locally")
 
     # Neo4j (remote)
     try:
         resp = httpx.get("http://localhost:7474", timeout=3)
-        print(f"  🟢 Neo4j (port 7474):        ✅ Running")
+        print("  🟢 Neo4j (port 7474):        ✅ Running")
     except Exception:
-        print(f"  ⚪ Neo4j (port 7474):        📭 Not available locally")
+        print("  ⚪ Neo4j (port 7474):        📭 Not available locally")
 
     print()
 
@@ -516,7 +513,7 @@ def main():
 
     # Collect and feed
     print(f"\n{'═'*60}")
-    print(f"  🧠  MEMORY INGESTION ENGINE")
+    print("  🧠  MEMORY INGESTION ENGINE")
     print(f"  {datetime.now().isoformat()}")
     print(f"{'═'*60}")
 
@@ -547,7 +544,7 @@ def main():
         print(f"     ✅ {result['nodes']} nodes + {result['edges']} edges\n")
 
     print(f"  {'═'*60}")
-    print(f"  ✅  Memory ingestion complete!")
+    print("  ✅  Memory ingestion complete!")
     print(f"  {'═'*60}\n")
     show_status()
 

@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """Memory API — interfaz unificada para las 3 capas de memoria [FR1-FR4]"""
 import json
-import os
 import sqlite3
 import sys
 from datetime import datetime, timedelta, timezone

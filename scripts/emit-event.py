@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
 """Event Bus CLI — emite eventos validados al stream unificado (HAS-003)"""
 import json
-import os
 import sys
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
 
 REPO = Path(__file__).resolve().parent.parent
 EVENTS_FILE = REPO / "state" / "events" / "events.jsonl"

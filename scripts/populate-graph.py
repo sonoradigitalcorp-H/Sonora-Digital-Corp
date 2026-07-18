@@ -2,12 +2,13 @@
 """Knowledge Graph — pobla Neo4j desde eventos, specs, ADRs, fleet.yml [FR31-FR34]"""
 import json
 import os
-import sys
-import yaml
 import subprocess
+import sys
 import urllib.request
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
+import yaml
 
 REPO = Path(__file__).resolve().parent.parent
 EVENTS_FILE = REPO / "state" / "events" / "events.jsonl"

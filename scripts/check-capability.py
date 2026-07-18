@@ -2,8 +2,9 @@
 """Verifica si un agente tiene capability para una operación [FR8]"""
 import json
 import sys
-import yaml
 from pathlib import Path
+
+import yaml
 
 REPO = Path(__file__).resolve().parent.parent
 POLICIES_DIR = REPO / "agents" / "policies"

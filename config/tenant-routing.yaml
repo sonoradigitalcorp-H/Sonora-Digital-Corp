@@ -1,0 +1,32 @@
+# Tenant Routing — Números de teléfono → Tenants
+# Version: 1.0.0
+# Los números se detectan automáticamente de OpenClaw
+# Si el número no está en la tabla → tipo: desconocido
+
+routing:
+  # Master (Luis Daniel / Perroni)
+  - phone: "+5216623538272"
+    tenant: sdc_master
+    type: admin
+    name: "Luis Daniel"
+    notes: "Dueño del sistema"
+
+  # Contactos personales
+  - phone: "+5216622681111"
+    tenant: sdc_contact_nathaly
+    type: contact
+    name: "Nathaly Hermosillo"
+    notes: "Novia de Perroni"
+
+  # Partners
+  - phone: "+5216621072254"
+    tenant: aztrotech
+    type: partner
+    name: "César Holguín"
+    notes: "CEO AztroTech"
+
+  # Default para números desconocidos
+  default:
+    type: unknown
+    action: "send_welcome"
+    message: "¡Bienvenido a Sonora Digital Corp! 🚀 ¿Tienes un código de activación? Escríbelo aquí para empezar."
