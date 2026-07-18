@@ -1,0 +1,270 @@
+# SDC Packages — Planes de producto para todo el ecosistema
+# Versión: 1.0.0
+#
+# Cada paquete define: precio, capacidades, límites, powered-by, y canal de venta.
+
+# ═══════════════════════════════════════════════════════════════
+# 1. CONSUMIDORES (B2C) — Usuarios finales directos
+# ═══════════════════════════════════════════════════════════════
+consumers:
+  free:
+    name: "Free"
+    price_usd: 0
+    setup_fee: 0
+    audience: "Cualquier persona — entrada al ecosistema"
+    tagline: "Tu cerebro digital básico"
+    limits:
+      messages_per_month: 100
+      images_per_month: 5
+      videos_per_month: 0
+      tts_minutes: 5
+      storage_gb: 0.1
+    features:
+      - "Cerebro digital básico (memoria conversacional)"
+      - "Acceso vía WhatsApp/Telegram"
+      - "Powered by Sonora Digital Corp"
+      - "100 mensajes/mes"
+    missing:
+      - "Clone Service"
+      - "Obsidian vault"
+      - "Entrenamiento LoRA"
+    powered_by: true
+
+  artist:
+    name: "Artist"
+    price_usd: 29
+    setup_fee: 49
+    audience: "Músicos, artistas, creadores de contenido"
+    tagline: "Tu cerebro + clon para promover tu arte"
+    limits:
+      messages_per_month: 1000
+      images_per_month: 50
+      videos_per_month: 5
+      tts_minutes: 30
+      storage_gb: 2
+    features:
+      - "Cerebro digital completo"
+      - "Clone Service: 1 entrenamiento LoRA facial"
+      - "Clone Service: 1 clon de voz"
+      - "50 fotos generadas con tu cara/mes"
+      - "5 videos con tu identidad/mes"
+      - "Obsidian vault personal"
+      - "WhatsApp + Telegram + Web"
+    missing:
+      - "Múltiples LoRAs"
+      - "Equipo"
+    powered_by: true
+    best_for: "Músicos que quieren contenido con su imagen sin sesiones de foto"
+
+  pro:
+    name: "Pro"
+    price_usd: 49
+    setup_fee: 99
+    audience: "Profesionales, freelancers, pequeñas empresas"
+    tagline: "Tu identidad digital profesional"
+    limits:
+      messages_per_month: 5000
+      images_per_month: 200
+      videos_per_month: 20
+      tts_minutes: 120
+      storage_gb: 10
+    features:
+      - "Todo lo de Artist"
+      - "3 entrenamientos LoRA por año"
+      - "3 clones de voz"
+      - "200 fotos/mes"
+      - "20 videos/mes"
+      - "Múltiples estilos/escenarios"
+      - "Export multi-formato (TikTok, Reels, YouTube)"
+    missing:
+      - "Equipo"
+      - "API"
+    powered_by: true
+
+  premium:
+    name: "Premium"
+    price_usd: 99
+    setup_fee: 199
+    audience: "Agencias, creadores pesados, poder users"
+    tagline: "Poder creativo ilimitado"
+    limits:
+      messages_per_month: 20000
+      images_per_month: 1000
+      videos_per_month: 100
+      tts_minutes: 600
+      storage_gb: 50
+    features:
+      - "Todo lo de Pro"
+      - "10 entrenamientos LoRA por año"
+      - "10 clones de voz"
+      - "Prioridad en generación"
+      - "Sin marca de agua SDC en assets"
+      - "Soporte prioritario 24/7"
+    missing:
+      - "White-label completo"
+      - "API pública"
+    powered_by: true
+
+# ═══════════════════════════════════════════════════════════════
+# 2. PARTNERS (B2B) — Revendedores de tecnología
+# ═══════════════════════════════════════════════════════════════
+# El partner compra la tecnología SDC y la revende a SUS clientes
+# con su propia marca + powered by SDC
+partners:
+  starter:
+    name: "Partner Starter"
+    price_usd: 299
+    setup_fee: 499
+    audience: "Freelancers, consultores pequeños"
+    tagline: "Empieza a revender tecnología SDC"
+    includes:
+      client_slots: 10
+      margin_pct: 30
+    features:
+      - "Hasta 10 clientes incluidos en flat fee"
+      - "White-label básico (logo + colores)"
+      - "Powered by SDC en footer"
+      - "Dashboard de clientes"
+      - "Soporte por email"
+      - "30% de descuento mayorista"
+    revenue_example: |
+      Ejemplo con 10 clientes Pro:
+        Ingreso: 10 × $49 = $490
+        Tu flat fee: $299
+        Costo clientes: 10 × $34.30 = $343
+        Ganancia: $490 - $642 = -$152 (pérdida inicial, necesitas escalar)
+        
+      Ejemplo con 50 clientes Pro:
+        Ingreso: 50 × $49 = $2,450
+        Tu flat fee: $299
+        Costo clientes: 50 × $34.30 = $1,715
+        Ganancia: $2,450 - $2,014 = $436/mes
+
+    benefits:
+      - "No necesitas infraestructura"
+      - "No necesitas desarrollar nada"
+      - "Tu marca, nuestra tecnología"
+
+  business:
+    name: "Partner Business"
+    price_usd: 999
+    setup_fee: 2499
+    audience: "Agencias, empresas de tecnología"
+    tagline: "Escala con tu propia agencia digital"
+    includes:
+      client_slots: 100
+      margin_pct: 40
+    features:
+      - "Hasta 100 clientes incluidos en flat fee"
+      - "White-label completo (logo, colores, dominio propio)"
+      - "Powered by SDC en footer (requerido)"
+      - "Dashboard avanzado con analytics"
+      - "API de provisioning"
+      - "Soporte prioritario 24/7"
+      - "40% de descuento mayorista"
+      - "Onboarding dedicado"
+    revenue_example: |
+      Ejemplo con 50 clientes Pro:
+        Ingreso: 50 × $49 = $2,450
+        Tu flat fee: $999
+        Costo clientes: 50 × $29.40 = $1,470
+        Ganancia: $2,450 - $2,469 = -$19 (break-even en 51 clientes)
+      
+      Ejemplo con 100 clientes Pro:
+        Ingreso: 100 × $49 = $4,900
+        Tu flat fee: $999
+        Costo clientes: 100 × $29.40 = $2,940
+        Ganancia: $4,900 - $3,939 = $961/mes
+
+  enterprise:
+    name: "Partner Enterprise"
+    price_usd: 2999
+    setup_fee: 4999
+    audience: "Corporaciones, franchises, cadenas"
+    tagline: "Expansión ilimitada"
+    includes:
+      client_slots: -1
+      margin_pct: 50
+    features:
+      - "Clientes ilimitados incluidos en flat fee"
+      - "White-label completo + dominio SSL propio"
+      - "Powered by SDC en footer (requerido)"
+      - "API completa + SDK"
+      - "SLA 99.9%"
+      - "Gerente de cuenta dedicado"
+      - "50% de descuento mayorista"
+      - "Onboarding + training para tu equipo"
+      - "Co-marketing: apareces en nuestra red"
+    revenue_example: |
+      Ejemplo con 200 clientes Premium:
+        Ingreso: 200 × $99 = $19,800
+        Tu flat fee: $2,999
+        Costo clientes: 200 × $49.50 = $9,900
+        Ganancia: $19,800 - $12,899 = $6,901/mes
+
+# ═══════════════════════════════════════════════════════════════
+# 3. EMBAJADORES (Affiliate) — Comisión por referidos
+# ═══════════════════════════════════════════════════════════════
+# No revenden, solo refieren. Cobran comisión.
+ambassadors:
+  basic:
+    name: "Embajador Basic"
+    requirement: "Tener una red de contactos"
+    commission_pct: 15
+    commission_on: "Setup fee + primeros 3 meses"
+    features:
+      - "15% de comisión en cada venta referida"
+      - "Enlace de referido personalizado"
+      - "Dashboard de referidos"
+      - "Sin exclusividad"
+    example: "Refieres un cliente Pro ($49 setup + $49/mes) → Ganas: $7.35 setup + $7.35/mes por 3 meses = $29.40"
+
+  pro:
+    name: "Embajador Pro"
+    requirement: "Ser cliente SDC activo + red + crear contenido"
+    commission_pct: 25
+    commission_on: "Setup fee + primeros 6 meses"
+    features:
+      - "25% de comisión en cada venta referida"
+      - "Enlace + código promocional personalizado"
+      - "Dashboard de referidos + analytics"
+      - "Acceso anticipado a features"
+      - "Badge de Embajador SDC"
+    example: "Refieres 10 clientes Pro ($49 setup + $49/mes) → Ganas por cliente: $12.25 setup + $12.25/mes x 6 = $85.75. Total 10 clientes = $857.50"
+
+# ═══════════════════════════════════════════════════════════════
+# 4. ENTERPRISE — Corporaciones con necesidades específicas
+# ═══════════════════════════════════════════════════════════════
+enterprise:
+  name: "Enterprise"
+  price_usd: "A cotizar"
+  setup_fee: "A cotizar"
+  audience: "Empresas, gobierno, instituciones"
+  tagline: "Solución personalizada para tu organización"
+  features:
+    - "Todo incluido sin límites"
+    - "Infraestructura dedicada (opcional)"
+    - "SLA personalizado"
+    - "On-premise / VPC privada (opcional)"
+    - "Compliance: HIPAA, GDPR, ISO (según requiera)"
+    - "Gerente de cuenta dedicado 24/7"
+    - "Training presencial/virtual para todo tu equipo"
+    - "Integración con tus sistemas existentes"
+    - "Powered by SDC (negociable en Enterprise+)"
+  powered_by: true
+  powered_by_negotiable: true  # Versión sin powered-by con premium
+
+# ═══════════════════════════════════════════════════════════════
+# MATRIZ COMPARATIVA — Visual rápido
+# ═══════════════════════════════════════════════════════════════
+#                  Free   Artist   Pro   Premium   Partner   Embajador   Enterprise
+# Cerebro básico    ✅     ✅     ✅      ✅        ✅         ✅          ✅
+# Clone Service     ❌     ✅     ✅      ✅        ✅         ❌          ✅
+# LoRA training     ❌     1/año  3/año  10/año    Por plan    ❌         Ilimitado
+# Voice clone       ❌     1      3      10        Por plan    ❌         Ilimitado
+# WhatsApp/TG       ✅     ✅     ✅      ✅        ✅         ✅          ✅
+# Obsidian vault    ❌     ✅     ✅      ✅        Por plan    ❌          ✅
+# White-label       ❌     ❌     ❌      ❌        ✅         ❌          Negociable
+# API               ❌     ❌     ❌      ❌        ✅         ❌          ✅
+# Powered by SDC    ✅     ✅     ✅      ✅        ✅         ✅          Negociable
+# Precio            $0    $29    $49     $99      $299+      Gratis      A cotizar
