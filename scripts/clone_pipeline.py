@@ -20,12 +20,14 @@ sys.path.insert(0, str(REPO))
 
 MIN_PHOTOS = 15
 MIN_AUDIO_SEC = 10
-DB_PATH = Path(os.environ.get("DB_PATH", str(REPO / "data" / "clone_service.db")))
+def _get_db_path() -> Path:
+    return Path(os.environ.get("DB_PATH", str(REPO / "data" / "clone_service.db")))
 
 
 def _get_db() -> sqlite3.Connection:
-    os.makedirs(DB_PATH.parent, exist_ok=True)
-    conn = sqlite3.connect(str(DB_PATH))
+    db_path = _get_db_path()
+    os.makedirs(db_path.parent, exist_ok=True)
+    conn = sqlite3.connect(str(db_path))
     conn.row_factory = sqlite3.Row
     return conn
 

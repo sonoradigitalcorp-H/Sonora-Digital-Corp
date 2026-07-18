@@ -11,13 +11,20 @@ import sys
 
 sys.path.insert(0, str(REPO))
 
-DB_PATH = Path(tempfile.mkdtemp()) / "test_clone.db"
+_TEST_DB = Path(tempfile.mkdtemp()) / "test_clone.db"
 
-os.environ["DB_PATH"] = str(DB_PATH)
+
+def _set_db():
+    os.environ["DB_PATH"] = str(_TEST_DB)
+
+
+def _get_test_db() -> Path:
+    return _TEST_DB
 
 
 def _init_test_db():
-    conn = sqlite3.connect(str(DB_PATH))
+    _set_db()
+    conn = sqlite3.connect(str(_get_test_db()))
     conn.executescript("""
         CREATE TABLE IF NOT EXISTS clients (
             id TEXT PRIMARY KEY,
@@ -67,7 +74,7 @@ def _init_test_db():
 
 
 def _insert_client(client_id, pack_type, photo=10, video=3, tts=10, training=1):
-    conn = sqlite3.connect(str(DB_PATH))
+    conn = sqlite3.connect(str(_get_test_db()))
     conn.execute(
         "INSERT OR REPLACE INTO clients "
         "(id, status, pack_type, credits_photo, credits_video, "
@@ -80,7 +87,7 @@ def _insert_client(client_id, pack_type, photo=10, video=3, tts=10, training=1):
 
 
 def _get_credits(client_id):
-    conn = sqlite3.connect(str(DB_PATH))
+    conn = sqlite3.connect(str(_get_test_db()))
     conn.row_factory = sqlite3.Row
     row = conn.execute("SELECT * FROM clients WHERE id = ?", (client_id,)).fetchone()
     conn.close()
@@ -181,7 +188,7 @@ class TestCreditLowWarning:
     def test_warns_when_low(self):
         _init_test_db()
         _insert_client("low-1", "basic", photo=2, video=0, tts=0)
-        conn = sqlite3.connect(str(DB_PATH))
+        conn = sqlite3.connect(str(_get_test_db()))
         row = conn.execute("SELECT credits_photo FROM clients WHERE id = 'low-1'").fetchone()
         conn.close()
         assert row[0] < 5
