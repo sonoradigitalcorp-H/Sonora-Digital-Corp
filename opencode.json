@@ -1,151 +1,204 @@
 {
-  "$schema": "https://opencode.ai/config.json",
-  "username": "Mystic \u2014 SDC Agent OS v1.0",
-  "model": "opencode/deepseek-v4-flash-free",
-  "small_model": "opencode/mimo-v2.5-free",
+  "$schema": "./config/schema.json",
+  "username": "Mystic — Sonora Digital Corp",
   "default_agent": "mystic",
   "shell": "/bin/bash",
-  "logLevel": "DEBUG",
+  "fallbackProvider": "openrouter",
+  "logLevel": "INFO",
   "instructions": [
+    "sonora-enterprise-os/constitution/OMEGA-PROMPT-v10.0.md",
+    "sonora-enterprise-os/constitution/SOUL.md",
+    "sonora-enterprise-os/constitution/TRUTH.md",
+    "sonora-enterprise-os/constitution/10-RULES.md",
     "AGENTS.md",
-    "docs/SESSION-20260713-SDC-AGENT-OS.md"
+    "docs/MAPA-SDC.md",
+    "docs/REGLAS-AGENTE.md"
   ],
-  "skills": {
-    "paths": [
-      ".opencode/skills",
-      "skills"
-    ]
-  },
   "agent": {
     "mystic": {
       "mode": "primary",
-      "model": "opencode/deepseek-v4-flash-free",
-      "description": "Mystic \u2014 operador del SDC Agent OS. Construye empresas agent-native.",
-      "permission": {
-        "read": "allow",
-        "edit": "ask",
-        "bash": "ask",
-        "glob": "allow",
-        "grep": "allow",
-        "todowrite": "allow",
-        "webfetch": "allow",
-        "task": "allow"
-      }
+      "description": "Mystic — alma de Sonora Digital Corp. Asistente personal con identidad, voz y propósito.",
+      "permission": { "read": "allow", "edit": "allow", "bash": "allow", "glob": "allow", "grep": "allow", "todowrite": "allow", "webfetch": "allow", "task": "allow" }
+    },
+    "hermes": {
+      "mode": "subagent",
+      "description": "Hermes Agent — gateway multi-canal (Telegram, WhatsApp, Desktop)",
+      "permission": { "read": "allow", "bash": "deny" }
+    },
+    "openclaw": {
+      "mode": "subagent",
+      "description": "OpenClaw Gateway — 42 skills especializadas (browser, payments, social, media)",
+      "permission": { "read": "allow", "bash": "deny" }
+    },
+    "sdd": {
+      "mode": "subagent",
+      "description": "SDD Orchestrator — coordina las 6 fases del pipeline SDD",
+      "permission": { "read": "allow", "edit": "ask", "bash": "ask", "task": "allow" }
+    },
+    "sdd-spec": {
+      "mode": "subagent",
+      "description": "Spec Agent — genera especificaciones SDD completas a partir de briefings",
+      "permission": { "read": "allow", "edit": "ask", "bash": "ask" }
+    },
+    "sdd-design": {
+      "mode": "subagent",
+      "description": "Design Agent — crea plan.md y tasks.md desde especificaciones",
+      "permission": { "read": "allow", "edit": "ask", "bash": "ask" }
+    },
+    "sdd-apply": {
+      "mode": "subagent",
+      "description": "Apply Agent — ejecuta tareas de implementación",
+      "permission": { "read": "allow", "edit": "allow", "bash": "allow" }
+    },
+    "sdd-verify": {
+      "mode": "subagent",
+      "description": "Verify Agent — valida cumplimiento de constitución, checklist y tests",
+      "permission": { "read": "allow", "edit": "deny", "bash": "allow", "grep": "allow" }
+    },
+    "sdd-archive": {
+      "mode": "subagent",
+      "description": "Archive Agent — documenta resultados y actualiza conocimiento",
+      "permission": { "read": "allow", "edit": "allow", "bash": "allow" }
+    },
+    "sales": {
+      "mode": "subagent",
+      "description": "Sales OS — lead gen, qualification, proposals, pipeline",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Sales-OS.md"],
+      "permission": { "read": "allow", "edit": "allow", "bash": "allow" }
+    },
+    "dev": {
+      "mode": "subagent",
+      "description": "Dev OS — software delivery, CI/CD, architecture, tests",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Dev-OS.md"],
+      "permission": { "read": "allow", "edit": "allow", "bash": "allow" }
+    },
+    "support": {
+      "mode": "subagent",
+      "description": "Support OS — tickets, SLAs, client satisfaction",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Support-OS.md"],
+      "permission": { "read": "allow", "edit": "deny", "bash": "allow" }
+    },
+    "agent-os": {
+      "mode": "subagent",
+      "description": "Agent OS — harness lifecycle, skill registry, MCP governance",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Agent-OS.md"],
+      "permission": { "read": "allow", "edit": "allow", "bash": "deny" }
+    },
+    "knowledge": {
+      "mode": "subagent",
+      "description": "Knowledge OS — 7-layer memory, ADRs, knowledge capture",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Knowledge-OS.md"],
+      "permission": { "read": "allow", "edit": "allow", "bash": "allow" }
+    },
+    "finance": {
+      "mode": "subagent",
+      "description": "Finance OS — FinOps, revenue tracking, ROI, invoicing",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Finance-OS.md"],
+      "permission": { "read": "allow", "edit": "deny", "bash": "allow" }
+    },
+    "security": {
+      "mode": "subagent",
+      "description": "Security OS — secrets, audit, incident response, compliance",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Security-OS.md"],
+      "permission": { "read": "allow", "edit": "deny", "bash": "allow" }
+    },
+    "ops": {
+      "mode": "subagent",
+      "description": "Ops OS — infrastructure, monitoring, recovery, scaling",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Ops-OS.md"],
+      "permission": { "read": "allow", "edit": "allow", "bash": "allow" }
+    },
+    "quality": {
+      "mode": "subagent",
+      "description": "Quality OS — test frameworks, process audits, evaluations",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Quality-OS.md"],
+      "permission": { "read": "allow", "edit": "deny", "bash": "allow", "grep": "allow" }
+    },
+    "strategy": {
+      "mode": "subagent",
+      "description": "Strategy OS — initiatives, enterprise score, quarterly planning",
+      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Strategy-OS.md"],
+      "permission": { "read": "allow", "edit": "allow", "bash": "allow", "task": "allow" }
     },
     "builder": {
       "mode": "subagent",
-      "model": "opencode/north-mini-code-free",
-      "description": "Builder \u2014 ejecuta implementaci\u00f3n siguiendo SDD pipeline",
-      "permission": {
-        "read": "allow",
-        "edit": "allow",
-        "bash": {
-          "git *": "allow",
-          "pip *": "allow",
-          "npm *": "allow",
-          "*": "ask"
-        }
-      }
+      "description": "Builder — implementa features, escribe código, crea archivos",
+      "permission": { "edit": "allow", "bash": "allow" }
     },
-    "explore": {
+    "reviewer": {
       "mode": "subagent",
-      "description": "Explorador de c\u00f3digo y b\u00fasqueda",
-      "permission": {
-        "read": "allow",
-        "glob": "allow",
-        "grep": "allow",
-        "bash": "deny"
-      }
+      "description": "Reviewer — code review, seguridad, calidad",
+      "permission": { "read": "allow", "edit": "deny", "grep": "allow", "bash": "deny" }
+    },
+    "social": {
+      "mode": "subagent",
+      "description": "Social — publica contenido en redes sociales",
+      "permission": { "read": "allow", "bash": "ask" }
+    },
+    "content": {
+      "mode": "subagent",
+      "description": "Content — blogs, diseños, presentaciones, ghost CMS",
+      "permission": { "read": "allow", "edit": "ask", "bash": "ask" }
+    },
+    "music": {
+      "mode": "subagent",
+      "description": "Music — beats, letras, portadas, distribución",
+      "permission": { "read": "allow", "edit": "ask", "bash": "ask" }
     }
   },
   "mcp": {
-    "sonora-mcp": {
+    "openclaw": {
       "type": "remote",
-      "url": "http://127.0.0.1:8180",
+      "url": "http://localhost:18789",
       "enabled": true,
-      "description": "SDC MCP Gateway \u2014 53 tools (Hasura, Engram, Supabase, OmniVoice, FAL, MP, RAG)"
+      "description": "OpenClaw Gateway — 42 skills (browser, payments, social, media)"
     },
-    "supabase": {
+    "engram": {
       "type": "remote",
-      "url": "https://mcp.supabase.com/mcp?project_ref=jibalggzudkflwzdndqz",
+      "url": "http://149.56.46.173:7437",
       "enabled": true,
-      "headers": {
-        "x-supabase-anon-key": "sb_publisible_2n9gZ64cIbtrhK9s3hClgQ_chzhTtjK",
-        "x-supabase-service-key": "{env:SUPABASE_SERVICE_KEY}"
-      },
-      "description": "Supabase MCP \u2014 DB directa"
+      "description": "Engram — memoria persistente multi-sesión"
+    },
+    "qdrant": {
+      "type": "remote",
+      "url": "http://localhost:6333",
+      "enabled": true,
+      "description": "Qdrant — vector DB para búsqueda semántica"
+    },
+    "neo4j": {
+      "type": "remote",
+      "url": "http://localhost:7687",
+      "enabled": true,
+      "description": "Neo4j — graph DB para relaciones y CRM"
+    },
+    "n8n": {
+      "type": "remote",
+      "url": "http://localhost:5678",
+      "enabled": true,
+      "description": "n8n — workflow automation"
     }
   },
   "command": {
-    "status": {
-      "description": "Estado completo del sistema",
-      "template": "Ejecuta healthcheck completo: MCP Gateway, Hasura, Redis, Qdrant, Docker, Systemd"
-    },
-    "design": {
-      "description": "Generar componentes UI premium con shadcn/ui, three.js, Tailwind",
-      "template": "Usa el skill design en skills/design/SKILL.md. Genera componentes React/TypeScript individuales con shadcn/ui, @react-three/drei, framer-motion, y Tailwind CSS. $ARGUMENTS",
-      "agent": "mystic"
-    },
-    "gsd": {
-      "description": "Get Shit Done \u2014 flujo completo de implementaci\u00f3n",
-      "template": "GSD: 1) Estado actual 2) Qu\u00e9 hacer 3) Plan 4) Ejecutar 5) Verificar 6) Documentar",
-      "agent": "builder"
-    },
-    "crear": {
-      "description": "Crear empresa agent-native completa",
-      "template": "Usa el skill creator en skills/creator/SKILL.md. Crea tenant, 6 agentes, smart app. $ARGUMENTS",
-      "agent": "mystic"
-    },
-    "generar": {
-      "description": "Generar contenido diario para artistas",
-      "template": "Usa el skill content en skills/content/SKILL.md. Ejecuta daily-content-pipeline.sh. $ARGUMENTS",
-      "agent": "mystic"
-    },
-    "report": {
-      "description": "Reporte de revenue y m\u00e9tricas de negocio",
-      "template": "Usa el skill analytics en skills/analytics/SKILL.md. Consulta Hasura + Engram y genera reporte. $ARGUMENTS",
-      "agent": "mystic"
-    },
-    "tendencias": {
-      "description": "Analizar tendencias del momento para contenido",
-      "template": "Usa el skill social en skills/social/SKILL.md. Busca tendencias v\u00eda Firecrawl/Playwright. $ARGUMENTS",
-      "agent": "mystic"
-    },
-    "reconciliar": {
-      "description": "Revisar y reconciliar pagos pendientes",
-      "template": "Usa el skill payments en skills/payments/SKILL.md. Verifica transacciones MP. $ARGUMENTS",
-      "agent": "mystic"
-    },
-    "deploy": {
-      "description": "Deployar nueva app o landing page",
-      "template": "Usa el skill deploy en skills/deploy/SKILL.md. Lovable genera \u2192 nginx \u2192 systemd. $ARGUMENTS",
-      "agent": "builder"
-    },
-    "plan": {
-      "description": "Planning Gate \u2014 descompone en tareas",
-      "template": "Planifica siguiendo SDD pipeline: Research\u2192Spec\u2192Design\u2192Tasks\u2192Apply\u2192Verify\u2192Archive. $ARGUMENTS"
-    }
-  },
-  "references": {
-    "ablueprint": {
-      "path": "tenants/sdc/blueprint",
-      "description": "SDC Smart App Blueprint \u2014 hooks y componentes reutilizables"
-    },
-    "core": {
-      "path": "core",
-      "description": "SDC Core \u2014 infraestructura del sistema"
-    },
-    "agents": {
-      "path": "agents",
-      "description": "Registro de agentes por tenant"
-    },
-    "packs": {
-      "path": "packs",
-      "description": "SDC Packs \u2014 productos agent-native para empresas (music-label, agent-crm, content-factory)"
-    },
-    "abe-music": {
-      "path": "packs/abe-music",
-      "description": "ABE Music Pack \u2014 sello discogr\u00e1fico agent-native"
-    }
+    "status": { "description": "Estado completo del sistema", "template": "Ejecuta healthcheck completo: JARVIS, Hermes, OpenClaw, Neo4j, Qdrant, n8n, Docker, Systemd" },
+    "backup": { "description": "Backup completo del sistema", "template": "Ejecuta backup: copia sonora-enterprise-os/ apps/ config/ platforms/ a backups/ con timestamp" },
+    "brain": { "description": "Brain graph dashboard", "template": "Abre el Command Center con brain graph" },
+    "sdd-new": { "description": "Nueva spec SDD", "template": "SDD pipeline: Research→Spec→Design→Tasks→Apply→Verify→Archive", "agent": "sdd" },
+    "build": { "description": "Construir feature", "template": "Analiza requerimiento y construye solución completa siguiendo SDD pipeline", "agent": "builder" },
+    "sales": { "description": "Sales OS — pipeline de ventas", "template": "Carga Sales OS: revisa leads activos, genera reporte de pipeline", "agent": "sales" },
+    "dev": { "description": "Dev OS — CI/CD, deploys", "template": "Carga Dev OS: revisa builds, deployments pendientes, issues activos", "agent": "dev" },
+    "support": { "description": "Support OS — tickets, SLAs", "template": "Carga Support OS: revisa tickets abiertos, SLAs próximos a vencer", "agent": "support" },
+    "agent": { "description": "Agent OS — harnesses, skills", "template": "Carga Agent OS: revisa estado de harnesses, skills, salud de agentes", "agent": "agent-os" },
+    "knowledge": { "description": "Knowledge OS — memoria, ADRs", "template": "Carga Knowledge OS: revisa ADRs pendientes, captura conocimiento reciente", "agent": "knowledge" },
+    "finance": { "description": "Finance OS — FinOps, revenue", "template": "Carga Finance OS: revisa costos, ingresos del período, ROI", "agent": "finance" },
+    "security": { "description": "Security OS — auditoría", "template": "Carga Security OS: revisa secrets, alertas activas, última auditoría", "agent": "security" },
+    "ops": { "description": "Ops OS — infraestructura", "template": "Carga Ops OS: revisa salud de servicios, uso de disco, containers", "agent": "ops" },
+    "quality": { "description": "Quality OS — tests, evaluaciones", "template": "Carga Quality OS: revisa pass rate de tests, scores, auditorías", "agent": "quality" },
+    "strategy": { "description": "Strategy OS — score, planificación", "template": "Carga Strategy OS: revisa enterprise score, iniciativas activas", "agent": "strategy" },
+    "social": { "description": "Social — publicar en redes", "template": "Publica contenido en redes sociales (Facebook, Instagram, YouTube, X)", "agent": "social" },
+    "content": { "description": "Content — blogs, diseños", "template": "Crea contenido: blog en Ghost CMS, diseños en Canva, presentaciones", "agent": "content" },
+    "music": { "description": "Music — beats, canciones", "template": "Genera música, letras, portadas, distribuye", "agent": "music" },
+    "doc": { "description": "Auto-Doc — genera docs de proceso (SPEC, SCORE, ADR, LECCION, gherkin, events)", "template": "Analiza la sesion actual de AGENTS.md y genera toda la documentacion de proceso siguiendo templates de process/templates/. Crea directorio en process/completed/, todos los archivos (SPEC.md, SCORE.md, ADR.md, LECCION.md, events.jsonl, gherkin/), y actualiza CATALOG.md.", "agent": "sdd-archive" },
+    "plan": { "description": "Planning Gate — descompone objetivo en tareas y genera PLAN.yaml", "template": "Ejecuta plan-gate.py con el objetivo especificado: descomponer en tareas, estimar costo, validar contra truth/. Si no hay objetivo claro, pedir descomposicion primero." },
+    "verify": { "description": "Verification Pipeline — ejecuta truth gate, security gate, cost gate", "template": "Ejecuta verify-gate.py contra el plan activo: truth gate (contradice truth/), security gate (capabilities), cost gate (budget). Reporta resultados." }
   }
 }
