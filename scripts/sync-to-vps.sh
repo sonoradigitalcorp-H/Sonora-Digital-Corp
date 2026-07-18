@@ -25,6 +25,9 @@ rsync -avz --exclude '.git' --exclude 'node_modules' --exclude '__pycache__' --e
 echo "Regenerating configs on VPS..."
 ssh ovh "cd /home/ubuntu/sonora-digital-corp && python3 scripts/generate-configs.py"
 
+echo "Building Call Engine on VPS..."
+ssh ovh "cd /home/ubuntu/sonora-digital-corp/call-engine && go build -o /home/ubuntu/.local/bin/call-engine ./cmd/converse" 2>/dev/null && echo "  ✅ Call Engine built" || echo "  ⚠️  Call Engine build skipped"
+
 echo "Restarting Guardian..."
 ssh ovh "sudo systemctl restart truth-guardian.service 2>/dev/null || sudo kill -9 \$(pgrep -f guardian.main) 2>/dev/null; sleep 1; sudo systemctl start truth-guardian.service 2>/dev/null &"
 
