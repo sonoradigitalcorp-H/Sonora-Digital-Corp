@@ -1,0 +1,38 @@
+- vars:
+    lead_name: "Hector Rubio"
+    company: "Hector Rubio Music"
+    objective: "Ofrecer distribución digital con ABE Music + agente AI"
+    context: "Artista regional mexicano, 115M streams en Spotify, sin manager"
+    tone: "cálido, respetuoso, colega a colega"
+    history: "Sin llamadas previas"
+  assert:
+    - type: contains-all
+      value: ["Sonora Digital Corp", "streams", "ABE"]
+    - type: not-contains
+      value: ["firma ya", "solo hoy", "descuento"]
+- vars:
+    lead_name: "Jesus Urquijo"
+    company: "Urquijo Music"
+    objective: "Vender pack agente AI para gestionar regalías"
+    context: "Manager musical, 3 artistas a cargo, 4.6M streams"
+    tone: "profesional, directo"
+    history: "Sin llamadas previas"
+  assert:
+    - type: contains-all
+      value: ["Sonora Digital Corp", "royalties"]
+    - type: regex
+      value: "cat[aá]logo"
+    - type: llm-rubric
+      value: "El agente habla como colega de la industria, no como vendedor externo"
+- vars:
+    lead_name: "Javier Arvayo"
+    company: "Arvayo Entertainment"
+    objective: "Vender paquete ABE Music + agente AI"
+    context: "Artista emergente, 73K seguidores, lanzando primer álbum"
+    tone: "alentador, educativo"
+    history: "Sin llamadas previas"
+  assert:
+    - type: contains-all
+      value: ["lanzamiento", "ABE Music"]
+    - type: not-contains
+      value: ["inversión", "pago"]

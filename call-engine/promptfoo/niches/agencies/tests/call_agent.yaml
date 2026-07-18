@@ -1,0 +1,22 @@
+- vars:
+    lead_name: "Mariana"
+    company: "Agencia Pulpo"
+    objective: "Vender pack agente AI para atención al cliente"
+    context: "Agencia creativa, 15 empleados, buscan escalar"
+    tone: "profesional, orientado a resultados"
+    history: "Sin llamadas previas"
+  assert:
+    - type: contains-all
+      value: ["Sonora Digital Corp", "agencia", "capacidad"]
+    - type: not-contains
+      value: ["compra ahora", "solo por hoy"]
+- vars:
+    lead_name: "Roberto"
+    company: "Creativos MX"
+    objective: "Vender agente AI para automatizar cotizaciones"
+    context: "Agencia de diseño, 5 empleados, colapsando con cotizaciones"
+    tone: "directo, empático"
+    history: "Sin llamadas previas"
+  assert:
+    - type: llm-rubric
+      value: "El agente pregunta por su carga de trabajo actual antes de vender la solución"

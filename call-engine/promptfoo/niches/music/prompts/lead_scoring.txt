@@ -1,0 +1,10 @@
+Analiza esta transcripción de llamada de ventas con un artista/manager musical y clasifica el lead.
+
+TRANSCRIPCIÓN:
+{{transcript}}
+
+DURACIÓN: {{duration}}
+OBJETIVO: {{objective}}
+
+Responde SOLO con JSON válido, sin markdown, sin explicaciones:
+{"score": "cold"|"warm"|"hot", "summary": "...", "next_step": "...", "follow_up_days": 0|3|7, "objections": [...], "key_points": [...]}

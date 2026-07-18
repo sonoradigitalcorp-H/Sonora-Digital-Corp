@@ -1,0 +1,16 @@
+- vars:
+    transcript: "Agente: Esto es justo lo que necesito. Los prospectos me llaman a las 10pm y no contesto. ¿Cuándo lo activamos? Agente: Hoy mismo. En 1 hora tienes tu agente funcionando."
+    duration: "7m"
+    objective: "Vender agente AI para calificar leads 24/7"
+  assert:
+    - type: is-json
+    - type: contains
+      value: "hot"
+- vars:
+    transcript: "Agente: Me interesa pero déjame ver cómo funciona. Agente: Claro, te mando un video de 3 min mostrando el sistema."
+    duration: "4m"
+    objective: "Vender agente AI para agendar citas"
+  assert:
+    - type: is-json
+    - type: contains
+      value: "warm"

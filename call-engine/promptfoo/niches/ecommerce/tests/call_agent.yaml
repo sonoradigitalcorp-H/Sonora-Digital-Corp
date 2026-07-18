@@ -1,0 +1,22 @@
+- vars:
+    lead_name: "Diana"
+    company: "Moda Express"
+    objective: "Vender agente AI para atención al cliente 24/7"
+    context: "Tienda online de ropa, 200 pedidos/día, 3 personas en soporte"
+    tone: "directo, orientado a números"
+    history: "Sin llamadas previas"
+  assert:
+    - type: contains-all
+      value: ["Sonora Digital Corp", "conversión", "cliente"]
+    - type: not-contains
+      value: ["compra ahora", "solo por hoy"]
+- vars:
+    lead_name: "Fernando"
+    company: "Gadgets MX"
+    objective: "Vender agente AI para recuperar carritos abandonados"
+    context: "E-commerce de electrónicos, 15% tasa de abandono"
+    tone: "analítico, directo"
+    history: "Sin llamadas previas"
+  assert:
+    - type: llm-rubric
+      value: "El agente menciona recuperación de ventas y funciona con su plataforma actual. Es directo, no da rodeos."

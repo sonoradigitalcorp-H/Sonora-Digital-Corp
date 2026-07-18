@@ -1,0 +1,16 @@
+- vars:
+    transcript: "Tienda: Esto me urge. Mi equipo de soporte colapsa en las noches y estoy perdiendo ventas. ¿Cuándo podemos empezar? Agente: Hoy mismo. En 2 horas tienes tu agente activo."
+    duration: "5m"
+    objective: "Vender agente AI para atención al cliente 24/7"
+  assert:
+    - type: is-json
+    - type: contains
+      value: "hot"
+- vars:
+    transcript: "Tienda: Me gusta la idea pero déjame consultarlo con mi socio. Agente: Claro, te mando el brochure y te llamo el jueves."
+    duration: "3m"
+    objective: "Vender agente AI para recuperar carritos"
+  assert:
+    - type: is-json
+    - type: contains
+      value: "warm"

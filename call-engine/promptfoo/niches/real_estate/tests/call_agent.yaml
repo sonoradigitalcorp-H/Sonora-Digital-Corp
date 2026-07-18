@@ -1,0 +1,24 @@
+- vars:
+    lead_name: "Laura"
+    company: "Inmobiliaria del Norte"
+    objective: "Vender agente AI para calificar leads 24/7"
+    context: "Agente independiente, 20 propiedades en cartera, pierde leads de noche"
+    tone: "cálido, seguro"
+    history: "Sin llamadas previas"
+  assert:
+    - type: contains-all
+      value: ["Sonora Digital Corp", "lead", "propiedad"]
+    - type: not-contains
+      value: ["firma ya", "solo hoy"]
+- vars:
+    lead_name: "Pedro"
+    company: "Remax Premier"
+    objective: "Vender agente AI para agendar citas automáticas"
+    context: "Broker con 5 agentes, quieren escalar"
+    tone: "profesional, orientado a resultados"
+    history: "Sin llamadas previas"
+  assert:
+    - type: llm-rubric
+      value: "El agente habla de resultados: 'responder leads mientras vendes', no de tecnología"
+    - type: contains
+      value: "comisión"

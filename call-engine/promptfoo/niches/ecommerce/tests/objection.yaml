@@ -1,0 +1,18 @@
+- vars:
+    objection: "No tengo tiempo para implementar algo nuevo"
+    context: "Dueño de tienda online, 50 pedidos/día, operando solo"
+    relationship: "Lead frío"
+    attempt: "1"
+  assert:
+    - type: llm-rubric
+      value: "El agente responde 'por eso exactamente te llamo' y ofrece prueba de 7 días sin costo. Usa el método feel-felt-found."
+    - type: not-contains
+      value: ["insisto", "obligado"]
+- vars:
+    objection: "Ya tengo un chatbot"
+    context: "E-commerce con Shopify, 100 pedidos/día"
+    relationship: "Lead caliente, referido"
+    attempt: "2"
+  assert:
+    - type: llm-rubric
+      value: "El agente valida primero con '¿a qué te refieres exactamente?' y pregunta qué porcentaje de tickets resuelve su chatbot actual."

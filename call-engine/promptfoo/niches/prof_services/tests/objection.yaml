@@ -1,0 +1,20 @@
+- vars:
+    objection: "Manejo información confidencial"
+    context: "Consultor empresarial, datos sensibles de clientes"
+    relationship: "Lead frío"
+    attempt: "1"
+  assert:
+    - type: llm-rubric
+      value: "El agente responde inmediatamente sobre cifrado y cumplimiento, sin evadir. Valida la preocupación primero."
+    - type: contains
+      value: "cifrado"
+- vars:
+    objection: "Mis clientes prefieren hablarme directo"
+    context: "Abogado independiente, 20 años de experiencia"
+    relationship: "Lead tibio"
+    attempt: "2"
+  assert:
+    - type: llm-rubric
+      value: "El agente valida con '¿a qué te refieres exactamente?' y explica que el agente califica antes para que él solo hable con los casos calificados."
+    - type: not-contains
+      value: ["insisto", "obligado", "tienes que"]
