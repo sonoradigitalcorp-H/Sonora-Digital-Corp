@@ -1,0 +1,79 @@
+# Pricing Tiers — Templates de pricing dinámico por industria
+# Versión: 1.0.0
+# Cada entrada define markup base y revenue share por industria
+
+industries:
+  musica:
+    label: "Música y Entretenimiento"
+    markup_multiplier: 5.0
+    revenue_share_pct: 10
+    setup_fee:
+      small: 499
+      medium: 999
+      enterprise: 2499
+    monthly_base:
+      small: 99
+      medium: 299
+      enterprise: 999
+    notes: "Artistas, sellos, productores. Revenue share sobre ventas."
+
+  tecnologia:
+    label: "Tecnología y Consultoría"
+    markup_multiplier: 4.0
+    revenue_share_pct: 5
+    setup_fee:
+      small: 499
+      medium: 999
+      enterprise: 2499
+    monthly_base:
+      small: 149
+      medium: 499
+      enterprise: 1499
+    notes: "Agencias tech, consultoras. Revenue share sobre contratos."
+
+  marketing:
+    label: "Marketing y Publicidad"
+    markup_multiplier: 6.0
+    revenue_share_pct: 7
+    setup_fee:
+      small: 499
+      medium: 1499
+      enterprise: 3499
+    monthly_base:
+      small: 199
+      medium: 599
+      enterprise: 1999
+    notes: "Agencias de marketing, creadores de contenido. Alto volumen de assets."
+
+  legal:
+    label: "Legal y Compliance"
+    markup_multiplier: 8.0
+    revenue_share_pct: 5
+    setup_fee:
+      small: 999
+      medium: 2499
+      enterprise: 4999
+    monthly_base:
+      small: 299
+      medium: 799
+      enterprise: 2499
+    notes: "Despachos, compliance. Premium pricing por datos sensibles."
+
+  salud:
+    label: "Salud y Bienestar"
+    markup_multiplier: 7.0
+    revenue_share_pct: 5
+    setup_fee:
+      small: 999
+      medium: 2499
+      enterprise: 4999
+    monthly_base:
+      small: 299
+      medium: 799
+      enterprise: 2499
+    notes: "Clínicas, terapeutas. Requiere compliance HIPAA."
+
+partner_discounts:
+  aztrotech: 0.30
+  abe_music: 0.25
+  default: 0.20

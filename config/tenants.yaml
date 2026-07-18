@@ -1,0 +1,51 @@
+# Tenant Registry — Partners y sus clientes
+# Versión: 1.0.0
+# Cada partner tiene su propia configuración de marca y sus clientes
+
+master:
+  id: sdc
+  name: "Sonora Digital Corp"
+  owner: "Luis Daniel Guerrero Enciso"
+  type: master
+  branding:
+    logo: sdc-logo.png
+    primary_color: "#7c3aed"
+    secondary_color: "#a855f7"
+    powered_by: false
+  capabilities:
+    - all
+
+partners:
+  - id: aztrotech
+    name: "AztroTech"
+    owner: "César Holguín"
+    website: aztrotech.mx
+    type: partner
+    plan: partner_pro
+    branding:
+      logo: aztrotech-logo.png
+      primary_color: "#00d4ff"
+      secondary_color: "#0ea5e9"
+      powered_by: true
+    capabilities:
+      - clone_service
+      - digital_brain
+      - memory
+    clients: []
+
+  - id: abe_music
+    name: "ABE Music Group"
+    owner: "Abraham Ortega"
+    website: abemusicinc.com
+    type: partner
+    plan: partner_pro
+    branding:
+      logo: abe-logo.png
+      primary_color: "#FF6B35"
+      secondary_color: "#f97316"
+      powered_by: true
+    capabilities:
+      - clone_service
+      - digital_brain
+      - music_analytics
+    clients: []
