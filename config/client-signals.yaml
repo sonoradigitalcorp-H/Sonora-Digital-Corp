@@ -1,0 +1,167 @@
+# Client Signals — Detección de oportunidades a las 3AM
+# El sistema analiza cada cliente y genera sugerencias automáticas
+
+signals:
+  # ─── INACTIVIDAD ──────────────────────────────────
+  inactive_7_days:
+    name: "Cliente inactivo (7 días)"
+    description: "No ha generado contenido ni iniciado sesión en 7 días"
+    severity: medium
+    check: last_activity > 7_days
+    then:
+      suggest: "Recordatorio amigable: 'Oye, ¿sabías que tu clone puede trabajar por ti mientras descansas? 😎'"
+      action: send_whatsapp + send_email
+      delay_if_repeated: 3_days
+    audience: "Clientes con plan Pro o superior"
+
+  inactive_15_days:
+    name: "Cliente abandonando (15 días)"
+    description: "15 días sin actividad — riesgo de cancelación"
+    severity: high
+    check: last_activity > 15_days
+    then:
+      suggest: "Oferta especial: 'Te extrañamos. Toma 7 días gratis para reactivar tu clone. Sin compromiso.'"
+      action: send_whatsapp + send_email + offer_trial
+    audience: "Todos los clientes activos"
+
+  inactive_30_days:
+    name: "Cliente perdido (30 días)"
+    description: "30+ días sin actividad — requiere intervención humana"
+    severity: critical
+    then:
+      suggest: "El cliente X lleva 30+ días sin actividad. Programar llamada de retención."
+      action: schedule_call + notify_ambassador
+
+  # ─── USO INTENSO ──────────────────────────────────
+  high_usage_photos:
+    name: "Alto uso de fotos"
+    description: "Ha consumido >80% de sus fotos mensuales"
+    severity: low
+    check: photos_used > credits_total * 0.8
+    then:
+      suggest: "Estás volando con tus fotos 🔥. ¿Quieres más? Upgrade a Business por solo $99/mes."
+      action: send_whatsapp
+
+  high_usage_videos:
+    name: "Alto uso de videos"
+    description: "Ha consumido >80% de sus videos mensuales"
+    severity: low
+    then:
+      suggest: "Tus videos están rompiéndola 🎬. Sube a Business y duplica tu producción."
+      action: send_whatsapp
+
+  near_limit_total:
+    name: "Cerca del límite del plan"
+    description: "Créditos totales por debajo del 20%"
+    severity: medium
+    check: credits_remaining < 20%
+    then:
+      suggest: "Te quedan pocos créditos ⏳. Recarga aquí o sube de plan para no parar."
+      action: send_email + send_whatsapp
+
+  # ─── EMBAJADORES ──────────────────────────────────
+  ambassador_near_level_up:
+    name: "Embajador cerca de subir de nivel"
+    description: "Le faltan <5 clientes para subir al siguiente nivel"
+    severity: high
+    check: remaining_for_next_level <= 5
+    audience: "Embajadores activos"
+    then:
+      suggest: "¡Estás a solo {X} clientes de llegar a {next_level}! 🚀 Un empujón más y desbloqueas {bonus} de bono."
+      action: send_whatsapp + notify_ambassador
+
+  ambassador_inactive_7d:
+    name: "Embajador inactivo (7 días)"
+    description: "Embajador no ha compartido su link en 7 días"
+    severity: medium
+    audience: "Embajadores con <50 clientes"
+    then:
+      suggest: "¿Sabías que compartir tu link en redes sociales te da puntos extras? 🎯 Un post al día y tu red crece sola."
+      action: send_whatsapp + share_tips
+
+  ambassador_first_sale_pending:
+    name: "Embajador sin primera venta"
+    description: "Se registró como embajador hace >3 días y aún no vende"
+    severity: high
+    audience: "Embajadores nuevos"
+    then:
+      suggest: "¿Quieres ayuda con tu primera venta? Tenemos un training de 5 min que te muestra cómo cerrar tu primer cliente 🚀"
+      action: send_whatsapp + send_video_tutorial
+
+  # ─── LOOP ENTRENAMIENTO ──────────────────────────
+  lora_not_trained:
+    name: "Cliente nuevo sin LoRA entrenado"
+    description: "Se registró pero aún no entrena su clon facial"
+    severity: high
+    check: days_since_signup > 2 AND lora_trained == false
+    audience: "Clientes nuevos (<7 días)"
+    then:
+      suggest: "¡Tu clone te espera! 🎭 Solo necesitas 15 fotos para crear tu gemelo digital. ¿Empezamos?"
+      action: send_whatsapp
+
+  lora_trained_no_videos:
+    name: "LoRA listo, sin videos aún"
+    description: "Entrenó su LoRA pero no ha generado videos"
+    severity: medium
+    audience: "Clientes con LoRA entrenado"
+    then:
+      suggest: "Tu clone facial ya está listo. ¿Viste lo que puede hacer en video? 🎬 Prueba un video presentándote."
+      action: send_whatsapp + send_video_example
+
+  voice_not_cloned:
+    name: "Sin clon de voz aún"
+    description: "No ha clonado su voz después de 3 días"
+    severity: medium
+    audience: "Todos los clientes"
+    then:
+      suggest: "Tu voz es tu firma 🎙. Clone tu voz con solo 30 segundos de audio. Tu clone hablará como tú."
+      action: send_whatsapp
+
+  # ─── UPSELL / CROSS-SELL ─────────────────────────
+  upgrade_to_pro:
+    name: "Free user → Pro upgrade"
+    description: "Usuario free que ha agotado su trial 24h"
+    severity: high
+    check: trial_ended AND not_converted
+    audience: "Usuarios free post-trial"
+    then:
+      suggest: "Tu trial terminó pero tu clone te espera 🎭. Por solo $29/mes tu clone trabaja para ti 24/7."
+      action: send_email + send_whatsapp + offer_discount_7_days
+
+  upgrade_to_business:
+    name: "Pro → Business upgrade"
+    description: "Cliente Pro cerca del límite (>75% uso) por 2 meses consecutivos"
+    severity: medium
+    audience: "Clientes Pro"
+    then:
+      suggest: "Estás usando mucho tu clone 🔥. Con Business tienes 5 asientos, 500 fotos y 150 videos/mes. ¿Pasamos?"
+      action: send_whatsapp
+
+  # ─── CUMPLEAÑOS / ESPECIALES ─────────────────────
+  birthday:
+    name: "Cumpleaños del cliente"
+    description: "Hoy es su cumpleaños"
+    severity: low
+    check: today == client_birthday
+    then:
+      suggest: "¡Feliz cumpleaños! 🎂 Hoy tu clone te regala un video especial. ¿Qué mensaje quieres que grabe para ti?"
+      action: send_whatsapp + send_video_gift
+
+  # ─── GRACIAS / RECONOCIMIENTO ────────────────────
+  ambassador_network_milestone:
+    name: "Embajador alcanza meta de red"
+    description: "Llegó a 10/50/100/500 en su red"
+    severity: high
+    audience: "Embajadores"
+    then:
+      suggest: "¡{X} personas en tu red! 🚊 Eres una máquina. Sigue así y el siguiente nivel es tuyo."
+      action: send_whatsapp + send_congrats_video + notify_sdc
+
+  payment_failed:
+    name: "Pago fallido"
+    description: "No se pudo procesar el pago mensual"
+    severity: critical
+    check: last_payment_failed == true
+    then:
+      suggest: "Tuvimos un problema con tu pago 😕. Actualiza tu método de pago para que tu clone siga trabajando."
+      action: send_email + send_whatsapp + notify_sdc
