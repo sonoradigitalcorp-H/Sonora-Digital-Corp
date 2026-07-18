@@ -1,0 +1,20 @@
+- vars:
+    objection: "Ya tenemos herramientas"
+    context: "Agencia de marketing con 20 empleados, usan HubSpot"
+    relationship: "Lead frío"
+    attempt: "1"
+  assert:
+    - type: llm-rubric
+      value: "El agente valida con '¿a qué te refieres exactamente?' y pregunta qué herramientas usan antes de responder. Usa el método feel-felt-found."
+    - type: not-contains
+      value: ["insisto", "obligado"]
+- vars:
+    objection: "No tenemos presupuesto ahorita"
+    context: "Agencia pequeña, 5 empleados, creciendo"
+    relationship: "Lead caliente, referido"
+    attempt: "2"
+  assert:
+    - type: contains
+      value: "presupuesto"
+    - type: llm-rubric
+      value: "El agente pregunta por su gasto actual en herramientas antes de hablar de precio. Valida primero, no descarta la objeción."

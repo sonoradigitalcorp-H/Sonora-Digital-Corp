@@ -1,0 +1,22 @@
+- vars:
+    lead_name: "Lic. Mónica"
+    company: "Mónica y Asociados"
+    objective: "Vender agente AI para calificar prospectos legales"
+    context: "Despacho de abogados, 3 socios, quieren más clientes sin más administrativo"
+    tone: "formal, respetuoso"
+    history: "Sin llamadas previas"
+  assert:
+    - type: contains-all
+      value: ["Sonora Digital Corp", "prospecto", "facturable"]
+    - type: not-contains
+      value: ["compra ahora", "solo por hoy"]
+- vars:
+    lead_name: "CP. Roberto"
+    company: "Contadores Unidos"
+    objective: "Vender agente AI para agendar consultas"
+    context: "Firma contable, 10 empleados, saturados en temporada de impuestos"
+    tone: "directo, profesional"
+    history: "Sin llamadas previas"
+  assert:
+    - type: llm-rubric
+      value: "El agente es breve y habla de recuperar horas facturables. Pregunta por su carga actual antes de vender."

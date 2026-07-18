@@ -3,7 +3,6 @@
   "username": "Mystic — Sonora Digital Corp",
   "default_agent": "mystic",
   "shell": "/bin/bash",
-  "fallbackProvider": "openrouter",
   "logLevel": "INFO",
   "instructions": [
     "sonora-enterprise-os/constitution/OMEGA-PROMPT-v10.0.md",

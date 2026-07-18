@@ -1,0 +1,22 @@
+- vars:
+    objection: "Ya tengo distribuidor"
+    context: "Artista independiente con 500K streams mensuales"
+    relationship: "Lead frío, contacto por redes"
+    attempt: "1"
+  assert:
+    - type: llm-rubric
+      value: "El agente valida la objeción y pregunta '¿a qué te refieres exactamente?' antes de responder. No la descarta."
+    - type: not-contains
+      value: ["insisto", "obligado", "tienes que"]
+    - type: contains-all
+      value: ["distribuidor", "ABE"]
+- vars:
+    objection: "No me interesa, ya estoy bien así"
+    context: "Manager musical con 2 artistas, 2M streams combinados"
+    relationship: "Lead caliente, referido por colega"
+    attempt: "2"
+  assert:
+    - type: llm-rubric
+      value: "El agente usa el método feel-felt-found: entiende, conecta con caso similar, muestra resultado"
+    - type: not-contains
+      value: ["estás perdiendo", "deberías"]

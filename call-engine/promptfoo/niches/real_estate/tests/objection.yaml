@@ -1,0 +1,18 @@
+- vars:
+    objection: "Ya tengo quien me genera leads"
+    context: "Agente con 10 años de experiencia, cartera estable"
+    relationship: "Lead frío"
+    attempt: "1"
+  assert:
+    - type: llm-rubric
+      value: "El agente valida con '¿a qué te refieres exactamente?' y pregunta cuántos leads pierde porque no responde a tiempo. Usa el miedo a perder comisiones."
+    - type: not-contains
+      value: ["insisto", "obligado"]
+- vars:
+    objection: "No tengo tiempo para aprender algo nuevo"
+    context: "Broker ocupado, 3 propiedades cerrando este mes"
+    relationship: "Lead tibio"
+    attempt: "2"
+  assert:
+    - type: llm-rubric
+      value: "El agente responde 'por eso te llamo' y habla de cobertura 24/7. No presiona, valida primero."

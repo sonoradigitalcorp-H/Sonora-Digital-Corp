@@ -1,0 +1,24 @@
+- vars:
+    transcript: "Manager: Me interesa mucho ABE Music. ¿Cómo es el proceso de distribución? Agente: Te explico rápido. Subes tu catálogo, nosotros distribuimos a todas las plataformas, y el agente AI gestiona las regalías automáticamente."
+    duration: "8m"
+    objective: "Vender ABE Music + agente AI para catálogo de 3 artistas"
+  assert:
+    - type: is-json
+    - type: contains
+      value: "hot"
+- vars:
+    transcript: "Artista: Suena interesante pero ahorita estoy enfocado en mi gira. ¿Me envías info? Agente: Claro, te mando el brochure y agendamos para después de tu gira."
+    duration: "4m"
+    objective: "Vender ABE Music a artista en gira"
+  assert:
+    - type: is-json
+    - type: contains
+      value: "warm"
+- vars:
+    transcript: "Manager: La verdad estoy contento con mi distribuidor actual. No gracias. Agente: Entendido, si algo cambia aquí estoy."
+    duration: "2m"
+    objective: "Vender ABE Music a manager satisfecho"
+  assert:
+    - type: is-json
+    - type: contains
+      value: "cold"
