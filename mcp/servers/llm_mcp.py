@@ -6,8 +6,13 @@ Exposes LLM calls as native MCP tools for agents and the ABE assistant.
 
 import json
 import os
+import sys
+from pathlib import Path
 
 import httpx
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+from common.security.prompt_filter import scan_messages
 
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
 OPENROUTER_URL = os.getenv("OPENROUTER_URL", "https://openrouter.ai/api/v1")
@@ -17,9 +22,18 @@ SYSTEM_PROMPT = """Eres un asistente útil de Sonora Digital Corp. Responde en e
 
 
 async def llm_chat(messages: list, model: str = None, temperature: float = 0.7) -> str:
-    """Call OpenRouter chat completions API."""
+    """Call OpenRouter chat completions API with prompt injection protection."""
     if not OPENROUTER_API_KEY:
         return json.dumps({"error": "OPENROUTER_API_KEY not configured"})
+
+    # Scan messages for prompt injection
+    scan_result = scan_messages(messages)
+    if scan_result.blocked:
+        return json.dumps({
+            "error": "Message blocked by security filter",
+            "reason": scan_result.reason,
+            "category": scan_result.category,
+        })
 
     payload = {
         "model": model or DEFAULT_MODEL,

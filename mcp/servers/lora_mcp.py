@@ -1,12 +1,18 @@
 """LoRA MCP Server — Train, validate, and manage LoRA models for clone service.
 
 FR-02/FR-03: Photo validation and LoRA training pipeline.
+SECURITY: All photo URLs validated against SSRF before processing.
 """
 
 import json
 import os
+import sys
+from pathlib import Path
 
 import httpx
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+from common.security.url_validator import validate_urls
 
 FAL_KEY = os.getenv("FAL_KEY", "")
 SUPABASE_URL = os.getenv("SUPABASE_URL", "")
@@ -39,6 +45,17 @@ async def validate_photos(photo_urls: list[str], client_id: str = "") -> str:
             "valid": False,
             "reason": f"{len(invalid)} fotos tienen formato inválido",
             "invalid_formats": invalid[:3],
+            "client_id": client_id,
+        })
+
+    # SSRF protection: validate all URLs
+    url_results = validate_urls(photo_urls)
+    blocked = [r for r in url_results if not r.valid]
+    if blocked:
+        return json.dumps({
+            "valid": False,
+            "reason": f"{len(blocked)} URLs bloqueadas por seguridad",
+            "blocked": [b.reason for b in blocked[:3]],
             "client_id": client_id,
         })
     return json.dumps({

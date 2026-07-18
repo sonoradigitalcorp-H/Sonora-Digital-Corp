@@ -5,8 +5,13 @@ FR-04: Generate content using trained LoRA + cloned voice.
 
 import json
 import os
+import sys
+from pathlib import Path
 
 import httpx
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent.parent))
+from common.security.prompt_filter import scan_input
 
 FAL_KEY = os.getenv("FAL_KEY", "")
 SUPABASE_URL = os.getenv("SUPABASE_URL", "")
@@ -44,6 +49,10 @@ async def gen_photo(client_id: str, prompt: str, lora_id: str = "", trigger_word
         return json.dumps({"error": "prompt is required"})
     if not FAL_KEY:
         return json.dumps({"error": "FAL_KEY not configured"})
+
+    scan = scan_input(prompt)
+    if scan.blocked:
+        return json.dumps({"error": "Prompt blocked by security filter", "reason": scan.reason, "category": scan.category})
 
     trigger = trigger_word or client_id.lower().replace(" ", "_").replace("-", "_")
 
@@ -90,6 +99,12 @@ async def gen_video(client_id: str, prompt: str = "", script: str = "",
     if not client_id:
         return json.dumps({"error": "client_id is required"})
 
+    for text in [prompt, script]:
+        if text:
+            scan = scan_input(text)
+            if scan.blocked:
+                return json.dumps({"error": "Input blocked by security filter", "reason": scan.reason})
+
     credits = 5 if style == "talking_head" else 8
 
     try:
@@ -118,6 +133,10 @@ async def gen_tts(client_id: str, text: str, voice_id: str = "") -> str:
         return json.dumps({"error": "client_id is required"})
     if not text:
         return json.dumps({"error": "text is required"})
+
+    scan = scan_input(text)
+    if scan.blocked:
+        return json.dumps({"error": "Text blocked by security filter", "reason": scan.reason})
 
     if voice_id:
         async with httpx.AsyncClient() as client:
