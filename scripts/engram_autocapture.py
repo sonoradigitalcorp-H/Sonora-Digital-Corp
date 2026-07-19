@@ -259,7 +259,13 @@ class ObsidianExporter:
 
     def export_observation(self, obs: dict) -> Path:
         title = obs.get("title", "untitled").replace("/", "-")
+        if not title.strip():
+            title = f"observation-{obs.get('id', 'unknown')}"
         md_path = self.vault / "Observations" / f"{title}.md"
+        counter = 1
+        while md_path.exists():
+            md_path = self.vault / "Observations" / f"{title}-{counter}.md"
+            counter += 1
         tags = ["engram", obs.get("type", "discovery")]
         frontmatter = (
             "---\n"
@@ -275,6 +281,22 @@ class ObsidianExporter:
         md_path.write_text(frontmatter + obs.get("content", "") + "\n")
         obs_id = obs.get("id", title)
         self.mark_exported(obs_id)
+        return md_path
+
+    def export_session(self, session: dict) -> Path:
+        session_id = session.get("id", "unknown").replace("/", "-")
+        md_path = self.vault / "Sessions" / f"{session_id}.md"
+        frontmatter = (
+            "---\n"
+            f'session_id: {session.get("id", "")}\n'
+            f'project: {session.get("project", "")}\n'
+            f'started_at: {session.get("started_at", "")}\n'
+            f'ended_at: {session.get("ended_at", "")}\n'
+            "---\n"
+        )
+        summary = session.get("summary", "")
+        content = frontmatter + (summary if summary else "Sin resumen.")
+        md_path.write_text(content + "\n")
         return md_path
 
     def export_graph(self, relations: list[tuple[str, str, str]]) -> Path:
@@ -427,7 +449,93 @@ def main():
         vault = args.obsidian_export or args.vault
         exporter = ObsidianExporter(vault_path=vault)
         exporter.ensure_vault_structure()
-        print(f"Obsidian vault ready at {vault}")
+
+        def export_all(exporter: ObsidianExporter) -> None:
+            try:
+                import sqlite3
+                engram_dir = Path.home() / ".engram"
+                db_path = engram_dir / "engram.db"
+                if not db_path.exists():
+                    print(f"  Engram DB not found at {db_path}")
+                    return
+                conn = sqlite3.connect(str(db_path))
+                conn.row_factory = sqlite3.Row
+
+                cur = conn.execute(
+                    "SELECT id, sync_id, session_id, type, title, content, "
+                    "project, topic_key, revision_count, scope, created_at, updated_at "
+                    "FROM observations WHERE deleted_at IS NULL "
+                    "ORDER BY id ASC"
+                )
+                total = 0
+                new = 0
+                for row in cur.fetchall():
+                    total += 1
+                    obs_id = str(row["id"])
+                    if exporter.is_already_exported(obs_id):
+                        continue
+                    obs = dict(row)
+                    path = exporter.export_observation(obs)
+                    new += 1
+                    print(f"  → {path.name}")
+                print(f"\n📊 Exported {new}/{total} observations to {exporter.vault}")
+
+                cur_s = conn.execute(
+                    "SELECT id, project, started_at, ended_at, summary "
+                    "FROM sessions WHERE summary IS NOT NULL AND summary != '' "
+                    "ORDER BY started_at DESC"
+                )
+                s_total = 0
+                s_new = 0
+                for row in cur_s.fetchall():
+                    s_total += 1
+                    sid = str(row["id"])
+                    if exporter.is_already_exported(f"session:{sid}"):
+                        continue
+                    exporter.export_session(dict(row))
+                    exporter.mark_exported(f"session:{sid}")
+                    s_new += 1
+                print(f"📊 Exported {s_new}/{s_total} sessions")
+                conn.close()
+            except Exception as e:
+                print(f"  ⚠️ Export error: {e}")
+
+            try:
+                engram_dir = Path.home() / ".engram"
+                db_path = engram_dir / "engram.db"
+                conn2 = sqlite3.connect(str(db_path))
+                conn2.row_factory = sqlite3.Row
+                cur2 = conn2.execute("SELECT COUNT(*) as cnt FROM memory_relations")
+                rel_count = cur2.fetchone()["cnt"]
+                if rel_count > 0:
+                    cur2 = conn2.execute(
+                        "SELECT mr.id, mr.relation, "
+                        "COALESCE(o1.title, mr.source_id) as source, "
+                        "COALESCE(o2.title, mr.target_id) as target "
+                        "FROM memory_relations mr "
+                        "LEFT JOIN observations o1 ON o1.sync_id = mr.source_id "
+                        "LEFT JOIN observations o2 ON o2.sync_id = mr.target_id "
+                        "WHERE mr.judgment_status = 'judged' "
+                        "LIMIT 100"
+                    )
+                    relations = [
+                        (r["source"][:30], r["relation"], r["target"][:30])
+                        for r in cur2.fetchall()
+                    ]
+                    if relations:
+                        exporter.export_graph(relations)
+                conn2.close()
+            except Exception as e:
+                print(f"  ⚠️ Graph export error: {e}")
+
+        if args.watch:
+            print(f"🔄 Watching every {args.interval}s — exportando a {vault}")
+            while True:
+                export_all(exporter)
+                time.sleep(args.interval)
+        else:
+            print(f"📦 Exportando a {vault}...")
+            export_all(exporter)
         return
 
     if args.context:

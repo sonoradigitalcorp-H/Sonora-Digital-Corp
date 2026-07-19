@@ -9,7 +9,7 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/home/mystic/sonora-digital-corp/scripts/engram_autocapture.py --obsidian-export /home/mystic/Documents/sdc-brain-vault --interval 5m
+ExecStart=/usr/bin/python3 /home/mystic/sonora-digital-corp/scripts/engram_autocapture.py --obsidian-export /home/mystic/Documents/sdc-brain-vault --watch --interval 300
 WorkingDirectory=/home/mystic/sonora-digital-corp
 Restart=on-failure
 RestartSec=10
