@@ -1,0 +1,19 @@
+# Sonora ADK Bridge — Expone 36 agentes del ADK via API
+# Install: ln -s /home/ubuntu/sonora-digital-corp/infra/systemd/sonora-adk.service /home/ubuntu/.config/systemd/user/
+# Enable:  systemctl --user enable --now sonora-adk
+
+[Unit]
+Description=Sonora ADK Bridge — 36 ADK agents via REST API
+Documentation=https://github.com/sonoradigitalcorp-H/Sonora-Digital-Corp
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/env PYTHONPATH=/home/ubuntu/sonora-digital-corp /usr/bin/python3 -m mcp.adk.opencode_bridge
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+Restart=on-failure
+RestartSec=10
+Environment=ADK_BRIDGE_PORT=6401
+
+[Install]
+WantedBy=default.target

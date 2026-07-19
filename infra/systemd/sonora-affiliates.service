@@ -1,0 +1,19 @@
+# Sonora Affiliates — Portal de Afiliados y Referidos
+# Install: ln -s /home/ubuntu/sonora-digital-corp/infra/systemd/sonora-affiliates.service /home/ubuntu/.config/systemd/user/
+# Enable:  systemctl --user enable --now sonora-affiliates
+
+[Unit]
+Description=Sonora Affiliates — Referral Program Portal
+Documentation=https://github.com/sonoradigitalcorp-H/Sonora-Digital-Corp
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/env PYTHONPATH=/home/ubuntu/sonora-digital-corp /usr/bin/python3 -m products.affiliates.main
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+Restart=on-failure
+RestartSec=10
+Environment=AFFILIATES_PORT=6400
+
+[Install]
+WantedBy=default.target

@@ -1,0 +1,19 @@
+# Sonora Order Tracker — Rastreador de Entregas
+# Install: ln -s /home/ubuntu/sonora-digital-corp/infra/systemd/sonora-tracker.service /home/ubuntu/.config/systemd/user/
+# Enable:  systemctl --user enable --now sonora-tracker
+
+[Unit]
+Description=Sonora Order Tracker — Service Delivery Tracking
+Documentation=https://github.com/sonoradigitalcorp-H/Sonora-Digital-Corp
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/env PYTHONPATH=/home/ubuntu/sonora-digital-corp /usr/bin/python3 -m products.order_tracker.main
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+Restart=on-failure
+RestartSec=10
+Environment=TRACKER_PORT=6300
+
+[Install]
+WantedBy=default.target

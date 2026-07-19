@@ -1,0 +1,20 @@
+# Sonora Notifier — Motor de Notificaciones Multicanal
+# Install: ln -s /home/ubuntu/sonora-digital-corp/infra/systemd/sonora-notifier.service /home/ubuntu/.config/systemd/user/
+# Enable:  systemctl --user enable --now sonora-notifier
+
+[Unit]
+Description=Sonora Notifier — Multi-channel Notification Engine
+Documentation=https://github.com/sonoradigitalcorp-H/Sonora-Digital-Corp
+After=network.target
+Wants=whatsapp-webhook.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/env PYTHONPATH=/home/ubuntu/sonora-digital-corp /usr/bin/python3 -m products.notifier.main
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+Restart=on-failure
+RestartSec=10
+Environment=NOTIFIER_PORT=6200
+
+[Install]
+WantedBy=default.target
