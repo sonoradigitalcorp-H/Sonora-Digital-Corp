@@ -22,8 +22,8 @@ from fastapi.middleware.cors import CORSMiddleware
 REPO = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO))
 
-from memory.client_store import ClientStore
 from evolution.client_learner import ClientLearner
+from memory.client_store import ClientStore
 
 app = FastAPI(
     title="Sonora Client API",

@@ -1,6 +1,5 @@
 """Tests for Client API — 15 tests covering all endpoints"""
 
-import json
 import sys
 from pathlib import Path
 

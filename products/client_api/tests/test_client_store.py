@@ -1,6 +1,5 @@
 """Tests for ClientStore — 8 tests"""
 
-import json
 import sys
 from pathlib import Path
 

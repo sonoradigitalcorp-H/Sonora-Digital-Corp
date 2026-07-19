@@ -75,7 +75,6 @@ class ClientLearner:
         total_interactions = 0
 
         for cid in clients:
-            profile = self.store.get_profile(cid)
             interactions = self.store.get_interactions(cid, limit=1000)
             all_interactions.extend(interactions)
 
