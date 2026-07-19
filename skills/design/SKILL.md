@@ -1,97 +1,128 @@
+# skills/design — Premium UI Component Generation
+
+**Inherits**: OMEGA PROMPT v10.0 + SOUL.md
+**Template Version**: 1.0.0
+**Audit ID**: SKILL-DSN-001
+
 ---
-name: design
-description: Generate premium UI components with shadcn/ui, three.js, Tailwind CSS. Use when the user asks to create a design, landing page, dashboard, hero section, or UI component. NOT for generating full apps — use lovable for that.
-version: 1.0.0
-updated: 2026-07-14
----
 
-# Design Skill
+## 1. Business Objective
 
-Generate production-ready React/TypeScript components with shadcn/ui, @react-three/drei, framer-motion, and Tailwind CSS.
+Generate production-ready React/TypeScript UI components — with shadcn/ui, three.js, framer-motion, and Tailwind CSS — in under 30 seconds, following brand guidelines and responsive mobile-first patterns.
 
-## Stack
+## 2. Inputs (Gherkin)
 
-| Library | Version | Uso |
-|---------|---------|-----|
-| `@shadcn/react` | latest | Componentes base (Button, Card, Dialog, Tabs, Table, etc.) |
-| `@react-three/drei` | ^10 | Helpers 3D (Sparkles, Float, Text3D, Stars, MeshTransmissionMaterial, ContactShadows, Environment) |
-| `@react-three/fiber` | ^9 | React renderer for Three.js |
-| `framer-motion` | ^12 | Animaciones (layout, scroll, spring) |
-| `lucide-react` | latest | Iconos |
-| `tailwindcss` | ^4 | Estilos utilitarios |
-
-## Output format
-
-Cada componente es un archivo individual `.tsx`. Usar:
-
-```tsx
-import { Button } from '@shadcn/react'
-import { Sparkles } from '@react-three/drei'
-import { motion } from 'framer-motion'
-import { Camera } from 'lucide-react'
+```gherkin
+Given a user request for a UI component (hero, dashboard, card, form, etc.)
+And the design system context is available (colors, typography, spacing)
+When the component specification includes layout and interaction requirements
 ```
 
-## Patrones de diseño
+## 3. Outputs (Gherkin)
 
-### Glassmorphism
-```tsx
-<div className="backdrop-blur-xl bg-white/5 border border-white/10 rounded-2xl shadow-2xl">
+```gherkin
+Then a complete .tsx component file is generated with all imports
+And the component uses Tailwind classes (no inline styles)
+And shadcn/ui primitives are used for base elements
+And three.js with drei helpers is used for 3D components
+And framer-motion handles all animations
 ```
 
-### Botón con gradiente gold
-```tsx
-<Button className="bg-gradient-to-r from-amber-500 to-yellow-500 hover:from-amber-600 hover:to-yellow-600 text-black font-semibold">
+## 4. Events
+
+```
+Events:
+- design:component:created: a new UI component was generated
+- design:pattern:applied: a design pattern was used
 ```
 
-### Hero 3D con partículas
-```tsx
-import { Canvas } from '@react-three/fiber'
-import { Sparkles, Float } from '@react-three/drei'
+## 5. Dependencies
 
-<section className="relative h-screen">
-  <Canvas className="absolute inset-0">
-    <Sparkles count={100} scale={2} size={2} />
-    <Float speed={2}>
-      <mesh>{/* geometry */}</mesh>
-    </Float>
-  </Canvas>
-  <div className="relative z-10 flex items-center justify-center h-full">
-    <h1 className="text-6xl font-bold">{/* title */}</h1>
-  </div>
-</section>
+```
+Dependencies:
+- shadcn/ui: data — component primitives
+- @react-three/drei: data — 3D helpers
+- framer-motion: data — animation library
+- Tailwind CSS: data — utility classes
+- lucide-react: data — icons
 ```
 
-### shadcn Card con hover glass
-```tsx
-<Card className="backdrop-blur-md bg-white/5 border-white/10 hover:bg-white/10 transition-all">
-  <CardHeader>
-    <CardTitle>{title}</CardTitle>
-    <CardDescription>{desc}</CardDescription>
-  </CardHeader>
-  <CardContent>{children}</CardContent>
-</Card>
+## 6. Tools
+
+```
+Tools:
+- llm_chat: generates component code from specification
 ```
 
-### Dashboard metric card
-```tsx
-<Card>
-  <CardHeader className="flex flex-row items-center justify-between pb-2">
-    <CardTitle className="text-sm font-medium">{label}</CardTitle>
-    <Icon className="h-4 w-4 text-muted-foreground" />
-  </CardHeader>
-  <CardContent>
-    <div className="text-2xl font-bold">{value}</div>
-    <p className="text-xs text-muted-foreground">{change}</p>
-  </CardContent>
-</Card>
+## 7. Policies
+
+```
+Policies:
+- Never generate full applications — only components/pages
+- Never use inline styles — always Tailwind classes
+- Never truncate code — always complete, runnable output
+- Include exact imports for every library used
+- Dark mode enabled by default (dark class on html)
+- Responsive mobile-first layout required
+- One component per file, one file per component
 ```
 
-## Reglas
+## 8. Success Metrics
 
-1. NO generar apps completas — solo componentes/páginas individuales
-2. NO usar inline styles — siempre Tailwind classes
-3. NO truncar código — siempre completo
-4. Incluir imports exactos de cada librería
-5. Dark mode por defecto (`dark` class en html)
-6. Responsive mobile-first
-7. Un componente por archivo
+```gherkin
+Success Metrics:
+- generation_time: Given request When component generated Then seconds
+  Target: < 30 sec
+- zero_modification: Given generated component When reviewed Then no manual edits needed
+  Target: > 80%
+- compile_rate: Given generated code When compiled Then zero TypeScript errors
+  Target: > 95%
+```
+
+## 9. Failure Conditions
+
+```
+Failure Conditions:
+- Missing imports: generated code references undeclared libraries (detect via TypeScript check)
+- Type mismatch: prop types incompatible (detect via tsc compilation)
+- Runtime animation error: framer-motion conflict (detect via browser console)
+- Three.js WebGL incompatibility: canvas render error (detect via error event)
+```
+
+## 10. Recovery Procedure
+
+```
+Recovery Procedure:
+1. Re-request generation with more specific constraints
+2. If TypeScript errors → manually add missing imports, retry
+3. If animation errors → simplify motion props, fall back to CSS transitions
+4. If WebGL fails → provide non-3D fallback component
+5. Log failures to state/logs/skills/design.log
+```
+
+## 11. Business Value
+
+```
+Business Value: Premium UI components in under 30 seconds.
+```
+
+## 12. Parent OS
+
+```
+Parent OS: Dev
+```
+
+## 13. Version
+
+```
+Version: 1.0.0
+```
+
+## 14. Audit Trail
+
+```
+Audit Trail:
+- ADR: ADR-2026-DSN-001
+- Events: design:component:created, design:pattern:applied
+- Logs: state/logs/skills/design.log
+```

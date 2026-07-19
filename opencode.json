@@ -176,6 +176,12 @@
       "url": "http://localhost:5678",
       "enabled": true,
       "description": "n8n — workflow automation"
+    },
+    "adk": {
+      "type": "remote",
+      "url": "http://localhost:6401",
+      "enabled": true,
+      "description": "ADK Bridge — 36 agentes ADK (research, sales, support, onboarding, content, abe*)"
     }
   },
   "command": {
@@ -199,6 +205,10 @@
     "music": { "description": "Music — beats, canciones", "template": "Genera música, letras, portadas, distribuye", "agent": "music" },
     "doc": { "description": "Auto-Doc — genera docs de proceso (SPEC, SCORE, ADR, LECCION, gherkin, events)", "template": "Analiza la sesion actual de AGENTS.md y genera toda la documentacion de proceso siguiendo templates de process/templates/. Crea directorio en process/completed/, todos los archivos (SPEC.md, SCORE.md, ADR.md, LECCION.md, events.jsonl, gherkin/), y actualiza CATALOG.md.", "agent": "sdd-archive" },
     "plan": { "description": "Planning Gate — descompone objetivo en tareas y genera PLAN.yaml", "template": "Ejecuta plan-gate.py con el objetivo especificado: descomponer en tareas, estimar costo, validar contra truth/. Si no hay objetivo claro, pedir descomposicion primero." },
-    "verify": { "description": "Verification Pipeline — ejecuta truth gate, security gate, cost gate", "template": "Ejecuta verify-gate.py contra el plan activo: truth gate (contradice truth/), security gate (capabilities), cost gate (budget). Reporta resultados." }
+    "verify": { "description": "Verification Pipeline — ejecuta truth gate, security gate, cost gate", "template": "Ejecuta verify-gate.py contra el plan activo: truth gate (contradice truth/), security gate (capabilities), cost gate (budget). Reporta resultados." },
+    "adk": { "description": "ADK Bridge — agentes y capacidades", "template": "Lista agentes del ADK o consulta uno específico. Resuelve capacidades y las ejecuta si es necesario.", "agent": "agent-os" },
+    "sdk": { "description": "SDK Python/Node — herramientas del SDK", "template": "Usa el SDK de Sonora para health checks, tool calls, capabilities y skills. Compatible con Python (mcp/sdk/sonora_client.py) y Node.js (mcp/sdk/sonora-client.js).", "agent": "dev" },
+    "adr": { "description": "ADR Manager — registrar decisiones", "template": "Crea o consulta Architecture Decision Records en process/active/. Ayuda a documentar decisiones técnicas y por qué se tomaron.", "agent": "knowledge" },
+    "skill": { "description": "Skill Manager — crear, listar, completar skills", "template": "Lista skills disponibles, consulta una skill específica, o crea una nueva siguiendo SKILL-TEMPLATE.md. Verifica que cumpla los 14 campos.", "agent": "quality" }
   }
 }
