@@ -1,0 +1,21 @@
+# WhatsApp Responder — Responde automáticamente como ChatGPT
+# Install: ln -s /home/ubuntu/sonora-digital-corp/infra/systemd/whatsapp-responder.service /home/ubuntu/.config/systemd/user/
+# Enable:  systemctl --user enable --now whatsapp-responder
+
+[Unit]
+Description=WhatsApp Responder — ChatGPT-style auto-responder
+Documentation=https://github.com/sonoradigitalcorp-H/Sonora-Digital-Corp
+After=network.target
+Wants=whatsapp-webhook.service
+
+[Service]
+Type=simple
+ExecStart=/home/ubuntu/sonora-digital-corp/apps/whatsapp/responder-wrapper.sh
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+Restart=on-failure
+RestartSec=5
+StandardOutput=append:/home/ubuntu/sonora-digital-corp/state/logs/whatsapp-responder.log
+StandardError=append:/home/ubuntu/sonora-digital-corp/state/logs/whatsapp-responder.log
+
+[Install]
+WantedBy=default.target
