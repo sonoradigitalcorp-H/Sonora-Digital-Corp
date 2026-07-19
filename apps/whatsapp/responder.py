@@ -34,7 +34,7 @@ FOUNDER_PHONE = os.environ.get("FOUNDER_PHONE", "")
 
 # LLM config
 OPENROUTER_KEY = os.environ.get("OPENROUTER_API_KEY", "")
-LLM_MODEL = "openrouter/openai/gpt-4o-mini"
+LLM_MODEL = "opencode-go/deepseek-v4-flash"
 
 
 def _wacli(args: list, timeout: int = 30) -> dict:
