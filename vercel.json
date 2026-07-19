@@ -3,7 +3,8 @@
     "deploymentEnabled": { "main": true }
   },
   "framework": null,
-  "buildCommand": "echo 'static'",
+  "buildCommand": null,
+  "installCommand": null,
   "outputDirectory": "frontends",
   "cleanUrls": true,
   "trailingSlash": false,
