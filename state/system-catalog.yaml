@@ -1,0 +1,256 @@
+generated_at: '2026-07-19T16:26:49.620406+00:00'
+commit: 3c1a1a6b2ac5
+branch: main
+skills:
+  total: 55
+  complete_14_fields: 46
+  incomplete: 9
+  by_source:
+    sdc: 29
+    hermes: 12
+    openclaw: 6
+    process: 8
+  names:
+  - adk-manage
+  - adr-generate
+  - analytics
+  - audit-security
+  - automation
+  - capture-knowledge
+  - clone-service
+  - content
+  - creator
+  - deploy
+  - deploy-code
+  - design
+  - hermes-architect
+  - hermes-auditor
+  - hermes-consciencia
+  - hermes-demo-request
+  - hermes-freemium
+  - hermes-ia-explica
+  - hermes-mystic-info
+  - hermes-planes-precios
+  - hermes-qualify
+  - hermes-que-hace
+  - hermes-vision-cierre
+  - hermes-watchdog-status
+  - incident-response
+  - monitor
+  - monitor-service
+  - nsfw
+  - openclaw-browser
+  - openclaw-github
+  - openclaw-memory
+  - openclaw-policy
+  - openclaw-telegram
+  - openclaw-whatsapp
+  - payments
+  - plan-strategy
+  - presentar.md
+  - auto-doc
+  - gsd
+  - sdd-apply
+  - sdd-archive
+  - sdd-design
+  - sdd-orchestrator
+  - sdd-spec
+  - sdd-verify
+  - qualify-lead
+  - resolve-ticket
+  - sdk-python
+  - skill-create
+  - social
+  - spawn-agent
+  - track-finance
+  - validate-quality
+  - whatsapp-catalog
+  - whatsapp-onboarding
+products:
+  total: 13
+  with_api:
+  - &id001
+    name: affiliates
+    has_api: true
+    has_frontend: false
+    has_tests: true
+    port: null
+  - &id002
+    name: notifier
+    has_api: true
+    has_frontend: true
+    has_tests: true
+    port: null
+  - &id003
+    name: order_tracker
+    has_api: true
+    has_frontend: false
+    has_tests: true
+    port: null
+  with_frontend:
+  - cyber_diagnosis
+  - notifier
+  without_frontend:
+  - affiliates
+  - order_tracker
+  all:
+  - name: abe-music
+    has_api: false
+    has_frontend: false
+    has_tests: false
+    port: null
+  - *id001
+  - name: catalog
+    has_api: false
+    has_frontend: false
+    has_tests: false
+    port: null
+  - name: cyber_diagnosis
+    has_api: false
+    has_frontend: true
+    has_tests: false
+    port: null
+  - name: docs
+    has_api: false
+    has_frontend: false
+    has_tests: false
+    port: null
+  - name: mystika
+    has_api: false
+    has_frontend: false
+    has_tests: false
+    port: null
+  - *id002
+  - *id003
+  - name: presentations
+    has_api: false
+    has_frontend: false
+    has_tests: false
+    port: null
+  - name: production
+    has_api: false
+    has_frontend: false
+    has_tests: false
+    port: null
+  - name: social
+    has_api: false
+    has_frontend: false
+    has_tests: false
+    port: null
+  - name: sonora-client
+    has_api: false
+    has_frontend: false
+    has_tests: false
+    port: null
+  - name: sonora-dashboard
+    has_api: false
+    has_frontend: false
+    has_tests: false
+    port: null
+services:
+  mcp_servers: 26
+  mcp_server_names:
+  - content_mcp.py
+  - supabase_mcp.py
+  - lora_mcp.py
+  - ffmpeg_mcp.py
+  - onboarding_mcp.py
+  - cost_tracker_mcp.py
+  - generate_mcp.py
+  - whisper_mcp.py
+  - wacli_mcp.py
+  - hasura_mcp.py
+  - routing_mcp.py
+  - provision_mcp.py
+  - commissions_mcp.py
+  - credit_mcp.py
+  - pricing_mcp.py
+  - openlovable_mcp.py
+  - upload_mcp.py
+  - engram_mcp.py
+  - omnivoice_mcp.py
+  - payments_mcp.py
+  - voice_clone_mcp.py
+  - playwright_mcp.py
+  - llm_mcp.py
+  - rag_mcp.py
+  - mercadopago_mcp.py
+  - firecrawl_mcp.py
+  adk_agents: 36
+  systemd_services: 6
+  systemd_names:
+  - whatsapp-webhook
+  - sonora-adk
+  - sonora-notifier
+  - engram-obsidian-export
+  - sonora-tracker
+  - sonora-affiliates
+  ports_found:
+  - 6380
+agents:
+  registry_agents: 14
+  registry_names:
+  - creator-agent
+  - quality-agent
+  - monitor-agent
+  - ceo-agent
+  - marketing-agent
+  - content-agent
+  - sales-agent
+  - support-agent
+  - voice-agent
+  - clone-agent
+  - research-agent
+  - video-agent
+  - finance-agent
+  - evolution
+  opencode_subagents: 24
+  opencode_names:
+  - mystic
+  - hermes
+  - openclaw
+  - sdd
+  - sdd-spec
+  - sdd-design
+  - sdd-apply
+  - sdd-verify
+  - sdd-archive
+  - sales
+  - dev
+  - support
+  - agent-os
+  - knowledge
+  - finance
+  - security
+  - ops
+  - quality
+  - strategy
+  - builder
+  - reviewer
+  - social
+  - content
+  - music
+events:
+  total_events: 118
+  total_categories: 29
+  catalog_version: 3
+adrs:
+  active: 9
+  active_names:
+  - ADR-20260703-A
+  - ADR-20260704-ABE-001
+  - ADR-20260718-CLONE-SERVICE
+  - ADR-20260718-ONBOARDING
+  - ADR-20260719-PRODUCTOS-NUEVOS
+  - ADR-20260719-SDK-PYTHON
+  - ADR-20260719-SKILL-STANDARD
+  - ADR-20260719-UNIFICACION-ECOSISTEMAS
+  - ADR-20260719-WHATSAPP-OS-FASE1
+  completed: 29
+health_vps:
+  notifier: online
+  tracker: online
+  affiliates: online
+  adk_bridge: unknown
+  dashboard: unknown
+  adk: online
