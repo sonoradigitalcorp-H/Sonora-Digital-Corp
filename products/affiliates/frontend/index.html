@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonora Affiliates — Dashboard</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+:root {
+  --bg: #0a0a0f;
+  --surface: #13131a;
+  --card: #1a1a24;
+  --border: #2a2a3e;
+  --primary: #6366f1;
+  --primary-glow: rgba(99,102,241,.25);
+  --accent: #22d3ee;
+  --green: #10b981;
+  --yellow: #f59e0b;
+  --red: #ef4444;
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --radius: 12px;
+}
+body { font-family: Inter, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.app { max-width: 1280px; margin: 0 auto; padding: 24px 32px; }
+
+.header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.header h1 { font-size: 24px; font-weight: 700; }
+.header h1 span { color: var(--primary); }
+.header .subtitle { color: var(--text-dim); font-size: 14px; margin-top: 4px; }
+.back-link { color: var(--text-dim); text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; transition: .2s; }
+.back-link:hover { color: var(--primary); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px; transition: .2s;
+}
+.card:hover { border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); }
+.card .label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.card .value { font-size: 28px; font-weight: 700; }
+.card .value.green { color: var(--green); }
+.card .value.accent { color: var(--accent); }
+.card .value.primary { color: var(--primary); }
+.card .value.yellow { color: var(--yellow); }
+
+.dual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+@media(max-width:1024px){ .dual-grid { grid-template-columns: 1fr; } }
+.tri-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+@media(max-width:1024px){ .tri-grid { grid-template-columns: 1fr; } }
+
+.section { margin-bottom: 32px; }
+.section h2 { font-size: 18px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.section h2 .badge { font-size: 12px; background: var(--primary); color: #fff; padding: 2px 10px; border-radius: 12px; font-weight: 500; }
+
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
+tr:hover td { background: rgba(99,102,241,.04); }
+tr.clickable { cursor: pointer; }
+tr.clickable:hover td { background: rgba(99,102,241,.08); }
+td .rank { display: inline-flex; width: 24px; height: 24px; align-items: center; justify-content: center; border-radius: 50%; font-weight: 700; font-size: 12px; background: var(--surface); }
+td .rank.gold { background: #f59e0b33; color: var(--yellow); }
+td .rank.silver { background: #94a3b833; color: #cbd5e1; }
+td .rank.bronze { background: #b4530933; color: #d97706; }
+
+.status-badge {
+  display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;
+}
+.status-badge.active { background: #10b98133; color: var(--green); }
+.status-badge.inactive { background: #2a2a3e; color: var(--text-dim); }
+.status-badge.pending { background: #f59e0b33; color: var(--yellow); }
+.status-badge.paid { background: #6366f133; color: var(--primary); }
+
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.form-group input, .form-group select {
+  width: 100%; padding: 10px 12px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text); font-family: Inter; font-size: 14px; transition: .2s;
+}
+.form-group input:focus, .form-group select:focus {
+  outline: none; border-color: var(--primary); box-shadow: 0 0 12px var(--primary-glow);
+}
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 8px;
+  font-family: Inter; font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: .2s;
+}
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: #4f46e5; box-shadow: 0 0 16px var(--primary-glow); }
+.btn-accent { background: var(--accent); color: #000; }
+.btn-accent:hover { background: #0fc; }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+
+.search-input {
+  width: 100%; padding: 10px 14px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text); font-family: Inter; font-size: 14px; transition: .2s; margin-bottom: 12px;
+}
+.search-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 12px var(--primary-glow); }
+
+.empty { text-align: center; padding: 40px; color: var(--text-dim); }
+.empty .icon { font-size: 48px; margin-bottom: 12px; opacity: .4; }
+
+.toast {
+  position: fixed; top: 24px; right: 24px; padding: 12px 20px; border-radius: 8px;
+  font-size: 14px; z-index: 999; animation: slideIn .3s ease; max-width: 360px;
+}
+.toast.success { background: var(--green); color: #fff; }
+.toast.error { background: var(--red); color: #fff; }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+/* Modal */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,.6);
+  z-index: 100; align-items: center; justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 24px; max-width: 560px; width: 90%; max-height: 80vh; overflow-y: auto;
+}
+.modal h3 { font-size: 18px; font-weight: 600; margin-bottom: 16px; }
+.modal .close-btn { float: right; background: none; border: none; color: var(--text-dim); font-size: 24px; cursor: pointer; }
+.modal .close-btn:hover { color: var(--text); }
+
+.ref-link {
+  display: inline-block; background: var(--surface); padding: 8px 12px; border-radius: 6px;
+  font-family: monospace; font-size: 13px; color: var(--accent); word-break: break-all;
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div>
+      <a class="back-link" href="/">← Back to home</a>
+      <h1><span>◈</span> Affiliates Portal</h1>
+      <div class="subtitle">Referral program · commissions · payouts</div>
+    </div>
+  </div>
+
+  <div class="grid" id="stats-cards"></div>
+
+  <div class="dual-grid">
+    <div class="section">
+      <h2>🏆 Leaderboard</h2>
+      <div class="card" style="padding:0;overflow:auto">
+        <table><thead><tr><th>#</th><th>Name</th><th>Ref Code</th><th>Tokens</th><th>MXN</th><th>Referrals</th></tr></thead><tbody id="leaderboard-table"></tbody></table>
+      </div>
+    </div>
+    <div class="section">
+      <h2>New Affiliate</h2>
+      <div class="card">
+        <div class="form-group">
+          <label>Name</label>
+          <input id="aff-name" placeholder="Full name">
+        </div>
+        <div class="form-group">
+          <label>Email</label>
+          <input id="aff-email" placeholder="email@example.com">
+        </div>
+        <div class="form-group">
+          <label>Phone</label>
+          <input id="aff-phone" placeholder="+521234567890">
+        </div>
+        <button class="btn btn-primary" onclick="createAffiliate()">+ Create Affiliate</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Affiliates <span class="badge" id="affiliates-count">0</span></h2>
+    <input class="search-input" id="aff-search" placeholder="Search by name, email, or ref code..." oninput="renderAffiliates()">
+    <div class="card" style="padding:0;overflow:auto">
+      <table><thead><tr><th>Name</th><th>Ref Code</th><th>Tokens</th><th>MXN</th><th>Referrals</th><th>Status</th></tr></thead><tbody id="affiliates-table"></tbody></table>
+    </div>
+  </div>
+
+  <div class="dual-grid">
+    <div class="section">
+      <h2>Request Payout</h2>
+      <div class="card">
+        <div class="form-group">
+          <label>Affiliate ID</label>
+          <input id="payout-aff-id" placeholder="e.g. AF-XXXXXXXX">
+        </div>
+        <div class="form-group">
+          <label>Amount (MXN)</label>
+          <input id="payout-amount" type="number" step="0.01" min="0" placeholder="0.00">
+        </div>
+        <div class="form-group">
+          <label>Method</label>
+          <select id="payout-method">
+            <option value="transferencia">Transferencia</option>
+            <option value="stripe">Stripe</option>
+            <option value="mercadopago">Mercado Pago</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Account Info</label>
+          <input id="payout-account" placeholder="CLABE, email or alias">
+        </div>
+        <button class="btn btn-accent" onclick="requestPayout()">Request Payout</button>
+      </div>
+    </div>
+    <div class="section">
+      <h2>Payouts</h2>
+      <div class="card" style="padding:0;overflow:auto;max-height:300px">
+        <table><thead><tr><th>ID</th><th>Amount</th><th>Method</th><th>Status</th></tr></thead><tbody id="payouts-table"></tbody></table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Earnings Modal -->
+<div class="modal-overlay" id="earnings-modal">
+  <div class="modal">
+    <button class="close-btn" onclick="closeEarnings()">&times;</button>
+    <h3 id="earnings-title">Earnings</h3>
+    <div style="display:flex;gap:16px;margin-bottom:16px" id="earnings-summary"></div>
+    <table><thead><tr><th>Date</th><th>Tokens</th><th>MXN</th><th>Source</th><th>Description</th></tr></thead><tbody id="earnings-table"></tbody></table>
+  </div>
+</div>
+
+<script>
+const API = `http://localhost:6400`;
+let affiliatesData = [];
+
+async function fetchJSON(path, opts) {
+  try {
+    const r = await fetch(`${API}${path}`, { ...opts, headers: { 'Content-Type': 'application/json', ...opts?.headers } });
+    if (!r.ok) { const e = await r.json().catch(()=>{}); throw new Error(e?.detail || r.statusText); }
+    return await r.json();
+  } catch(e) { console.warn('fetch failed:', path, e); return null; }
+}
+
+function $(id) { return document.getElementById(id); }
+
+function toast(msg, type = 'success') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// ─── Stats ───
+async function loadStats() {
+  const data = await fetchJSON(`/affiliates/stats`);
+  if (!data) return;
+  $('stats-cards').innerHTML = [
+    { label: 'Total Affiliates', value: data.total_affiliates || 0, cls: '' },
+    { label: 'Active', value: data.active_affiliates || 0, cls: 'green' },
+    { label: 'Total Referrals', value: data.total_referrals || 0, cls: 'primary' },
+    { label: 'Tokens Earned', value: (data.total_tokens_earned || 0).toLocaleString(), cls: 'accent' },
+    { label: 'MXN Earned', value: `$${(data.total_mxn_earned || 0).toLocaleString()}`, cls: 'yellow' },
+    { label: 'Pending Payouts', value: `$${(data.pending_payouts_mxn || 0).toLocaleString()}`, cls: '' },
+  ].map(c => `
+    <div class="card">
+      <div class="label">${c.label}</div>
+      <div class="value ${c.cls}">${c.value}</div>
+    </div>
+  `).join('');
+}
+
+// ─── Leaderboard ───
+async function loadLeaderboard() {
+  const data = await fetchJSON(`/affiliates/leaderboard?limit=10`);
+  if (!data || !data.leaderboard?.length) {
+    $('leaderboard-table').innerHTML = '<tr><td colspan="6" class="empty"><div class="icon">🏆</div>No affiliates yet</td></tr>';
+    return;
+  }
+  $('leaderboard-table').innerHTML = data.leaderboard.map(a => `
+    <tr>
+      <td><span class="rank ${a.rank === 1 ? 'gold' : a.rank === 2 ? 'silver' : a.rank === 3 ? 'bronze' : ''}">${a.rank}</span></td>
+      <td><strong>${a.name}</strong></td>
+      <td><code style="color:var(--accent);font-size:12px">${a.ref_code}</code></td>
+      <td>${(a.total_tokens || 0).toLocaleString()}</td>
+      <td>$${(a.total_mxn || 0).toLocaleString()}</td>
+      <td>${a.referrals_count || 0}</td>
+    </tr>
+  `).join('');
+}
+
+// ─── Affiliates ───
+async function loadAffiliates() {
+  const data = await fetchJSON(`/affiliates`);
+  if (!data) return;
+  affiliatesData = data.affiliates || [];
+  $('affiliates-count').textContent = data.totals?.total || 0;
+  renderAffiliates();
+}
+
+function renderAffiliates() {
+  const q = $('aff-search').value.toLowerCase();
+  const filtered = affiliatesData.filter(a =>
+    a.name.toLowerCase().includes(q) ||
+    a.email.toLowerCase().includes(q) ||
+    a.ref_code.toLowerCase().includes(q)
+  );
+  if (!filtered.length) {
+    $('affiliates-table').innerHTML = '<tr><td colspan="6" class="empty"><div class="icon">👥</div>No affiliates found</td></tr>';
+    return;
+  }
+  $('affiliates-table').innerHTML = filtered.map(a => `
+    <tr class="clickable" onclick="showEarnings('${a.id}', '${a.name}')">
+      <td><strong>${a.name}</strong><br><span style="font-size:11px;color:var(--text-dim)">${a.email || ''}</span></td>
+      <td><code style="color:var(--accent);font-size:12px">${a.ref_code}</code></td>
+      <td>${(a.total_tokens || 0).toLocaleString()}</td>
+      <td>$${(a.total_mxn || 0).toLocaleString()}</td>
+      <td>${a.referrals_count || 0}</td>
+      <td><span class="status-badge ${a.active ? 'active' : 'inactive'}">${a.active ? 'active' : 'inactive'}</span></td>
+    </tr>
+  `).join('');
+}
+
+async function createAffiliate() {
+  const name = $('aff-name').value.trim();
+  if (!name) { toast('Name is required', 'error'); return; }
+  const email = $('aff-email').value.trim();
+  const phone = $('aff-phone').value.trim();
+  const res = await fetchJSON(`/affiliates`, {
+    method: 'POST',
+    body: JSON.stringify({ name, email, phone, tenant: 'default' }),
+  });
+  if (res && res.ok) {
+    toast(`Affiliate created: ${res.affiliate.ref_code}`);
+    $('aff-name').value = ''; $('aff-email').value = ''; $('aff-phone').value = '';
+    loadAll();
+  } else {
+    toast('Failed to create affiliate', 'error');
+  }
+}
+
+// ─── Earnings Modal ───
+async function showEarnings(affiliateId, name) {
+  $('earnings-title').textContent = `Earnings: ${name}`;
+  $('earnings-modal').classList.add('open');
+  const data = await fetchJSON(`/earnings?affiliate_id=${affiliateId}`);
+  if (!data) {
+    $('earnings-table').innerHTML = '<tr><td colspan="5" class="empty">No earnings yet</td></tr>';
+    return;
+  }
+  $('earnings-summary').innerHTML = `
+    <div class="card" style="flex:1;padding:12px"><div class="label">Tokens</div><div class="value primary" style="font-size:20px">${(data.total_tokens || 0).toLocaleString()}</div></div>
+    <div class="card" style="flex:1;padding:12px"><div class="label">MXN</div><div class="value yellow" style="font-size:20px">$${(data.total_mxn || 0).toLocaleString()}</div></div>
+    <div class="card" style="flex:1;padding:12px"><div class="label">Entries</div><div class="value" style="font-size:20px">${data.total || 0}</div></div>
+  `;
+  const entries = data.entries || [];
+  if (!entries.length) {
+    $('earnings-table').innerHTML = '<tr><td colspan="5" class="empty">No earnings yet</td></tr>';
+    return;
+  }
+  $('earnings-table').innerHTML = entries.map(e => `
+    <tr>
+      <td style="font-size:12px;color:var(--text-dim)">${(e.created_at || '').slice(0, 10)}</td>
+      <td style="color:var(--accent)">+${e.amount_tokens || 0}</td>
+      <td style="color:var(--yellow)">+$${(e.amount_mxn || 0).toFixed(2)}</td>
+      <td><span class="status-badge paid">${e.source || '—'}</span></td>
+      <td style="color:var(--text-dim);font-size:13px">${e.description || ''}</td>
+    </tr>
+  `).join('');
+}
+
+function closeEarnings() {
+  $('earnings-modal').classList.remove('open');
+}
+
+// ─── Payouts ───
+async function loadPayouts() {
+  const data = await fetchJSON(`/payouts`);
+  if (!data) return;
+  const payouts = data.payouts || [];
+  if (!payouts.length) {
+    $('payouts-table').innerHTML = '<tr><td colspan="4" class="empty"><div class="icon">💰</div>No payouts yet</td></tr>';
+    return;
+  }
+  $('payouts-table').innerHTML = payouts.map(p => `
+    <tr>
+      <td style="font-size:12px;color:var(--text-dim)">${p.id}</td>
+      <td>$${(p.amount_mxn || 0).toFixed(2)}</td>
+      <td style="font-size:12px">${p.method || '—'}</td>
+      <td><span class="status-badge ${p.status === 'paid' ? 'paid' : 'pending'}">${p.status || 'pending'}</span></td>
+    </tr>
+  `).join('');
+}
+
+async function requestPayout() {
+  const affiliate_id = $('payout-aff-id').value.trim();
+  if (!affiliate_id) { toast('Affiliate ID is required', 'error'); return; }
+  const amount_mxn = parseFloat($('payout-amount').value);
+  if (!amount_mxn || amount_mxn <= 0) { toast('Invalid amount', 'error'); return; }
+  const method = $('payout-method').value;
+  const account_info = $('payout-account').value.trim();
+  const res = await fetchJSON(`/payouts`, {
+    method: 'POST',
+    body: JSON.stringify({ affiliate_id, amount_mxn, method, account_info }),
+  });
+  if (res && res.ok) {
+    toast(`Payout requested: ${res.payout.id}`);
+    $('payout-aff-id').value = ''; $('payout-amount').value = ''; $('payout-account').value = '';
+    loadPayouts(); loadStats();
+  } else {
+    toast('Failed to request payout', 'error');
+  }
+}
+
+// ─── Init ───
+async function loadAll() {
+  await Promise.all([loadStats(), loadLeaderboard(), loadAffiliates(), loadPayouts()]);
+}
+loadAll();
+setInterval(loadAll, 15000);
+</script>
+</body>
+</html>

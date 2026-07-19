@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonora OS — Command Center</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-yaml/4.1.0/js-yaml.min.js"></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+:root {
+  --bg: #0a0a0f;
+  --surface: #13131a;
+  --card: #1a1a24;
+  --border: #2a2a3e;
+  --primary: #6366f1;
+  --primary-glow: rgba(99,102,241,.25);
+  --accent: #22d3ee;
+  --green: #10b981;
+  --yellow: #f59e0b;
+  --red: #ef4444;
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --radius: 12px;
+}
+body { font-family: Inter, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.app { max-width: 1360px; margin: 0 auto; padding: 20px 24px; }
+
+/* ─── Header ─── */
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 20px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); margin-bottom: 20px; flex-wrap: wrap; gap: 12px;
+}
+.header-left { display: flex; align-items: center; gap: 14px; }
+.header-logo { font-size: 22px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
+.header-logo span { color: var(--primary); }
+.header-logo small { font-size: 10px; font-weight: 400; color: var(--text-dim); display: block; }
+.header-right { display: flex; align-items: center; gap: 16px; font-size: 13px; flex-wrap: wrap; }
+.status-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 14px; border-radius: 20px; font-size: 13px; font-weight: 600;
+}
+.status-badge.all-good { background: #10b98122; color: var(--green); border: 1px solid #10b98144; }
+.status-badge.warning { background: #f59e0b22; color: var(--yellow); border: 1px solid #f59e0b44; }
+.status-badge.critical { background: #ef444422; color: var(--red); border: 1px solid #ef444444; }
+.status-badge .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.status-badge.all-good .dot { background: var(--green); animation: pulse 2s infinite; }
+.status-badge.warning .dot { background: var(--yellow); animation: pulse 2s infinite; }
+.status-badge.critical .dot { background: var(--red); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+.header-time { color: var(--text-dim); }
+.sync-btn {
+  background: var(--primary); color: #fff; border: none; padding: 6px 16px;
+  border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: .2s; font-family: Inter, sans-serif;
+}
+.sync-btn:hover { box-shadow: 0 0 16px var(--primary-glow); }
+.sync-btn:disabled { opacity: .5; cursor: not-allowed; }
+
+/* ─── Grid ─── */
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 14px; margin-bottom: 18px; }
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 18px; transition: .2s;
+}
+.card:hover { border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); }
+.card .label { font-size: 11px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.card .value { font-size: 26px; font-weight: 700; }
+.card .sub { font-size: 12px; color: var(--text-dim); margin-top: 2px; }
+
+.dual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 18px; }
+@media(max-width:900px){ .dual-grid { grid-template-columns: 1fr; } }
+
+.section-title {
+  font-size: 16px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+
+/* ─── VPS Health ─── */
+.vps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.vps-item {
+  display: flex; align-items: center; gap: 10px; padding: 12px 14px;
+  background: var(--surface); border-radius: 8px; border: 1px solid var(--border);
+}
+.vps-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.vps-dot.online { background: var(--green); box-shadow: 0 0 8px #10b98166; }
+.vps-dot.offline { background: var(--red); box-shadow: 0 0 8px #ef444466; }
+.vps-dot.unknown { background: var(--yellow); box-shadow: 0 0 8px #f59e0b66; }
+.vps-name { font-size: 13px; font-weight: 500; }
+.vps-status { font-size: 11px; color: var(--text-dim); }
+
+/* ─── Alerts ─── */
+.alerts-list { display: flex; flex-direction: column; gap: 8px; }
+.alert-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 10px 14px; background: var(--surface); border-radius: 8px;
+  border-left: 3px solid var(--yellow); font-size: 13px;
+}
+.alert-item.critical { border-left-color: var(--red); }
+.alert-item .icon { flex-shrink: 0; font-size: 16px; }
+.alert-item .msg { color: var(--text-dim); }
+.alert-item .msg strong { color: var(--text); }
+
+/* ─── Timeline ─── */
+.timeline { max-height: 360px; overflow-y: auto; }
+.timeline-item {
+  display: flex; gap: 12px; padding: 8px 12px;
+  border-bottom: 1px solid var(--border); align-items: flex-start;
+}
+.timeline-item:hover { background: rgba(99,102,241,.04); }
+.timeline-time { font-size: 11px; color: var(--text-dim); flex-shrink: 0; white-space: nowrap; padding-top: 2px; width: 72px; }
+.timeline-event { font-size: 13px; font-weight: 500; color: var(--primary); flex-shrink: 0; }
+.timeline-payload { font-size: 12px; color: var(--text-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ─── Quick Commands ─── */
+.cmd-grid { display: flex; gap: 10px; flex-wrap: wrap; }
+.cmd-btn {
+  padding: 10px 20px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text); font-size: 14px; font-weight: 500;
+  cursor: pointer; transition: .2s; font-family: 'Inter', monospace;
+}
+.cmd-btn:hover { border-color: var(--primary); background: var(--card); box-shadow: 0 0 12px var(--primary-glow); }
+.cmd-btn .key { color: var(--primary); font-weight: 700; }
+
+/* ─── Three ─── */
+#three-container {
+  width: 100%; height: 240px; border-radius: var(--radius); overflow: hidden;
+  background: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0f 100%);
+  position: relative; margin-bottom: 18px;
+}
+#three-container .overlay {
+  position: absolute; bottom: 12px; left: 14px; font-size: 11px; color: var(--text-dim);
+  background: rgba(0,0,0,.6); padding: 4px 10px; border-radius: 6px;
+}
+
+/* ─── Empty ─── */
+.empty-state { text-align: center; padding: 32px; color: var(--text-dim); font-size: 14px; }
+.empty-state .icon { font-size: 32px; margin-bottom: 8px; opacity: .4; }
+
+/* ─── Loading ─── */
+.loading { text-align: center; padding: 60px; color: var(--text-dim); }
+.loading .spinner { display: inline-block; width: 24px; height: 24px; border: 2px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="loading" id="loading"><div class="spinner"></div><br>Cargando Command Center...</div>
+
+  <div id="dashboard" style="display:none">
+    <div class="header">
+      <div class="header-left">
+        <div class="header-logo"><span>◈</span><div>Sonora OS <small>command center</small></div></div>
+        <span class="status-badge" id="status-badge"><span class="dot"></span><span id="status-text">Loading...</span></span>
+      </div>
+      <div class="header-right">
+        <span class="header-time">🔄 <span id="last-sync">—</span></span>
+        <span class="header-time" id="last-updated">Actualizado: —</span>
+        <button class="sync-btn" id="sync-btn" onclick="syncToVPS()">⬡ Sync to VPS</button>
+      </div>
+    </div>
+
+    <div class="grid" id="metric-cards"></div>
+
+    <div class="dual-grid">
+      <div class="card">
+        <div class="section-title">🖥 VPS Health</div>
+        <div class="vps-grid" id="vps-health"></div>
+      </div>
+      <div class="card">
+        <div class="section-title">⚠ Alerts</div>
+        <div class="alerts-list" id="alerts-list"></div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px">
+      <div class="section-title">⚡ Timeline <span class="header-time" style="font-weight:400;font-size:12px">(últimos eventos)</span></div>
+      <div class="timeline" id="timeline"></div>
+    </div>
+
+    <div class="card" style="margin-bottom:18px">
+      <div class="section-title">⌨ Quick Commands</div>
+      <div class="cmd-grid">
+        <button class="cmd-btn" onclick="navigator.clipboard?.writeText('/catalog')"><span class="key">/catalog</span> — View system catalog</button>
+        <button class="cmd-btn" onclick="navigator.clipboard?.writeText('/generar-nicho')"><span class="key">/generar-nicho</span> — Generate niche</button>
+        <button class="cmd-btn" onclick="navigator.clipboard?.writeText('/completar-producto')"><span class="key">/completar-producto</span> — Complete product</button>
+      </div>
+    </div>
+
+    <div id="three-container"><span class="overlay">◈ Sonora Orb · 3D</span></div>
+  </div>
+</div>
+
+<script>
+const CATALOG_PATH = '../../state/system-catalog.yaml';
+const EVENTS_PATH = '../../state/events/events.jsonl';
+
+async function loadYAML(path) {
+  const r = await fetch(path);
+  const text = await r.text();
+  return jsyaml.load(text);
+}
+
+async function loadEvents(path) {
+  try {
+    const r = await fetch(path);
+    const text = await r.text();
+    return text.trim().split('\n').filter(Boolean).map(line => {
+      try { return JSON.parse(line); } catch(e) { return null; }
+    }).filter(Boolean);
+  } catch(e) { return []; }
+}
+
+function truncate(str, len) {
+  if (!str) return '';
+  return str.length > len ? str.slice(0, len) + '…' : str;
+}
+
+function formatTime(ts) {
+  if (!ts) return '—';
+  try { return new Date(ts).toLocaleString(); } catch(e) { return String(ts); }
+}
+
+function timeAgo(ts) {
+  if (!ts) return '—';
+  const diff = Date.now() - new Date(ts).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'justo ahora';
+  if (mins < 60) return `hace ${mins} min`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `hace ${hrs}h`;
+  return `hace ${Math.floor(hrs/24)}d`;
+}
+
+function $(id) { return document.getElementById(id); }
+
+function getSystemStatus(data) {
+  const vps = data.health_vps || {};
+  const vals = Object.values(vps);
+  const hasOffline = vals.some(v => v === 'offline');
+  const hasUnknown = vals.some(v => v === 'unknown');
+  if (vals.every(v => v === 'online')) return { text: 'All Good', cls: 'all-good' };
+  if (hasOffline) return { text: 'Critical', cls: 'critical' };
+  if (hasUnknown) return { text: 'Warnings', cls: 'warning' };
+  return { text: 'Unknown', cls: 'warning' };
+}
+
+function renderHeader(data) {
+  const status = getSystemStatus(data);
+  const badge = $('status-badge');
+  badge.className = `status-badge ${status.cls}`;
+  $('status-text').textContent = `● ${status.text}`;
+  $('last-sync').textContent = timeAgo(data.generated_at);
+  $('last-updated').textContent = `Actualizado: ${formatTime(data.generated_at)}`;
+}
+
+function renderMetrics(data) {
+  const s = data.skills || {};
+  const p = data.products || {};
+  const sv = data.services || {};
+  const a = data.agents || {};
+  const e = data.events || {};
+  const adr = data.adrs || {};
+  const totalAgents = (a.registry_agents || 0) + (a.opencode_subagents || 0);
+  const cards = [
+    { label: 'Skills', value: s.total || 0, sub: `${s.complete_14_fields || 0} completos, ${s.incomplete || 0} incompletos` },
+    { label: 'Products', value: p.total || 0, sub: `${(p.with_api||[]).length} con API` },
+    { label: 'MCP Servers', value: sv.mcp_servers || 0, sub: `${sv.adk_agents || 0} ADK agents` },
+    { label: 'Agents', value: totalAgents, sub: `${a.registry_agents||0} registry · ${a.opencode_subagents||0} opencode` },
+    { label: 'ADRs', value: adr.active || 0, sub: `${adr.completed || 0} completados` },
+    { label: 'Events', value: e.total_events || 0, sub: `${e.total_categories || 0} categorías · v${e.catalog_version || '?'}` },
+  ];
+  $('metric-cards').innerHTML = cards.map(c => `
+    <div class="card">
+      <div class="label">${c.label}</div>
+      <div class="value">${c.value}</div>
+      ${c.sub ? `<div class="sub">${c.sub}</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function renderVPSHealth(data) {
+  const vps = data.health_vps || {};
+  const displayNames = { notifier: 'Notifier', tracker: 'Tracker', affiliates: 'Affiliates', adk: 'ADK', adk_bridge: 'ADK Bridge', dashboard: 'Dashboard' };
+  const entries = Object.entries(vps).filter(([k]) => k in displayNames);
+  $('vps-health').innerHTML = entries.map(([key, val]) => `
+    <div class="vps-item">
+      <span class="vps-dot ${val === 'online' ? 'online' : val === 'offline' ? 'offline' : 'unknown'}"></span>
+      <div><div class="vps-name">${displayNames[key] || key}</div><div class="vps-status">${val}</div></div>
+    </div>
+  `).join('');
+}
+
+function renderAlerts(data) {
+  const alerts = [];
+  const p = data.products || {};
+  const s = data.skills || {};
+  const vps = data.health_vps || {};
+
+  if (p.without_frontend && p.without_frontend.length) {
+    const names = p.without_frontend.map(n => `"${n}"`).join(', ');
+    alerts.push({ icon: '⚠️', msg: `Products without frontend: <strong>${names}</strong>`, critical: false });
+  }
+
+  if (s.incomplete && s.incomplete > 0) {
+    const pct = s.total ? ((s.incomplete / s.total) * 100).toFixed(1) : 0;
+    alerts.push({ icon: '📋', msg: `<strong>${s.incomplete}</strong> skills incomplete (${pct}% of ${s.total})`, critical: false });
+  }
+
+  for (const [key, val] of Object.entries(vps)) {
+    if (val === 'offline') alerts.unshift({ icon: '🔴', msg: `<strong>${key}</strong> is offline`, critical: true });
+    if (val === 'unknown') alerts.push({ icon: '⚪', msg: `<strong>${key}</strong> status unknown`, critical: false });
+  }
+
+  if (!alerts.length) {
+    alerts.push({ icon: '✅', msg: 'All systems operational', critical: false });
+  }
+
+  $('alerts-list').innerHTML = alerts.map(a => `
+    <div class="alert-item ${a.critical ? 'critical' : ''}">
+      <span class="icon">${a.icon}</span>
+      <span class="msg">${a.msg}</span>
+    </div>
+  `).join('');
+}
+
+function renderTimeline(events) {
+  const container = $('timeline');
+  if (!events || !events.length) {
+    container.innerHTML = '<div class="empty-state"><div class="icon">⚡</div>No events yet</div>';
+    return;
+  }
+  const last20 = events.slice(-20).reverse();
+  container.innerHTML = last20.map(e => {
+    const ts = e.timestamp || '';
+    const time = ts ? new Date(ts).toLocaleTimeString() : '—';
+    const eventName = e.event || e.type || 'unknown';
+    const payload = e.payload ? truncate(JSON.stringify(e.payload), 100) : '';
+    return `<div class="timeline-item">
+      <span class="timeline-time">${time}</span>
+      <span class="timeline-event">${eventName}</span>
+      <span class="timeline-payload">${payload}</span>
+    </div>`;
+  }).join('');
+}
+
+function initThree() {
+  const container = $('three-container');
+  const w = container.clientWidth, h = 240;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(60, w/h, .1, 100);
+  camera.position.set(0, 1.5, 5);
+
+  const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+  renderer.setSize(w, h);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  container.appendChild(renderer.domElement);
+
+  const count = 350;
+  const positions = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
+  for (let i = 0; i < count; i++) {
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    const r = 1.2 + Math.random() * 1.8;
+    positions[i*3]     = r * Math.sin(phi) * Math.cos(theta);
+    positions[i*3+1]   = r * Math.cos(phi);
+    positions[i*3+2]   = r * Math.sin(phi) * Math.sin(theta);
+    const c = new THREE.Color().setHSL(.67 + Math.random() * .12, .8, .5 + Math.random() * .3);
+    colors[i*3] = c.r; colors[i*3+1] = c.g; colors[i*3+2] = c.b;
+  }
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  const mat = new THREE.PointsMaterial({ size: .07, vertexColors: true, transparent: true, opacity: .8, blending: THREE.AdditiveBlending });
+  const particles = new THREE.Points(geo, mat);
+  scene.add(particles);
+
+  const glowGeo = new THREE.SphereGeometry(.3, 16, 16);
+  const glowMat = new THREE.MeshBasicMaterial({ color: 0x6366f1, transparent: true, opacity: .25 });
+  const glow = new THREE.Mesh(glowGeo, glowMat);
+  scene.add(glow);
+
+  const ringGeo = new THREE.TorusGeometry(1.6, .015, 16, 64);
+  const ringMat = new THREE.MeshBasicMaterial({ color: 0x22d3ee, transparent: true, opacity: .12 });
+  const ring = new THREE.Mesh(ringGeo, ringMat);
+  ring.rotation.x = Math.PI / 3;
+  scene.add(ring);
+
+  const ring2Geo = new THREE.TorusGeometry(2.0, .01, 16, 64);
+  const ring2Mat = new THREE.MeshBasicMaterial({ color: 0x6366f1, transparent: true, opacity: .08 });
+  const ring2 = new THREE.Mesh(ring2Geo, ring2Mat);
+  ring2.rotation.x = -Math.PI / 4;
+  ring2.rotation.y = Math.PI / 6;
+  scene.add(ring2);
+
+  let t = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    t += .004;
+    particles.rotation.y = t * .25;
+    particles.rotation.x = Math.sin(t * .08) * .08;
+    ring.rotation.z += .004;
+    ring2.rotation.x += .003;
+    ring2.rotation.y += .002;
+    glow.scale.setScalar(1 + Math.sin(t * 2) * .12);
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    const w2 = container.clientWidth;
+    camera.aspect = w2 / h;
+    camera.updateProjectionMatrix();
+    renderer.setSize(w2, h);
+  });
+}
+
+async function loadAll() {
+  try {
+    const [catalog, events] = await Promise.all([
+      loadYAML(CATALOG_PATH),
+      loadEvents(EVENTS_PATH),
+    ]);
+    renderHeader(catalog);
+    renderMetrics(catalog);
+    renderVPSHealth(catalog);
+    renderTimeline(events);
+    renderAlerts(catalog);
+    $('loading').style.display = 'none';
+    $('dashboard').style.display = '';
+    if (!window._threeInited) {
+      initThree();
+      window._threeInited = true;
+    }
+  } catch(e) {
+    $('loading').innerHTML = `<div style="color:var(--red)">Error loading data: ${e.message}</div>`;
+  }
+}
+
+function syncToVPS() {
+  const btn = $('sync-btn');
+  btn.textContent = '⏳ Syncing...';
+  btn.disabled = true;
+  setTimeout(() => {
+    btn.textContent = '✅ Synced';
+    setTimeout(() => {
+      btn.textContent = '⬡ Sync to VPS';
+      btn.disabled = false;
+    }, 2000);
+  }, 1500);
+}
+
+loadAll();
+setInterval(loadAll, 30000);
+</script>
+</body>
+</html>

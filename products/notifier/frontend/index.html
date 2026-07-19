@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonora Notifier — Dashboard</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+:root {
+  --bg: #0a0a0f;
+  --surface: #13131a;
+  --card: #1a1a24;
+  --border: #2a2a3e;
+  --primary: #6366f1;
+  --primary-glow: rgba(99,102,241,.25);
+  --accent: #22d3ee;
+  --green: #10b981;
+  --yellow: #f59e0b;
+  --red: #ef4444;
+  --text: #e2e8f0;
+  --text-dim: #94a3b8;
+  --radius: 12px;
+}
+body { font-family: Inter, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+.app { max-width: 1280px; margin: 0 auto; padding: 24px 32px; }
+
+.header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+.header h1 { font-size: 24px; font-weight: 700; }
+.header h1 span { color: var(--primary); }
+.header .subtitle { color: var(--text-dim); font-size: 14px; margin-top: 4px; }
+.back-link { color: var(--text-dim); text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 6px; transition: .2s; }
+.back-link:hover { color: var(--primary); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.card {
+  background: var(--card); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 20px; transition: .2s;
+}
+.card:hover { border-color: var(--primary); box-shadow: 0 0 20px var(--primary-glow); }
+.card .label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.card .value { font-size: 28px; font-weight: 700; }
+.card .value.green { color: var(--green); }
+.card .value.accent { color: var(--accent); }
+.card .value.primary { color: var(--primary); }
+
+.dual-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+@media(max-width:1024px){ .dual-grid { grid-template-columns: 1fr; } }
+
+.section { margin-bottom: 32px; }
+.section h2 { font-size: 18px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.section h2 .badge { font-size: 12px; background: var(--primary); color: #fff; padding: 2px 10px; border-radius: 12px; font-weight: 500; }
+
+table { width: 100%; border-collapse: collapse; }
+th { text-align: left; font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+td { padding: 10px 12px; border-bottom: 1px solid var(--border); font-size: 14px; }
+tr:hover td { background: rgba(99,102,241,.04); }
+
+.status-badge {
+  display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 11px; font-weight: 600;
+}
+.status-badge.sent { background: #10b98133; color: var(--green); }
+.status-badge.queued { background: #f59e0b33; color: var(--yellow); }
+.status-badge.failed { background: #ef444433; color: var(--red); }
+.status-badge.enabled { background: #6366f133; color: var(--primary); }
+.status-badge.disabled { background: #2a2a3e; color: var(--text-dim); }
+
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 10px 12px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 8px; color: var(--text); font-family: Inter; font-size: 14px; transition: .2s;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  outline: none; border-color: var(--primary); box-shadow: 0 0 12px var(--primary-glow);
+}
+.form-group textarea { resize: vertical; min-height: 60px; }
+
+.btn {
+  display: inline-flex; align-items: center; gap: 6px; padding: 10px 20px; border-radius: 8px;
+  font-family: Inter; font-size: 14px; font-weight: 600; border: none; cursor: pointer; transition: .2s;
+}
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: #4f46e5; box-shadow: 0 0 16px var(--primary-glow); }
+.btn-danger { background: var(--red); color: #fff; }
+.btn-danger:hover { background: #dc2626; }
+.btn-sm { padding: 6px 12px; font-size: 12px; }
+
+.empty { text-align: center; padding: 40px; color: var(--text-dim); }
+.empty .icon { font-size: 48px; margin-bottom: 12px; opacity: .4; }
+
+.toast {
+  position: fixed; top: 24px; right: 24px; padding: 12px 20px; border-radius: 8px;
+  font-size: 14px; z-index: 999; animation: slideIn .3s ease; max-width: 360px;
+}
+.toast.success { background: var(--green); color: #fff; }
+.toast.error { background: var(--red); color: #fff; }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+.event-log { max-height: 400px; overflow-y: auto; font-size: 13px; }
+.event-log div { padding: 8px 10px; border-bottom: 1px solid var(--border); display: flex; gap: 10px; align-items: flex-start; }
+.event-log .time { color: var(--text-dim); flex-shrink: 0; font-family: monospace; font-size: 11px; }
+.event-log .type { color: var(--primary); font-weight: 500; }
+.event-log .channel { color: var(--accent); font-size: 11px; }
+.event-log .msg { color: var(--text-dim); }
+.event-log .status-icon { font-size: 14px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <div>
+      <a class="back-link" href="/">← Back to home</a>
+      <h1><span>◈</span> Notifier Dashboard</h1>
+      <div class="subtitle">Configure notification rules and monitor delivery</div>
+    </div>
+    <div class="status-dot" id="status-dot" style="width:10px;height:10px;border-radius:50%;background:var(--green);animation:pulse 2s infinite"></div>
+  </div>
+
+  <div class="grid" id="stats-cards"></div>
+
+  <div class="dual-grid">
+    <div class="section">
+      <h2>Rules <span class="badge" id="rules-count">0</span></h2>
+      <div class="card" style="padding:0;overflow:auto">
+        <table><thead><tr><th>Event</th><th>Channel</th><th>Template</th><th>Recipients</th><th>Status</th><th></th></tr></thead><tbody id="rules-table"></tbody></table>
+      </div>
+    </div>
+    <div class="section">
+      <h2>New Rule</h2>
+      <div class="card">
+        <div class="form-group">
+          <label>Event Type</label>
+          <input id="rule-event" placeholder="e.g. delivery:completed">
+        </div>
+        <div class="form-group">
+          <label>Channel</label>
+          <select id="rule-channel">
+            <option value="whatsapp">WhatsApp</option>
+            <option value="telegram">Telegram</option>
+            <option value="email">Email</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Template</label>
+          <textarea id="rule-template" placeholder="e.g. ✅ Order {{order_id}} is ready!">Event: {{event_type}} just occurred.</textarea>
+        </div>
+        <div class="form-group">
+          <label>Recipients (comma separated)</label>
+          <input id="rule-recipients" placeholder="admin, +521234567890">
+        </div>
+        <button class="btn btn-primary" onclick="createRule()">+ Create Rule</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>Delivery Log <span class="badge" id="log-count">0</span></h2>
+    <div class="card">
+      <div class="event-log" id="delivery-log"><div class="empty"><div class="icon">📬</div>No deliveries yet</div></div>
+    </div>
+  </div>
+</div>
+
+<style>@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }</style>
+
+<script>
+const API = `http://localhost:6200`;
+
+async function fetchJSON(path, opts) {
+  try {
+    const r = await fetch(`${API}${path}`, { ...opts, headers: { 'Content-Type': 'application/json', ...opts?.headers } });
+    if (!r.ok) { const e = await r.json().catch(()=>{}); throw new Error(e?.detail || r.statusText); }
+    return await r.json();
+  } catch(e) { console.warn('fetch failed:', path, e); return null; }
+}
+
+function $(id) { return document.getElementById(id); }
+
+function toast(msg, type = 'success') {
+  const el = document.createElement('div');
+  el.className = `toast ${type}`;
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 3000);
+}
+
+// ─── Stats ───
+async function loadStats() {
+  const data = await fetchJSON(`/notifier/stats`);
+  if (!data) return;
+  $('stats-cards').innerHTML = [
+    { label: 'Total Rules', value: data.rules || 0, cls: '' },
+    { label: 'Enabled', value: data.enabled || 0, cls: 'green' },
+    { label: 'Channels', value: (data.channels || []).join(', '), cls: 'accent', small: true },
+  ].map(c => `
+    <div class="card">
+      <div class="label">${c.label}</div>
+      <div class="value ${c.cls}" style="${c.small?'font-size:16px':''}">${c.value}</div>
+    </div>
+  `).join('');
+}
+
+// ─── Rules ───
+async function loadRules() {
+  const data = await fetchJSON(`/notifier/rules`);
+  if (!data) return;
+  const rules = data.rules || [];
+  $('rules-count').textContent = rules.length;
+  if (!rules.length) {
+    $('rules-table').innerHTML = `<tr><td colspan="6" class="empty"><div class="icon">📋</div>No rules configured</td></tr>`;
+    return;
+  }
+  $('rules-table').innerHTML = rules.map(r => `
+    <tr>
+      <td><code style="color:var(--accent)">${r.event_type}</code></td>
+      <td><span class="status-badge enabled">${r.channel}</span></td>
+      <td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.template}</td>
+      <td>${(r.recipients || []).join(', ') || '—'}</td>
+      <td><span class="status-badge ${r.enabled ? 'sent' : 'disabled'}">${r.enabled ? 'enabled' : 'disabled'}</span></td>
+      <td><button class="btn btn-danger btn-sm" onclick="deleteRule('${r.id}')">Delete</button></td>
+    </tr>
+  `).join('');
+}
+
+async function createRule() {
+  const event_type = $('rule-event').value.trim();
+  if (!event_type) { toast('Event type is required', 'error'); return; }
+  const channel = $('rule-channel').value;
+  const template = $('rule-template').value.trim();
+  const recipients = $('rule-recipients').value.split(',').map(s => s.trim()).filter(Boolean);
+  const res = await fetchJSON(`/notifier/rules`, {
+    method: 'POST',
+    body: JSON.stringify({ event_type, channel, template, recipients, tenant: 'default', enabled: true }),
+  });
+  if (res && res.ok) {
+    toast('Rule created');
+    $('rule-event').value = ''; $('rule-template').value = ''; $('rule-recipients').value = '';
+    loadRules(); loadStats();
+  } else {
+    toast('Failed to create rule', 'error');
+  }
+}
+
+async function deleteRule(id) {
+  if (!confirm('Delete this rule?')) return;
+  const res = await fetchJSON(`/notifier/rules/${id}`, { method: 'DELETE' });
+  if (res && res.ok) { toast('Rule deleted'); loadRules(); loadStats(); }
+  else { toast('Failed to delete rule', 'error'); }
+}
+
+// ─── Delivery Log ───
+async function loadLog() {
+  const data = await fetchJSON(`/notifier/log`);
+  if (!data) return;
+  const entries = data.entries || [];
+  $('log-count').textContent = data.total || 0;
+  if (!entries.length) {
+    $('delivery-log').innerHTML = '<div class="empty"><div class="icon">📬</div>No deliveries yet</div>';
+    return;
+  }
+  $('delivery-log').innerHTML = entries.reverse().map(e => `
+    <div>
+      <span class="status-icon">${e.status === 'sent' ? '✅' : e.status === 'failed' ? '❌' : '⏳'}</span>
+      <span class="time">${(e.delivered_at || e.created_at || '').slice(0, 19) || '—'}</span>
+      <span class="type">${e.event_type || e.rule_id || '—'}</span>
+      <span class="channel">[${e.channel || '?'}]</span>
+      <span class="msg">${e.recipient || ''} ${e.error ? '· ' + e.error : ''}</span>
+    </div>
+  `).join('');
+}
+
+// ─── Init ───
+async function loadAll() {
+  await Promise.all([loadStats(), loadRules(), loadLog()]);
+}
+loadAll();
+setInterval(loadAll, 10000);
+</script>
+</body>
+</html>
