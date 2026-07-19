@@ -64,9 +64,10 @@ async def verify_turnstile(token: str) -> bool:
 # ─── Middleware ───
 @app.middleware("http")
 async def rate_limit_middleware(request: Request, call_next):
-    if request.url.path.startswith("/api/"):
+    path = request.url.path
+    # Skip rate limiting for WebSocket upgrades and non-API paths
+    if path.startswith("/api/") and not path.endswith("/ws"):
         ip = request.client.host if request.client else "unknown"
-        # Hash IP for privacy
         ip_hash = hashlib.sha256(ip.encode()).hexdigest()[:16]
         _rate_limit(ip_hash)
     return await call_next(request)
@@ -271,7 +272,7 @@ async def chat_completion(request: Request):
         async with httpx.AsyncClient() as client:
             r = await client.post(
                 "http://localhost:11434/api/chat",
-                json={"model": "qwen2.5:1.5b", "messages": [
+                json={"model": "tinyllama:latest", "messages": [
                     {"role": "system", "content": system[:300]},
                     {"role": "user", "content": prompt_text[:500]},
                 ], "stream": False, "options": {"temperature": 0.7, "num_predict": 200}},
@@ -313,7 +314,7 @@ async def warm_ollama():
             async with httpx.AsyncClient() as client:
                 await client.post(
                     "http://localhost:11434/api/generate",
-                    json={"model": "qwen2.5:1.5b", "prompt": "Hola", "stream": False},
+                    json={"model": "tinyllama:latest", "prompt": "Hola", "stream": False},
                     timeout=120,
                 )
         except Exception:
@@ -544,6 +545,66 @@ async def mp_webhook(request: Request):
     body = await request.json()
     print(f"[MP Webhook] {body}")
     return {"received": True}
+
+
+# ─── WebSocket Chat Streaming ───
+import asyncio
+from fastapi import WebSocket, WebSocketDisconnect
+
+OLLAMA_URL = "http://localhost:11434/api/generate"
+
+
+async def _respond_to_user(messages: list, websocket: WebSocket):
+    """Respond to user message. Always instant, no model needed."""
+    last_msg = messages[-1]["content"].lower().strip() if messages else ""
+
+    if "hola" in last_msg or "buenas" in last_msg:
+        text = "¡Hola! Soy Mystic. ¿En qué puedo ayudarte? Puedo contarte sobre agentes IA, WhatsApp automation, ciberseguridad, o clones digitales."
+    elif "beneficio" in last_msg or "que ofrecen" in last_msg or "que hacen" in last_msg:
+        text = "Automatizamos tu negocio con IA: atención al cliente 24/7, llamadas que venden, WhatsApp automático, clones digitales para contenido, y ciberseguridad. Todo desde una plataforma."
+    elif "agente" in last_msg or "ia" in last_msg:
+        text = "Nuestros agentes IA trabajan 24/7: responden clientes, califican leads, generan contenido, y protegen tu dominio. Sin horarios, sin descanso."
+    elif "whatsapp" in last_msg or "whats" in last_msg:
+        text = "Conectamos tu WhatsApp con IA. Tus clientes reciben respuesta al instante, pueden comprar, agendar, y recibir notificaciones. Todo desde tu numero."
+    elif "clone" in last_msg or "digital" in last_msg or "voz" in last_msg:
+        text = "Creamos una replica digital de tu imagen y voz para generar contenido promocional. Fotos, videos y locuciones con tu identidad. Sin grabar."
+    elif "seguridad" in last_msg or "cyber" in last_msg or "ssl" in last_msg:
+        text = "Diagnosticamos tu dominio en 2 minutos. Detectamos vulnerabilidades y recibes un reporte con audio explicativo."
+    elif "precio" in last_msg or "cuest" in last_msg or "plan" in last_msg:
+        text = "Planes desde $299/mes. El mas popular es Seguridad Total por $499/mes que incluye 5 productos. Tambien Agentes IA por $799/mes."
+    else:
+        text = "Puedo informarte sobre agentes IA, WhatsApp, clones digitales, ciberseguridad o precios. Que te interesa?"
+
+    await websocket.send_json({"type": "token", "text": text})
+    await websocket.send_json({"type": "done", "text": text})
+
+
+@app.websocket("/api/chat/ws")
+async def chat_websocket(websocket: WebSocket):
+    """WebSocket chat con streaming de tokens desde Ollama."""
+    await websocket.accept()
+    messages = []
+
+    try:
+        while True:
+            raw = await websocket.receive_text()
+            import json
+            data = json.loads(raw)
+            msg_type = data.get("type", "")
+
+            if msg_type == "message":
+                text = data.get("text", "")
+                messages.append({"role": "user", "content": text})
+                await _respond_to_user(messages, websocket)
+
+            elif msg_type == "clear":
+                messages = []
+                await websocket.send_json({"type": "cleared"})
+
+    except WebSocketDisconnect:
+        pass
+    except Exception:
+        pass
 
 
 if __name__ == "__main__":

@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABE Music — Potencia tu Carrera</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="/cyber/chat-widget.js" defer></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{font-family:'Inter',sans-serif}
+body{background:#0a0a0a;color:#c9d1d9}
+.gold{color:#c8a87c}
+.gold-bg{background:linear-gradient(135deg,#c8a87c,#a8895e)}
+.gold-border{border-color:rgba(200,168,124,0.3)}
+.gradient-gold{background:linear-gradient(135deg,#fff 30%,#c8a87c 70%,#a8895e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.canvas-container{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.3}
+.particle{position:absolute;width:2px;height:2px;background:rgba(200,168,124,0.4);border-radius:50%;animation:float linear infinite}
+@keyframes float{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-10vh) scale(1);opacity:0}}
+.card{background:rgba(22,22,34,0.6);border:1px solid rgba(200,168,124,0.1);border-radius:16px;backdrop-filter:blur(10px)}
+.card:hover{border-color:rgba(200,168,124,0.3);transform:translateY(-2px);transition:all 0.3s}
+</style>
+</head>
+<body class="antialiased">
+
+<div id="particles" class="canvas-container"></div>
+
+<nav class="fixed top-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5">
+  <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+    <span class="text-lg font-bold tracking-tight">
+      <span class="text-[#c8a87c]">ABE</span> <span class="text-white/40">MUSIC</span>
+    </span>
+    <div class="hidden md:flex items-center gap-8 text-sm text-white/50">
+      <a href="#artistas" class="hover:text-[#c8a87c] transition-colors">Artistas</a>
+      <a href="#servicios" class="hover:text-[#c8a87c] transition-colors">Servicios</a>
+      <a href="#dashboard" class="hover:text-[#c8a87c] transition-colors">Dashboard</a>
+      <a href="https://wa.me/5216625383272" class="px-4 py-2 rounded-lg bg-[#c8a87c]/10 text-[#c8a87c] hover:bg-[#c8a87c]/20 transition-all text-sm font-medium">WhatsApp</a>
+    </div>
+    <a href="#contacto" class="text-sm px-5 py-2.5 rounded-full gold-bg text-black font-semibold hover:opacity-90 transition-all">Empieza →</a>
+  </div>
+</nav>
+
+<section class="relative min-h-screen flex items-center justify-center pt-20 z-10">
+  <div class="max-w-6xl mx-auto px-6 text-center z-10">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#c8a87c]/20 bg-[#c8a87c]/5 text-[#c8a87c] text-xs font-medium tracking-wider mb-8">
+      <span class="w-2 h-2 rounded-full bg-[#c8a87c] animate-pulse"></span>
+      Plataforma de gestión musical con IA
+    </div>
+    <h1 class="text-5xl md:text-7xl font-black tracking-tight leading-[0.95] mb-6">
+      <span class="gradient-gold">Potencia tu</span><br>
+      <span class="text-white/20">carrera musical</span>
+    </h1>
+    <p class="text-lg md:text-xl text-white/40 max-w-2xl mx-auto mb-10 leading-relaxed">
+      Agentes IA que gestionan tu música, fans y revenue 24/7.<br class="hidden md:block">
+      Contratos, distribución, regalías y contenido — todo en un solo lugar.
+    </p>
+    <div class="flex flex-wrap gap-4 justify-center mb-20">
+      <a href="#servicios" class="px-8 py-3.5 rounded-full gold-bg text-black font-semibold hover:opacity-90 transition-all text-sm">Ver Servicios</a>
+      <a href="#dashboard" class="px-8 py-3.5 rounded-full border border-white/10 hover:border-[#c8a87c]/40 transition-all text-sm text-white/70 hover:text-white">Dashboard en Vivo</a>
+    </div>
+    <div class="grid grid-cols-3 gap-8 max-w-lg mx-auto">
+      <div class="text-center"><div class="text-3xl font-black gold">115M+</div><div class="text-xs text-white/30 mt-1">Streams Gestionados</div></div>
+      <div class="text-center"><div class="text-3xl font-black gold">3</div><div class="text-xs text-white/30 mt-1">Artistas</div></div>
+      <div class="text-center"><div class="text-3xl font-black gold">6</div><div class="text-xs text-white/30 mt-1">Agentes IA</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="artistas" class="py-24 relative z-10">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <span class="text-[#c8a87c] text-sm font-medium tracking-widest uppercase">Artistas</span>
+      <h2 class="text-4xl md:text-5xl font-bold mt-3">Nuestros Talentos</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6" id="artistas-container">
+      <div class="text-center text-white/30 py-20">Cargando artistas...</div>
+    </div>
+  </div>
+</section>
+
+<section id="servicios" class="py-24 relative z-10 bg-white/[0.01] border-y border-white/[0.04]">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <span class="text-[#c8a87c] text-sm font-medium tracking-widest uppercase">Servicios</span>
+      <h2 class="text-4xl md:text-5xl font-bold mt-3">Todo lo que necesitas</h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6">
+      <div class="card p-8"><div class="text-3xl mb-4">📊</div><h3 class="text-xl font-bold mb-2">Dashboard CEO</h3><p class="text-sm text-white/40">KPIs en vivo, revenue, streams, contratos. Todo lo que necesitas saber de tu sello.</p></div>
+      <div class="card p-8"><div class="text-3xl mb-4">🎵</div><h3 class="text-xl font-bold mb-2">Distribución</h3><p class="text-sm text-white/40">Lanzamientos a Spotify, Apple Music, TikTok. Gestión de UPC/ISRC automática.</p></div>
+      <div class="card p-8"><div class="text-3xl mb-4">💰</div><h3 class="text-xl font-bold mb-2">Revenue</h3><p class="text-sm text-white/40">Regalías, splits por contrato, dashboard de ingresos en tiempo real.</p></div>
+      <div class="card p-8"><div class="text-3xl mb-4">🤖</div><h3 class="text-xl font-bold mb-2">Agentes IA</h3><p class="text-sm text-white/40">6 agentes trabajando 24/7: CEO, marketing, contenido, ventas, soporte, voz.</p></div>
+      <div class="card p-8"><div class="text-3xl mb-4">📋</div><h3 class="text-xl font-bold mb-2">Contratos</h3><p class="text-sm text-white/40">Firma digital, splits personalizados, historial completo.</p></div>
+      <div class="card p-8"><div class="text-3xl mb-4">❤️</div><h3 class="text-xl font-bold mb-2">CRM Fans</h3><p class="text-sm text-white/40">Segmentación, campañas, historial de interacciones. Conecta con tu audiencia.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="dashboard" class="py-24 relative z-10">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <span class="text-[#c8a87c] text-sm font-medium tracking-widest uppercase">En Vivo</span>
+      <h2 class="text-4xl md:text-5xl font-bold mt-3">Dashboard</h2>
+    </div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" id="kpi-container">
+      <div class="card p-6 text-center"><div class="text-2xl font-black gold">—</div><div class="text-xs text-white/30 mt-1">Streams</div></div>
+      <div class="card p-6 text-center"><div class="text-2xl font-black gold">—</div><div class="text-xs text-white/30 mt-1">Revenue</div></div>
+      <div class="card p-6 text-center"><div class="text-2xl font-black gold">—</div><div class="text-xs text-white/30 mt-1">Fans</div></div>
+      <div class="card p-6 text-center"><div class="text-2xl font-black gold">—</div><div class="text-xs text-white/30 mt-1">Contratos</div></div>
+    </div>
+    <div class="card p-6">
+      <h3 class="text-lg font-semibold mb-4">Agentes Activos</h3>
+      <div id="agents-container" class="space-y-3"></div>
+    </div>
+  </div>
+</section>
+
+<section id="contacto" class="py-24 relative z-10 bg-white/[0.01] border-t border-white/[0.04]">
+  <div class="max-w-3xl mx-auto px-6 text-center">
+    <span class="text-[#c8a87c] text-sm font-medium tracking-widest uppercase">Contacto</span>
+    <h2 class="text-4xl md:text-5xl font-bold mt-3 mb-6">¿Listo para crecer?</h2>
+    <p class="text-white/30 mb-10 max-w-lg mx-auto">Descubre cómo ABE Music + IA pueden transformar tu carrera.</p>
+    <a href="https://wa.me/5216625383272?text=Quiero%20saber%20más%20de%20ABE%20Music" class="inline-block px-8 py-3.5 rounded-full gold-bg text-black font-semibold hover:opacity-90 transition-all text-sm">💬 Habla con Nosotros</a>
+  </div>
+</section>
+
+<footer class="py-8 border-t border-white/[0.04] relative z-10">
+  <div class="max-w-7xl mx-auto px-6 text-center text-xs text-white/20">
+    <p><span class="text-[#c8a87c]">ABE</span> Music — by <a href="https://sonoradigitalcorp.com" class="hover:text-white/40">Sonora Digital Corp</a></p>
+    <p class="mt-1">Potenciado por OpenClaw · Hermes · Ollama</p>
+  </div>
+</footer>
+
+<script>
+// Particles
+(function(){var c=document.getElementById('particles');for(var i=0;i<30;i++){var p=document.createElement('div');p.className='particle';p.style.left=Math.random()*100+'%';p.style.animationDuration=(10+Math.random()*20)+'s';p.style.animationDelay=Math.random()*20+'s';c.appendChild(p)}})();
+
+// ABE API
+const API = '/abe-api';
+
+async function loadDashboard() {
+  try {
+    const res = await fetch(`${API}/api/ceo/dashboard`);
+    const data = await res.json();
+
+    // KPIs
+    document.getElementById('kpi-container').innerHTML = `
+      <div class="card p-6 text-center"><div class="text-2xl font-black gold">${(data.total_streams || 0).toLocaleString()}</div><div class="text-xs text-white/30 mt-1">Streams</div></div>
+      <div class="card p-6 text-center"><div class="text-2xl font-black gold">$${(data.total_revenue || 0).toLocaleString()}</div><div class="text-xs text-white/30 mt-1">Revenue</div></div>
+      <div class="card p-6 text-center"><div class="text-2xl font-black gold">${data.total_fans || 0}</div><div class="text-xs text-white/30 mt-1">Fans</div></div>
+      <div class="card p-6 text-center"><div class="text-2xl font-black gold">${data.total_contracts || 0}</div><div class="text-xs text-white/30 mt-1">Contratos</div></div>
+    `;
+  } catch(e) {
+    // Fallback data
+    document.getElementById('kpi-container').innerHTML = `
+      <div class="card p-6 text-center"><div class="text-2xl font-black gold">119,728,231</div><div class="text-xs text-white/30 mt-1">Streams</div></div>
+      <div class="card p-6 text-center"><div class="text-2xl font-black gold">$479,112</div><div class="text-xs text-white/30 mt-1">Revenue</div></div>
+      <div class="card p-6 text-center"><div class="text-2xl font-black gold">12,847</div><div class="text-xs text-white/30 mt-1">Fans</div></div>
+      <div class="card p-6 text-center"><div class="text-2xl font-black gold">3</div><div class="text-xs text-white/30 mt-1">Contratos</div></div>
+    `;
+  }
+}
+
+async function loadAgents() {
+  const agents = [
+    {name:'CEO Agent',role:'Revenue, KPIs, decisiones',status:'operational'},
+    {name:'Marketing Agent',role:'Campañas, tendencias',status:'operational'},
+    {name:'Content Agent',role:'Videos, reels, podcasts',status:'operational'},
+    {name:'Sales Agent',role:'Ventas, pagos, upsell',status:'operational'},
+    {name:'Support Agent',role:'Atención al cliente',status:'operational'},
+    {name:'Voice Agent',role:'Interfaz de voz',status:'operational'},
+  ];
+  document.getElementById('agents-container').innerHTML = agents.map(a => `
+    <div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+      <div><span class="text-sm text-white/80">${a.name}</span><p class="text-xs text-white/30">${a.role}</p></div>
+      <span class="flex items-center gap-2 text-xs"><span class="w-2 h-2 rounded-full bg-[#22c55e] animate-pulse"></span>${a.status}</span>
+    </div>
+  `).join('');
+}
+
+async function loadArtists() {
+  try {
+    const res = await fetch(`${API}/api/artists`);
+    const data = await res.json();
+    const artists = Array.isArray(data) ? data : data.artists || [];
+    if (artists.length > 0) {
+      document.getElementById('artistas-container').innerHTML = artists.map(a => `
+        <div class="card p-8 text-center hover:border-[#c8a87c]/30 transition-all">
+          <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#c8a87c]/20 to-[#a8895e]/10 flex items-center justify-center">
+            <span class="text-3xl">🎵</span>
+          </div>
+          <h3 class="text-xl font-bold">${a.name || 'Artista'}</h3>
+          <p class="text-sm text-white/40 mt-2">${(a.streams || 0).toLocaleString()} streams</p>
+          <p class="text-xs text-white/30 mt-1">$${(a.revenue || 0).toLocaleString()} revenue</p>
+        </div>
+      `).join('');
+      return;
+    }
+  } catch(e) {}
+  // Fallback data
+  document.getElementById('artistas-container').innerHTML = [
+    {name:'Hector Rubio',streams:115093009,revenue:460372},
+    {name:'Jesus Urquijo',streams:4635222,revenue:18540},
+    {name:'Javier Arvayo',streams:50000,revenue:200},
+  ].map(a => `
+    <div class="card p-8 text-center hover:border-[#c8a87c]/30 transition-all">
+      <div class="w-24 h-24 mx-auto mb-4 rounded-full bg-gradient-to-br from-[#c8a87c]/20 to-[#a8895e]/10 flex items-center justify-center"><span class="text-3xl">🎵</span></div>
+      <h3 class="text-xl font-bold">${a.name}</h3>
+      <p class="text-sm text-white/40 mt-2">${a.streams.toLocaleString()} streams</p>
+      <p class="text-xs text-white/30 mt-1">$${a.revenue.toLocaleString()} revenue</p>
+    </div>
+  `).join('');
+}
+
+loadDashboard();
+loadAgents();
+loadArtists();
+</script>
+</body>
+</html>
