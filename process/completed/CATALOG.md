@@ -38,3 +38,4 @@
 | 2026-07-10 | 20260710-full-inventory | ... | ... | ... | completed | ... |
 | 2026-07-11 | 20260711-AE-FIXES | ... | ... | ... | completed | ... |
 | 2026-07-10 | 20260710-mystik-abe-complete | ... | ... | ... | completed | ... |
+| SPEC-202 | SPEC-20260718-UNIFY-005 | ... | ... | ... | completed | ... |

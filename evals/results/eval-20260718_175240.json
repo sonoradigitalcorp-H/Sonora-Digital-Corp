@@ -1,0 +1,184 @@
+{
+  "total": 36,
+  "passed": 34,
+  "failed": 2,
+  "domains": {
+    "AGENT": {
+      "passed": 10,
+      "failed": 0,
+      "total": 10
+    },
+    "CAP": {
+      "passed": 5,
+      "failed": 1,
+      "total": 6
+    },
+    "SDD": {
+      "passed": 8,
+      "failed": 0,
+      "total": 8
+    },
+    "SKILL": {
+      "passed": 5,
+      "failed": 0,
+      "total": 5
+    },
+    "EVENT": {
+      "passed": 6,
+      "failed": 0,
+      "total": 6
+    },
+    "OTHER": {
+      "passed": 0,
+      "failed": 1,
+      "total": 1
+    }
+  },
+  "tests": [
+    {
+      "name": "test_agent_01_creator_agent_defined",
+      "status": "passed"
+    },
+    {
+      "name": "test_agent_02_quality_agent_defined",
+      "status": "passed"
+    },
+    {
+      "name": "test_agent_03_monitor_agent_defined",
+      "status": "passed"
+    },
+    {
+      "name": "test_agent_04_ceo_agent_defined",
+      "status": "passed"
+    },
+    {
+      "name": "test_agent_05_marketing_agent_defined",
+      "status": "passed"
+    },
+    {
+      "name": "test_agent_06_content_agent_defined",
+      "status": "passed"
+    },
+    {
+      "name": "test_agent_07_sales_agent_defined",
+      "status": "passed"
+    },
+    {
+      "name": "test_agent_08_support_agent_defined",
+      "status": "passed"
+    },
+    {
+      "name": "test_agent_09_voice_agent_defined",
+      "status": "passed"
+    },
+    {
+      "name": "test_agent_10_clone_agent_defined",
+      "status": "passed"
+    },
+    {
+      "name": "test_cap_01_registry_exists",
+      "status": "passed"
+    },
+    {
+      "name": "test_cap_02_dualidad_resuelta",
+      "status": "passed"
+    },
+    {
+      "name": "test_cap_03_router_exists",
+      "status": "passed"
+    },
+    {
+      "name": "test_cap_04_bus_api_defined",
+      "status": "passed"
+    },
+    {
+      "name": "test_cap_05_provider_registry_sync",
+      "status": "passed"
+    },
+    {
+      "name": "test_cap_06_agents_have_capabilities",
+      "status": "failed"
+    },
+    {
+      "name": "test_sdd_01_spec_skill_exists",
+      "status": "passed"
+    },
+    {
+      "name": "test_sdd_02_design_skill_exists",
+      "status": "passed"
+    },
+    {
+      "name": "test_sdd_03_apply_skill_exists",
+      "status": "passed"
+    },
+    {
+      "name": "test_sdd_04_verify_skill_exists",
+      "status": "passed"
+    },
+    {
+      "name": "test_sdd_05_archive_skill_exists",
+      "status": "passed"
+    },
+    {
+      "name": "test_sdd_06_orchestrator_skill_exists",
+      "status": "passed"
+    },
+    {
+      "name": "test_sdd_07_completed_specs_exist",
+      "status": "passed"
+    },
+    {
+      "name": "test_sdd_08_gherkin_scenarios_exist",
+      "status": "passed"
+    },
+    {
+      "name": "test_skill_01_skill_registry_js_exists",
+      "status": "passed"
+    },
+    {
+      "name": "test_skill_02_skill_template_exists",
+      "status": "passed"
+    },
+    {
+      "name": "test_skill_03_skill_creator_exists",
+      "status": "passed"
+    },
+    {
+      "name": "test_skill_04_meta_registry_skills",
+      "status": "passed"
+    },
+    {
+      "name": "test_skill_05_skills_have_hermes_index",
+      "status": "passed"
+    },
+    {
+      "name": "test_event_01_emitter_exists",
+      "status": "passed"
+    },
+    {
+      "name": "test_event_02_emitter_can_emit",
+      "status": "passed"
+    },
+    {
+      "name": "test_event_03_listener_can_start",
+      "status": "passed"
+    },
+    {
+      "name": "test_event_04_alert_handler_exists",
+      "status": "passed"
+    },
+    {
+      "name": "test_event_05_memory_handler_exists",
+      "status": "passed"
+    },
+    {
+      "name": "test_event_06_catalog_has_events",
+      "status": "passed"
+    },
+    {
+      "name": "FAILED",
+      "status": "failed"
+    }
+  ],
+  "timestamp": "2026-07-19T00:52:40.148335+00:00"
+}
