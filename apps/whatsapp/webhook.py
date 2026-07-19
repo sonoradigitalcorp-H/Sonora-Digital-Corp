@@ -32,8 +32,10 @@ sys.path.insert(0, str(REPO))
 
 from apps.observe.pipeline import emit_event
 
-WACLI = os.path.expanduser("~/.local/bin/wacli")
-STORE = os.path.expanduser("~/.config/ai.opencode.desktop/wacli")
+WACLI = os.environ.get("WACLI_PATH") or os.path.expanduser("~/.local/bin/wacli")
+if not os.path.exists(WACLI):
+    WACLI = "/usr/local/bin/wacli"
+STORE = os.environ.get("WACLI_STORE") or os.path.expanduser("~/.config/ai.opencode.desktop/wacli")
 SEEN_PATH = Path("state/whatsapp/seen_messages.json")
 FOUNDER_INBOX = Path("state/inbox/founder.jsonl")
 DEFAULT_INTERVAL = 5  # seconds

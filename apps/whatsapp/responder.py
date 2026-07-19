@@ -23,8 +23,10 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO))
 
-WACLI = os.path.expanduser("~/.local/bin/wacli")
-STORE = os.path.expanduser("~/.config/ai.opencode.desktop/wacli")
+WACLI = os.environ.get("WACLI_PATH") or os.path.expanduser("~/.local/bin/wacli")
+if not os.path.exists(WACLI):
+    WACLI = "/usr/local/bin/wacli"
+STORE = os.environ.get("WACLI_STORE") or os.path.expanduser("~/.config/ai.opencode.desktop/wacli")
 EVENTS_FILE = REPO / "state" / "events" / "events.jsonl"
 SEEN_RESPONDED = REPO / "state" / "whatsapp" / "responded.json"
 PHONE = "5216623538272"
