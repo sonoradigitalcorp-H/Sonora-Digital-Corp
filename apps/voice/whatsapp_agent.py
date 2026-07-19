@@ -420,7 +420,7 @@ def _wacli_read(*args, timeout=120):
 
 # ========== OPENROUTER LLM ==========
 
-OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY") or "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"
+OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY") or ""
 
 def _ask_openrouter(text: str, context: str = "") -> str:
     try:

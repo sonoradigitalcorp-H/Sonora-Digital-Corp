@@ -10,7 +10,7 @@ HOME = os.path.expanduser("~")
 SCREENSHOT_DIR = os.path.join(HOME, "jarvis/screenshots/revoke_keys")
 os.makedirs(SCREENSHOT_DIR, exist_ok=True)
 
-KEEP_KEYS = {"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"}
+KEEP_KEYS = set(os.environ.get("OPENROUTER_KEEP_KEYS", "").split(",")) - {""}
 
 async def main():
     print("=" * 70)
