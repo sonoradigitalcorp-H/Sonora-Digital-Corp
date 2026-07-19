@@ -219,6 +219,26 @@ Estado completo desplegado en:
 
 `mystic` (primary) + explore, builder, reviewer, hermes, openclaw, sdd/*, memory, research, code, sales, dev, support, agent, knowledge, finance, security, ops, quality, strategy.
 
+## Workflow: Branch por Sesión
+
+Cada sesión crea su propio branch aislado → PR → code review → merge.
+Esto evita que sesiones paralelas pisoteen commits entre sí.
+
+```
+INICIO:  bash scripts/start-session.sh --desc "descripción"
+TRABAJO: código, commits, tests
+FINAL:   bash scripts/end-session.sh --title "feat: lo que hice"
+REVIEW:  Revisar PR en GitHub → CI checks → squash-merge a main
+SYNC:    bash scripts/sync-to-vps.sh  (después del merge)
+```
+
+| Comando | Qué hace |
+|---------|----------|
+| `bash scripts/start-session.sh --desc "..."` | Sincroniza + crea branch aislado |
+| `bash scripts/end-session.sh --title "..."` | Test gate + commit + push + PR + brain sync |
+| `bash scripts/end-session.sh --no-pr` | Solo commit sin PR |
+| `bash scripts/end-session.sh --no-tests` | Saltea test gate |
+
 ## Comandos rápidos
 
 - `/status` — healthcheck
@@ -227,6 +247,8 @@ Estado completo desplegado en:
 - `/gsd` — Get Shit Done
 - `/sdd-new` — nueva spec
 - `/build` — construir feature
+- `/start` — start-session.sh interactivo
+- `/end` — end-session.sh interactivo
 - `/sales` — Sales OS
 - `/dev` — Dev OS
 - `/support` — Support OS
