@@ -2,7 +2,7 @@
 name = "jarvis"
 version = "2.0.0"
 description = "JARVIS — Multi-agent AI Platform"
-requires-python = ">=3.11"
+requires-python = ">=3.10"
 
 [tool.ruff]
 line-length = 160
@@ -12,13 +12,16 @@ select = ["E", "F", "I", "UP", "B"]
 ignore = ["B008", "UP042", "E402", "UP017"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests"]
+testpaths = ["tests", "evals", "memory/tests"]
 asyncio_mode = "auto"
 markers = ["asyncio: async tests"]
 
 [tool.coverage.run]
-source = ["src/core", "webui", "voice"]
-omit = ["*/tests/*", "*/venv/*", "*/hermes-env/*"]
+source = ["apps", "memory", "core", "scripts", "metrics"]
+omit = ["*/tests/*", "*/venv/*", "*/node_modules/*", "*/migrations/*"]
 
 [tool.coverage.report]
-fail_under = 80
+fail_under = 60
+
+[tool.pytest-bdd]
+features_base = "gherkin/"

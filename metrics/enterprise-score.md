@@ -1,11 +1,13 @@
 # Enterprise Score — Sonora Digital Corp
 
-**Version**: 1.0.0
-**Audit ID**: METRICS-SCORE-001
+**Version**: 2.0.0 (unified)
+**Canonical**: `metrics/enterprise_score.py` (real-time, CLI+API)
+**API**: `/api/enterprise-score` delegates to canonical
+**Legacy**: v1 webui event-based heuristic and v1 markdown conceptual are retired
 
 ---
 
-Every initiative must score ≥ 60 to be approved. Score is calculated from 10 metrics, each weighted equally (max 10 points each).
+Every initiative must score ≥ 60 to be approved. 10 real-time metrics, each 0–10 (max 100).
 
 ---
 
@@ -15,141 +17,42 @@ Every initiative must score ≥ 60 to be approved. Score is calculated from 10 m
 Enterprise Score = SUM(metric_score for all 10 metrics) (max 100)
 ```
 
-Each metric scored 0–10:
-- 0–3: Poor
-- 4–6: Acceptable
-- 7–8: Good
-- 9–10: Excellent
+| Score | Threshold |
+|-------|-----------|
+| ≥ 90 | Exceptional — Scale immediately |
+| 80–89 | Strong — Approve and fund |
+| 70–79 | Good — Approve with monitoring |
+| 60–69 | Acceptable — Approve conditionally |
+| 40–59 | Weak — Require improvements |
+| < 40 | Poor — Kill or reject |
 
 ---
 
-## The 10 Metrics
+## The 10 Real-Time Metrics
 
-### 1. Revenue Impact
-
-| Dimension | Value |
-|-----------|-------|
-| Gherkin | Given initiative When revenue projected Then score = impact/total_revenue * 10 |
-| Weight | 10/100 |
-| Source | Finance OS — `revenue_recorded` event |
-| Target | > $1k/month per initiative |
-
-### 2. Scalability
-
-| Dimension | Value |
-|-----------|-------|
-| Gherkin | Given initiative When users multiplied by N Then score = can_handle_10x |
-| Weight | 10/100 |
-| Source | Ops OS — `scaled_up` event |
-| Target | Handles 10x current load without redesign |
-
-### 3. Reusability
-
-| Dimension | Value |
-|-----------|-------|
-| Gherkin | Given initiative When implemented Then score = other_OS_that_can_use / total_OS |
-| Weight | 10/100 |
-| Source | Agent OS — skill registry |
-| Target | Reusable by ≥ 3 other OS |
-
-### 4. Automation Impact
-
-| Dimension | Value |
-|-----------|-------|
-| Gherkin | Given initiative When deployed Then score = automated_steps / total_steps |
-| Weight | 10/100 |
-| Source | Agent OS — `agent_spawned` event |
-| Target | > 80% of steps automated |
-
-### 5. Knowledge Impact
-
-| Dimension | Value |
-|-----------|-------|
-| Gherkin | Given initiative When completed Then score = ADRs_created / total_decisions |
-| Weight | 10/100 |
-| Source | Knowledge OS — `adr_created` event |
-| Target | ADR coverage > 90% |
-
-### 6. Reliability
-
-| Dimension | Value |
-|-----------|-------|
-| Gherkin | Given initiative When running for 30d Then score = uptime_percentage / 10 |
-| Weight | 10/100 |
-| Source | Ops OS — `service_down` event |
-| Target | > 99.9% uptime |
-
-### 7. Founder Independence
-
-| Dimension | Value |
-|-----------|-------|
-| Gherkin | Given initiative When operating Then score = automated_decisions / total_decisions |
-| Weight | 10/100 |
-| Source | Strategy OS — `health_review_completed` event |
-| Target | > 90% decisions without founder |
-
-### 8. Operational Simplicity
-
-| Dimension | Value |
-|-----------|-------|
-| Gherkin | Given initiative When maintained Then score = 10 - (components / max_components) |
-| Weight | 10/100 |
-| Source | Ops OS — monitoring data |
-| Target | < 5 components per initiative |
-
-### 9. Customer Value
-
-| Dimension | Value |
-|-----------|-------|
-| Gherkin | Given initiative When measured Then score = customer_satisfaction / 10 |
-| Weight | 10/100 |
-| Source | Support OS — `satisfaction_recorded` event |
-| Target | > 4.5 / 5.0 |
-
-### 10. FinOps Efficiency
-
-| Dimension | Value |
-|-----------|-------|
-| Gherkin | Given initiative When operating for 30d Then score = 10 - (cost_per_call / budget_per_call * 10) |
-| Weight | 10/100 |
-| Source | Finance OS — `finops_snapshot` event |
-| Target | Cost per call < $0.001, budget variance < 10% |
+| # | Metric | Source | Scoring |
+|---|--------|--------|---------|
+| 1 | **test_pass_rate** | `pytest tests/ -q` output | ≥99%=10, ≥95%=9, ≥90%=8, ≥80%=7, ≥70%=6, ≥60%=5, else rate/10 |
+| 2 | **availability** | TCP socket on webui(5174), abe(5180), hermes(8000), evolution(8080), guardian(8088), content(8765), notebook(8502), omnivoice(3900) | 100%=10, ≥90%=9, ≥80%=8, etc. |
+| 3 | **documentation** | `docs/*.md` + product docs | min(10, count/2) |
+| 4 | **security** | `state/quality/violations.jsonl` | max(1, 10 - violations) |
+| 5 | **automation** | Cron scripts in `scripts/` | min(10, cron_count) |
+| 6 | **capabilities** | `capabilities/*/capability.yaml` | min(10, count) |
+| 7 | **agents** | `agents/*.yaml` | min(10, count) |
+| 8 | **cost_tracking** | `state/economics.db` | 10 if tracked, 5 if not |
+| 9 | **services** | Same as availability (backward compat) | Same as availability |
+| 10 | **evolution** | Evolution Engine placeholder | Static 8 |
 
 ---
 
-## Scoring Thresholds
+## Usage
 
-| Score | Verdict | Action |
-|-------|---------|--------|
-| ≥ 90 | Exceptional | Scale immediately |
-| 80–89 | Strong | Approve and fund |
-| 70–79 | Good | Approve with monitoring |
-| 60–69 | Acceptable | Approve conditionally |
-| 40–59 | Weak | Require improvements |
-| < 40 | Poor | Kill or reject |
+```bash
+# CLI
+python3 metrics/enterprise_score.py
+python3 metrics/enterprise_score.py --json
+python3 metrics/enterprise_score.py --watch   # every 60s
 
----
-
-## Calculation Frequency
-
-| Update | Trigger | By |
-|--------|---------|----|
-| Per initiative | At creation | Quality OS |
-| Per initiative | After completion | Quality OS |
-| Enterprise-wide | Weekly | Strategy OS |
-| Enterprise-wide | Quarterly | Strategy OS |
-
----
-
-## Audit Trail
-
-Every score change is recorded:
-
-```gherkin
-Given enterprise score is calculated
-When weekly review triggers
-Then score_updated event fires
-And score stored in Historical Memory
-And delta from previous score recorded
-And if score < 60 then kill_recommendation generated
+# API (via webui)
+GET /api/enterprise-score
 ```

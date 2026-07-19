@@ -117,55 +117,13 @@ def _read_jsonl(path):
 
 @router.get("/api/enterprise-score")
 async def enterprise_score():
-    events = _read_jsonl(STATE_DIR / "logs" / "events.jsonl")
-    finops_calls = [c for c in _read_jsonl(STATE_DIR / "finops.jsonl") if c.get("event") == "ai_call"]
-
-    revenue_score = min(10, len([e for e in events if e.get("event") == "revenue_recorded"])) if any(e.get("event") == "revenue_recorded" for e in events) else 1
-    scale_events = [e for e in events if e.get("event") in ("scaled_up", "scaled_down")]
-    scalability_score = min(10, len(scale_events) + 3)
-    skill_events = [e for e in events if e.get("event") == "skill_execution"]
-    os_used = set()
-    for s in skill_events:
-        p = s.get("payload", {})
-        if isinstance(p, dict):
-            os_used.add(p.get("parent_os", ""))
-    reusability_score = min(10, len(os_used))
-    auto_events = len(skill_events)
-    total_ops = len(events)
-    automation_score = min(10, round(auto_events / max(1, total_ops) * 10)) if total_ops > 0 else 1
-    knowledge_events = [e for e in events if e.get("event") == "knowledge_stored"]
-    knowledge_score = min(10, len(knowledge_events))
-    healthy = len([e for e in events if e.get("event") == "service_healthy"])
-    down = len([e for e in events if e.get("event") == "service_down"])
-    reliability_score = round(healthy / max(1, healthy + down) * 10) if (healthy + down) > 0 else 5
-    recovered = len([e for e in events if e.get("event") == "service_recovered"])
-    total_incidents = down + recovered
-    founder_score = min(10, round(recovered / max(1, total_incidents) * 10)) if total_incidents > 0 else 1
-    event_types = len(set(e.get("event", "") for e in events))
-    simplicity_score = max(0, 10 - event_types // 10) if event_types > 0 else 10
-    satisfaction_events = [e for e in events if e.get("event") == "satisfaction_recorded"]
-    customer_score = min(10, len(satisfaction_events)) if satisfaction_events else 1
-    total_cost = sum(c.get("cost", 0) for c in finops_calls)
-    total_calls = len(finops_calls)
-    cost_per_call = total_cost / max(1, total_calls)
-    finops_score = max(0, 10 - round(cost_per_call / 0.001)) if total_calls > 0 else 1
-
-    metrics = {
-        "Revenue Impact": revenue_score,
-        "Scalability": scalability_score,
-        "Reusability": reusability_score,
-        "Automation Impact": automation_score,
-        "Knowledge Impact": knowledge_score,
-        "Reliability": reliability_score,
-        "Founder Independence": founder_score,
-        "Operational Simplicity": simplicity_score,
-        "Customer Value": customer_score,
-        "FinOps Efficiency": finops_score,
-    }
+    from metrics.enterprise_score import compute_enterprise_score
+    result = compute_enterprise_score()
     return {
-        "total": sum(metrics.values()),
+        "total": result["enterprise_score"],
         "max": 100,
-        "metrics": metrics,
+        "metrics": result["metrics"],
+        "threshold_met": result["threshold_met"],
         "timestamp": datetime.now(timezone.utc).isoformat(),
     }
 
