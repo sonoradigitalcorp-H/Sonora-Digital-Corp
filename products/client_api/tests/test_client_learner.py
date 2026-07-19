@@ -8,8 +8,8 @@ sys.path.insert(0, str(REPO))
 
 import pytest
 
-from memory.client_store import ClientStore
 from evolution.client_learner import ClientLearner
+from memory.client_store import ClientStore
 
 
 @pytest.fixture
