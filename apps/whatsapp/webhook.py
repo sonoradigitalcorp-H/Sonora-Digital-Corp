@@ -30,7 +30,19 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO))
 
-from apps.observe.pipeline import emit_event
+EVENTS_FILE = REPO / "state" / "events" / "events.jsonl"
+
+
+def _emit_json(event_type: str, payload: dict) -> None:
+    """Emit event as JSON line (not YAML like the pipeline)."""
+    EVENTS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    entry = {
+        "event": event_type,
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "payload": payload,
+    }
+    with open(EVENTS_FILE, "a") as f:
+        f.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
 WACLI = os.environ.get("WACLI_PATH") or os.path.expanduser("~/.local/bin/wacli")
 if not os.path.exists(WACLI):
@@ -119,7 +131,7 @@ def _process_message(msg: dict, seen: set) -> bool:
         "timestamp": timestamp,
         "message_id": msg_id,
     }
-    emit_event("whatsapp:message:received", payload)
+    _emit_json("whatsapp:message:received", payload)
 
     # If message is from the founder → save to inbox
     if FOUNDER_PHONE and FOUNDER_PHONE in sender:
@@ -131,13 +143,13 @@ def _process_message(msg: dict, seen: set) -> bool:
         }
         with open(FOUNDER_INBOX, "a") as f:
             f.write(json.dumps(inbox_entry, ensure_ascii=False) + "\n")
-        emit_event("founder:message:received", payload)
+        _emit_json("founder:message:received", payload)
         print(f"[whatsapp-webhook] 📩 MENSAJE DEL FUNDADOR: {text[:100]}", file=sys.stderr)
 
     # Trigger catalog request if text mentions catalog
     catalog_keywords = ["catálogo", "catalogo", "catalog", "servicios", "productos", "planes"]
     if text and any(k in text.lower() for k in catalog_keywords):
-        emit_event("whatsapp:catalog:requested", {"client_id": sender, "timestamp": timestamp})
+        _emit_json("whatsapp:catalog:requested", {"client_id": sender, "timestamp": timestamp})
 
     return True
 
@@ -152,7 +164,7 @@ def run_webhook(interval: int = DEFAULT_INTERVAL, once: bool = False) -> None:
             messages = _fetch_messages()
             if messages is None:
                 # wacli error or auth issue
-                emit_event("system:whatsapp:disconnected", {"error": "messages fetch failed"})
+                _emit_json("system:whatsapp:disconnected", {"error": "messages fetch failed"})
                 print(f"[whatsapp-webhook] Disconnected, retrying in {backoff}s", file=sys.stderr)
                 time.sleep(backoff)
                 backoff = min(backoff * 2, BACKOFF_MAX)
@@ -161,7 +173,7 @@ def run_webhook(interval: int = DEFAULT_INTERVAL, once: bool = False) -> None:
                 continue
 
             if backoff > 1:
-                emit_event("system:whatsapp:reconnected", {"timestamp": datetime.now(timezone.utc).isoformat()})
+                _emit_json("system:whatsapp:reconnected", {"timestamp": datetime.now(timezone.utc).isoformat()})
                 print("[whatsapp-webhook] Reconnected", file=sys.stderr)
                 backoff = 1
 
@@ -182,7 +194,7 @@ def run_webhook(interval: int = DEFAULT_INTERVAL, once: bool = False) -> None:
         print("[whatsapp-webhook] Stopped by user", file=sys.stderr)
         _save_seen(seen)
     except Exception as e:
-        emit_event("system:whatsapp:disconnected", {"error": str(e)})
+        _emit_json("system:whatsapp:disconnected", {"error": str(e)})
         _save_seen(seen)
         raise
 
