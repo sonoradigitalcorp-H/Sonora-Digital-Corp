@@ -117,6 +117,10 @@ print(f'  Skills paths: {d.get(\"skills\",{}).get(\"paths\",[])}')
         run: |
           PYTHONPATH=. python3 -m pytest evals/test_evals.py -v --tb=short
 
+      - name: Security audit (pip-audit)
+        run: |
+          pip install pip-audit && pip-audit -r requirements.txt --desc on || echo "⚠️ Security audit found issues (non-blocking)"
+
       - name: Run lint
         run: |
           ruff check apps/ memory/ metrics/ scripts/ --quiet || echo "⚠️ Lint warnings (non-blocking)"

@@ -1,13 +1,13 @@
 # JARVIS Core Dependencies
-fastapi>=0.115.0
-uvicorn>=0.49.0
-jinja2>=3.1.0
+fastapi>=0.139.0
+uvicorn>=0.51.0
+jinja2>=3.1.6
 python-multipart>=0.0.18
 httpx>=0.28.1
-requests>=2.31.0
+requests>=2.34.0
 python-dotenv>=1.0.0
-neo4j>=5.15.0
-qdrant-client>=1.7.0
+neo4j>=6.2.0
+qdrant-client>=1.18.0
 fastmcp>=0.2.0
 
 # Voice
@@ -22,13 +22,16 @@ pydub>=0.25.1
 ollama>=0.6.2
 
 # Testing
-pytest>=8.0.0
-pytest-asyncio>=0.23.0
-pytest-cov>=5.0.0
-coverage>=7.13.0
+pytest>=9.1.0
+pytest-asyncio>=0.24.0
+pytest-cov>=6.0.0
+coverage>=7.15.0
 
 # Token counting
-tiktoken>=0.7.0
+tiktoken>=0.13.0
 
 # Utils
 python-dateutil>=2.8.0
+
+# Security audit
+pip-audit>=2.7.0
