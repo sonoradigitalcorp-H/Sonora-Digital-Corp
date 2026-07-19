@@ -50,7 +50,7 @@ if not os.path.exists(WACLI):
 STORE = os.environ.get("WACLI_STORE") or os.path.expanduser("~/.config/ai.opencode.desktop/wacli")
 SEEN_PATH = Path("state/whatsapp/seen_messages.json")
 FOUNDER_INBOX = Path("state/inbox/founder.jsonl")
-DEFAULT_INTERVAL = 5  # seconds
+DEFAULT_INTERVAL = 2  # seconds (reduced from 5 for lower latency)
 BACKOFF_MAX = 60  # seconds
 
 # Founder's phone number — set via FOUNDER_PHONE env var
