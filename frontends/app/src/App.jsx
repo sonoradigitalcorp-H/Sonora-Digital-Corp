@@ -1,5 +1,8 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef, lazy, Suspense } from 'react'
 import { products, metrics, plans, team } from './data/products'
+
+const Scene3D = lazy(() => import('./components/Scene3D'))
+const Dashboard = lazy(() => import('./components/Dashboard'))
 
 function App() {
   const [activeSection, setActiveSection] = useState('hero')
@@ -75,20 +78,9 @@ function Hero() {
       id="hero"
       className="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden"
     >
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {Array.from({ length: 40 }).map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1 h-1 bg-[#7c5cfc]/20 rounded-full animate-float"
-            style={{
-              left: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 20}s`,
-              animationDuration: `${15 + Math.random() * 20}s`,
-              opacity: 0.3 + Math.random() * 0.5,
-            }}
-          />
-        ))}
-      </div>
+      <Suspense fallback={<div className="absolute inset-0 bg-[#0a0a0a]" />}>
+        <Scene3D />
+      </Suspense>
 
       <div className="max-w-6xl mx-auto px-6 text-center relative z-10">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#22c55e]/20 bg-[#22c55e]/5 text-[#22c55e] text-xs font-medium tracking-wider mb-8">
@@ -199,65 +191,13 @@ function Productos() {
   )
 }
 
-function Dashboard() {
-  const liveMetrics = [
-    { label: 'Agentes', value: metrics.agents, icon: '🤖' },
-    { label: 'Capacidades', value: metrics.capabilities, icon: '⚡' },
-    { label: 'MCP Tools', value: metrics.tools, icon: '🔧' },
-    { label: 'Skills', value: metrics.skills, icon: '📚' },
-    { label: 'Eventos', value: metrics.events.total, icon: '📡' },
-    { label: 'Uptime', value: `${metrics.uptime}%`, icon: '✅' },
-  ]
-
-  const statusItems = [
-    { name: 'AI Call Engine', status: 'operational' },
-    { name: 'Clone Service', status: 'operational' },
-    { name: 'WhatsApp Agent', status: 'operational' },
-    { name: 'Hermes Gateway', status: 'operational' },
-    { name: 'Neo4j Graph DB', status: 'operational' },
-    { name: 'Qdrant Vector', status: 'operational' },
-  ]
-
+function DashboardWrapper() {
   return (
     <section id="dashboard" className="py-32 relative bg-white/[0.01] border-y border-white/[0.04]">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-20">
-          <span className="text-[#22c55e] text-sm font-medium tracking-widest uppercase">
-            Sistema en vivo
-          </span>
-          <h2 className="text-4xl md:text-5xl font-bold mt-3">Dashboard</h2>
-          <p className="text-white/30 mt-4 max-w-xl mx-auto">
-            Métricas reales del ecosistema SDC.
-          </p>
-        </div>
-
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-12">
-          {liveMetrics.map((m) => (
-            <div
-              key={m.label}
-              className="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] text-center hover:border-[#7c5cfc]/20 transition-all"
-            >
-              <div className="text-2xl mb-2">{m.icon}</div>
-              <div className="text-2xl font-black text-white">{m.value}</div>
-              <div className="text-xs text-white/30 mt-1">{m.label}</div>
-            </div>
-          ))}
-        </div>
-
-        <div className="max-w-2xl mx-auto">
-          <h3 className="text-lg font-semibold mb-4 text-center">Estado de Servicios</h3>
-          <div className="rounded-2xl bg-white/[0.02] border border-white/[0.06] divide-y divide-white/[0.06]">
-            {statusItems.map((s) => (
-              <div key={s.name} className="flex items-center justify-between px-6 py-4">
-                <span className="text-sm text-white/70">{s.name}</span>
-                <span className="flex items-center gap-2 text-xs">
-                  <span className="w-2 h-2 rounded-full bg-[#22c55e] animate-pulse" />
-                  Operational
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
+        <Suspense fallback={<div className="text-center py-20 text-white/30">Cargando dashboard...</div>}>
+      <DashboardWrapper />
+        </Suspense>
       </div>
     </section>
   )
@@ -324,6 +264,19 @@ function Precios() {
 }
 
 function Contacto() {
+  const [turnstileToken, setTurnstileToken] = useState('')
+  const turnstileRef = useRef(null)
+
+  useEffect(() => {
+    if (window.turnstile && turnstileRef.current) {
+      window.turnstile.render(turnstileRef.current, {
+        sitekey: '0x4AAAAAAAXx8o3BmBTxQq1t',
+        callback: (token) => setTurnstileToken(token),
+        theme: 'dark',
+      })
+    }
+  }, [])
+
   return (
     <section id="contacto" className="py-32 relative bg-white/[0.01] border-t border-white/[0.04]">
       <div className="max-w-3xl mx-auto px-6 text-center">
@@ -338,12 +291,28 @@ function Contacto() {
         </p>
 
         <form
-          action="https://formsubmit.co/hello@sonoradigitalcorp.com"
-          method="POST"
           className="max-w-md mx-auto space-y-4 text-left"
+          onSubmit={async (e) => {
+            e.preventDefault()
+            if (!turnstileToken) {
+              alert('Por favor completa la verificación anti-bot')
+              return
+            }
+            const fd = new FormData(e.target)
+            const data = Object.fromEntries(fd)
+            try {
+              await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...data, 'cf-turnstile-response': turnstileToken }),
+              })
+              alert('✅ Mensaje recibido. Te contactamos pronto.')
+              e.target.reset()
+            } catch {
+              alert('Error al enviar. Intenta de nuevo.')
+            }
+          }}
         >
-          <input type="hidden" name="_subject" value="Lead desde sdc.app" />
-          <input type="hidden" name="_next" value="https://sonoradigitalcorp.com" />
           <input
             type="text"
             name="name"
@@ -378,6 +347,7 @@ function Contacto() {
             <option value="whatsapp">WhatsApp AI Agent</option>
             <option value="todo">Todo el paquete</option>
           </select>
+          <div ref={turnstileRef} className="flex justify-center" />
           <button
             type="submit"
             className="w-full py-3.5 rounded-xl bg-[#7c5cfc] hover:bg-[#6a4ae0] transition-all font-semibold text-sm"

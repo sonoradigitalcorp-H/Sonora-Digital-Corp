@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BarberKing Studio | Sonora Digital Corp</title>
+<meta name="description" content="BarberKing Studio — Servicios profesionales vía WhatsApp. Contrata desde tu celular.">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--primary:#1a1a2e;--accent:#e94560;--primary-rgb:26,26,46;--accent-rgb:233,69,96}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Outfit',sans-serif;background:#06060e;color:#e2e8f0;overflow-x:hidden}
+canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.glow-orb{position:fixed;border-radius:50%;filter:blur(120px);pointer-events:none;opacity:.12;z-index:0}
+.glow-orb:nth-child(1){width:500px;height:500px;background:var(--primary);top:-20%;left:-10%;animation:drift 25s ease-in-out infinite}
+.glow-orb:nth-child(2){width:350px;height:350px;background:var(--accent);bottom:-15%;right:-10%;animation:drift 30s ease-in-out infinite reverse}
+@keyframes drift{0%,100%{transform:translate(0,0)scale(1)}25%{transform:translate(50px,-50px)scale(1.1)}50%{transform:translate(-30px,30px)scale(.95)}75%{transform:translate(40px,20px)scale(1.05)}}
+.nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:1rem 2rem;background:rgba(6,6,14,.8);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.04)}
+.nav-brand{font-weight:800;font-size:1.1rem;color:white;text-decoration:none;display:flex;align-items:center;gap:.5rem}
+.nav-brand span{color:var(--accent)}
+.nav-wa{padding:.5rem 1.2rem;background:var(--accent);border:none;border-radius:100px;color:white;font-weight:600;font-size:.8rem;cursor:pointer;transition:all .3s;text-decoration:none}
+.nav-wa:hover{transform:scale(1.04);box-shadow:0 0 30px rgba(var(--accent-rgb),.3)}
+section{padding:5rem 2rem;position:relative;z-index:1}
+.container{max-width:1100px;margin:0 auto}
+.hero{min-height:90vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:8rem 2rem 5rem;position:relative;z-index:1}
+.hero-badge{display:inline-flex;align-items:center;gap:.5rem;padding:.5rem 1.2rem;background:rgba(var(--accent-rgb),.1);border:1px solid rgba(var(--accent-rgb),.2);border-radius:100px;font-size:.75rem;color:var(--accent);letter-spacing:.12em;text-transform:uppercase;margin-bottom:2rem;font-weight:600}
+.hero h1{font-size:clamp(2.5rem,7vw,5rem);font-weight:900;line-height:1.05;letter-spacing:-.03em;max-width:850px;margin-bottom:1.2rem}
+.hero h1 span{background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero p{font-size:1.15rem;color:#94a3b8;max-width:550px;line-height:1.7;margin-bottom:2.5rem}
+.btn-primary{padding:.9rem 2.5rem;background:linear-gradient(135deg,var(--primary),var(--accent));border:none;border-radius:100px;color:white;font-weight:700;font-size:.95rem;cursor:pointer;transition:all .4s;text-decoration:none;display:inline-flex;align-items:center;gap:.6rem}
+.btn-primary:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 0 60px rgba(var(--accent-rgb),.3)}
+.btn-secondary{padding:.9rem 2.5rem;background:transparent;border:1px solid rgba(255,255,255,.08);border-radius:100px;color:#94a3b8;font-weight:600;font-size:.95rem;cursor:pointer;transition:all .3s;text-decoration:none}
+.btn-secondary:hover{background:rgba(255,255,255,.04);border-color:rgba(var(--accent-rgb),.3);color:white}
+.stats{display:flex;gap:2.5rem;margin-top:3rem;flex-wrap:wrap;justify-content:center}
+.stat{text-align:center}
+.stat-num{font-size:2rem;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--accent)}
+.stat-label{font-size:.8rem;color:#64748b;margin-top:.2rem}
+h2{font-size:clamp(2rem,4vw,3rem);font-weight:800;line-height:1.1;margin-bottom:1rem;text-align:center}
+h2 span{background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sub{color:#94a3b8;font-size:1.05rem;max-width:600px;line-height:1.7;margin:0 auto 3rem;text-align:center}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem}
+.card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:2rem;transition:all .4s;text-align:center}
+.card:hover{transform:translateY(-4px);border-color:rgba(var(--accent-rgb),.2);background:rgba(var(--accent-rgb),.03)}
+.card-icon{font-size:2.5rem;margin-bottom:1rem}
+.card h3{font-size:1.15rem;font-weight:700;margin-bottom:.5rem}
+.card p{font-size:.85rem;color:#94a3b8;line-height:1.6;margin-bottom:1rem}
+.card .price-tag{font-size:1.8rem;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--accent);margin-bottom:.5rem}
+.card .price-tag span{font-size:.8rem;color:#64748b;font-weight:400;font-family:'Outfit',sans-serif}
+.card .cta-small{padding:.5rem 1.5rem;background:linear-gradient(135deg,var(--primary),var(--accent));border:none;border-radius:100px;color:white;font-weight:600;font-size:.8rem;cursor:pointer;transition:all .3s;text-decoration:none;display:inline-block}
+.card .cta-small:hover{transform:scale(1.04);box-shadow:0 0 20px rgba(var(--accent-rgb),.3)}
+.price-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-top:2rem}
+.price-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:24px;padding:2.5rem;position:relative;transition:all .5s;text-align:center}
+.price-card:hover{transform:translateY(-4px);border-color:rgba(var(--accent-rgb),.2)}
+.price-card.featured{border-color:rgba(var(--accent-rgb),.25);background:rgba(var(--accent-rgb),.03)}
+.price-card .emoji{font-size:2.5rem;margin-bottom:.5rem}
+.price-card h3{font-size:1.2rem;font-weight:700;margin-bottom:.3rem}
+.price-card .sub-text{font-size:.85rem;color:#94a3b8;margin-bottom:1.2rem}
+.price-card .price{font-size:2.8rem;font-weight:900;font-family:'JetBrains Mono',monospace;color:var(--accent);margin-bottom:1rem}
+.price-card .price span{font-size:.9rem;color:#64748b;font-weight:400;font-family:'Outfit',sans-serif}
+.price-card .cta{width:100%;padding:.85rem 0;background:linear-gradient(135deg,var(--primary),var(--accent));border:none;border-radius:100px;color:white;font-weight:600;font-size:.9rem;cursor:pointer;transition:all .4s;margin-top:1.5rem;text-decoration:none;display:block;text-align:center}
+.price-card .cta:hover{transform:scale(1.02);box-shadow:0 0 30px rgba(var(--accent-rgb),.3)}
+.gallery-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin-top:2rem}
+.gallery-item{aspect-ratio:4/3;background:rgba(255,255,255,.03);border-radius:16px;border:1px solid rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:3rem;transition:all .4s}
+.gallery-item:hover{transform:scale(1.02);border-color:rgba(var(--accent-rgb),.2);background:rgba(var(--accent-rgb),.03)}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-top:2rem}
+.team-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:2rem;text-align:center;transition:all .4s}
+.team-card:hover{transform:translateY(-4px);border-color:rgba(var(--accent-rgb),.2)}
+.team-avatar{width:80px;height:80px;margin:0 auto 1rem;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;font-size:2rem;color:white}
+.team-card h4{font-weight:700;margin-bottom:.2rem}
+.team-card p{font-size:.8rem;color:#94a3b8}
+.testimonial-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:2rem;transition:all .4s}
+.testimonial-card:hover{transform:translateY(-3px);border-color:rgba(var(--accent-rgb),.2)}
+.testimonial-card p{font-size:.9rem;color:#cbd5e1;line-height:1.6;margin-bottom:1rem;font-style:italic}
+.testimonial-card .author{font-weight:600;font-size:.85rem;color:var(--accent)}
+.contact-section{text-align:center;padding:5rem 2rem}
+.contact-section .wa-btn{display:inline-flex;align-items:center;gap:.8rem;padding:1.2rem 3rem;background:linear-gradient(135deg,var(--primary),var(--accent));border:none;border-radius:100px;color:white;font-weight:700;font-size:1.05rem;cursor:pointer;transition:all .4s;text-decoration:none;margin-top:1.5rem}
+.contact-section .wa-btn:hover{transform:translateY(-3px);box-shadow:0 0 40px rgba(var(--accent-rgb),.3)}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1rem;margin-top:2rem}
+.menu-item{display:flex;justify-content:space-between;align-items:center;padding:1rem 1.5rem;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:12px;transition:all .3s}
+.menu-item:hover{border-color:rgba(var(--accent-rgb),.2);background:rgba(var(--accent-rgb),.02)}
+.menu-item .name{font-weight:600;font-size:.95rem}
+.menu-item .price{font-family:'JetBrains Mono',monospace;color:var(--accent);font-weight:700}
+.timeline{max-width:600px;margin:2rem auto 0;position:relative}
+.timeline::before{content:'';position:absolute;left:20px;top:0;bottom:0;width:2px;background:rgba(var(--accent-rgb),.2)}
+.timeline-item{padding-left:50px;position:relative;margin-bottom:2rem}
+.timeline-item::before{content:'';position:absolute;left:12px;top:4px;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));border:3px solid #06060e}
+.timeline-item .date{font-size:.75rem;color:#64748b;font-weight:600;text-transform:uppercase;letter-spacing:.05em}
+.timeline-item h4{font-size:1.05rem;margin:.2rem 0;font-weight:700}
+.timeline-item p{font-size:.85rem;color:#94a3b8}
+.video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem}
+.video-card{aspect-ratio:16/9;background:rgba(255,255,255,.03);border-radius:16px;border:1px solid rgba(255,255,255,.05);display:flex;align-items:center;justify-content:center;font-size:3rem;transition:all .4s;position:relative}
+.video-card:hover{transform:scale(1.02);border-color:rgba(var(--accent-rgb),.2);background:rgba(var(--accent-rgb),.03)}
+.transformation-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-top:2rem}
+.transformation-card{display:grid;grid-template-columns:1fr 1fr;gap:0;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.06);transition:all .4s}
+.transformation-card:hover{border-color:rgba(var(--accent-rgb),.2)}
+.transformation-card .before,.transformation-card .after{padding:2rem 1rem;text-align:center;font-size:.85rem;font-weight:600}
+.transformation-card .before{background:rgba(255,255,255,.03);color:#94a3b8}
+.transformation-card .after{background:rgba(var(--accent-rgb),.08);color:var(--accent)}
+.promo-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;margin-top:2rem}
+.promo-card{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:20px;padding:2rem;text-align:center;transition:all .4s;position:relative;overflow:hidden}
+.promo-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--primary),var(--accent))}
+.promo-card:hover{transform:translateY(-4px);border-color:rgba(var(--accent-rgb),.2)}
+.promo-card .badge{display:inline-block;padding:.25rem .8rem;background:rgba(var(--accent-rgb),.15);border-radius:100px;font-size:.65rem;font-weight:700;color:var(--accent);margin-bottom:1rem;text-transform:uppercase;letter-spacing:.05em}
+.promo-card h3{font-size:1.1rem;font-weight:700;margin-bottom:.5rem}
+.promo-card p{font-size:.85rem;color:#94a3b8;margin-bottom:1rem}
+footer{padding:3rem 2rem;border-top:1px solid rgba(255,255,255,.05);text-align:center;position:relative;z-index:1;color:#64748b;font-size:.85rem}
+footer .powered{color:var(--accent);font-weight:600}
+@media(max-width:768px){.hero h1{font-size:2.2rem}.grid,.price-grid,.gallery-grid,.team-grid,.menu-grid,.video-grid,.transformation-grid,.promo-grid{grid-template-columns:1fr}.stats{gap:1.5rem}}
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div class="glow-orb"></div><div class="glow-orb"></div>
+
+<nav class="nav">
+  <a href="#" class="nav-brand">SDC <span>BarberKing Studio</span></a>
+  <a href="https://wa.me/5216623538272?text=Hola%20quiero%20informes%20sobre%20BarberKing%20Studio%20en%20Sonora%20Digital%20Corp" target="_blank" class="nav-wa">💬 Contratar</a>
+</nav>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<footer>
+  <p>© 2026 Sonora Digital Corp — <span class="powered">BarberKing Studio</span></p>
+  <p style="margin-top:.5rem;color:#64748b">Hecho en México — Powered by SDC</p>
+</footer>
+
+<script>
+const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d');
+let p=[];
+function resize(){canvas.width=window.innerWidth;canvas.height=document.body.scrollHeight}
+resize();window.addEventListener('resize',resize);
+class P{
+  constructor(){this.reset()}
+  reset(){this.x=Math.random()*canvas.width;this.y=Math.random()*canvas.height;this.size=Math.random()*2+.3;this.sx=(Math.random()-.5)*.2;this.sy=(Math.random()-.5)*.2;this.o=Math.random()*.3+.05;this.c=Math.random()>.5?255+','+255+','+255:'255'+','+'255'+','+'255'}
+  update(){this.x+=this.sx;this.y+=this.sy;if(this.x<0||this.x>canvas.width||this.y<0||this.y>canvas.height)this.reset()}
+  draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${this.o})`;ctx.fill()}
+}
+for(let i=0;i<50;i++)p.push(new P());
+function animate(){ctx.clearRect(0,0,canvas.width,canvas.height);p.forEach(q=>{q.update();q.draw()});requestAnimationFrame(animate)}
+animate();
+window.addEventListener('scroll',()=>{canvas.height=document.body.scrollHeight});
+</script>
+<section class="hero">
+  <div class="hero-badge">✦ BARBERKING STUDIO</div>
+  <h1>Tu <span>BarberKing Studio</span><br>en WhatsApp</h1>
+  <p>Servicios profesionales con IA. Contrata desde tu celular. Recibe resultados en minutos.</p>
+  <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center">
+    <a href="https://wa.me/5216623538272?text=Hola%20quiero%20informes%20sobre%20BarberKing%20Studio%20en%20Sonora%20Digital%20Corp" target="_blank" class="btn-primary">💬 Contratar ahora →</a>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-num">24/7</div><div class="stat-label">Disponible</div></div>
+    <div class="stat"><div class="stat-num">3</div><div class="stat-label">Servicios</div></div>
+    <div class="stat"><div class="stat-num">WhatsApp</div><div class="stat-label">Entrega</div></div>
+  </div>
+</section>
+<section class="container">
+  <h2>Nuestros <span>Servicios</span></h2>
+  <p class="sub">Todo lo que necesitas, desde tu WhatsApp.</p>
+  <div class="grid">
+    <div class="card"><div class="card-icon">🎯</div><h3>Corte de cabello</h3><div class="price-tag">$149 <span>MXN</span></div><p>Desde 5 tokens · Entrega rápida</p><a href="https://wa.me/5216623538272?text=Hola%20quiero%20corte-de-cabello%20para%20barberking-studio" target="_blank" class="cta-small">Solicitar →</a></div>
+    <div class="card"><div class="card-icon">🔥</div><h3>Fotos de perfil</h3><div class="price-tag">$299 <span>MXN</span></div><p>Desde 10 tokens · Entrega rápida</p><a href="https://wa.me/5216623538272?text=Hola%20quiero%20fotos-de-perfil%20para%20barberking-studio" target="_blank" class="cta-small">Solicitar →</a></div>
+    <div class="card"><div class="card-icon">💎</div><h3>Video promocional</h3><div class="price-tag">$599 <span>MXN</span></div><p>Desde 25 tokens · Entrega rápida</p><a href="https://wa.me/5216623538272?text=Hola%20quiero%20video-promocional%20para%20barberking-studio" target="_blank" class="cta-small">Solicitar →</a></div>
+  </div>
+</section>
+<section class="container">
+  <h2><span>Galería</span></h2>
+  <p class="sub">Resultados de nuestros clientes.</p>
+  <div class="gallery-grid">
+    <div class="gallery-item">📸</div>
+    <div class="gallery-item">🎨</div>
+    <div class="gallery-item">📱</div>
+    <div class="gallery-item">✨</div>
+  </div>
+</section>
+<section class="container">
+  <h2>Nuestros <span>Precios</span></h2>
+  <p class="sub">Planes flexibles para cada necesidad.</p>
+  <div class="price-grid">
+    <div class="price-card"><div class="emoji">🌱</div><h3>Básico</h3><div class="sub-text">Corte de cabello</div><div class="price">$149<span>/servicio</span></div><a href="https://wa.me/5216623538272?text=Hola%20quiero%20el%20plan%20bsico%20de%20barberking-studio" target="_blank" class="cta">Contratar →</a></div>
+    <div class="price-card featured"><div class="emoji">🔥</div><h3>Pro</h3><div class="sub-text">Fotos de perfil</div><div class="price">$299<span>/servicio</span></div><a href="https://wa.me/5216623538272?text=Hola%20quiero%20el%20plan%20pro%20de%20barberking-studio" target="_blank" class="cta">Contratar →</a></div>
+    <div class="price-card"><div class="emoji">💎</div><h3>Premium</h3><div class="sub-text">Video promocional</div><div class="price">$599<span>/servicio</span></div><a href="https://wa.me/5216623538272?text=Hola%20quiero%20el%20plan%20premium%20de%20barberking-studio" target="_blank" class="cta">Contratar →</a></div>
+  </div>
+</section>
+<section class="contact-section container">
+  <div class="hero-badge" style="margin:0 auto 1rem;display:inline-flex">💬 CONTACTO</div>
+  <h2>Empieza <span>hoy</span></h2>
+  <p class="sub" style="margin:0 auto 2rem">Escríbenos por WhatsApp y recibe atención personalizada al instante.</p>
+  <a href="https://wa.me/5216623538272?text=Hola%20quiero%20informes%20sobre%20BarberKing%20Studio%20en%20Sonora%20Digital%20Corp" target="_blank" class="wa-btn">💬 Escribir por WhatsApp →</a>
+</section>
+</body>
+</html>

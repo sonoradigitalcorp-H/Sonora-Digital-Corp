@@ -1,0 +1,14 @@
+type: error
+command: deploy
+success: false
+duration_ms: 0
+tokens_used: 0
+user: system
+outcome: Connection refused
+improvement: ''
+client_impact: false
+skills_used: []
+files_changed: []
+session_id: ses-5c05d9dddc70
+timestamp: '2026-07-19T17:29:19.283704Z'
+score: 0

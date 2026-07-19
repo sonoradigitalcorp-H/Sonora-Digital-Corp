@@ -1,0 +1,17 @@
+type: comando
+command: /generar-nicho
+success: true
+duration_ms: 4200
+tokens_used: 1500
+user: alice
+outcome: ''
+improvement: ''
+client_impact: false
+skills_used:
+- bash
+- python
+files_changed:
+- niche.yaml
+session_id: ses-389da73b01e1
+timestamp: '2026-07-19T17:29:15.128499Z'
+score: 0

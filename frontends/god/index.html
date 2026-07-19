@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>God Mode — SDC</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{font-family:'Inter',sans-serif}
+body{background:#0a0a0a;color:#c9d1d9}
+.god-glow{box-shadow:0 0 20px rgba(200,168,124,0.1)}
+</style>
+</head>
+<body class="antialiased">
+<div class="max-w-7xl mx-auto px-6 py-8">
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-2xl font-black tracking-tight">⚡ GOD <span class="text-white/40">MODE</span></h1>
+    <div class="flex gap-2 text-xs">
+      <span class="px-3 py-1.5 rounded-full bg-[#c8a87c]/10 text-[#c8a87c]" id="god-status">🔴 Conectando...</span>
+    </div>
+  </div>
+
+  <!-- Command Center -->
+  <div class="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] mb-6 god-glow">
+    <h2 class="text-lg font-semibold mb-3">🛠️ Comando Central</h2>
+    <div class="flex gap-3">
+      <input type="text" id="god-command" placeholder="Ej: docker ps, systemctl status ollama, sdc cyber scan empresa.com"
+        class="flex-1 px-4 py-3 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder-white/20 focus:outline-none focus:border-[#c8a87c]/40 font-mono text-sm">
+      <button onclick="execCommand()"
+        class="px-6 py-3 rounded-xl bg-[#c8a87c] hover:bg-[#b89a70] text-black font-semibold text-sm">Ejecutar</button>
+    </div>
+    <pre id="god-output" class="mt-4 p-4 rounded-xl bg-black/40 text-green-400 font-mono text-xs max-h-64 overflow-auto hidden"></pre>
+  </div>
+
+  <!-- Services -->
+  <div class="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] mb-6">
+    <h2 class="text-lg font-semibold mb-3">🔌 Servicios</h2>
+    <div id="services-list" class="space-y-2"></div>
+  </div>
+
+  <!-- Tenants -->
+  <div class="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] mb-6">
+    <h2 class="text-lg font-semibold mb-3">👥 Tenants / Clientes</h2>
+    <div id="tenants-list" class="space-y-2"></div>
+  </div>
+
+  <!-- Quick Actions -->
+  <div class="p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06]">
+    <h2 class="text-lg font-semibold mb-3">⚡ Acciones Rápidas</h2>
+    <div class="flex flex-wrap gap-3">
+      <button onclick="quickCmd('systemctl status ollama')" class="px-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:border-[#c8a87c]/40 text-xs">🔊 Ollama status</button>
+      <button onclick="quickCmd('docker ps --format \"table {{.Names}}\t{{.Status}}\" | head -20')" class="px-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:border-[#c8a87c]/40 text-xs">🐳 Docker</button>
+      <button onclick="quickCmd('free -h')" class="px-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:border-[#c8a87c]/40 text-xs">💾 Memoria</button>
+      <button onclick="quickCmd('df -h / | tail -1')" class="px-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:border-[#c8a87c]/40 text-xs">💿 Disco</button>
+      <button onclick="quickCmd('curl -s http://localhost:8086/api/leads | python3 -c \"import sys,json;d=json.load(sys.stdin);print(len(d[chr(34)+\"leads\"+chr(34)]),chr(34)+chr(34)+\"leads\")"')" class="px-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:border-[#c8a87c]/40 text-xs">📋 Leads</button>
+      <button onclick="quickCmd('sdc doctor')" class="px-4 py-2 rounded-xl bg-white/[0.04] border border-white/[0.08] hover:border-[#c8a87c]/40 text-xs">🩺 Doctor</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const GOD_KEY = prompt('🔑 God Mode Key:') || 'sdc-god-2026';
+
+async function api(path, opts = {}) {
+  const url = new URL(path, window.location.origin);
+  if (opts.params) Object.entries(opts.params).forEach(([k,v]) => url.searchParams.set(k,v));
+  const res = await fetch(url, {
+    method: opts.method || 'GET',
+    headers: { 'Content-Type': 'application/json', ...opts.headers },
+    body: opts.body ? JSON.stringify(opts.body) : undefined,
+  });
+  return res.json();
+}
+
+// Command execution
+async function execCommand() {
+  const cmd = document.getElementById('god-command').value.trim();
+  if (!cmd) return;
+  const output = document.getElementById('god-output');
+  output.classList.remove('hidden');
+  output.textContent = '⏳ Ejecutando...';
+
+  const data = await api('/api/command', {
+    method: 'POST',
+    body: { command: cmd, god_key: GOD_KEY },
+  });
+  output.textContent = `$ ${cmd}\n${data.output || '(empty)'}\n\nExit code: ${data.rc}`;
+}
+
+async function quickCmd(cmd) {
+  document.getElementById('god-command').value = cmd;
+  await execCommand();
+}
+
+// Load services
+async function loadServices() {
+  const data = await api('/api/god/services', { params: { god_key: GOD_KEY } });
+  const list = document.getElementById('services-list');
+  list.innerHTML = '';
+  (data.services || []).forEach(s => {
+    const status = s.status;
+    const icon = status.includes('Up') || status === 'active' ? '✅' : status.includes('Exited') || status === 'inactive' ? '❌' : '⏳';
+    list.innerHTML += `<div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+      <span class="text-sm">${s.name}</span>
+      <div class="flex items-center gap-3">
+        <span class="text-xs text-white/30">${s.type}</span>
+        <span class="text-xs ${status.includes('Up') || status === 'active' ? 'text-[#22c55e]' : 'text-[#ef4444]'}">${icon} ${status.slice(0, 30)}</span>
+      </div>
+    </div>`;
+  });
+  document.getElementById('god-status').textContent = `✅ ${data.services?.length || 0} servicios`;
+}
+
+// Load tenants
+async function loadTenants() {
+  const data = await api('/api/god/usage', { params: { god_key: GOD_KEY } });
+  const list = document.getElementById('tenants-list');
+  list.innerHTML = '';
+  (data.tenants || []).forEach(t => {
+    list.innerHTML += `<div class="flex items-center justify-between p-3 rounded-xl bg-white/[0.02] border border-white/[0.06]">
+      <span class="text-sm font-mono">${t.tenant_id}</span>
+      <div class="flex gap-4 text-xs text-white/40">
+        <span>💬 ${t.messages} mensajes</span>
+        <span>🕐 ${t.updated_at?.slice(0, 10) || '-'}</span>
+      </div>
+    </div>`;
+  });
+  if (!data.tenants?.length) list.innerHTML = '<div class="text-sm text-white/30 text-center py-4">Sin tenants activos</div>';
+}
+
+loadServices();
+loadTenants();
+setInterval(loadServices, 30000);
+</script>
+</body>
+</html>

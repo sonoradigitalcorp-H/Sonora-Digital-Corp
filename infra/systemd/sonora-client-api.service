@@ -1,0 +1,19 @@
+# Sonora Client API — Client Learning & Insights
+# Install: ln -s /home/ubuntu/sonora-digital-corp/infra/systemd/sonora-client-api.service /home/ubuntu/.config/systemd/user/
+# Enable:  systemctl --user enable --now sonora-client-api
+
+[Unit]
+Description=Sonora Client API — client learning & insights
+Documentation=https://github.com/sonoradigitalcorp-H/Sonora-Digital-Corp
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/env PYTHONPATH=/home/ubuntu/sonora-digital-corp /usr/bin/python3 -m products.client_api.main
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+Restart=on-failure
+RestartSec=10
+Environment=CLIENT_API_PORT=6500
+
+[Install]
+WantedBy=default.target
