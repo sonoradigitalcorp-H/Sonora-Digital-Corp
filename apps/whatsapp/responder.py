@@ -39,9 +39,25 @@ OPENROUTER_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 LLM_MODEL = "opencode-go/deepseek-v4-flash"
 
 
+# ============================================================
+# KILL SWITCH: NEVER send to anyone except founder (5216623538272)
+# This runs on EVERY _wacli call. Imposible saltarlo.
+# ============================================================
+ALLOWED_NUMBERS = ["5216623538272"]
+def _guard_send(args):
+    for i, arg in enumerate(args):
+        if arg == "--to" and i + 1 < len(args):
+            to_addr = args[i + 1]
+            allowed = any(num in to_addr for num in ALLOWED_NUMBERS)
+            if not allowed:
+                raise PermissionError(f"BLOCKED: cannot send to {to_addr}. Only allowed: {ALLOWED_NUMBERS}")
+            break
+    return args
+
 def _wacli(args: list, timeout: int = 30) -> dict:
     if not os.path.exists(WACLI):
         return {"success": False, "error": "wacli not found"}
+    _guard_send(args)
     cmd = [WACLI] + args + ["--store", STORE, "--json"]
     try:
         r = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
