@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cyber Diagnosis — Protege tu Empresa</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://sdk.mercadopago.com/js/v2"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{font-family:'Inter',sans-serif}
+.gradient-text{background:linear-gradient(135deg,#fff 30%,#7c5cfc 70%,#c8a87c);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.fomo-badge{background:linear-gradient(135deg,rgba(239,68,68,0.1),rgba(239,68,68,0.02));border:1px solid rgba(239,68,68,0.3)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.pulse{animation:pulse 2s ease-in-out infinite}
+.particle{position:absolute;width:2px;height:2px;background:rgba(124,92,252,0.3);border-radius:50%;animation:float linear infinite}
+@keyframes float{0%{transform:translateY(100vh) scale(0);opacity:0}10%{opacity:1}90%{opacity:1}100%{transform:translateY(-10vh) scale(1);opacity:0}}
+</style>
+</head>
+<body class="bg-[#0a0a0a] text-white antialiased">
+
+<div id="particles" class="fixed inset-0 pointer-events-none z-0 overflow-hidden"></div>
+
+<nav class="fixed top-0 w-full z-50 bg-[#0a0a0a]/80 backdrop-blur-xl border-b border-white/5">
+  <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+    <span class="text-lg font-bold tracking-tight">SONORA <span class="text-white/40">DIGITAL</span> <span class="text-[#c8a87c]">CORP</span></span>
+    <div class="hidden md:flex items-center gap-6 text-sm text-white/60">
+      <a href="#como-funciona" class="hover:text-white transition-colors">Cómo Funciona</a>
+      <a href="#precios" class="hover:text-white transition-colors">Planes</a>
+      <a href="https://wa.me/5216625383272" class="px-4 py-2 rounded-lg bg-[#22c55e]/10 text-[#22c55e] hover:bg-[#22c55e]/20 transition-all">WhatsApp</a>
+    </div>
+    <a href="#precios" class="text-sm px-5 py-2.5 rounded-lg bg-[#7c5cfc] hover:bg-[#6a4ae0] transition-all font-medium">Proteger mi Empresa →</a>
+  </div>
+</nav>
+
+<section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden z-10">
+  <div class="max-w-6xl mx-auto px-6 text-center z-10">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#ef4444]/20 bg-[#ef4444]/5 text-[#ef4444] text-xs font-medium tracking-wider mb-8 pulse">
+      🔴 Auditoría Gratis — 3 cupos esta semana
+    </div>
+    <h1 class="text-5xl md:text-7xl font-black tracking-tight leading-[0.95] mb-6">
+      <span class="gradient-text">¿Tu empresa está</span><br>
+      <span class="text-white/30">protegida en internet?</span>
+    </h1>
+    <p class="text-lg md:text-xl text-white/40 max-w-3xl mx-auto mb-10 leading-relaxed">
+      El 60% de las PYMEs que sufren un ciberataque cierran en 6 meses.<br class="hidden md:block">
+      Descubre tus vulnerabilidades antes de que lo hagan los atacantes.
+    </p>
+    <div class="flex flex-wrap gap-4 justify-center mb-20">
+      <a href="#precios" class="px-8 py-3.5 rounded-xl bg-[#7c5cfc] hover:bg-[#6a4ae0] transition-all font-semibold text-sm">Quiero mi Diagnóstico</a>
+      <a href="#como-funciona" class="px-8 py-3.5 rounded-xl border border-white/10 hover:border-[#7c5cfc]/40 transition-all font-semibold text-sm text-white/70 hover:text-white">Cómo Funciona</a>
+    </div>
+    <div class="grid grid-cols-3 gap-8 max-w-lg mx-auto">
+      <div class="text-center"><div class="text-3xl font-black text-white">8</div><div class="text-xs text-white/30 mt-1">Verificaciones</div></div>
+      <div class="text-center"><div class="text-3xl font-black text-white">2 min</div><div class="text-xs text-white/30 mt-1">Duración</div></div>
+      <div class="text-center"><div class="text-3xl font-black text-[#22c55e">100%</div><div class="text-xs text-white/30 mt-1">Gratis</div></div>
+    </div>
+  </div>
+</section>
+
+<section id="como-funciona" class="py-24 relative z-10 bg-white/[0.01] border-y border-white/[0.04]">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <span class="text-[#7c5cfc] text-sm font-medium tracking-widest uppercase">Cómo Funciona</span>
+      <h2 class="text-4xl md:text-5xl font-bold mt-3">Tu diagnóstico en 2 minutos</h2>
+    </div>
+    <div class="grid md:grid-cols-4 gap-6">
+      <div class="text-center p-6">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-[#7c5cfc]/10 flex items-center justify-center text-2xl">1️⃣</div>
+        <h3 class="font-semibold mb-2">Agenda</h3>
+        <p class="text-xs text-white/40">EscrÍbenos por WhatsApp o compra tu plan. Te contactamos en minutos.</p>
+      </div>
+      <div class="text-center p-6">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-[#c8a87c]/10 flex items-center justify-center text-2xl">2️⃣</div>
+        <h3 class="font-semibold mb-2">Escaneamos</h3>
+        <p class="text-xs text-white/40">Nuestro sistema analiza tu dominio: DNS, SSL, headers, puertos y más.</p>
+      </div>
+      <div class="text-center p-6">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-[#22c55e]/10 flex items-center justify-center text-2xl">3️⃣</div>
+        <h3 class="font-semibold mb-2">Recibes</h3>
+        <p class="text-xs text-white/40">Reporte HTML, presentación y audio de Mystic explicando resultados.</p>
+      </div>
+      <div class="text-center p-6">
+        <div class="w-16 h-16 mx-auto mb-4 rounded-2xl bg-[#7c5cfc]/10 flex items-center justify-center text-2xl">4️⃣</div>
+        <h3 class="font-semibold mb-2">Protégete</h3>
+        <p class="text-xs text-white/40">Plan de acción prioritario + presupuesto para implementar correcciones.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="precios" class="py-24 relative z-10">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <span class="text-[#c8a87c] text-sm font-medium tracking-widest uppercase">Planes</span>
+      <h2 class="text-4xl md:text-5xl font-bold mt-3">Inversión</h2>
+      <p class="text-white/30 mt-4 max-w-xl mx-auto">Empieza con un diagnóstico gratuito. Contrata la protección cuando estés listo.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+      <div class="p-8 rounded-2xl bg-white/[0.02] border border-white/[0.06] text-center">
+        <div class="text-4xl mb-4">🆓</div>
+        <h3 class="text-xl font-bold mb-1">Gratis</h3>
+        <div class="text-3xl font-black mb-1">$0</div>
+        <p class="text-xs text-white/30 mb-6">Diagnóstico único</p>
+        <ul class="space-y-3 text-sm text-white/60 mb-8 text-left">
+          <li class="flex items-center gap-2">✅ 8 verificaciones de seguridad</li>
+          <li class="flex items-center gap-2">✅ Reporte HTML</li>
+          <li class="flex items-center gap-2">✅ Audio Mystic con resultados</li>
+          <li class="flex items-center gap-2">⏳ Válido por 48h</li>
+        </ul>
+        <a href="https://wa.me/5216625383272?text=Quiero%20mi%20diagn%C3%B3stico%20gratis" class="block text-center py-3 rounded-xl bg-[#22c55e] hover:bg-[#16a34a] transition-all text-sm font-medium">💬 WhatsApp Gratis</a>
+      </div>
+
+      <div class="p-8 rounded-2xl gradient-card border-[#7c5cfc]/20 relative">
+        <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-[#7c5cfc] text-xs font-bold">MÁS POPULAR</div>
+        <div class="text-4xl mb-4">🛡️</div>
+        <h3 class="text-xl font-bold mb-1">Pro</h3>
+        <div class="text-3xl font-black mb-1">$299<span class="text-sm font-normal text-white/30">/mes</span></div>
+        <p class="text-xs text-white/30 mb-6">Protección continua</p>
+        <ul class="space-y-3 text-sm text-white/60 mb-8 text-left">
+          <li class="flex items-center gap-2">✅ Diagnóstico semanal automático</li>
+          <li class="flex items-center gap-2">✅ Hasta 3 dominios</li>
+          <li class="flex items-center gap-2">✅ Alertas en tiempo real</li>
+          <li class="flex items-center gap-2">✅ Dashboard de seguridad</li>
+          <li class="flex items-center gap-2">✅ Soporte prioritario</li>
+        </ul>
+        <button onclick="openMP('pro')" class="w-full py-3 rounded-xl bg-[#7c5cfc] hover:bg-[#6a4ae0] transition-all text-sm font-medium">
+          Comprar → $299/mes
+        </button>
+        <div id="mp-checkout-pro" class="mt-4"></div>
+      </div>
+
+      <div class="p-8 rounded-2xl bg-white/[0.02] border border-white/[0.06] text-center">
+        <div class="text-4xl mb-4">🏢</div>
+        <h3 class="text-xl font-bold mb-1">Enterprise</h3>
+        <div class="text-3xl font-black mb-1">$999<span class="text-sm font-normal text-white/30">/mes</span></div>
+        <p class="text-xs text-white/30 mb-6">Cobertura total</p>
+        <ul class="space-y-3 text-sm text-white/60 mb-8 text-left">
+          <li class="flex items-center gap-2">✅ Diagnóstico continuo</li>
+          <li class="flex items-center gap-2">✅ Dominios ilimitados</li>
+          <li class="flex items-center gap-2">✅ Agente IA 24/7 dedicado</li>
+          <li class="flex items-center gap-2">✅ Remediación incluida</li>
+          <li class="flex items-center gap-2">✅ SLA 99.99%</li>
+          <li class="flex items-center gap-2">✅ Onboarding personalizado</li>
+        </ul>
+        <a href="https://wa.me/5216625383272?text=Quiero%20plan%20Enterprise%20para%20mi%20empresa" class="block text-center py-3 rounded-xl border border-white/10 hover:border-[#7c5cfc]/40 transition-all text-sm font-medium">Contactar</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="checks" class="py-24 relative z-10 bg-white/[0.01] border-y border-white/[0.04]">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-center mb-16">
+      <span class="text-[#7c5cfc] text-sm font-medium tracking-widest uppercase">Qué Revisamos</span>
+      <h2 class="text-4xl md:text-5xl font-bold mt-3">8 Verificaciones Clave</h2>
+    </div>
+    <div class="grid md:grid-cols-4 gap-4">
+      <div class="p-5 rounded-xl bg-white/[0.02] border border-white/[0.06]"><span class="text-lg">🔐</span><h3 class="font-semibold mt-2">DNSSEC</h3><p class="text-xs text-white/40 mt-1">Protección contra spoofing de dominio</p></div>
+      <div class="p-5 rounded-xl bg-white/[0.02] border border-white/[0.06]"><span class="text-lg">📧</span><h3 class="font-semibold mt-2">SPF + DMARC</h3><p class="text-xs text-white/40 mt-1">Seguridad de email corporativo</p></div>
+      <div class="p-5 rounded-xl bg-white/[0.02] border border-white/[0.06]"><span class="text-lg">🔒</span><h3 class="font-semibold mt-2">SSL/TLS</h3><p class="text-xs text-white/40 mt-1">Vigencia y validez del certificado</p></div>
+      <div class="p-5 rounded-xl bg-white/[0.02] border border-white/[0.06]"><span class="text-lg">🔄</span><h3 class="font-semibold mt-2">HTTPS Redirect</h3><p class="text-xs text-white/40 mt-1">Redirección forzada a HTTPS</p></div>
+      <div class="p-5 rounded-xl bg-white/[0.02] border border-white/[0.06]"><span class="text-lg">🛡️</span><h3 class="font-semibold mt-2">Security Headers</h3><p class="text-xs text-white/40 mt-1">HSTS, CSP, X-Frame-Options</p></div>
+      <div class="p-5 rounded-xl bg-white/[0.02] border border-white/[0.06]"><span class="text-lg">📬</span><h3 class="font-semibold mt-2">MX Records</h3><p class="text-xs text-white/40 mt-1">Configuración de correo</p></div>
+      <div class="p-5 rounded-xl bg-white/[0.02] border border-white/[0.06]"><span class="text-lg">🚪</span><h3 class="font-semibold mt-2">Puertos</h3><p class="text-xs text-white/40 mt-1">Puertos abiertos vulnerables</p></div>
+      <div class="p-5 rounded-xl bg-white/[0.02] border border-white/[0.06]"><span class="text-lg">📊</span><h3 class="font-semibold mt-2">Score General</h3><p class="text-xs text-white/40 mt-1">Calificación A-F con riesgo asociado</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="py-24 relative z-10">
+  <div class="max-w-3xl mx-auto px-6 text-center">
+    <span class="text-[#22c55e] text-sm font-medium tracking-widest uppercase">¿Listo?</span>
+    <h2 class="text-4xl md:text-5xl font-bold mt-3 mb-6">Protege tu empresa hoy</h2>
+    <p class="text-white/30 mb-8 max-w-lg mx-auto">Empieza con un diagnóstico gratuito. Sin compromiso, sin tarjeta.</p>
+    <div class="flex flex-wrap gap-4 justify-center">
+      <a href="https://wa.me/5216625383272?text=Quiero%20mi%20diagn%C3%B3stico%20gratis" class="px-8 py-3.5 rounded-xl bg-[#22c55e] hover:bg-[#16a34a] transition-all font-semibold text-sm">💬 WhatsApp Gratis</a>
+      <a href="mailto:hello@sonoradigitalcorp.com?subject=Diagn%C3%B3stico%20de%20Ciberseguridad" class="px-8 py-3.5 rounded-xl border border-white/10 hover:border-[#7c5cfc]/40 transition-all font-semibold text-sm">✉️ Email</a>
+    </div>
+  </div>
+</section>
+
+<footer class="py-8 border-t border-white/[0.04] relative z-10">
+  <div class="max-w-7xl mx-auto px-6 text-center text-xs text-white/20">
+    <p>Sonora Digital Corp · <a href="https://sonoradigitalcorp.com" class="hover:text-white/40">sonoradigitalcorp.com</a> · <a href="https://wa.me/5216625383272" class="hover:text-white/40">WhatsApp</a></p>
+    <p class="mt-1">Sistema Mystic — Diagnóstico Automatizado de Ciberseguridad</p>
+  </div>
+</footer>
+
+<script>
+;(function(){
+  var c=document.getElementById('particles');
+  for(var i=0;i<40;i++){
+    var p=document.createElement('div');
+    p.className='particle';
+    p.style.left=Math.random()*100+'%';
+    p.style.animationDuration=(10+Math.random()*20)+'s';
+    p.style.animationDelay=Math.random()*20+'s';
+    c.appendChild(p);
+  }
+})();
+
+function openMP(plan) {
+  var prices = {pro: 299, enterprise: 999};
+  var price = prices[plan];
+  var mp = new MercadoPago('TEST-xxxx-xxxx-xxxx-xxxx-xxxx');
+  var pref = {items: [{title: 'Cyber Diagnosis ' + plan, quantity: 1, unit_price: price, currency_id: 'MXN'}]};
+  mp.checkout({preference: pref, render: {container: '#mp-checkout-' + plan, label: 'Pagar con Mercado Pago'}});
+}
+</script>
+<script src="/cyber/chat-widget.js" defer></script>
+</body>
+</html>

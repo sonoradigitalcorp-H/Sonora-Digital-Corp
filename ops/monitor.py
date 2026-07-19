@@ -32,12 +32,19 @@ SERVICES = [
 
 
 def emit(event_type: str, payload: dict):
-    """Emit event via emitter module."""
+    """Emit event via file + Supabase + RabbitMQ."""
     try:
         from events.emitter import emit_sync
-
         emit_sync(event_type, payload, "ops-agent")
     except ImportError:
+        pass
+
+    try:
+        from ops.supabase_emitter import emit_to_supabase, emit_to_rabbitmq
+        severity = "critical" if "down" in event_type else "warning" if "warning" in event_type else "info"
+        emit_to_supabase(event_type, payload, severity)
+        emit_to_rabbitmq(event_type, payload)
+    except Exception:
         pass
 
 
@@ -131,6 +138,12 @@ def run(interval: int = 300):
 
         STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
         STATE_FILE.write_text(json.dumps(current, indent=2))
+
+        try:
+            from ops.supabase_emitter import emit_service_status
+            emit_service_status(current)
+        except Exception:
+            pass
 
         prev = current
 

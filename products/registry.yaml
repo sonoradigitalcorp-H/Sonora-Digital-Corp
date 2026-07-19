@@ -1,0 +1,310 @@
+# SDC Product Registry — Catálogo de Mini Servicios / Productos / Agentes
+# Cada entrada es un producto facturable, combinable, con skills asociadas.
+# Cache, cookies, auth y FAQs documentados por producto.
+
+products:
+
+  - id: cyber-diagnosis
+    name: Cyber Diagnosis Express
+    entity: Mystic Security Agent
+    tagline: "Auditoría de ciberseguridad express con audio + reporte"
+    category: security
+    tier: [free, pro, enterprise]
+    price_mxn: {free: 0, pro: 299, enterprise: 999}
+    skills: [audit-security.skill.md, scan.py, report.py, voice.py]
+    features:
+      - 8 verificaciones (DNS, SSL, headers, puertos, email)
+      - Reporte FOMO + Risk Management Plan
+      - Audio Mystic (voz Dalia Neural)
+      - Campañas de marketing por nicho
+    triggers: [command:/sdc cyber scan, command:/sdc cyber campaign]
+    events: [cyber.scan.started, cyber.scan.completed, cyber.audio.generated]
+    cache: "Cache-Control: no-cache"
+    cookies: "session: HTTP-only, SameSite=Strict, 1h"
+    auth: "Free: sin auth. Pro: API key. Enterprise: JWT"
+    faqs:
+      - p: "¿Qué datos necesito?"
+        r: "Solo el dominio de tu empresa (ej: empresa.com)"
+      - p: "¿Cuánto tarda?"
+        r: "30 segundos de scan, 2 minutos el reporte"
+
+  - id: ssl-monitor
+    name: SSL Guardian
+    entity: Certificate Watcher
+    tagline: "Monitoreo de certificados SSL/TLS con alertas 24/7"
+    category: security
+    tier: [pro, enterprise]
+    price_mxn: {pro: 99, enterprise: 299}
+    skills: [monitor-service.skill.md, scan.py]
+    features:
+      - Monitoreo diario de vigencia SSL
+      - Alerta 30, 14, 7 y 1 día antes de expirar
+      - Detección de TLS 1.0/1.1
+      - Dashboard de estado
+    triggers: [cron:0 6 * * *, event:ssl.cert_expiring]
+    events: [ssl.cert_valid, ssl.cert_expiring, ssl.cert_expired]
+    cache: "Cache-Control: max-age=3600"
+    cookies: "session: HTTP-only, SameSite=Strict"
+    auth: API key
+    faqs:
+      - p: "¿Cuántos dominios?"
+        r: "Pro: hasta 5. Enterprise: ilimitados"
+
+  - id: dns-guardian
+    name: DNS Guardian
+    entity: Domain Protector
+    tagline: "Protección DNS contra spoofing y phishing"
+    category: security
+    tier: [pro, enterprise]
+    price_mxn: {pro: 149, enterprise: 399}
+    skills: [scan.py, report.py]
+    features:
+      - Verificación DNSSEC
+      - Monitoreo SPF/DKIM/DMARC
+      - Detección de cambios no autorizados
+    triggers: [cron:*/30 * * * *, event:dns.change_detected]
+    events: [dns.verified, dns.change_detected, dns.spoof_attempt]
+    cache: "TTL 300"
+    cookies: "solo session"
+    auth: API key
+
+  - id: email-guardian
+    name: Email Guardian
+    entity: Anti-Phishing Agent
+    tagline: "Protección contra spoofing de correo corporativo"
+    category: security
+    tier: [pro, enterprise]
+    price_mxn: {pro: 149, enterprise: 399}
+    skills: [scan.py]
+    triggers: [cron:0 8 * * 1]
+    events: [email.spf_valid, email.dmarc_warning]
+
+  - id: call-engine-mini
+    name: Call Engine Mini
+    entity: TeleSales Agent
+    tagline: "Agente de llamadas IA que vende por ti"
+    category: ai
+    tier: [pro, enterprise]
+    price_mxn: {pro: 499, enterprise: 999}
+    skills: [call-engine, voice.py]
+    features:
+      - Llamadas simultáneas desde WhatsApp
+      - Manejo de objeciones (Brian Tracy)
+      - Scoring automático de leads
+      - Post-seguimiento vía WhatsApp
+    triggers: [command:/sdc call, event:lead.new]
+    events: [call.started, call.completed, lead.scored]
+    auth: JWT + API key
+
+  - id: super-seller-agent
+    name: Super Seller Agent
+    entity: Vendedor IA Contextual
+    tagline: "Agente de ventas IA con contexto completo de productos, paquetes y precios"
+    category: ai
+    tier: [pro, enterprise]
+    price_mxn: {pro: 799, enterprise: 1499}
+    skills: [call-engine, voice.py, engine.py, products/engine.py]
+    features:
+      - Conoce todos los productos, paquetes y precios
+      - Contexto completo del negocio (FAQ, casos de éxito)
+      - Voz + Chat inteligente (Mystic)
+      - Responde en el tono de cada plataforma
+      - Detecta intención y upselling automático
+      - Integración con redes sociales (DM responder)
+      - Captura leads automáticamente
+      - Trigger "Sonora" para beneficios freemium
+    triggers: [always:available, event:social.mention, event:lead.new]
+    events: [seller.call_started, seller.deal_closed, seller.lead_captured]
+    cache: "Cache-Control: no-cache (tiempo real)"
+    cookies: "session + prefs_chat: SameSite=Lax, 30d"
+    auth: JWT + API key
+    faqs:
+      - p: "¿Qué sabe el Super Seller?"
+        r: "Todo: productos, precios, paquetes, FAQ, casos de éxito, ciberseguridad, IA. Responde en contexto."
+      - p: "¿Habla por teléfono?"
+        r: "Sí. Llama, califica leads, cierra ventas. Voz humana (Dalia Neural)."
+
+  - id: clone-mini
+    name: Clone Mini
+    entity: Digital Twin Agent
+    tagline: "Réplica facial + voz para contenido promocional"
+    category: ai
+    tier: [pro, enterprise]
+    price_mxn: {pro: 599, enterprise: 999}
+    skills: [clone-service.skill.md, lora_mcp, omnivoice_mcp]
+    triggers: [command:/sdc clone, event:clone.client_registered]
+
+  - id: whatsapp-agent-mini
+    name: WhatsApp Agent Mini
+    entity: Conversational Sales Agent
+    tagline: "Bot WhatsApp IA que vende 24/7"
+    category: ai
+    tier: [pro, enterprise]
+    price_mxn: {pro: 299, enterprise: 599}
+    skills: [wacli, hermes-gateway]
+    features:
+      - Respuestas desde tu número
+      - Catálogo de productos
+      - Pagos MP / Stripe
+      - Dashboard de métricas
+    triggers: [always:available, event:message.incoming]
+    events: [whatsapp.message_received, whatsapp.order_placed]
+
+  - id: uptime-monitor
+    name: Uptime Guardian
+    entity: Availability Watcher
+    tagline: "Monitoreo de disponibilidad 24/7"
+    category: infra
+    tier: [free, pro, enterprise]
+    price_mxn: {free: 0, pro: 49, enterprise: 199}
+    skills: [monitor-service.skill.md]
+
+  - id: backup-agent
+    name: Backup Guardian
+    entity: Data Protector Agent
+    tagline: "Backups automáticos con verificación"
+    category: infra
+    tier: [pro, enterprise]
+    price_mxn: {pro: 199, enterprise: 499}
+    skills: [ops/backup.py]
+    triggers: [cron:0 3 * * *]
+
+  - id: niche-barberking-studio
+    name: BarberKing Studio
+    entity: Niche Agent
+    tagline: "Servicios profesionales de barberking studio vía WhatsApp"
+    category: niche
+    tier: [pro, enterprise]
+    price_mxn: {pro: 149, enterprise: 599}
+    skills: [niche-barberking-studio-onboarding.skill.md, niche-barberking-studio-catalog.skill.md]
+    features:
+      - Catálogo WhatsApp para Corte de cabello
+      - Catálogo WhatsApp para Fotos de perfil
+      - Catálogo WhatsApp para Video promocional
+    triggers:
+      - event:niche:barbero:message:received
+      - event:niche:{niche_id}:catalog:requested
+    events:
+      - niche:barbero:onboarding:started
+      - niche:barbero:onboarding:completed
+      - niche:barbero:catalog:sent
+      - niche:barbero:service:selected
+    cache: "Cache-Control: no-cache"
+    auth: WhatsApp
+    faqs:
+      - p: "¿Qué servicios ofrece BarberKing Studio?"
+        r: "Ofrecemos: Corte de cabello, Fotos de perfil, Video promocional. Todo por WhatsApp."
+      - p: "¿Cuánto cuesta?"
+        r: "Desde $149 MXN. Consulta nuestro catálogo en WhatsApp."
+
+  - id: niche-mystik-music
+    name: Mystik Music
+    entity: Niche Agent
+    tagline: "Servicios profesionales de mystik music vía WhatsApp"
+    category: niche
+    tier: [pro, enterprise]
+    price_mxn: {pro: 299, enterprise: 799}
+    skills: [niche-mystik-music-onboarding.skill.md, niche-mystik-music-catalog.skill.md]
+    features:
+      - Catálogo WhatsApp para Clon de voz
+      - Catálogo WhatsApp para Fotos profesionales
+      - Catálogo WhatsApp para Talking head
+    triggers:
+      - event:niche:musico:message:received
+      - event:niche:{niche_id}:catalog:requested
+    events:
+      - niche:musico:onboarding:started
+      - niche:musico:onboarding:completed
+      - niche:musico:catalog:sent
+      - niche:musico:service:selected
+    cache: "Cache-Control: no-cache"
+    auth: WhatsApp
+    faqs:
+      - p: "¿Qué servicios ofrece Mystik Music?"
+        r: "Ofrecemos: Clon de voz, Fotos profesionales, Talking head. Todo por WhatsApp."
+      - p: "¿Cuánto cuesta?"
+        r: "Desde $299 MXN. Consulta nuestro catálogo en WhatsApp."
+
+  - id: niche-tacos-el-fogon
+    name: Tacos El Fogon
+    entity: Niche Agent
+    tagline: "Servicios profesionales de tacos el fogon vía WhatsApp"
+    category: niche
+    tier: [pro, enterprise]
+    price_mxn: {pro: 99, enterprise: 199}
+    skills: [niche-tacos-el-fogon-onboarding.skill.md, niche-tacos-el-fogon-catalog.skill.md]
+    features:
+      - Catálogo WhatsApp para Menú digital
+      - Catálogo WhatsApp para Promociones
+      - Catálogo WhatsApp para Reservaciones
+    triggers:
+      - event:niche:restaurante:message:received
+      - event:niche:{niche_id}:catalog:requested
+    events:
+      - niche:restaurante:onboarding:started
+      - niche:restaurante:onboarding:completed
+      - niche:restaurante:catalog:sent
+      - niche:restaurante:service:selected
+    cache: "Cache-Control: no-cache"
+    auth: WhatsApp
+    faqs:
+      - p: "¿Qué servicios ofrece Tacos El Fogon?"
+        r: "Ofrecemos: Menú digital, Promociones, Reservaciones. Todo por WhatsApp."
+      - p: "¿Cuánto cuesta?"
+        r: "Desde $99 MXN. Consulta nuestro catálogo en WhatsApp."
+
+  - id: niche-bufete-jurdico
+    name: Bufete Jurídico
+    entity: Niche Agent
+    tagline: "Servicios profesionales de Bufete Jurídico vía WhatsApp"
+    category: niche
+    tier: [pro, enterprise]
+    price_mxn: {pro: 499, enterprise: 1499}
+    skills: [niche-bufete-jurdico-onboarding.skill.md, niche-bufete-jurdico-catalog.skill.md]
+    features:
+      - Catálogo WhatsApp para Consulta legal
+      - Catálogo WhatsApp para Redacción de contratos
+      - Catálogo WhatsApp para Video asesoría
+    triggers:
+      - event:niche:abogado:message:received
+      - event:niche:abogado:catalog:requested
+    events:
+      - niche:abogado:onboarding:started
+      - niche:abogado:onboarding:completed
+      - niche:abogado:catalog:sent
+      - niche:abogado:service:selected
+    cache: "Cache-Control: no-cache"
+    auth: WhatsApp
+    faqs:
+      - p: "¿Qué servicios ofrece Bufete Jurídico?"
+        r: "Ofrecemos: Consulta legal, Redacción de contratos, Video asesoría. Todo por WhatsApp."
+      - p: "¿Cuánto cuesta?"
+        r: "Desde $499 MXN. Consulta nuestro catálogo en WhatsApp."
+
+  - id: niche-bufete-juridico
+    name: Bufete Jurídico
+    entity: Niche Agent
+    tagline: "Servicios profesionales de Bufete Jurídico vía WhatsApp"
+    category: niche
+    tier: [pro, enterprise]
+    price_mxn: {pro: 499, enterprise: 1499}
+    skills: [niche-bufete-juridico-onboarding.skill.md, niche-bufete-juridico-catalog.skill.md]
+    features:
+      - Catálogo WhatsApp para Consulta legal
+      - Catálogo WhatsApp para Redacción de contratos
+      - Catálogo WhatsApp para Video asesoría
+    triggers:
+      - event:niche:abogado:message:received
+      - event:niche:abogado:catalog:requested
+    events:
+      - niche:abogado:onboarding:started
+      - niche:abogado:onboarding:completed
+      - niche:abogado:catalog:sent
+      - niche:abogado:service:selected
+    cache: "Cache-Control: no-cache"
+    auth: WhatsApp
+    faqs:
+      - p: "¿Qué servicios ofrece Bufete Jurídico?"
+        r: "Ofrecemos: Consulta legal, Redacción de contratos, Video asesoría. Todo por WhatsApp."
+      - p: "¿Cuánto cuesta?"
+        r: "Desde $499 MXN. Consulta nuestro catálogo en WhatsApp."

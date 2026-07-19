@@ -1,0 +1,14 @@
+# Timer para ejecutar el evolution loop diariamente a las 3:00 AM
+# Install: sudo ln -s /home/mystic/sonora-digital-corp/infra/systemd/sonora-evolution.timer /etc/systemd/system/
+# Enable:  sudo systemctl enable --now sonora-evolution.timer
+
+[Unit]
+Description=Sonora Evolution daily timer (runs at 3:00 AM)
+Requires=sonora-evolution.service
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+
+[Install]
+WantedBy=timers.target

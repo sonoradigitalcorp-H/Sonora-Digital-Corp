@@ -1,0 +1,273 @@
+# SDC Package Registry — Planes y Paquetes
+# Layer 1: Combina productos en paquetes facturables
+# Layer 2: Skills + Tools requeridas por paquete
+# Layer 3: Subscription mapping
+# 
+# Cada paquete es una combinación de productos del product registry.
+# Pricing: suma de productos - descuento por paquete.
+
+packages:
+
+  # ─── FREE TIER ───
+  - id: starter-free
+    name: Starter Gratis
+    tier: free
+    price_mxn: 0
+    discount: 0
+    products:
+      - cyber-diagnosis
+      - uptime-monitor
+    skills_required:
+      - audit-security.skill.md
+      - monitor-service.skill.md
+    tools_required:
+      - firecrawl_scrape
+      - browser_navigate
+    features:
+      - 1 diagnóstico gratuito
+      - 1 dominio monitoreado
+      - Reporte HTML + Audio Mystic
+      - Válido 48h
+    limits:
+      domains: 1
+      scans: 1
+      calls_month: 0
+      clones: 0
+    systemd_services: []
+    nginx_configs: []
+
+  # ─── SECURITY BUNDLE ───
+  - id: security-bundle
+    name: Seguridad Total
+    tier: pro
+    price_mxn: 499
+    discount: 150  # descuento por paquete vs comprar individual
+    products:
+      - cyber-diagnosis
+      - ssl-monitor
+      - dns-guardian
+      - email-guardian
+      - uptime-monitor
+    skills_required:
+      - audit-security.skill.md
+      - monitor-service.skill.md
+      - scan.py
+      - report.py
+    tools_required:
+      - firecrawl_scrape
+      - browser_navigate
+      - llm_chat
+      - engram_save
+    features:
+      - Diagnóstico semanal automático
+      - Monitoreo SSL + DNS + Email
+      - Alertas WhatsApp en tiempo real
+      - Dashboard de seguridad
+      - Hasta 5 dominios
+      - Risk Management Plan mensual
+    limits:
+      domains: 5
+      scans: 999
+      calls_month: 0
+      clones: 0
+    systemd_services:
+      - sdc-api-bridge.service
+      - ops-agent.service
+    nginx_configs:
+      - /etc/nginx/sites-available/sonora-landing
+
+  # ─── AI AGENTS BUNDLE ───
+  - id: ai-bundle
+    name: Agentes IA
+    tier: pro
+    price_mxn: 799
+    discount: 299
+    products:
+      - call-engine-mini
+      - whatsapp-agent-mini
+      - uptime-monitor
+    skills_required:
+      - wacli
+      - hermes-gateway
+      - deploy-code.skill.md
+      - monitor-service.skill.md
+    tools_required:
+      - omnivoice_speak
+      - llm_chat
+      - stripe_create_checkout
+      - engram_save
+      - browser_navigate
+    features:
+      - Call Engine: 500 llamadas/mes
+      - WhatsApp Agent: respuestas ilimitadas
+      - Catálogo de productos + pagos MP/Stripe
+      - Dashboard de métricas en vivo
+      - 1 agente IA dedicado
+    limits:
+      domains: 3
+      scans: 0
+      calls_month: 500
+      clones: 0
+    systemd_services:
+      - hermes
+      - hermes-dashboard
+      - event-listener.service
+    nginx_configs:
+      - /etc/nginx/sites-available/sonora-landing
+
+  # ─── CLONE BUNDLE ───
+  - id: clone-bundle
+    name: Clone Digital
+    tier: pro
+    price_mxn: 699
+    discount: 200
+    products:
+      - clone-mini
+      - whatsapp-agent-mini
+      - backup-agent
+    skills_required:
+      - clone-service.skill.md
+      - lora_mcp
+      - omnivoice_mcp
+      - deploy-code.skill.md
+    tools_required:
+      - train_lora
+      - omnivoice_clone
+      - omnivoice_speak
+      - upload_file
+      - engram_save
+    features:
+      - 1 entrenamiento LoRA facial
+      - 1 clonación de voz
+      - 100 assets generados/mes
+      - WhatsApp Agent para entrega
+      - Backup automático de assets
+    limits:
+      domains: 1
+      scans: 0
+      calls_month: 0
+      clones: 1
+    systemd_services:
+      - sdc-api-bridge.service
+      - ops-agent.service
+    nginx_configs: []
+
+  # ─── BUSINESS COMPLETE ───
+  - id: business-complete
+    name: Empresa Completa
+    tier: enterprise
+    price_mxn: 2499
+    discount: 600
+    products:
+      - cyber-diagnosis
+      - ssl-monitor
+      - dns-guardian
+      - email-guardian
+      - call-engine-mini
+      - whatsapp-agent-mini
+      - clone-mini
+      - uptime-monitor
+      - backup-agent
+    skills_required:
+      - audit-security.skill.md
+      - monitor-service.skill.md
+      - clone-service.skill.md
+      - deploy-code.skill.md
+      - validate-quality.skill.md
+      - track-finance.skill.md
+      - wacli
+      - hermes-gateway
+    tools_required:
+      - firecrawl_scrape
+      - browser_navigate
+      - omnivoice_speak
+      - omnivoice_clone
+      - train_lora
+      - llm_chat
+      - stripe_create_checkout
+      - engram_save
+      - upload_file
+      - engram_search
+    features:
+      - TODO: seguridad + IA + clones
+      - Dominios ilimitados
+      - Llamadas ilimitadas
+      - Clones ilimitados
+      - Agente IA 24/7 dedicado
+      - SLA 99.99%
+      - Onboarding personalizado
+    limits:
+      domains: 999
+      scans: 999
+      calls_month: 99999
+      clones: 999
+    systemd_services:
+      - hermes
+      - hermes-dashboard
+      - event-listener.service
+      - sdc-api-bridge.service
+      - ops-agent.service
+      - sdc-self-audit.timer
+    nginx_configs:
+      - /etc/nginx/sites-available/sonora-landing
+
+  # ─── NICHE PACKAGES ───
+  - id: ecommerce-security
+    name: E-commerce Seguro
+    tier: pro
+    price_mxn: 399
+    discount: 100
+    products:
+      - cyber-diagnosis
+      - ssl-monitor
+      - whatsapp-agent-mini
+    skills_required:
+      - audit-security.skill.md
+      - monitor-service.skill.md
+      - wacli
+    tools_required:
+      - firecrawl_scrape
+      - browser_navigate
+      - llm_chat
+    features:
+      - Diagnóstico específico para tiendas online
+      - SSL + seguridad de pagos
+      - Bot WhatsApp para atención al cliente
+      - Alertas de seguridad en tiempo real
+    limits:
+      domains: 2
+      scans: 12
+      calls_month: 0
+      clones: 0
+    systemd_services:
+      - event-listener.service
+    nginx_configs: []
+
+  - id: startup-pack
+    name: Startup Pack
+    tier: pro
+    price_mxn: 299
+    discount: 50
+    products:
+      - cyber-diagnosis
+      - uptime-monitor
+      - backup-agent
+    skills_required:
+      - audit-security.skill.md
+      - monitor-service.skill.md
+      - ops/backup.py
+    tools_required:
+      - firecrawl_scrape
+      - engram_save
+    features:
+      - Diagnóstico + monitoreo + backups
+      - Ideal para startups en crecimiento
+      - Configuración en 24h
+    limits:
+      domains: 2
+      scans: 12
+      calls_month: 0
+      clones: 0
+    systemd_services:
+      - ops-agent.service
+    nginx_configs: []
