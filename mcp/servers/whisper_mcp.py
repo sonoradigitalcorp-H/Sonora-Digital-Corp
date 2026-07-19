@@ -50,26 +50,18 @@ async def whisper_transcribe(audio_url: str, language: str = "es") -> str:
 
             srt_content = "\n".join(srt_lines)
 
-            srt_url = ""
-            if SUPABASE_URL and SUPABASE_SERVICE_KEY and text:
-                headers = {
-                    "apikey": SUPABASE_SERVICE_KEY,
-                    "Authorization": f"Bearer {SUPABASE_SERVICE_KEY}",
-                    "Content-Type": "text/plain",
-                }
-                import hashlib
-                srt_path = f"content/subtitles/{hashlib.md5(text.encode()).hexdigest()[:10]}.srt"
-                async with httpx.AsyncClient() as client:
-                    resp = await client.post(
-                        f"{SUPABASE_URL}/storage/v1/object/sdc-assets/{srt_path}",
-                        content=srt_content.encode(),
-                        headers=headers,
-                        timeout=30,
-                    )
-                    if resp.status_code in (200, 201):
-                        srt_url = f"{SUPABASE_URL}/storage/v1/object/public/sdc-assets/{srt_path}"
+                        srt_url = ""
+            # Save SRT locally — Supabase not needed for WhatsApp pipeline
+            import hashlib as _hl
+            srt_dir = os.path.join(os.path.dirname(__file__), "..", "..", "state", "subtitles")
+            os.makedirs(srt_dir, exist_ok=True)
+            srt_name = _hl.md5(text.encode()).hexdigest()[:10] + ".srt"
+            srt_path = os.path.join(srt_dir, srt_name)
+            with open(srt_path, "w") as f_srt:
+                f_srt.write(srt_content)
+            srt_url = srt_path
 
-            return json.dumps({
+return json.dumps({
                 "text": text,
                 "srt": srt_content,
                 "srt_url": srt_url,

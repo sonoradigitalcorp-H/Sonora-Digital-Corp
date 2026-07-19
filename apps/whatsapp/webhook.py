@@ -33,7 +33,7 @@ sys.path.insert(0, str(REPO))
 EVENTS_FILE = REPO / "state" / "events" / "events.jsonl"
 
 
-def _emit_json(event_type: str, payload: dict) -> None:
+def emit_event(event_type: str, payload: dict) -> None:
     """Emit event as JSON line (not YAML like the pipeline)."""
     EVENTS_FILE.parent.mkdir(parents=True, exist_ok=True)
     entry = {
@@ -115,6 +115,13 @@ def _fetch_messages(limit: int = 50) -> list:
 
 
 def _process_message(msg: dict, seen: set) -> bool:
+    # ONLY process messages from founder (5216623538272)
+    sender = msg.get("SenderJID", "") or msg.get("sender", "") or msg.get("from", "")
+    sender_clean = sender.split("@")[0] if "@" in sender else sender
+    founder = "5216623538272"
+    env_phone = os.environ.get("FOUNDER_PHONE", "")
+    if sender_clean != founder and sender_clean != env_phone:
+        return False  # silently ignore messages from anyone else
     """Process a single message. Returns True if it was new."""
     msg_id = msg.get("MsgID") or msg.get("id") or msg.get("message_id") or msg.get("key", {}).get("id")
     if not msg_id or msg_id in seen:
@@ -131,7 +138,7 @@ def _process_message(msg: dict, seen: set) -> bool:
         "timestamp": timestamp,
         "message_id": msg_id,
     }
-    _emit_json("whatsapp:message:received", payload)
+    emit_event("whatsapp:message:received", payload)
 
     # If message is from the founder → save to inbox
     if FOUNDER_PHONE and FOUNDER_PHONE in sender:
@@ -143,13 +150,13 @@ def _process_message(msg: dict, seen: set) -> bool:
         }
         with open(FOUNDER_INBOX, "a") as f:
             f.write(json.dumps(inbox_entry, ensure_ascii=False) + "\n")
-        _emit_json("founder:message:received", payload)
+        emit_event("founder:message:received", payload)
         print(f"[whatsapp-webhook] 📩 MENSAJE DEL FUNDADOR: {text[:100]}", file=sys.stderr)
 
     # Trigger catalog request if text mentions catalog
     catalog_keywords = ["catálogo", "catalogo", "catalog", "servicios", "productos", "planes"]
     if text and any(k in text.lower() for k in catalog_keywords):
-        _emit_json("whatsapp:catalog:requested", {"client_id": sender, "timestamp": timestamp})
+        emit_event("whatsapp:catalog:requested", {"client_id": sender, "timestamp": timestamp})
 
     return True
 
@@ -164,7 +171,7 @@ def run_webhook(interval: int = DEFAULT_INTERVAL, once: bool = False) -> None:
             messages = _fetch_messages()
             if messages is None:
                 # wacli error or auth issue
-                _emit_json("system:whatsapp:disconnected", {"error": "messages fetch failed"})
+                emit_event("system:whatsapp:disconnected", {"error": "messages fetch failed"})
                 print(f"[whatsapp-webhook] Disconnected, retrying in {backoff}s", file=sys.stderr)
                 time.sleep(backoff)
                 backoff = min(backoff * 2, BACKOFF_MAX)
@@ -173,7 +180,7 @@ def run_webhook(interval: int = DEFAULT_INTERVAL, once: bool = False) -> None:
                 continue
 
             if backoff > 1:
-                _emit_json("system:whatsapp:reconnected", {"timestamp": datetime.now(timezone.utc).isoformat()})
+                emit_event("system:whatsapp:reconnected", {"timestamp": datetime.now(timezone.utc).isoformat()})
                 print("[whatsapp-webhook] Reconnected", file=sys.stderr)
                 backoff = 1
 
@@ -194,7 +201,7 @@ def run_webhook(interval: int = DEFAULT_INTERVAL, once: bool = False) -> None:
         print("[whatsapp-webhook] Stopped by user", file=sys.stderr)
         _save_seen(seen)
     except Exception as e:
-        _emit_json("system:whatsapp:disconnected", {"error": str(e)})
+        emit_event("system:whatsapp:disconnected", {"error": str(e)})
         _save_seen(seen)
         raise
 
