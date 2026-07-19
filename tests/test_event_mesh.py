@@ -27,23 +27,26 @@ def test_catalog_exists():
     assert CATALOG.exists()
     with open(CATALOG) as f:
         data = yaml.safe_load(f)
-    assert data["version"] == 2
+    assert data["version"] == 3
     assert "categories" in data
     assert "artist" in data["categories"]
     assert "agent" in data["categories"]
+    assert "whatsapp" in data["categories"]
 
 
 def test_load_catalog():
     events = load_catalog()
     assert "artist.data_sync.completed" in events
-    assert "agent.action.executed" in events
-    assert "system.error.occurred" in events
-    assert "memory.stored" in events
-    assert "constitution.gate.violation" in events
-    assert "evolution.adr.proposed" in events
-    assert "track.published" in events
-    assert "video.generated" in events
-    assert "revenue.updated" in events
+    assert "agent_health_report" in events
+    assert "agent_manifest_created" in events
+    assert "engram_bridge_created" in events
+    assert "governance_hardened" in events
+    assert "adr_created" in events
+    assert "track.publish.completed" in events
+    assert "video.generation.completed" in events
+    assert "whatsapp:message:received" in events
+    assert "whatsapp:message:sent" in events
+    assert "whatsapp:catalog:requested" in events
 
 
 def test_make_event_has_schema():
@@ -67,7 +70,7 @@ def test_make_event_has_schema():
 
 
 def test_validate_event_passes():
-    evt = make_event_has("agent.action.executed", "kernel", "default", "system", "test")
+    evt = make_event_has("agent_health_report", "kernel", "default", "system", "test")
     validate_event(evt)
 
 
@@ -104,7 +107,13 @@ def test_catalog_all_events_parseable():
         data = yaml.safe_load(f)
     all_events = set()
     for cat_name, cat_data in data["categories"].items():
-        for evt in cat_data["events"]:
+        if isinstance(cat_data, list):
+            events = cat_data
+        elif isinstance(cat_data, dict):
+            events = cat_data.get("events", [])
+        else:
+            continue
+        for evt in events:
             if isinstance(evt, dict):
                 all_events.add(evt["type"])
             else:

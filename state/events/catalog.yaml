@@ -156,3 +156,11 @@ categories:
   - video.generation.progress
   - video.generation.requested
   - video.generation.started
+  whatsapp:
+  - whatsapp:catalog:requested
+  - whatsapp:contacts:list
+  - whatsapp:message:received
+  - whatsapp:message:sent
+  - whatsapp:qr:created
+  - whatsapp:qr:read
+  - whatsapp:wa_me_link:created

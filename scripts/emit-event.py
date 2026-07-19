@@ -21,11 +21,20 @@ def load_catalog() -> set[str]:
             data = yaml.safe_load(f)
         events = set()
         for cat in data.get("categories", {}).values():
-            for evt in cat.get("events", []):
-                if isinstance(evt, dict):
-                    events.add(evt.get("type", ""))
-                else:
-                    events.add(evt)
+            # v3 format: category value is a list of event names
+            if isinstance(cat, list):
+                for evt in cat:
+                    if isinstance(evt, dict):
+                        events.add(evt.get("type", ""))
+                    else:
+                        events.add(evt)
+            # v2 fallback: category value is a dict with "events" key
+            elif isinstance(cat, dict):
+                for evt in cat.get("events", []):
+                    if isinstance(evt, dict):
+                        events.add(evt.get("type", ""))
+                    else:
+                        events.add(evt)
         return events
     except Exception:
         return set()

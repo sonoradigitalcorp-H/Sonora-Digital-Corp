@@ -117,3 +117,12 @@ agents:
     channel: agent:finance
     triggers: [event:payment:process:requested, event:invoice:generated]
     emits: [payment:processed, payment:refunded, payment:failed, payment:reconciled]
+
+  - name: evolution
+    tenant: sdc
+    role: self-improvement
+    tools: [enterprise_score, engram_save, engram_search]
+    memory: engram_sdc
+    channel: agent:evolution
+    triggers: [cron:*/30, event:system:score:updated]
+    emits: [evolution.improvement_proposed, evolution.simulated, evolution.completed]

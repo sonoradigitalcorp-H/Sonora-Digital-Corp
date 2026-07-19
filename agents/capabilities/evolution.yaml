@@ -1,0 +1,8 @@
+name: evolution
+version: 1.0.0
+description: Self-improvement capability for Sonora OS
+policies:
+  - propose_improvements
+  - simulate_impact
+  - apply_if_score_grows
+  - revert_if_score_drops
