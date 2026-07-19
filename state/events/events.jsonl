@@ -9,3 +9,7 @@
 {"event": "SyncCycleCompleted", "producer": "decision-engine", "timestamp": "2026-07-19T14:52:42Z", "payload": {"artists_synced": 1, "total_duration_ms": 0}}
 {"event": "client:interaction", "timestamp": "2026-07-19T17:56:14.757169+00:00", "payload": {"client_id": "test-client-001", "type": "message", "service": "video-talking-head"}}
 {"event": "client:updated", "timestamp": "2026-07-19T17:56:15.304024+00:00", "payload": {"client_id": "test-client-001", "updates": {"name": "Juan Actualizado", "niche": "barbero"}}}
+{"event": "client:interaction", "timestamp": "2026-07-19T18:06:44.553326+00:00", "payload": {"client_id": "test-client-001", "type": "message", "service": "video-talking-head"}}
+{"event": "client:updated", "timestamp": "2026-07-19T18:06:44.770511+00:00", "payload": {"client_id": "test-client-001", "updates": {"name": "Juan Actualizado", "niche": "barbero"}}}
+{"event": "client:interaction", "timestamp": "2026-07-19T18:18:43.119724+00:00", "payload": {"client_id": "test-client-001", "type": "message", "service": "video-talking-head"}}
+{"event": "client:updated", "timestamp": "2026-07-19T18:18:43.473304+00:00", "payload": {"client_id": "test-client-001", "updates": {"name": "Juan Actualizado", "niche": "barbero"}}}
