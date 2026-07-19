@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>SDC Eval Dashboard — 34/36</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0d1117; color: #c9d1d9; padding: 24px; max-width: 1200px; margin: 0 auto; }
+        h1 { font-size: 28px; margin-bottom: 4px; }
+        .subtitle { color: #8b949e; font-size: 14px; margin-bottom: 24px; }
+        .summary { display: flex; gap: 16px; margin-bottom: 24px; flex-wrap: wrap; }
+        .stat { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 20px 28px; min-width: 120px; }
+        .num { font-size: 40px; font-weight: 700; }
+        .label { font-size: 11px; text-transform: uppercase; color: #8b949e; letter-spacing: 0.5px; }
+        .pass .num { color: #3fb950; }
+        .fail .num { color: #f85149; }
+        .total .num { color: #58a6ff; }
+        .pct .num { color: #d29922; }
+        h2 { font-size: 18px; margin: 24px 0 12px; color: #f0f6fc; }
+        table { width: 100%; border-collapse: collapse; background: #161b22; border-radius: 8px; overflow: hidden; margin-bottom: 16px; }
+        th { text-align: left; padding: 12px 16px; background: #21262d; border-bottom: 1px solid #30363d; font-size: 11px; text-transform: uppercase; color: #8b949e; letter-spacing: 0.5px; }
+        td { padding: 10px 16px; border-bottom: 1px solid #21262d; font-size: 13px; }
+        tr:hover { background: #1c2128; }
+        tr.failed td { border-left: 3px solid #f85149; }
+        tr.passed td { border-left: 3px solid #3fb950; }
+        .status-passed { color: #3fb950; font-weight: 600; }
+        .status-failed { color: #f85149; font-weight: 600; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; letter-spacing: 0.3px; }
+        .badge.agent { background: #3fb95022; color: #3fb950; }
+        .badge.cap { background: #d2992222; color: #d29922; }
+        .badge.sdd { background: #58a6ff22; color: #58a6ff; }
+        .badge.skill { background: #bc8cff22; color: #bc8cff; }
+        .badge.event { background: #f8514922; color: #f85149; }
+        .bar { height: 8px; background: #21262d; border-radius: 4px; overflow: hidden; }
+        .fill { height: 100%; background: #3fb950; border-radius: 4px; }
+        .fill.low { background: #f85149; }
+        .fill.medium { background: #d29922; }
+        .footer { margin-top: 24px; font-size: 11px; color: #484f58; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>SDC Agent OS — Eval Dashboard</h1>
+    <p class="subtitle">5 domains · 36 tests · 2026-07-18 17:52:40</p>
+
+    <div class="summary">
+        <div class="stat total"><div class="num">36</div><div class="label">Total</div></div>
+        <div class="stat pass"><div class="num">34</div><div class="label">Passed</div></div>
+        <div class="stat fail"><div class="num">2</div><div class="label">Failed</div></div>
+        <div class="stat pct"><div class="num">94%</div><div class="label">Pass Rate</div></div>
+    </div>
+
+    <h2>📊 By Domain</h2>
+    <table>
+        <tr><th>Domain</th><th>Passed/Total</th><th>Rate</th><th>Bar</th></tr>
+        
+        <tr>
+            <td><span class="badge agent">AGENT</span></td>
+            <td>10/10</td>
+            <td>100%</td>
+            <td><div class="bar"><div class="fill" style="width:100.0%"></div></div></td>
+        </tr>
+        <tr>
+            <td><span class="badge cap">CAP</span></td>
+            <td>5/6</td>
+            <td>83%</td>
+            <td><div class="bar"><div class="fill" style="width:83.33333333333334%"></div></div></td>
+        </tr>
+        <tr>
+            <td><span class="badge event">EVENT</span></td>
+            <td>6/6</td>
+            <td>100%</td>
+            <td><div class="bar"><div class="fill" style="width:100.0%"></div></div></td>
+        </tr>
+        <tr>
+            <td><span class="badge other">OTHER</span></td>
+            <td>0/1</td>
+            <td>0%</td>
+            <td><div class="bar"><div class="fill" style="width:0.0%"></div></div></td>
+        </tr>
+        <tr>
+            <td><span class="badge sdd">SDD</span></td>
+            <td>8/8</td>
+            <td>100%</td>
+            <td><div class="bar"><div class="fill" style="width:100.0%"></div></div></td>
+        </tr>
+        <tr>
+            <td><span class="badge skill">SKILL</span></td>
+            <td>5/5</td>
+            <td>100%</td>
+            <td><div class="bar"><div class="fill" style="width:100.0%"></div></div></td>
+        </tr>
+    </table>
+
+    <h2>📋 All Tests</h2>
+    <table>
+        <tr><th>Status</th><th>Test</th><th>Result</th></tr>
+        
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge agent">AGENT-01</span> Agent 01 Creator Agent Defined</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge agent">AGENT-02</span> Agent 02 Quality Agent Defined</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge agent">AGENT-03</span> Agent 03 Monitor Agent Defined</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge agent">AGENT-04</span> Agent 04 Ceo Agent Defined</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge agent">AGENT-05</span> Agent 05 Marketing Agent Defined</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge agent">AGENT-06</span> Agent 06 Content Agent Defined</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge agent">AGENT-07</span> Agent 07 Sales Agent Defined</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge agent">AGENT-08</span> Agent 08 Support Agent Defined</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge agent">AGENT-09</span> Agent 09 Voice Agent Defined</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge agent">AGENT-10</span> Agent 10 Clone Agent Defined</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge cap">CAP-01</span> Cap 01 Registry Exists</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge cap">CAP-02</span> Cap 02 Dualidad Resuelta</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge cap">CAP-03</span> Cap 03 Router Exists</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge cap">CAP-04</span> Cap 04 Bus Api Defined</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge cap">CAP-05</span> Cap 05 Provider Registry Sync</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="failed">
+            <td>❌</td>
+            <td><span class="badge cap">CAP-06</span> Cap 06 Agents Have Capabilities</td>
+            <td><span class="status-failed">FAILED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge sdd">SDD-01</span> Sdd 01 Spec Skill Exists</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge sdd">SDD-02</span> Sdd 02 Design Skill Exists</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge sdd">SDD-03</span> Sdd 03 Apply Skill Exists</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge sdd">SDD-04</span> Sdd 04 Verify Skill Exists</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge sdd">SDD-05</span> Sdd 05 Archive Skill Exists</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge sdd">SDD-06</span> Sdd 06 Orchestrator Skill Exists</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge sdd">SDD-07</span> Sdd 07 Completed Specs Exist</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge sdd">SDD-08</span> Sdd 08 Gherkin Scenarios Exist</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge skill">SKILL-01</span> Skill 01 Skill Registry Js Exists</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge skill">SKILL-02</span> Skill 02 Skill Template Exists</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge skill">SKILL-03</span> Skill 03 Skill Creator Exists</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge skill">SKILL-04</span> Skill 04 Meta Registry Skills</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge skill">SKILL-05</span> Skill 05 Skills Have Hermes Index</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge event">EVENT-01</span> Event 01 Emitter Exists</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge event">EVENT-02</span> Event 02 Emitter Can Emit</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge event">EVENT-03</span> Event 03 Listener Can Start</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge event">EVENT-04</span> Event 04 Alert Handler Exists</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge event">EVENT-05</span> Event 05 Memory Handler Exists</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="passed">
+            <td>✅</td>
+            <td><span class="badge event">EVENT-06</span> Event 06 Catalog Has Events</td>
+            <td><span class="status-passed">PASSED</span></td>
+        </tr>
+        <tr class="failed">
+            <td>❌</td>
+            <td> Failed</td>
+            <td><span class="status-failed">FAILED</span></td>
+        </tr>
+    </table>
+
+    <div class="footer">Generated by SDC Eval Runner · promptfoo-compatible</div>
+</body>
+</html>
