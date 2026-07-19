@@ -98,20 +98,20 @@ def _fetch_messages(limit: int = 50) -> list:
     data = result.get("data", [])
     if isinstance(data, list):
         return data
-    # Some wacli versions wrap messages under a key
+    # wacli wraps messages under data.messages
     return data.get("messages", []) if isinstance(data, dict) else []
 
 
 def _process_message(msg: dict, seen: set) -> bool:
     """Process a single message. Returns True if it was new."""
-    msg_id = msg.get("id") or msg.get("message_id") or msg.get("key", {}).get("id")
+    msg_id = msg.get("MsgID") or msg.get("id") or msg.get("message_id") or msg.get("key", {}).get("id")
     if not msg_id or msg_id in seen:
         return False
 
     seen.add(msg_id)
-    sender = _normalize_sender(msg.get("sender", ""))
-    text = msg.get("text", "") or msg.get("message", "") or msg.get("body", "")
-    timestamp = msg.get("timestamp", "") or msg.get("time", "")
+    sender = _normalize_sender(msg.get("SenderJID", msg.get("sender", "")))
+    text = msg.get("Text", "") or msg.get("DisplayText", "") or msg.get("text", "") or msg.get("message", "") or msg.get("body", "")
+    timestamp = msg.get("Timestamp", "") or msg.get("timestamp", "") or msg.get("time", "")
 
     payload = {
         "from": sender,
