@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SDC Design System</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════════
+   SONORA DESIGN SYSTEM v1.0
+   Inspirado en: ElevenLabs (purple/glass), Spotify (green/clean),
+                 Netflix (bold/cinematic), Higgsfield (AI/futuristic)
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ─── Tokens ─── */
+:root {
+  /* Backgrounds */
+  --bg-deep: #0a0a0a;
+  --bg-surface: #111111;
+  --bg-card: #1a1a1a;
+  --bg-card-hover: #222222;
+  --bg-elevated: #252525;
+
+  /* Brand — Purple (ElevenLabs vibe) */
+  --purple-50: #f5f3ff;
+  --purple-100: #ede9fe;
+  --purple-200: #ddd6fe;
+  --purple-400: #a78bfa;
+  --purple-500: #8b5cf6;
+  --purple-600: #7c3aed;
+  --purple-700: #6d28d9;
+  --purple-900: #1e1b4b;
+  
+  /* Brand — Green (Spotify vibe) */
+  --green-400: #34d399;
+  --green-500: #10b981;
+  --green-600: #059669;
+  
+  /* Brand — Red (Netflix vibe) */
+  --red-500: #ef4444;
+  --red-600: #dc2626;
+  
+  /* Brand — Cyan (Higgsfield vibe) */
+  --cyan-400: #22d3ee;
+  --cyan-500: #06b6d4;
+
+  /* Text */
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --text-tertiary: #71717a;
+  --text-inverse: #0a0a0a;
+
+  /* Gradients */
+  --gradient-brand: linear-gradient(135deg, #7c3aed, #a78bfa, #22d3ee);
+  --gradient-purple: linear-gradient(135deg, #7c3aed, #6d28d9);
+  --gradient-green: linear-gradient(135deg, #10b981, #34d399);
+  --gradient-red: linear-gradient(135deg, #ef4444, #dc2626);
+  --gradient-hero: linear-gradient(to bottom, #0a0a0a 0%, #111111 50%, #0a0a0a 100%);
+
+  /* Effects */
+  --glass-bg: rgba(255, 255, 255, 0.03);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-hover: rgba(255, 255, 255, 0.06);
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.3);
+  --shadow-md: 0 4px 6px rgba(0,0,0,0.4);
+  --shadow-lg: 0 10px 25px rgba(0,0,0,0.5);
+  --shadow-glow-purple: 0 0 20px rgba(124, 58, 237, 0.15);
+  --shadow-glow-green: 0 0 20px rgba(16, 185, 129, 0.15);
+
+  /* Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+
+  /* Typography */
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size-base: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 2rem;
+  --font-size-4xl: 2.5rem;
+  --font-size-5xl: 3.5rem;
+  --font-size-6xl: 4.5rem;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-20: 80px;
+}
+
+/* ─── Reset ─── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font-sans);
+  background: var(--bg-deep);
+  color: var(--text-primary);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+::selection { background: var(--purple-600); color: white; }
+
+/* ─── Typography ─── */
+h1, h2, h3, h4 { font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
+h1 { font-size: var(--font-size-5xl); }
+h2 { font-size: var(--font-size-3xl); }
+h3 { font-size: var(--font-size-2xl); }
+p { color: var(--text-secondary); font-size: var(--font-size-base); }
+.text-gradient { background: var(--gradient-brand); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.text-purple { color: var(--purple-400); }
+.text-green { color: var(--green-400); }
+.text-secondary { color: var(--text-secondary); }
+.text-tertiary { color: var(--text-tertiary); }
+
+/* ─── Cards (Glassmorphism — ElevenLabs style) ─── */
+.card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-6);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(12px);
+}
+.card:hover {
+  background: var(--glass-hover);
+  border-color: rgba(124, 58, 237, 0.3);
+  box-shadow: var(--shadow-glow-purple);
+  transform: translateY(-2px);
+}
+.card-green:hover { border-color: rgba(16, 185, 129, 0.3); box-shadow: var(--shadow-glow-green); }
+
+/* ─── Buttons ─── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-full);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.btn-primary {
+  background: var(--gradient-purple);
+  color: white;
+  box-shadow: var(--shadow-glow-purple);
+}
+.btn-primary:hover { transform: scale(1.02); box-shadow: 0 0 30px rgba(124, 58, 237, 0.3); }
+.btn-green {
+  background: var(--gradient-green);
+  color: white;
+  box-shadow: var(--shadow-glow-green);
+}
+.btn-green:hover { transform: scale(1.02); }
+.btn-ghost {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--glass-border);
+}
+.btn-ghost:hover { background: var(--glass-hover); border-color: var(--purple-500); }
+.btn-lg { padding: var(--space-4) var(--space-8); font-size: var(--font-size-base); }
+.btn-xl { padding: var(--space-5) var(--space-10); font-size: var(--font-size-lg); }
+
+/* ─── Navbar (Netflix/Spotify style) ─── */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-8);
+  background: linear-gradient(to bottom, rgba(10,10,10,0.95) 0%, transparent 100%);
+  backdrop-filter: blur(20px);
+}
+.navbar-logo {
+  font-size: var(--font-size-xl);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+.navbar-logo span { color: var(--purple-400); }
+.navbar-links { display: flex; gap: var(--space-6); align-items: center; }
+.navbar-links a {
+  color: var(--text-secondary);
+  text-decoration: none;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  transition: color 0.2s;
+}
+.navbar-links a:hover { color: var(--text-primary); }
+
+/* ─── Hero (Netflix cinematic style) ─── */
+.hero {
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-20) var(--space-8);
+  background: var(--gradient-hero);
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 50% 50%, rgba(124,58,237,0.08) 0%, transparent 50%);
+  animation: heroPulse 8s ease-in-out infinite;
+}
+@keyframes heroPulse {
+  0%, 100% { transform: scale(1); opacity: 0.5; }
+  50% { transform: scale(1.1); opacity: 1; }
+}
+.hero-content { position: relative; z-index: 1; max-width: 800px; }
+.hero h1 { font-size: var(--font-size-6xl); margin-bottom: var(--space-4); }
+.hero p { font-size: var(--font-size-lg); max-width: 600px; margin: 0 auto var(--space-8); }
+
+/* ─── Grid ─── */
+.grid { display: grid; gap: var(--space-4); }
+.grid-2 { grid-template-columns: repeat(2, 1fr); }
+.grid-3 { grid-template-columns: repeat(3, 1fr); }
+.grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+/* ─── Section ─── */
+.section { padding: var(--space-16) var(--space-8); max-width: 1200px; margin: 0 auto; }
+.section-header { text-align: center; margin-bottom: var(--space-12); }
+.section-header h2 { margin-bottom: var(--space-3); }
+.section-header p { max-width: 500px; margin: 0 auto; }
+
+/* ─── Inputs (Spotify clean style) ─── */
+.input {
+  width: 100%;
+  padding: var(--space-3) var(--space-4);
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: var(--font-size-sm);
+  transition: all 0.2s;
+  outline: none;
+}
+.input:focus { border-color: var(--purple-500); box-shadow: 0 0 0 3px rgba(124,58,237,0.15); }
+.input::placeholder { color: var(--text-tertiary); }
+
+/* ─── Badge ─── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--space-1) var(--space-3);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-xs);
+  font-weight: 600;
+  gap: var(--space-1);
+}
+.badge-purple { background: rgba(124, 58, 237, 0.15); color: var(--purple-400); }
+.badge-green { background: rgba(16, 185, 129, 0.15); color: var(--green-400); }
+.badge-red { background: rgba(239, 68, 68, 0.15); color: var(--red-500); }
+.badge-cyan { background: rgba(34, 211, 238, 0.15); color: var(--cyan-400); }
+.badge-dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.badge-dot.purple { background: var(--purple-400); }
+.badge-dot.green { background: var(--green-400); }
+
+/* ─── Table (Netflix list style) ─── */
+.table-wrap {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+  overflow: hidden;
+}
+table { width: 100%; border-collapse: collapse; }
+th {
+  text-align: left;
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  border-bottom: 1px solid var(--glass-border);
+}
+td {
+  padding: var(--space-3) var(--space-4);
+  font-size: var(--font-size-sm);
+  border-bottom: 1px solid var(--glass-border);
+  color: var(--text-secondary);
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,0.02); }
+
+/* ─── Stats / Metric Cards (ElevenLabs style) ─── */
+.stat {
+  text-align: center;
+  padding: var(--space-6);
+}
+.stat-value { font-size: var(--font-size-4xl); font-weight: 800; background: var(--gradient-brand); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+.stat-label { font-size: var(--font-size-sm); color: var(--text-tertiary); margin-top: var(--space-1); }
+
+/* ─── Avatar (Spotify circular style) ─── */
+.avatar {
+  width: 40px; height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--gradient-purple);
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: var(--font-size-sm);
+  flex-shrink: 0;
+}
+.avatar-lg { width: 64px; height: 64px; font-size: var(--font-size-xl); }
+
+/* ─── Divider ─── */
+.divider { height: 1px; background: var(--glass-border); margin: var(--space-8) 0; }
+.divider-gradient { height: 1px; background: linear-gradient(to right, transparent, var(--purple-500), transparent); margin: var(--space-8) 0; }
+
+/* ─── Glass pill (ElevenLabs) ─── */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-2) var(--space-4);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-full);
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  backdrop-filter: blur(12px);
+}
+
+/* ─── Loading spinner ─── */
+.spinner {
+  width: 20px; height: 20px;
+  border: 2px solid var(--glass-border);
+  border-top-color: var(--purple-500);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ─── Tabs (Higgsfield style) ─── */
+.tabs {
+  display: flex; gap: var(--space-1);
+  background: var(--bg-card);
+  padding: var(--space-1);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--glass-border);
+}
+.tab {
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-tertiary);
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  background: transparent;
+  font-family: var(--font-sans);
+}
+.tab.active { background: var(--purple-600); color: white; }
+.tab:hover:not(.active) { color: var(--text-primary); background: var(--glass-hover); }
+
+/* ─── Responsive ─── */
+@media(max-width: 768px) {
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  h1 { font-size: var(--font-size-3xl); }
+  h2 { font-size: var(--font-size-2xl); }
+  .hero h1 { font-size: var(--font-size-4xl); }
+  .navbar { padding: var(--space-3) var(--space-4); }
+  .navbar-links { display: none; }
+}
+
+/* ─── Glass gradient bg (ElevenLabs style) ─── */
+.glass-bg {
+  position: relative;
+  overflow: hidden;
+}
+.glass-bg::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: radial-gradient(ellipse at 20% 50%, rgba(124,58,237,0.1) 0%, transparent 50%),
+              radial-gradient(ellipse at 80% 50%, rgba(34,211,238,0.06) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+/* ─── Code block ─── */
+.code {
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: var(--font-size-sm);
+  overflow-x: auto;
+  color: var(--text-secondary);
+}
+.code .purple { color: var(--purple-400); }
+.code .green { color: var(--green-400); }
+.code .cyan { color: var(--cyan-400); }
+</style>
+</head>
+<body>
+
+<!-- Navbar (Netflix/Spotify) -->
+<nav class="navbar">
+  <div class="navbar-logo">◈ <span>SDC</span></div>
+  <div class="navbar-links">
+    <a href="#">Inicio</a>
+    <a href="#">Productos</a>
+    <a href="#">Dashboard</a>
+    <a href="#">Precios</a>
+    <button class="btn btn-primary btn-lg">Empezar →</button>
+  </div>
+</nav>
+
+<!-- Hero (Netflix cinematic) -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="pill" style="margin-bottom:24px">
+      <span class="badge-dot purple"></span>
+      Sistema de agentes IA en producción
+    </div>
+    <h1>Agentes <span class="text-gradient">inteligentes</span><br>que trabajan 24/7</h1>
+    <p>Clona tu voz, genera contenido, atiende clientes por WhatsApp. Todo automático, todo en tu infraestructura.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-primary btn-xl">Comenzar →</button>
+      <button class="btn btn-ghost btn-xl">Ver demo</button>
+    </div>
+    <div class="grid grid-3" style="max-width:500px;margin:48px auto 0">
+      <div class="stat"><div class="stat-value">15+</div><div class="stat-label">Productos</div></div>
+      <div class="stat"><div class="stat-value">99%</div><div class="stat-label">Uptime</div></div>
+      <div class="stat"><div class="stat-value">50+</div><div class="stat-label">Skills IA</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Section: Components showcase -->
+<section class="section">
+  <div class="section-header">
+    <span class="badge badge-purple" style="margin-bottom:12px">✦ Design System v1.0</span>
+    <h2>Componentes <span class="text-gradient">SDC</span></h2>
+    <p>Inspirado en ElevenLabs, Spotify, Netflix y Higgsfield</p>
+  </div>
+
+  <!-- Cards grid -->
+  <h3 style="margin-bottom:16px;font-size:var(--font-size-xl);font-weight:600;color:var(--text-secondary)">Cards Glassmorphism</h3>
+  <div class="grid grid-3" style="margin-bottom:48px">
+    <div class="card">
+      <div style="font-size:32px;margin-bottom:12px">🎙️</div>
+      <h3 style="margin-bottom:4px;font-size:var(--font-size-lg)">Clon de Voz</h3>
+      <p style="font-size:var(--font-size-sm)">Clona cualquier voz con 30 segundos de audio. Resultados ultra-realistas.</p>
+      <div style="display:flex;gap:8px;margin-top:16px">
+        <span class="badge badge-purple">Nuevo</span>
+        <span class="badge badge-green">Popular</span>
+      </div>
+    </div>
+    <div class="card card-green">
+      <div style="font-size:32px;margin-bottom:12px">📹</div>
+      <h3 style="margin-bottom:4px;font-size:var(--font-size-lg)">Talking Head</h3>
+      <p style="font-size:var(--font-size-sm)">Convierte fotos + audio en videos que hablan. Ideal para contenido.</p>
+    </div>
+    <div class="card">
+      <div style="font-size:32px;margin-bottom:12px">🤖</div>
+      <h3 style="margin-bottom:4px;font-size:var(--font-size-lg)">WhatsApp Agent</h3>
+      <p style="font-size:var(--font-size-sm)">Atención al cliente 24/7 vía WhatsApp con IA. Sin código.</p>
+    </div>
+  </div>
+
+  <!-- Buttons -->
+  <h3 style="margin-bottom:16px;font-size:var(--font-size-xl);font-weight:600;color:var(--text-secondary)">Botones</h3>
+  <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:48px">
+    <button class="btn btn-primary">Primary</button>
+    <button class="btn btn-green">Green</button>
+    <button class="btn btn-ghost">Ghost</button>
+    <button class="btn btn-primary btn-lg">Large</button>
+    <button class="btn btn-primary btn-xl">XLarge</button>
+    <button class="btn btn-ghost"><span class="spinner"></span> Cargando</button>
+  </div>
+
+  <!-- Tabs + Table -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-bottom:48px">
+    <div>
+      <h3 style="margin-bottom:16px;font-size:var(--font-size-xl);font-weight:600;color:var(--text-secondary)">Tabs (Higgsfield)</h3>
+      <div class="tabs">
+        <button class="tab active">Servicios</button>
+        <button class="tab">Clientes</button>
+        <button class="tab">Facturación</button>
+        <button class="tab">Analítica</button>
+      </div>
+    </div>
+    <div>
+      <h3 style="margin-bottom:16px;font-size:var(--font-size-xl);font-weight:600;color:var(--text-secondary)">Inputs (Spotify)</h3>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <input class="input" placeholder="Nombre del cliente">
+        <input class="input" placeholder="WhatsApp">
+        <select class="input">
+          <option>Selecciona un servicio</option>
+          <option>Clon de voz</option>
+          <option>Talking head</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table (Netflix list) -->
+  <h3 style="margin-bottom:16px;font-size:var(--font-size-xl);font-weight:600;color:var(--text-secondary)">Tabla (Netflix)</h3>
+  <div class="table-wrap" style="margin-bottom:48px">
+    <table>
+      <thead>
+        <tr><th>Servicio</th><th>Cliente</th><th>Estado</th><th>Tokens</th><th>Entrega</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="display:flex;align-items:center;gap:12px">
+            <div class="avatar">JD</div>
+            <span>Clon de Voz</span>
+          </td>
+          <td>Juan Pérez</td>
+          <td><span class="badge badge-green"><span class="badge-dot green"></span> Completado</span></td>
+          <td style="color:var(--purple-400);font-weight:600">150</td>
+          <td style="color:var(--text-tertiary)">12 Jul</td>
+        </tr>
+        <tr>
+          <td style="display:flex;align-items:center;gap:12px">
+            <div class="avatar" style="background:var(--gradient-green)">MG</div>
+            <span>Talking Head</span>
+          </td>
+          <td>María García</td>
+          <td><span class="badge badge-cyan"><span class="badge-dot" style="background:var(--cyan-400)"></span> En proceso</span></td>
+          <td style="color:var(--purple-400);font-weight:600">250</td>
+          <td style="color:var(--text-tertiary)">14 Jul</td>
+        </tr>
+        <tr>
+          <td style="display:flex;align-items:center;gap:12px">
+            <div class="avatar" style="background:var(--gradient-red)">CL</div>
+            <span>Foto IA</span>
+          </td>
+          <td>Carlos López</td>
+          <td><span class="badge badge-purple"><span class="badge-dot purple"></span> Pendiente</span></td>
+          <td style="color:var(--purple-400);font-weight:600">50</td>
+          <td style="color:var(--text-tertiary)">16 Jul</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Code block -->
+  <h3 style="margin-bottom:16px;font-size:var(--font-size-xl);font-weight:600;color:var(--text-secondary)">Bloque de código (ElevenLabs)</h3>
+  <div class="code" style="margin-bottom:48px">
+    <span class="purple">from</span> sonora_sdk <span class="purple">import</span> SonoraSDK<br><br>
+    sdk = <span class="cyan">SonoraSDK</span>(client_id=<span class="green">"sdc-core"</span>)<br>
+    result = <span class="purple">await</span> sdk.<span class="cyan">tool</span>(<span class="green">"clone_voice"</span>, {<span class="green">"audio"</span>: <span class="green">"path/to/file.mp3"</span>})<br>
+    <span class="purple">print</span>(result)  <span class="green"># ✅ Voz clonada exitosamente</span>
+  </div>
+
+  <!-- Stats row -->
+  <div class="grid grid-4" style="margin-bottom:48px">
+    <div class="card" style="text-align:center;padding:var(--space-8)">
+      <div style="font-size:36px;margin-bottom:8px">🎯</div>
+      <div class="stat-value" style="font-size:var(--font-size-3xl)">54</div>
+      <div class="stat-label">Skills IA</div>
+    </div>
+    <div class="card" style="text-align:center;padding:var(--space-8)">
+      <div style="font-size:36px;margin-bottom:8px">📦</div>
+      <div class="stat-value" style="font-size:var(--font-size-3xl)">15</div>
+      <div class="stat-label">Productos</div>
+    </div>
+    <div class="card" style="text-align:center;padding:var(--space-8)">
+      <div style="font-size:36px;margin-bottom:8px">🤖</div>
+      <div class="stat-value" style="font-size:var(--font-size-3xl)">74</div>
+      <div class="stat-label">Agentes</div>
+    </div>
+    <div class="card" style="text-align:center;padding:var(--space-8)">
+      <div style="font-size:36px;margin-bottom:8px">⚡</div>
+      <div class="stat-value" style="font-size:var(--font-size-3xl)">118</div>
+      <div class="stat-label">Eventos</div>
+    </div>
+  </div>
+
+  <!-- Divider -->
+  <div class="divider-gradient"></div>
+
+  <!-- Footer (Spotify minimal) -->
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-8) 0">
+    <div class="navbar-logo">◈ <span>SDC</span></div>
+    <div style="display:flex;gap:24px">
+      <a href="#" style="color:var(--text-tertiary);text-decoration:none;font-size:var(--font-size-sm)">WhatsApp</a>
+      <a href="#" style="color:var(--text-tertiary);text-decoration:none;font-size:var(--font-size-sm)">Status</a>
+      <a href="#" style="color:var(--text-tertiary);text-decoration:none;font-size:var(--font-size-sm)">API</a>
+    </div>
+    <span style="color:var(--text-tertiary);font-size:var(--font-size-xs)">© 2026 Sonora Digital Corp</span>
+  </div>
+</section>
+
+</body>
+</html>
