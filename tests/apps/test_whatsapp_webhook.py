@@ -32,8 +32,8 @@ def _mock_emit():
 # ─── _normalize_sender ───────────────────────────────────────────────
 
 @pytest.mark.parametrize("raw,expected", [
-    ("5216622681111@s.whatsapp.net", "5216622681111"),
-    ("5216622681111.0:1@s.whatsapp.net", "5216622681111.0:1"),
+    ("5216623538272@s.whatsapp.net", "5216623538272"),
+    ("5216623538272.0:1@s.whatsapp.net", "5216623538272.0:1"),
     ("6622681111", "6622681111"),
 ])
 def test_normalize_sender(raw, expected):
@@ -43,14 +43,14 @@ def test_normalize_sender(raw, expected):
 # ─── _process_message ────────────────────────────────────────────────
 
 def test_process_message_new(clean_seen):
-    msg = {"id": "MSG001", "sender": "5216622681111@s.whatsapp.net", "text": "Hola"}
+    msg = {"id": "MSG001", "sender": "5216623538272@s.whatsapp.net", "text": "Hola"}
     with _mock_emit():
         new = webhook._process_message(msg, set())
     assert new is True
 
 
 def test_process_message_duplicate(clean_seen):
-    msg = {"id": "MSG001", "sender": "5216622681111@s.whatsapp.net", "text": "Hola"}
+    msg = {"id": "MSG001", "sender": "5216623538272@s.whatsapp.net", "text": "Hola"}
     seen = {"MSG001"}
     with _mock_emit():
         new = webhook._process_message(msg, seen)
@@ -58,7 +58,7 @@ def test_process_message_duplicate(clean_seen):
 
 
 def test_process_message_triggers_catalog(clean_seen):
-    msg = {"id": "MSG002", "sender": "5216622681111@s.whatsapp.net", "text": "Envíame el catálogo"}
+    msg = {"id": "MSG002", "sender": "5216623538272@s.whatsapp.net", "text": "Envíame el catálogo"}
     emitted = []
     with patch.object(webhook, "emit_event", side_effect=lambda t, p: emitted.append((t, p))):
         webhook._process_message(msg, set())
@@ -86,8 +86,8 @@ def test_load_seen_missing_file(clean_seen):
 @patch("time.sleep", return_value=None)
 def test_run_webhook_processes_new_messages(mock_sleep, clean_seen):
     messages = [
-        {"id": "M1", "sender": "5216622681111@s.whatsapp.net", "text": "Hola"},
-        {"id": "M2", "sender": "5216622681112@s.whatsapp.net", "text": "catálogo"},
+        {"id": "M1", "sender": "5216623538272@s.whatsapp.net", "text": "Hola"},
+        {"id": "M2", "sender": "5216623538272@s.whatsapp.net", "text": "catálogo"},
     ]
     emitted = []
     with patch.object(webhook, "_fetch_messages", return_value=messages), \

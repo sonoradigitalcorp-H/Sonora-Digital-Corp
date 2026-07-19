@@ -2543,6 +2543,30 @@
       "revenue": 0.0,
       "created_at": "2026-07-19T14:51:08.624661+00:00",
       "released_at": "2026-07-19T14:51:08.720638+00:00"
+    },
+    "c1c32455": {
+      "id": "c1c32455",
+      "artist_id": "artist-1",
+      "title": "Test Song",
+      "type": "single",
+      "genre": "Pop",
+      "upc": "ABEC1C32455",
+      "isrc": "MXC1C3245500001",
+      "platforms": [
+        "spotify",
+        "apple_music",
+        "deezer",
+        "amazon_music",
+        "youtube_music",
+        "tidal",
+        "pandora",
+        "claro_musica"
+      ],
+      "status": "published",
+      "streams": 0,
+      "revenue": 0.0,
+      "created_at": "2026-07-19T22:05:49.995880+00:00",
+      "released_at": "2026-07-19T22:05:49.997711+00:00"
     }
   }
 }

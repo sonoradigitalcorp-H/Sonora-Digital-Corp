@@ -1,15 +1,28 @@
-{"event": "knowledge.session_ingested", "timestamp": "2026-07-19T14:52:36.923491+00:00", "payload": {"session_id": "20260710-full-inventory", "path": "/home/mystic/sonora-digital-corp/process/completed/20260710-full-inventory", "title": "SESSION 2026-07-10 \u2014 Inventario Completo + Gap Analysis", "sections": ["1. INVENTARIO COMPLETO", "2. GAP ANALYSIS", "3. PROXIMOS PASOS RECOMENDADOS", "4. PRODUCTOS FORKEADOS (esta sesi\u00f3n)", "5. SERVICIOS ACTIVOS"]}}
-{"event": "SyncCycleStarted", "producer": "decision-engine", "timestamp": "2026-07-19T14:52:42Z", "payload": {"artist_count": 1, "capabilities": ["acquire-metadata", "search-artist", "browse-artist"]}}
-{"event": "SyncCycleCompleted", "producer": "decision-engine", "timestamp": "2026-07-19T14:52:42Z", "payload": {"artists_synced": 1, "total_duration_ms": 0}}
-{"event": "SyncCycleStarted", "producer": "decision-engine", "timestamp": "2026-07-19T14:52:42Z", "payload": {"artist_count": 1, "capabilities": ["acquire-metadata", "search-artist", "browse-artist"]}}
-{"event": "SyncCycleCompleted", "producer": "decision-engine", "timestamp": "2026-07-19T14:52:42Z", "payload": {"artists_synced": 1, "total_duration_ms": 0}}
-{"event": "SyncCycleStarted", "producer": "decision-engine", "timestamp": "2026-07-19T14:52:42Z", "payload": {"artist_count": 1, "capabilities": ["acquire-metadata", "search-artist", "browse-artist"]}}
-{"event": "SyncCycleCompleted", "producer": "decision-engine", "timestamp": "2026-07-19T14:52:42Z", "payload": {"artists_synced": 1, "total_duration_ms": 0}}
-{"event": "SyncCycleStarted", "producer": "decision-engine", "timestamp": "2026-07-19T14:52:42Z", "payload": {"artist_count": 1, "capabilities": ["acquire-metadata", "search-artist", "browse-artist"]}}
-{"event": "SyncCycleCompleted", "producer": "decision-engine", "timestamp": "2026-07-19T14:52:42Z", "payload": {"artists_synced": 1, "total_duration_ms": 0}}
-{"event": "client:interaction", "timestamp": "2026-07-19T17:56:14.757169+00:00", "payload": {"client_id": "test-client-001", "type": "message", "service": "video-talking-head"}}
-{"event": "client:updated", "timestamp": "2026-07-19T17:56:15.304024+00:00", "payload": {"client_id": "test-client-001", "updates": {"name": "Juan Actualizado", "niche": "barbero"}}}
-{"event": "client:interaction", "timestamp": "2026-07-19T18:06:44.553326+00:00", "payload": {"client_id": "test-client-001", "type": "message", "service": "video-talking-head"}}
-{"event": "client:updated", "timestamp": "2026-07-19T18:06:44.770511+00:00", "payload": {"client_id": "test-client-001", "updates": {"name": "Juan Actualizado", "niche": "barbero"}}}
-{"event": "client:interaction", "timestamp": "2026-07-19T18:18:43.119724+00:00", "payload": {"client_id": "test-client-001", "type": "message", "service": "video-talking-head"}}
-{"event": "client:updated", "timestamp": "2026-07-19T18:18:43.473304+00:00", "payload": {"client_id": "test-client-001", "updates": {"name": "Juan Actualizado", "niche": "barbero"}}}
+{"event": "knowledge.session_ingested", "timestamp": "2026-07-19T22:06:03.069085+00:00", "payload": {"session_id": "20260710-full-inventory", "path": "/home/ubuntu/sonora-digital-corp/process/completed/20260710-full-inventory", "title": "SESSION 2026-07-10 \u2014 Inventario Completo + Gap Analysis", "sections": ["1. INVENTARIO COMPLETO", "2. GAP ANALYSIS", "3. PROXIMOS PASOS RECOMENDADOS", "4. PRODUCTOS FORKEADOS (esta sesi\u00f3n)", "5. SERVICIOS ACTIVOS"]}}
+{"event": "SyncCycleStarted", "producer": "decision-engine", "timestamp": "2026-07-19T22:06:03Z", "payload": {"artist_count": 1, "capabilities": ["acquire-metadata", "search-artist", "browse-artist"]}}
+{"event": "SyncCycleCompleted", "producer": "decision-engine", "timestamp": "2026-07-19T22:06:03Z", "payload": {"artists_synced": 1, "total_duration_ms": 0}}
+{"event": "SyncCycleStarted", "producer": "decision-engine", "timestamp": "2026-07-19T22:06:03Z", "payload": {"artist_count": 1, "capabilities": ["acquire-metadata", "search-artist", "browse-artist"]}}
+{"event": "SyncCycleCompleted", "producer": "decision-engine", "timestamp": "2026-07-19T22:06:03Z", "payload": {"artists_synced": 1, "total_duration_ms": 0}}
+{"event": "SyncCycleStarted", "producer": "decision-engine", "timestamp": "2026-07-19T22:06:03Z", "payload": {"artist_count": 1, "capabilities": ["acquire-metadata", "search-artist", "browse-artist"]}}
+{"event": "SyncCycleCompleted", "producer": "decision-engine", "timestamp": "2026-07-19T22:06:03Z", "payload": {"artists_synced": 1, "total_duration_ms": 0}}
+{"event": "SyncCycleStarted", "producer": "decision-engine", "timestamp": "2026-07-19T22:06:03Z", "payload": {"artist_count": 1, "capabilities": ["acquire-metadata", "search-artist", "browse-artist"]}}
+{"event": "SyncCycleCompleted", "producer": "decision-engine", "timestamp": "2026-07-19T22:06:03Z", "payload": {"artists_synced": 1, "total_duration_ms": 0}}
+{"event": "system:whatsapp:disconnected", "timestamp": "2026-07-19T22:14:41.498701+00:00", "payload": {"error": "messages fetch failed"}}
+{"event": "whatsapp:message:received", "timestamp": "2026-07-19T22:17:41.844825+00:00", "payload": {"from": "5216623538272", "text": "Hola", "timestamp": "", "message_id": "MSG001"}}
+{"event": "whatsapp:message:received", "timestamp": "2026-07-19T22:17:41.847761+00:00", "payload": {"from": "5216623538272", "text": "Envíame el catálogo", "timestamp": "", "message_id": "MSG002"}}
+{"event": "whatsapp:catalog:requested", "timestamp": "2026-07-19T22:17:41.847879+00:00", "payload": {"client_id": "5216623538272", "timestamp": ""}}
+{"event": "whatsapp:message:received", "timestamp": "2026-07-19T22:17:41.855670+00:00", "payload": {"from": "5216623538272", "text": "Hola", "timestamp": "", "message_id": "M1"}}
+{"event": "whatsapp:message:received", "timestamp": "2026-07-19T22:17:41.855791+00:00", "payload": {"from": "5216623538272", "text": "catálogo", "timestamp": "", "message_id": "M2"}}
+{"event": "whatsapp:catalog:requested", "timestamp": "2026-07-19T22:17:41.855867+00:00", "payload": {"client_id": "5216623538272", "timestamp": ""}}
+{"event": "system:whatsapp:disconnected", "timestamp": "2026-07-19T22:17:41.861014+00:00", "payload": {"error": "messages fetch failed"}}
+{"event": "whatsapp:response:sent", "timestamp": "2026-07-19T22:17:46.509385+00:00", "payload": {"to": "5216623538272", "original_msg_id": "MSG001", "intent": "text", "response_preview": "⚠️ Error de conexión: 'choices'"}}
+{"event": "whatsapp:response:sent", "timestamp": "2026-07-19T22:17:53.359360+00:00", "payload": {"to": "5216623538272", "original_msg_id": "MSG002", "intent": "text", "response_preview": "⚠️ Error de conexión: 'choices'"}}
+{"event": "whatsapp:response:sent", "timestamp": "2026-07-19T22:17:56.594069+00:00", "payload": {"to": "5216623538272", "original_msg_id": "M1", "intent": "text", "response_preview": "⚠️ Error de conexión: 'choices'"}}
+{"event": "whatsapp:response:sent", "timestamp": "2026-07-19T22:18:00.316214+00:00", "payload": {"to": "5216623538272", "original_msg_id": "M2", "intent": "text", "response_preview": "⚠️ Error de conexión: 'choices'"}}
+{"event": "whatsapp:message:received", "timestamp": "2026-07-19T22:18:55.695312+00:00", "payload": {"from": "5216623538272", "text": "Hola", "timestamp": "", "message_id": "MSG001"}}
+{"event": "whatsapp:message:received", "timestamp": "2026-07-19T22:18:55.699827+00:00", "payload": {"from": "5216623538272", "text": "Envíame el catálogo", "timestamp": "", "message_id": "MSG002"}}
+{"event": "whatsapp:catalog:requested", "timestamp": "2026-07-19T22:18:55.699925+00:00", "payload": {"client_id": "5216623538272", "timestamp": ""}}
+{"event": "whatsapp:message:received", "timestamp": "2026-07-19T22:18:55.721250+00:00", "payload": {"from": "5216623538272", "text": "Hola", "timestamp": "", "message_id": "M1"}}
+{"event": "whatsapp:message:received", "timestamp": "2026-07-19T22:18:55.721355+00:00", "payload": {"from": "5216623538272", "text": "catálogo", "timestamp": "", "message_id": "M2"}}
+{"event": "whatsapp:catalog:requested", "timestamp": "2026-07-19T22:18:55.721436+00:00", "payload": {"client_id": "5216623538272", "timestamp": ""}}
+{"event": "system:whatsapp:disconnected", "timestamp": "2026-07-19T22:18:55.726439+00:00", "payload": {"error": "messages fetch failed"}}

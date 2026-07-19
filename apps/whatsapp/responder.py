@@ -131,6 +131,14 @@ def _detect_intent(text: str) -> str:
 
 def _respond(sender: str, text: str, msg_id: str) -> None:
     """Process message and send response."""
+    # ONLY respond to founder — never send to anyone else
+    founder_phone = "5216623538272"
+    env_phone = os.environ.get("FOUNDER_PHONE", "")
+    sender_clean = sender.split("@s.whatsapp.net")[0] if "@s.whatsapp.net" in sender else sender
+    if sender_clean != founder_phone and sender_clean != env_phone:
+        print(f"[responder] BLOCKED message from {sender_clean} — not the founder", flush=True)
+        return
+
     intent = _detect_intent(text)
     print(f"[responder] {sender}: {text[:60]}... → {intent}", file=sys.stderr)
 
