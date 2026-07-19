@@ -5,14 +5,14 @@ from typing import Any
 from memory.base import MemoryResult, MemoryStore
 
 REPO = Path(__file__).resolve().parent.parent.parent
-ENGRAM_DB = REPO / "engram.db"
+LONG_DB = REPO / "state" / "long_memory.db"
 
 
 class LongMemory(MemoryStore):
     name = "long"
 
     def __init__(self, db_path: str | Path | None = None):
-        self.db_path = Path(db_path) if db_path else ENGRAM_DB
+        self.db_path = Path(db_path) if db_path else LONG_DB
         self._use_sqlite = self.db_path.exists()
         self._data: dict[str, dict] = {}
 

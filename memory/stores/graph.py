@@ -19,9 +19,8 @@ class GraphMemory(MemoryStore):
 
     def _init_neo4j(self):
         try:
-            from neo4j import GraphDatabase
-            self._neo4j = GraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "password"))
-            self._neo4j.verify_connectivity()
+            from neo4j import AsyncGraphDatabase
+            self._neo4j = AsyncGraphDatabase.driver("bolt://localhost:7687", auth=("neo4j", "password"))
         except Exception:
             self._neo4j = None
 

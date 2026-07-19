@@ -8,6 +8,25 @@ REPO = Path(__file__).resolve().parent.parent.parent
 SEMANTIC_DIR = REPO / "state" / "semantic"
 
 
+_EMBEDDER = None
+
+def _get_embedder():
+    global _EMBEDDER
+    if _EMBEDDER is None:
+        try:
+            from sentence_transformers import SentenceTransformer
+            _EMBEDDER = SentenceTransformer("all-MiniLM-L6-v2")
+        except Exception:
+            _EMBEDDER = False
+    return _EMBEDDER if _EMBEDDER is not False else None
+
+def _embed(text: str) -> list[float]:
+    embedder = _get_embedder()
+    if embedder:
+        return embedder.encode(text, normalize_embeddings=True).tolist()
+    return [0.0] * 384
+
+
 class SemanticMemory(MemoryStore):
     name = "semantic"
 
@@ -29,14 +48,31 @@ class SemanticMemory(MemoryStore):
         safe = key.replace("/", "_").replace("\\", "_")
         return self.storage_dir / f"{safe}.json"
 
+    def _ensure_collection(self):
+        if not self._qdrant:
+            return
+        try:
+            cols = self._qdrant.get_collections()
+            if not any(c.name == "hermes" for c in cols.collections):
+                from qdrant_client.http import models
+                self._qdrant.create_collection(
+                    collection_name="hermes",
+                    vectors_config=models.VectorParams(size=384, distance=models.Distance.COSINE),
+                )
+        except Exception:
+            pass
+
     async def store(self, key: str, data: dict, ttl: int | None = None) -> MemoryResult:
         if self._qdrant:
             try:
                 from qdrant_client.http import models
+                self._ensure_collection()
                 point_id = hash(key) % (2**63)
+                text = json.dumps(data, default=str)
+                vector = _embed(text)
                 self._qdrant.upsert(
                     collection_name="hermes",
-                    points=[models.PointStruct(id=point_id, vector=[0.0]*384, payload={"key": key, "data": data})],
+                    points=[models.PointStruct(id=point_id, vector=vector, payload={"key": key, "data": data})],
                 )
                 return MemoryResult(key=key, data=data, found=True, store_type="semantic")
             except Exception:
@@ -66,11 +102,14 @@ class SemanticMemory(MemoryStore):
         return MemoryResult(key=key, found=False, store_type="semantic")
 
     async def search(self, query: str | dict, top_k: int = 5) -> list[MemoryResult]:
+        if isinstance(query, dict):
+            query = str(query)
         if self._qdrant:
             try:
+                vector = _embed(query)
                 hits = self._qdrant.search(
                     collection_name="hermes",
-                    query_vector=[0.0]*384,
+                    query_vector=vector,
                     limit=top_k,
                 )
                 return [
@@ -79,8 +118,6 @@ class SemanticMemory(MemoryStore):
                 ]
             except Exception:
                 pass
-        if isinstance(query, dict):
-            query = str(query)
         q = query.lower()
         results: list[MemoryResult] = []
         for path in sorted(self.storage_dir.glob("*.json")):
