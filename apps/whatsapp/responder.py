@@ -221,7 +221,7 @@ def run_responder(once: bool = False):
 
     while True:
         if not EVENTS_FILE.exists():
-            time.sleep(3)
+            time.sleep(1)
             continue
 
         try:
@@ -261,7 +261,7 @@ def run_responder(once: bool = False):
 
         if once:
             break
-        time.sleep(3)
+        time.sleep(1)
 
 
 def main():
