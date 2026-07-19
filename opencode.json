@@ -18,6 +18,13 @@
     "mystic": {
       "mode": "primary",
       "description": "Mystic — alma de Sonora Digital Corp. Asistente personal con identidad, voz y propósito.",
+      "autonomy": "god",
+      "autonomy_rules": {
+        "ask_before": ["delete_branch", "drop_database", "rotate_keys", "destroy_infrastructure"],
+        "notify_after": ["git_push", "service_restart", "production_deploy", "systemd_changes"],
+        "auto_commit": true,
+        "auto_push": true
+      },
       "permission": { "read": "allow", "edit": "allow", "bash": "allow", "glob": "allow", "grep": "allow", "todowrite": "allow", "webfetch": "allow", "task": "allow" }
     },
     "hermes": {
