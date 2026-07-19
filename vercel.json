@@ -3,8 +3,10 @@
     "deploymentEnabled": { "main": true }
   },
   "framework": null,
-  "buildCommand": "",
+  "buildCommand": "echo 'static'",
   "outputDirectory": "frontends",
+  "cleanUrls": true,
+  "trailingSlash": false,
   "routes": [
     { "src": "/abe/portal/(.*)", "dest": "/abe/portal/$1" },
     { "src": "/abe/(.*)", "dest": "/abe/$1" },
