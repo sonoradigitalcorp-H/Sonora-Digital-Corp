@@ -35,8 +35,13 @@ from apps.observe.pipeline import emit_event
 WACLI = os.path.expanduser("~/.local/bin/wacli")
 STORE = os.path.expanduser("~/.config/ai.opencode.desktop/wacli")
 SEEN_PATH = Path("state/whatsapp/seen_messages.json")
+FOUNDER_INBOX = Path("state/inbox/founder.jsonl")
 DEFAULT_INTERVAL = 5  # seconds
 BACKOFF_MAX = 60  # seconds
+
+# Founder's phone number — set via FOUNDER_PHONE env var
+# This is YOUR number. When you send a WhatsApp, it goes to the inbox.
+FOUNDER_PHONE = os.environ.get("FOUNDER_PHONE", "")
 
 
 def _wacli(args: list, timeout: int = 30) -> dict:
@@ -113,6 +118,19 @@ def _process_message(msg: dict, seen: set) -> bool:
         "message_id": msg_id,
     }
     emit_event("whatsapp:message:received", payload)
+
+    # If message is from the founder → save to inbox
+    if FOUNDER_PHONE and FOUNDER_PHONE in sender:
+        FOUNDER_INBOX.parent.mkdir(parents=True, exist_ok=True)
+        inbox_entry = {
+            "event": "founder:message:received",
+            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "payload": payload,
+        }
+        with open(FOUNDER_INBOX, "a") as f:
+            f.write(json.dumps(inbox_entry, ensure_ascii=False) + "\n")
+        emit_event("founder:message:received", payload)
+        print(f"[whatsapp-webhook] 📩 MENSAJE DEL FUNDADOR: {text[:100]}", file=sys.stderr)
 
     # Trigger catalog request if text mentions catalog
     catalog_keywords = ["catálogo", "catalogo", "catalog", "servicios", "productos", "planes"]

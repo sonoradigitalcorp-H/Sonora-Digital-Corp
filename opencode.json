@@ -216,6 +216,7 @@
     "adk": { "description": "ADK Bridge — agentes y capacidades", "template": "Lista agentes del ADK o consulta uno específico. Resuelve capacidades y las ejecuta si es necesario.", "agent": "agent-os" },
     "sdk": { "description": "SDK Python/Node — herramientas del SDK", "template": "Usa el SDK de Sonora para health checks, tool calls, capabilities y skills. Compatible con Python (mcp/sdk/sonora_client.py) y Node.js (mcp/sdk/sonora-client.js).", "agent": "dev" },
     "adr": { "description": "ADR Manager — registrar decisiones", "template": "Crea o consulta Architecture Decision Records en process/active/. Ayuda a documentar decisiones técnicas y por qué se tomaron.", "agent": "knowledge" },
-    "skill": { "description": "Skill Manager — crear, listar, completar skills", "template": "Lista skills disponibles, consulta una skill específica, o crea una nueva siguiendo SKILL-TEMPLATE.md. Verifica que cumpla los 14 campos.", "agent": "quality" }
+    "skill": { "description": "Skill Manager — crear, listar, completar skills", "template": "Lista skills disponibles, consulta una skill específica, o crea una nueva siguiendo SKILL-TEMPLATE.md. Verifica que cumpla los 14 campos.", "agent": "quality" },
+    "inbox": { "description": "WhatsApp Inbox — revisa mensajes del fundador", "template": "Ejecuta scripts/check-inbox.py para ver mensajes nuevos de WhatsApp del fundador. Si hay mensajes nuevos, los lee y responde.", "agent": "mystic" }
   }
 }
