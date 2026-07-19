@@ -1,0 +1,26 @@
+# Engram → Obsidian live export
+# Install: sudo ln -s /home/mystic/sonora-digital-corp/infra/systemd/engram-obsidian-export.service /etc/systemd/system/
+# Enable:  sudo systemctl enable --now engram-obsidian-export
+
+[Unit]
+Description=Engram Auto-Capture — Obsidian vault live export
+Documentation=https://github.com/sonoradigitalcorp-H/sonora-digital-corp
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/mystic/sonora-digital-corp/scripts/engram_autocapture.py --obsidian-export /home/mystic/Documents/sdc-brain-vault --interval 5m
+WorkingDirectory=/home/mystic/sonora-digital-corp
+Restart=on-failure
+RestartSec=10
+User=mystic
+Group=mystic
+
+# Security hardening
+NoNewPrivileges=yes
+ProtectHome=read-only
+ProtectSystem=full
+PrivateTmp=yes
+
+[Install]
+WantedBy=default.target

@@ -90,3 +90,30 @@ agents:
     channel: agent:clone
     triggers: [command:/clonar, event:clone:client_registered, event:clone:photos_collected]
     emits: [clone:client_registered, clone:photos_collected, clone:lora_trained, clone:voice_cloned, clone:generated, clone:credits_low]
+
+  - name: research-agent
+    tenant: sdc
+    role: Investigación y análisis — capacidades, artistas, scoring, health del sistema
+    tools: [capability_resolve, enterprise_score, health_all, engram_search, rag_search]
+    memory: engram_sdc
+    channel: agent:research
+    triggers: [event:research:requested, command:/investigar]
+    emits: [research:completed, research:failed]
+
+  - name: video-agent
+    tenant: sdc
+    role: Generación de video — talking heads, lipsync, video editing
+    tools: [gen_video, gen_tts, ffmpeg_convert, ffmpeg_assemble, upload_file]
+    memory: engram_sdc
+    channel: agent:video
+    triggers: [event:content:video_requested, command:/video]
+    emits: [content:video:generated, content:video:failed]
+
+  - name: finance-agent
+    tenant: sdc
+    role: Procesamiento de pagos — Stripe, MercadoPago, facturación, conciliación
+    tools: [stripe_create_checkout, stripe_create_payment, mp_create_preference, mp_query_payment, engram_save]
+    memory: engram_sdc
+    channel: agent:finance
+    triggers: [event:payment:process:requested, event:invoice:generated]
+    emits: [payment:processed, payment:refunded, payment:failed, payment:reconciled]
