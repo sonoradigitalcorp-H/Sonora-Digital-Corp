@@ -1,0 +1,7 @@
+name: evolution
+priority: 70
+rules:
+  - "Evolution agent may propose improvements to the system"
+  - "Proposals must include score impact simulation"
+  - "Automatic application requires score >= 75"
+  - "Failed improvements must be reverted within 1 hour"

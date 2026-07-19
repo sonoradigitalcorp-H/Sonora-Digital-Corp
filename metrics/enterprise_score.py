@@ -19,7 +19,6 @@ import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -29,18 +28,19 @@ REPO = Path(__file__).resolve().parent.parent
 def run_tests() -> dict:
     try:
         result = subprocess.run(
-            [sys.executable, "-m", "pytest", "tests/", "-q", "--tb=no"],
-            capture_output=True, text=True, timeout=60, cwd=str(REPO),
+            [sys.executable, "-m", "pytest", "tests/", "-q", "--tb=no", "--continue-on-collection-errors"],
+            capture_output=True, text=True, timeout=300, cwd=str(REPO),
         )
         output = result.stdout + result.stderr
         import re
         passed = sum(int(m) for m in re.findall(r'(\d+) passed', output) or [0])
         failed = sum(int(m) for m in re.findall(r'(\d+) failed', output) or [0])
-        total = passed + failed
+        errors = sum(int(m) for m in re.findall(r'(\d+) errors?', output) or [0])
+        total = passed + failed + errors
         rate = (passed / total * 100) if total > 0 else 0
-        return {"passed": passed, "failed": failed, "total": total, "pass_rate": round(rate, 1)}
+        return {"passed": passed, "failed": failed, "errors": errors, "total": total, "pass_rate": round(rate, 1)}
     except Exception as e:
-        return {"error": str(e), "passed": 0, "failed": 0, "total": 0, "pass_rate": 0}
+        return {"error": str(e), "passed": 0, "failed": 0, "errors": 0, "total": 0, "pass_rate": 0}
 
 
 def check_services_health() -> dict:
@@ -74,22 +74,33 @@ def get_doc_coverage() -> dict:
 
 def get_test_coverage_score(tests: dict) -> int:
     rate = tests.get("pass_rate", 0)
-    if rate >= 99: return 10
-    if rate >= 95: return 9
-    if rate >= 90: return 8
-    if rate >= 80: return 7
-    if rate >= 70: return 6
-    if rate >= 60: return 5
+    if rate >= 99:
+        return 10
+    if rate >= 95:
+        return 9
+    if rate >= 90:
+        return 8
+    if rate >= 80:
+        return 7
+    if rate >= 70:
+        return 6
+    if rate >= 60:
+        return 5
     return max(1, int(rate // 10))
 
 
 def get_availability_score(health: dict) -> int:
     pct = health.get("availability_pct", 0)
-    if pct == 100: return 10
-    if pct >= 90: return 9
-    if pct >= 80: return 8
-    if pct >= 70: return 7
-    if pct >= 60: return 6
+    if pct == 100:
+        return 10
+    if pct >= 90:
+        return 9
+    if pct >= 80:
+        return 8
+    if pct >= 70:
+        return 7
+    if pct >= 60:
+        return 6
     return max(0, min(10, int(pct / 10)))
 
 
@@ -119,6 +130,19 @@ def get_security_score() -> int:
     return max(1, 10 - count)
 
 
+def count_agents_from_registry() -> int:
+    registry_path = REPO / "agents" / "registry.yaml"
+    if not registry_path.exists():
+        return 0
+    try:
+        import yaml
+        with open(registry_path) as f:
+            data = yaml.safe_load(f)
+        return len(data.get("agents", []))
+    except Exception:
+        return 0
+
+
 def compute_enterprise_score() -> dict:
     tests = run_tests()
     health = check_services_health()
@@ -126,7 +150,7 @@ def compute_enterprise_score() -> dict:
     economics = get_economics_data()
     security = get_security_score()
 
-    total_agents = len(list((REPO / "agents").glob("*.yaml"))) if (REPO / "agents").exists() else 0
+    total_agents = count_agents_from_registry()
 
     metrics = {
         "test_pass_rate": get_test_coverage_score(tests),

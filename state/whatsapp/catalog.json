@@ -1,0 +1,134 @@
+{
+  "version": "1.0.0",
+  "currency": "MXN",
+  "updated_at": "2026-07-19",
+  "categories": [
+    {
+      "id": "clone",
+      "name": "Clon Digital",
+      "description": "Entrena un clon de voz y rostro para generar contenido automático",
+      "items": [
+        {
+          "id": "clone-voice",
+          "name": "Clon de Voz",
+          "description": "Clona tu voz con 30 segundos de audio",
+          "tokens": 100,
+          "price_mxn": 899,
+          "delivery": "24-48 hrs",
+          "revisions": 2
+        },
+        {
+          "id": "clone-face",
+          "name": "Entrenamiento LoRA Facial",
+          "description": "Entrena un modelo LoRA con fotos de tu rostro",
+          "tokens": 150,
+          "price_mxn": 1299,
+          "delivery": "24-48 hrs",
+          "revisions": 2
+        }
+      ]
+    },
+    {
+      "id": "content",
+      "name": "Contenido Digital",
+      "description": "Imágenes, videos y audio generados por IA",
+      "items": [
+        {
+          "id": "photo-professional",
+          "name": "Foto Profesional con IA",
+          "description": "Foto de perfil o promocional con tu LoRA",
+          "tokens": 10,
+          "price_mxn": 149,
+          "delivery": "2-4 hrs",
+          "revisions": 2
+        },
+        {
+          "id": "video-talking-head",
+          "name": "Video Talking Head",
+          "description": "Video tuyo hablando a partir de foto + audio",
+          "tokens": 25,
+          "price_mxn": 349,
+          "delivery": "6-12 hrs",
+          "revisions": 2
+        },
+        {
+          "id": "voiceover",
+          "name": "Voiceover con tu Clon",
+          "description": "Narración de hasta 2 minutos con tu voz clonada",
+          "tokens": 15,
+          "price_mxn": 199,
+          "delivery": "1-3 hrs",
+          "revisions": 1
+        }
+      ]
+    },
+    {
+      "id": "social",
+      "name": "Redes Sociales",
+      "description": "Pack de contenido listo para publicar",
+      "items": [
+        {
+          "id": "social-starter",
+          "name": "Pack Starter",
+          "description": "5 posts + 3 reels + 1 video corto",
+          "tokens": 50,
+          "price_mxn": 799,
+          "delivery": "48-72 hrs",
+          "revisions": 2
+        },
+        {
+          "id": "social-pro",
+          "name": "Pack Pro",
+          "description": "10 posts + 7 reels + 3 videos cortos",
+          "tokens": 120,
+          "price_mxn": 1799,
+          "delivery": "72-96 hrs",
+          "revisions": 3
+        }
+      ]
+    },
+    {
+      "id": "plans",
+      "name": "Planes Mensuales",
+      "description": "Suscripciones con tokens incluidos",
+      "items": [
+        {
+          "id": "plan-starter",
+          "name": "Starter",
+          "description": "50 tokens/mes + soporte por WhatsApp",
+          "tokens": 50,
+          "price_mxn": 299,
+          "delivery": "inmediato",
+          "revisions": 0
+        },
+        {
+          "id": "plan-pro",
+          "name": "Pro",
+          "description": "150 tokens/mes + 1 clone de voz/año",
+          "tokens": 150,
+          "price_mxn": 799,
+          "delivery": "inmediato",
+          "revisions": 0
+        },
+        {
+          "id": "plan-elite",
+          "name": "Elite",
+          "description": "500 tokens/mes + 2 clones/año + prioridad",
+          "tokens": 500,
+          "price_mxn": 1999,
+          "delivery": "inmediato",
+          "revisions": 0
+        }
+      ]
+    }
+  ],
+  "policies": {
+    "delivery_hours": {
+      "min": 1,
+      "max": 96
+    },
+    "revisions_included": 2,
+    "token_refund_policy": "Tokens no consumidos por error técnico se reembolsan automáticamente.",
+    "payment_methods": ["stripe", "mercadopago", "transferencia"]
+  }
+}
