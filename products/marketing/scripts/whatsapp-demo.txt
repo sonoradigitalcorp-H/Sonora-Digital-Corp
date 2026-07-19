@@ -1,0 +1,5 @@
+# Demo de WhatsApp Agent
+# Voz: es-MX-DaliaNeural
+# Duración: ~46s
+
+¿Sabes lo que pasa cuando un cliente te escribe a WhatsApp a las 3 de la mañana? Con Sonora Digital Corp, pasa esto: el cliente recibe una respuesta al instante. No un 'te contactamos mañana'. Una respuesta real. Con información real. Precios, disponibilidad, catálogo. Y si quiere comprar, le ayudamos a pagar. Todo sin que tú hagas nada. Todo mientras duermes. Así funciona la inteligencia artificial bien aplicada. Sonora Digital Corp. Tu negocio trabajando solo.
