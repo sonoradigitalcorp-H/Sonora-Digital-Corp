@@ -49,7 +49,7 @@ FOUNDER_PHONE = os.environ.get("FOUNDER_PHONE", "")
 def _wacli(args: list, timeout: int = 30) -> dict:
     if not os.path.exists(WACLI):
         return {"success": False, "error": "wacli not found"}
-    cmd = [WACLI] + args + ["--store", STORE, "--json"]
+    cmd = [WACLI] + args + ["--store", STORE, "--json", "--read-only"]
     try:
         r = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout)
         out = r.stdout.strip()
