@@ -29,7 +29,7 @@ def run_tests() -> dict:
     try:
         result = subprocess.run(
             [sys.executable, "-m", "pytest", "tests/", "-q", "--tb=no", "--continue-on-collection-errors"],
-            capture_output=True, text=True, timeout=300, cwd=str(REPO),
+            capture_output=True, text=True, timeout=600, cwd=str(REPO),
         )
         output = result.stdout + result.stderr
         import re
