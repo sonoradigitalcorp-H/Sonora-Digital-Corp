@@ -1,0 +1,20 @@
+# WhatsApp Webhook — escucha mensajes entrantes cada 5s
+# Install: ln -s /home/ubuntu/sonora-digital-corp/infra/systemd/whatsapp-webhook.service /home/ubuntu/.config/systemd/user/
+# Enable:  systemctl --user enable --now whatsapp-webhook
+
+[Unit]
+Description=WhatsApp Webhook — incoming message listener
+Documentation=https://github.com/sonoradigitalcorp-H/Sonora-Digital-Corp
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/env PYTHONPATH=/home/ubuntu/sonora-digital-corp /usr/bin/python3 /home/ubuntu/sonora-digital-corp/apps/whatsapp/webhook.py
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+Restart=on-failure
+RestartSec=10
+StandardOutput=append:/home/ubuntu/sonora-digital-corp/state/logs/whatsapp-webhook.log
+StandardError=append:/home/ubuntu/sonora-digital-corp/state/logs/whatsapp-webhook.log
+
+[Install]
+WantedBy=default.target
