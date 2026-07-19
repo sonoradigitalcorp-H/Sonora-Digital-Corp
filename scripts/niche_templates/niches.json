@@ -1,0 +1,56 @@
+{
+  "barbero": {
+    "name": "Barber\u00eda",
+    "services": ["Corte de cabello", "Fotos de perfil", "Video promocional"],
+    "tokens": [5, 10, 25],
+    "prices": [149, 299, 599],
+    "triggers": ["corte", "barber\u00eda", "peluquer\u00eda"],
+    "landing_sections": ["hero", "servicios", "galeria", "precios", "contacto"],
+    "colors": { "primary": "#1a1a2e", "accent": "#e94560" }
+  },
+  "abogado": {
+    "name": "Bufete Jur\u00eddico",
+    "services": ["Consulta legal", "Redacci\u00f3n de contratos", "Video asesor\u00eda"],
+    "tokens": [10, 20, 40],
+    "prices": [499, 799, 1499],
+    "triggers": ["abogado", "consulta", "legal"],
+    "landing_sections": ["hero", "servicios", "equipo", "precios", "contacto"],
+    "colors": { "primary": "#1B1B2F", "accent": "#C4A35A" }
+  },
+  "musico": {
+    "name": "M\u00fasico / Artista",
+    "services": ["Clon de voz", "Fotos profesionales", "Talking head"],
+    "tokens": [25, 10, 25],
+    "prices": [799, 299, 599],
+    "triggers": ["m\u00fasica", "artista", "cantante"],
+    "landing_sections": ["hero", "musica", "videos", "shows", "contacto"],
+    "colors": { "primary": "#0a0a0a", "accent": "#7c5cfc" }
+  },
+  "fitness": {
+    "name": "Fitness / Entrenador",
+    "services": ["Rutina personalizada", "Fotos de progreso", "Video ejercicios"],
+    "tokens": [10, 10, 15],
+    "prices": [399, 299, 499],
+    "triggers": ["gym", "ejercicio", "entrenador"],
+    "landing_sections": ["hero", "planes", "transformaciones", "precios", "contacto"],
+    "colors": { "primary": "#0f3460", "accent": "#16c79a" }
+  },
+  "coach": {
+    "name": "Coach / Mentor",
+    "services": ["Sesi\u00f3n 1:1", "Plan personalizado", "Video contenido"],
+    "tokens": [15, 20, 15],
+    "prices": [499, 799, 399],
+    "triggers": ["coach", "mentor", "sesi\u00f3n"],
+    "landing_sections": ["hero", "servicios", "testimonios", "precios", "contacto"],
+    "colors": { "primary": "#2C3E50", "accent": "#E67E22" }
+  },
+  "restaurante": {
+    "name": "Restaurante",
+    "services": ["Men\u00fa digital", "Promociones", "Reservaciones"],
+    "tokens": [3, 5, 5],
+    "prices": [99, 149, 199],
+    "triggers": ["men\u00fa", "reserva", "restaurante"],
+    "landing_sections": ["hero", "menu", "promos", "galeria", "contacto"],
+    "colors": { "primary": "#2D2D2D", "accent": "#E74C3C" }
+  }
+}
