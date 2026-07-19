@@ -105,6 +105,40 @@ print(f'  Commands: {len(d.get(\"command\",{}))}')
 print(f'  Skills paths: {d.get(\"skills\",{}).get(\"paths\",[])}')
 "
 
+      - name: Install Python deps
+        run: |
+          pip install -r requirements.txt --quiet
+
+      - name: Run unit tests
+        run: |
+          PYTHONPATH=. python3 -m pytest tests/ evals/ memory/tests/ -q --tb=short -x
+
+      - name: Run structural evals
+        run: |
+          PYTHONPATH=. python3 -m pytest evals/test_evals.py -v --tb=short
+
+      - name: Run lint
+        run: |
+          ruff check apps/ memory/ metrics/ scripts/ --quiet || echo "⚠️ Lint warnings (non-blocking)"
+
+      - name: Install promptfoo
+        run: |
+          npm install -g promptfoo
+
+      - name: Run promptfoo evals
+        run: |
+          cd promptfoo && promptfoo eval
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        continue-on-error: true
+
+      - name: Upload promptfoo results
+        uses: actions/upload-artifact@v4
+        with:
+          name: promptfoo-results
+          path: promptfoo/results.json
+        continue-on-error: true
+
       - name: Check promptfoo config
         run: |
           if [ -f promptfoo/promptfooconfig.yaml ]; then

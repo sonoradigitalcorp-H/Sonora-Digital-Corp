@@ -50,7 +50,7 @@ def check_services_health() -> dict:
         "content-server": 8765, "open-notebook-ui": 8502, "omnivoice": 3900,
     }
     alive = 0
-    for name, port in services.items():
+    for _name, port in services.items():
         try:
             import socket
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
