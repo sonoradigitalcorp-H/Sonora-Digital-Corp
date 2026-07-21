@@ -28,14 +28,14 @@ jobs:
           if [ -f tools/registry.json ]; then
             echo "✅ tools/registry.json exists"
             python3 -c "
-import json
-with open('tools/registry.json') as f:
-    d = json.load(f)
-print(f'  {len(d[\"tools\"])} tools')
-print(f'  {len(d[\"servers\"])} servers')
-for s in d['servers']:
-    print(f'    {s[\"name\"]}: {s[\"tool_count\"]} tools')
-"
+            import json
+            with open('tools/registry.json') as f:
+                d = json.load(f)
+            print(f'  {len(d[\"tools\"])} tools')
+            print(f'  {len(d[\"servers\"])} servers')
+            for s in d['servers']:
+                print(f'    {s[\"name\"]}: {s[\"tool_count\"]} tools')
+            "
           else
             echo "❌ tools/registry.json MISSING"
             exit 1
@@ -46,16 +46,16 @@ for s in d['servers']:
           if [ -f agents/registry.yaml ]; then
             echo "✅ agents/registry.yaml exists"
             python3 -c "
-import yaml
-with open('agents/registry.yaml') as f:
-    d = yaml.safe_load(f)
-agents = d.get('agents', [])
-print(f'  {len(agents)} agents defined')
-tenants = set(a['tenant'] for a in agents)
-for t in sorted(tenants):
-    count = sum(1 for a in agents if a['tenant'] == t)
-    print(f'    {t}: {count} agents')
-"
+            import yaml
+            with open('agents/registry.yaml') as f:
+                d = yaml.safe_load(f)
+            agents = d.get('agents', [])
+            print(f'  {len(agents)} agents defined')
+            tenants = set(a['tenant'] for a in agents)
+            for t in sorted(tenants):
+                count = sum(1 for a in agents if a['tenant'] == t)
+                print(f'    {t}: {count} agents')
+            "
           else
             echo "❌ agents/registry.yaml MISSING"
             exit 1
@@ -65,18 +65,18 @@ for t in sorted(tenants):
         run: |
           missing=0
           python3 -c "
-import yaml
-with open('agents/registry.yaml') as f:
-    d = yaml.safe_load(f)
-for a in d.get('agents', []):
-    path = f'agents/{a[\"tenant\"]}/{a[\"name\"]}.md'
-    import os
-    if not os.path.exists(path):
-        print(f'  ❌ {path} MISSING')
-        exit(1)
-    else:
-        print(f'  ✅ {path}')
-" || missing=1
+          import yaml
+          with open('agents/registry.yaml') as f:
+              d = yaml.safe_load(f)
+          for a in d.get('agents', []):
+              path = f'agents/{a[\"tenant\"]}/{a[\"name\"]}.md'
+              import os
+              if not os.path.exists(path):
+                  print(f'  ❌ {path} MISSING')
+                  exit(1)
+              else:
+                  print(f'  ✅ {path}')
+          " || missing=1
           exit $missing
 
       - name: Check MCP servers Python syntax
@@ -95,15 +95,15 @@ for a in d.get('agents', []):
       - name: Validate opencode.json
         run: |
           python3 -c "
-import json
-with open('opencode.json') as f:
-    d = json.load(f)
-print(f'✅ opencode.json valid')
-print(f'  Agents: {list(d.get(\"agent\",{}).keys())}')
-print(f'  MCP servers: {list(d.get(\"mcp\",{}).keys())}')
-print(f'  Commands: {len(d.get(\"command\",{}))}')
-print(f'  Skills paths: {d.get(\"skills\",{}).get(\"paths\",[])}')
-"
+          import json
+          with open('opencode.json') as f:
+              d = json.load(f)
+          print(f'✅ opencode.json valid')
+          print(f'  Agents: {list(d.get(\"agent\",{}).keys())}')
+          print(f'  MCP servers: {list(d.get(\"mcp\",{}).keys())}')
+          print(f'  Commands: {len(d.get(\"command\",{}))}')
+          print(f'  Skills paths: {d.get(\"skills\",{}).get(\"paths\",[])}')
+          "
 
       - name: Install Python deps
         run: |
