@@ -1,0 +1,85 @@
+# Promptfoo evals — Mystic Shield Diagnosis Quality
+
+prompts:
+  - "Eres Mystic, asistente de ciberseguridad de Sonora Digital Corp. Analiza estos resultados de escaneo de red para una PyME mexicana y genera un análisis ejecutivo con hallazgos, riesgos y recomendaciones.\n\nResultados del escaneo:\n{scan_results}"
+
+providers:
+  - id: openrouter:deepseek/deepseek-v4-flash
+    config:
+      temperature: 0.3
+      max_tokens: 2000
+
+tests:
+  # Test 1: Escenario normal con hallazgos
+  - vars:
+      scan_results: |
+        Total hosts detectados: 24
+        Hosts con puertos abiertos: 8
+        192.168.1.1: 80/tcp (http), 443/tcp (https)
+        192.168.1.250: 22/tcp (ssh), 3389/tcp (ms-wbt-server), 445/tcp (microsoft-ds)
+        192.168.1.100: 22/tcp (ssh), 3306/tcp (mysql)
+    assert:
+      - type: contains-all
+        value:
+          - "RDP"
+          - "SSH"
+          - "riesgo"
+          - "recomendación"
+      - type: not-contains
+        value: "ERROR"
+
+  # Test 2: Red vacía
+  - vars:
+      scan_results: |
+        Total hosts detectados: 0
+        Hosts con puertos abiertos: 0
+    assert:
+      - type: contains-all
+        value:
+          - "no se detectaron"
+          - "verificar"
+
+  # Test 3: Solo un servidor
+  - vars:
+      scan_results: |
+        Total hosts detectados: 1
+        Hosts con puertos abiertos: 1
+        10.0.0.5: 443/tcp (https), 22/tcp (ssh)
+    assert:
+      - type: contains-all
+        value:
+          - "servidor"
+          - "recomendación"
+
+  # Test 4: Muchos servicios expuestos (riesgo alto)
+  - vars:
+      scan_results: |
+        Total hosts detectados: 45
+        Hosts con puertos abiertos: 30
+        192.168.0.10: 3389/tcp (ms-wbt-server), 22/tcp (ssh)
+        192.168.0.11: 3389/tcp (ms-wbt-server), 23/tcp (telnet)
+        192.168.0.12: 22/tcp (ssh), 21/tcp (ftp)
+    assert:
+      - type: contains-all
+        value:
+          - "alto"
+          - "RDP"
+          - "telnet"
+          - "FTP"
+          - "riesgo"
+      - type: not-contains
+        value: "ERROR"
+
+  # Test 5: Formato profesional
+  - vars:
+      scan_results: |
+        Total hosts detectados: 10
+        Hosts con puertos abiertos: 3
+    assert:
+      - type: contains-all
+        value:
+          - "resumen"
+          - "hallazgos"
+          - "recomendaciones"
+      - type: not-contains
+        value: "ERROR"

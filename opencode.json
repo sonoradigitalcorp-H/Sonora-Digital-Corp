@@ -320,6 +320,12 @@
       "url": "http://localhost:6401",
       "enabled": true,
       "description": "ADK Bridge \u2014 36 agentes ADK (research, sales, support, onboarding, content, abe*)"
+    },
+    "shield": {
+      "type": "remote",
+      "url": "http://localhost:8930",
+      "enabled": true,
+      "description": "Mystic Shield \u2014 diagn\u00f3stico de seguridad con IA, PDF, audio, WhatsApp, Email"
     }
   },
   "command": {
@@ -452,6 +458,11 @@
       "description": "OpenClaw Orchestrator \u2014 52 skills, MCP bridge, canales",
       "template": "Usa OpenClaw como orquestador: skills, MCP servers, canales Telegram/WhatsApp",
       "agent": "openclaw"
+    },
+    "shield": {
+      "description": "Mystic Shield \u2014 diagn\u00f3stico de seguridad",
+      "template": "Ejecuta diagn\u00f3stico de seguridad: escanea red, analiza con IA, genera PDF+audio, env\u00eda por WhatsApp y Email. Usa shield_mcp.py",
+      "agent": "mystic"
     }
   }
 }
