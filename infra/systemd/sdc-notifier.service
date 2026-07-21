@@ -1,0 +1,18 @@
+[Unit]
+Description=SDC Notifier Worker — OpenClaw bridge for proactive notifications
+After=network.target sdc-event-listener.service openclaw-gateway.service
+Requires=openclaw-gateway.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/python3 /home/ubuntu/sonora-digital-corp/events/notifier.py
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+User=ubuntu
+Restart=on-failure
+RestartSec=5
+Environment="NOTIFIER_POLL_INTERVAL=10"
+Environment="OPENCLAW_URL=http://localhost:18789"
+Environment="PYTHONPATH=/home/ubuntu/sonora-digital-corp"
+
+[Install]
+WantedBy=multi-user.target
