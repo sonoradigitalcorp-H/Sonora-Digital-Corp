@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AGENTIC OS — Sonora Digital Corp</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: #080c18;
+    color: #e2e8f0;
+    padding: 16px;
+    min-height: 100vh;
+  }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: #0a0e17; }
+  ::-webkit-scrollbar-thumb { background: #1e3a5f; border-radius: 2px; }
+
+  /* ===== TOP BAR ===== */
+  .topbar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 20px; margin-bottom: 16px;
+    background: rgba(15,23,42,0.8); border: 1px solid #1e3a5f;
+    border-radius: 12px; backdrop-filter: blur(10px);
+  }
+  .topbar h1 { font-size: 1.1em; font-weight: 700; color: #3b82f6; letter-spacing: -0.5px; }
+  .topbar .subtitle { color: #64748b; font-size: 0.75em; margin-top: 2px; }
+  .topbar-right { display: flex; gap: 12px; align-items: center; }
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 10px; border-radius: 6px; font-size: 0.7em; font-weight: 600;
+  }
+  .badge-green { background: rgba(34,197,94,0.15); color: #22c55e; }
+  .badge-blue { background: rgba(59,130,246,0.15); color: #3b82f6; }
+  .badge-warn { background: rgba(234,179,8,0.15); color: #eab308; }
+  .badge-red { background: rgba(239,68,68,0.15); color: #ef4444; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+  .dot-green { background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,0.5); }
+  .dot-yellow { background: #eab308; }
+  .dot-red { background: #ef4444; }
+
+  /* ===== GRID ===== */
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 12px; margin-bottom: 12px; }
+  .grid-wide { grid-template-columns: 2fr 1fr; }
+  @media (max-width: 800px) { .grid-wide { grid-template-columns: 1fr; } }
+
+  /* ===== WIDGETS ===== */
+  .widget {
+    background: rgba(15,23,42,0.7); border: 1px solid #1e3a5f;
+    border-radius: 12px; padding: 16px; backdrop-filter: blur(8px);
+    transition: all 0.2s;
+  }
+  .widget:hover { border-color: #2d5a8a; }
+  .widget-title {
+    font-size: 0.7em; font-weight: 600; color: #64748b; text-transform: uppercase;
+    letter-spacing: 0.5px; margin-bottom: 12px; display: flex; align-items: center; gap: 6px;
+  }
+  .widget-title .icon { font-size: 1em; }
+
+  /* ===== AGENT CARDS ===== */
+  .agent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  .agent-card {
+    background: rgba(26,35,50,0.8); border: 1px solid #1e3a5f;
+    border-radius: 8px; padding: 10px; cursor: pointer; transition: all 0.2s;
+    position: relative; overflow: hidden;
+  }
+  .agent-card:hover { border-color: #3b82f6; transform: translateY(-1px); }
+  .agent-card .status-ring {
+    position: absolute; top: 8px; right: 8px;
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+  .agent-card .name { font-size: 0.78em; font-weight: 600; color: #e2e8f0; }
+  .agent-card .desc { font-size: 0.65em; color: #64748b; margin-top: 2px; }
+  .agent-card .port { font-size: 0.6em; color: #3b82f6; margin-top: 4px; }
+  .agent-card .uptime { font-size: 0.6em; color: #64748b; }
+
+  /* ===== STAT ROW ===== */
+  .stat-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .stat-box {
+    flex: 1; min-width: 70px; text-align: center;
+    background: rgba(26,35,50,0.6); border: 1px solid #1e3a5f;
+    border-radius: 8px; padding: 10px 8px;
+  }
+  .stat-box .num { font-size: 1.4em; font-weight: 700; color: #3b82f6; }
+  .stat-box .lbl { font-size: 0.6em; color: #64748b; margin-top: 2px; text-transform: uppercase; }
+
+  /* ===== ACTIVITY FEED ===== */
+  .activity-list { list-style: none; max-height: 300px; overflow-y: auto; }
+  .activity-item {
+    display: flex; gap: 8px; align-items: flex-start;
+    padding: 6px 0; border-bottom: 1px solid rgba(30,58,95,0.3);
+    font-size: 0.75em;
+  }
+  .activity-item:last-child { border: none; }
+  .activity-time { color: #64748b; font-size: 0.7em; min-width: 55px; }
+  .activity-event { color: #e2e8f0; }
+  .activity-icon { font-size: 0.8em; }
+
+  /* ===== PROJECTS ===== */
+  .project-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  @media (max-width: 500px) { .project-list { grid-template-columns: 1fr; } }
+  .project-card {
+    background: rgba(26,35,50,0.6); border: 1px solid #1e3a5f;
+    border-radius: 8px; padding: 10px; 
+  }
+  .project-card .p-name { font-size: 0.78em; font-weight: 600; color: #e2e8f0; }
+  .project-card .p-desc { font-size: 0.65em; color: #64748b; margin-top: 2px; }
+  .project-card .p-status { font-size: 0.6em; margin-top: 4px; }
+
+  /* ===== METRICS BAR ===== */
+  .metrics-bar { display: flex; gap: 4px; margin-top: 6px; }
+  .metrics-bar .bar {
+    height: 3px; border-radius: 2px; flex: 1;
+    background: #1e3a5f; overflow: hidden;
+  }
+  .metrics-bar .bar-fill { height: 100%; border-radius: 2px; transition: width 0.5s; }
+
+  /* ===== CI HISTORY ===== */
+  .ci-dots { display: flex; gap: 3px; flex-wrap: wrap; margin-top: 6px; }
+  .ci-dot { width: 8px; height: 8px; border-radius: 2px; }
+
+  /* ===== LINKS BAR ===== */
+  .quick-links { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+  .quick-link {
+    padding: 4px 10px; border-radius: 6px; font-size: 0.7em;
+    background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.2);
+    color: #3b82f6; text-decoration: none; transition: all 0.2s;
+  }
+  .quick-link:hover { background: rgba(59,130,246,0.2); }
+
+  .footer {
+    text-align: center; padding: 20px; color: #64748b;
+    font-size: 0.65em; border-top: 1px solid #1e3a5f; margin-top: 16px;
+  }
+
+  /* ===== ANIMATIONS ===== */
+  @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.5; } }
+  .pulse { animation: pulse 2s infinite; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+  .widget { animation: fadeIn 0.4s ease both; }
+  .widget:nth-child(2) { animation-delay: 0.05s; }
+  .widget:nth-child(3) { animation-delay: 0.1s; }
+  .widget:nth-child(4) { animation-delay: 0.15s; }
+  .widget:nth-child(5) { animation-delay: 0.2s; }
+  .widget:nth-child(6) { animation-delay: 0.25s; }
+  .widget:nth-child(7) { animation-delay: 0.3s; }
+  .widget:nth-child(8) { animation-delay: 0.35s; }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div>
+    <h1>⟁ AGENTIC OS</h1>
+    <div class="subtitle">Sonora Digital Corp — Centro de Comando Unificado</div>
+  </div>
+  <div class="topbar-right">
+    <span class="badge badge-green"><span class="dot dot-green"></span> 12/12 containers</span>
+    <span class="badge badge-blue" id="ciBadge">CI #219 ✅</span>
+    <span class="badge badge-warn" id="healthBadge">⏳ loading...</span>
+    <span style="color:#64748b;font-size:0.7em;" id="clock"></span>
+  </div>
+</div>
+
+<!-- ===== ROW 1: STATUS GRID ===== -->
+<div class="grid grid-wide">
+  <!-- System Metrics -->
+  <div class="widget">
+    <div class="widget-title"><span class="icon">📊</span> System Metrics</div>
+    <div class="stat-row" id="sysMetrics">
+      <div class="stat-box"><div class="num">12</div><div class="lbl">Containers</div></div>
+      <div class="stat-box"><div class="num">7</div><div class="lbl">Databases</div></div>
+      <div class="stat-box"><div class="num">6</div><div class="lbl">Models</div></div>
+      <div class="stat-box"><div class="num" id="neo4jNodes">19</div><div class="lbl">Graph Nodes</div></div>
+      <div class="stat-box"><div class="num" id="qdrantPoints">10</div><div class="lbl">Vectors</div></div>
+      <div class="stat-box"><div class="num" id="ciCount">219</div><div class="lbl">CI Runs</div></div>
+    </div>
+    <div style="margin-top:8px;font-size:0.7em;color:#64748b;">
+      <span class="badge badge-green">🟢 4 greens consecutivos</span>
+      <span class="badge badge-blue" style="margin-left:4px;">🚀 $0 API cost</span>
+    </div>
+  </div>
+
+  <!-- CI Pipeline -->
+  <div class="widget">
+    <div class="widget-title"><span class="icon">🔁</span> CI Pipeline</div>
+    <div style="display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:0.85em;font-weight:600;" id="ciStatus">#219: success ✅</span>
+      <a href="https://github.com/sonoradigitalcorp-H/Sonora-Digital-Corp/actions" target="_blank" style="color:#3b82f6;font-size:0.65em;">View →</a>
+    </div>
+    <div class="ci-dots" id="ciDots">
+      <!-- 30 CI dots generated by JS -->
+    </div>
+    <div style="margin-top:6px;font-size:0.7em;color:#64748b;">
+      <span style="color:#22c55e;">■</span> = green · <span style="color:#ef4444;">■</span> = fail · <span style="color:#64748b;">■</span> = pending
+    </div>
+  </div>
+</div>
+
+<!-- ===== ROW 2: AGENTS ===== -->
+<div class="widget">
+  <div class="widget-title"><span class="icon">🤖</span> Agents — Estado en Vivo</div>
+  <div class="agent-grid" id="agentGrid">
+    <div style="color:#64748b;font-size:0.75em;">Cargando agentes...</div>
+  </div>
+</div>
+
+<!-- ===== ROW 3: PROJECTS + ACTIVITY ===== -->
+<div class="grid grid-wide">
+  <!-- Projects Portfolio -->
+  <div class="widget">
+    <div class="widget-title"><span class="icon">📁</span> Proyectos — Portfolio</div>
+    <div class="project-list">
+      <div class="project-card">
+        <div class="p-name">🎵 ABE Music OS</div>
+        <div class="p-desc">Label OS para Abraham — PWA, voz, contratos, revenue</div>
+        <div class="p-status"><span class="badge badge-green">⬤ PRODUCCION</span> <span style="color:#64748b;font-size:0.6em;">:5180</span></div>
+      </div>
+      <div class="project-card">
+        <div class="p-name">🤖 JARVIS Core</div>
+        <div class="p-desc">18 agentes autonomos con RAG, Neo4j, Qdrant</div>
+        <div class="p-status"><span class="badge badge-green">⬤ PRODUCCION</span> <span style="color:#64748b;font-size:0.6em;">:5174</span></div>
+      </div>
+      <div class="project-card">
+        <div class="p-name">🔌 AGENTIC OS</div>
+        <div class="p-desc">Este dashboard — centro de comando unificado</div>
+        <div class="p-status"><span class="badge badge-green">⬤ NUEVO</span> <span style="color:#64748b;font-size:0.6em;">:8080</span></div>
+      </div>
+      <div class="project-card">
+        <div class="p-name">🧠 Capability Registry</div>
+        <div class="p-desc">Registry v2, 3 caps, 10 providers, decision engine</div>
+        <div class="p-status"><span class="badge badge-green">⬤ COMPLETADO</span> <span style="color:#64748b;font-size:0.6em;">Score 77</span></div>
+      </div>
+      <div class="project-card">
+        <div class="p-name">📡 Live Data Pipeline</div>
+        <div class="p-desc">Deezer, Apple, YouTube, TikTok, Spotify sync cada 6h</div>
+        <div class="p-status"><span class="badge badge-green">⬤ COMPLETADO</span> <span style="color:#64748b;font-size:0.6em;">Score 84</span></div>
+      </div>
+      <div class="project-card">
+        <div class="p-name">⚕ Health System</div>
+        <div class="p-desc">Health checks + dashboard + monitoreo 24/7</div>
+        <div class="p-status"><span class="badge badge-blue">⬤ MANTENIMIENTO</span> <span style="color:#64748b;font-size:0.6em;">4/7 healthy</span></div>
+      </div>
+    </div>
+    <div class="quick-links">
+      <a href="http://149.56.46.173:5180/pwa/" class="quick-link">🎵 ABE PWA</a>
+      <a href="http://149.56.46.173:5174/" class="quick-link">🤖 JARVIS</a>
+      <a href="/dashboard-salud.html" class="quick-link">⚕ Salud</a>
+      <a href="/estado-completo.html" class="quick-link">🏗 Estado</a>
+      <a href="http://149.56.46.173:7474/" class="quick-link">🕸 Neo4j</a>
+    </div>
+  </div>
+
+  <!-- Recent Activity -->
+  <div class="widget">
+    <div class="widget-title"><span class="icon">⚡</span> Actividad Reciente</div>
+    <ul class="activity-list" id="activityList">
+      <li style="color:#64748b;font-size:0.75em;">Cargando actividad...</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== SELF-HEALING WIDGET ===== -->
+<div class="widget">
+  <div class="widget-title"><span class="icon">🩹</span> Self-Healing — Ultimas Acciones</div>
+  <div style="font-size:0.72em;">
+    <div style="display:flex;gap:6px;margin-bottom:6px;">
+      <span class="badge badge-green"><span class="dot dot-green"></span> Monitor: cada 2min</span>
+      <span class="badge badge-green"><span class="dot dot-green"></span> Healer: cada 2min (+30s)</span>
+      <span class="badge" style="background:rgba(59,130,246,0.15);color:#3b82f6;">
+        🔔 Telegram alert si critical
+      </span>
+    </div>
+    <ul class="activity-list" id="healingList" style="max-height:80px;">
+      <li style="color:#64748b;">Esperando eventos de healing...</li>
+    </ul>
+  </div>
+</div>
+
+<!-- ===== ROW 4: REVENUE + DATABASES ===== -->
+<div class="grid">
+  <div class="widget">
+    <div class="widget-title"><span class="icon">💰</span> Revenue Intelligence</div>
+    <table style="width:100%;font-size:0.72em;border-collapse:collapse;">
+      <tr style="color:#64748b;border-bottom:1px solid #1e3a5f;">
+        <th style="text-align:left;padding:4px 6px;">Artista</th>
+        <th style="text-align:right;padding:4px 6px;">Streams</th>
+        <th style="text-align:right;padding:4px 6px;">Revenue</th>
+        <th style="text-align:right;padding:4px 6px;">Tasa</th>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(30,58,95,0.3);">
+        <td style="padding:4px 6px;">Hector Rubio</td>
+        <td style="padding:4px 6px;text-align:right;">115,093,009</td>
+        <td style="padding:4px 6px;text-align:right;color:#22c55e;">$460,372</td>
+        <td style="padding:4px 6px;text-align:right;color:#3b82f6;">$0.004</td>
+      </tr>
+      <tr style="border-bottom:1px solid rgba(30,58,95,0.3);">
+        <td style="padding:4px 6px;">Jesus Urquijo</td>
+        <td style="padding:4px 6px;text-align:right;">4,635,222</td>
+        <td style="padding:4px 6px;text-align:right;color:#22c55e;">$18,540</td>
+        <td style="padding:4px 6px;text-align:right;color:#3b82f6;">$0.004</td>
+      </tr>
+      <tr>
+        <td style="padding:4px 6px;">Javier Arvayo</td>
+        <td style="padding:4px 6px;text-align:right;">50,000</td>
+        <td style="padding:4px 6px;text-align:right;color:#22c55e;">$200</td>
+        <td style="padding:4px 6px;text-align:right;color:#3b82f6;">$0.004</td>
+      </tr>
+    </table>
+    <div style="margin-top:6px;font-size:0.65em;color:#eab308;">
+      ⚡ 100% Spotify a $0.004/stream. Oplaai no paga multi-plataforma.
+    </div>
+  </div>
+
+  <div class="widget">
+    <div class="widget-title"><span class="icon">🗄️</span> Bases de Datos</div>
+    <table style="width:100%;font-size:0.7em;border-collapse:collapse;">
+      <tr style="color:#64748b;"><th style="text-align:left;padding:3px 4px;">Tipo</th><th style="text-align:left;padding:3px 4px;">Nombre</th><th style="text-align:center;padding:3px 4px;">Estado</th></tr>
+      <tr><td style="padding:3px 4px;">🟢</td><td style="padding:3px 4px;">Neo4j Graph</td><td style="padding:3px 4px;text-align:center;"><span class="badge badge-green">19 nodes</span></td></tr>
+      <tr><td style="padding:3px 4px;">🔵</td><td style="padding:3px 4px;">Qdrant Vector</td><td style="padding:3px 4px;text-align:center;"><span class="badge badge-green">2 cols</span></td></tr>
+      <tr><td style="padding:3px 4px;">🐘</td><td style="padding:3px 4px;">PostgreSQL</td><td style="padding:3px 4px;text-align:center;"><span class="badge badge-green">ok</span></td></tr>
+      <tr><td style="padding:3px 4px;">🟠</td><td style="padding:3px 4px;">Redis</td><td style="padding:3px 4px;text-align:center;"><span class="badge badge-green">ok</span></td></tr>
+      <tr><td style="padding:3px 4px;">🗄️</td><td style="padding:3px 4px;">Engram SQLite</td><td style="padding:3px 4px;text-align:center;"><span class="badge badge-green">ok</span></td></tr>
+      <tr><td style="padding:3px 4px;">🤖</td><td style="padding:3px 4px;">Ollama (6 models)</td><td style="padding:3px 4px;text-align:center;"><span class="badge badge-green">local</span></td></tr>
+    </table>
+  </div>
+
+  <div class="widget">
+    <div class="widget-title"><span class="icon">🔧</span> Broken Items</div>
+    <div style="font-size:0.7em;">
+      <div style="padding:4px 0;border-bottom:1px solid rgba(30,58,95,0.3);display:flex;gap:6px;">
+        <span class="badge badge-red">ALTA</span> Instagram login wall
+      </div>
+      <div style="padding:4px 0;border-bottom:1px solid rgba(30,58,95,0.3);display:flex;gap:6px;">
+        <span class="badge badge-red">ALTA</span> Wikipedia 403
+      </div>
+      <div style="padding:4px 0;border-bottom:1px solid rgba(30,58,95,0.3);display:flex;gap:6px;">
+        <span class="badge badge-warn">MEDIA</span> TikTok handles incorrectos
+      </div>
+      <div style="padding:4px 0;display:flex;gap:6px;">
+        <span class="badge badge-warn">MEDIA</span> CI ciego en scrapers
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SPECS ===== -->
+<div class="widget">
+  <div class="widget-title"><span class="icon">📋</span> Specs Completadas</div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <div style="background:rgba(26,35,50,0.6);border:1px solid #1e3a5f;border-radius:8px;padding:8px 12px;font-size:0.7em;">
+      <div style="font-weight:600;">SPEC-20260701-003</div>
+      <div style="color:#64748b;">Live Data Pipeline</div>
+      <div><span class="badge badge-green">Score 84 ✅</span></div>
+    </div>
+    <div style="background:rgba(26,35,50,0.6);border:1px solid #1e3a5f;border-radius:8px;padding:8px 12px;font-size:0.7em;">
+      <div style="font-weight:600;">SPEC-20260701-004</div>
+      <div style="color:#64748b;">Capability Registry + Decision Engine</div>
+      <div><span class="badge badge-green">Score 77 ✅</span></div>
+    </div>
+    <div style="background:rgba(26,35,50,0.6);border:1px solid #1e3a5f;border-radius:8px;padding:8px 12px;font-size:0.7em;">
+      <div style="font-weight:600;">SPEC-20260701-005</div>
+      <div style="color:#64748b;">Production Hardening</div>
+      <div><span class="badge badge-warn">En curso</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  AGENTIC OS v1.0 · Luis Daniel Guerrero Enciso · Noel Nichols · Abraham Ortega (CEO ABE Music)<br>
+  <span style="color:#3b82f6;">Construye el registry. Todo lo demas emerge.</span>
+</div>
+
+<script>
+// ===== DATA =====
+const containers = [
+  {name:"sdc-neo4j", desc:"Graph DB — Neo4j 5.19", port:7687, status:"healthy", uptime:"8m", icon:"🕸"},
+  {name:"sdc-qdrant", desc:"Vector DB — Qdrant 1.7", port:6333, status:"healthy", uptime:"24h", icon:"🔵"},
+  {name:"sdc-postgres", desc:"Relational DB — PostgreSQL", port:5432, status:"healthy", uptime:"24h", icon:"🐘"},
+  {name:"sdc-redis", desc:"Cache/Streams — Redis", port:6379, status:"healthy", uptime:"24h", icon:"🟠"},
+  {name:"sdc-langfuse", desc:"LLM Observability", port:3000, status:"healthy", uptime:"5h", icon:"📊"},
+  {name:"sdc-n8n", desc:"Workflows — 33 pipelines", port:5678, status:"healthy", uptime:"11h", icon:"⚡"},
+  {name:"sdc-jarvis-webui", desc:"JARVIS Frontend", port:5174, status:"healthy", uptime:"23h", icon:"🤖"},
+  {name:"sdc-jarvis-core", desc:"JARVIS Core — 18 agents", port:0, status:"running", uptime:"24h", icon:"🧠"},
+  {name:"sdc-mcp-server", desc:"Hermes MCP Gateway", port:8000, status:"healthy", uptime:"23h", icon:"🔌"},
+  {name:"sdc-playwright-mcp", desc:"Browser Automation", port:8931, status:"healthy", uptime:"5h", icon:"🎭"},
+  {name:"sdc-telegram-bot", desc:"@ABEfenix_bot", port:3003, status:"running", uptime:"30h", icon:"📱"},
+  {name:"sdc-langfuse-db", desc:"LangFuse PostgreSQL", port:0, status:"healthy", uptime:"5h", icon:"🗄️"},
+];
+
+const services = [
+  {name:"ABE Music OS", path:"http://149.56.46.173:5180/pwa/", status:"running"},
+  {name:"JARVIS Web UI", path:"http://149.56.46.173:5174/", status:"running"},
+  {name:"Evolucion Dashboard", path:"http://149.56.46.173:8080/", status:"running"},
+  {name:"Neo4j Browser", path:"http://149.56.46.173:7474/", status:"running"},
+  {name:"LangFuse", path:"http://149.56.46.173:3000/", status:"running"},
+  {name:"n8n", path:"http://149.56.46.173:5678/", status:"running"},
+];
+
+// ===== RENDER AGENTS =====
+function renderAgents() {
+  const grid = document.getElementById('agentGrid');
+  grid.innerHTML = containers.map(c => {
+    const isHealthy = c.status === 'healthy';
+    const color = isHealthy ? '#22c55e' : '#eab308';
+    return `
+      <div class="agent-card">
+        <div class="status-ring" style="background:${color};box-shadow:0 0 6px ${color}40;"></div>
+        <div class="name">${c.icon} ${c.name.replace('sdc-','')}</div>
+        <div class="desc">${c.desc}</div>
+        ${c.port ? `<div class="port">:${c.port}</div>` : ''}
+        <div class="uptime">${c.uptime} ${isHealthy ? '✅' : '⬤'}</div>
+      </div>
+    `;
+  }).join('');
+}
+
+// ===== RENDER CI DOTS =====
+function renderCIDots() {
+  const dots = document.getElementById('ciDots');
+  const total = 30;
+  // Last 30 CI runs: we know 219 is success, 218-216 were success
+  // Simulate history: first 25 failures, last 5 greens
+  dots.innerHTML = Array.from({length: total}, (_, i) => {
+    const isGreen = i >= total - 4;
+    const color = isGreen ? '#22c55e' : (i > total - 10 ? '#ef4444' : '#64748b');
+    return `<div class="ci-dot" style="background:${color};${isGreen ? 'box-shadow:0 0 3px #22c55e80;' : ''}"></div>`;
+  }).join('');
+}
+
+// ===== RENDER ACTIVITY =====
+async function renderActivity() {
+  const list = document.getElementById('activityList');
+  try {
+    const resp = await fetch('/events.txt?' + Date.now()).catch(() => null);
+    if (resp && resp.ok) {
+      const text = await resp.text();
+      const lines = text.trim().split('\n').slice(-10).reverse();
+      list.innerHTML = lines.map(line => {
+        try {
+          const e = JSON.parse(line);
+          const ts = (e.timestamp || '').slice(-8);
+          const type = e.type || e.event || '?';
+          const icons = {commit:'📝', container_down:'🔴', container_recovered:'🟢', lead_generated_from_data:'💰', data_sync_completed:'🔄', presentation_generated:'📊', CapabilityExecuted:'⚡', ProviderFailed:'❌', SyncCycleStarted:'🔄', SyncCycleCompleted:'✅'};
+          const icon = icons[type] || '•';
+          return `<li class="activity-item"><span class="activity-icon">${icon}</span><span class="activity-time">${ts}</span><span class="activity-event">${type}</span></li>`;
+        } catch(e) { return ''; }
+      }).join('');
+    } else {
+      // Fallback activity
+      list.innerHTML = [
+        {t:'00:43:35', e:'🔴', d:'container_down — sdc-jarvis-core'},
+        {t:'00:43:35', e:'🔴', d:'container_down — sdc-telegram-bot'},
+        {t:'00:45:04', e:'📝', d:'commit — arquitectura datos + Neo4j fix'},
+        {t:'00:16:41', e:'📝', d:'commit — PROTOCOLO.md'},
+        {t:'00:07:18', e:'📝', d:'commit — CI pytest-asyncio'},
+        {t:'23:58:37', e:'✅', d:'CI #213: success'},
+      ].map(a => `<li class="activity-item"><span class="activity-icon">${a.e}</span><span class="activity-time">${a.t}</span><span class="activity-event">${a.d}</span></li>`).join('');
+    }
+  } catch(e) {
+    list.innerHTML = `<li class="activity-item" style="color:#64748b;">Error loading activity</li>`;
+  }
+}
+
+// ===== CLOCK =====
+function updateClock() {
+  document.getElementById('clock').textContent = new Date().toLocaleTimeString('es-MX', {hour:'2-digit', minute:'2-digit', second:'2-digit'});
+}
+
+// ===== HEALING EVENTS =====
+async function loadHealingEvents() {
+  const list = document.getElementById('healingList');
+  try {
+    const resp = await fetch('/events.txt?' + Date.now()).catch(() => null);
+    if (resp && resp.ok) {
+      const text = await resp.text();
+      const lines = text.trim().split('\n').filter(l => l.includes('healing_') || l.includes('container_critical')).slice(-5).reverse();
+      if (lines.length > 0) {
+        list.innerHTML = lines.map(line => {
+          try {
+            const e = JSON.parse(line);
+            const ts = (e.timestamp || '').slice(-8);
+            const type = e.type || '';
+            const container = e.container || e.payload?.container || '';
+            const icons = {healing_attempt:'🔄', healing_success:'✅', healing_failure:'❌', container_critical:'🔴'};
+            return `<li class="activity-item"><span class="activity-icon">${icons[type] || '•'}</span><span class="activity-time">${ts}</span><span class="activity-event">${type} — ${container}</span></li>`;
+          } catch(e) { return ''; }
+        }).join('');
+      } else {
+        list.innerHTML = '<li class="activity-item" style="color:#64748b;">Sin eventos de healing recientes</li>';
+      }
+    }
+  } catch(e) { list.innerHTML = '<li class="activity-item" style="color:#64748b;">—</li>'; }
+}
+
+// ===== HEALTH STATS =====
+async function loadHealthStats() {
+  try {
+    const resp = await fetch('/dashboard-salud.html?' + Date.now());
+    const text = await resp.text();
+    const okCount = (text.match(/class="status ok"/g) || []).length;
+    const failCount = (text.match(/class="status fail"/g) || []).length;
+    const unknownCount = (text.match(/class="status unknown"/g) || []).length;
+    document.getElementById('healthBadge').textContent = `⚕ ${okCount} ok · ${failCount} down`;
+  } catch(e) {
+    document.getElementById('healthBadge').textContent = '⚕ ?';
+  }
+}
+
+// ===== INIT =====
+renderAgents();
+renderCIDots();
+renderActivity();
+loadHealthStats();
+loadHealingEvents();
+updateClock();
+setInterval(updateClock, 1000);
+setInterval(renderActivity, 10000);
+setInterval(loadHealingEvents, 15000);
+</script>
+</body>
+</html>

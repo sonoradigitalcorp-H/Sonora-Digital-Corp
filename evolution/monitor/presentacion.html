@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Cognitive Kernel — Presentacion 2026-07-03</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/night.min.css">
+<style>
+  .reveal { font-family: 'Courier New', monospace; }
+  .reveal h1 { color: #00ff88; text-transform: none; }
+  .reveal h2 { color: #00ccff; text-transform: none; }
+  .reveal h3 { color: #ffcc00; text-transform: none; }
+  .reveal li { font-size: 0.8em; }
+  .reveal .score { font-size: 3em; color: #00ff88; font-weight: bold; }
+  .reveal .score-sub { font-size: 1em; color: #888; }
+  .reveal .green { color: #00ff88; }
+  .reveal .blue { color: #00ccff; }
+  .reveal .yellow { color: #ffcc00; }
+  .reveal .red { color: #ff4444; }
+  .reveal .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .reveal .card { background: #1a1a3a; border-radius: 8px; padding: 15px; border-left: 4px solid #00ff88; }
+  .reveal .card-title { color: #00ccff; font-size: 0.7em; margin-bottom: 5px; }
+  .reveal .card-val { font-size: 1.2em; }
+  .reveal pre { font-size: 0.5em; }
+  .reveal .layer { display: flex; align-items: center; padding: 6px 0; border-bottom: 1px solid #1a1a3a; }
+  .reveal .layer-name { color: #00ff88; min-width: 200px; font-size: 0.6em; }
+  .reveal .layer-desc { color: #aaa; font-size: 0.6em; }
+  .reveal .table { width: 100%; font-size: 0.5em; border-collapse: collapse; }
+  .reveal .table td { padding: 8px; border-bottom: 1px solid #333; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<section>
+  <h1>🧠 Cognitive Kernel</h1>
+  <h3>Sonora Digital Corp</h3>
+  <p>Fase A + B + C — Sesión 2026-07-03</p>
+  <p><span class="score">84</span><span class="score-sub">/100</span></p>
+</section>
+
+<section>
+  <h2>¿Qué construimos?</h2>
+  <p>3 fases · 15 módulos · ~130 tasks · 121 archivos</p>
+  <p><span class="green">No es un framework de agentes.</span></p>
+  <p><span class="blue">Es un sistema operativo para decisiones.</span></p>
+</section>
+
+<section>
+  <h2>Arquitectura Completada</h2>
+  <div style="font-size: 0.7em;">
+    <div class="layer"><span class="layer-name">🌐 Human / API</span><span class="layer-desc">Usuario, GitHub, cron</span></div>
+    <div class="layer"><span class="layer-name">📜 Truth YAML</span><span class="layer-desc">11 archivos, 46 reglas</span></div>
+    <div class="layer"><span class="layer-name">📋 Planning Gate</span><span class="layer-desc">plan-gate.py → PLAN.yaml</span></div>
+    <div class="layer"><span class="layer-name">✅ Verification Pipeline</span><span class="layer-desc">Truth + Security + Cost gates</span></div>
+    <div class="layer"><span class="layer-name">🤖 Agent Registry</span><span class="layer-desc">9 agents · deny-all default</span></div>
+    <div class="layer"><span class="layer-name">🧠 Memory Kernel</span><span class="layer-desc">3 DBs (working/project/org) + TTL</span></div>
+    <div class="layer"><span class="layer-name">💰 Economics Kernel</span><span class="layer-desc">$1.65 spec vs $105 review</span></div>
+    <div class="layer"><span class="layer-name">📖 Learning Kernel</span><span class="layer-desc">9 heurísticas automáticas</span></div>
+    <div class="layer"><span class="layer-name">📊 Knowledge Graph</span><span class="layer-desc">8 specs · 38 services en Neo4j</span></div>
+    <div class="layer"><span class="layer-name">🛡️ Truth Guardian</span><span class="layer-desc">systemd · 0 drifts · status API</span></div>
+    <div class="layer"><span class="layer-name">📡 Event Bus</span><span class="layer-desc">463 eventos unificados</span></div>
+    <div class="layer"><span class="layer-name">⚙️ Config Unifier</span><span class="layer-desc">fleet.yml → 3 configs</span></div>
+    <div class="layer"><span class="layer-name">🔄 Vercel Deploy</span><span class="layer-desc">Auto-deploy en cada push</span></div>
+  </div>
+</section>
+
+<section>
+  <h2>Fase A — Foundations</h2>
+  <p class="score" style="font-size:2em;">83</p>
+  <div class="grid">
+    <div class="card"><div class="card-title">A1 Truth YAML</div><div class="card-val">11 archivos, 46 reglas</div></div>
+    <div class="card"><div class="card-title">A2 Event Bus</div><div class="card-val">462 eventos migrados</div></div>
+    <div class="card"><div class="card-title">A3 Planning Gate</div><div class="card-val">plan-gate.py + /plan cmd</div></div>
+    <div class="card"><div class="card-title">A4 Verification Pipeline</div><div class="card-val">3 gates: truth/security/cost</div></div>
+    <div class="card"><div class="card-title">A5 Knowledge Graph</div><div class="card-val">Neo4j: 8 specs, 38 services</div></div>
+    <div class="card"><div class="card-title">A6 CI/CD</div><div class="card-val">process-gate.yml actualizado</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>Fase B — Kernel Separation</h2>
+  <p class="score" style="font-size:2em;">85</p>
+  <div class="grid">
+    <div class="card"><div class="card-title">B1 Memory</div><div class="card-val">3 DBs + TTL (1h/7d/permanente)</div></div>
+    <div class="card"><div class="card-title">B2 Agent Registry</div><div class="card-val">9 agents, 6 capabilities, 6 policies</div></div>
+    <div class="card"><div class="card-title">B3 Security</div><div class="card-val">Deny-all default + check-capability</div></div>
+    <div class="card"><div class="card-title">B4 CI/CD v2</div><div class="card-val">Truth validation en cada PR</div></div>
+    <div class="card"><div class="card-title">B5 Templates</div><div class="card-val">7 nuevos = 13 templates total</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>Fase C — Intelligence Layer</h2>
+  <p class="score" style="font-size:2em;">84</p>
+  <div class="grid">
+    <div class="card"><div class="card-title">C1 Economics</div><div class="card-val">$1.65 opencode vs $105 claude</div></div>
+    <div class="card"><div class="card-title">C2 Learning</div><div class="card-val">9 heurísticas → truth/90-learned.yaml</div></div>
+    <div class="card"><div class="card-title">C3 Scoreboard</div><div class="card-val">9 agents metricados via API</div></div>
+    <div class="card"><div class="card-title">C4 Config Unifier</div><div class="card-val">fleet.yml → 23 servicios auto-generados</div></div>
+  </div>
+</section>
+
+<section>
+  <h2>Errores y Soluciones</h2>
+  <table class="table">
+    <tr><td>🔴 SSH + systemctl timeout</td><td class="green">kill -9 + reset-failed</td></tr>
+    <tr><td>🔴 Python import con guiones</td><td class="green">Underscores, no guiones</td></tr>
+    <tr><td>🔴 systemd log PermissionError</td><td class="green">try/except + fallback stdout</td></tr>
+    <tr><td>🔴 auto-doc.py limitado</td><td class="green">Docs manuales complementarios</td></tr>
+    <tr><td>🔴 drift_scanner dict ports</td><td class="green">isinstance check arreglado</td></tr>
+  </table>
+</section>
+
+<section>
+  <h2>Heurísticas Aprendidas</h2>
+  <p style="font-size:0.6em;">9 reglas almacenadas en truth/90-learned.yaml</p>
+  <ol style="font-size:0.6em;">
+    <li>Siempre probar edge cases en drift_scanner</li>
+    <li>No confiar en systemctl restart cuando el servicio está stuck</li>
+    <li>SSH commands deben ser cortos y con timeout</li>
+    <li>Docker container names incluyen prefijo sdc-</li>
+    <li>Next.js 16 usa -H flag, no HOST env var</li>
+    <li>Descomposición en fases funciona mejor que monolítica</li>
+    <li>Economics: ratio 63x entre modelo barato y caro</li>
+    <li>Git pull en VPS requiere git clean -fd si hubo scp previo</li>
+    <li>Las capabilities en deny-all previenen errores silenciosos</li>
+  </ol>
+</section>
+
+<section>
+  <h2>Commit</h2>
+  <pre>c08bb4b
+121 files changed, 8907 insertions
+15 modules, ~130 tasks
+3 fases, score 84/100</pre>
+</section>
+
+<section>
+  <h2>Próximos Pasos</h2>
+  <ul>
+    <li class="yellow">🔸 Setup VERCEL_TOKEN en GitHub secrets</li>
+    <li class="blue">🔹 Self-Evolution Loop (C4/C6)</li>
+    <li class="blue">🔹 Execution Kernel (scheduler)</li>
+    <li class="blue">🔹 Agent Scoreboard HTML dashboard</li>
+  </ul>
+</section>
+
+<section>
+  <h2>¿Dónde ver todo?</h2>
+  <table class="table">
+    <tr><td>📊 System Map</td><td>docs/SYSTEM-MAP.html</td></tr>
+    <tr><td>📡 Status API</td><td>:8088/api/v1/status</td></tr>
+    <tr><td>🤖 Scoreboard</td><td>:8088/api/v1/scoreboard</td></tr>
+    <tr><td>📜 Truth</td><td>truth/*.yaml (11 files)</td></tr>
+    <tr><td>📋 Registry</td><td>agents/registry.yaml</td></tr>
+    <tr><td>📖 Memoria</td><td>state/memory/ (26 permanentes)</td></tr>
+    <tr><td>🔄 GitHub</td><td>github.com/sonoradigitalcorp-H/...</td></tr>
+  </table>
+</section>
+
+<section>
+  <h1 style="color: #00ff88;">✓</h1>
+  <h2>Sesión Completa</h2>
+  <p>Cognitive Kernel v1.0 — Enterprise Score 84/100</p>
+  <p style="color: #888; font-size: 0.6em;">2026-07-03 · Sonora Digital Corp</p>
+</section>
+
+</div>
+</div>
+<script>Reveal.initialize({hash:true, controls:true, progress:true, center:true});</script>
+</body>
+</html>

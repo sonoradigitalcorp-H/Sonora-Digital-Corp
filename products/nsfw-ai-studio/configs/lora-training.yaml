@@ -1,0 +1,64 @@
+# Configuración de entrenamiento LoRA
+# Usar con: make train-lora CONFIG=configs/lora-training.yaml
+
+name: "profesor_nombre"                    # Cambia esto por el nombre real
+
+model:
+  base: "flux"                             # flux, sdxl, sd15
+  path: "/workspace/models/checkpoints"    # Ruta a checkpoints dentro del contenedor
+  # Si usas Flux, se necesita clip:
+  # clip_l: /workspace/models/clip/clip_l.safetensors
+  # t5xxl: /workspace/models/clip/t5xxl_fp16.safetensors
+
+dataset:
+  path: "/workspace/datasets/profesor_nombre"   # Tus imágenes aquí
+  repeats: 20                                   # Repeticiones por imagen
+  caption_ext: ".txt"                           # .txt con prompts por imagen
+  resolution: 1024                              # 1024 para Flux/SDXL, 512 para SD1.5
+
+  # ESTRUCTURA DEL DATASET:
+  # datasets/profesor_nombre/
+  #   ├── img_001.jpg
+  #   ├── img_001.txt      (contiene: "una foto de profesor_nombre, ...")
+  #   ├── img_002.jpg
+  #   ├── img_002.txt
+  #   └── ...
+
+network:
+  type: "lora"                               # lora, lokr, ia3, etc.
+  rank: 32                                   # 32-64 para balance calidad/tamaño
+  alpha: 16                                  # alpha = rank/2 normalmente
+  train_unet: true
+  train_text_encoder: false                  # true para mejor calidad (más VRAM)
+
+training:
+  batch_size: 1                              # 1 para 24GB, 2 para 48GB+
+  epochs: 20                                 # 15-30 suficientes
+  learning_rate: 1e-4                        # 1e-4 para SDXL/Flux
+  lr_scheduler: "cosine_with_restarts"
+  lr_warmup_steps: 100
+  optimizer: "AdamW8bit"                     # Ahorra VRAM
+  mixed_precision: "fp16"                    # fp16 para 24GB, bf16 para 48GB+
+  seed: 42
+
+  # Cache latents (ahorra VRAM durante training)
+  cache_latents: true
+  cache_text_encoder_outputs: true
+
+  # Bucketing (permite múltiples resoluciones)
+  enable_bucket: true
+  min_bucket_res: 512
+  max_bucket_res: 1024
+  bucket_reso_steps: 64
+
+save:
+  path: "/workspace/output"                  # Output del contenedor
+  save_every_n_epochs: 5                     # Checkpoints intermedios
+  save_last_n_epochs: 3                      # Solo guardar últimos 3
+  save_precision: "fp16"                     # fp16 para ahorrar espacio
+  output_name: "profesor_nombre_lora"
+
+# REQUISITOS:
+# - GPU: 24GB VRAM mínimo (48GB+ recomendado para Flux)
+# - Dataset: 20-50 imágenes, 1024x1024, bien variadas
+# - Tiempo: ~30-60min para 20 épocas con 30 imágenes
