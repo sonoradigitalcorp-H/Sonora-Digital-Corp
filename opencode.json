@@ -69,61 +69,61 @@
     "sales": {
       "mode": "subagent",
       "description": "Sales OS — lead gen, qualification, proposals, pipeline",
-      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Sales-OS.md"],
+      "instructions": ["skills/prompts/OS/Sales-OS.md"],
       "permission": { "read": "allow", "edit": "allow", "bash": "allow" }
     },
     "dev": {
       "mode": "subagent",
       "description": "Dev OS — software delivery, CI/CD, architecture, tests",
-      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Dev-OS.md"],
+      "instructions": ["skills/prompts/OS/Dev-OS.md"],
       "permission": { "read": "allow", "edit": "allow", "bash": "allow" }
     },
     "support": {
       "mode": "subagent",
       "description": "Support OS — tickets, SLAs, client satisfaction",
-      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Support-OS.md"],
+      "instructions": ["skills/prompts/OS/Support-OS.md"],
       "permission": { "read": "allow", "edit": "deny", "bash": "allow" }
     },
     "agent-os": {
       "mode": "subagent",
       "description": "Agent OS — harness lifecycle, skill registry, MCP governance",
-      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Agent-OS.md"],
+      "instructions": ["skills/prompts/OS/Agent-OS.md"],
       "permission": { "read": "allow", "edit": "allow", "bash": "deny" }
     },
     "knowledge": {
       "mode": "subagent",
       "description": "Knowledge OS — 7-layer memory, ADRs, knowledge capture",
-      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Knowledge-OS.md"],
+      "instructions": ["skills/prompts/OS/Knowledge-OS.md"],
       "permission": { "read": "allow", "edit": "allow", "bash": "allow" }
     },
     "finance": {
       "mode": "subagent",
       "description": "Finance OS — FinOps, revenue tracking, ROI, invoicing",
-      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Finance-OS.md"],
+      "instructions": ["skills/prompts/OS/Finance-OS.md"],
       "permission": { "read": "allow", "edit": "deny", "bash": "allow" }
     },
     "security": {
       "mode": "subagent",
       "description": "Security OS — secrets, audit, incident response, compliance",
-      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Security-OS.md"],
+      "instructions": ["skills/prompts/OS/Security-OS.md"],
       "permission": { "read": "allow", "edit": "deny", "bash": "allow" }
     },
     "ops": {
       "mode": "subagent",
       "description": "Ops OS — infrastructure, monitoring, recovery, scaling",
-      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Ops-OS.md"],
+      "instructions": ["skills/prompts/OS/Ops-OS.md"],
       "permission": { "read": "allow", "edit": "allow", "bash": "allow" }
     },
     "quality": {
       "mode": "subagent",
       "description": "Quality OS — test frameworks, process audits, evaluations",
-      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Quality-OS.md"],
+      "instructions": ["skills/prompts/OS/Quality-OS.md"],
       "permission": { "read": "allow", "edit": "deny", "bash": "allow", "grep": "allow" }
     },
     "strategy": {
       "mode": "subagent",
       "description": "Strategy OS — initiatives, enterprise score, quarterly planning",
-      "instructions": ["sonora-enterprise-os/prompts/prompts/OS/Strategy-OS.md"],
+      "instructions": ["skills/prompts/OS/Strategy-OS.md"],
       "permission": { "read": "allow", "edit": "allow", "bash": "allow", "task": "allow" }
     },
     "builder": {

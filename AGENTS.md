@@ -39,15 +39,15 @@ docker compose -f infra/docker-compose.yml -f infra/docker-compose.vps.yml up -d
 docker ps -a --format 'table {{.Names}}\t{{.Status}}'
 docker stats --no-stream
 
-# Rebuild MCP image (after changing mcp/Dockerfile)
-cd mcp && docker build -t sdc-mcp-server:latest .
+# Rebuild MCP image (after changing skills/mcp/Dockerfile)
+cd skills/mcp && docker build -t sdc-mcp-server:latest .
 docker rm -f sdc-adk-runtime sdc-hermes-mcp
 # Then recreate with: -v /home/ubuntu/sonora-digital-corp/config:/config:rw --network sdc-network
 ```
 
 ## Gotchas
 
-- **MCP Dockerfile**: copies entire `mcp/` dir now (was only partial). Volume must mount config at `/config` NOT `/app/config` because `path.join(__dirname, '../..', 'config')` resolves to `/config` when `__dirname=/app/gateway`.
+- **MCP Dockerfile**: copies entire `skills/mcp/` dir now (was only partial). Volume must mount config at `/config` NOT `/app/config` because `path.join(__dirname, '../..', 'config')` resolves to `/config` when `__dirname=/app/gateway`.
 - **n8n DB timeout**: sdc-n8n must start AFTER sdc-postgres is healthy. Restart: `docker restart sdc-n8n`.
 - **Test collection errors**: 27 import errors in `tests/unit/` (`test_unified_bridge.py`, `test_verify.py`, `test_voice.py`). These don't block integration/eval/structural tests.
 - **ruff not on VPS**: lint commands only work locally. VPS has no dev tooling.
@@ -56,15 +56,14 @@ docker rm -f sdc-adk-runtime sdc-hermes-mcp
 
 ```
 config/       — tenants.json, registry.json, ambassadors.yaml, whatsapp-product.yaml
-mcp/gateway/  — MCP HTTP server (port 18989), mcp-server-http.js
-mcp/servers/  — wacli_mcp.py (WhatsApp CLI tools)
-mcp/Dockerfile — full image build for sdc-mcp-server
+skills/mcp/   — MCP tools (gateway, servers, SDK, CLI)
+skills/       — All skills + reusable tools unificados
+core/         — Motor único del sistema (engine, planner, executors, agents)
 infra/        — docker-compose files, systemd units, qdrant/neo4j Dockerfiles
-scripts/      — api_bridge.py (WebSocket chat), voice/, code/
+scripts/      — api_bridge.py (WebSocket chat), voice/, code/, 70+ scripts
 state/        — engram.db, engram/, events/, whatsapp/
 process/active/ — current specs, ADRs, scores
 clients/      — abe-music, azrec, el-joyero
-scripts/      — 70+ shell scripts (start-session, end-session, backup, etc.)
 ```
 
 ## References

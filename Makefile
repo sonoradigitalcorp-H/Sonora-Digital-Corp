@@ -12,19 +12,19 @@ help:  ## Show this help
 test:  ## Run all unit tests
 	PYTHONPATH=. python3 -m pytest tests/ -q --tb=short
 
-test-all:  ## Run all tests (unit + evals + memory)
-	PYTHONPATH=. python3 -m pytest tests/ evals/ memory/tests/ -q --tb=short
+test-all:  ## Run all tests (unit + core)
+	PYTHONPATH=. python3 -m pytest tests/ core/tests/ -q --tb=short
 
 test-v:  ## Run all tests with verbose output
-	PYTHONPATH=. python3 -m pytest tests/ evals/ memory/tests/ -v --tb=short
+	PYTHONPATH=. python3 -m pytest tests/ core/tests/ -v --tb=short
 
 # ─── Lint ────────────────────────────────────────────────────────────────────
 
 lint:  ## Run ruff linter
-	ruff check apps/ memory/ metrics/ scripts/
+	ruff check apps/ core/ scripts/ skills/
 
 lint-fix:  ## Auto-fix lint issues
-	ruff check --fix apps/ memory/ metrics/ scripts/
+	ruff check --fix apps/ core/ scripts/ skills/
 
 # ─── Evals ───────────────────────────────────────────────────────────────────
 
@@ -34,7 +34,7 @@ eval-structural:  ## Run structural evals (agent/cap/sdd/skill/event)
 	PYTHONPATH=. python3 -m pytest evals/test_evals.py -v --tb=short
 
 eval-promptfoo:  ## Run promptfoo LLM evals
-	cd promptfoo && promptfoo eval && cd ..
+	cd tests/promptfoo && promptfoo eval && cd ../..
 
 eval-dashboard:  ## Generate eval dashboard HTML
 	PYTHONPATH=. python3 evals/generate-dashboard.py
