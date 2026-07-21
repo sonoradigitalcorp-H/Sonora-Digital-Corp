@@ -130,7 +130,7 @@ jobs:
                 
                 // Auth
                 const t = await new Promise((resolve, reject) => {
-                  const data = JSON.stringify({client_id:'sdc-core',client_secret:'sdc_secret_ent3rpr1s3_k3y_2026'});
+                  const data = JSON.stringify({client_id:'sdc-core',client_secret:'${{ secrets.SDC_CLIENT_SECRET }}'});
                   const req = http.request({hostname:'127.0.0.1',port:18989,path:'/api/auth/token',method:'POST',headers:{'Content-Type':'application/json','Content-Length':data.length}}, r => { let d='';r.on('data',c=>d+=c);r.on('end',()=>resolve(JSON.parse(d))); });
                   req.on('error', reject); req.write(data); req.end();
                 });

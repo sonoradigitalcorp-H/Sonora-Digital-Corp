@@ -48,6 +48,8 @@ jobs:
             exit 1
           fi
       - name: MCP Gateway — Auth test
+        env:
+          SONORA_CLIENT_SECRET: ${{ secrets.SDC_CLIENT_SECRET }}
         run: |
           TOKEN=$(curl -s -X POST http://127.0.0.1:18989/api/auth/token \
             -H 'Content-Type: application/json' \
