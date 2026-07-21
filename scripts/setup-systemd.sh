@@ -3,8 +3,9 @@
 # Creates systemd services for all JARVIS components
 set -euo pipefail
 
-JARVIS_DIR="${JARVIS_DIR:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
+REPO="${REPO:-$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)}"
 SERVICES_DIR="${SERVICES_DIR:-/etc/systemd/system}"
+USER="${SUDO_USER:-$USER}"
 
 log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*"; }
 
@@ -16,7 +17,7 @@ fi
 log "Setting up Sonora systemd services..."
 
 # 0. MCP Gateway (Node.js, entry point único)
-cat > "${SERVICES_DIR}/sonora-mcp-gateway.service" << 'EOF'
+cat > "${SERVICES_DIR}/sonora-mcp-gateway.service" << EOF
 [Unit]
 Description=Sonora MCP Gateway — Entry Point Único (Auth JWT + CapabilityRegistry + ADK)
 After=network.target docker.service redis.service
@@ -25,9 +26,9 @@ Wants=redis.service
 
 [Service]
 Type=simple
-User=mystic
-WorkingDirectory=/home/mystic/sonora-digital-corp/mcp
-ExecStart=/usr/bin/node /home/mystic/sonora-digital-corp/mcp/gateway/mcp-server-http.js
+User=$USER
+WorkingDirectory=$REPO/mcp
+ExecStart=/usr/bin/node $REPO/mcp/gateway/mcp-server-http.js
 Restart=always
 RestartSec=5
 Environment="NODE_ENV=production"
@@ -35,15 +36,15 @@ Environment="SONORA_CLIENT_ID=sdc-core"
 Environment="SONORA_CLIENT_SECRET=${SONORA_CLIENT_SECRET:-}"
 Environment="OPENROUTER_API_KEY=${OPENROUTER_API_KEY:-}"
 Environment="OPENCODE_API_KEY=${OPENCODE_API_KEY:-}"
-StandardOutput=append:/home/mystic/sonora-digital-corp/state/logs/mcp-gateway.log
-StandardError=append:/home/mystic/sonora-digital-corp/state/logs/mcp-gateway.log
+StandardOutput=append:$REPO/state/logs/mcp-gateway.log
+StandardError=append:$REPO/state/logs/mcp-gateway.log
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
 # 1. JARVIS Core Orchestrator
-cat > "${SERVICES_DIR}/jarvis-core.service" << 'EOF'
+cat > "${SERVICES_DIR}/jarvis-core.service" << EOF
 [Unit]
 Description=JARVIS Core Orchestrator
 After=network.target docker.service
@@ -51,21 +52,21 @@ Requires=docker.service
 
 [Service]
 Type=simple
-User=mystic
-WorkingDirectory=/home/mystic/sonora-digital-corp
-ExecStart=/home/mystic/sonora-digital-corp/venv/bin/python main.py
+User=$USER
+WorkingDirectory=$REPO
+ExecStart=$REPO/venv/bin/python main.py
 Restart=always
 RestartSec=10
 Environment="PYTHONUNBUFFERED=1"
-StandardOutput=append:/home/mystic/sonora-digital-corp/state/logs/core.log
-StandardError=append:/home/mystic/sonora-digital-corp/state/logs/core.log
+StandardOutput=append:$REPO/state/logs/core.log
+StandardError=append:$REPO/state/logs/core.log
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
 # 2. JARVIS Web UI
-cat > "${SERVICES_DIR}/jarvis-webui.service" << 'EOF'
+cat > "${SERVICES_DIR}/jarvis-webui.service" << EOF
 [Unit]
 Description=JARVIS Web UI
 After=network.target jarvis-core.service
@@ -73,30 +74,30 @@ Wants=jarvis-core.service
 
 [Service]
 Type=simple
-User=mystic
-WorkingDirectory=/home/mystic/sonora-digital-corp
-ExecStart=/home/mystic/sonora-digital-corp/venv/bin/python webui/fastapp.py
+User=$USER
+WorkingDirectory=$REPO
+ExecStart=$REPO/venv/bin/python webui/fastapp.py
 Restart=always
 RestartSec=10
 Environment="PYTHONUNBUFFERED=1"
-StandardOutput=append:/home/mystic/sonora-digital-corp/state/logs/webui.log
-StandardError=append:/home/mystic/sonora-digital-corp/state/logs/webui.log
+StandardOutput=append:$REPO/state/logs/webui.log
+StandardError=append:$REPO/state/logs/webui.log
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
 # 3. JARVIS Health Check Timer (runs every 5 minutes)
-cat > "${SERVICES_DIR}/jarvis-healthcheck.service" << 'EOF'
+cat > "${SERVICES_DIR}/jarvis-healthcheck.service" << EOF
 [Unit]
 Description=JARVIS Health Check
 
 [Service]
 Type=oneshot
-User=mystic
-ExecStart=/home/mystic/sonora-digital-corp/scripts/healthcheck.sh
-StandardOutput=append:/home/mystic/sonora-digital-corp/state/logs/healthcheck.log
-StandardError=append:/home/mystic/sonora-digital-corp/state/logs/healthcheck.log
+User=$USER
+ExecStart=$REPO/scripts/healthcheck.sh
+StandardOutput=append:$REPO/state/logs/healthcheck.log
+StandardError=append:$REPO/state/logs/healthcheck.log
 EOF
 
 cat > "${SERVICES_DIR}/jarvis-healthcheck.timer" << 'EOF'
@@ -113,16 +114,16 @@ WantedBy=timers.target
 EOF
 
 # 4. JARVIS Backup Timer (runs daily at 3 AM)
-cat > "${SERVICES_DIR}/jarvis-backup.service" << 'EOF'
+cat > "${SERVICES_DIR}/jarvis-backup.service" << EOF
 [Unit]
 Description=JARVIS Daily Backup
 
 [Service]
 Type=oneshot
-User=mystic
-ExecStart=/home/mystic/sonora-digital-corp/scripts/backup.sh
-StandardOutput=append:/home/mystic/sonora-digital-corp/state/logs/backup.log
-StandardError=append:/home/mystic/sonora-digital-corp/state/logs/backup.log
+User=$USER
+ExecStart=$REPO/scripts/backup.sh
+StandardOutput=append:$REPO/state/logs/backup.log
+StandardError=append:$REPO/state/logs/backup.log
 EOF
 
 cat > "${SERVICES_DIR}/jarvis-backup.timer" << 'EOF'

@@ -1,8 +1,8 @@
 #!/bin/bash
 # WhatsApp Webhook cron — ensure webhook listener is running
-# Usage: add to crontab: */5 * * * * /bin/bash /home/mystic/sonora-digital-corp/scripts/whatsapp-webhook-cron.sh
+# Usage: add to crontab: */5 * * * * /bin/bash \$HOME/sonora-digital-corp/scripts/whatsapp-webhook-cron.sh
 
-REPO="/home/mystic/sonora-digital-corp"
+REPO="$(cd "$(dirname "$0")/.." && pwd)"
 PIDFILE="/tmp/whatsapp-webhook.pid"
 LOGFILE="$REPO/state/logs/whatsapp-webhook.log"
 

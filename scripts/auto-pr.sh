@@ -25,7 +25,7 @@ done
 
 # Detect gh binary
 GH_BIN=""
-for p in /usr/bin/gh /home/mystic/.local/bin/gh /snap/bin/gh; do
+for p in /usr/bin/gh $HOME/.local/bin/gh /snap/bin/gh; do
     [ -x "$p" ] && { GH_BIN="$p"; break; }
 done
 if [ -z "$GH_BIN" ]; then
