@@ -1,0 +1,69 @@
+name: contabilidad/sat-declaraciones
+description: "Declaraciones SAT — bimestrales, anuales, ISR, IVA, buzón tributario"
+version: 1
+
+inputs:
+  - name: tipo
+    type: string
+    enum: [bimestral, anual, informativa, complementaria]
+  - name: regimen
+    type: string
+    enum: [resico, persona-fisica, persona-moral, sueldos, arrendamiento]
+  - name: periodo
+    type: string
+    description: "Periodo a declarar (ej: 2026-07)"
+  - name: cliente_id
+    type: string
+    description: "RFC o ID del cliente"
+  - name: xmls
+    type: array
+    description: "Lista de XMLs del periodo"
+
+outputs:
+  - name: declaracion_path
+    type: string
+    description: "Path de la declaración generada"
+  - name: isr_calculado
+    type: number
+    description: "ISR determinado"
+  - name: iva_a_favor
+    type: number
+    description: "IVA a favor o a cargo"
+  - name: estado
+    type: string
+    enum: [calculada, presentada, pendiente, error]
+
+prompt: |
+  Eres experto en declaraciones SAT.
+  Conoces todos los regímenes fiscales mexicanos:
+  - RESICO (Régimen Simplificado de Confianza): tope 3.5M, tasas progresivas 1-2.5%
+  - Persona Física: actividades empresariales, honorarios, arrendamiento
+  - Persona Moral: ISR 30%, PTU, CUFIN
+  - Sueldos y salarios: ISR anual, subsidio al empleo
+  - Incorporación Fiscal: tope 2M, IVA 100% acreditable
+  
+  Proceso:
+  1. Recopilar XMLs del periodo del cliente
+  2. Calcular ISR según régimen
+  3. Calcular IVA (acreditable vs trasladado)
+  4. Generar declaración (bimestral/mensual/anual)
+  5. Verificar fechas de vencimiento
+  6. Recordatorios automáticos 5 días antes del vencimiento
+
+  Fechas clave:
+  - Bimestral RESICO: días 1-17 del mes siguiente al bimestre
+  - Mensual: días 1-17 del mes siguiente
+  - Anual: durante abril (personas físicas)
+  - IVA: días 1-17 del mes siguiente
+
+tools_required:
+  - sat-api
+  - wacli
+
+agents_allowed:
+  - nathy-resico-agent
+  - nathy-conta-agent
+
+eval_criteria:
+  - accuracy: "ISR e IVA calculados correctamente según régimen"
+  - latency: "< 3s cálculo"

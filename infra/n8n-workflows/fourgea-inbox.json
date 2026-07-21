@@ -1,0 +1,148 @@
+{
+  "name": "Fourgea Inbox Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "fourgea-webhook",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "webhook-trigger",
+      "name": "Webhook: Email Arrival",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Extrae adjuntos del email entrante\nconst email = $input.first().json;\nconst attachments = [];\n\nif (email.attachments && email.attachments.length > 0) {\n  for (const att of email.attachments) {\n    const ext = (att.filename || '').toLowerCase();\n    if (ext.endsWith('.xml') || ext.endsWith('.pdf')) {\n      attachments.push({\n        filename: att.filename,\n        content: att.content,\n        contentType: att.contentType || 'application/octet-stream',\n        size: att.size || 0\n      });\n    }\n  }\n}\n\nif (attachments.length === 0) {\n  throw new Error('No XML/PDF attachments found');\n}\n\nreturn attachments.map(a => ({ json: a }));"
+      },
+      "id": "extract-attachments",
+      "name": "Extract Attachments",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const att = $input.first().json;\nreturn [{\n  json: {\n    filename: att.filename,\n    size: att.size,\n    status: 'extracted',\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "log-received",
+      "name": "Log Received",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [650, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $env.EDGE_RECEIVER_URL }}/edge/inbox",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "=Bearer {{ $env.EDGE_API_KEY }}"
+            },
+            {
+              "name": "X-Device-ID",
+              "value": "nathaly-laptop"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": []
+        },
+        "options": {
+          "timeout": 60000
+        }
+      },
+      "id": "call-edge-receiver",
+      "name": "Process via Edge Receiver",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "const response = $input.first().json;\nconst original = $('Log Received').first().json;\n\nreturn [{\n  json: {\n    filename: original.filename,\n    success: response.success,\n    classification: response.classification || 'unknown',\n    result: response.result || {},\n    renamed_to: response.renamed_to || original.filename,\n    uuid: response.result?.uuid || '',\n    rfc_emisor: response.result?.rfc_emisor || '',\n    total: response.result?.total || 0,\n    timestamp: new Date().toISOString()\n  }\n}];"
+      },
+      "id": "format-result",
+      "name": "Format Result",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [1050, 300]
+    },
+    {
+      "parameters": {
+        "operation": "sendMessage",
+        "chatId": "={{ $env.FOURGEA_TELEGRAM_CHAT_ID }}",
+        "text": "=📄 *{{ $json.filename }}*\n✅ Procesado: {{ $json.classification }}\n📋 RFC Emisor: {{ $json.rfc_emisor }}\n💰 Total: ${{ $json.total }}\n🔑 UUID: {{ $json.uuid.substring(0,8) }}...\n📝 Renombrado: {{ $json.renamed_to }}",
+        "additionalFields": {
+          "parse_mode": "Markdown"
+        }
+      },
+      "id": "notify-telegram",
+      "name": "Notify Telegram",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 2,
+      "position": [1250, 300]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "fourgea-processing-log",
+          "mode": "list"
+        },
+        "data": {
+          "string": [
+            "={{ $json.timestamp }}",
+            "={{ $json.filename }}",
+            "={{ $json.classification }}",
+            "={{ $json.rfc_emisor }}",
+            "={{ $json.total }}",
+            "={{ $json.success ? 'OK' : 'ERROR' }}"
+          ]
+        },
+        "options": {}
+      },
+      "id": "log-to-spreadsheet",
+      "name": "Log to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4,
+      "position": [1250, 450]
+    }
+  ],
+  "connections": {
+    "Webhook: Email Arrival": {
+      "main": [[ { "node": "Extract Attachments", "type": "main", "index": 0 } ]]
+    },
+    "Extract Attachments": {
+      "main": [[ { "node": "Log Received", "type": "main", "index": 0 } ]]
+    },
+    "Log Received": {
+      "main": [[ { "node": "Process via Edge Receiver", "type": "main", "index": 0 } ]]
+    },
+    "Process via Edge Receiver": {
+      "main": [[ { "node": "Format Result", "type": "main", "index": 0 } ]]
+    },
+    "Format Result": {
+      "main": [
+        [ { "node": "Notify Telegram", "type": "main", "index": 0 } ],
+        [ { "node": "Log to Google Sheets", "type": "main", "index": 0 } ]
+      ]
+    }
+  },
+  "settings": {
+    "saveManualExecutions": true,
+    "callerPolicy": "workflowsFromSameOwner"
+  },
+  "versionId": "1.0.0",
+  "active": true
+}

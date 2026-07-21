@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f0a1a" />
+  <title>Mysticverse — SDC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%238b5cf6'/></svg>" />
+  <style>
+    body { background: #0f0a1a; }
+    #age-gate { transition: opacity 0.5s ease; }
+    .three-fallback { background: linear-gradient(to bottom, #0f0a1a 0%, #1a0f2e 50%, #0f0a1a 100%); }
+    .hero-full::before { background: linear-gradient(to right, rgba(15,10,26,0.85) 0%, rgba(15,10,26,0.4) 50%, rgba(15,10,26,0.3) 100%); }
+  </style>
+  <script type="module" crossorigin src="/assets/main-DWwiHsgc.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/main-l70s5As2.css">
+</head>
+<body class="text-fg-primary font-body overflow-x-hidden">
+  <!-- Age Gate -->
+  <div id="age-gate" class="fixed inset-0 z-[100] bg-[#0f0a1a] flex flex-col items-center justify-center px-4">
+    <div class="text-center max-w-sm">
+      <span class="text-5xl">🔮</span>
+      <h1 class="font-display text-3xl font-bold mt-4 text-accent-violet">Mysticverse</h1>
+      <p class="text-fg-muted mt-2">You must be 18+ to enter</p>
+      <div class="mt-8 space-y-4">
+        <div class="text-left">
+          <label class="text-xs text-fg-muted block mb-1.5">Date of Birth</label>
+          <input id="birth-date" type="date" class="w-full bg-bg-surface border border-border-frost rounded-card px-4 py-3 text-fg-primary text-sm focus:outline-none focus:border-accent-violet transition-colors" />
+        </div>
+        <label class="flex items-start gap-2 text-xs text-fg-muted">
+          <input type="checkbox" class="mt-0.5 accent-accent-violet" checked />
+          I agree to the Terms of Service and Privacy Policy
+        </label>
+        <button id="age-gate-enter" disabled class="btn-secondary w-full h-12 text-base disabled:opacity-40 disabled:cursor-not-allowed">Enter Mysticverse</button>
+      </div>
+      <div class="flex justify-center gap-4 mt-8 text-[10px] text-fg-muted">
+        <span class="flex items-center gap-1">🔞 18+</span>
+        <span class="flex items-center gap-1">✅ KYC</span>
+        <span class="flex items-center gap-1">🔒 Encrypted</span>
+        <span class="flex items-center gap-1">💳 Stripe</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Content (hidden until age gate passes) -->
+  <div id="age-gate-content" style="display:none">
+    <!-- Three.js bg -->
+    <div id="three-container" class="fixed inset-0 z-0 pointer-events-none">
+      <div class="three-fallback absolute inset-0"></div>
+    </div>
+
+    <!-- Desktop nav -->
+    <nav class="hidden md:flex glass fixed top-0 left-0 right-0 z-50 items-center justify-between px-8 h-16" style="border-color: rgba(139,92,246,0.15)">
+      <span class="font-display font-bold text-lg text-accent-violet">Mysticverse</span>
+      <div class="flex items-center gap-8 text-sm text-fg-muted">
+        <a href="#explore" class="hover:text-accent-violet transition-colors">Explore</a>
+        <a href="#features" class="hover:text-accent-violet transition-colors">Features</a>
+        <a href="#plans" class="hover:text-accent-violet transition-colors">Plans</a>
+        <button class="btn-secondary h-9 px-5 text-sm">Get Started</button>
+      </div>
+    </nav>
+
+    <main class="relative z-10">
+      <!-- HERO — female model full-bleed -->
+      <section id="explore" class="hero-full min-h-screen flex flex-col justify-center items-center px-4 md:px-8 text-center pt-16 md:pt-0" style="background-image: url('/assets/images/mv-hero-female.jpg')">
+        <div class="reveal max-w-2xl">
+          <h1 class="font-display text-3xl md:text-5xl lg:text-6xl font-bold leading-tight">
+            Where your digital self<br />
+            <span class="text-accent-violet text-glow-violet">meets desire.</span>
+          </h1>
+          <p class="font-body text-base md:text-lg text-fg-primary/80 mt-4 max-w-md mx-auto">
+            Create, share, and monetize your digital presence.<br />
+            Your content. Your rules. Your revenue.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-3 justify-center mt-8">
+            <button class="btn-secondary h-12 px-8 text-base">Start Creating →</button>
+            <button class="h-12 px-8 text-base rounded-btn border border-white/20 text-white/80 hover:bg-white/10 transition-all">Explore</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- VALUE PROP -->
+      <section class="min-h-screen flex flex-col justify-center px-4 md:px-8 py-section-mobile md:py-section">
+        <div class="flex flex-col md:flex-row gap-4 max-w-4xl mx-auto w-full">
+          <div class="reveal glass-violet rounded-card p-6 md:p-8 flex-1 text-center">
+            <span class="text-3xl">📸</span>
+            <h3 class="font-display font-semibold mt-4 text-lg">Your Content</h3>
+            <p class="text-sm text-fg-muted mt-2">You own everything you create. Full rights, full control.</p>
+          </div>
+          <div class="reveal reveal-delay-2 glass-violet rounded-card p-6 md:p-8 flex-1 text-center">
+            <span class="text-3xl">🛡️</span>
+            <h3 class="font-display font-semibold mt-4 text-lg">Your Rules</h3>
+            <p class="text-sm text-fg-muted mt-2">Set your own terms, pricing, and access levels.</p>
+          </div>
+          <div class="reveal reveal-delay-3 glass-violet rounded-card p-6 md:p-8 flex-1 text-center">
+            <span class="text-3xl">💰</span>
+            <h3 class="font-display font-semibold mt-4 text-lg">Your Revenue</h3>
+            <p class="text-sm text-fg-muted mt-2">Direct payments via Stripe. 85% creator payout.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECOND HERO — male model -->
+      <section class="hero-full min-h-[60vh] flex flex-col justify-center items-center px-4 md:px-8 text-center py-20" style="background-image: url('/assets/images/mv-hero-male.jpg')">
+        <div class="reveal">
+          <h2 class="font-display text-3xl md:text-5xl font-bold">Unleash your digital self</h2>
+          <p class="text-fg-primary/70 mt-4">Your AI clone handles DMs while you focus on creating.</p>
+        </div>
+      </section>
+
+      <!-- CREATOR TOOLS -->
+      <section id="features" class="min-h-screen flex flex-col justify-center px-4 md:px-8 py-section-mobile md:py-section">
+        <h2 class="reveal font-display text-2xl md:text-4xl font-bold text-center mb-12">Creator tools</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-3xl mx-auto w-full">
+          <div class="reveal glass-violet rounded-card p-6">
+            <span class="text-2xl">📊</span>
+            <h3 class="font-display font-semibold mt-3">Creator Dashboard</h3>
+            <p class="text-sm text-fg-muted mt-1">Real-time earnings, subscriber stats, content performance.</p>
+          </div>
+          <div class="reveal reveal-delay-2 glass-violet rounded-card p-6">
+            <span class="text-2xl">💎</span>
+            <h3 class="font-display font-semibold mt-3">Subscription Tiers</h3>
+            <p class="text-sm text-fg-muted mt-1">Free, paid monthly, yearly — you decide pricing.</p>
+          </div>
+          <div class="reveal reveal-delay-3 glass-violet rounded-card p-6">
+            <span class="text-2xl">🔐</span>
+            <h3 class="font-display font-semibold mt-3">PPV Content</h3>
+            <p class="text-sm text-fg-muted mt-1">Lock your best content behind one-time payments.</p>
+          </div>
+          <div class="reveal reveal-delay-4 glass-violet rounded-card p-6">
+            <span class="text-2xl">🤖</span>
+            <h3 class="font-display font-semibold mt-3">AI Clone DMs</h3>
+            <p class="text-sm text-fg-muted mt-1">Your digital twin handles DMs 24/7. You never lift a finger.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- AI CLONE FEATURE — double exposure image -->
+      <section class="hero-full min-h-[80vh] flex flex-col justify-center items-center px-4 md:px-8 text-center py-20" style="background-image: url('/assets/images/mv-ai-clone.jpg')">
+        <div class="reveal glass-violet rounded-card p-8 md:p-12 max-w-lg backdrop-blur-sm">
+          <h2 class="font-display text-3xl md:text-4xl font-bold">Your AI Twin</h2>
+          <p class="text-fg-primary/80 mt-3">Trained on your personality. Responds in your voice. Works 24/7.</p>
+          <button class="btn-secondary mt-6 h-11 px-8">Activate Yours →</button>
+        </div>
+      </section>
+
+      <!-- TRUST BADGES -->
+      <section class="flex flex-col justify-center px-4 md:px-8 py-section-mobile md:py-section">
+        <div class="flex gap-4 overflow-x-auto snap-x-mandatory scrollbar-hide pb-4 max-w-3xl mx-auto w-full">
+          <div class="reveal glass-violet rounded-card p-6 min-w-[180px] snap-center flex-shrink-0 text-center">
+            <span class="text-3xl">🔞</span>
+            <p class="font-display font-semibold mt-2 text-sm">18+ Verified</p>
+          </div>
+          <div class="reveal reveal-delay-2 glass-violet rounded-card p-6 min-w-[180px] snap-center flex-shrink-0 text-center">
+            <span class="text-3xl">✅</span>
+            <p class="font-display font-semibold mt-2 text-sm">KYC Verified</p>
+          </div>
+          <div class="reveal reveal-delay-3 glass-violet rounded-card p-6 min-w-[180px] snap-center flex-shrink-0 text-center">
+            <span class="text-3xl">🔒</span>
+            <p class="font-display font-semibold mt-2 text-sm">Encrypted</p>
+          </div>
+          <div class="reveal reveal-delay-4 glass-violet rounded-card p-6 min-w-[180px] snap-center flex-shrink-0 text-center">
+            <span class="text-3xl">💳</span>
+            <p class="font-display font-semibold mt-2 text-sm">Stripe</p>
+          </div>
+        </div>
+        <div class="flex justify-center gap-2 mt-4">
+          <span class="size-2 rounded-full bg-accent-violet"></span>
+          <span class="size-2 rounded-full bg-fg-muted/30"></span>
+          <span class="size-2 rounded-full bg-fg-muted/30"></span>
+          <span class="size-2 rounded-full bg-fg-muted/30"></span>
+        </div>
+      </section>
+
+      <!-- PLANS -->
+      <section id="plans" class="min-h-screen flex flex-col justify-center px-4 md:px-8 py-section-mobile md:py-section">
+        <h2 class="reveal font-display text-2xl md:text-4xl font-bold text-center mb-8">Choose your path</h2>
+        <div class="flex justify-center gap-2 mb-8">
+          <button class="px-6 py-2 rounded-full bg-accent-violet text-black text-sm font-medium">For Creators</button>
+          <button class="px-6 py-2 rounded-full border border-border-violet text-fg-muted text-sm">For Fans</button>
+        </div>
+        <div class="flex gap-4 overflow-x-auto snap-x-mandatory scrollbar-hide pb-4 max-w-4xl mx-auto w-full px-2">
+          <div class="reveal glass-violet rounded-card p-6 min-w-[280px] snap-center flex-shrink-0">
+            <h3 class="font-display font-semibold text-lg">Free</h3>
+            <p class="text-3xl font-display font-bold mt-2">$0</p>
+            <ul class="text-sm text-fg-muted mt-6 space-y-3">
+              <li class="flex items-start gap-2">✓ 1 AI Clone</li>
+              <li class="flex items-start gap-2">✓ Basic analytics</li>
+              <li class="flex items-start gap-2">✓ Community access</li>
+            </ul>
+            <button class="btn-outline w-full mt-8 h-11 border-violet/15 hover:border-accent-violet hover:text-accent-violet">Get Started</button>
+          </div>
+          <div class="reveal reveal-delay-2 glass-violet rounded-card p-6 min-w-[280px] snap-center flex-shrink-0 relative">
+            <span class="absolute -top-2.5 right-3 bg-accent-violet text-black text-[11px] font-bold px-2.5 py-0.5 rounded-full">POPULAR</span>
+            <h3 class="font-display font-semibold text-lg">Premium</h3>
+            <p class="text-3xl font-display font-bold mt-2 text-accent-violet">$49</p>
+            <p class="text-xs text-fg-muted mt-1">/month</p>
+            <ul class="text-sm text-fg-muted mt-6 space-y-3">
+              <li class="flex items-start gap-2">✓ 3 AI Clones</li>
+              <li class="flex items-start gap-2">✓ Full analytics + insights</li>
+              <li class="flex items-start gap-2">✓ Subscription tiers</li>
+              <li class="flex items-start gap-2">✓ PPV content</li>
+            </ul>
+            <button class="btn-secondary w-full mt-8 h-11">Start Free Trial</button>
+          </div>
+          <div class="reveal reveal-delay-3 glass-violet rounded-card p-6 min-w-[280px] snap-center flex-shrink-0">
+            <h3 class="font-display font-semibold text-lg">Elite</h3>
+            <p class="text-3xl font-display font-bold mt-2">$149</p>
+            <p class="text-xs text-fg-muted mt-1">/month</p>
+            <ul class="text-sm text-fg-muted mt-6 space-y-3">
+              <li class="flex items-start gap-2">✓ Unlimited AI Clones</li>
+              <li class="flex items-start gap-2">✓ AI DM assistant (24/7)</li>
+              <li class="flex items-start gap-2">✓ Custom branding</li>
+              <li class="flex items-start gap-2">✓ Dedicated manager</li>
+            </ul>
+            <button class="btn-secondary w-full mt-8 h-11 opacity-80">Go Elite</button>
+          </div>
+        </div>
+        <div class="flex justify-center gap-2 mt-4">
+          <span class="size-2 rounded-full bg-fg-muted/30"></span>
+          <span class="size-2 rounded-full bg-accent-violet"></span>
+          <span class="size-2 rounded-full bg-fg-muted/30"></span>
+        </div>
+      </section>
+
+      <!-- CTA -->
+      <section class="hero-full h-screen flex flex-col justify-center items-center px-4 text-center" style="background-image: url('/assets/images/mv-hero-female.jpg')">
+        <div class="reveal">
+          <h2 class="font-display text-3xl md:text-5xl font-bold">Enter the Mysticverse</h2>
+          <p class="text-fg-primary/70 mt-4 max-w-md mx-auto">Your digital self is waiting.</p>
+          <button class="btn-secondary h-14 px-10 text-lg mt-8">Join Now →</button>
+        </div>
+      </section>
+    </main>
+
+    <!-- Mobile bottom nav -->
+    <nav id="bottom-nav" class="md:hidden glass fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center h-16 pb-2 transition-transform duration-300 ease-fluid" style="border-color: rgba(139,92,246,0.15)">
+      <a href="#explore" class="flex flex-col items-center gap-0.5 text-accent-violet text-[10px]">
+        <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="7.5"/><path stroke-linecap="round" stroke-linejoin="round" d="m21 21-5.197-5.197"/></svg>
+        <span>Explore</span>
+      </a>
+      <a href="#features" class="flex flex-col items-center gap-0.5 text-fg-muted text-[10px]">
+        <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"/></svg>
+        <span>Create</span>
+      </a>
+      <a href="#" class="flex flex-col items-center gap-0.5 text-fg-muted text-[10px]">
+        <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/></svg>
+        <span>Inbox</span>
+      </a>
+      <a href="#" class="flex flex-col items-center gap-0.5 text-fg-muted text-[10px]">
+        <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"/></svg>
+        <span>Profile</span>
+      </a>
+    </nav>
+  </div>
+</body>
+</html>

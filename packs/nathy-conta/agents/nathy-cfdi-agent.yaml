@@ -1,0 +1,23 @@
+name: nathy-cfdi-agent
+description: "Agente de CFDI — timbrado, cancelación, validación de XML, complementos de pago"
+model: opencode/deepseek-v4-flash-free
+provider: opencode
+capability: cfdi-management
+maturity: 3-Accelerated
+tools:
+  - sonora:cfdi_timbrar
+  - sonora:cfdi_cancelar
+  - sonora:cfdi_validar_xml
+  - sonora:cfdi_extraer_metadatos
+  - sonora:cfdi_complemento_pago
+  - sonora:enterprise_score
+policies:
+  max_tokens_per_call: 4096
+  timeout_seconds: 60
+events:
+  emits: [accounting:cfdi:timbrar, accounting:cfdi:cancelar]
+  listens: [whatsapp:message:received, edge:file:received]
+lifecycle:
+  spawn: on-demand
+  max_idle: 15m
+  max_concurrent: 5

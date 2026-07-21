@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a0f" />
+  <title>Sonora Digital Twin — SDC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='%2300f0ff'/></svg>" />
+  <script type="module" crossorigin src="/assets/main-DWwiHsgc.js"></script>
+  <link rel="stylesheet" crossorigin href="/assets/main-l70s5As2.css">
+</head>
+<body class="bg-bg-deep text-fg-primary font-body overflow-x-hidden">
+  <!-- Three.js background (lazy-loaded) -->
+  <div id="three-container" class="fixed inset-0 z-0 pointer-events-none">
+    <div class="three-fallback absolute inset-0"></div>
+  </div>
+
+  <!-- Desktop nav -->
+  <nav class="hidden md:flex glass fixed top-0 left-0 right-0 z-50 items-center justify-between px-8 h-16">
+    <span class="font-display font-bold text-lg text-accent-cyan">SDC</span>
+    <div class="flex items-center gap-8 text-sm text-fg-muted">
+      <a href="#hero" class="hover:text-accent-cyan transition-colors">Home</a>
+      <a href="#features" class="hover:text-accent-cyan transition-colors">Features</a>
+      <a href="#pricing" class="hover:text-accent-cyan transition-colors">Pricing</a>
+      <button class="btn-primary h-9 px-5 text-sm">Build My Clone</button>
+    </div>
+  </nav>
+
+  <main class="relative z-10">
+    <!-- HERO — full-bleed image -->
+    <section id="hero" class="hero-full min-h-screen flex flex-col justify-center items-center px-4 md:px-8 text-center pt-16 md:pt-0" style="background-image: url('/assets/images/dt-hero-female.jpg')">
+      <div class="reveal max-w-2xl">
+        <h1 class="font-display text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
+          Your brand, cloned.<br />
+          <span class="text-accent-cyan text-glow-cyan">24/7.</span>
+        </h1>
+        <p class="font-body text-base md:text-lg text-fg-primary/80 mt-4 max-w-md mx-auto">
+          Upload a photo. Choose a personality.<br class="hidden sm:block" />
+          Your AI twin works while you sleep.
+        </p>
+        <div class="flex flex-col sm:flex-row gap-3 justify-center mt-8">
+          <button class="btn-primary h-12 px-8 text-base animate-glow-pulse">Build My Clone →</button>
+          <button class="h-12 px-8 text-base rounded-btn border border-white/20 text-white hover:bg-white/10 transition-all">Watch Demo</button>
+        </div>
+        <div class="flex items-center justify-center gap-6 mt-12 text-fg-primary/60 text-sm">
+          <span class="flex items-center gap-1.5"><span class="size-1.5 rounded-full bg-success"></span> 24/7 Active</span>
+          <span class="flex items-center gap-1.5"><span class="size-1.5 rounded-full bg-success"></span> KYC Verified</span>
+          <span class="flex items-center gap-1.5"><span class="size-1.5 rounded-full bg-success"></span> Encrypted</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS — with real people photos -->
+    <section class="min-h-screen flex flex-col justify-center px-4 md:px-8 py-section-mobile md:py-section">
+      <h2 class="reveal font-display text-2xl md:text-4xl font-bold text-center mb-12">How it works</h2>
+      <div class="flex flex-col md:flex-row gap-4 md:gap-8 max-w-5xl mx-auto w-full">
+        <div class="reveal reveal-delay-1 glass-card rounded-card overflow-hidden flex-1">
+          <div class="aspect-video overflow-hidden">
+            <img src="/assets/images/dt-step-upload.jpg" alt="Upload your content" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" loading="lazy" />
+          </div>
+          <div class="p-6">
+            <div class="size-10 rounded-full bg-accent-cyan/10 flex-center text-lg mb-3">📸</div>
+            <h3 class="font-display font-semibold text-lg">Upload</h3>
+            <p class="text-sm text-fg-muted mt-2">Share your photos, voice, and brand guidelines. Takes 5 minutes.</p>
+          </div>
+        </div>
+        <div class="reveal reveal-delay-2 glass-card rounded-card overflow-hidden flex-1">
+          <div class="aspect-video overflow-hidden">
+            <img src="/assets/images/dt-step-train.jpg" alt="Train your AI twin" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" loading="lazy" />
+          </div>
+          <div class="p-6">
+            <div class="size-10 rounded-full bg-accent-cyan/10 flex-center text-lg mb-3">🧠</div>
+            <h3 class="font-display font-semibold text-lg">Train</h3>
+            <p class="text-sm text-fg-muted mt-2">We train your AI twin on your personality, voice, and knowledge.</p>
+          </div>
+        </div>
+        <div class="reveal reveal-delay-3 glass-card rounded-card overflow-hidden flex-1">
+          <div class="aspect-video overflow-hidden">
+            <img src="/assets/images/dt-step-deploy.jpg" alt="Deploy your twin" class="w-full h-full object-cover hover:scale-105 transition-transform duration-700" loading="lazy" />
+          </div>
+          <div class="p-6">
+            <div class="size-10 rounded-full bg-accent-cyan/10 flex-center text-lg mb-3">🚀</div>
+            <h3 class="font-display font-semibold text-lg">Deploy</h3>
+            <p class="text-sm text-fg-muted mt-2">Your twin goes live on Telegram, WhatsApp, and web. 24/7.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES — with real device photos -->
+    <section id="features" class="min-h-screen flex flex-col justify-center px-4 md:px-8 py-section-mobile md:py-section">
+      <h2 class="reveal font-display text-2xl md:text-4xl font-bold text-center mb-12">Everything you need</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 max-w-5xl mx-auto w-full">
+        <div class="reveal reveal-delay-1 glass-card rounded-card overflow-hidden">
+          <img src="/assets/images/dt-feature-alwayson.jpg" alt="Always-On" class="w-full aspect-video object-cover" loading="lazy" />
+          <div class="p-5">
+            <h3 class="font-display font-semibold">🕐 Always-On</h3>
+            <p class="text-sm text-fg-muted mt-1 leading-relaxed">Your twin never sleeps. Responds instantly.</p>
+          </div>
+        </div>
+        <div class="reveal reveal-delay-2 glass-card rounded-card overflow-hidden p-5">
+          <h3 class="font-display font-semibold">🎭 Custom Personality</h3>
+          <p class="text-sm text-fg-muted mt-1 leading-relaxed">Trainable voice, tone, and style that matches your brand.</p>
+        </div>
+        <div class="reveal reveal-delay-3 glass-card rounded-card overflow-hidden p-5">
+          <h3 class="font-display font-semibold">📱 Multi-Platform</h3>
+          <p class="text-sm text-fg-muted mt-1 leading-relaxed">Telegram, WhatsApp, Messenger, and your website.</p>
+        </div>
+        <div class="reveal reveal-delay-4 glass-card rounded-card overflow-hidden p-5">
+          <h3 class="font-display font-semibold">📊 Analytics</h3>
+          <p class="text-sm text-fg-muted mt-1 leading-relaxed">Track conversations, conversions, improve over time.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SECOND HERO — male model -->
+    <section class="hero-full min-h-[60vh] flex flex-col justify-center items-center px-4 md:px-8 text-center py-20" style="background-image: url('/assets/images/dt-hero-male.jpg')">
+      <div class="reveal max-w-xl">
+        <h2 class="font-display text-3xl md:text-5xl font-bold">Trusted by creators worldwide</h2>
+        <p class="text-fg-primary/70 mt-4">Join 1,200+ businesses already using SDC Digital Twins.</p>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section id="pricing" class="min-h-screen flex flex-col justify-center px-4 md:px-8 py-section-mobile md:py-section">
+      <h2 class="reveal font-display text-2xl md:text-4xl font-bold text-center mb-8">Simple pricing</h2>
+      <p class="reveal text-center text-fg-muted mb-10 max-w-md mx-auto">Start free, upgrade when you need more power.</p>
+      <div class="flex gap-4 overflow-x-auto snap-x-mandatory scrollbar-hide pb-4 max-w-4xl mx-auto w-full px-2">
+        <div class="reveal glass rounded-card p-6 min-w-[280px] snap-center flex-shrink-0">
+          <h3 class="font-display font-semibold text-lg">Starter</h3>
+          <p class="text-3xl font-display font-bold mt-2">$0</p>
+          <ul class="text-sm text-fg-muted mt-6 space-y-3">
+            <li class="flex items-start gap-2">✓ 1 AI Twin</li>
+            <li class="flex items-start gap-2">✓ 100 messages / month</li>
+            <li class="flex items-start gap-2">✓ Web widget</li>
+          </ul>
+          <button class="btn-outline w-full mt-8 h-11">Get Started</button>
+        </div>
+        <div class="reveal reveal-delay-2 glass-cyan rounded-card p-6 min-w-[280px] snap-center flex-shrink-0 relative">
+          <span class="absolute -top-2.5 right-3 bg-accent-cyan text-black text-[11px] font-bold px-2.5 py-0.5 rounded-full">BEST VALUE</span>
+          <h3 class="font-display font-semibold text-lg">Professional</h3>
+          <p class="text-3xl font-display font-bold mt-2 text-accent-cyan">$299</p>
+          <p class="text-xs text-fg-muted mt-1">/month</p>
+          <ul class="text-sm text-fg-muted mt-6 space-y-3">
+            <li class="flex items-start gap-2">✓ 3 AI Twins</li>
+            <li class="flex items-start gap-2">✓ 10,000 messages / month</li>
+            <li class="flex items-start gap-2">✓ Telegram + WhatsApp + Web</li>
+            <li class="flex items-start gap-2">✓ Custom personality training</li>
+            <li class="flex items-start gap-2">✓ Analytics dashboard</li>
+          </ul>
+          <button class="btn-primary w-full mt-8 h-11">Start Free Trial</button>
+        </div>
+        <div class="reveal reveal-delay-3 glass rounded-card p-6 min-w-[280px] snap-center flex-shrink-0">
+          <h3 class="font-display font-semibold text-lg">Enterprise</h3>
+          <p class="text-3xl font-display font-bold mt-2">Custom</p>
+          <ul class="text-sm text-fg-muted mt-6 space-y-3">
+            <li class="flex items-start gap-2">✓ Unlimited AI Twins</li>
+            <li class="flex items-start gap-2">✓ Unlimited messages</li>
+            <li class="flex items-start gap-2">✓ All platforms + API</li>
+            <li class="flex items-start gap-2">✓ Dedicated support</li>
+            <li class="flex items-start gap-2">✓ Custom integration</li>
+          </ul>
+          <button class="btn-outline w-full mt-8 h-11">Contact Us</button>
+        </div>
+      </div>
+      <div class="flex justify-center gap-2 mt-4">
+        <span class="size-2 rounded-full bg-fg-muted/50"></span>
+        <span class="size-2 rounded-full bg-accent-cyan"></span>
+        <span class="size-2 rounded-full bg-fg-muted/50"></span>
+      </div>
+    </section>
+
+    <!-- STATS -->
+    <section class="flex flex-col justify-center px-4 md:px-8 py-section-mobile md:py-section">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-4xl mx-auto w-full">
+        <div class="reveal glass rounded-card p-6 text-center">
+          <p class="counter font-display text-3xl md:text-4xl font-bold text-accent-cyan" data-target="1247">0</p>
+          <p class="text-xs text-fg-muted mt-1">Twins Deployed</p>
+        </div>
+        <div class="reveal reveal-delay-2 glass rounded-card p-6 text-center">
+          <p class="counter font-display text-3xl md:text-4xl font-bold text-accent-cyan" data-target="50">0</p>
+          <p class="text-xs text-fg-muted mt-1">Countries</p>
+        </div>
+        <div class="reveal reveal-delay-3 glass rounded-card p-6 text-center">
+          <p class="counter font-display text-3xl md:text-4xl font-bold text-accent-cyan" data-target="99">0</p>
+          <p class="text-xs text-fg-muted mt-1">% Uptime</p>
+        </div>
+        <div class="reveal reveal-delay-4 glass rounded-card p-6 text-center">
+          <p class="counter font-display text-3xl md:text-4xl font-bold text-accent-cyan" data-target="15">0</p>
+          <p class="text-xs text-fg-muted mt-1">min setup</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="hero-full h-screen flex flex-col justify-center items-center px-4 text-center" style="background-image: url('/assets/images/dt-hero-female.jpg')">
+      <div class="reveal">
+        <h2 class="font-display text-3xl md:text-5xl font-bold">Ready to clone yourself?</h2>
+        <p class="text-fg-primary/70 mt-4 max-w-md mx-auto">Join 1,200+ creators already using SDC Digital Twins.</p>
+        <button class="btn-primary h-14 px-10 text-lg mt-8 animate-glow-pulse">Build My Clone →</button>
+      </div>
+    </section>
+  </main>
+
+  <!-- Mobile bottom nav -->
+  <nav id="bottom-nav" class="md:hidden glass fixed bottom-0 left-0 right-0 z-50 flex justify-around items-center h-16 pb-2 transition-transform duration-300 ease-fluid">
+    <a href="#hero" class="flex flex-col items-center gap-0.5 text-accent-cyan text-[10px]">
+      <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m2.25 12 8.954-8.955a1.126 1.126 0 0 1 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"/></svg>
+      <span>Home</span>
+    </a>
+    <a href="#features" class="flex flex-col items-center gap-0.5 text-fg-muted text-[10px]">
+      <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="m3.75 13.5 10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75Z"/></svg>
+      <span>Features</span>
+    </a>
+    <a href="#pricing" class="flex flex-col items-center gap-0.5 text-fg-muted text-[10px]">
+      <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m-3-2.818.879.659c1.171.879 3.07.879 4.242 0 1.172-.879 1.172-2.303 0-3.182C13.536 12.219 12.768 12 12 12c-.725 0-1.45-.22-2.003-.659-1.106-.879-1.106-2.303 0-3.182s2.9-.879 4.006 0l.415.33M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"/></svg>
+      <span>Pricing</span>
+    </a>
+    <a href="#" class="flex flex-col items-center gap-0.5 text-fg-muted text-[10px]">
+      <svg class="size-5" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75"/></svg>
+      <span>Contact</span>
+    </a>
+  </nav>
+</body>
+</html>

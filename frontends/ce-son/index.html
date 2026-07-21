@@ -1,0 +1,1393 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#050508">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="description" content="Ce-Son — Tu red de confianza. Delivery garantizado 24/7.">
+  <title>Ce-Son · Tu red de confianza</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,700;9..40,900&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Inter', 'DM Sans', sans-serif;
+      background: #050508;
+      color: #f0f0f0;
+      overflow-x: hidden;
+    }
+
+    /* ─── Neón Palette ─── */
+    :root {
+      --bg-deep: #050508;
+      --bg-card: #0c0c18;
+      --bg-card2: #111122;
+      --cyan: #00f0ff;
+      --magenta: #ff2d75;
+      --lime: #39ff14;
+      --amber: #ffb000;
+      --purple: #a855f7;
+      --text: #f0f0f0;
+      --text-muted: #6b6b8d;
+    }
+
+    /* ─── Scrollbar ─── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg-deep); }
+    ::-webkit-scrollbar-thumb { background: var(--cyan); border-radius: 2px; }
+
+    /* ─── Animations ─── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes pulse-glow {
+      0%, 100% { box-shadow: 0 0 20px var(--cyan), 0 0 40px rgba(0,240,255,0.1); }
+      50% { box-shadow: 0 0 30px var(--cyan), 0 0 60px rgba(0,240,255,0.2); }
+    }
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes neonPulse {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 1; }
+    }
+    @keyframes slideInLeft {
+      from { opacity: 0; transform: translateX(-30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes slideInRight {
+      from { opacity: 0; transform: translateX(30px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes scaleIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .animate-on-view {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .animate-on-view.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── Particles Background ─── */
+    #particles-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw; height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* ─── Navigation ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 16px 24px;
+      background: rgba(5,5,8,0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(0,240,255,0.08);
+    }
+    nav .inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    nav .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    nav .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 900;
+      color: #fff;
+    }
+    nav .logo-text {
+      font-size: 20px;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    nav .logo-sub {
+      font-size: 11px;
+      color: var(--text-muted);
+      font-weight: 400;
+      -webkit-text-fill-color: var(--text-muted);
+    }
+    nav .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    nav .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+    nav .nav-links a:hover { color: var(--cyan); }
+    .btn-cta {
+      padding: 10px 24px;
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-cta:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 30px rgba(0,240,255,0.3);
+    }
+    .btn-outline {
+      padding: 10px 24px;
+      background: transparent;
+      color: var(--cyan);
+      border: 1.5px solid var(--cyan);
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.3s;
+      text-decoration: none;
+      display: inline-block;
+    }
+    .btn-outline:hover {
+      background: rgba(0,240,255,0.1);
+      box-shadow: 0 0 20px rgba(0,240,255,0.15);
+    }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+    .hamburger span { width: 24px; height: 2px; background: var(--text); border-radius: 2px; transition: 0.3s; }
+
+    /* ─── Hero ─── */
+    .hero {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 120px 24px 80px;
+    }
+    .hero-grid {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      width: 100%;
+    }
+    .hero-content {
+      animation: fadeUp 1s ease-out;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      background: rgba(0,240,255,0.08);
+      border: 1px solid rgba(0,240,255,0.2);
+      border-radius: 50px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--cyan);
+      margin-bottom: 24px;
+      letter-spacing: 0.5px;
+    }
+    .hero-badge .dot {
+      width: 6px; height: 6px;
+      background: var(--lime);
+      border-radius: 50%;
+      animation: pulse-glow 2s infinite;
+    }
+    .hero h1 {
+      font-size: clamp(2.4rem, 6vw, 4.2rem);
+      font-weight: 900;
+      line-height: 1.05;
+      margin-bottom: 20px;
+      letter-spacing: -0.02em;
+    }
+    .hero h1 .gradient-text {
+      background: linear-gradient(135deg, var(--cyan), var(--magenta), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 500px;
+      margin-bottom: 36px;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .hero .car-visual {
+      position: relative;
+      animation: fadeUp 1s ease-out 0.3s both;
+    }
+    .hero .car-visual .car-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(0,240,255,0.1);
+      border-radius: 24px;
+      padding: 32px;
+      position: relative;
+      overflow: hidden;
+      animation: pulse-glow 3s infinite;
+    }
+    .hero .car-visual .car-card::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0,240,255,0.03) 0%, transparent 60%);
+      animation: float 6s ease-in-out infinite;
+    }
+    .hero .car-visual .car-svg {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      height: auto;
+    }
+    .hero .car-visual .stats-float {
+      position: absolute;
+      background: var(--bg-card2);
+      border: 1px solid rgba(0,240,255,0.15);
+      border-radius: 16px;
+      padding: 12px 16px;
+      backdrop-filter: blur(10px);
+      animation: float 4s ease-in-out infinite;
+    }
+    .stats-float.delivery { bottom: -10px; right: -20px; }
+    .stats-float.rating { top: -10px; left: -20px; }
+    .stats-float .num {
+      font-size: 1.5rem;
+      font-weight: 900;
+      color: var(--cyan);
+    }
+    .stats-float .label {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ─── Trust Bar ─── */
+    .trust-bar {
+      position: relative;
+      z-index: 1;
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .trust-bar p {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 24px;
+    }
+    .trust-bar .logos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      opacity: 0.5;
+    }
+    .trust-bar .logos span {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 1px;
+    }
+
+    /* ─── Sections ─── */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 100px 24px;
+    }
+    section .inner {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .section-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 4px 14px;
+      background: rgba(255,45,117,0.08);
+      border: 1px solid rgba(255,45,117,0.2);
+      border-radius: 50px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--magenta);
+      margin-bottom: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .section-title {
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 900;
+      margin-bottom: 16px;
+      letter-spacing: -0.02em;
+    }
+    .section-sub {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      max-width: 600px;
+      line-height: 1.6;
+    }
+    .section-title .highlight {
+      background: linear-gradient(135deg, var(--amber), var(--magenta));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ─── Features ─── */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 48px;
+    }
+    .feature-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(0,240,255,0.06);
+      border-radius: 20px;
+      padding: 32px 24px;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+    .feature-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 3px;
+      background: linear-gradient(90deg, var(--cyan), var(--magenta));
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0,240,255,0.15);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+    }
+    .feature-card:hover::after { opacity: 1; }
+    .feature-card .icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+    }
+    .feature-card h3 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .feature-card p {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
+    /* ─── Car Grid ─── */
+    .car-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-top: 48px;
+    }
+    .car-item {
+      background: var(--bg-card);
+      border: 1px solid rgba(0,240,255,0.06);
+      border-radius: 16px;
+      padding: 24px;
+      text-align: center;
+      transition: all 0.4s;
+    }
+    .car-item:hover {
+      transform: translateY(-4px);
+      border-color: rgba(0,240,255,0.2);
+      box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+    }
+    .car-item .emoji-car {
+      font-size: 48px;
+      margin-bottom: 12px;
+      display: block;
+    }
+    .car-item h4 {
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .car-item p {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ─── Dashboard Preview ─── */
+    .dashboard-preview {
+      background: var(--bg-card);
+      border: 1px solid rgba(0,240,255,0.08);
+      border-radius: 24px;
+      padding: 32px;
+      margin-top: 48px;
+      overflow: hidden;
+    }
+    .dashboard-preview .phone-frame {
+      max-width: 375px;
+      margin: 0 auto;
+      background: var(--bg-deep);
+      border-radius: 32px;
+      padding: 16px;
+      border: 1px solid rgba(0,240,255,0.1);
+      box-shadow: 0 20px 80px rgba(0,0,0,0.5);
+    }
+    .phone-frame .status-bar {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 4px 12px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .phone-frame .dash-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .phone-frame .dash-header h4 {
+      font-size: 18px;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .phone-frame .dash-header .tokens {
+      font-size: 12px;
+      color: var(--amber);
+      font-weight: 700;
+    }
+    .dash-stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 16px;
+    }
+    .dash-stat {
+      background: var(--bg-card2);
+      border-radius: 12px;
+      padding: 12px;
+      text-align: center;
+    }
+    .dash-stat .num {
+      font-size: 20px;
+      font-weight: 900;
+    }
+    .dash-stat .num.cyan { color: var(--cyan); }
+    .dash-stat .num.magenta { color: var(--magenta); }
+    .dash-stat .num.lime { color: var(--lime); }
+    .dash-stat .label {
+      font-size: 10px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .dash-order {
+      background: var(--bg-card2);
+      border-radius: 12px;
+      padding: 12px;
+      margin-bottom: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .dash-order .info .name {
+      font-size: 13px;
+      font-weight: 600;
+    }
+    .dash-order .info .meta {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+    .dash-order .status {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 50px;
+      font-weight: 600;
+    }
+    .status.live { background: rgba(57,255,20,0.12); color: var(--lime); border: 1px solid rgba(57,255,20,0.2); }
+    .status.pending { background: rgba(255,176,0,0.12); color: var(--amber); border: 1px solid rgba(255,176,0,0.2); }
+
+    /* ─── Gamification ─── */
+    .badges-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 48px;
+    }
+    .badge-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(255,176,0,0.1);
+      border-radius: 16px;
+      padding: 20px 16px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .badge-card:hover {
+      border-color: rgba(255,176,0,0.3);
+      transform: translateY(-2px);
+    }
+    .badge-card .emoji {
+      font-size: 32px;
+      margin-bottom: 8px;
+      display: block;
+    }
+    .badge-card h4 {
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .badge-card p {
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    /* ─── Pricing ─── */
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 48px;
+    }
+    .pricing-card {
+      background: var(--bg-card);
+      border: 1px solid rgba(0,240,255,0.08);
+      border-radius: 24px;
+      padding: 32px 24px;
+      text-align: center;
+      transition: all 0.4s;
+      position: relative;
+    }
+    .pricing-card.featured {
+      border-color: var(--cyan);
+      box-shadow: 0 0 40px rgba(0,240,255,0.08);
+    }
+    .pricing-card.featured::before {
+      content: 'MÁS POPULAR';
+      position: absolute;
+      top: -10px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 4px 16px;
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      border-radius: 50px;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .pricing-card .price {
+      font-size: 3rem;
+      font-weight: 900;
+      margin: 16px 0;
+    }
+    .pricing-card .price span {
+      font-size: 1rem;
+      color: var(--text-muted);
+      font-weight: 400;
+    }
+    .pricing-card ul {
+      list-style: none;
+      text-align: left;
+      margin: 20px 0;
+    }
+    .pricing-card ul li {
+      padding: 8px 0;
+      font-size: 14px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .pricing-card ul li::before {
+      content: '✓';
+      color: var(--lime);
+      font-weight: 700;
+    }
+
+    /* ─── Testimonials ─── */
+    .testimonials-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+      margin-top: 48px;
+    }
+    .testimonial {
+      background: var(--bg-card);
+      border: 1px solid rgba(0,240,255,0.06);
+      border-radius: 20px;
+      padding: 28px;
+    }
+    .testimonial .stars {
+      color: var(--amber);
+      font-size: 16px;
+      margin-bottom: 12px;
+    }
+    .testimonial blockquote {
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text);
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+    .testimonial .author {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .testimonial .author .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan), var(--magenta));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 16px;
+    }
+    .testimonial .author .info .name {
+      font-size: 14px;
+      font-weight: 600;
+    }
+    .testimonial .author .info .role {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ─── CTA ─── */
+    .cta-final {
+      text-align: center;
+      padding: 100px 24px;
+      background: linear-gradient(180deg, transparent, rgba(0,240,255,0.02), transparent);
+    }
+    .cta-final h2 {
+      font-size: clamp(2rem, 4vw, 3.5rem);
+      font-weight: 900;
+      margin-bottom: 16px;
+    }
+    .cta-final p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      margin-bottom: 32px;
+      max-width: 500px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .cta-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* ─── Footer ─── */
+    footer {
+      position: relative;
+      z-index: 1;
+      padding: 40px 24px;
+      border-top: 1px solid rgba(0,240,255,0.06);
+      text-align: center;
+    }
+    footer .inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    footer .copy {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    footer .links {
+      display: flex;
+      gap: 16px;
+    }
+    footer .links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 13px;
+    }
+    footer .links a:hover { color: var(--cyan); }
+
+    /* ─── Mobile ─── */
+    @media (max-width: 768px) {
+      .hero-grid { grid-template-columns: 1fr; gap: 40px; }
+      .hero .car-visual { order: -1; }
+      .hero .car-visual .stats-float { display: none; }
+      nav .nav-links { display: none; }
+      .hamburger { display: flex; }
+      nav .nav-links.open {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: 100%; left: 0; right: 0;
+        background: rgba(5,5,8,0.95);
+        backdrop-filter: blur(20px);
+        padding: 20px 24px;
+        border-bottom: 1px solid rgba(0,240,255,0.1);
+      }
+      .stats-float { display: none; }
+      section { padding: 60px 20px; }
+      .car-gallery { grid-template-columns: repeat(2, 1fr); }
+      .pricing-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ─── Mobile Nav Drawer ─── */
+    .mobile-menu-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      backdrop-filter: blur(10px);
+      z-index: 200;
+    }
+    .mobile-menu-overlay.open { display: block; }
+    .mobile-menu {
+      position: fixed;
+      top: 0; right: -300px;
+      width: 280px;
+      height: 100vh;
+      background: var(--bg-card);
+      padding: 80px 32px 40px;
+      transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 201;
+      border-left: 1px solid rgba(0,240,255,0.1);
+    }
+    .mobile-menu.open { right: 0; }
+    .mobile-menu a {
+      display: block;
+      padding: 16px 0;
+      color: var(--text);
+      text-decoration: none;
+      font-size: 18px;
+      font-weight: 600;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .mobile-menu .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 28px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Particles Canvas -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu-overlay" id="mobileOverlay" onclick="closeMobileMenu()"></div>
+  <div class="mobile-menu" id="mobileMenu">
+    <button class="close-btn" onclick="closeMobileMenu()">✕</button>
+    <a href="#como-funciona" onclick="closeMobileMenu()">Cómo funciona</a>
+    <a href="#vendedores" onclick="closeMobileMenu()">Vendedores</a>
+    <a href="#logros" onclick="closeMobileMenu()">Logros</a>
+    <a href="#precios" onclick="closeMobileMenu()">Precios</a>
+    <a href="#contacto" onclick="closeMobileMenu()">Contacto</a>
+    <div style="margin-top: 32px;">
+      <a href="#login" class="btn-cta" style="text-align:center;width:100%;" onclick="closeMobileMenu()">Entrar</a>
+    </div>
+  </div>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="inner">
+      <a href="#" class="logo">
+        <div class="logo-icon">⚡</div>
+        <div>
+          <div class="logo-text">CE-SON</div>
+          <div class="logo-sub">tu red de confianza</div>
+        </div>
+      </a>
+      <div class="nav-links">
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#vendedores">Vendedores</a>
+        <a href="#logros">Logros</a>
+        <a href="#precios">Precios</a>
+        <a href="#login" class="btn-outline" style="padding:6px 18px;font-size:12px;">Entrar</a>
+        <a href="#contacto" class="btn-cta" style="padding:6px 18px;font-size:12px;">Comenzar</a>
+      </div>
+      <button class="hamburger" onclick="toggleMobileMenu()">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- ═══════ HERO ═══════ -->
+  <section class="hero" id="inicio">
+    <div class="hero-grid">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="dot"></span>
+          Delivery garantizado 24/7
+        </div>
+        <h1>
+          Tu red de<br>
+          <span class="gradient-text">confianza</span><br>
+          al instante
+        </h1>
+        <p>
+          Conectamos tu negocio con vendedores locales. Pedidos por WhatsApp, 
+          reparto en minutos, trazabilidad total. Sin complicaciones.
+        </p>
+        <div class="hero-actions">
+          <a href="#contacto" class="btn-cta">Quiero ser socio</a>
+          <a href="#como-funciona" class="btn-outline">Ver más</a>
+        </div>
+      </div>
+      <div class="car-visual">
+        <div class="car-card">
+          <div class="stats-float delivery">
+            <div class="num">15<span style="font-size:12px;color:var(--text-muted);">min</span></div>
+            <div class="label">entrega promedio</div>
+          </div>
+          <div class="stats-float rating">
+            <div class="num" style="color:var(--amber);">4.9</div>
+            <div class="label">★ calificación</div>
+          </div>
+          <!-- Animated car SVG -->
+          <svg class="car-svg" viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <!-- Road -->
+            <rect x="0" y="160" width="400" height="8" rx="4" fill="#1a1a2e"/>
+            <!-- Dashed line -->
+            <line x1="20" y1="164" x2="60" y2="164" stroke="#00f0ff" stroke-width="2" stroke-dasharray="8 8" opacity="0.3"/>
+            <line x1="100" y1="164" x2="380" y2="164" stroke="#00f0ff" stroke-width="2" stroke-dasharray="8 8" opacity="0.3"/>
+            <!-- Car body -->
+            <rect x="90" y="100" width="200" height="60" rx="12" fill="url(#carGrad)" stroke="#00f0ff" stroke-width="1.5" stroke-opacity="0.3"/>
+            <!-- Car roof -->
+            <path d="M120 100 L140 75 L240 75 L260 100 Z" fill="url(#roofGrad)" stroke="#00f0ff" stroke-width="1" stroke-opacity="0.2"/>
+            <!-- Windows -->
+            <rect x="148" y="80" width="35" height="20" rx="6" fill="#0a0a1f" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.2"/>
+            <rect x="195" y="80" width="35" height="20" rx="6" fill="#0a0a1f" stroke="#00f0ff" stroke-width="0.5" stroke-opacity="0.2"/>
+            <!-- Wheels -->
+            <circle cx="145" cy="160" r="18" fill="#111" stroke="#00f0ff" stroke-width="1.5" stroke-opacity="0.3"/>
+            <circle cx="145" cy="160" r="8" fill="url(#wheelGrad)"/>
+            <circle cx="240" cy="160" r="18" fill="#111" stroke="#00f0ff" stroke-width="1.5" stroke-opacity="0.3"/>
+            <circle cx="240" cy="160" r="8" fill="url(#wheelGrad)"/>
+            <!-- Light beam -->
+            <path d="M290 115 L350 95 L350 145 L290 130 Z" fill="#00f0ff" opacity="0.06"/>
+            <path d="M290 118 L340 102 L340 138 L290 128 Z" fill="#00f0ff" opacity="0.04"/>
+            <!-- Speed lines -->
+            <line x1="40" y1="120" x2="80" y2="120" stroke="#00f0ff" stroke-width="1.5" opacity="0.15"/>
+            <line x1="30" y1="135" x2="85" y2="135" stroke="#ff2d75" stroke-width="1.5" opacity="0.1"/>
+            <line x1="50" y1="150" x2="75" y2="150" stroke="#00f0ff" stroke-width="1" opacity="0.08"/>
+            <!-- Gradients -->
+            <defs>
+              <linearGradient id="carGrad" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1a1a3e"/>
+                <stop offset="100%" stop-color="#0c0c24"/>
+              </linearGradient>
+              <linearGradient id="roofGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#1a1a3e"/>
+                <stop offset="100%" stop-color="#0c0c24"/>
+              </linearGradient>
+              <radialGradient id="wheelGrad">
+                <stop offset="0%" stop-color="#00f0ff"/>
+                <stop offset="100%" stop-color="#0a0a1f"/>
+              </radialGradient>
+            </defs>
+            <!-- Vibration animation -->
+            <animateTransform attributeName="transform" type="translate" values="0,0; 1,0; -1,0; 0,0" dur="0.1s" repeatCount="indefinite" xlink:href="#car"/>
+          </svg>
+          <div style="text-align:center;margin-top:12px;position:relative;z-index:1;">
+            <span style="font-size:13px;font-weight:700;color:var(--cyan);">EN VIVO</span>
+            <span style="font-size:12px;color:var(--text-muted);margin-left:12px;">23 repartidores activos</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ TRUST BAR ═══════ -->
+  <div class="trust-bar animate-on-view">
+    <p>Usado por vendedores en toda la república</p>
+    <div class="logos">
+      <span>⚡ CDMX</span>
+      <span>🌵 SONORA</span>
+      <span>🌮 JALISCO</span>
+      <span>🌊 SINALOA</span>
+      <span>🏔️ NUEVO LEÓN</span>
+    </div>
+  </div>
+
+  <!-- ═══════ CÓMO FUNCIONA ═══════ -->
+  <section id="como-funciona">
+    <div class="inner">
+      <div class="section-tag">⚡ El proceso</div>
+      <h2 class="section-title">Así de <span class="highlight">fácil</span> funciona</h2>
+      <p class="section-sub">Tres pasos. Cero complicaciones. Tu negocio vendiendo 24/7.</p>
+      <div class="features-grid">
+        <div class="feature-card animate-on-view">
+          <div class="icon" style="background:rgba(0,240,255,0.1);">📱</div>
+          <h3>1. El cliente pide</h3>
+          <p>El cliente envía un WhatsApp al número de tu negocio. El bot de Ce-Son recibe el pedido, muestra el menú y confirma la orden al instante.</p>
+        </div>
+        <div class="feature-card animate-on-view">
+          <div class="icon" style="background:rgba(255,45,117,0.1);">🚗</div>
+          <h3>2. Un vendedor lo toma</h3>
+          <p>El pedido se publica al instante en tu red de vendedores. El primero en confirmar se asigna automáticamente con timer de entrega.</p>
+        </div>
+        <div class="feature-card animate-on-view">
+          <div class="icon" style="background:rgba(57,255,20,0.1);">✅</div>
+          <h3>3. Entregado y trazado</h3>
+          <p>El cliente recibe notificación, tracking en vivo, y confirmación de entrega. Tú ves todo desde tu dashboard: ventas, clientes, comisiones.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ FLOTA ═══════ -->
+  <section id="vendedores" style="background:linear-gradient(180deg,transparent,rgba(0,240,255,0.02),transparent);">
+    <div class="inner">
+      <div class="section-tag">🚗 Tu flota</div>
+      <h2 class="section-title">Vendedores <span class="highlight">en tu zona</span></h2>
+      <p class="section-sub">Cada vendedor tiene su propia red de clientes. Nosotros conectamos, tú vendes.</p>
+      <div class="car-gallery">
+        <div class="car-item animate-on-view">
+          <span class="emoji-car">🚗</span>
+          <h4>Reparto exprés</h4>
+          <p>15-20 min promedio</p>
+        </div>
+        <div class="car-item animate-on-view">
+          <span class="emoji-car">🏍️</span>
+          <h4>Moto delivery</h4>
+          <p>Perfecto para la ciudad</p>
+        </div>
+        <div class="car-item animate-on-view">
+          <span class="emoji-car">🚐</span>
+          <h4>Flota grande</h4>
+          <p>Pedidos voluminosos</p>
+        </div>
+        <div class="car-item animate-on-view">
+          <span class="emoji-car">⚡</span>
+          <h4>Eco-friendly</h4>
+          <p>Bicicletas y eléctricos</p>
+        </div>
+        <div class="car-item animate-on-view">
+          <span class="emoji-car">📦</span>
+          <h4>Almacén</h4>
+          <p>Puntos de recolección</p>
+        </div>
+        <div class="car-item animate-on-view">
+          <span class="emoji-car">🌟</span>
+          <h4>Premium</h4>
+          <p>Servicio VIP 24/7</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ DASHBOARD PREVIEW ═══════ -->
+  <section>
+    <div class="inner">
+      <div class="section-tag">📊 Dashboard</div>
+      <h2 class="section-title">Todo el control en <span class="highlight">tu mano</span></h2>
+      <p class="section-sub">Ventas en tiempo real, clientes, tokens, logros. Todo desde tu celular.</p>
+      <div class="dashboard-preview animate-on-view">
+        <div class="phone-frame">
+          <div class="status-bar">
+            <span>9:41</span>
+            <span>📶 🔋</span>
+          </div>
+          <div class="dash-header">
+            <h4>CE-SON</h4>
+            <span class="tokens">🪙 2,450</span>
+          </div>
+          <div class="dash-stats">
+            <div class="dash-stat">
+              <div class="num cyan">12</div>
+              <div class="label">Hoy</div>
+            </div>
+            <div class="dash-stat">
+              <div class="num magenta">3</div>
+              <div class="label">Pendientes</div>
+            </div>
+            <div class="dash-stat">
+              <div class="num lime">$8,450</div>
+              <div class="label">Ingresos</div>
+            </div>
+            <div class="dash-stat">
+              <div class="num" style="color:var(--amber);">4.9★</div>
+              <div class="label">Rating</div>
+            </div>
+          </div>
+          <div class="dash-order">
+            <div class="info">
+              <div class="name">🍇 2x Uva · $500</div>
+              <div class="meta">Juan · Av. Reforma</div>
+            </div>
+            <span class="status pending">Asignado</span>
+          </div>
+          <div class="dash-order">
+            <div class="info">
+              <div class="name">🍓 1x Fresa · $350</div>
+              <div class="meta">María · Col. Centro</div>
+            </div>
+            <span class="status live">✔ Entregado</span>
+          </div>
+          <div class="dash-order">
+            <div class="info">
+              <div class="name">🍇 3x Uva · $750</div>
+              <div class="meta">Carlos · Del Valle</div>
+            </div>
+            <span class="status live">✔ Entregado</span>
+          </div>
+          <div class="dash-order">
+            <div class="info">
+              <div class="name">🥥 2x Coco · $700</div>
+              <div class="meta">Ana · Escobedo</div>
+            </div>
+            <span class="status live">✔ Entregado</span>
+          </div>
+          <div style="text-align:center;margin-top:12px;font-size:11px;color:var(--text-muted);">
+            <span class="pulse-dot" style="display:inline-block;width:6px;height:6px;background:var(--lime);border-radius:50%;animation:pulse-glow 2s infinite;margin-right:6px;vertical-align:middle;"></span>
+            Sincronizado en vivo
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ GAMIFICATION ═══════ -->
+  <section id="logros" style="background:linear-gradient(180deg,transparent,rgba(255,176,0,0.02),transparent);">
+    <div class="inner">
+      <div class="section-tag">🏆 Gamificación</div>
+      <h2 class="section-title">Gana tokens y <span class="highlight">desbloquea logros</span></h2>
+      <p class="section-sub">Cada venta suma. Canjea tus tokens por bundles, 2x1 y ofertas exclusivas.</p>
+      <div class="badges-grid">
+        <div class="badge-card animate-on-view">
+          <span class="emoji">🏆</span>
+          <h4>Primera Venta</h4>
+          <p>Tu primer pedido entregado</p>
+        </div>
+        <div class="badge-card animate-on-view">
+          <span class="emoji">⚡</span>
+          <h4>5 en el Día</h4>
+          <p>Cinco ventas en un día</p>
+        </div>
+        <div class="badge-card animate-on-view">
+          <span class="emoji">🔥</span>
+          <h4>Racha 7 Días</h4>
+          <p>Vender 7 días seguidos</p>
+        </div>
+        <div class="badge-card animate-on-view">
+          <span class="emoji">🍇</span>
+          <h4>Sabor Popular</h4>
+          <p>Mayoría de un sabor</p>
+        </div>
+        <div class="badge-card animate-on-view">
+          <span class="emoji">💎</span>
+          <h4>Club 10K</h4>
+          <p>$10,000 en ventas totales</p>
+        </div>
+        <div class="badge-card animate-on-view">
+          <span class="emoji">🤝</span>
+          <h4>Referidor</h4>
+          <p>Traer otro vendedor</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ PRICING ═══════ -->
+  <section id="precios">
+    <div class="inner">
+      <div class="section-tag">💰 Planes</div>
+      <h2 class="section-title">Precios <span class="highlight">claros</span>, sin sorpresas</h2>
+      <p class="section-sub">Empieza con tu negocio en minutos. Cancela cuando quieras.</p>
+      <div class="pricing-grid">
+        <div class="pricing-card animate-on-view">
+          <h3>Starter</h3>
+          <div class="price">$299 <span>/mes</span></div>
+          <ul>
+            <li>Bot WhatsApp 24/7</li>
+            <li>Menú digital interactivo</li>
+            <li>Dashboard básico</li>
+            <li>Hasta 50 pedidos/mes</li>
+            <li>Soporte por WhatsApp</li>
+          </ul>
+          <a href="#contacto" class="btn-outline" style="width:100%;">Comenzar</a>
+        </div>
+        <div class="pricing-card featured animate-on-view">
+          <h3>Pro</h3>
+          <div class="price">$599 <span>/mes</span></div>
+          <ul>
+            <li>Todo lo de Starter</li>
+            <li>Dispatch a repartidores</li>
+            <li>Dashboard avanzado + clientes</li>
+            <li>Pedidos ilimitados</li>
+            <li>Gamificación y tokens</li>
+            <li>Bundle builder + 2x1</li>
+            <li>Soporte prioritario 24/7</li>
+          </ul>
+          <a href="#contacto" class="btn-cta" style="width:100%;">Comenzar</a>
+        </div>
+        <div class="pricing-card animate-on-view">
+          <h3>Enterprise</h3>
+          <div class="price">$1,499 <span>/mes</span></div>
+          <ul>
+            <li>Todo lo de Pro</li>
+            <li>API personalizada</li>
+            <li>Multi-sucursal</li>
+            <li>CRM completo + reportes</li>
+            <li>Onboarding automatizado</li>
+            <li>Gerente de cuenta dedicado</li>
+            <li>Comisión por venta: 5%</li>
+          </ul>
+          <a href="#contacto" class="btn-outline" style="width:100%;">Contactar</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ TESTIMONIALS ═══════ -->
+  <section style="background:linear-gradient(180deg,transparent,rgba(168,85,247,0.02),transparent);">
+    <div class="inner">
+      <div class="section-tag">💬 Testimonios</div>
+      <h2 class="section-title">Lo que dicen <span class="highlight">nuestros socios</span></h2>
+      <div class="testimonials-grid">
+        <div class="testimonial animate-on-view">
+          <div class="stars">★★★★★</div>
+          <blockquote>"Desde que uso Ce-Son, mis ventas subieron 40%. El dashboard me muestra exactamente qué sabores se venden más y cuándo."</blockquote>
+          <div class="author">
+            <div class="avatar">LM</div>
+            <div class="info">
+              <div class="name">Luis M.</div>
+              <div class="role">Distribuidor, Sonora</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial animate-on-view">
+          <div class="stars">★★★★★</div>
+          <blockquote>"La trazabilidad es increíble. Sé exactamente quién entregó, cuánto tardó y si el cliente quedó satisfecho. Ya no pierdo pedidos."</blockquote>
+          <div class="author">
+            <div class="avatar">AG</div>
+            <div class="info">
+              <div class="name">Ana G.</div>
+              <div class="role">Dueña de negocio, CDMX</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial animate-on-view">
+          <div class="stars">★★★★★</div>
+          <blockquote>"La gamificación me tiene enganchado. Compito con otros vendedores por tokens y logros. He duplicado mis entregas semanales."</blockquote>
+          <div class="author">
+            <div class="avatar">PC</div>
+            <div class="info">
+              <div class="name">Pedro C.</div>
+              <div class="role">Vendedor, Jalisco</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════ CTA FINAL ═══════ -->
+  <section class="cta-final" id="contacto">
+    <h2>¿Listo para <span class="gradient-text">crecer</span>?</h2>
+    <p>Únete a la red de confianza. Configuramos tu negocio en menos de 24 horas.</p>
+    <div class="cta-actions">
+      <a href="https://wa.me/5216623446953" target="_blank" class="btn-cta" style="font-size:16px;padding:14px 36px;">
+        📱 Contactar por WhatsApp
+      </a>
+      <a href="#login" class="btn-outline" style="font-size:16px;padding:14px 36px;">
+        Ver dashboard
+      </a>
+    </div>
+  </section>
+
+  <!-- ═══════ FOOTER ═══════ -->
+  <footer>
+    <div class="inner">
+      <div class="copy">© 2026 Ce-Son · tu red de confianza ⚡</div>
+      <div class="links">
+        <a href="#">Términos</a>
+        <a href="#">Privacidad</a>
+        <a href="https://wa.me/5216623446953">Soporte</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════ SCRIPTS ═══════ -->
+  <script>
+    // ─── Particles ───
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.speedX = (Math.random() - 0.5) * 0.3;
+        this.speedY = (Math.random() - 0.5) * 0.3;
+        this.opacity = Math.random() * 0.5 + 0.1;
+        this.color = Math.random() > 0.5 ? '0,240,255' : '255,45,117';
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+          this.reset();
+        }
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${this.color},${this.opacity})`;
+        ctx.fill();
+      }
+    }
+
+    for (let i = 0; i < 60; i++) {
+      particles.push(new Particle());
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      // Draw connections
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(0,240,255,${0.03 * (1 - dist / 120)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+      requestAnimationFrame(animateParticles);
+    }
+    animateParticles();
+
+    // ─── Scroll Animations ───
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.querySelectorAll('.animate-on-view').forEach(el => {
+      observer.observe(el);
+    });
+
+    // ─── Mobile Menu ───
+    function toggleMobileMenu() {
+      document.getElementById('mobileMenu').classList.toggle('open');
+      document.getElementById('mobileOverlay').classList.toggle('open');
+    }
+    function closeMobileMenu() {
+      document.getElementById('mobileMenu').classList.remove('open');
+      document.getElementById('mobileOverlay').classList.remove('open');
+    }
+
+    // ─── Smooth scroll ───
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
+
+    // ─── Car SVG animation ───
+    const carSvg = document.querySelector('.car-svg');
+    if (carSvg) {
+      setInterval(() => {
+        const beam = carSvg.querySelector('path[opacity="0.06"]');
+        const beam2 = carSvg.querySelector('path[opacity="0.04"]');
+        if (beam && beam2) {
+          beam.setAttribute('opacity', (Math.random() * 0.04 + 0.04).toFixed(2));
+          beam2.setAttribute('opacity', (Math.random() * 0.03 + 0.02).toFixed(2));
+        }
+      }, 300);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+[Unit]
+Description=Ce-Son R1 WhatsApp Webhook
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/mystic/sonora-digital-corp
+EnvironmentFile=%h/.env.ce-son
+ExecStart=/usr/bin/python3 -m apps.whatsapp.webhook --interval 3
+Restart=always
+RestartSec=5
+StandardOutput=append:%h/sonora-digital-corp/logs/r1-webhook.log
+StandardError=append:%h/sonora-digital-corp/logs/r1-webhook.log
+
+[Install]
+WantedBy=default.target

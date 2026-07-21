@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nathy Conta - Contabilidad Inteligente</title>
+  <meta name="description" content="Servicios contables para pequeñas, medianas y grandes empresas. Moderno, transparente y digital.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Georgia:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="stylesheet" href="../branding/brand.css">
+</head>
+<body>
+  <nav class="nav" id="nav">
+    <div class="nav__inner container">
+      <a href="#" class="nav__logo">
+        <svg width="36" height="36" viewBox="0 0 400 400" fill="none">
+          <rect width="400" height="400" rx="80" fill="#0f1b4d"/>
+          <g transform="translate(200,160)">
+            <rect x="-60" y="80" width="120" height="6" rx="3" fill="#c9a84c"/>
+            <rect x="-10" y="56" width="20" height="30" rx="2" fill="#c9a84c"/>
+            <rect x="-120" y="50" width="240" height="5" rx="2.5" fill="#c9a84c"/>
+            <path d="M-110 55 L-130 75 L-70 75 Z" fill="#c9a84c" opacity="0.9"/>
+            <rect x="-130" y="75" width="60" height="4" rx="2" fill="#c9a84c"/>
+            <path d="M110 55 L130 75 L70 75 Z" fill="#c9a84c" opacity="0.9"/>
+            <rect x="70" y="75" width="60" height="4" rx="2" fill="#c9a84c"/>
+            <text x="-100" y="62" font-family="serif" font-size="24" font-weight="bold" fill="#0f1b4d" text-anchor="middle">$</text>
+            <text x="100" y="62" font-family="serif" font-size="22" font-weight="bold" fill="#0f1b4d" text-anchor="middle">%</text>
+          </g>
+          <path d="M80 280 Q140 240 200 260 Q260 280 320 220" stroke="#c9a84c" stroke-width="3" fill="none"/>
+          <circle cx="320" cy="220" r="5" fill="#c9a84c"/>
+        </svg>
+        <span>Nathy Conta</span>
+      </a>
+      <button class="nav__toggle" id="navToggle" aria-label="Menú">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav__menu" id="navMenu">
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#precios">Planes</a></li>
+        <li><a href="#como-funciona">Cómo funciona</a></li>
+        <li><a href="#contacto" class="btn btn--gold btn--sm">Contactar</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero__bg"></div>
+      <div class="hero__inner container">
+        <div class="hero__content">
+          <p class="hero__tag">Contabilidad digital para tu negocio</p>
+          <h1 class="hero__title">Tu contadora,<br><span class="text-gold">siempre al día</span></h1>
+          <p class="hero__subtitle">
+            Servicios contables profesionales para pequeñas, medianas y grandes empresas.
+            Moderno, transparente, 100% digital.
+          </p>
+          <div class="hero__actions">
+            <a href="https://t.me/Nathy_Conta_bot" class="btn btn--gold btn--lg" target="_blank">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+              Empezar ahora
+            </a>
+            <a href="#servicios" class="btn btn--outline btn--lg">Ver servicios</a>
+          </div>
+        </div>
+        <div class="hero__visual">
+          <div class="hero__card">
+            <div class="hero__card-header">
+              <span class="dot dot--green"></span>
+              <span class="dot dot--yellow"></span>
+              <span class="dot dot--red"></span>
+            </div>
+            <div class="hero__card-body">
+              <div class="stat">
+                <span class="stat__label">Ingresos</span>
+                <span class="stat__value">$284,500</span>
+                <span class="stat__change up">+12.5%</span>
+              </div>
+              <div class="stat">
+                <span class="stat__label">Gastos</span>
+                <span class="stat__value">$142,300</span>
+                <span class="stat__change down">-3.2%</span>
+              </div>
+              <div class="stat">
+                <span class="stat__label">Impuestos</span>
+                <span class="stat__value">$42,675</span>
+                <span class="stat__change up">+2.1%</span>
+              </div>
+              <div class="stat stat--total">
+                <span class="stat__label">Resultado</span>
+                <span class="stat__value">$99,525</span>
+                <span class="stat__change up">+8.3%</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TRUSTED BY -->
+    <section class="trusted">
+      <div class="container">
+        <p class="trusted__text">Confían en nosotros</p>
+        <div class="trusted__logos">
+          <span class="trusted__logo">TechSolve</span>
+          <span class="trusted__logo">Grupo Nova</span>
+          <span class="trusted__logo">Comercio Sur</span>
+          <span class="trusted__logo">InnovaMKT</span>
+          <span class="trusted__logo">DataCore</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="services" id="servicios">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Servicios <span class="text-gold">contables</span></h2>
+          <p class="section-desc">Soluciones adaptadas al tamaño y necesidades de tu empresa</p>
+        </div>
+        <div class="services__grid">
+          <article class="service-card">
+            <div class="service-card__icon">🏢</div>
+            <h3 class="service-card__title">Pequeña Empresa</h3>
+            <p class="service-card__desc">Contabilidad simplificada, declaraciones mensuales, facturación electrónica y asesoría fiscal básica.</p>
+            <ul class="service-card__list">
+              <li>Contabilidad mensual</li>
+              <li>IVA / ISR</li>
+              <li>Facturación CFDI</li>
+              <li>Soporte por chat</li>
+            </ul>
+            <a href="https://t.me/Nathy_Conta_bot" class="btn btn--outline btn--full" target="_blank">Consultar</a>
+          </article>
+          <article class="service-card service-card--featured">
+            <div class="service-card__badge">Más popular</div>
+            <div class="service-card__icon">🏭</div>
+            <h3 class="service-card__title">Mediana Empresa</h3>
+            <p class="service-card__desc">Gestión contable integral, nóminas, costos, estados financieros y planeación tributaria.</p>
+            <ul class="service-card__list">
+              <li>Todo lo del plan básico</li>
+              <li>Nóminas y PRONAF</li>
+              <li>Estados financieros</li>
+              <li>Planeación fiscal</li>
+              <li>Dashboard mensual</li>
+            </ul>
+            <a href="https://t.me/Nathy_Conta_bot" class="btn btn--gold btn--full" target="_blank">Lo quiero</a>
+          </article>
+          <article class="service-card">
+            <div class="service-card__icon">🏛️</div>
+            <h3 class="service-card__title">Gran Empresa</h3>
+            <p class="service-card__desc">Outsourcing contable total, consolidación, auditoría, precios de transferencia y cumplimiento SAT.</p>
+            <ul class="service-card__list">
+              <li>Todo lo del plan profesional</li>
+              <li>Consolidación</li>
+              <li>Auditoría externa</li>
+              <li>Precios de transferencia</li>
+              <li>Dedicated account manager</li>
+            </ul>
+            <a href="https://t.me/Nathy_Conta_bot" class="btn btn--outline btn--full" target="_blank">Contactar</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="pricing" id="precios">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Planes <span class="text-gold">transparentes</span></h2>
+          <p class="section-desc">Sin letras chiquitas. Precios fijos mensuales.</p>
+        </div>
+        <div class="pricing__grid">
+          <div class="price-card">
+            <h3 class="price-card__name">Esencial</h3>
+            <p class="price-card__amount"><span class="price-card__currency">$</span>1,499<span class="price-card__period">/mes</span></p>
+            <p class="price-card__note">Ideal para freelancers y startups</p>
+            <ul class="price-card__features">
+              <li>Contabilidad mensual</li>
+              <li>Declaraciones bimestrales</li>
+              <li>Facturación CFDI ilimitada</li>
+              <li>Asesoría vía Telegram</li>
+            </ul>
+            <a href="https://t.me/Nathy_Conta_bot" class="btn btn--outline btn--full" target="_blank">Elegir plan</a>
+          </div>
+          <div class="price-card price-card--featured">
+            <div class="price-card__badge">Recomendado</div>
+            <h3 class="price-card__name">Profesional</h3>
+            <p class="price-card__amount"><span class="price-card__currency">$</span>3,999<span class="price-card__period">/mes</span></p>
+            <p class="price-card__note">Para empresas en crecimiento</p>
+            <ul class="price-card__features">
+              <li>Todo lo de Esencial</li>
+              <li>Nóminas (hasta 10 empleados)</li>
+              <li>Estados financieros mensuales</li>
+              <li>Dashboard contable</li>
+              <li>Declaración anual</li>
+            </ul>
+            <a href="https://t.me/Nathy_Conta_bot" class="btn btn--gold btn--full" target="_blank">Elegir plan</a>
+          </div>
+          <div class="price-card">
+            <h3 class="price-card__name">Enterprise</h3>
+            <p class="price-card__amount"><span class="price-card__currency">$</span>9,999<span class="price-card__period">/mes</span></p>
+            <p class="price-card__note">Para corporaciones y grupos</p>
+            <ul class="price-card__features">
+              <li>Todo lo de Profesional</li>
+              <li>Nóminas ilimitadas</li>
+              <li>Consolidación financiera</li>
+              <li>Auditoría preventiva</li>
+              <li>Manager dedicado</li>
+            </ul>
+            <a href="https://t.me/Nathy_Conta_bot" class="btn btn--outline btn--full" target="_blank">Elegir plan</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how" id="como-funciona">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Así de <span class="text-gold">fácil</span></h2>
+          <p class="section-desc">En 4 pasos tu contabilidad está al día</p>
+        </div>
+        <div class="how__steps">
+          <div class="step">
+            <div class="step__num">1</div>
+            <h3 class="step__title">Habla con Nathy</h3>
+            <p class="step__desc">Inicia el bot de Telegram y cuéntanos sobre tu negocio</p>
+          </div>
+          <div class="step">
+            <div class="step__num">2</div>
+            <h3 class="step__title">Elige tu plan</h3>
+            <p class="step__desc">Te recomendamos el plan ideal para tu empresa</p>
+          </div>
+          <div class="step">
+            <div class="step__num">3</div>
+            <h3 class="step__title">Sube tus documentos</h3>
+            <p class="step__desc">Comparte facturas y documentos por el chat seguro</p>
+          </div>
+          <div class="step">
+            <div class="step__num">4</div>
+            <h3 class="step__title">Recibe tu contabilidad</h3>
+            <p class="step__desc">Estados financieros, declaraciones y dashboard cada mes</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- TESTIMONIALS -->
+    <section class="testimonials">
+      <div class="container">
+        <div class="section-header">
+          <h2 class="section-title">Lo que dicen <span class="text-gold">nuestros clientes</span></h2>
+        </div>
+        <div class="testimonials__grid">
+          <blockquote class="testimonial">
+            <div class="testimonial__stars">★★★★★</div>
+            <p class="testimonial__text">"Desde que trabajo con Nathy Conta, ya no me preocupo por fechas de declaración. Todo está automatizado y siempre al día."</p>
+            <cite class="testimonial__author">— Laura G. <span>Restaurante La Parra</span></cite>
+          </blockquote>
+          <blockquote class="testimonial">
+            <div class="testimonial__stars">★★★★★</div>
+            <p class="testimonial__text">"El dashboard mensual me da visibilidad total de mis finanzas. Tomo mejores decisiones gracias a la información clara."</p>
+            <cite class="testimonial__author">— Roberto M. <span>Grupo Nova S.A.</span></cite>
+          </blockquote>
+          <blockquote class="testimonial">
+            <div class="testimonial__stars">★★★★★</div>
+            <p class="testimonial__text">"La atención por Telegram es inmediata. Resuelvo dudas fiscales en minutos. Me encanta la cercanía digital."</p>
+            <cite class="testimonial__author">— Carolina T. <span>TechSolve MX</span></cite>
+          </blockquote>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta" id="contacto">
+      <div class="container">
+        <div class="cta__inner">
+          <h2 class="cta__title">¿Listo para poner tu contabilidad <span class="text-gold">en orden</span>?</h2>
+          <p class="cta__desc">Habla directo con Nathy Conta por Telegram. Resolvemos tus dudas en minutos.</p>
+          <a href="https://t.me/Nathy_Conta_bot" class="btn btn--gold btn--lg" target="_blank">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0a12 12 0 00-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+            Ir al bot → @Nathy_Conta_bot
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <div class="footer__brand">
+        <svg width="28" height="28" viewBox="0 0 400 400" fill="none">
+          <rect width="400" height="400" rx="80" fill="#0f1b4d"/>
+          <g transform="translate(200,160)">
+            <rect x="-60" y="80" width="120" height="6" rx="3" fill="#c9a84c"/>
+            <rect x="-10" y="56" width="20" height="30" rx="2" fill="#c9a84c"/>
+            <rect x="-120" y="50" width="240" height="5" rx="2.5" fill="#c9a84c"/>
+            <path d="M-110 55 L-130 75 L-70 75 Z" fill="#c9a84c" opacity="0.9"/>
+            <rect x="-130" y="75" width="60" height="4" rx="2" fill="#c9a84c"/>
+            <path d="M110 55 L130 75 L70 75 Z" fill="#c9a84c" opacity="0.9"/>
+            <rect x="70" y="75" width="60" height="4" rx="2" fill="#c9a84c"/>
+            <text x="-100" y="62" font-family="serif" font-size="24" font-weight="bold" fill="#0f1b4d" text-anchor="middle">$</text>
+            <text x="100" y="62" font-family="serif" font-size="22" font-weight="bold" fill="#0f1b4d" text-anchor="middle">%</text>
+          </g>
+        </svg>
+        <span>Nathy Conta</span>
+      </div>
+      <p class="footer__tag">Contabilidad inteligente para tu negocio</p>
+      <div class="footer__links">
+        <a href="https://t.me/Nathy_Conta_bot">Bot de Telegram</a>
+        <a href="#">Aviso de privacidad</a>
+        <a href="#">Términos del servicio</a>
+      </div>
+      <p class="footer__copy">© 2026 Nathy Conta. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

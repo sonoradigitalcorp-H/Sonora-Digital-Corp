@@ -26,3 +26,5 @@
 {"event": "whatsapp:message:received", "timestamp": "2026-07-19T22:18:55.721355+00:00", "payload": {"from": "5216623538272", "text": "catálogo", "timestamp": "", "message_id": "M2"}}
 {"event": "whatsapp:catalog:requested", "timestamp": "2026-07-19T22:18:55.721436+00:00", "payload": {"client_id": "5216623538272", "timestamp": ""}}
 {"event": "system:whatsapp:disconnected", "timestamp": "2026-07-19T22:18:55.726439+00:00", "payload": {"error": "messages fetch failed"}}
+{"event": "bot:message", "timestamp": "2026-07-20T01:23:41.538581+00:00", "payload": {"user_id": 5738935134, "text": "hola"}}
+{"event": "bot:response", "timestamp": "2026-07-20T01:23:42.945680+00:00", "payload": {"user_id": 5738935134, "preview": "⚠️ Error: 'choices'"}}

@@ -59,6 +59,44 @@
       "status": "active",
       "pack": "joyeria",
       "created": "2026-07-15"
+    },
+    "nathy-conta": {
+      "name": "Nathy Conta",
+      "tier": "pro",
+      "rate_limit": 200,
+      "period_seconds": 60,
+      "max_tokens_monthly": 1000000,
+      "qdrant_collection": "jarvis_knowledge",
+      "features": [
+        "chat",
+        "agents",
+        "rag",
+        "cfdi",
+        "sat",
+        "nominas",
+        "resico",
+        "contpaq",
+        "conciliacion"
+      ],
+      "status": "active",
+      "pack": "nathy-conta",
+      "created": "2026-07-19"
+    },
+    "nathy-conta_nathy-conta": {
+      "name": "Nathy Conta",
+      "tier": "basic",
+      "rate_limit": 50,
+      "period_seconds": 60,
+      "max_tokens_monthly": 100000,
+      "qdrant_collection": "jarvis_knowledge",
+      "features": [
+        "chat",
+        "agents",
+        "rag"
+      ],
+      "status": "active",
+      "pack": "nathy-conta",
+      "created": "2026-07-19"
     }
   },
   "defaults": {

@@ -1,0 +1,23 @@
+# Telegram Scheduler — Programación de mensajes a clientes via Telegram + WhatsApp
+# Install: sudo ln -s /home/mystic/sonora-digital-corp/infra/systemd/telegram-scheduler.service /etc/systemd/system/
+# Enable:  sudo systemctl enable --now telegram-scheduler
+
+[Unit]
+Description=Telegram Scheduler — Programación de mensajes a clientes via Telegram + WhatsApp
+Documentation=https://github.com/sonoradigitalcorp-H/Sonora-Digital-Corp
+After=network.target
+
+[Service]
+Type=simple
+User=mystic
+WorkingDirectory=/home/mystic/sonora-digital-corp/apps/telegram_scheduler
+Environment=TELEGRAM_TOKEN=8665900402:AAG0PW36xvlXybG7Heyu-TK9CUFeiVhAa0U
+Environment=OWNER_TELEGRAM_ID=13238192000
+ExecStart=/usr/bin/python3 bot.py
+Restart=always
+RestartSec=10
+StandardOutput=append:/home/mystic/sonora-digital-corp/apps/telegram_scheduler/telegram_scheduler.log
+StandardError=append:/home/mystic/sonora-digital-corp/apps/telegram_scheduler/telegram_scheduler.log
+
+[Install]
+WantedBy=multi-user.target

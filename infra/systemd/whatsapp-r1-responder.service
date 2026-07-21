@@ -1,0 +1,16 @@
+[Unit]
+Description=Ce-Son R1 WhatsApp Responder
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/mystic/sonora-digital-corp
+EnvironmentFile=%h/.env.ce-son
+ExecStart=/usr/bin/python3 -m apps.whatsapp.responders.r1_bot
+Restart=always
+RestartSec=10
+StandardOutput=append:%h/sonora-digital-corp/logs/r1-responder.log
+StandardError=append:%h/sonora-digital-corp/logs/r1-responder.log
+
+[Install]
+WantedBy=default.target

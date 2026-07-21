@@ -1,0 +1,40 @@
+/* NATHY CONTA - Design Tokens */
+:root {
+  /* Primary palette */
+  --nc-deep-blue: #0f1b4d;
+  --nc-dark-blue: #1a237e;
+  --nc-gold: #c9a84c;
+  --nc-gold-light: #f0d478;
+  --nc-gold-dark: #a8882e;
+
+  /* Neutrals */
+  --nc-white: #ffffff;
+  --nc-off-white: #f8f7f4;
+  --nc-light-gray: #e8e6e1;
+  --nc-mid-gray: #8a8680;
+  --nc-dark-gray: #2d2a24;
+
+  /* Semantic */
+  --nc-success: #2e7d32;
+  --nc-error: #c62828;
+
+  /* Typography */
+  --nc-font-display: 'Georgia', 'Times New Roman', serif;
+  --nc-font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Spacing */
+  --nc-space-xs: 0.25rem;
+  --nc-space-sm: 0.5rem;
+  --nc-space-md: 1rem;
+  --nc-space-lg: 2rem;
+  --nc-space-xl: 4rem;
+
+  /* Radius */
+  --nc-radius: 8px;
+  --nc-radius-lg: 16px;
+
+  /* Shadows */
+  --nc-shadow-sm: 0 1px 3px rgba(15, 27, 77, 0.1);
+  --nc-shadow-md: 0 4px 12px rgba(15, 27, 77, 0.15);
+  --nc-shadow-lg: 0 8px 30px rgba(15, 27, 77, 0.2);
+}

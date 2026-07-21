@@ -1,0 +1,39 @@
+# Configuración Nathy Edge Client
+# Copia este archivo a C:\NathyConta\Config\config.yaml
+
+vps:
+  url: "https://vps.sonoradigitalcorp.com"
+  api_key: ""  # Se asigna cuando se active
+  enabled: false  # Cambiar a true cuando el VPS esté configurado
+
+device:
+  id: "nathy-laptop"
+  name: "Nathy Conta"
+
+paths:
+  root: "C:\\NathyConta"
+  watch_delay: 1.0
+
+clientes:
+  detectar_automatico: true
+  crear_carpetas: true
+  # Opcional: lista de RFCs conocidos para clasificación manual
+  # conocidos:
+  #   - rfc: "FOURGEAMEXICO"
+  #     nombre: "Fourgea México"
+  #   - rfc: "XXXX010101XXX"
+  #     nombre: "Cliente X"
+
+allowed_extensions:
+  - .xml
+  - .pdf
+  - .XML
+  - .PDF
+  - .xlsx
+  - .csv
+
+max_file_size_mb: 20
+
+logging:
+  level: "INFO"
+  file: "C:\\NathyConta\\Logs\\nathy-edge.log"
