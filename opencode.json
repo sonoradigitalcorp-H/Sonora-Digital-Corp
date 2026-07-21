@@ -6,13 +6,12 @@
   "fallbackProvider": "openrouter",
   "logLevel": "INFO",
   "instructions": [
-    "sonora-enterprise-os/constitution/OMEGA-PROMPT-v10.0.md",
-    "sonora-enterprise-os/constitution/SOUL.md",
-    "sonora-enterprise-os/constitution/TRUTH.md",
-    "sonora-enterprise-os/constitution/10-RULES.md",
+    "constitution/OMEGA-PROMPT.md",
+    "constitution/SOUL.md",
+    "constitution/TRUTH.md",
+    "constitution/10-RULES.md",
     "AGENTS.md",
-    "docs/MAPA-SDC.md",
-    "docs/REGLAS-AGENTE.md"
+    "docs/MAPA-SDC.md"
   ],
   "agent": {
     "mystic": {

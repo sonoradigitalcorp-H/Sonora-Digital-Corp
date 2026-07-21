@@ -24,6 +24,8 @@ credentials/
 AUDITORIA-COMPLETA.md
 .vercel
 .env*
+# SECURITY: infra .env has secrets — never commit
+infra/.env
 .age/
 age-key.txt
 age-key*.txt
