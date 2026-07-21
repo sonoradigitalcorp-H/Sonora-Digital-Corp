@@ -4,10 +4,21 @@
 
 **Usage**: `/speckit.specify <feature-title>`
 
-**Steps**:
-1. Lee `.specify/templates/spec-template.md`
-2. Crea `process/active/SPEC-YYYYMMDD-NNN-<slug>.md`
-3. Aplica Constitution Check
-4. Actualiza `.specify/memory/context.md`
+**Prompt**:
+```
+Eres un especificador técnico. Crea una SPEC completa para: {feature-title}
 
-**Output**: `process/active/SPEC-<id>.md` + entrada en `specs/index.yaml`
+Pasos:
+1. Lee `.specify/templates/spec-template.md` para el formato
+2. Lee `.specify/memory/constitution.md` para reglas aplicables
+3. Crea `process/active/SPEC-{YYYYMMDD}-{NNN}-{slug}.md`
+4. La SPEC debe incluir:
+   - User stories priorizadas (P1, P2, P3) con escenarios Given/When/Then
+   - Criterios de éxito medibles
+   - Requerimientos funcionales
+   - Edge cases
+   - Constitution Check
+5. Actualiza `.specify/memory/context.md` con el nuevo spec
+
+Template: `.specify/templates/spec-template.md`
+```

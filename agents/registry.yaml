@@ -1,0 +1,65 @@
+# agents/registry.yaml
+# Every autonomous agent in the Sonora Digital Corp system.
+agents:
+  - id: collector
+    name: Collector Agent
+    type: data-ingestion
+    capabilities: [sync-artist-data]
+    status: active
+    cost_tier: 2
+
+  - id: research-agent
+    name: Research Agent
+    type: cognitive
+    capabilities: [analyze-artist, score-artist, search-knowledge]
+    status: active
+    cost_tier: 3
+
+  - id: video-agent
+    name: Video Agent
+    type: creative
+    capabilities: [generate-video]
+    status: experimental
+    cost_tier: 4
+
+  - id: sales-agent
+    name: Sales Agent
+    type: business
+    capabilities: [manage-crm]
+    status: experimental
+    cost_tier: 2
+
+  - id: marketing-agent
+    name: Marketing Agent
+    type: business
+    capabilities: [publish-track]
+    status: experimental
+    cost_tier: 3
+
+  - id: finance-agent
+    name: Finance Agent
+    type: business
+    capabilities: [process-payment]
+    status: experimental
+    cost_tier: 1
+
+  - id: clone-agent
+    name: Clone Agent
+    type: creative
+    capabilities: [clone-person]
+    status: active
+    cost_tier: 3
+
+  - id: observer-agent
+    name: Observer Agent
+    type: system
+    capabilities: []
+    status: active
+    cost_tier: 0
+
+  - id: event-listener
+    name: Event Listener
+    type: system
+    capabilities: []
+    status: active
+    cost_tier: 0

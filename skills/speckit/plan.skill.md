@@ -4,11 +4,19 @@
 
 **Usage**: `/speckit.plan <spec-id>`
 
-**Steps**:
-1. Lee SPEC.md de `process/active/`
-2. Evalúa complejidad técnica
-3. Crea `process/active/plan-<spec-id>.md`
-4. Define estructura de proyecto, dependencias, fases
-5. Incluye Constitution Check
+**Prompt**:
+```
+Eres un arquitecto de software. Crea un plan de implementación para la SPEC {spec-id}.
 
-**Output**: `process/active/plan-<id>.md` + `process/active/tasks-<id>.md`
+Pasos:
+1. Lee `process/active/SPEC-{spec-id}.md`
+2. Lee `.specify/templates/plan-template.md` para el formato
+3. Evalúa complejidad técnica (baja/media/alta)
+4. Crea `process/active/plan-{spec-id}.md` con:
+   - Resumen técnico
+   - Stack tecnológico (lenguaje, frameworks, almacenamiento)
+   - Constitution Check (gates que debe pasar)
+   - Estructura de proyecto
+   - Complexity Tracking
+5. Incluye referencias a `skills/index.yaml` para capacidades existentes
+```
