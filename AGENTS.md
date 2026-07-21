@@ -60,7 +60,7 @@ mcp/gateway/  — MCP HTTP server (port 18989), mcp-server-http.js
 mcp/servers/  — wacli_mcp.py (WhatsApp CLI tools)
 mcp/Dockerfile — full image build for sdc-mcp-server
 infra/        — docker-compose files, systemd units, qdrant/neo4j Dockerfiles
-ops/          — api_bridge.py (WebSocket chat), voice/, code/
+scripts/      — api_bridge.py (WebSocket chat), voice/, code/
 state/        — engram.db, engram/, events/, whatsapp/
 process/active/ — current specs, ADRs, scores
 clients/      — abe-music, azrec, el-joyero

@@ -1,7 +1,7 @@
 [project]
-name = "jarvis"
+name = "sonora-digital-corp"
 version = "2.0.0"
-description = "JARVIS — Multi-agent AI Platform"
+description = "SDC — Sonora Digital Corp Multi-agent Platform"
 requires-python = ">=3.10"
 
 [tool.ruff]

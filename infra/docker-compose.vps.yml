@@ -63,15 +63,29 @@ services:
       file: docker-compose.yml
       service: langfuse-db
 
-  jarvis-core:
-    extends:
-      file: docker-compose.yml
-      service: jarvis-core
+  openclaw:
+    build: ./openclaw
+    container_name: sdc-openclaw
+    ports:
+      - "127.0.0.1:18789:18789"
+    volumes:
+      - openclaw_data:/root/.openclaw
+    restart: unless-stopped
+    networks:
+      - sdc-network
 
-  jarvis-webui:
-    extends:
-      file: docker-compose.yml
-      service: jarvis-webui
+  hermes:
+    image: nousresearch/hermes-agent:latest
+    container_name: sdc-hermes
+    network_mode: host
+    environment:
+      - HERMES_UID=1000
+      - HERMES_GID=1000
+      - API_SERVER_HOST=127.0.0.1
+      - API_SERVER_KEY=${HERMES_API_KEY}
+    volumes:
+      - hermes_data:/opt/data
+    restart: unless-stopped
 
 networks:
   sdc-network:
@@ -86,3 +100,5 @@ volumes:
   qdrant_snapshots:
   n8n_data:
   langfuse_data:
+  openclaw_data:
+  hermes_data:

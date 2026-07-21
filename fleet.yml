@@ -50,15 +50,6 @@ services:
     proxy: false
     notes: Hermes MCP gateway
 
-  - name: sdc-jarvis-webui
-    machine: sdc-prod
-    port: 5174
-    bind: 127.0.0.1
-    protocol: http
-    docker: true
-    proxy: false
-    notes: Web frontend (Next.js)
-
   - name: sdc-qdrant
     machine: sdc-prod
     port:
@@ -173,15 +164,6 @@ services:
     docker: true
     proxy: false
     notes: Redis cache
-
-  - name: sdc-jarvis-core
-    machine: sdc-prod
-    port: null
-    bind: null
-    protocol: null
-    docker: true
-    proxy: false
-    notes: JARVIS core engine (no web port)
 
   - name: sdc-langfuse
     machine: sdc-prod

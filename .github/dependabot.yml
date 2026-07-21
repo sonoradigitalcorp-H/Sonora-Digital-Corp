@@ -21,7 +21,7 @@ updates:
       - "security"
 
   - package-ecosystem: "docker"
-    directory: "/infra/docker/jarvis"
+    directory: "/mcp"
     schedule:
       interval: "weekly"
       day: "monday"
