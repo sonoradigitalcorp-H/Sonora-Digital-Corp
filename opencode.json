@@ -191,7 +191,7 @@
     }
   },
   "command": {
-    "status": { "description": "Estado completo del sistema", "template": "Ejecuta healthcheck completo: JARVIS, Hermes, OpenClaw, Neo4j, Qdrant, n8n, Docker, Systemd" },
+    "status": { "description": "Estado completo del sistema", "template": "Ejecuta healthcheck completo: Hermes, OpenClaw, Neo4j, Qdrant, n8n, Docker, Systemd" },
     "backup": { "description": "Backup completo del sistema", "template": "Ejecuta backup: copia sonora-enterprise-os/ apps/ config/ platforms/ a backups/ con timestamp" },
     "brain": { "description": "Brain graph dashboard", "template": "Abre el Command Center con brain graph" },
     "sdd-new": { "description": "Nueva spec SDD", "template": "SDD pipeline: Research→Spec→Design→Tasks→Apply→Verify→Archive", "agent": "sdd" },
