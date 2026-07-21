@@ -1,0 +1,16 @@
+[Unit]
+Description=ComfyUI — Content Creation Engine
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/home/ubuntu/comfyui/venv/bin/python /home/ubuntu/comfyui/main.py --listen 0.0.0.0 --port 8188
+WorkingDirectory=/home/ubuntu/comfyui
+Restart=on-failure
+RestartSec=5
+User=ubuntu
+StandardOutput=append:/home/ubuntu/sonora-digital-corp/state/logs/comfyui.log
+StandardError=append:/home/ubuntu/sonora-digital-corp/state/logs/comfyui.log
+
+[Install]
+WantedBy=multi-user.target
