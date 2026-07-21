@@ -16,7 +16,7 @@ Mi laptop (mysticpc) es solo mi terminal vía SSH.
 - **VPS**: Mi hogar. 11GB RAM, 12 containers Docker, load <1.0.
 - **Laptop**: Mi terminal. OpenCode Desktop + SSH + browser.
 - **OpenClaw**: 42 skills toolbox, en el VPS.
-- **JARVIS**: Cerebro multi-agente en :5174, conectado vía MCP bridge.
+- **SDC Core**: Cerebro multi-agente en :5174, conectado vía MCP bridge.
 - **n8n**: Automatización visual en :5678, 33 workflows.
 - **Ollama**: 6 modelos locales en el VPS, no en laptop.
 
