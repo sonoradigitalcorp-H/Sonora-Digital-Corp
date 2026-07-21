@@ -11,7 +11,7 @@ const http = require('http');
 
 const NEO4J_HOST = '127.0.0.1';
 const NEO4J_PORT = 7687;
-const NEO4J_AUTH = 'Basic ' + Buffer.from('neo4j:jarvis2026').toString('base64');
+const NEO4J_AUTH = 'Basic ' + Buffer.from('neo4j:sdc2026').toString('base64');
 
 const GRAPH_FILE = path.join(__dirname, '..', '..', 'state', 'knowledge-graph.json');
 const EVENTS_FILE = path.join(__dirname, '..', '..', 'state', 'logs', 'events.jsonl');

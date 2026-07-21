@@ -186,7 +186,7 @@ const SHARED_TOOL_HANDLERS = {
       const http = require('http');
       const body = JSON.stringify({ statements: [{ statement: query }] });
       return await new Promise((resolve) => {
-        const req = http.request({ hostname: '127.0.0.1', port: 7687, path: '/db/neo4j/tx/commit', method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Basic ' + Buffer.from('neo4j:jarvis2026').toString('base64') }, timeout: 10000 }, (res) => {
+        const req = http.request({ hostname: '127.0.0.1', port: 7687, path: '/db/neo4j/tx/commit', method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Basic ' + Buffer.from('neo4j:sdc2026').toString('base64') }, timeout: 10000 }, (res) => {
           let d = ''; res.on('data', c => d += c); res.on('end', () => { try { resolve({ results: JSON.parse(d) }); } catch { resolve({ raw: d }); } });
         });
         req.on('error', (e) => resolve({ error: e.message }));
@@ -199,7 +199,7 @@ const SHARED_TOOL_HANDLERS = {
       const http = require('http');
       const body = JSON.stringify({ vector: vector || Array(384).fill(0), limit: limit || 5, with_payload: true });
       return await new Promise((resolve) => {
-        const req = http.request({ hostname: '127.0.0.1', port: 6333, path: `/collections/${collection || 'jarvis_knowledge'}/points/search`, method: 'POST', headers: { 'Content-Type': 'application/json' }, timeout: 10000 }, (res) => {
+        const req = http.request({ hostname: '127.0.0.1', port: 6333, path: `/collections/${collection || 'sdc_knowledge'}/points/search`, method: 'POST', headers: { 'Content-Type': 'application/json' }, timeout: 10000 }, (res) => {
           let d = ''; res.on('data', c => d += c); res.on('end', () => { try { resolve(JSON.parse(d)); } catch { resolve({ raw: d }); } });
         });
         req.on('error', (e) => resolve({ error: e.message }));

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Qdrant Collections Initialization for JARVIS
+Qdrant Collections Initialization for SDC
 Crear las colecciones necesarias para la memoria vectorial
 """
 
@@ -43,7 +43,7 @@ def initialize_collections():
             "distance": Distance.COSINE
         },
         {
-            "name": "jarvis_knowledge",
+            "name": "sdc_knowledge",
             "description": "Base de conocimiento general (RAG pipeline real)",
             "vector_size": 768,
             "distance": Distance.COSINE

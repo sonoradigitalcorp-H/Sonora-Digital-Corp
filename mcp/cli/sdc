@@ -125,7 +125,7 @@ async function agentCmd(args) {
   if (sub === 'list') {
     const r = await sdk.status();
     console.log('\n📋 Agentes activos (via orchestrator):');
-    console.log('   (conectar a JARVIS para lista completa)\n');
+    console.log('   (conectar a SDC para lista completa)\n');
     console.log(`   Tenant: ${r.tenant || 'N/A'}`);
     console.log(`   Versión: ${r.version}`);
     console.log(`   Servicios: ${r.summary ? r.summary.online + '/' + r.summary.total : 'N/A'}`);

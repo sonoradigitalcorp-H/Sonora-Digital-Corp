@@ -7,7 +7,7 @@ ROOT = Path(__file__).parent.parent
 
 # Tests import from src.core.*, core.*, voice.*, webui.*
 # Old flat structure → now under apps/
-for p in ["apps/jarvis", "apps/jarvis/src", "apps", "apps/abe-service", "mcp", "."]:
+for p in ["apps", "apps/abe-service", "mcp", "."]:
     full = ROOT / p
     if full.exists():
         sys.path.insert(0, str(full))

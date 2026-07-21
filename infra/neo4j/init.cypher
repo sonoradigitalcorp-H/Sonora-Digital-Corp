@@ -1,4 +1,4 @@
-// Neo4j Schema Initialization for JARVIS
+// Neo4j Schema Initialization for SDC
 // Ejecutar en Neo4j Browser o via cypher-shell
 
 // Crear constraints para IDs únicos
@@ -45,8 +45,8 @@ CALL db.index.fulltext.createNodeIndex("projectName", ["Project"], ["name"]);
 
 // Crear nodos iniciales de ejemplo
 CREATE (jarvis:Person {
-    id: 'jarvis-001',
-    name: 'JARVIS',
+    id: 'sdc-core-001',
+    name: 'SDC Core',
     role: 'AI Assistant',
     created_at: datetime()
 })
@@ -59,8 +59,8 @@ CREATE (luis:Person {
 })
 
 CREATE (jarvisProject:Project {
-    id: 'project-jarvis',
-    name: 'JARVIS AI System',
+    id: 'project-sdc',
+    name: 'SDC AI System',
     status: 'active',
     start_date: date(),
     description: 'Sistema de IA avanzado con memoria persistente'
@@ -89,18 +89,18 @@ CREATE (mcpConcept:Concept {
 
 // Crear relaciones
 MATCH (luis:Person {id: 'luis-001'})
-MATCH (jarvis:Person {id: 'jarvis-001'})
+MATCH (jarvis:Person {id: 'sdc-core-001'})
 CREATE (luis)-[:OWNS]->(jarvis)
 
 MATCH (luis:Person {id: 'luis-001'})
-MATCH (project:Project {id: 'project-jarvis'})
+MATCH (project:Project {id: 'project-sdc'})
 CREATE (luis)-[:DEVELOPS]->(project)
 
-MATCH (jarvis:Person {id: 'jarvis-001'})
-MATCH (project:Project {id: 'project-jarvis'})
+MATCH (jarvis:Person {id: 'sdc-core-001'})
+MATCH (project:Project {id: 'project-sdc'})
 CREATE (jarvis)-[:IS_PART_OF]->(project)
 
-MATCH (project:Project {id: 'project-jarvis'})
+MATCH (project:Project {id: 'project-sdc'})
 MATCH (neo4j:Concept {id: 'concept-neo4j'})
 MATCH (qdrant:Concept {id: 'concept-qdrant'})
 MATCH (mcp:Concept {id: 'concept-mcp'})

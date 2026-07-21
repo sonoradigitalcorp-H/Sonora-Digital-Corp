@@ -1,1 +1,1 @@
-"""Integration tests for JARVIS."""
+"""Integration tests for SDC."""
