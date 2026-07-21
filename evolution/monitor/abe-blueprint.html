@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ABE Music — Blueprint del Proyecto</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',sans-serif;background:#080c18;color:#e2e8f0;padding:16px;max-width:960px;margin:0 auto;}
+  .header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;margin-bottom:16px;background:rgba(15,23,42,0.8);border:1px solid #1e3a5f;border-radius:12px;}
+  .header h1{font-size:1em;font-weight:700;color:#3b82f6;}
+  .header .sub{color:#64748b;font-size:0.7em;}
+  .back{color:#3b82f6;text-decoration:none;font-size:0.7em;}
+  h2{font-size:0.8em;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;border-bottom:1px solid #1e3a5f;padding-bottom:6px;margin-top:16px;}
+  h3{font-size:0.75em;font-weight:600;color:#94a3b8;margin:10px 0 6px;}
+  .card{background:rgba(15,23,42,0.7);border:1px solid #1e3a5f;border-radius:10px;padding:14px;margin-bottom:10px;}
+  table{width:100%;border-collapse:collapse;font-size:0.72em;}
+  th{color:#64748b;font-weight:500;text-align:left;padding:5px 6px;border-bottom:1px solid #1e3a5f;}
+  td{padding:5px 6px;border-bottom:1px solid rgba(30,58,95,0.3);}
+  .num{text-align:right;font-variant-numeric:tabular-nums;}
+  .tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.65em;font-weight:600;margin:2px;}
+  .tag-blue{background:rgba(59,130,246,0.15);color:#3b82f6;}
+  .tag-green{background:rgba(34,197,94,0.15);color:#22c55e;}
+  .tag-amber{background:rgba(234,179,8,0.15);color:#eab308;}
+  .tag-purple{background:rgba(139,92,246,0.15);color:#8b5cf6;}
+  .tag-red{background:rgba(239,68,68,0.15);color:#ef4444;}
+
+  .diagram{border:1px solid #1e3a5f;border-radius:8px;padding:20px;margin:10px 0;background:rgba(15,23,42,0.5);overflow-x:auto;white-space:nowrap;font-size:0.65em;color:#94a3b8;line-height:1.8;}
+  .diagram .hl{color:#3b82f6;font-weight:600;}
+  .diagram .green{color:#22c55e;}
+  .diagram .arrow{color:#64748b;}
+
+  .footer{text-align:center;padding:20px;color:#64748b;font-size:0.65em;border-top:1px solid #1e3a5f;margin-top:16px;}
+</style>
+</head>
+<body>
+<div class="header">
+  <div><h1>🏗️ ABE Music — Blueprint del Proyecto</h1><div class="sub">Arquitectura · Stack · Data Flow · Roadmap</div></div>
+  <div style="display:flex;gap:6px;">
+    <a href="/abe-fullstack.html" style="color:#8b5cf6;text-decoration:none;font-size:0.65em;border:1px solid #8b5cf6;padding:4px 8px;border-radius:6px;">Full-Stack Blueprint</a>
+    <a href="/abe-dashboard.html" class="back">← Dashboard</a>
+  </div>
+</div>
+
+<h2>📐 Arquitectura General</h2>
+<div class="diagram">
+┌─────────────────────────────────────────────────────────────────────────┐
+│                         <span class="hl">INTERNET 🌐</span>                                        │
+│  Spotify API · Apple Music · Deezer API · YouTube · Instagram · TikTok  │
+└────────────────────────┬────────────────────────────────────────────────┘
+                         │ scraping + APIs
+┌────────────────────────▼────────────────────────────────────────────────┐
+│                  <span class="green">DATA INGESTION LAYER</span>                                   │
+│   Python scrapers · Stats.fm API · Deezer API · Apple Music API        │
+│   CEO Dashboard (manual) · Instagram scraper · TikTok scraper          │
+└────────────────────────┬────────────────────────────────────────────────┘
+                         │ JSON / CSV
+┌────────────────────────▼────────────────────────────────────────────────┐
+│                  <span class="hl">DATA LAKE (Raw)</span>                                        │
+│   ~/evolucion/ · JSON dumps · spreadsheets · screenshots               │
+└────────────────────────┬────────────────────────────────────────────────┘
+                         │ transform
+┌────────────────────────▼────────────────────────────────────────────────┐
+│                  <span class="green">ANALYTICS ENGINE</span>                                        │
+│   Revenue calculations · Rate analysis · Estimaciones multi-plataforma  │
+│   $0.004/stream Spotify · $0.008 Apple · $0.001 YouTube                │
+└────────────────────────┬────────────────────────────────────────────────┘
+                         │ build
+┌────────────────────────▼────────────────────────────────────────────────┐
+│                  <span class="hl">PRODUCT LAYER (Static HTML)</span>                                │
+│   ┌────────────┐  ┌──────────┐  ┌────────────┐  ┌───────────────┐     │
+│   │  Dashboard  │  │ Artists  │  │  Revenue   │  │  Contracts    │     │
+│   │  (at-a-glance)│  │ Profiles │  │ Intelligence│  │  Portal      │     │
+│   └────────────┘  └──────────┘  └────────────┘  └───────────────┘     │
+└────────────────────────┬────────────────────────────────────────────────┘
+                         │ serve
+┌────────────────────────▼────────────────────────────────────────────────┐
+│                  <span class="green">SERVE LAYER (Nginx → :8080)</span>                              │
+│   http://149.56.46.173:8080/ → War Room → ABE Products                  │
+│   http://149.56.46.173:5180/pwa/ → ABE PWA (Legacy)                    │
+└─────────────────────────────────────────────────────────────────────────┘
+</div>
+
+<h2>📦 Stack Tecnologico</h2>
+<div class="card">
+  <table>
+    <tr><th>Capa</th><th>Tecnologia</th><th>Version</th></tr>
+    <tr><td>Frontend</td><td>HTML + Vanilla CSS + Google Fonts (Inter)</td><td>—</td></tr>
+    <tr><td>Backend (PWA)</td><td>Ollama + llama3.2-vision:11b</td><td>—</td></tr>
+    <tr><td>Servidor Web</td><td>Nginx</td><td>—</td></tr>
+    <tr><td>Server (PWA)</td><td>Vite (Node.js)</td><td>—</td></tr>
+    <tr><td>Scraping</td><td>Python (stats.fm, Deezer)</td><td>—</td></tr>
+    <tr><td>Data Viz</td><td>Pure CSS (sin librerias)</td><td>—</td></tr>
+    <tr><td>Version Control</td><td>Git + GitHub</td><td>—</td></tr>
+  </table>
+</div>
+
+<h2>🗂️ Productos</h2>
+<div class="card" style="font-size:0.72em;">
+  <table>
+    <tr><th>#</th><th>Producto</th><th>URL</th><th>Que muestra</th></tr>
+    <tr>
+      <td>1</td>
+      <td><strong>ABE Music Dashboard</strong></td>
+      <td><code>/abe-dashboard.html</code></td>
+      <td>Resumen ejecutivo, revenue total ($479K), streams (119.7M), links a los 4 productos</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><strong>Artist Profiles</strong></td>
+      <td><code>/abe-artists.html</code></td>
+      <td>Hector Rubio (115M streams, 1.1M ML), Jesus Urquijo (4.6M, 29K ML), Javier Arvayo (50K, 981 ML)</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><strong>Revenue Intelligence</strong></td>
+      <td><code>/abe-revenue.html</code></td>
+      <td>Revenue por artista, payout rates, proyecciones Apple/YouTube/Deezer, escenarios</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><strong>Contracts Portal</strong></td>
+      <td><code>/abe-contracts.html</code></td>
+      <td>Contratos por artista, distribucion (Oplaai, Colonize Media), revenue ledger</td>
+    </tr>
+  </table>
+</div>
+
+<h2>📊 Datos de Revenue</h2>
+<div class="card">
+  <table>
+    <tr><th>Artista</th><th>Streams</th><th>Revenue</th><th>Tasa</th><th>ML Spotify</th><th>% Revenue</th></tr>
+    <tr>
+      <td>Hector Rubio</td>
+      <td class="num">115,093,009</td>
+      <td class="num" style="color:#22c55e;">$460,372</td>
+      <td class="num">$0.0040</td>
+      <td class="num">1,100,000</td>
+      <td class="num" style="color:#3b82f6;">96.1%</td>
+    </tr>
+    <tr>
+      <td>Jesus Urquijo</td>
+      <td class="num">4,635,222</td>
+      <td class="num" style="color:#22c55e;">$18,540</td>
+      <td class="num">$0.0040</td>
+      <td class="num">29,800</td>
+      <td class="num" style="color:#eab308;">3.9%</td>
+    </tr>
+    <tr>
+      <td>Javier Arvayo</td>
+      <td class="num">50,000</td>
+      <td class="num" style="color:#22c55e;">$200</td>
+      <td class="num">$0.0040</td>
+      <td class="num">981</td>
+      <td class="num" style="color:#64748b;">0.04%</td>
+    </tr>
+    <tr style="border-top:1px solid #1e3a5f;">
+      <td><strong>Total</strong></td>
+      <td class="num"><strong>119,778,231</strong></td>
+      <td class="num" style="color:#22c55e;"><strong>$479,112</strong></td>
+      <td class="num"><strong>$0.0040</strong></td>
+      <td class="num"><strong>1,130,781</strong></td>
+      <td class="num"><strong>100%</strong></td>
+    </tr>
+  </table>
+</div>
+
+<h2>🔌 Fuentes de Datos</h2>
+<div class="card" style="font-size:0.7em;">
+  <table>
+    <tr><th>Fuente</th><th>Datos Obtenidos</th><th>Metodo</th><th>Frecuencia</th></tr>
+    <tr><td>Stats.fm / Spotify API</td><td>Streams totales, ML, top tracks</td><td>Python scraper (scraper-smoking)</td><td>Daily / On demand</td></tr>
+    <tr><td>Deezer API</td><td>Fans, playlists, tracks</td><td>Scripts Python (stats/scrapers)</td><td>On demand</td></tr>
+    <tr><td>Apple Music API</td><td>Artist info, artwork</td><td>JSON (music-brainz)</td><td>Static</td></tr>
+    <tr><td>CEO Dashboard</td><td>Revenue, streams, ML benchmarks</td><td>Manual entry / screenshots</td><td>Periodic</td></tr>
+    <tr><td>Instagram</td><td>Followers, posts, engagement</td><td>Manual</td><td>On demand</td></tr>
+    <tr><td>TikTok</td><td>Followers, videos</td><td>Manual</td><td>On demand</td></tr>
+  </table>
+</div>
+
+<h2>🧱 Data Model</h2>
+<div class="card" style="font-size:0.72em;">
+  <h3>Artist</h3>
+  <div style="color:#94a3b8;margin-bottom:8px;">
+    name · label · distributor · isrc · streams_total · revenue_total · payout_rate · monthly_listeners · followers · genre · status
+  </div>
+  <h3>Release</h3>
+  <div style="color:#94a3b8;margin-bottom:8px;">
+    title · artist · type(album|single) · release_date · streams · revenue · isrc · spotify_id
+  </div>
+  <h3>Contract</h3>
+  <div style="color:#94a3b8;margin-bottom:8px;">
+    artist · label · distributor · type · start_date · status · revenue_share
+  </div>
+  <h3>Revenue Ledger</h3>
+  <div style="color:#94a3b8;">
+    period · artist · release · platform · streams · revenue · rate · payout_date
+  </div>
+</div>
+
+<h2>🛤️ Roadmap</h2>
+<div class="card" style="font-size:0.72em;">
+  <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(30,58,95,0.3);">
+    <span>✅ <strong>MVP Product Suite</strong> — Dashboard + Artists + Revenue + Contracts</span>
+    <span class="tag tag-green">Done</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(30,58,95,0.3);">
+    <span>⏳ <strong>Scraper Automatizado</strong> — Pipeline Python CI/CD para scraping diario</span>
+    <span class="tag tag-amber">In Progress</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(30,58,95,0.3);">
+    <span>⏳ <strong>Comparador de Datos</strong> — Scraped vs CEO dashboard vs plataforma</span>
+    <span class="tag tag-amber">Backlog</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(30,58,95,0.3);">
+    <span>🔲 <strong>Live Charts JS</strong> — Graficos interactivos (Chart.js o D3) en Revenue</span>
+    <span class="tag">Todo</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(30,58,95,0.3);">
+    <span>🔲 <strong>Multi-Platform Split</strong> — Dashboard de distribucion Spotify vs Apple vs YouTube</span>
+    <span class="tag">Todo</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid rgba(30,58,95,0.3);">
+    <span>🔲 <strong>Contract Management</strong> — CRUD de contratos, fechas, renewal alerts</span>
+    <span class="tag">Todo</span>
+  </div>
+  <div style="display:flex;justify-content:space-between;padding:6px 0;">
+    <span>🔲 <strong>ABE Mobile App</strong> — React Native o PWA offline-first para Android/iOS</span>
+    <span class="tag">Todo</span>
+  </div>
+</div>
+
+<h2>🏢 Entidades Legales</h2>
+<div class="card" style="font-size:0.72em;">
+  <table>
+    <tr><th>Entidad</th><th>Rol</th><th>Jurisdiccion</th></tr>
+    <tr><td><strong>ABE Music Inc</strong></td><td>Record Label</td><td>California, USA</td></tr>
+    <tr><td><strong>Oplaai, LLC</strong></td><td>Distributor (Hector Rubio)</td><td>Maricopa, Arizona</td></tr>
+    <tr><td><strong>Colonize Media</strong></td><td>Distributor (Jesus Urquijo)</td><td>—</td></tr>
+    <tr><td><strong>VIZUAL</strong></td><td>Co-Label (Hector Rubio)</td><td>—</td></tr>
+  </table>
+</div>
+
+<div class="footer">
+  ABE Music Inc · Blueprint v1.0 · Solo datos publicos/fuentes abiertas
+</div>
+</body>
+</html>

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ABE Music — Artist Profiles</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',sans-serif;background:#080c18;color:#e2e8f0;padding:16px;max-width:1100px;margin:0 auto;}
+  .header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;margin-bottom:16px;background:rgba(15,23,42,0.8);border:1px solid #1e3a5f;border-radius:12px;}
+  .header h1{font-size:1em;font-weight:700;color:#3b82f6;}
+  .header .sub{color:#64748b;font-size:0.7em;}
+  .back{color:#3b82f6;text-decoration:none;font-size:0.7em;}
+  
+  .artist-card{background:rgba(15,23,42,0.7);border:1px solid #1e3a5f;border-radius:12px;padding:20px;margin-bottom:12px;}
+  .artist-card h2{font-size:1.1em;font-weight:700;color:#e2e8f0;margin-bottom:4px;}
+  .artist-card .genre{color:#64748b;font-size:0.75em;margin-bottom:12px;}
+  .metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px;margin-bottom:12px;}
+  .metric{background:rgba(26,35,50,0.6);border:1px solid #1e3a5f;border-radius:8px;padding:10px;text-align:center;}
+  .metric .value{font-size:1.2em;font-weight:700;color:#3b82f6;}
+  .metric .label{font-size:0.6em;color:#64748b;margin-top:2px;text-transform:uppercase;}
+  .metric .green{color:#22c55e;}
+  .detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:0.75em;}
+  .detail-item{padding:4px 0;border-bottom:1px solid rgba(30,58,95,0.2);display:flex;justify-content:space-between;}
+  .detail-item .key{color:#64748b;}
+  .detail-item .val{color:#e2e8f0;}
+
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:4px;font-size:0.65em;font-weight:600;}
+  .bg-green{background:rgba(34,197,94,0.15);color:#22c55e;}
+  .bg-amber{background:rgba(234,179,8,0.15);color:#eab308;}
+  
+  .top-songs{font-size:0.7em;margin-top:8px;}
+  .top-songs table{width:100%;border-collapse:collapse;}
+  .top-songs td{padding:3px 6px;border-bottom:1px solid rgba(30,58,95,0.2);}
+
+  .footer{text-align:center;padding:20px;color:#64748b;font-size:0.65em;border-top:1px solid #1e3a5f;margin-top:16px;}
+</style>
+</head>
+<body>
+<div class="header">
+  <div><h1>🎤 ABE Music — Artist Profiles</h1><div class="sub">Perfiles detallados con datos del registry</div></div>
+  <a href="/abe-dashboard.html" class="back">← Dashboard</a>
+</div>
+
+<div class="artist-card">
+  <h2>Hector Rubio</h2>
+  <div class="genre">Regional Mexicano · Angostura, Sinaloa · <span class="badge bg-green">active</span></div>
+  <div class="metrics">
+    <div class="metric"><div class="value">115.1M</div><div class="label">Streams</div></div>
+    <div class="metric"><div class="value green">$460,372</div><div class="label">Revenue</div></div>
+    <div class="metric"><div class="value">1.03M</div><div class="label">Spotify ML</div></div>
+    <div class="metric"><div class="value">1.1M</div><div class="label">Monthly Listeners</div></div>
+    <div class="metric"><div class="value">660</div><div class="label">Deezer Fans</div></div>
+    <div class="metric"><div class="value">7</div><div class="label">Releases</div></div>
+  </div>
+  <div class="detail-grid">
+    <div class="detail-item"><span class="key">Label</span><span class="val">ABE Music + VIZUAL</span></div>
+    <div class="detail-item"><span class="key">Distribution</span><span class="val">Oplaai, LLC</span></div>
+    <div class="detail-item"><span class="key">Top Song</span><span class="val" style="color:#3b82f6;">Se Volvieron Locos (16M)</span></div>
+    <div class="detail-item"><span class="key">Latest Release</span><span class="val">Malicia (En Vivo) — 2025</span></div>
+    <div class="detail-item"><span class="key">Album</span><span class="val">SMOKING</span></div>
+    <div class="detail-item"><span class="key">Notable</span><span class="val">Abrio para Peso Pluma</span></div>
+    <div class="detail-item"><span class="key">Deezer ID</span><span class="val">9814216</span></div>
+    <div class="detail-item"><span class="key">Apple Music ID</span><span class="val">1082292215</span></div>
+  </div>
+  <div class="top-songs">
+    <strong style="color:#64748b;">Top Tracks</strong>
+    <table><tr><td>Se Volvieron Locos</td><td style="text-align:right;color:#3b82f6;">289,703</td></tr>
+    <tr><td>Un Millon</td><td style="text-align:right;color:#3b82f6;">189,100</td></tr>
+    <tr><td>Mil Historias</td><td style="text-align:right;color:#3b82f6;">87,932</td></tr></table>
+  </div>
+</div>
+
+<div class="artist-card">
+  <h2>Jesus Urquijo</h2>
+  <div class="genre">Regional Mexicano · <span class="badge bg-green">active</span></div>
+  <div class="metrics">
+    <div class="metric"><div class="value">4.64M</div><div class="label">Streams</div></div>
+    <div class="metric"><div class="value green">$18,540</div><div class="label">Revenue</div></div>
+    <div class="metric"><div class="value">24.3K</div><div class="label">Spotify ML</div></div>
+    <div class="metric"><div class="value">29.8K</div><div class="label">Monthly Listeners</div></div>
+    <div class="metric"><div class="value">73</div><div class="label">Deezer Fans</div></div>
+    <div class="metric"><div class="value">11</div><div class="label">Releases</div></div>
+  </div>
+  <div class="detail-grid">
+    <div class="detail-item"><span class="key">Label</span><span class="val">ABE Music Inc</span></div>
+    <div class="detail-item"><span class="key">Distribution</span><span class="val">ABE Music / Colonize Media</span></div>
+    <div class="detail-item"><span class="key">Top Song</span><span class="val" style="color:#3b82f6;">Power Trae (2.13M)</span></div>
+    <div class="detail-item"><span class="key">Shazams</span><span class="val">1,347</span></div>
+    <div class="detail-item"><span class="key">Deezer ID</span><span class="val">15277093</span></div>
+    <div class="detail-item"><span class="key">Apple Music ID</span><span class="val">1319826332</span></div>
+  </div>
+  <div class="top-songs">
+    <strong style="color:#64748b;">Top Tracks</strong>
+    <table><tr><td>Power Trae</td><td style="text-align:right;color:#3b82f6;">2,125,681</td></tr>
+    <tr><td>Te Amare Mas</td><td style="text-align:right;color:#3b82f6;">1,105,438</td></tr>
+    <tr><td>El Abe</td><td style="text-align:right;color:#3b82f6;">538,100</td></tr></table>
+  </div>
+</div>
+
+<div class="artist-card">
+  <h2>Javier Arvayo</h2>
+  <div class="genre">Pop Latino · Hermosillo, Sonora · <span class="badge bg-amber">signed</span></div>
+  <div class="metrics">
+    <div class="metric"><div class="value">50K</div><div class="label">Streams</div></div>
+    <div class="metric"><div class="value green">$200</div><div class="label">Revenue</div></div>
+    <div class="metric"><div class="value">73.7K</div><div class="label">Spotify ML</div></div>
+    <div class="metric"><div class="value">981</div><div class="label">Monthly Listeners</div></div>
+    <div class="metric"><div class="value">10</div><div class="label">Deezer Fans</div></div>
+    <div class="metric"><div class="value">3</div><div class="label">Releases</div></div>
+  </div>
+  <div class="detail-grid">
+    <div class="detail-item"><span class="key">Label</span><span class="val">ABE Music</span></div>
+    <div class="detail-item"><span class="key">Top Song</span><span class="val" style="color:#3b82f6;">GOETT</span></div>
+    <div class="detail-item"><span class="key">Album</span><span class="val">Abe Music Presenta (2020)</span></div>
+    <div class="detail-item"><span class="key">Deezer ID</span><span class="val">98593652</span></div>
+    <div class="detail-item"><span class="key">Apple Music ID</span><span class="val">1519877798</span></div>
+  </div>
+  <div class="top-songs">
+    <strong style="color:#64748b;">Top Tracks</strong>
+    <table><tr><td>GOETT</td><td style="text-align:right;color:#3b82f6;">25,000</td></tr>
+    <tr><td>El Versace</td><td style="text-align:right;color:#3b82f6;">15,000</td></tr></table>
+  </div>
+</div>
+
+<div class="footer">
+  ABE Music Inc · Datos sincronizados cada 6h · Fuente: Deezer, Apple Music, Spotify
+</div>
+</body>
+</html>

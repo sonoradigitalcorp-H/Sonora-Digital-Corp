@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ABE Music OS — Product Suite</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',sans-serif;background:#080c18;color:#e2e8f0;padding:16px;max-width:1100px;margin:0 auto;}
+  .header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;margin-bottom:16px;background:rgba(15,23,42,0.8);border:1px solid #1e3a5f;border-radius:12px;}
+  .header h1{font-size:1em;font-weight:700;color:#3b82f6;}
+  .header .sub{color:#64748b;font-size:0.7em;margin-top:2px;}
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:0.65em;font-weight:600;}
+  .bg-green{background:rgba(34,197,94,0.15);color:#22c55e;}
+  .bg-blue{background:rgba(59,130,246,0.15);color:#3b82f6;}
+  .bg-amber{background:rgba(234,179,8,0.15);color:#eab308;}
+  
+  h2{font-size:0.8em;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;border-bottom:1px solid #1e3a5f;padding-bottom:6px;}
+  
+  .products{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin-bottom:16px;}
+  .product-card{background:rgba(15,23,42,0.7);border:1px solid #1e3a5f;border-radius:10px;padding:16px;cursor:pointer;transition:all 0.2s;text-decoration:none;color:inherit;display:block;}
+  .product-card:hover{border-color:#3b82f6;transform:translateY(-2px);}
+  .product-card .icon{font-size:2em;margin-bottom:6px;}
+  .product-card .name{font-size:0.9em;font-weight:600;color:#e2e8f0;}
+  .product-card .desc{font-size:0.7em;color:#64748b;margin-top:4px;}
+  .product-card .status{font-size:0.65em;margin-top:6px;}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px;margin-bottom:12px;}
+  .widget{background:rgba(15,23,42,0.7);border:1px solid #1e3a5f;border-radius:10px;padding:14px;}
+  .widget-title{font-size:0.7em;font-weight:600;color:#64748b;text-transform:uppercase;margin-bottom:10px;}
+
+  table{width:100%;border-collapse:collapse;font-size:0.72em;}
+  th{color:#64748b;font-weight:500;text-align:left;padding:5px 6px;border-bottom:1px solid #1e3a5f;}
+  td{padding:5px 6px;border-bottom:1px solid rgba(30,58,95,0.3);}
+  .num{text-align:right;font-variant-numeric:tabular-nums;}
+
+  .quick-links{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;}
+  .quick-link{padding:4px 10px;border-radius:6px;font-size:0.7em;background:rgba(59,130,246,0.1);border:1px solid rgba(59,130,246,0.2);color:#3b82f6;text-decoration:none;transition:all 0.2s;}
+  .quick-link:hover{background:rgba(59,130,246,0.2);}
+
+  .footer{text-align:center;padding:20px;color:#64748b;font-size:0.65em;border-top:1px solid #1e3a5f;margin-top:16px;}
+</style>
+</head>
+<body>
+<div class="header">
+  <div><h1>🎵 ABE Music OS</h1><div class="sub">Product Suite — Sonora Digital Corp</div></div>
+  <div style="display:flex;gap:6px;">
+    <span class="badge bg-green">⬤ Produccion</span>
+    <span class="badge bg-blue">3 artistas</span>
+    <span class="badge bg-amber">$479K revenue</span>
+  </div>
+</div>
+
+<h2>📦 Productos</h2>
+<div class="products">
+  <a href="/abe-artists.html" class="product-card">
+    <div class="icon">🎤</div>
+    <div class="name">Artist Profiles</div>
+    <div class="desc">Perfiles detallados de cada artista con metricas en vivo</div>
+    <div class="status"><span class="badge bg-green">NUEVO</span></div>
+  </a>
+  <a href="/abe-revenue.html" class="product-card">
+    <div class="icon">💰</div>
+    <div class="name">Revenue Intelligence</div>
+    <div class="desc">Revenue por artista, plataforma, y tasa de pago</div>
+    <div class="status"><span class="badge bg-green">NUEVO</span></div>
+  </a>
+  <a href="/abe-contracts.html" class="product-card">
+    <div class="icon">📋</div>
+    <div class="name">Contracts Portal</div>
+    <div class="desc">Contratos digitales, splits de distribucion, ledger</div>
+    <div class="status"><span class="badge bg-green">NUEVO</span></div>
+  </a>
+  <a href="http://149.56.46.173:5180/pwa/" class="product-card">
+    <div class="icon">🤖</div>
+    <div class="name">ABE PWA (Legacy)</div>
+    <div class="desc">Asistente de voz original con avatar 3D</div>
+    <div class="status"><span class="badge bg-blue">EXISTENTE</span></div>
+  </a>
+  <a href="/abe-blueprint.html" class="product-card">
+    <div class="icon">🏗️</div>
+    <div class="name">Project Blueprint</div>
+    <div class="desc">Arquitectura, stack, data flow, roadmap completo</div>
+    <div class="status"><span class="badge bg-green">NUEVO</span></div>
+  </a>
+</div>
+
+<h2>📊 Resumen Ejecutivo</h2>
+<div class="grid">
+  <div class="widget">
+    <div class="widget-title">🎤 Artistas</div>
+    <table>
+      <tr><th>Artista</th><th class="num">Streams</th><th class="num">Revenue</th><th class="num">Tasa</th><th>Status</th></tr>
+      <tr>
+        <td>Hector Rubio</td>
+        <td class="num">115,093,009</td>
+        <td class="num" style="color:#22c55e;">$460,372</td>
+        <td class="num" style="color:#3b82f6;">$0.004</td>
+        <td><span class="badge bg-green">active</span></td>
+      </tr>
+      <tr>
+        <td>Jesus Urquijo</td>
+        <td class="num">4,635,222</td>
+        <td class="num" style="color:#22c55e;">$18,540</td>
+        <td class="num" style="color:#3b82f6;">$0.004</td>
+        <td><span class="badge bg-green">active</span></td>
+      </tr>
+      <tr>
+        <td>Javier Arvayo</td>
+        <td class="num">50,000</td>
+        <td class="num" style="color:#22c55e;">$200</td>
+        <td class="num" style="color:#3b82f6;">$0.004</td>
+        <td><span class="badge bg-amber">signed</span></td>
+      </tr>
+    </table>
+    <div class="quick-links"><a href="/abe-artists.html" class="quick-link">Ver perfiles →</a></div>
+  </div>
+
+  <div class="widget">
+    <div class="widget-title">📡 Sync Status</div>
+    <div style="font-size:0.75em;">
+      <div style="padding:6px 0;border-bottom:1px solid rgba(30,58,95,0.3);">
+        <span class="badge bg-green">⬤</span> Deezer — API publica
+      </div>
+      <div style="padding:6px 0;border-bottom:1px solid rgba(30,58,95,0.3);">
+        <span class="badge bg-green">⬤</span> Apple Music — API publica
+      </div>
+      <div style="padding:6px 0;border-bottom:1px solid rgba(30,58,95,0.3);">
+        <span class="badge bg-green">⬤</span> YouTube — yt-dlp
+      </div>
+      <div style="padding:6px 0;border-bottom:1px solid rgba(30,58,95,0.3);">
+        <span class="badge bg-green">⬤</span> TikTok — Playwright
+      </div>
+      <div style="padding:6px 0;">
+        <span class="badge bg-amber">⬤</span> Instagram — login wall
+      </div>
+    </div>
+    <div class="quick-links" style="margin-top:6px;">
+      <span class="badge bg-blue">Cada 6h via cron</span>
+      <span class="badge bg-green">7/7 healthy</span>
+    </div>
+  </div>
+
+  <div class="widget">
+    <div class="widget-title">💰 Revenue Intelligence</div>
+    <div style="font-size:0.72em;">
+      <div style="padding:6px 0;border-bottom:1px solid rgba(30,58,95,0.3);">
+        <strong>Tasa implicita:</strong> $0.004/stream
+      </div>
+      <div style="padding:6px 0;border-bottom:1px solid rgba(30,58,95,0.3);">
+        <strong>Plataforma:</strong> 100% Spotify
+      </div>
+      <div style="padding:6px 0;">
+        <strong>Distribuidor:</strong> Oplaai, LLC
+      </div>
+    </div>
+    <div style="margin-top:6px;padding:8px;background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.2);border-radius:6px;font-size:0.7em;color:#eab308;">
+      ⚡ Todo el revenue es Spotify puro. Apple Music y YouTube no estan reflejados.
+    </div>
+    <div class="quick-links"><a href="/abe-revenue.html" class="quick-link">Ver revenue →</a></div>
+  </div>
+</div>
+
+<div class="footer">
+  ABE Music Inc · Abraham Ortega (CEO) · Distribuido por Oplaai, LLC<br>
+  <span style="color:#3b82f6;">Construye el registry. Todo lo demas emerge.</span>
+</div>
+</body>
+</html>

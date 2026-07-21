@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ABE Music — Revenue Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',sans-serif;background:#080c18;color:#e2e8f0;padding:16px;max-width:1100px;margin:0 auto;}
+  .header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;margin-bottom:16px;background:rgba(15,23,42,0.8);border:1px solid #1e3a5f;border-radius:12px;}
+  .header h1{font-size:1em;font-weight:700;color:#3b82f6;}
+  .header .sub{color:#64748b;font-size:0.7em;}
+  .back{color:#3b82f6;text-decoration:none;font-size:0.7em;}
+
+  h2{font-size:0.8em;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;border-bottom:1px solid #1e3a5f;padding-bottom:6px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px;margin-bottom:12px;}
+  .widget{background:rgba(15,23,42,0.7);border:1px solid #1e3a5f;border-radius:10px;padding:14px;}
+
+  table{width:100%;border-collapse:collapse;font-size:0.72em;}
+  th{color:#64748b;font-weight:500;text-align:left;padding:5px 6px;border-bottom:1px solid #1e3a5f;}
+  td{padding:5px 6px;border-bottom:1px solid rgba(30,58,95,0.3);}
+  .num{text-align:right;font-variant-numeric:tabular-nums;}
+
+  .summary-card{background:linear-gradient(135deg,rgba(15,23,42,0.9),rgba(26,35,50,0.9));border:1px solid #3b82f6;border-radius:12px;padding:20px;margin-bottom:12px;text-align:center;}
+  .summary-card .big{font-size:2.5em;font-weight:800;color:#22c55e;}
+  .summary-card .lbl{font-size:0.7em;color:#64748b;margin-top:4px;}
+  .summary-card .detail{display:flex;justify-content:center;gap:20px;margin-top:10px;font-size:0.8em;}
+  .summary-card .detail span{color:#94a3b8;}
+
+  .platform-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(30,58,95,0.3);font-size:0.75em;}
+  .platform-row:last-child{border:none;}
+  .platform-row .name{color:#e2e8f0;}
+  .platform-row .rate{font-weight:600;}
+  .platform-row .spotify{color:#22c55e;}
+  .platform-row .apple{color:#3b82f6;}
+  .platform-row .youtube{color:#ef4444;}
+
+  .insight{background:rgba(234,179,8,0.1);border:1px solid rgba(234,179,8,0.2);border-radius:8px;padding:12px;font-size:0.75em;color:#eab308;margin-top:8px;}
+  
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:4px;font-size:0.65em;font-weight:600;}
+  .bg-green{background:rgba(34,197,94,0.15);color:#22c55e;}
+  .bg-blue{background:rgba(59,130,246,0.15);color:#3b82f6;}
+  .bg-red{background:rgba(239,68,68,0.15);color:#ef4444;}
+
+  .bar-chart{margin:10px 0;}
+  .bar-row{display:flex;align-items:center;gap:8px;margin:4px 0;}
+  .bar-label{min-width:100px;font-size:0.7em;color:#94a3b8;}
+  .bar-track{flex:1;height:20px;background:#1e3a5f;border-radius:4px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:4px;transition:width 0.5s;}
+  .bar-value{min-width:70px;text-align:right;font-size:0.7em;font-weight:600;}
+
+  .footer{text-align:center;padding:20px;color:#64748b;font-size:0.65em;border-top:1px solid #1e3a5f;margin-top:16px;}
+</style>
+</head>
+<body>
+<div class="header">
+  <div><h1>💰 ABE Music — Revenue Intelligence</h1><div class="sub">Revenue tracking y analisis de plataformas</div></div>
+  <a href="/abe-dashboard.html" class="back">← Dashboard</a>
+</div>
+
+<div class="summary-card">
+  <div class="big">$479,112</div>
+  <div class="lbl">Revenue Total Reportado</div>
+  <div class="detail">
+    <span>119.7M streams</span>
+    <span style="color:#22c55e;">$0.004/stream</span>
+    <span>100% Spotify</span>
+  </div>
+</div>
+
+<h2>📊 Revenue por Artista</h2>
+<div class="grid">
+  <div class="widget">
+    <div class="bar-chart">
+      <div class="bar-row">
+        <div class="bar-label">Hector Rubio</div>
+        <div class="bar-track"><div class="bar-fill" style="width:96%;background:#22c55e;"></div></div>
+        <div class="bar-value" style="color:#22c55e;">$460,372</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Jesus Urquijo</div>
+        <div class="bar-track"><div class="bar-fill" style="width:4%;background:#3b82f6;"></div></div>
+        <div class="bar-value" style="color:#3b82f6;">$18,540</div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">Javier Arvayo</div>
+        <div class="bar-track"><div class="bar-fill" style="width:0.04%;background:#eab308;"></div></div>
+        <div class="bar-value" style="color:#eab308;">$200</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="widget">
+    <div class="widget">
+      <table>
+        <tr><th>Artista</th><th class="num">Streams</th><th class="num">Revenue</th><th class="num">Tasa</th></tr>
+        <tr><td>Hector Rubio</td><td class="num">115,093,009</td><td class="num" style="color:#22c55e;">$460,372</td><td class="num" style="color:#3b82f6;">$0.004</td></tr>
+        <tr><td>Jesus Urquijo</td><td class="num">4,635,222</td><td class="num" style="color:#22c55e;">$18,540</td><td class="num" style="color:#3b82f6;">$0.004</td></tr>
+        <tr><td>Javier Arvayo</td><td class="num">50,000</td><td class="num" style="color:#22c55e;">$200</td><td class="num" style="color:#3b82f6;">$0.004</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<h2>💳 Payout Rates por Plataforma</h2>
+<div class="grid">
+  <div class="widget">
+    <div class="platform-row">
+      <span class="name">🎵 Spotify</span>
+      <span class="rate spotify">$0.004 / stream</span>
+      <span>100% del revenue actual</span>
+    </div>
+    <div class="platform-row">
+      <span class="name">🍎 Apple Music</span>
+      <span class="rate apple">$0.008 / stream</span>
+      <span style="color:#64748b;">0% del revenue actual</span>
+    </div>
+    <div class="platform-row">
+      <span class="name">▶️ YouTube</span>
+      <span class="rate youtube">$0.001 / stream</span>
+      <span style="color:#64748b;">0% del revenue actual</span>
+    </div>
+    <div class="insight">
+      ⚡ Si el revenue incluyera Apple Music ($0.008), el total seria 2x mas.<br>
+      Si incluyera YouTube ($0.001), seria 0.25x menos.<br>
+      <strong>La tasa exacta de $0.004 confirma que es 100% Spotify.</strong>
+    </div>
+  </div>
+
+  <div class="widget">
+    <h2>📈 Proyecciones</h2>
+    <table>
+      <tr><th>Escenario</th><th class="num">Revenue Estimado</th></tr>
+      <tr><td>Actual (100% Spotify)</td><td class="num" style="color:#22c55e;">$479,112</td></tr>
+      <tr><td>50% Spotify + 50% Apple</td><td class="num" style="color:#3b82f6;">$718,668</td></tr>
+      <tr><td>33% cada plataforma</td><td class="num" style="color:#eab308;">$558,964</td></tr>
+      <tr><td>100% Apple Music</td><td class="num" style="color:#3b82f6;">$958,224</td></tr>
+    </table>
+    <div class="insight" style="margin-top:8px;">
+      💡 Diversificar a Apple Music podria duplicar el revenue sin aumentar streams.
+    </div>
+  </div>
+</div>
+
+<h2>📋 Revenue por Release</h2>
+<div class="widget">
+  <table>
+    <tr><th>Release</th><th>Artista</th><th class="num">Streams</th><th class="num">Revenue</th></tr>
+    <tr><td>SMOKING (Album)</td><td>Hector Rubio</td><td class="num">45,000,000</td><td class="num" style="color:#22c55e;">$180,000</td></tr>
+    <tr><td>Se Volvieron Locos</td><td>Hector Rubio</td><td class="num">16,000,000</td><td class="num" style="color:#22c55e;">$64,000</td></tr>
+    <tr><td>Power Trae</td><td>Jesus Urquijo</td><td class="num">2,125,681</td><td class="num" style="color:#22c55e;">$8,502</td></tr>
+    <tr><td>Te Amare Mas</td><td>Jesus Urquijo</td><td class="num">1,105,438</td><td class="num" style="color:#22c55e;">$4,421</td></tr>
+    <tr><td>Ahi La Llevo</td><td>Jesus Urquijo</td><td class="num">705,340</td><td class="num" style="color:#22c55e;">$2,821</td></tr>
+    <tr><td>El Abe</td><td>Jesus Urquijo</td><td class="num">538,100</td><td class="num" style="color:#22c55e;">$2,152</td></tr>
+    <tr><td>GOETT</td><td>Javier Arvayo</td><td class="num">25,000</td><td class="num" style="color:#22c55e;">$100</td></tr>
+    <tr><td>El Versace</td><td>Javier Arvayo</td><td class="num">15,000</td><td class="num" style="color:#22c55e;">$60</td></tr>
+  </table>
+</div>
+
+<div class="footer">
+  ABE Music Inc · Datos de revenue del CEO Dashboard · Tasa calculada: Revenue / Streams
+</div>
+</body>
+</html>

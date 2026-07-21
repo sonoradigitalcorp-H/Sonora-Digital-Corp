@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>ABE Music — Contracts & Distribution</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',sans-serif;background:#080c18;color:#e2e8f0;padding:16px;max-width:1100px;margin:0 auto;}
+  .header{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;margin-bottom:16px;background:rgba(15,23,42,0.8);border:1px solid #1e3a5f;border-radius:12px;}
+  .header h1{font-size:1em;font-weight:700;color:#3b82f6;}
+  .header .sub{color:#64748b;font-size:0.7em;}
+  .back{color:#3b82f6;text-decoration:none;font-size:0.7em;}
+  
+  h2{font-size:0.8em;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;border-bottom:1px solid #1e3a5f;padding-bottom:6px;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:12px;margin-bottom:12px;}
+  .widget{background:rgba(15,23,42,0.7);border:1px solid #1e3a5f;border-radius:10px;padding:14px;}
+
+  table{width:100%;border-collapse:collapse;font-size:0.72em;}
+  th{color:#64748b;font-weight:500;text-align:left;padding:5px 6px;border-bottom:1px solid #1e3a5f;}
+  td{padding:5px 6px;border-bottom:1px solid rgba(30,58,95,0.3);}
+  .num{text-align:right;}
+
+  .org-card{background:rgba(15,23,42,0.7);border:1px solid #1e3a5f;border-radius:10px;padding:16px;margin-bottom:12px;}
+  .org-card h3{font-size:0.9em;color:#3b82f6;margin-bottom:4px;}
+  .org-card .detail{font-size:0.72em;color:#94a3b8;line-height:1.6;}
+  .org-card .tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.65em;font-weight:600;margin-right:4px;}
+
+  .contract-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid rgba(30,58,95,0.3);font-size:0.72em;}
+  .contract-row:last-child{border:none;}
+  .contract-row .artist-name{font-weight:600;color:#e2e8f0;}
+
+  .ledger-entry{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid rgba(30,58,95,0.2);font-size:0.7em;}
+
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:2px 6px;border-radius:4px;font-size:0.65em;font-weight:600;}
+  .bg-green{background:rgba(34,197,94,0.15);color:#22c55e;}
+  .bg-blue{background:rgba(59,130,246,0.15);color:#3b82f6;}
+  .bg-amber{background:rgba(234,179,8,0.15);color:#eab308;}
+
+  .footer{text-align:center;padding:20px;color:#64748b;font-size:0.65em;border-top:1px solid #1e3a5f;margin-top:16px;}
+</style>
+</head>
+<body>
+<div class="header">
+  <div><h1>📋 ABE Music — Contracts & Distribution</h1><div class="sub">Gestion de contratos, distribucion y ledger</div></div>
+  <a href="/abe-dashboard.html" class="back">← Dashboard</a>
+</div>
+
+<div class="org-card">
+  <h3>🏢 ABE Music Inc</h3>
+  <div class="detail">
+    <strong>Label:</strong> ABE Music Inc<br>
+    <strong>Fundada:</strong> 2018-01-19<br>
+    <strong>Jurisdiccion:</strong> California, USA<br>
+    <strong>Fundador:</strong> Abraham Ortega (President)<br>
+    <strong>Status:</strong> <span class="tag" style="background:rgba(34,197,94,0.15);color:#22c55e;">Active</span>
+    <strong>Empleados:</strong> 4<br>
+    <strong>Revenue Estimado:</strong> $4M<br>
+    <strong>Ubicacion:</strong> Compton / Torrance, CA<br>
+  </div>
+</div>
+
+<h2>📦 Distribucion</h2>
+<div class="grid">
+  <div class="widget">
+    <h3 style="color:#3b82f6;font-size:0.8em;">Primary: Oplaai, LLC</h3>
+    <div style="font-size:0.7em;color:#94a3b8;margin-top:4px;">
+      Fundado: 2017<br>
+      Ubicacion: Maricopa, Arizona<br>
+      Especialidad: Distribucion independiente, marketing digital, produccion de video<br>
+      Relacion: Licencia exclusiva con Hector Rubio
+    </div>
+  </div>
+  <div class="widget">
+    <h3 style="color:#3b82f6;font-size:0.8em;">Secondary: Colonize Media</h3>
+    <div style="font-size:0.7em;color:#94a3b8;margin-top:4px;">
+      Distribucion secundaria para Jesus Urquijo<br>
+      ABE Music / Colonize Media partnership
+    </div>
+  </div>
+</div>
+
+<h2>📜 Contratos por Artista</h2>
+<div class="grid">
+  <div class="widget">
+    <div class="contract-row">
+      <span class="artist-name">Hector Rubio</span>
+      <span><span class="badge bg-green">active</span></span>
+    </div>
+    <div class="contract-row">
+      <span style="font-size:0.65em;color:#64748b;">Label</span>
+      <span style="font-size:0.65em;">ABE Music + VIZUAL</span>
+    </div>
+    <div class="contract-row">
+      <span style="font-size:0.65em;color:#64748b;">Distribucion</span>
+      <span style="font-size:0.65em;">Oplaai, LLC (exclusive license)</span>
+    </div>
+    <div class="contract-row">
+      <span style="font-size:0.65em;color:#64748b;">Streams</span>
+      <span style="font-size:0.65em;">115,093,009</span>
+    </div>
+    <div class="contract-row" style="border:none;">
+      <span style="font-size:0.65em;color:#64748b;">Revenue</span>
+      <span style="font-size:0.65em;color:#22c55e;">$460,372</span>
+    </div>
+  </div>
+
+  <div class="widget">
+    <div class="contract-row">
+      <span class="artist-name">Jesus Urquijo</span>
+      <span><span class="badge bg-green">active</span></span>
+    </div>
+    <div class="contract-row">
+      <span style="font-size:0.65em;color:#64748b;">Label</span>
+      <span style="font-size:0.65em;">ABE Music Inc</span>
+    </div>
+    <div class="contract-row">
+      <span style="font-size:0.65em;color:#64748b;">Distribucion</span>
+      <span style="font-size:0.65em;">ABE Music / Colonize Media</span>
+    </div>
+    <div class="contract-row">
+      <span style="font-size:0.65em;color:#64748b;">Streams</span>
+      <span style="font-size:0.65em;">4,635,222</span>
+    </div>
+    <div class="contract-row" style="border:none;">
+      <span style="font-size:0.65em;color:#64748b;">Revenue</span>
+      <span style="font-size:0.65em;color:#22c55e;">$18,540</span>
+    </div>
+  </div>
+
+  <div class="widget">
+    <div class="contract-row">
+      <span class="artist-name">Javier Arvayo</span>
+      <span><span class="badge bg-amber">signed</span></span>
+    </div>
+    <div class="contract-row">
+      <span style="font-size:0.65em;color:#64748b;">Label</span>
+      <span style="font-size:0.65em;">ABE Music</span>
+    </div>
+    <div class="contract-row">
+      <span style="font-size:0.65em;color:#64748b;">Distribucion</span>
+      <span style="font-size:0.65em;">—</span>
+    </div>
+    <div class="contract-row">
+      <span style="font-size:0.65em;color:#64748b;">Streams</span>
+      <span style="font-size:0.65em;">50,000</span>
+    </div>
+    <div class="contract-row" style="border:none;">
+      <span style="font-size:0.65em;color:#64748b;">Revenue</span>
+      <span style="font-size:0.65em;color:#22c55e;">$200</span>
+    </div>
+  </div>
+</div>
+
+<h2>📊 Revenue Ledger</h2>
+<div class="widget">
+  <table>
+    <tr><th>Release</th><th>Artista</th><th>Tipo</th><th class="num">Streams</th><th class="num">Revenue</th></tr>
+    <tr><td>SMOKING</td><td>Hector Rubio</td><td>album</td><td class="num">45,000,000</td><td class="num" style="color:#22c55e;">$180,000</td></tr>
+    <tr><td>Se Volvieron Locos</td><td>Hector Rubio</td><td>single</td><td class="num">16,000,000</td><td class="num" style="color:#22c55e;">$64,000</td></tr>
+    <tr><td>Power Trae</td><td>Jesus Urquijo</td><td>single</td><td class="num">2,125,681</td><td class="num" style="color:#22c55e;">$8,502</td></tr>
+    <tr><td>Te Amare Mas</td><td>Jesus Urquijo</td><td>single</td><td class="num">1,105,438</td><td class="num" style="color:#22c55e;">$4,421</td></tr>
+    <tr><td>Ahi La Llevo</td><td>Jesus Urquijo</td><td>single</td><td class="num">705,340</td><td class="num" style="color:#22c55e;">$2,821</td></tr>
+    <tr><td>El Abe</td><td>Jesus Urquijo</td><td>single</td><td class="num">538,100</td><td class="num" style="color:#22c55e;">$2,152</td></tr>
+    <tr><td>Malicia (En Vivo)</td><td>Hector Rubio</td><td>single</td><td class="num">0</td><td class="num" style="color:#64748b;">$0</td></tr>
+    <tr><td>GOETT</td><td>Javier Arvayo</td><td>single</td><td class="num">25,000</td><td class="num" style="color:#22c55e;">$100</td></tr>
+    <tr><td>El Versace</td><td>Javier Arvayo</td><td>single</td><td class="num">15,000</td><td class="num" style="color:#22c55e;">$60</td></tr>
+  </table>
+</div>
+
+<div class="footer">
+  ABE Music Inc · Datos de contratos y ledger · Distribuidor principal: Oplaai, LLC
+</div>
+</body>
+</html>

@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capability Registry + Decision Engine — Presentacion</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/night.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/monokai.css">
+<style>
+  :root {
+    --accent: #3b82f6;
+    --accent2: #06b6d4;
+    --green: #22c55e;
+    --yellow: #eab308;
+    --red: #ef4444;
+  }
+  .reveal { font-family: 'Inter', system-ui, sans-serif; }
+  .reveal h1 { color: var(--accent); text-transform: none; font-size: 2.5em; }
+  .reveal h2 { color: var(--accent2); text-transform: none; font-size: 1.6em; border-bottom: 2px solid #1e3a5f; padding-bottom: 0.3em; }
+  .reveal h3 { color: var(--accent); text-transform: none; }
+  .reveal p, .reveal li { color: #cbd5e1; font-size: 0.85em; }
+  .reveal ul { list-style: none; }
+  .reveal ul li::before { content: "▸ "; color: var(--accent2); }
+  .reveal code { background: #1e293b; padding: 0.15em 0.4em; border-radius: 4px; font-size: 0.8em; }
+  .reveal pre code { padding: 1em; font-size: 0.7em; line-height: 1.5; max-height: 400px; }
+  .reveal table { font-size: 0.75em; }
+  .reveal th { color: var(--accent2); border-bottom: 2px solid var(--accent); }
+  .reveal td { border-bottom: 1px solid #1e3a5f; }
+  .score-big { font-size: 3em; font-weight: bold; color: var(--accent2); }
+  .status { display: inline-block; padding: 0.15em 0.6em; border-radius: 4px; font-size: 0.7em; font-weight: bold; }
+  .status-ok { background: rgba(34,197,94,0.2); color: var(--green); }
+  .status-warn { background: rgba(234,179,8,0.2); color: var(--yellow); }
+  .status-fail { background: rgba(239,68,68,0.2); color: var(--red); }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 1em; margin-top: 0.5em; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1em; margin-top: 0.5em; }
+  .card { background: #1e293b; border: 1px solid #1e3a5f; border-radius: 8px; padding: 0.8em; }
+  .card h4 { color: var(--accent); margin: 0 0 0.3em; font-size: 0.9em; }
+  .card p, .card li { font-size: 0.75em; }
+  .fragment { opacity: 0; transition: opacity 0.3s ease; }
+  .fragment.visible { opacity: 1; }
+  .subtitle { color: #64748b; font-size: 0.6em; margin-top: 0.3em; }
+  .big-number { font-size: 2.2em; font-weight: bold; color: var(--accent2); }
+  .big-label { font-size: 0.5em; color: #64748b; }
+  .revenue-row { display: flex; justify-content: space-between; padding: 0.4em 0; border-bottom: 1px solid #1e3a5f; }
+  .revenue-row:last-child { border: none; }
+  .revenue-artist { color: var(--accent); }
+  .revenue-rate { color: var(--green); font-weight: bold; }
+  blockquote { border-left: 3px solid var(--accent); padding-left: 1em; color: #94a3b8; font-style: italic; }
+</style>
+</head>
+<body>
+<div class="reveal">
+<div class="slides">
+
+<section>
+
+<section>
+  <h1 style="font-size:3em;">Capability Registry + Decision Engine</h1>
+  <p style="color:#64748b;font-size:0.7em;margin-top:0.3em;">SPEC-20260701-004 · 2026-07-01 · Score: 77/100</p>
+  <div style='display:flex;gap:1em;justify-content:center;margin-top:1.5em;'><div style='text-align:center;flex:1;'><div style='font-size:1.8em;font-weight:bold;color:var(--accent2);'>3</div><div style='font-size:0.5em;color:#64748b;'>Specs</div></div><div style='text-align:center;flex:1;'><div style='font-size:1.8em;font-weight:bold;color:var(--accent2);'>79</div><div style='font-size:0.5em;color:#64748b;'>Tests</div></div><div style='text-align:center;flex:1;'><div style='font-size:1.8em;font-weight:bold;color:var(--accent2);'>10</div><div style='font-size:0.5em;color:#64748b;'>Providers</div></div><div style='text-align:center;flex:1;'><div style='font-size:1.8em;font-weight:bold;color:var(--accent2);'>3</div><div style='font-size:0.5em;color:#64748b;'>Capabilities</div></div></div>
+</section>
+
+</section>
+<section>
+<section class=''><h2>📅 Evolucion</h2>
+
+<div style="text-align:left;max-width:700px;margin:0 auto;">
+
+        <div style="display:flex;gap:1em;margin:0.5em 0;padding:0.5em;
+                    background:#1e293b;border-radius:6px;border-left:3px solid var(--accent2);">
+          <div style="min-width:80px;color:#64748b;font-size:0.7em;">Jun 29</div>
+          <div style="flex:1;">
+            <div style="color:var(--accent);font-weight:bold;font-size:0.85em;">ABE Music OS + Live Data Pipeline</div>
+            <div style="color:#94a3b8;font-size:0.75em;">SPEC-20260701-003. Nace ABE Music, Deezer/Apple Music collectors, sync engine, PWA. Score 84.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:1em;margin:0.5em 0;padding:0.5em;
+                    background:#1e293b;border-radius:6px;border-left:3px solid var(--accent2);">
+          <div style="min-width:80px;color:#64748b;font-size:0.7em;">Jun 30</div>
+          <div style="flex:1;">
+            <div style="color:var(--accent);font-weight:bold;font-size:0.85em;">Browser Scraping</div>
+            <div style="color:#94a3b8;font-size:0.75em;">TikTok (Playwright), Spotify (raw text), Instagram login detection. Playwright chromium instalado.</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:1em;margin:0.5em 0;padding:0.5em;
+                    background:#1e293b;border-radius:6px;border-left:3px solid var(--accent2);">
+          <div style="min-width:80px;color:#64748b;font-size:0.7em;">Jul 1</div>
+          <div style="flex:1;">
+            <div style="color:var(--accent);font-weight:bold;font-size:0.85em;">Capability Registry + Decision Engine</div>
+            <div style="color:#94a3b8;font-size:0.75em;">SPEC-SPEC-20260701-004. Planner 7 modulos, 70 tests, registry v2, SDK bridge, 10 providers. Score 77.</div>
+          </div>
+        </div>
+</div>
+</section>
+</section>
+<section>
+<section class=''><h2>🏗 Arquitectura</h2>
+
+<div class="grid-3">
+  <div class="card">
+    <h4>1. Capability Layer</h4>
+    <p><code>planner/</code> — 7 modulos, 70 tests</p>
+    <ul>
+      <li>Registry JSON v2 + Pydantic</li>
+      <li>Decision Engine + fallback chain</li>
+      <li>Health checker TTL 5min</li>
+      <li>5 executores: HTTP, CLI, Browser, MCP, SDK</li>
+      <li>3 capabilities, 10 providers</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>2. Collector Layer</h4>
+    <p><code>scrapers/collectors/</code> — 8 colectores</p>
+    <ul>
+      <li>Deezer: search → ID → detail → tracks</li>
+      <li>Apple Music: search API publica</li>
+      <li>YouTube: yt-dlp CLI</li>
+      <li>TikTok / Spotify: Playwright browser</li>
+      <li>Instagram: login wall detection</li>
+      <li>Cada uno con CAPABILITY_ID</li>
+    </ul>
+  </div>
+  <div class="card">
+    <h4>3. Sync + Data Layer</h4>
+    <p><code>scrapers/sync.py</code> + <code>data/</code></p>
+    <ul>
+      <li>abe-music.json: fuente de verdad</li>
+      <li>abe-contracts.json, abe-ledger.json</li>
+      <li>Backup automatico pre-sync</li>
+      <li>Eventos a events.jsonl</li>
+      <li>Lead bridge a sales pipeline</li>
+    </ul>
+  </div>
+</div>
+</section>
+</section>
+<section>
+<section class=''><h2>🚀 Produccion</h2>
+
+<table>
+<thead><tr><th>Puerto</th><th>Servicio</th><th>Estado</th><th>Notas</th></tr></thead>
+<tbody><tr><td>5174</td><td>Web UI JARVIS</td><td><span class='status-ok'>activo</span></td><td style='font-size:0.8em;color:#64748b;'></td></tr><tr><td>5180</td><td>ABE Service PWA</td><td><span class='status-ok'>activo</span></td><td style='font-size:0.8em;color:#64748b;'></td></tr><tr><td>8000</td><td>Hermes MCP Gateway</td><td><span class='status-ok'>activo</span></td><td style='font-size:0.8em;color:#64748b;'></td></tr><tr><td>18789</td><td>OpenClaw Gateway</td><td><span class='status-ok'>activo</span></td><td style='font-size:0.8em;color:#64748b;'></td></tr><tr><td>6333</td><td>Qdrant (Docker)</td><td><span class='status-ok'>activo</span></td><td style='font-size:0.8em;color:#64748b;'></td></tr><tr><td>7687</td><td>Neo4j (Docker)</td><td><span class='status-ok'>activo</span></td><td style='font-size:0.8em;color:#64748b;'></td></tr><tr><td>5678</td><td>n8n (Docker)</td><td><span class='status-ok'>activo</span></td><td style='font-size:0.8em;color:#64748b;'></td></tr></tbody>
+</table>
+</section>
+</section>
+<section>
+<section class=''><h2>💰 Revenue Intelligence</h2>
+
+<div style="text-align:left;max-width:650px;margin:0 auto;">
+<div class='revenue-row'><span class='revenue-artist'>Hector Rubio</span><span>115,093,009 streams</span><span>$460,372.00</span><span class='revenue-rate'>$0.0040/stream</span></div><div class='revenue-row'><span class='revenue-artist'>Jesus Urquijo</span><span>4,635,222 streams</span><span>$18,540.00</span><span class='revenue-rate'>$0.0040/stream</span></div><div class='revenue-row'><span class='revenue-artist'>Javier Arvayo</span><span>50,000 streams</span><span>$200.00</span><span class='revenue-rate'>$0.0040/stream</span></div>
+</div>
+<pre style="margin-top:0.8em;"><code class="language-bash"># Todos los artistas = $0.004/stream → 100% Spotify
+# Apple Music ($0.008) daria 2x revenue (no reportado)
+# YouTube ($0.001) daria 0.25x revenue (no reportado)
+# → Oplaai paga solo Spotify</code></pre>
+</section>
+</section>
+<section>
+<section class=''><h2>⚠️ Que se Rompe</h2>
+<div style='text-align:left;max-width:700px;margin:0 auto;'><div style='display:flex;gap:1em;margin:0.4em 0;padding:0.4em 0.6em;background:#1e293b;border-radius:4px;border-left:3px solid var(--red);'><span style='min-width:120px;font-size:0.75em;color:#64748b;'>HIGH</span><span style='font-size:0.8em;'>Instagram: login wall, necesita cookies/sesión</span></div><div style='display:flex;gap:1em;margin:0.4em 0;padding:0.4em 0.6em;background:#1e293b;border-radius:4px;border-left:3px solid var(--yellow);'><span style='min-width:120px;font-size:0.75em;color:#64748b;'>MED</span><span style='font-size:0.8em;'>Wikipedia: 403 desde datacenter IP (Cloudflare)</span></div><div style='display:flex;gap:1em;margin:0.4em 0;padding:0.4em 0.6em;background:#1e293b;border-radius:4px;border-left:3px solid var(--yellow);'><span style='min-width:120px;font-size:0.75em;color:#64748b;'>MED</span><span style='font-size:0.8em;'>TikTok handles: @thor_rubio / @jesusurquijo.oficial no existen</span></div><div style='display:flex;gap:1em;margin:0.4em 0;padding:0.4em 0.6em;background:#1e293b;border-radius:4px;border-left:3px solid var(--yellow);'><span style='min-width:120px;font-size:0.75em;color:#64748b;'>MED</span><span style='font-size:0.8em;'>Lead bridge: import path incorrecto para SalesPipeline</span></div><div style='display:flex;gap:1em;margin:0.4em 0;padding:0.4em 0.6em;background:#1e293b;border-radius:4px;border-left:3px solid var(--yellow);'><span style='min-width:120px;font-size:0.75em;color:#64748b;'>MED</span><span style='font-size:0.8em;'>Commit hooks: requieren active spec, pero no hay spec activa tras completar</span></div></div></section>
+</section>
+<section>
+<section class=''><h2>🧩 Que Falta</h2>
+<div class='grid-3'><div class='card'><h4>🔴 Alta</h4><ul><li>Qdrant seed de colección abe-artists</li><li>Sync cron cada 6h (script existe, no instalado)</li><li>GitHub Actions push (workflow creado, no ejecutado)</li><li>Timeout por provider en registry</li></ul></div><div class='card'><h4>🟡 Media</h4><ul><li>Instagram cookie auth</li><li>Dashboard de salud de providers</li></ul></div><div class='card'><h4>🟢 Baja</h4><ul></ul></div></div></section>
+</section>
+<section>
+<section class=''><h2>🧠 Senior Thinking</h2>
+
+<div class="grid-3">
+  <div class="card"><h4>1. Capability First</h4><p>Nunca "que API uso". Siempre "que capacidad necesito". El sistema decide quien ejecuta.</p></div>
+  <div class="card"><h4>2. Fallback es la Unica Verdad</h4><p>Siempre plan B, C, D. Health check da prioridad, no bloquea.</p></div>
+  <div class="card"><h4>3. Eventos como Fuente de Verdad</h4><p>Toda accion deja traza estructurada. JSONL es grep-friendly, importable.</p></div>
+</div>
+<div class="grid-3" style="margin-top:0.5em;">
+  <div class="card"><h4>4. Zero Config del Fundador</h4><p>Abraham no configura nada. Si necesita tocar algo, el sistema fallo.</p></div>
+  <div class="card"><h4>5. Costo $0 es Restriccion de Diseno</h4><p>Sin API keys de pago fuerza excelencia tecnica.</p></div>
+  <div class="card"><h4>6. Specs > Codigo</h4><p>SPEC → Gherkin → ADR → Code → Score → LECCION. El codigo es el ultimo paso.</p></div>
+</div>
+</section>
+</section>
+<section>
+<section class=''><h2>📌 Proximos Pasos</h2>
+
+<div style='text-align:left;max-width:600px;margin:0 auto;'><div style='display:flex;gap:0.8em;margin:0.5em 0;padding:0.5em 0.8em;background:#1e293b;border-radius:6px;'><span style='color:var(--accent2);font-weight:bold;'>1.</span><span>Git push + verificar CI verde en GitHub Actions</span></div><div style='display:flex;gap:0.8em;margin:0.5em 0;padding:0.5em 0.8em;background:#1e293b;border-radius:6px;'><span style='color:var(--accent2);font-weight:bold;'>2.</span><span>Instalar sync cron cada 6h (scripts/install-sync-cron.sh)</span></div><div style='display:flex;gap:0.8em;margin:0.5em 0;padding:0.5em 0.8em;background:#1e293b;border-radius:6px;'><span style='color:var(--accent2);font-weight:bold;'>3.</span><span>Seedear Qdrant coleccion abe-artists</span></div><div style='display:flex;gap:0.8em;margin:0.5em 0;padding:0.5em 0.8em;background:#1e293b;border-radius:6px;'><span style='color:var(--accent2);font-weight:bold;'>4.</span><span>Fix lead bridge a Neo4j (import path)</span></div><div style='display:flex;gap:0.8em;margin:0.5em 0;padding:0.5em 0.8em;background:#1e293b;border-radius:6px;'><span style='color:var(--accent2);font-weight:bold;'>5.</span><span>Dashboard de salud de providers</span></div><div style='display:flex;gap:0.8em;margin:0.5em 0;padding:0.5em 0.8em;background:#1e293b;border-radius:6px;'><span style='color:var(--accent2);font-weight:bold;'>6.</span><span>Instagram cookie auth para perfiles reales</span></div></div>
+</section>
+</section>
+<section>
+
+<section>
+  <h1 style="font-size:2.5em;">⏚</h1>
+  <p style="color:#64748b;font-size:0.7em;">Construye el registry. Todo lo demas emerge.</p>
+  <p style="color:#64748b;font-size:0.6em;margin-top:1em;">Sonora Digital Corp — Sistema Autonomo de Inteligencia Musical</p>
+</section>
+
+</section>
+
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/highlight/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+<script>
+  Reveal.initialize({
+    hash: true,
+    controls: true,
+    progress: true,
+    slideNumber: true,
+    plugins: [ RevealHighlight, RevealNotes ]
+  });
+</script>
+</body>
+</html>
