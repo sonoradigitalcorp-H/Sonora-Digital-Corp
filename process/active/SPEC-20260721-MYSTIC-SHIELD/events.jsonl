@@ -1,7 +1,0 @@
-{"event": "shield:diagnosis:started", "timestamp": "2026-07-21T13:35:58Z", "payload": {"company_name": "Test Company", "target": "127.0.0.1"}}
-{"event": "shield:scan:completed", "timestamp": "2026-07-21T13:36:05Z", "payload": {"total_hosts": 254, "active_hosts": 254, "target": "127.0.0.1"}}
-{"event": "shield:analysis:completed", "timestamp": "2026-07-21T13:36:25Z", "payload": {"llm_provider": "openrouter", "model": "deepseek-v4-flash", "status": "fallback"}}
-{"event": "shield:pdf:generated", "timestamp": "2026-07-21T13:36:35Z", "payload": {"path": "state/reports/diagnostico-test-company-20260721.pdf", "pages": 6}}
-{"event": "shield:audio:generated", "timestamp": "2026-07-21T13:36:38Z", "payload": {"path": "state/reports/diagnostico-test-company-20260721.mp3", "duration_sec": 90}}
-{"event": "shield:diagnosis:completed", "timestamp": "2026-07-21T13:36:38Z", "payload": {"diagnosis_id": "9c37a5ef", "company_name": "Test Company", "success": true}}
-{"event": "shield:lead:captured", "timestamp": "2026-07-21T13:40:00Z", "payload": {"company": "Fourgea México", "email": "marco@fourgea.com", "phone": "6622681111", "status": "pending"}}
