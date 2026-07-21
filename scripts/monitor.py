@@ -1,117 +1,160 @@
-#!/usr/bin/env python3
-"""Monitoreo de contenedores — alerta cuando algo muere.
-
-Uso: python3 scripts/monitor.py              # una vez
-     python3 scripts/monitor.py --watch      # cada 60s
+"""Ops Agent — Monitor de servicios.
+Checkea servicios cada N segundos, emite eventos al bus.
+Usage: python -m ops.monitor [--interval 300] [--once]
 """
-import argparse
 import json
-import logging
+import os
 import subprocess
+import sys
 import time
-from datetime import datetime
 from pathlib import Path
 
-logging.basicConfig(level=logging.INFO)
-log = logging.getLogger("monitor")
-
 BASE = Path(__file__).resolve().parent.parent
-EVENTS_FILE = BASE / "state" / "logs" / "events.jsonl"
-MEMORY_EVENTS = BASE / "memory" / "learning" / "events.jsonl"
+STATE_FILE = BASE / "state" / "ops" / "service-state.json"
+
+SERVICES = [
+    ("hermes", "docker"),
+    ("hermes-dashboard", "docker"),
+    ("sdc-neo4j", "docker"),
+    ("supabase-kong", "docker"),
+    ("supabase-db", "docker"),
+    ("supabase-studio", "docker"),
+    ("sdc-redis", "docker"),
+    ("sdc-qdrant", "docker"),
+    ("sdc-grafana", "docker"),
+    ("sonora-hasura", "docker"),
+    ("sdc-pgadmin4", "docker"),
+    ("sdc-omnivoice", "docker"),
+    ("syncthing@ubuntu", "systemd"),
+    ("event-listener", "systemd"),
+    ("omnivoice-agent", "systemd"),
+]
 
 
-def get_containers() -> list[dict]:
+def emit(event_type: str, payload: dict):
+    """Emit event via file + Supabase + RabbitMQ."""
+    try:
+        from events.emitter import emit_sync
+        emit_sync(event_type, payload, "ops-agent")
+    except ImportError:
+        pass
+
+    try:
+        from ops.supabase_emitter import emit_to_supabase, emit_to_rabbitmq
+        severity = "critical" if "down" in event_type else "warning" if "warning" in event_type else "info"
+        emit_to_supabase(event_type, payload, severity)
+        emit_to_rabbitmq(event_type, payload)
+    except Exception:
+        pass
+
+
+def check_docker(name: str) -> str:
     result = subprocess.run(
-        ["docker", "ps", "--format", "{{.Names}}|{{.Status}}|{{.Ports}}"],
+        ["docker", "inspect", name, "--format", "{{.State.Status}}"],
         capture_output=True, text=True, timeout=10,
     )
-    containers = []
-    for line in result.stdout.strip().split("\n"):
-        if not line or "|" not in line:
-            continue
-        parts = line.split("|")
-        name = parts[0]
-        status = parts[1]
-        ports = parts[2] if len(parts) > 2 else ""
-        healthy = "healthy" in status or "(healthy)" in status
-        running = "Up" in status
-        # Containers without healthcheck that are running are considered healthy
-        if running and not healthy and "(healthy)" not in status:
-            healthy = True  # running without healthcheck = assumed healthy
-        containers.append({
-            "name": name,
-            "status": status,
-            "ports": ports,
-            "healthy": healthy,
-            "running": running,
-        })
-    return containers
+    if result.returncode != 0:
+        return "down"
+    status = result.stdout.strip()
+    if status != "running":
+        return status
+
+    health = subprocess.run(
+        ["docker", "inspect", name, "--format", "{{.State.Health.Status}}"],
+        capture_output=True, text=True, timeout=5,
+    )
+    h = health.stdout.strip()
+    if not h or h == "<nil>":
+        return "healthy"
+    if h == "healthy":
+        return "healthy"
+    return f"degraded({h})"
 
 
-def emit_event(event: dict):
-    event["timestamp"] = datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%SZ")
-    # State logs
-    EVENTS_FILE.parent.mkdir(parents=True, exist_ok=True)
-    with open(EVENTS_FILE, "a") as f:
-        f.write(json.dumps(event) + "\n")
-    # Memory events
-    MEMORY_EVENTS.parent.mkdir(parents=True, exist_ok=True)
-    entry = {"event": event.get("type"), "timestamp": event["timestamp"], "payload": event}
-    with open(MEMORY_EVENTS, "a") as f:
-        f.write(json.dumps(entry) + "\n")
+def check_systemd(name: str) -> str:
+    result = subprocess.run(
+        ["systemctl", "is-active", name],
+        capture_output=True, text=True, timeout=10,
+    )
+    status = result.stdout.strip()
+    return "healthy" if status == "active" else f"down({status})"
 
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--watch", action="store_true")
-    args = parser.parse_args()
+def check_disk() -> dict:
+    result = subprocess.run(
+        ["df", "/"], capture_output=True, text=True, timeout=5,
+    )
+    lines = result.stdout.strip().split("\n")
+    if len(lines) >= 2:
+        parts = lines[1].split()
+        usage = int(parts[4].rstrip("%")) if len(parts) >= 5 else 0
+        return {"usage_pct": usage, "status": "ok" if usage <= 85 else "warning"}
+    return {"usage_pct": 0, "status": "unknown"}
 
-    previous = {}  # name -> healthy
+
+def load_previous() -> dict:
+    if STATE_FILE.exists():
+        try:
+            return json.loads(STATE_FILE.read_text())
+        except (json.JSONDecodeError, ValueError):
+            pass
+    return {}
+
+
+def check_all() -> dict:
+    state = {}
+    for name, kind in SERVICES:
+        if kind == "docker":
+            state[name] = check_docker(name)
+        elif kind == "systemd":
+            state[name] = check_systemd(name)
+    disk = check_disk()
+    state["disk"] = f"{disk['usage_pct']}%"
+    state["disk_status"] = disk["status"]
+    return state
+
+
+def run(interval: int = 300):
+    prev = load_previous()
+    print(f"[ops] Monitor started — interval={interval}s")
 
     while True:
+        current = check_all()
+
+        for key, val in current.items():
+            pval = prev.get(key, "")
+            if val == pval:
+                continue
+
+            if key == "disk_status":
+                if val == "warning" and pval == "ok":
+                    emit("system:disk:warning", {"usage": current.get("disk", "?")})
+            elif key == "disk":
+                continue
+            elif "down" in val and ("down" not in pval):
+                emit("system:service:down", {"service": key, "status": val})
+            elif val == "healthy" and "down" in pval:
+                emit("system:service:recovered", {"service": key, "from": pval, "to": val})
+
+        STATE_FILE.parent.mkdir(parents=True, exist_ok=True)
+        STATE_FILE.write_text(json.dumps(current, indent=2))
+
         try:
-            containers = get_containers()
-            all_healthy = all(c["healthy"] for c in containers if c["running"])
-            total = len(containers)
-            healthy = sum(1 for c in containers if c["healthy"])
-            down = [c["name"] for c in containers if c["running"] and not c["healthy"]]
-            dead = [c["name"] for c in containers if not c["running"]]
+            from ops.supabase_emitter import emit_service_status
+            emit_service_status(current)
+        except Exception:
+            pass
 
-            for c in containers:
-                was = previous.get(c["name"], True)
-                now = c["healthy"]
-                if was and not now:
-                    emit_event({
-                        "type": "container_down",
-                        "container": c["name"],
-                        "status": c["status"],
-                    })
-                    log.warning(f"🔴 {c['name']}: DOWN ({c['status']})")
-                elif not was and now:
-                    emit_event({
-                        "type": "container_recovered",
-                        "container": c["name"],
-                        "status": c["status"],
-                    })
-                    log.info(f"🟢 {c['name']}: RECOVERED")
-                previous[c["name"]] = now
+        prev = current
 
-            status_icon = "✅" if all_healthy else "⚠️"
-            log.info(f"{status_icon} Containers: {healthy}/{total} healthy, {len(down)} down, {len(dead)} dead")
-            if down:
-                for name in down:
-                    log.warning(f"  🔴 {name}")
-            if dead:
-                for name in dead:
-                    log.error(f"  💀 {name}")
-
-        except Exception as e:
-            log.error(f"Monitor error: {e}")
-
-        if not args.watch:
+        if "--once" in sys.argv:
             break
-        time.sleep(60)
+        time.sleep(interval)
 
 
 if __name__ == "__main__":
-    main()
+    interval = 300
+    for i, arg in enumerate(sys.argv):
+        if arg == "--interval" and i + 1 < len(sys.argv):
+            interval = int(sys.argv[i + 1])
+    run(interval)
