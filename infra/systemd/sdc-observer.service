@@ -1,0 +1,12 @@
+[Unit]
+Description=SDC Observer — system heartbeat every 5 min
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/home/ubuntu/sonora-digital-corp/scripts/observer-run.sh
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+User=ubuntu
+
+[Install]
+WantedBy=multi-user.target

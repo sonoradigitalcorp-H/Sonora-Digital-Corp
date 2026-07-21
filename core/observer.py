@@ -40,30 +40,28 @@ def _count_agents():
 
 
 def _count_capabilities():
-    caps_dir = REPO / "capabilities"
-    if caps_dir.exists():
-        return len([f for f in caps_dir.iterdir() if (f / "capability.yaml").exists()])
+    index = REPO / "skills" / "index.yaml"
+    if index.exists():
+        import yaml
+        data = yaml.safe_load(index.read_text())
+        return len(data.get("capabilities", []))
     return 0
 
 
 def _count_constitution_files():
     const_dir = REPO / "constitution"
     if const_dir.exists():
-        return len(list(const_dir.glob("*.yaml")))
+        return len(list(const_dir.glob("*")))
     return 0
 
 
 def _count_constitution_rules():
-    import yaml
     const_dir = REPO / "constitution"
     total = 0
     if const_dir.exists():
-        for f in const_dir.glob("*.yaml"):
-            try:
-                data = yaml.safe_load(f.read_text())
-                total += len(data.get("rules", []))
-            except Exception:
-                pass
+        for f in const_dir.iterdir():
+            if f.suffix in (".yaml", ".yml", ".md"):
+                total += 1
     return total
 
 

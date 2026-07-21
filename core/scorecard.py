@@ -6,7 +6,7 @@ from pathlib import Path
 
 
 REPO = Path(__file__).resolve().parent.parent
-SCORECARD_FILE = REPO / "evolution" / "scorecard.json"
+SCORECARD_FILE = REPO / "core" / "scorecard.json"
 
 
 def calculate(metrics: dict) -> int:
