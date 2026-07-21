@@ -12,11 +12,14 @@ help:  ## Show this help
 test:  ## Run unit tests (known stable subset)
 	PYTHONPATH=. python3 -m pytest tests/unit/ -q --tb=short
 
-test-all:  ## Run all tests (unit + core)
-	PYTHONPATH=. python3 -m pytest tests/unit/ tests/gherkin/ core/tests/ -q --tb=short
+test-all:  ## Run all tests (unit + bdd + integration)
+	PYTHONPATH=. python3 -m pytest tests/unit/ tests/gherkin/ tests/integration/ core/tests/ -q --tb=short
 
 test-v:  ## Run all tests verbose
-	PYTHONPATH=. python3 -m pytest tests/unit/ tests/gherkin/ core/tests/ -v --tb=short
+	PYTHONPATH=. python3 -m pytest tests/unit/ tests/gherkin/ tests/integration/ core/tests/ -v --tb=short
+
+test-integration:  ## Run integration tests only (real services)
+	PYTHONPATH=. python3 -m pytest tests/integration/ -v --tb=short
 
 # ─── SDD ───────────────────────────────────────────────────────────────────
 
