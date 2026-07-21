@@ -603,12 +603,12 @@ mcp_servers:
     url: https://mcp.higgsfield.ai
   jarvis:
     args:
-    - /home/mystic/sonora-digital-corp/apps/hermes/hermes_bridge.py
+    - __REPO__/apps/hermes/hermes_bridge.py
     command: /usr/bin/python3
     connect_timeout: 30
     enabled: true
     env:
-      JARVIS_HOME: /home/mystic/jarvis
+      JARVIS_HOME: __HOME__/jarvis
     timeout: 120
   kubernetes:
     args:

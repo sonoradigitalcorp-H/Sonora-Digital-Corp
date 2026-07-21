@@ -1,0 +1,7 @@
+2026-07-19 18:17:03,783 [INFO] nathy.bot: Nathy Bot iniciado — @NathyCont_bot
+2026-07-19 18:17:04,245 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8269193231:AAF70NVpEMsrP_fePAc_qLdNEsJkBIGUy4g/getMe "HTTP/1.1 200 OK"
+2026-07-19 18:17:04,435 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8269193231:AAF70NVpEMsrP_fePAc_qLdNEsJkBIGUy4g/deleteWebhook "HTTP/1.1 200 OK"
+2026-07-19 18:17:04,441 [INFO] telegram.ext.Application: Application started
+2026-07-19 18:17:09,674 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8269193231:AAF70NVpEMsrP_fePAc_qLdNEsJkBIGUy4g/getUpdates "HTTP/1.1 200 OK"
+2026-07-19 18:17:09,675 [INFO] telegram.ext.Application: Application is stopping. This might take a moment.
+2026-07-19 18:17:09,675 [INFO] telegram.ext.Application: Application.stop() complete

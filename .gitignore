@@ -94,3 +94,6 @@ docs/sdc-brain-vault/
 archive/
 credentials/
 data/
+nathy-bot/*.log
+nathy-bot/data/
+nathy-bot/bot*.log

@@ -1,5 +1,5 @@
 # Engram → Obsidian live export
-# Install: sudo ln -s /home/mystic/sonora-digital-corp/infra/systemd/engram-obsidian-export.service /etc/systemd/system/
+# Install: sudo ln -s __REPO__/infra/systemd/engram-obsidian-export.service /etc/systemd/system/
 # Enable:  sudo systemctl enable --now engram-obsidian-export
 
 [Unit]
@@ -9,8 +9,8 @@ After=network.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/python3 /home/mystic/sonora-digital-corp/scripts/engram_autocapture.py --obsidian-export /home/mystic/Documents/sdc-brain-vault --watch --interval 300
-WorkingDirectory=/home/mystic/sonora-digital-corp
+ExecStart=/usr/bin/python3 __REPO__/scripts/engram_autocapture.py --obsidian-export __HOME__/Documents/sdc-brain-vault --watch --interval 300
+WorkingDirectory=__REPO__
 Restart=on-failure
 RestartSec=10
 User=mystic

@@ -4,9 +4,10 @@
 # Frecuencia: Diaria (error correction) + Semanal (meta-evolve)
 set -euo pipefail
 
-LOG="/home/mystic/sonora-digital-corp/logs/agency-pipeline.log"
+REPO="$(cd "$(dirname "$0")/.." && pwd)"
+LOG="$REPO/logs/agency-pipeline.log"
 DATE=$(date '+%Y-%m-%d %H:%M:%S')
-cd /home/mystic/sonora-digital-corp
+cd "$REPO"
 
 log() { echo "[$DATE] $1" | tee -a "$LOG"; }
 

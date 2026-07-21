@@ -3,7 +3,7 @@
 # bash scripts/setup-github.sh
 set -euo pipefail
 
-JARVIS_DIR="/home/mystic/sonora-digital-corp"
+JARVIS_DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$JARVIS_DIR"
 
 echo "⚡ JARVIS — GitHub Auto-Setup"
@@ -40,7 +40,7 @@ fi
 
 # 4. Push
 echo "📤 Pusheando código..."
-export GIT_SSH_COMMAND='ssh -i /home/mystic/.ssh/id_ed25519'
+export GIT_SSH_COMMAND="ssh -i $HOME/.ssh/id_ed25519"
 git remote set-url origin git@github.com:perrykingla69-cyber/jarvis.git 2>/dev/null || true
 git push -u origin main --force 2>&1 || echo "   (primero crea el repo en GitHub)"
 

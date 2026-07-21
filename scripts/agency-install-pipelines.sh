@@ -6,23 +6,23 @@ set -euo pipefail
 
 echo "=== AGENCY OS — Instalando Pipelines ==="
 
-SCRIPTS="/home/mystic/sonora-digital-corp/scripts"
+REPO="$(cd "$(dirname "$0")/.." && pwd)"
 SYSTEMD="/etc/systemd/system"
 
 # === 1. AGENCY PIPELINE (diario 4AM) ===
 echo "[1/4] Agency pipeline timer (4AM daily)..."
-cat << 'EOF' | sudo tee "$SYSTEMD/agency-pipeline.service" > /dev/null
+cat << EOF | sudo tee "$SYSTEMD/agency-pipeline.service" > /dev/null
 [Unit]
 Description=AGENCY OS — Daily Auto-Improve Pipeline
 After=network.target docker.service
 
 [Service]
 Type=oneshot
-ExecStart=/home/mystic/sonora-digital-corp/scripts/agency-pipeline.sh
-User=mystic
-WorkingDirectory=/home/mystic/sonora-digital-corp
-StandardOutput=append:/home/mystic/sonora-digital-corp/state/logs/agency-pipeline.log
-StandardError=append:/home/mystic/sonora-digital-corp/state/logs/agency-pipeline.log
+ExecStart=$REPO/scripts/agency-pipeline.sh
+User=$USER
+WorkingDirectory=$REPO
+StandardOutput=append:$REPO/state/logs/agency-pipeline.log
+StandardError=append:$REPO/state/logs/agency-pipeline.log
 EOF
 
 cat << 'EOF' | sudo tee "$SYSTEMD/agency-pipeline.timer" > /dev/null
@@ -39,18 +39,18 @@ EOF
 
 # === 2. GIT AUTO-SYNC (cada hora) ===
 echo "[2/4] Git auto-sync cron (hourly)..."
-cat << 'EOF' | sudo tee "$SYSTEMD/agency-git-sync.service" > /dev/null
+cat << EOF | sudo tee "$SYSTEMD/agency-git-sync.service" > /dev/null
 [Unit]
 Description=AGENCY OS — Hourly Git Sync
 After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/home/mystic/sonora-digital-corp/scripts/agency-github-sync.sh
-User=mystic
-WorkingDirectory=/home/mystic/sonora-digital-corp
-StandardOutput=append:/home/mystic/sonora-digital-corp/state/logs/git-sync.log
-StandardError=append:/home/mystic/sonora-digital-corp/state/logs/git-sync.log
+ExecStart=$REPO/scripts/agency-github-sync.sh
+User=$USER
+WorkingDirectory=$REPO
+StandardOutput=append:$REPO/state/logs/git-sync.log
+StandardError=append:$REPO/state/logs/git-sync.log
 EOF
 
 cat << 'EOF' | sudo tee "$SYSTEMD/agency-git-sync.timer" > /dev/null
@@ -67,19 +67,19 @@ EOF
 
 # === 3. E2E NOCTURNO ===
 echo "[3/4] E2E nightly simulation..."
-cat << 'EOF' | sudo tee "$SYSTEMD/agency-e2e-nightly.service" > /dev/null
+cat << EOF | sudo tee "$SYSTEMD/agency-e2e-nightly.service" > /dev/null
 [Unit]
 Description=AGENCY OS — Nightly E2E User Simulation
 After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/home/mystic/sonora-digital-corp/scripts/agency-e2e-simulate.sh
-User=mystic
-WorkingDirectory=/home/mystic/sonora-digital-corp
+ExecStart=$REPO/scripts/agency-e2e-simulate.sh
+User=$USER
+WorkingDirectory=$REPO
 Environment=DISPLAY=:0
-StandardOutput=append:/home/mystic/sonora-digital-corp/state/logs/e2e-nightly.log
-StandardError=append:/home/mystic/sonora-digital-corp/state/logs/e2e-nightly.log
+StandardOutput=append:$REPO/state/logs/e2e-nightly.log
+StandardError=append:$REPO/state/logs/e2e-nightly.log
 EOF
 
 cat << 'EOF' | sudo tee "$SYSTEMD/agency-e2e-nightly.timer" > /dev/null

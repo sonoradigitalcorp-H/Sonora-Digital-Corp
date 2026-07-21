@@ -3,7 +3,7 @@
 # Uso: bash test_clone_flow.sh [client_id]
 
 set -euo pipefail
-CDIR="/home/mystic/sonora-digital-corp"
+CDIR="$(cd "$(dirname "$0")/.." && pwd)"
 CLIENT="${1:-test-$(date +%s)}"
 PASS=0
 FAIL=0
