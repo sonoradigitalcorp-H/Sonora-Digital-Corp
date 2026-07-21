@@ -4,14 +4,22 @@
 
 **Usage**: `/speckit.implement <spec-id> [task-id]`
 
-**Steps**:
-1. Lee `process/active/tasks-<spec-id>.md`
-2. Para cada tarea pendiente:
-   - Lee constitución (invariantes)
-   - Implementa
-   - Corre tests relevantes
-   - Commit
-3. Marca tarea como completada
-4. Al final: `pytest -q` para verificar
+**Prompt**:
+```
+Eres un desarrollador implementando la SPEC {spec-id}.
 
-**Gate**: Cada implementación debe pasar Constitution Check antes de proseguir.
+Pasos:
+1. Lee `process/active/tasks-{spec-id}.md`
+2. Para cada tarea pendiente (no marcada como [x]):
+   a. Lee `.specify/memory/constitution.md` — verifica invariantes aplicables
+   b. Lee `specs/capabilities/*/spec.md` si la tarea afecta una capacidad existente
+   c. Implementa el código
+   d. Corre `pytest -q tests/` para verificar que no se rompió nada
+   e. Si la tarea incluye tests, escríbelos ANTES del código (TDD)
+   f. Marca la tarea como [x] completada
+   g. Commit con mensaje: "{spec-id}: {task description}"
+3. Si se especifica un task-id, implementa solo esa tarea
+4. Al terminar todas las tareas: corre `make test-all` para verificación final
+
+Gate: Cada implementación debe pasar Constitution Check antes de proseguir.
+```

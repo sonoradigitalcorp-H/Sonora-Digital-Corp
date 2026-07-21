@@ -1,0 +1,1 @@
+/home/ubuntu/sonora-digital-corp/specs/capabilities/manage-crm/gherkin/manage-crm.feature

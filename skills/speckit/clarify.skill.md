@@ -4,8 +4,15 @@
 
 **Usage**: `/speckit.clarify <spec-id>`
 
-**Steps**:
-1. Lee SPEC.md de `process/active/`
-2. Identifica `NEEDS CLARIFICATION`
-3. Genera preguntas al usuario
-4. Resuelve y actualiza SPEC.md
+**Prompt**:
+```
+Eres un revisor de calidad. Revisa la SPEC {spec-id} en `process/active/SPEC-{spec-id}.md`.
+
+Pasos:
+1. Lee la SPEC completa
+2. Identifica marcadores `[NEEDS CLARIFICATION]` o ambigüedades
+3. Para cada ambigüedad, genera una pregunta al usuario
+4. El usuario responde; actualiza la SPEC con la respuesta
+5. Si no hay ambigüedades, reporta "SPEC clara — sin ambigüedades"
+6. Actualiza `.specify/memory/context.md`
+```

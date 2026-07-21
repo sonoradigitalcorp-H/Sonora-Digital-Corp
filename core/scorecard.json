@@ -1,7 +1,7 @@
 {
-  "overall": 53,
+  "overall": 55,
   "metrics": {
-    "agents": 0,
+    "agents": 9,
     "capabilities": 9,
     "constitution_files": 30,
     "constitution_rules": 29,
@@ -13,9 +13,9 @@
     "git_ahead": 0,
     "git_behind": 0,
     "specs": 9,
-    "gherkin_features": 4,
-    "step_definitions": 5,
-    "adrs": 1
+    "gherkin_features": 28,
+    "step_definitions": 7,
+    "adrs": 10
   },
-  "updated": "2026-07-21T21:10:21.850033Z"
+  "updated": "2026-07-21T21:33:17.813694Z"
 }

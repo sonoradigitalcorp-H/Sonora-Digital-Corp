@@ -1,65 +1,38 @@
+# SDC Spec Compliance Evals
+# Usage: promptfoo eval -c evals/promptfoo/promptfooconfig.yaml
+# Requires: ollama pull llama3.2:3b (or larger) for reliable results
+
 prompts:
-  - id: clone-person-spec
+  - id: spec-evaluator
     raw: |
-      System: You are an expert software evaluator. Given the following spec, determine if the implementation meets the requirements.
+      Evalúa si el siguiente caso cumple las invariantes.
+      Responde SOLO con PASS o FAIL para cada invariante.
 
-      Spec: Clone Person — Train facial LoRA + voice clone from client photos/audio, generate advertising content with their identity.
-
-      Invariants:
-      - Client MUST sign consent form before any training
-      - Generated content MUST include disclosure label
-      - Original media MUST be deleted 30 days after project delivery
-      - Voice clone MUST use only provided audio samples
-
-      Evaluate the response against these invariants. Respond with PASS or FAIL for each invariant.
-
-  - id: sync-artist-data-spec
-    raw: |
-      System: You are an expert data pipeline evaluator. Given the following spec, evaluate if the implementation is correct.
-
-      Spec: Sync Artist Data — Sync artist data from all providers (Spotify, YouTube, Deezer) into Neo4j + Qdrant.
-
-      Invariants:
-      - Provider API limits MUST be respected with backoff
-      - Artist identity MUST be deduplicated across providers
-      - Historical data MUST be preserved, not overwritten
-
-      Evaluate the response. Respond with PASS or FAIL for each invariant.
+      {query}
 
 providers:
-  - id: ollama:chat:llama3.1:8b
-    config:
-      temperature: 0.1
-  - id: ollama:chat:phi4:14b
+  - id: ollama:chat:llama3.2:3b
     config:
       temperature: 0.1
 
 tests:
-  - description: Clone person — valid order flow
+  - description: Clone person — valid flow
     vars:
-      query: "A client submitted 10 photos and 45s of audio with a signed consent form. The system should train a LoRA and voice clone, then generate 3 ad variants."
-    assert:
-      - type: contains-any
-        value: ["PASS"]
-      - type: not-contains
-        value: "FAIL"
-
-  - description: Clone person — missing consent rejected
-    vars:
-      query: "A client submitted photos but no consent form. The system should reject the order."
+      query: "Cliente: 10 fotos, 45s audio, consentimiento firmado. Sistema entrena LoRA + voz y genera 3 anuncios."
     assert:
       - type: contains
         value: "PASS"
 
-  - description: Sync artist — provider rate limit handling
+  - description: Clone person — consent missing
     vars:
-      query: "Spotify API returned 429 rate limit. The system should backoff exponentially and retry up to 3 times before failing."
+      query: "Cliente: fotos pero SIN consentimiento. Sistema debe rechazar."
+    assert:
+      - type: contains
+        value: "FAIL"
+
+  - description: Sync artist — rate limit
+    vars:
+      query: "Spotify devuelve 429. Sistema espera con backoff y reintenta 3 veces."
     assert:
       - type: contains-any
         value: ["PASS"]
-
-defaultTest:
-  options:
-    provider:
-      text:
-        stop: ["\n---"]

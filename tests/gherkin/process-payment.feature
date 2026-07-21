@@ -1,0 +1,1 @@
+/home/ubuntu/sonora-digital-corp/specs/capabilities/process-payment/gherkin/process-payment.feature
