@@ -1,0 +1,18 @@
+[Unit]
+Description=Nathy Conta MCP Server (OpenClaw skills)
+After=network.target
+
+[Service]
+Type=simple
+User=mystic
+WorkingDirectory=/home/mystic/sonora-digital-corp/apps/nathy-bot
+Environment="NATHY_BOT_TOKEN=8269193231:AAF70NVpEMsrP_fePAc_qLdNEsJkBIGUy4g"
+Environment="NATHY_CHANNEL_ID=@NathyConta"
+Environment="NATHY_MCP_PORT=8765"
+Environment="OPENROUTER_API_KEY=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"
+ExecStart=/usr/bin/python3 /home/mystic/sonora-digital-corp/apps/nathy-bot/nathy_mcp_server.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,38 @@
+# Ce-Son v3 — Configuración del Cliente R1
+business:
+  name: "Ce-Son"
+  phone: "5216623446953"
+  owner_phone: ""  # Número del dueño del negocio
+  timezone: "America/Mexico_City"
+  hours:
+    open: "09:00"
+    close: "23:00"
+
+dispatch:
+  group_jid: ""  # JID del grupo de repartidores
+  response_timeout_min: 5  # Minutos para esperar respuesta del grupo
+  delivery_timeout_min: 20  # Minutos máximos para entrega
+  max_redispatch: 3  # Re-dispatch si nadie toma
+
+payment:
+  methods:
+    - efectivo
+    - tarjeta
+    - spei
+    - mercadopago
+    - bitcoin
+
+commission:
+  rate: 0.05  # 5% por defecto
+  setup_fee: 999
+  monthly_fee: 299
+
+features:
+  gamification: true
+  bundles: true
+  seller_tracking: true
+  tokens: true
+
+wacli:
+  store: "~/.config/wacli/r1-6623446953"
+  phone: "5216623446953"

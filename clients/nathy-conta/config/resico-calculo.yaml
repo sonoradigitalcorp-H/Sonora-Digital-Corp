@@ -1,0 +1,73 @@
+name: contabilidad/resico-calculo
+description: "Cálculo de ISR para RESICO — tasas progresivas, tope de ingresos, declaraciones bimestrales"
+version: 1
+
+inputs:
+  - name: ingresos_periodo
+    type: number
+    description: "Ingresos del periodo"
+  - name: ingresos_acumulados
+    type: number
+    description: "Ingresos acumulados en el año"
+  - name: periodo
+    type: string
+    description: "Periodo (ej: 2026-07)"
+  - name: cliente_id
+    type: string
+    description: "RFC o ID del cliente"
+  - name: gastos
+    type: number
+    description: "Gastos del periodo (si aplica)"
+
+outputs:
+  - name: isr_mensual
+    type: number
+    description: "ISR a pagar en el periodo"
+  - name: tasa_aplicada
+    type: number
+    description: "Tasa de ISR aplicada (1-2.5%)"
+  - name: tope_restante
+    type: number
+    description: "Ingreso restante antes del tope de 3.5M"
+  - name: estado
+    type: string
+    enum: [calculado, excede_tope, error]
+
+prompt: |
+  Eres experto en RESICO (Régimen Simplificado de Confianza).
+  
+  Características del régimen:
+  - Solo personas físicas con ingresos ≤ $3,500,000 MXN al año
+  - Tasas progresivas sobre ingresos (sin deducciones):
+    1. Ingresos hasta $25,000 → 1.0%
+    2. Ingresos hasta $50,000 → 1.10%
+    3. Ingresos hasta $83,333.33 → 1.50%
+    4. Ingresos hasta $208,333.33 → 2.00%
+    5. Ingresos hasta $3,500,000 → 2.50%
+  - Declaraciones BIMESTRALES (días 1-17 del mes siguiente)
+  - IVA: se declara mensualmente (días 1-17)
+  - NO se pueden deducir gastos (excepto IVA)
+  - Si excede $3.5M: debe migrar a otro régimen
+  
+  Recordatorios automáticos:
+  - 5 días antes del cierre de cada bimestre
+  - Cuando el cliente alcanza 80%, 90%, 95% y 100% del tope
+  - Si excede el tope: avisar para migrar de régimen
+  
+  Cada cliente RESICO tiene:
+  - Límite individual de $3.5M anual
+  - Control de ingresos por bimestre
+  - Posibilidad de tener múltiples actividades
+
+tools_required:
+  - sat-api
+  - google-sheets-api
+  - wacli
+
+agents_allowed:
+  - nathy-resico-agent
+  - nathy-conta-agent
+
+eval_criteria:
+  - accuracy: "Tasa correcta según ingresos, tope monitoreado"
+  - latency: "< 2s cálculo"

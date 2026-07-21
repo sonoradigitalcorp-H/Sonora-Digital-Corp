@@ -283,35 +283,478 @@
         "profile",
         "social"
       ]
+    },
+    "cfdi-timbrado": {
+      "id": "cfdi-timbrado",
+      "name": "CFDI Timbrado y Cancelaci\u00f3n",
+      "description": "Timbrado CFDI 4.0, cancelaci\u00f3n, sustituci\u00f3n, complementos (pago, n\u00f3mina, carta porte)",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "ingreso",
+              "pago",
+              "nomina",
+              "traslado",
+              "carta-porte"
+            ]
+          },
+          "cliente_id": {
+            "type": "string"
+          },
+          "monto": {
+            "type": "number"
+          },
+          "uuid": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tipo",
+          "cliente_id"
+        ]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string"
+          },
+          "xml_path": {
+            "type": "string"
+          },
+          "estado": {
+            "type": "string"
+          }
+        }
+      },
+      "providers": [
+        {
+          "id": "pac-api",
+          "contract_type": "http",
+          "weight": 1,
+          "enabled": true,
+          "cost_per_call": 3,
+          "rate_limit": 30,
+          "config": {
+            "timeout": 10
+          }
+        }
+      ],
+      "tags": [
+        "cfdi",
+        "facturacion",
+        "sat",
+        "mexico"
+      ]
+    },
+    "sat-declaraciones": {
+      "id": "sat-declaraciones",
+      "name": "SAT Declaraciones",
+      "description": "Declaraciones bimestrales/anuales, ISR, IVA, buz\u00f3n tributario, RESICO",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "bimestral",
+              "anual",
+              "informativa"
+            ]
+          },
+          "regimen": {
+            "type": "string",
+            "enum": [
+              "resico",
+              "persona-fisica",
+              "persona-moral"
+            ]
+          },
+          "periodo": {
+            "type": "string"
+          },
+          "cliente_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tipo",
+          "regimen",
+          "periodo"
+        ]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "isr_calculado": {
+            "type": "number"
+          },
+          "iva_a_favor": {
+            "type": "number"
+          },
+          "declaracion_path": {
+            "type": "string"
+          },
+          "estado": {
+            "type": "string"
+          }
+        }
+      },
+      "providers": [
+        {
+          "id": "sat-api",
+          "contract_type": "http",
+          "weight": 1,
+          "enabled": true,
+          "cost_per_call": 0,
+          "rate_limit": 20,
+          "config": {
+            "timeout": 30
+          }
+        }
+      ],
+      "tags": [
+        "sat",
+        "declaraciones",
+        "isr",
+        "iva",
+        "mexico"
+      ]
+    },
+    "conciliacion-bancaria": {
+      "id": "conciliacion-bancaria",
+      "name": "Conciliaci\u00f3n Bancaria",
+      "description": "Cruce de facturas vs movimientos bancarios, detecci\u00f3n de discrepancias",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "mes": {
+            "type": "string"
+          },
+          "cliente_id": {
+            "type": "string"
+          },
+          "estado_cuenta_path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "mes",
+          "cliente_id"
+        ]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "conciliada": {
+            "type": "boolean"
+          },
+          "discrepancias": {
+            "type": "array"
+          },
+          "saldo_final": {
+            "type": "number"
+          }
+        }
+      },
+      "providers": [
+        {
+          "id": "google-sheets-api",
+          "contract_type": "http",
+          "weight": 1,
+          "enabled": true,
+          "cost_per_call": 0,
+          "rate_limit": 10,
+          "config": {
+            "timeout": 30
+          }
+        }
+      ],
+      "tags": [
+        "conciliacion",
+        "bancos",
+        "contabilidad"
+      ]
+    },
+    "nominas-cfdi": {
+      "id": "nominas-cfdi",
+      "name": "N\u00f3minas CFDI 4.0",
+      "description": "CFDI de n\u00f3mina, percepciones, deducciones, finiquitos, PRONAF, incidencias",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "ordinaria",
+              "finiquito",
+              "liquidacion",
+              "incidencia",
+              "pronaf"
+            ]
+          },
+          "empleado_id": {
+            "type": "string"
+          },
+          "periodo": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tipo",
+          "empleado_id"
+        ]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "uuid": {
+            "type": "string"
+          },
+          "neto": {
+            "type": "number"
+          },
+          "xml_path": {
+            "type": "string"
+          },
+          "estado": {
+            "type": "string"
+          }
+        }
+      },
+      "providers": [
+        {
+          "id": "contpaq-api",
+          "contract_type": "http",
+          "weight": 1,
+          "enabled": true,
+          "cost_per_call": 0,
+          "rate_limit": 20,
+          "config": {
+            "timeout": 10
+          }
+        }
+      ],
+      "tags": [
+        "nominas",
+        "cfdi",
+        "empleados",
+        "mexico"
+      ]
+    },
+    "resico-calculo": {
+      "id": "resico-calculo",
+      "name": "C\u00e1lculo ISR RESICO",
+      "description": "C\u00e1lculo ISR progresivo para RESICO, control de tope 3.5M, declaraciones bimestrales",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "ingresos_periodo": {
+            "type": "number"
+          },
+          "ingresos_acumulados": {
+            "type": "number"
+          },
+          "periodo": {
+            "type": "string"
+          },
+          "cliente_id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "ingresos_periodo",
+          "periodo"
+        ]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "isr_mensual": {
+            "type": "number"
+          },
+          "tasa_aplicada": {
+            "type": "number"
+          },
+          "tope_restante": {
+            "type": "number"
+          },
+          "estado": {
+            "type": "string"
+          }
+        }
+      },
+      "providers": [
+        {
+          "id": "sat-api",
+          "contract_type": "http",
+          "weight": 1,
+          "enabled": true,
+          "cost_per_call": 0,
+          "rate_limit": 20,
+          "config": {
+            "timeout": 10
+          }
+        }
+      ],
+      "tags": [
+        "resico",
+        "isr",
+        "sat",
+        "mexico"
+      ]
+    },
+    "contpaq-polizas": {
+      "id": "contpaq-polizas",
+      "name": "CONTPAQi P\u00f3lizas Contables",
+      "description": "Generaci\u00f3n de p\u00f3lizas, cat\u00e1logo de cuentas, balanza de comprobaci\u00f3n, auxiliares",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "poliza-ingreso",
+              "poliza-egreso",
+              "poliza-diario",
+              "poliza-orden"
+            ]
+          },
+          "cliente_id": {
+            "type": "string"
+          },
+          "periodo": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "tipo",
+          "cliente_id",
+          "periodo"
+        ]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "poliza_path": {
+            "type": "string"
+          },
+          "folio": {
+            "type": "string"
+          },
+          "estado": {
+            "type": "string"
+          }
+        }
+      },
+      "providers": [
+        {
+          "id": "contpaq-api",
+          "contract_type": "http",
+          "weight": 1,
+          "enabled": true,
+          "cost_per_call": 0,
+          "rate_limit": 20,
+          "config": {
+            "timeout": 10
+          }
+        }
+      ],
+      "tags": [
+        "contpaq",
+        "polizas",
+        "contabilidad",
+        "mexico"
+      ]
+    },
+    "organizar-archivos": {
+      "id": "organizar-archivos",
+      "name": "Organizador de Archivos",
+      "description": "Clasifica XMLs y PDFs por cliente/RFC/fecha, renombra, elimina duplicados",
+      "input_schema": {
+        "type": "object",
+        "properties": {
+          "origen": {
+            "type": "string"
+          },
+          "modo": {
+            "type": "string",
+            "enum": [
+              "clasificar",
+              "organizar",
+              "limpiar"
+            ]
+          }
+        },
+        "required": [
+          "origen"
+        ]
+      },
+      "output_schema": {
+        "type": "object",
+        "properties": {
+          "archivos_procesados": {
+            "type": "integer"
+          },
+          "clientes_detectados": {
+            "type": "array"
+          },
+          "estructura": {
+            "type": "string"
+          }
+        }
+      },
+      "providers": [
+        {
+          "id": "edge-client",
+          "contract_type": "cli",
+          "weight": 1,
+          "enabled": true,
+          "cost_per_call": 0,
+          "rate_limit": 100,
+          "config": {
+            "timeout": 60
+          }
+        }
+      ],
+      "tags": [
+        "organizacion",
+        "archivos",
+        "xml",
+        "contabilidad"
+      ]
     }
   },
   "skills": {
     "research": {
-      "description": "Búsqueda y síntesis de información",
+      "description": "B\u00fasqueda y s\u00edntesis de informaci\u00f3n",
       "category": "core",
       "mcp_server": null,
       "command": "/research"
     },
     "code": {
-      "description": "Análisis y generación de código",
+      "description": "An\u00e1lisis y generaci\u00f3n de c\u00f3digo",
       "category": "core",
       "mcp_server": null,
       "command": "/code"
     },
     "explore": {
-      "description": "Navegación de sistema de archivos y exploratorio",
+      "description": "Navegaci\u00f3n de sistema de archivos y exploratorio",
       "category": "core",
       "mcp_server": null,
       "command": "/explore"
     },
     "memory": {
-      "description": "Gestión de memoria y contexto",
+      "description": "Gesti\u00f3n de memoria y contexto",
       "category": "core",
       "mcp_server": null,
       "command": "/memory"
     },
     "skill": {
-      "description": "Ejecución de habilidades MCP",
+      "description": "Ejecuci\u00f3n de habilidades MCP",
       "category": "core",
       "mcp_server": null,
       "command": "/skill"
@@ -323,13 +766,13 @@
       "command": "/voice"
     },
     "review": {
-      "description": "Revisión de código y verificación",
+      "description": "Revisi\u00f3n de c\u00f3digo y verificaci\u00f3n",
       "category": "core",
       "mcp_server": null,
       "command": "/review"
     },
     "hermes": {
-      "description": "Integración con Hermes para mensajería",
+      "description": "Integraci\u00f3n con Hermes para mensajer\u00eda",
       "category": "external",
       "mcp_server": "hermes",
       "command": "/hermes"
@@ -341,7 +784,7 @@
       "command": "/openclaw"
     },
     "gbrain": {
-      "description": "Motor de razonamiento y síntesis",
+      "description": "Motor de razonamiento y s\u00edntesis",
       "category": "core",
       "mcp_server": null,
       "command": "/gbrain"
@@ -351,13 +794,49 @@
       "category": "core",
       "mcp_server": null,
       "command": "/engram"
+    },
+    "cfdi": {
+      "description": "Timbrado y cancelaci\u00f3n de CFDI 4.0 \u2014 ingreso, pago, n\u00f3mina, carta porte",
+      "category": "accounting",
+      "mcp_server": null,
+      "command": "/cfdi"
+    },
+    "sat": {
+      "description": "Declaraciones SAT \u2014 bimestrales, anuales, ISR, IVA, buz\u00f3n tributario",
+      "category": "accounting",
+      "mcp_server": null,
+      "command": "/sat"
+    },
+    "nominas": {
+      "description": "CFDI de n\u00f3mina 4.0 \u2014 percepciones, deducciones, finiquitos, PRONAF",
+      "category": "accounting",
+      "mcp_server": null,
+      "command": "/nominas"
+    },
+    "resico": {
+      "description": "C\u00e1lculo ISR RESICO \u2014 tasas progresivas, tope 3.5M, declaraciones bimestrales",
+      "category": "accounting",
+      "mcp_server": null,
+      "command": "/resico"
+    },
+    "conciliacion": {
+      "description": "Conciliaci\u00f3n bancaria \u2014 cruce de facturas vs movimientos bancarios",
+      "category": "accounting",
+      "mcp_server": null,
+      "command": "/conciliar"
+    },
+    "contpaq": {
+      "description": "CONTPAQi \u2014 p\u00f3lizas, cat\u00e1logo de cuentas, balanza, auxiliares",
+      "category": "accounting",
+      "mcp_server": null,
+      "command": "/contpaq"
     }
   },
   "agents": [
     {
       "name": "abe-agent",
       "version": "1.0.0",
-      "description": "Agente de ABE Music — gestión de artistas, releases, streams, revenue y KPIs",
+      "description": "Agente de ABE Music \u2014 gesti\u00f3n de artistas, releases, streams, revenue y KPIs",
       "model": "qwen3:4b",
       "provider": "ollama",
       "capability": "music-production",
@@ -393,7 +872,7 @@
     {
       "name": "abe-analytics-agent",
       "version": "1.0.0",
-      "description": "Analítica y reportes — KPIs, tendencias, predicciones, dashboards automáticos",
+      "description": "Anal\u00edtica y reportes \u2014 KPIs, tendencias, predicciones, dashboards autom\u00e1ticos",
       "model": "deepseek-r1:7b",
       "provider": "ollama",
       "capability": "business-intelligence",
@@ -715,7 +1194,7 @@
     {
       "name": "abe-crm-agent",
       "version": "1.0.0",
-      "description": "CRM de artistas — gestión de contactos, contratos, y relaciones con artistas ABE",
+      "description": "CRM de artistas \u2014 gesti\u00f3n de contactos, contratos, y relaciones con artistas ABE",
       "model": "llama3.2:3b",
       "provider": "ollama",
       "capability": "client-onboarding",
@@ -861,7 +1340,7 @@
     {
       "name": "abe-marketing-agent",
       "version": "1.0.0",
-      "description": "Marketing y contenido — generación de contenido, campañas, redes sociales",
+      "description": "Marketing y contenido \u2014 generaci\u00f3n de contenido, campa\u00f1as, redes sociales",
       "model": "llama3.2:3b",
       "provider": "ollama",
       "capability": "content-production",
@@ -1034,7 +1513,7 @@
     {
       "name": "abe-revenue-agent",
       "version": "1.0.0",
-      "description": "Revenue y royalties — tracking de ingresos, splits, pagos a artistas",
+      "description": "Revenue y royalties \u2014 tracking de ingresos, splits, pagos a artistas",
       "model": "qwen3:4b",
       "provider": "ollama",
       "capability": "financial-operations",
@@ -1209,7 +1688,7 @@
     {
       "name": "abe-scheduler-agent",
       "version": "1.0.0",
-      "description": "Automatización — programación de tareas, recordatorios, sync automático",
+      "description": "Automatizaci\u00f3n \u2014 programaci\u00f3n de tareas, recordatorios, sync autom\u00e1tico",
       "model": "qwen3:1.7b",
       "provider": "ollama",
       "capability": "agent-operations",
@@ -1240,7 +1719,7 @@
     {
       "name": "booking-agent",
       "version": "1.0.0",
-      "description": "Agente de reservas — gestiona citas, consultas y booking de servicios",
+      "description": "Agente de reservas \u2014 gestiona citas, consultas y booking de servicios",
       "model": "qwen2.5:1.5b",
       "provider": "ollama",
       "capability": "client-onboarding",
@@ -1270,7 +1749,7 @@
     {
       "name": "content-agent",
       "version": "1.0.0",
-      "description": "Agente de contenido — genera, revisa y publica contenido multi-formato",
+      "description": "Agente de contenido \u2014 genera, revisa y publica contenido multi-formato",
       "model": "llama3.2:3b",
       "provider": "ollama",
       "capability": "content-production",
@@ -1302,7 +1781,7 @@
     {
       "name": "onboarding-agent",
       "version": "1.0.0",
-      "description": "Agente de onboarding — registro, KYC, configuración y activación de clientes",
+      "description": "Agente de onboarding \u2014 registro, KYC, configuraci\u00f3n y activaci\u00f3n de clientes",
       "model": "llama3.2:3b",
       "provider": "ollama",
       "capability": "client-onboarding",
@@ -1339,7 +1818,7 @@
     {
       "name": "research-agent",
       "version": "1.0.0",
-      "description": "Agente de investigación — busca información, sintetiza, analiza",
+      "description": "Agente de investigaci\u00f3n \u2014 busca informaci\u00f3n, sintetiza, analiza",
       "model": "gemini-2.5-flash",
       "provider": "openrouter",
       "capability": "strategic-intelligence",
@@ -1367,7 +1846,7 @@
     {
       "name": "sales-agent",
       "version": "1.0.0",
-      "description": "Agente de ventas — califica leads, genera propuestas, cierra deals",
+      "description": "Agente de ventas \u2014 califica leads, genera propuestas, cierra deals",
       "model": "deepseek-v4-flash",
       "provider": "opencode-go",
       "capability": "sales-execution",
@@ -1404,7 +1883,7 @@
     {
       "name": "support-agent",
       "version": "1.0.0",
-      "description": "Agente de soporte — tickets, consultas, escalamiento y resolución",
+      "description": "Agente de soporte \u2014 tickets, consultas, escalamiento y resoluci\u00f3n",
       "model": "llama3.2:3b",
       "provider": "ollama",
       "capability": "support-operations",
@@ -1436,6 +1915,161 @@
         "max_concurrent": "5"
       },
       "registeredAt": "2026-07-18T23:39:56.295Z"
+    },
+    {
+      "name": "nathy-conta-agent",
+      "version": "1.0.0",
+      "description": "Agente principal de Nathy Conta \u2014 contabilidad digital, CFDI, SAT, RESICO, n\u00f3minas, CONTPAQi",
+      "model": "opencode/deepseek-v4-flash-free",
+      "provider": "opencode",
+      "capability": "accounting",
+      "maturity": "3-Accelerated",
+      "tools": [
+        "sonora:capability_resolve",
+        "sonora:enterprise_score",
+        "sonora:skills_system",
+        "sonora:skills_search",
+        "sonora:cfdi_timbrar",
+        "sonora:cfdi_cancelar",
+        "sonora:cfdi_validar_xml",
+        "sonora:sat_declarar",
+        "sonora:sat_buzon",
+        "sonora:conciliar_movimientos",
+        "sonora:nomina_generar",
+        "sonora:resico_calcular_isr",
+        "sonora:contpaq_poliza",
+        "sonora:organizar_archivos"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [
+          "accounting:cfdi:timbrar",
+          "accounting:sat:declarar",
+          "accounting:nomina:generar"
+        ],
+        "listens": [
+          "whatsapp:message:received",
+          "web:cfdi:upload"
+        ]
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "30m",
+        "max_concurrent": 3
+      },
+      "registeredAt": "2026-07-19T18:08:58.014028Z"
+    },
+    {
+      "name": "nathy-cfdi-agent",
+      "version": "1.0.0",
+      "description": "Agente de CFDI \u2014 timbrado, cancelaci\u00f3n, validaci\u00f3n XML, complementos de pago",
+      "model": "opencode/deepseek-v4-flash-free",
+      "provider": "opencode",
+      "capability": "cfdi-management",
+      "maturity": "3-Accelerated",
+      "tools": [
+        "sonora:cfdi_timbrar",
+        "sonora:cfdi_cancelar",
+        "sonora:cfdi_validar_xml",
+        "sonora:cfdi_extraer_metadatos",
+        "sonora:cfdi_complemento_pago",
+        "sonora:enterprise_score"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [
+          "accounting:cfdi:timbrar",
+          "accounting:cfdi:cancelar"
+        ],
+        "listens": [
+          "whatsapp:message:received",
+          "edge:file:received"
+        ]
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "15m",
+        "max_concurrent": 5
+      },
+      "registeredAt": "2026-07-19T18:08:58.014028Z"
+    },
+    {
+      "name": "nathy-nominas-agent",
+      "version": "1.0.0",
+      "description": "Agente de n\u00f3minas \u2014 CFDI n\u00f3mina 4.0, percepciones, deducciones, finiquitos, PRONAF",
+      "model": "opencode/deepseek-v4-flash-free",
+      "provider": "opencode",
+      "capability": "payroll-management",
+      "maturity": "2-Assisted",
+      "tools": [
+        "sonora:nomina_generar",
+        "sonora:nomina_incidencias",
+        "sonora:nomina_finiquito",
+        "sonora:nomina_pronaf",
+        "sonora:enterprise_score"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [
+          "accounting:nomina:generar",
+          "accounting:nomina:incidencia"
+        ],
+        "listens": [
+          "whatsapp:message:received"
+        ]
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "15m",
+        "max_concurrent": 3
+      },
+      "registeredAt": "2026-07-19T18:08:58.014028Z"
+    },
+    {
+      "name": "nathy-resico-agent",
+      "version": "1.0.0",
+      "description": "Agente RESICO \u2014 c\u00e1lculo ISR progresivo, declaraciones bimestrales, control tope 3.5M",
+      "model": "opencode/deepseek-v4-flash-free",
+      "provider": "opencode",
+      "capability": "resico-management",
+      "maturity": "3-Accelerated",
+      "tools": [
+        "sonora:resico_calcular_isr",
+        "sonora:resico_declaracion_bimestral",
+        "sonora:resico_tope_ingresos",
+        "sonora:resico_clientes",
+        "sonora:sat_declarar",
+        "sonora:enterprise_score"
+      ],
+      "policies": {
+        "max_tokens_per_call": "4096",
+        "timeout_seconds": "60"
+      },
+      "events": {
+        "emits": [
+          "accounting:resico:declarar",
+          "accounting:resico:alerta_tope"
+        ],
+        "listens": [
+          "whatsapp:message:received",
+          "scheduler:monthly:check"
+        ]
+      },
+      "lifecycle": {
+        "spawn": "on-demand",
+        "max_idle": "15m",
+        "max_concurrent": 3
+      },
+      "registeredAt": "2026-07-19T18:08:58.014028Z"
     }
   ]
 }

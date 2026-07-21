@@ -1,0 +1,27 @@
+# OpenClaw Edge — Configuración
+# Copiar a config.yaml y ajustar valores
+
+vps:
+  url: "https://vps.sonoradigitalcorp.com"
+  api_key: "EDGE_API_KEY_AQUI"
+
+device:
+  id: "nathaly-laptop"
+  name: "Laptop Nathaly — Fourgea"
+
+paths:
+  root: "C:\\OpenClaw"
+  # Subdirectorios creados automáticamente
+  watch_delay: 2.0  # segundos entre escaneos
+
+allowed_extensions:
+  - ".xml"
+  - ".pdf"
+  - ".XML"
+  - ".PDF"
+
+max_file_size_mb: 20
+
+logging:
+  level: "INFO"
+  file: "C:\\OpenClaw\\Logs\\edge.log"

@@ -1,0 +1,79 @@
+{
+  "business": {
+    "name": "Ce-Son",
+    "tagline": "El sabor que conecta",
+    "phone": "5216623446953",
+    "currency": "MXN"
+  },
+  "categories": [
+    {
+      "name": "Pastillas Efervescentes",
+      "emoji": "💊",
+      "items": [
+        {
+          "id": "uva",
+          "name": "Uva",
+          "emoji": "🍇",
+          "prices": { "250": 250, "350": 350, "550": 550 },
+          "description": "Pastilla efervescente sabor uva",
+          "available": true
+        },
+        {
+          "id": "fresa",
+          "name": "Fresa",
+          "emoji": "🍓",
+          "prices": { "250": 250, "350": 350, "550": 550 },
+          "description": "Pastilla efervescente sabor fresa",
+          "available": true
+        },
+        {
+          "id": "natural",
+          "name": "Natural",
+          "emoji": "🌿",
+          "prices": { "250": 250, "350": 350, "550": 550 },
+          "description": "Pastilla efervescente sabor natural",
+          "available": true
+        },
+        {
+          "id": "boobaloo",
+          "name": "Boobaloo",
+          "emoji": "🧪",
+          "prices": { "250": 250, "350": 350, "550": 550 },
+          "description": "Pastilla efervescente sabor boobaloo",
+          "available": true
+        },
+        {
+          "id": "platano",
+          "name": "Plátano",
+          "emoji": "🍌",
+          "prices": { "250": 250, "350": 350, "550": 550 },
+          "description": "Pastilla efervescente sabor plátano",
+          "available": true
+        },
+        {
+          "id": "coco",
+          "name": "Coco",
+          "emoji": "🥥",
+          "prices": { "250": 250, "350": 350, "550": 550 },
+          "description": "Pastilla efervescente sabor coco",
+          "available": true
+        },
+        {
+          "id": "nuez",
+          "name": "Nuez",
+          "emoji": "🥜",
+          "prices": { "250": 250, "350": 350, "550": 550 },
+          "description": "Pastilla efervescente sabor nuez",
+          "available": true
+        }
+      ]
+    }
+  ],
+  "payment_methods": [
+    { "id": "efectivo", "name": "Efectivo", "emoji": "💵" },
+    { "id": "tarjeta", "name": "Tarjeta (terminal)", "emoji": "💳" },
+    { "id": "spei", "name": "SPEI / Transferencia", "emoji": "🏦" },
+    { "id": "mercadopago", "name": "Mercado Pago (link)", "emoji": "🟡" },
+    { "id": "bitcoin", "name": "Bitcoin / Cripto", "emoji": "₿" }
+  ]
+}

@@ -1,0 +1,7 @@
+# OpenClaw Edge — Fourgea México
+# Cliente ligero Windows (Nathaly)
+
+watchdog>=3.0
+httpx>=0.27,<1.0
+pyyaml>=6.0
+win10toast>=0.9; platform_system == "Windows"

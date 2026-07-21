@@ -1,0 +1,23 @@
+name: nathy-resico-agent
+description: "Agente RESICO — cálculo de ISR, declaraciones bimestrales, control de ingresos, tope 3.5M"
+model: opencode/deepseek-v4-flash-free
+provider: opencode
+capability: resico-management
+maturity: 3-Accelerated
+tools:
+  - sonora:resico_calcular_isr
+  - sonora:resico_declaracion_bimestral
+  - sonora:resico_tope_ingresos
+  - sonora:resico_clientes
+  - sonora:sat_declarar
+  - sonora:enterprise_score
+policies:
+  max_tokens_per_call: 4096
+  timeout_seconds: 60
+events:
+  emits: [accounting:resico:declarar, accounting:resico:alerta_tope]
+  listens: [whatsapp:message:received, scheduler:monthly:check]
+lifecycle:
+  spawn: on-demand
+  max_idle: 15m
+  max_concurrent: 3

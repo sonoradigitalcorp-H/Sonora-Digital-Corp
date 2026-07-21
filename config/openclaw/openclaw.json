@@ -1,0 +1,265 @@
+{
+  "gateway": {
+    "port": 18789,
+    "mode": "local",
+    "auth": {
+      "mode": "token",
+      "token": "18732f622f79afa71304a652be709d67f20e83ed0cc2e57c"
+    }
+  },
+  "meta": {
+    "lastTouchedVersion": "2026.7.1",
+    "lastTouchedAt": "2026-07-16T19:48:44.085Z"
+  },
+  "skills": {
+    "entries": {
+      "1password": {
+        "enabled": false
+      },
+      "apple-notes": {
+        "enabled": false
+      },
+      "apple-reminders": {
+        "enabled": false
+      },
+      "bear-notes": {
+        "enabled": false
+      },
+      "blogwatcher": {
+        "enabled": true
+      },
+      "blucli": {
+        "enabled": false
+      },
+      "camsnap": {
+        "enabled": false
+      },
+      "coding-agent": {
+        "enabled": true
+      },
+      "discord": {
+        "enabled": true
+      },
+      "eightctl": {
+        "enabled": false
+      },
+      "gemini": {
+        "enabled": true
+      },
+      "gifgrep": {
+        "enabled": false
+      },
+      "gog": {
+        "enabled": true
+      },
+      "goplaces": {
+        "enabled": false
+      },
+      "himalaya": {
+        "enabled": false
+      },
+      "imsg": {
+        "enabled": true
+      },
+      "model-usage": {
+        "enabled": true
+      },
+      "obsidian": {
+        "enabled": true
+      },
+      "openhue": {
+        "enabled": false
+      },
+      "ordercli": {
+        "enabled": false
+      },
+      "peekaboo": {
+        "enabled": false
+      },
+      "sag": {
+        "enabled": true
+      },
+      "sherpa-onnx-tts": {
+        "enabled": true
+      },
+      "slack": {
+        "enabled": true
+      },
+      "songsee": {
+        "enabled": true
+      },
+      "sonoscli": {
+        "enabled": true
+      },
+      "spotify-player": {
+        "enabled": true
+      },
+      "summarize": {
+        "enabled": true
+      },
+      "things-mac": {
+        "enabled": false
+      },
+      "tmux": {
+        "enabled": false
+      },
+      "trello": {
+        "enabled": true
+      },
+      "video-frames": {
+        "enabled": true
+      },
+      "voice-call": {
+        "enabled": true
+      },
+      "wacli": {
+        "enabled": true
+      },
+      "xurl": {
+        "enabled": false
+      },
+      "gsd": {
+        "enabled": true
+      },
+      "close-loop": {
+        "enabled": true
+      },
+      "learning-loop": {
+        "enabled": true
+      },
+      "reflect": {
+        "enabled": true
+      },
+      "agent-evolver": {
+        "enabled": true
+      },
+      "browser-use": {
+        "enabled": true
+      },
+      "linux-desktop": {
+        "enabled": true
+      },
+      "stripe": {
+        "enabled": true
+      },
+      "supabase": {
+        "enabled": true
+      },
+      "fal-ai": {
+        "enabled": true
+      },
+      "mcporter": {
+        "enabled": true
+      },
+      "skill-creator": {
+        "enabled": true
+      },
+      "github": {
+        "enabled": true
+      },
+      "gh-issues": {
+        "enabled": true
+      },
+      "taskflow": {
+        "enabled": true
+      },
+      "taskflow-inbox-triage": {
+        "enabled": true
+      },
+      "healthcheck": {
+        "enabled": true
+      },
+      "canvas": {
+        "enabled": true
+      },
+      "diagram-maker": {
+        "enabled": true
+      },
+      "meme-maker": {
+        "enabled": true
+      },
+      "notion": {
+        "enabled": true
+      },
+      "clawhub": {
+        "enabled": true
+      },
+      "clawpify": {
+        "enabled": true
+      },
+      "whop-cli": {
+        "enabled": true
+      },
+      "paymentsdb": {
+        "enabled": true
+      },
+      "meta-ads": {
+        "enabled": true
+      },
+      "posthog": {
+        "enabled": true
+      },
+      "brevo": {
+        "enabled": true
+      },
+      "ghost-cms": {
+        "enabled": true
+      },
+      "comfyui": {
+        "enabled": true
+      },
+      "canva-connect": {
+        "enabled": true
+      },
+      "playwright": {
+        "enabled": true
+      },
+      "clone-service": {
+        "enabled": true
+      }
+    }
+  },
+  "wizard": {
+    "lastRunAt": "2026-06-08T00:48:18.212Z",
+    "lastRunVersion": "2026.6.1",
+    "lastRunCommand": "doctor",
+    "lastRunMode": "local"
+  },
+  "plugins": {
+    "entries": {
+      "whatsapp": {
+        "enabled": false
+      },
+      "telegram": {
+        "enabled": false
+      }
+    },
+    "allow": []
+  },
+  "channels": {
+    "telegram": {
+      "enabled": false
+    },
+    "whatsapp": {
+      "actions": {
+        "calls": true
+      },
+      "accounts": {
+        "default": {
+          "enabled": true,
+          "name": "SDC WhatsApp",
+          "dmPolicy": "open",
+          "allowFrom": [
+            "*"
+          ],
+          "contextVisibility": "allowlist",
+          "direct": {
+            "5216622681111@s.whatsapp.net": {
+              "systemPrompt": "Eres la asistente personal de Perroni. Hablas espa\u00f1ol mexicano, eres juguetona, divertida y coqueta pero con l\u00edmites claros. NUNCA reveles informaci\u00f3n privada como contrase\u00f1as, tokens, API keys, datos bancarios, conversaciones privadas de Perroni con otras personas, ni contenido de sus otros chats. Si alguien te pide esa informaci\u00f3n, responde con algo como 'Esa informaci\u00f3n es privada, no la comparto \ud83d\ude18' y cambia el tema. No tienes acceso a las conversaciones de otros usuarios ni a informaci\u00f3n sensible del sistema. Eres solo una asistente conversacional para interactuar con contactos autorizados."
+            }
+          }
+        }
+      }
+    }
+  }
+}

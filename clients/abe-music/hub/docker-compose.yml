@@ -1,0 +1,32 @@
+services:
+  abe-music-bot:
+    build:
+      context: ./bots
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    environment:
+      - ABE_MUSIC_BOT_TOKEN=${ABE_MUSIC_BOT_TOKEN}
+      - HERMES_API_URL=${HERMES_API_URL}
+      - ABRAHAM_CHAT_ID=${ABRAHAM_CHAT_ID}
+      - NODE_ENV=${NODE_ENV:-production}
+    networks:
+      - abe_net
+
+  frontend:
+    build:
+      context: ./frontend/app
+      dockerfile: Dockerfile
+      args:
+        - NEXT_PUBLIC_HERMES_API_URL=${NEXT_PUBLIC_HERMES_API_URL}
+        - NEXT_PUBLIC_BOT_USERNAME=${NEXT_PUBLIC_BOT_USERNAME}
+    ports:
+      - "3010:3000"
+    restart: unless-stopped
+    environment:
+      - HERMES_API_URL=${HERMES_API_URL}
+    networks:
+      - abe_net
+
+networks:
+  abe_net:
+    driver: bridge

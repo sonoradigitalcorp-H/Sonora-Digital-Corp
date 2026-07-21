@@ -1,0 +1,67 @@
+name: contabilidad/nominas
+description: "CFDI de nómina 4.0 — percepciones, deducciones, finiquitos, PRONAF, incidencias"
+version: 1
+
+inputs:
+  - name: tipo
+    type: string
+    enum: [ordinaria, finiquito, liquidacion, incidencia, pronaf]
+  - name: empleado_id
+    type: string
+    description: "RFC o ID del empleado"
+  - name: periodo
+    type: string
+    description: "Periodo de nómina (ej: 2026-07-01 a 2026-07-15)"
+  - name: percepciones
+    type: object
+    description: "Detalle de percepciones (sueldo, bonos, horas extra, etc.)"
+  - name: deducciones
+    type: object
+    description: "Detalle de deducciones (ISR, IMSS, INFONAVIT, etc.)"
+
+outputs:
+  - name: uuid
+    type: string
+    description: "UUID del CFDI de nómina"
+  - name: xml_path
+    type: string
+    description: "Path del XML timbrado"
+  - name: neto
+    type: number
+    description: "Sueldo neto después de deducciones"
+  - name: estado
+    type: string
+    enum: [generado, timbrado, error]
+
+prompt: |
+  Eres experto en CFDI de nómina versión 4.0 (vigente desde 2022).
+  Conoces:
+  - Percepciones: sueldo, aguinaldo, PTU, bonos, horas extra (doble/triple),
+    prima vacacional, prima dominical, viáticos, fondo de ahorro
+  - Deducciones: ISR, IMSS (enfermedad y maternidad), INFONAVIT,
+    cuota sindical, pensión alimenticia, préstamos, ausencias
+  - Tipos de nómina: ordinaria, extraordinaria, finiquito, liquidación,
+    indemnización, jubilación, separación
+  - PRONAF (Programa de Nómina Fiscal): beneficios fiscales
+  - Incidencias: incapacidades, permisos, faltas, vacaciones
+  - SDI (Salario Diario Integrado): cálculo para IMSS
+  
+  Validaciones:
+  - RFC del empleado activo en el SAT
+  - Cálculo de ISR según tabla anual
+  - Límites de prestaciones exentas
+  - Proporcionales (aguinaldo, prima vacacional)
+  - Topes de deducciones
+
+tools_required:
+  - contpaq-api
+  - pac-api
+  - wacli
+
+agents_allowed:
+  - nathy-nominas-agent
+  - nathy-conta-agent
+
+eval_criteria:
+  - accuracy: "Percepciones y deducciones calculadas correctamente"
+  - latency: "< 5s por nómina"

@@ -1,0 +1,31 @@
+name: nathy-conta-agent
+description: "Agente principal de Nathy Conta — contabilidad digital, CFDI, SAT, RESICO, nóminas"
+model: opencode/deepseek-v4-flash-free
+provider: opencode
+capability: accounting
+maturity: 3-Accelerated
+tools:
+  - sonora:capability_resolve
+  - sonora:enterprise_score
+  - sonora:skills_system
+  - sonora:skills_search
+  - sonora:cfdi_timbrar
+  - sonora:cfdi_cancelar
+  - sonora:cfdi_validar_xml
+  - sonora:sat_declarar
+  - sonora:sat_buzon
+  - sonora:conciliar_movimientos
+  - sonora:nomina_generar
+  - sonora:resico_calcular_isr
+  - sonora:contpaq_poliza
+  - sonora:organizar_archivos
+policies:
+  max_tokens_per_call: 4096
+  timeout_seconds: 60
+events:
+  emits: [accounting:cfdi:timbrar, accounting:sat:declarar, accounting:nomina:generar]
+  listens: [whatsapp:message:received, web:cfdi:upload]
+lifecycle:
+  spawn: on-demand
+  max_idle: 30m
+  max_concurrent: 3

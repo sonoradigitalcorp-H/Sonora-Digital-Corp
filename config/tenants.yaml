@@ -49,3 +49,23 @@ partners:
       - digital_brain
       - music_analytics
     clients: []
+
+  - id: nathy_conta
+    name: "Nathy Conta"
+    owner: "Nathy"
+    type: client
+    plan: client_pro
+    branding:
+      logo: nathy-logo.png
+      primary_color: "#0f1b4d"
+      secondary_color: "#c9a84c"
+      powered_by: true
+    capabilities:
+      - cfdi
+      - sat
+      - nominas
+      - resico
+      - contpaq
+      - conciliacion
+      - organizador
+    clients: []

@@ -1,0 +1,65 @@
+name: contabilidad/contpaq-polizas
+description: "CONTPAQi Contabilidad — pólizas, catálogos de cuentas, auxiliares, balanza, reportes"
+version: 1
+
+inputs:
+  - name: tipo
+    type: string
+    enum: [poliza-ingreso, poliza-egreso, poliza-diario, poliza-orden]
+  - name: cliente_id
+    type: string
+    description: "RFC o ID del cliente"
+  - name: periodo
+    type: string
+    description: "Periodo contable (ej: 2026-07)"
+  - name: cuentas
+    type: object
+    description: "Cargos y abonos por cuenta contable"
+  - name: referencias
+    type: array
+    description: "Referencias de facturas/documentos soporte"
+
+outputs:
+  - name: poliza_path
+    type: string
+    description: "Path del archivo de póliza generado"
+  - name: folio
+    type: string
+    description: "Folio de la póliza"
+  - name: estado
+    type: string
+    enum: [generada, contabilizada, error]
+
+prompt: |
+  Eres experto en CONTPAQi Contabilidad (Contabilidad Electrónica).
+  
+  Conoces:
+  - Tipos de pólizas: Ingreso (I), Egreso (E), Diario (D), Orden (O)
+  - Catálogo de cuentas: SAT estandarizado (mayor 1-9)
+    - 1: Activo, 2: Pasivo, 3: Capital, 4: Ingresos
+    - 5: Costos, 6: Gastos, 7: Otros, 8: Cuentas de orden
+  - Balanza de comprobación: mensual con saldos iniciales, cargos, abonos
+  - Pólizas automáticas: depreciación, amortización, PTU
+  - Contabilidad electrónica: DIOT, balanza, catálogo, pólizas (SAT)
+  - Auxiliares por cliente/proveedor
+  - Cierre mensual y anual
+  
+  Flujo:
+  1. Recibir XMLs del periodo
+  2. Clasificar por tipo de gasto/ingreso
+  3. Determinar cuentas contables según catálogo del cliente
+  4. Generar pólizas (I, E, D) con cargos y abonos
+  5. Asignar folios correlativos
+  6. Guardar en formato CONTPAQi o TXT para importación
+  7. Generar balanza de comprobación
+
+tools_required:
+  - contpaq-api
+  - google-sheets-api
+
+agents_allowed:
+  - nathy-conta-agent
+
+eval_criteria:
+  - accuracy: "Cuentas contables correctas según catálogo SAT"
+  - latency: "< 5s por póliza"

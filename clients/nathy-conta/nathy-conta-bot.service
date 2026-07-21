@@ -1,0 +1,15 @@
+[Unit]
+Description=Nathy Conta Telegram Bot
+After=network.target
+
+[Service]
+Type=simple
+User=mystic
+WorkingDirectory=/home/mystic/nathy-conta/bot
+Environment="NATHY_CONTA_TOKEN=8720440822:AAHAZcdNd1cZg1QI6GB48t27blhe2bkD-Hw"
+ExecStart=/usr/bin/python3 /home/mystic/nathy-conta/bot/main.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

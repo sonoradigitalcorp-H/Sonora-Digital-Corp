@@ -1,0 +1,16 @@
+[Unit]
+Description=Ce-Son v3 API
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/mystic/sonora-digital-corp
+EnvironmentFile=%h/.env.ce-son
+ExecStart=/usr/bin/python3 -m products.ce_son.main
+Restart=always
+RestartSec=5
+StandardOutput=append:%h/sonora-digital-corp/logs/ce-son-api.log
+StandardError=append:%h/sonora-digital-corp/logs/ce-son-api.log
+
+[Install]
+WantedBy=default.target

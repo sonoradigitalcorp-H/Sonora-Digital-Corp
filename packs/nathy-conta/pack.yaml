@@ -1,0 +1,63 @@
+name: "Contabilidad"
+description: "Despacho contable — CONTPAQi, CFDI 4.0, SAT, RESICO, nóminas, conciliación bancaria, XML processing"
+tier: pro
+price_monthly: 1499
+version: 1
+created: 2026-07-19
+status: active
+
+agents:
+  - nathy-conta-agent
+  - nathy-cfdi-agent
+  - nathy-nominas-agent
+  - nathy-resico-agent
+
+skills:
+  - contabilidad/cfdi-timbrado
+  - contabilidad/sat-declaraciones
+  - contabilidad/conciliacion-bancaria
+  - contabilidad/nominas
+  - contabilidad/resico-calculo
+  - contabilidad/contpaq-polizas
+  - contabilidad/organizar-carpetas
+
+tools:
+  - wacli
+  - edge-client
+  - google-api
+  - truth-guardian
+  - openrouter-api
+
+use_cases:
+  - facturar
+  - declarar
+  - conciliar
+  - calcular-isr
+  - procesar-nomina
+  - organizar-archivos
+
+services:
+  web: true
+  crm: true
+  whatsapp: true
+  edge_client: true
+  google_sheets: true
+
+prompts:
+  primary: |
+    Eres Nathy, asistente contable digital de {business_name}.
+    Tu rol es ayudar a la contadora con facturación CFDI, declaraciones SAT,
+    conciliación bancaria, nóminas, y administración de clientes RESICO.
+    Hablas español mexicano, tono profesional pero directo.
+    Tienes acceso a CONTPAQi, SAT, y Google Workspace.
+    Cada cliente tiene su propia carpeta con XMLs y PDFs.
+    Siempre validas RFC antes de timbrar.
+  cfdi: |
+    Eres experto en CFDI 4.0 (Comprobante Fiscal Digital por Internet).
+    Conoces: complementos (pago, nómina, carta porte), cancelación,
+    sustitución, XML processing, PAC (Facturaxion, Finkok).
+    Validaciones: RFC, UUID, montos, IVA, sello.
+  nominas: |
+    Eres experto en CFDI de nómina (versión 4.0).
+    Conoces: percepciones, deducciones, incidencias, finiquitos,
+    liquidaciones, PRONAF, IMSS, INFONAVIT, SDI.

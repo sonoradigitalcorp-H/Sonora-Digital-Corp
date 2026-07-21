@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABE Studio — Presentación</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#0A0A0A;color:#F0EDE8;overflow:hidden;height:100vh}
+.slides{height:100vh;overflow-y:auto;scroll-snap-type:y mandatory}
+.slide{min-height:100vh;scroll-snap-align:start;display:flex;flex-direction:column;justify-content:center;padding:60px 80px;position:relative}
+.slide::after{content:'';position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;background:radial-gradient(ellipse at 50% 0%, rgba(124,58,237,0.06) 0%, transparent 65%)}
+.slide>*{position:relative;z-index:1}
+h1{font-size:64px;font-weight:900;letter-spacing:-2px;line-height:1}
+h1 span{background:linear-gradient(135deg,#D4AF37,#7C3AED);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+h2{font-size:36px;font-weight:700;letter-spacing:-1px;margin-bottom:8px}
+h2 .gold{color:#D4AF37}
+h2 .purple{color:#7C3AED}
+.sub{color:#888;font-size:18px;margin-bottom:40px;max-width:600px}
+.tag{display:inline-flex;align-items:center;gap:6px;background:rgba(124,58,237,0.12);border:1px solid rgba(124,58,237,0.3);color:#7C3AED;font-size:11px;font-weight:700;letter-spacing:1px;padding:6px 14px;border-radius:100px;margin-bottom:16px;text-transform:uppercase}
+.tag.gold{background:rgba(212,175,55,0.1);border-color:rgba(212,175,55,0.3);color:#D4AF37}
+.grid{display:grid;gap:16px}
+.g2{grid-template-columns:1fr 1fr}
+.g3{grid-template-columns:1fr 1fr 1fr}
+.g4{grid-template-columns:1fr 1fr 1fr 1fr}
+.card{background:#111;border:1px solid #1a1a1a;border-radius:16px;padding:24px;transition:all .3s}
+.card:hover{border-color:#7C3AED40;transform:translateY(-2px)}
+.card .icon{font-size:32px;margin-bottom:12px}
+.card h3{font-size:16px;font-weight:700;margin-bottom:6px}
+.card p{font-size:13px;color:#888;line-height:1.5}
+.card .badge{display:inline-block;font-size:10px;font-weight:700;padding:3px 8px;border-radius:6px;margin-top:8px}
+.badge.gold{background:rgba(212,175,55,0.12);color:#D4AF37}
+.badge.purple{background:rgba(124,58,237,0.12);color:#7C3AED}
+.badge.green{background:rgba(16,185,129,0.12);color:#10B981}
+
+.pipeline{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:16px;padding:30px;margin-bottom:30px}
+.pipeline .flow{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:16px 0}
+.flow .step{background:#1a1a1a;border-radius:10px;padding:12px 18px;font-size:13px;font-weight:600;text-align:center;min-width:100px;flex:1}
+.flow .step .sub{font-size:10px;font-weight:400;color:#666;margin-top:4px;margin-bottom:0}
+.flow .arrow{color:#7C3AED;font-size:20px;flex-shrink:0}
+.flow .step.pending{border-left:3px solid #555}
+.flow .step.active{border-left:3px solid #7C3AED;background:#1a0a2e}
+.flow .step.done{border-left:3px solid #10B981;background:#0a1a0e}
+
+.docker-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:20px}
+.docker-box{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:12px;padding:16px;text-align:center}
+.docker-box .name{font-size:13px;font-weight:700;color:#D4AF37}
+.docker-box .port{font-size:11px;color:#666;margin-top:2px}
+.docker-box .desc{font-size:11px;color:#888;margin-top:6px}
+.docker-box .tag-sm{display:inline-block;font-size:9px;padding:2px 6px;border-radius:4px;margin-top:6px}
+.docker-box .tag-sm.ext{background:rgba(124,58,237,0.15);color:#7C3AED}
+.docker-box .tag-sm.int{background:rgba(16,185,129,0.15);color:#10B981}
+.docker-box .tag-sm.db{background:rgba(59,130,246,0.15);color:#3B82F6}
+
+.prod-card{background:#0d0d0d;border:1px solid #1a1a1a;border-radius:16px;padding:20px}
+.prod-card h4{font-size:14px;font-weight:700;margin-bottom:4px}
+.prod-card .price{font-size:24px;font-weight:900;color:#D4AF37}
+.prod-card .desc{font-size:12px;color:#888;margin:8px 0}
+.prod-card ul{list-style:none;font-size:12px;color:#aaa}
+.prod-card ul li::before{content:'✓ ';color:#10B981}
+
+.roadmap-phase{margin-bottom:24px}
+.roadmap-phase .phase-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.roadmap-phase .phase-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:14px}
+.roadmap-phase .phase-num.f1{background:rgba(124,58,237,0.2);color:#7C3AED}
+.roadmap-phase .phase-num.f2{background:rgba(212,175,55,0.2);color:#D4AF37}
+.roadmap-phase .phase-num.f3{background:rgba(16,185,129,0.2);color:#10B981}
+.roadmap-phase .phase-num.f4{background:rgba(59,130,246,0.2);color:#3B82F6}
+.roadmap-phase .phase-title{font-size:18px;font-weight:700}
+.roadmap-phase .phase-days{font-size:12px;color:#666}
+.roadmap-items{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.roadmap-items li{font-size:13px;color:#aaa;list-style:none;padding:6px 12px;background:#111;border-radius:8px}
+
+.nav-dots{position:fixed;right:24px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:10px}
+.nav-dots a{width:10px;height:10px;border-radius:50%;background:#333;transition:all .3s;text-decoration:none}
+.nav-dots a:hover,.nav-dots a.active{background:#D4AF37;transform:scale(1.4)}
+
+.arrow-down{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);animation:bounce 2s infinite;font-size:24px;color:#555;z-index:2}
+@keyframes bounce{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(8px)}}
+
+.fade-in{opacity:0;transform:translateY(20px);transition:all .6s ease}
+.fade-in.visible{opacity:1;transform:translateY(0)}
+
+#progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#D4AF37,#7C3AED);z-index:200;transition:width .3s}
+
+@media(max-width:768px){
+  .slide{padding:30px 20px}
+  h1{font-size:36px}
+  h2{font-size:24px}
+  .g2,.g3,.g4{grid-template-columns:1fr}
+  .flow{flex-direction:column;align-items:stretch}
+  .flow .arrow{transform:rotate(90deg);text-align:center}
+  .nav-dots{right:12px}
+  .docker-grid{grid-template-columns:1fr 1fr}
+  .roadmap-items{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav class="nav-dots" id="navDots">
+  <a href="#slide-0" class="active"></a>
+  <a href="#slide-1"></a>
+  <a href="#slide-2"></a>
+  <a href="#slide-3"></a>
+  <a href="#slide-4"></a>
+  <a href="#slide-5"></a>
+  <a href="#slide-6"></a>
+  <a href="#slide-7"></a>
+</nav>
+
+<div class="slides" id="slides">
+
+<!-- SLIDE 0: PORTADA -->
+<section class="slide" id="slide-0">
+  <div class="tag gold">ABE Music Inc × Sonora Digital Corp</div>
+  <h1><span>ABE</span> Studio</h1>
+  <p style="font-size:22px;color:#aaa;margin-top:12px;font-weight:300">De la canción al video, sin estudio.</p>
+  <p style="color:#666;margin-top:20px;max-width:500px;line-height:1.6">Sistema de generación de contenido IA impulsado por Seedance 2.0 para artistas de ABE Music Inc.</p>
+  <div style="display:flex;gap:24px;margin-top:40px;flex-wrap:wrap">
+    <div><div style="font-size:28px;font-weight:900;color:#D4AF37">6</div><div style="font-size:13px;color:#666">Productos</div></div>
+    <div><div style="font-size:28px;font-weight:900;color:#D4AF37">7</div><div style="font-size:13px;color:#666">Servicios Docker</div></div>
+    <div><div style="font-size:28px;font-weight:900;color:#D4AF37">15</div><div style="font-size:13px;color:#666">Días de implementación</div></div>
+    <div><div style="font-size:28px;font-weight:900;color:#D4AF37">3</div><div style="font-size:13px;color:#666">Artistas</div></div>
+  </div>
+  <div class="arrow-down">↓</div>
+</section>
+
+<!-- SLIDE 1: MARCA -->
+<section class="slide" id="slide-1">
+  <div class="tag">Identidad</div>
+  <h2>Marca <span class="gold">ABE Studio</span></h2>
+  <p class="sub">La línea de productos IA de ABE Music Inc para generación automatizada de video.</p>
+
+  <div class="grid g2" style="margin-bottom:30px">
+    <div class="card">
+      <h3>Paleta</h3>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <div style="width:40px;height:40px;border-radius:8px;background:#0A0A0A;border:2px solid #333"></div>
+        <div style="width:40px;height:40px;border-radius:8px;background:#D4AF37"></div>
+        <div style="width:40px;height:40px;border-radius:8px;background:#7C3AED"></div>
+        <div style="width:40px;height:40px;border-radius:8px;background:#1a1a1a"></div>
+        <div style="width:40px;height:40px;border-radius:8px;background:#F0EDE8"></div>
+      </div>
+      <p style="margin-top:10px;font-size:12px">
+        <span style="color:#888">#0A0A0A</span> ·
+        <span style="color:#D4AF37">#D4AF37</span> ·
+        <span style="color:#7C3AED">#7C3AED</span> ·
+        <span style="color:#888">#1a1a1a</span> ·
+        <span style="color:#F0EDE8">#F0EDE8</span>
+      </p>
+    </div>
+    <div class="card">
+      <h3>Naming de Productos</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px;font-size:12px">
+        <div><span style="color:#D4AF37">Prompt Reels</span> <span style="color:#666">| T2V</span></div>
+        <div><span style="color:#D4AF37">Foto Reels</span> <span style="color:#666">| I2V</span></div>
+        <div><span style="color:#D4AF37">Beat Sync</span> <span style="color:#666">| Audio</span></div>
+        <div><span style="color:#D4AF37">Clone Studio</span> <span style="color:#666">| Ref2V</span></div>
+        <div><span style="color:#D4AF37">Lyric Flow</span> <span style="color:#666">| Letras</span></div>
+        <div><span style="color:#D4AF37">ABE Cuts</span> <span style="color:#666">| Multi-clip</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="border-color:#7C3AED20;background:linear-gradient(135deg,#0d0d2b,#0a0a0a);max-width:600px">
+    <p style="font-size:14px;font-style:italic;color:#aaa">"El estudio IA de tu artista. Consistencia, velocidad, calidad — sin los costos de producción tradicional."</p>
+  </div>
+</section>
+
+<!-- SLIDE 2: PRODUCTOS -->
+<section class="slide" id="slide-2">
+  <div class="tag gold">Productos</div>
+  <h2>6 Líneas de <span class="gold">Producto</span></h2>
+  <p class="sub">Cada una mapea a un plan de suscripción existente y a un modo de generación Seedance.</p>
+
+  <div class="grid g3">
+    <div class="prod-card">
+      <div style="font-size:28px;margin-bottom:8px">✍️</div>
+      <h4>Prompt Reels</h4>
+      <div class="desc">Texto → Video. Describe una escena y recibe un videoclip cinemático.</div>
+      <span class="badge gold">T2V</span>
+      <span class="badge green">Start</span>
+    </div>
+    <div class="prod-card">
+      <div style="font-size:28px;margin-bottom:8px">📷</div>
+      <h4>Foto Reels</h4>
+      <div class="desc">Imagen → Video. Una foto del artista cobra vida con movimiento.</div>
+      <span class="badge gold">I2V</span>
+      <span class="badge green">Pro</span>
+    </div>
+    <div class="prod-card">
+      <div style="font-size:28px;margin-bottom:8px">🎵</div>
+      <h4>Beat Sync</h4>
+      <div class="desc">Audio + Imagen → Video sincronizado al ritmo de la canción.</div>
+      <span class="badge purple">Audio</span>
+      <span class="badge green">Pro</span>
+    </div>
+    <div class="prod-card">
+      <div style="font-size:28px;margin-bottom:8px">🎭</div>
+      <h4>Clone Studio</h4>
+      <div class="desc">@character del artista. Consistencia perfecta en todas las generaciones.</div>
+      <span class="badge purple">Ref2V</span>
+      <span class="badge green">Unlimited</span>
+    </div>
+    <div class="prod-card">
+      <div style="font-size:28px;margin-bottom:8px">📝</div>
+      <h4>Lyric Flow</h4>
+      <div class="desc">Letra animada con visuales generados. Perfecto para YouTube.</div>
+      <span class="badge gold">T2V</span>
+      <span class="badge green">Pro</span>
+    </div>
+    <div class="prod-card">
+      <div style="font-size:28px;margin-bottom:8px">🎬</div>
+      <h4>ABE Cuts</h4>
+      <div class="desc">Pipeline multi-clip. Videoclips completos de 1 minuto encadenando 15s.</div>
+      <span class="badge purple">Multi</span>
+      <span class="badge green">Unlimited</span>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:16px;margin-top:24px;flex-wrap:wrap">
+    <div class="card" style="flex:1;min-width:120px;text-align:center;padding:16px">
+      <div style="font-size:12px;color:#888">Studio Start</div>
+      <div style="font-size:20px;font-weight:900;color:#D4AF37">$99/mes</div>
+      <div style="font-size:11px;color:#666">5 reels</div>
+    </div>
+    <div class="card" style="flex:1;min-width:120px;text-align:center;padding:16px;border-color:#D4AF3740">
+      <div style="font-size:12px;color:#888">Studio Pro</div>
+      <div style="font-size:20px;font-weight:900;color:#D4AF37">$299/mes</div>
+      <div style="font-size:11px;color:#666">20 reels</div>
+    </div>
+    <div class="card" style="flex:1;min-width:120px;text-align:center;padding:16px;border-color:#7C3AED40">
+      <div style="font-size:12px;color:#888">Studio Unlimited</div>
+      <div style="font-size:20px;font-weight:900;color:#7C3AED">$999/mes</div>
+      <div style="font-size:11px;color:#666">Ilimitados</div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 3: PIPELINES -->
+<section class="slide" id="slide-3">
+  <div class="tag">Pipelines</div>
+  <h2>Pipelines de <span class="purple">Contenido</span></h2>
+  <p class="sub">Flujos automatizados desde la solicitud del usuario hasta el video entregado.</p>
+
+  <div class="pipeline">
+    <h3 style="font-size:16px;margin-bottom:8px">✍️ Prompt Reel — Text-to-Video</h3>
+    <p style="font-size:12px;color:#888;margin-bottom:12px">Pipeline directo. Un prompt → un video de 5-15s en ~60 segundos.</p>
+    <div class="flow">
+      <div class="step active">Usuario<br><span class="sub">web / Telegram</span></div>
+      <div class="arrow">→</div>
+      <div class="step active">Studio API<br><span class="sub">validar + encolar</span></div>
+      <div class="arrow">→</div>
+      <div class="step active">Redis Queue<br><span class="sub">prioridad</span></div>
+      <div class="arrow">→</div>
+      <div class="step active">Worker<br><span class="sub">POST Seedance</span></div>
+      <div class="arrow">→</div>
+      <div class="step done">Seedance API<br><span class="sub">generación async</span></div>
+      <div class="arrow">→</div>
+      <div class="step done">Webhook<br><span class="sub">callback</span></div>
+      <div class="arrow">→</div>
+      <div class="step done">Notificar<br><span class="sub">entrega</span></div>
+    </div>
+  </div>
+
+  <div class="pipeline" style="border-color:#7C3AED20">
+    <h3 style="font-size:16px;margin-bottom:8px">🎬 ABE Cuts — Multi-clip (para videos &gt;15s)</h3>
+    <p style="font-size:12px;color:#888;margin-bottom:12px">Divide la canción en segmentos de 15s, genera en paralelo, une con FFmpeg.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+      <div style="background:#1a0a2e;border:1px solid #7C3AED30;border-radius:10px;padding:12px;flex:1;min-width:120px;text-align:center">
+        <div style="font-size:11px;color:#7C3AED;font-weight:700">SEG 0-15s</div>
+        <div style="font-size:10px;color:#666">Clip 1</div>
+      </div>
+      <div style="font-size:18px;color:#7C3AED;display:flex;align-items:center">+</div>
+      <div style="background:#1a0a2e;border:1px solid #7C3AED30;border-radius:10px;padding:12px;flex:1;min-width:120px;text-align:center">
+        <div style="font-size:11px;color:#7C3AED;font-weight:700">SEG 15-30s</div>
+        <div style="font-size:10px;color:#666">Clip 2</div>
+      </div>
+      <div style="font-size:18px;color:#7C3AED;display:flex;align-items:center">+</div>
+      <div style="background:#1a0a2e;border:1px solid #7C3AED30;border-radius:10px;padding:12px;flex:1;min-width:120px;text-align:center">
+        <div style="font-size:11px;color:#7C3AED;font-weight:700">SEG 30-45s</div>
+        <div style="font-size:10px;color:#666">Clip 3</div>
+      </div>
+      <div style="font-size:18px;color:#7C3AED;display:flex;align-items:center">+</div>
+      <div style="background:#1a0a2e;border:1px solid #7C3AED30;border-radius:10px;padding:12px;flex:1;min-width:120px;text-align:center">
+        <div style="font-size:11px;color:#7C3AED;font-weight:700">SEG 45-60s</div>
+        <div style="font-size:10px;color:#666">Clip 4</div>
+      </div>
+      <div style="font-size:18px;color:#10B981;display:flex;align-items:center">→</div>
+      <div style="background:#0a1a0e;border:1px solid #10B98130;border-radius:10px;padding:12px;flex:1;min-width:120px;text-align:center">
+        <div style="font-size:11px;color:#10B981;font-weight:700">FFMPEG</div>
+        <div style="font-size:10px;color:#666">concat + audio</div>
+      </div>
+      <div style="font-size:18px;color:#10B981;display:flex;align-items:center">→</div>
+      <div style="background:#0a1a0e;border:1px solid #10B98130;border-radius:10px;padding:12px;flex:1;min-width:120px;text-align:center">
+        <div style="font-size:11px;color:#10B981;font-weight:700">VIDEO FINAL</div>
+        <div style="font-size:10px;color:#666">60s · 1080p</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="pipeline" style="border-color:#D4AF3720">
+    <h3 style="font-size:16px;margin-bottom:8px">🎭 Clone Studio — Reference-to-Video con @character</h3>
+    <p style="font-size:12px;color:#888;margin-bottom:12px">Setup único del artista. Todas las generaciones mantienen su identidad visual.</p>
+    <div class="flow">
+      <div class="step done">Fotos del artista<br><span class="sub">5 ángulos</span></div>
+      <div class="arrow">→</div>
+      <div class="step done">@character<br><span class="sub">guardado en DB</span></div>
+      <div class="arrow">→</div>
+      <div class="step active">Generación<br><span class="sub">ref images inyectadas</span></div>
+      <div class="arrow">→</div>
+      <div class="step done">Video consistente<br><span class="sub">misma cara/estilo</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 4: ARQUITECTURA DOCKER -->
+<section class="slide" id="slide-4">
+  <div class="tag gold">Infraestructura</div>
+  <h2>Arquitectura <span class="gold">Docker</span></h2>
+  <p class="sub">7 servicios nuevos + integración con SDC stack existente. Todo testeable localmente.</p>
+
+  <div class="docker-grid">
+    <div class="docker-box">
+      <div class="name">studio-api</div>
+      <div class="port">:3020</div>
+      <div class="desc">API REST. Recibe peticiones, valida suscripciones, encola tareas.</div>
+      <span class="tag-sm ext">HTTP</span>
+    </div>
+    <div class="docker-box" style="border-color:#D4AF3740">
+      <div class="name">studio-worker</div>
+      <div class="port">interno</div>
+      <div class="desc">Worker async. Envía a Seedance, hace polling, procesa resultados.</div>
+      <span class="tag-sm int">Worker</span>
+    </div>
+    <div class="docker-box">
+      <div class="name">studio-webhook</div>
+      <div class="port">:3021</div>
+      <div class="desc">Receptor de callbacks de Seedance. Recibe videos completados.</div>
+      <span class="tag-sm ext">HTTP</span>
+    </div>
+    <div class="docker-box" style="border-color:#7C3AED40">
+      <div class="name">studio-mock</div>
+      <div class="port">:3099</div>
+      <div class="desc">Mock de Seedance para tests. Sin consumir créditos reales.</div>
+      <span class="tag-sm int">Mock</span>
+    </div>
+    <div class="docker-box">
+      <div class="name">abe-music-bot</div>
+      <div class="port">interno</div>
+      <div class="desc">Bot Telegram. Nuevo flujo /reel. Notifica resultados.</div>
+      <span class="tag-sm ext">Telegram</span>
+    </div>
+    <div class="docker-box">
+      <div class="name">frontend</div>
+      <div class="port">:3010</div>
+      <div class="desc">Next.js. Nuevo "Reel Studio" en el dashboard.</div>
+      <span class="tag-sm ext">Web</span>
+    </div>
+    <div class="docker-box" style="border-color:#3B82F640">
+      <div class="name">redis</div>
+      <div class="port">:6379</div>
+      <div class="desc">Cola de tareas + caché de estados.</div>
+      <span class="tag-sm db">Queue</span>
+    </div>
+    <div class="docker-box" style="border-color:#3B82F640">
+      <div class="name">postgres</div>
+      <div class="port">:5432</div>
+      <div class="desc">Tablas: studio_tasks, studio_usage, studio_artists.</div>
+      <span class="tag-sm db">DB</span>
+    </div>
+  </div>
+
+  <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:12px;padding:20px;margin-top:20px">
+    <div style="font-size:13px;font-weight:700;margin-bottom:12px;color:#888">Diagrama de flujo entre servicios</div>
+    <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:11px">
+      <span style="background:#1a1a1a;padding:6px 12px;border-radius:6px;color:#D4AF37">Usuario</span>
+      <span style="color:#555">→</span>
+      <span style="background:#1a1a1a;padding:6px 12px;border-radius:6px;color:#D4AF37">Studio API</span>
+      <span style="color:#555">→</span>
+      <span style="background:#1a1a1a;padding:6px 12px;border-radius:6px;color:#10B981">Redis Queue</span>
+      <span style="color:#555">→</span>
+      <span style="background:#1a1a1a;padding:6px 12px;border-radius:6px;color:#7C3AED">Worker</span>
+      <span style="color:#555">→</span>
+      <span style="background:#1a1a1a;padding:6px 12px;border-radius:6px;color:#3B82F6">Seedance API</span>
+      <span style="color:#555">→</span>
+      <span style="background:#1a1a1a;padding:6px 12px;border-radius:6px;color:#7C3AED">Webhook</span>
+      <span style="color:#555">→</span>
+      <span style="background:#1a1a1a;padding:6px 12px;border-radius:6px;color:#D4AF37">Usuario</span>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 5: AUTOMATIZACIÓN -->
+<section class="slide" id="slide-5">
+  <div class="tag purple">Automatización</div>
+  <h2>Cron + n8n + <span class="purple">Eventos</span></h2>
+  <p class="sub">El sistema se auto-gestiona: límites, limpieza, notificaciones, reportes.</p>
+
+  <div class="grid g2">
+    <div class="card">
+      <h3>⏰ Cron Jobs</h3>
+      <div style="font-size:12px;margin-top:10px">
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1a1a1a">
+          <span style="color:#aaa">Polling de tareas</span>
+          <span style="color:#10B981">* * * * *</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1a1a1a">
+          <span style="color:#aaa">Limpiar videos expirados</span>
+          <span style="color:#D4AF37">0 8 * * *</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1a1a1a">
+          <span style="color:#aaa">Reset límites mensuales</span>
+          <span style="color:#7C3AED">0 0 1 * *</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1a1a1a">
+          <span style="color:#aaa">Reintentar fallidas</span>
+          <span style="color:#10B981">*/30 * * * *</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0">
+          <span style="color:#aaa">Reporte semanal</span>
+          <span style="color:#D4AF37">0 9 * * 1</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>📡 Eventos del Sistema</h3>
+      <div style="font-size:12px;margin-top:10px">
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1a1a1a">
+          <span style="color:#10B981">generation.completed</span>
+          <span style="color:#aaa">Notificar + descontar</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1a1a1a">
+          <span style="color:#EF4444">generation.failed</span>
+          <span style="color:#aaa">Reintentar o alertar</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1a1a1a">
+          <span style="color:#D4AF37">credits.low</span>
+          <span style="color:#aaa">Alerta Abraham</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #1a1a1a">
+          <span style="color:#3B82F6">monthly.reset</span>
+          <span style="color:#aaa">Reset contadores</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0">
+          <span style="color:#7C3AED">artist.onboarded</span>
+          <span style="color:#aaa">Setup @character</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="grid-column:1/-1">
+      <div style="display:flex;gap:16px;flex-wrap:wrap;justify-content:space-between">
+        <div>
+          <h3>n8n Workflows</h3>
+          <div style="font-size:12px;color:#888;margin-top:6px">
+            • studio-batch-generate — lote multi-artista<br>
+            • studio-expiry-cleanup — limpieza diaria<br>
+            • studio-weekly-report — reporte semanal<br>
+            • studio-credit-alert — alerta créditos bajos
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:36px;font-weight:900;color:#10B981">24/7</div>
+          <div style="font-size:11px;color:#666">Automatizado</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 6: BASE DE DATOS -->
+<section class="slide" id="slide-6">
+  <div class="tag">Datos</div>
+  <h2>Esquema de <span class="purple">Base de Datos</span></h2>
+  <p class="sub">4 tablas nuevas para el Studio. Cada tarea, consumo y artista queda registrado.</p>
+
+  <div class="grid g2" style="margin-bottom:24px">
+    <div class="card" style="border-color:#7C3AED20">
+      <h3 style="color:#7C3AED">studio_tasks</h3>
+      <p style="font-size:11px;color:#888;margin-top:6px;font-family:monospace">
+        id UUID · user_id INT · artist_id VARCHAR<br>
+        task_type VARCHAR(32) · seedance_task_id VARCHAR(64)<br>
+        status VARCHAR(16) · credits INT · prompt TEXT<br>
+        result_url TEXT · processing_time INT<br>
+        created_at · completed_at
+      </p>
+    </div>
+    <div class="card" style="border-color:#D4AF3720">
+      <h3 style="color:#D4AF37">studio_usage</h3>
+      <p style="font-size:11px;color:#888;margin-top:6px;font-family:monospace">
+        id UUID · user_id INT · month DATE<br>
+        reels_generated INT · credits_consumed INT<br>
+        UNIQUE(user_id, month)
+      </p>
+    </div>
+    <div class="card" style="border-color:#10B98120">
+      <h3 style="color:#10B981">studio_artists</h3>
+      <p style="font-size:11px;color:#888;margin-top:6px;font-family:monospace">
+        id UUID · artist_id VARCHAR(8) FK<br>
+        character_refs JSONB — URLs de fotos de referencia<br>
+        created_at · updated_at
+      </p>
+    </div>
+    <div class="card" style="border-color:#3B82F620">
+      <h3 style="color:#3B82F6">studio_templates</h3>
+      <p style="font-size:11px;color:#888;margin-top:6px;font-family:monospace">
+        id UUID · name VARCHAR(128) · prompt TEXT<br>
+        category VARCHAR(64) · artist_id VARCHAR<br>
+        is_public BOOLEAN · created_by INT
+      </p>
+    </div>
+  </div>
+
+  <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:12px;padding:16px">
+    <div style="font-size:12px;color:#888">Los videos generados expiran en el CDN de Seedance. El webhook handler los descarga automáticamente al storage local (OVH / R2) y actualiza result_url con una URL permanente.</div>
+  </div>
+</section>
+
+<!-- SLIDE 7: ROADMAP -->
+<section class="slide" id="slide-7">
+  <div class="tag gold">Implementación</div>
+  <h2>Roadmap · <span class="gold">15 días</span></h2>
+  <p class="sub">Fases incrementales. Cada fase produce algo testeable en Docker.</p>
+
+  <div class="roadmap-phase">
+    <div class="phase-header">
+      <div class="phase-num f1">1</div>
+      <div class="phase-title">Fundación</div>
+      <div class="phase-days">Días 1-2</div>
+    </div>
+    <ul class="roadmap-items">
+      <li>Mock de Seedance (Flask)</li>
+      <li>SDK base con types</li>
+      <li>Docker compose con mock</li>
+      <li>Test: curl → mock → respuesta</li>
+    </ul>
+  </div>
+
+  <div class="roadmap-phase">
+    <div class="phase-header">
+      <div class="phase-num f2">2</div>
+      <div class="phase-title">API + Worker</div>
+      <div class="phase-days">Días 3-7</div>
+    </div>
+    <ul class="roadmap-items">
+      <li>Studio API (POST /studio/generate)</li>
+      <li>Studio Worker (cola Redis)</li>
+      <li>Polling de tareas en progreso</li>
+      <li>Webhook handler + storage</li>
+      <li>Test: API → Worker → Mock → Webhook</li>
+    </ul>
+  </div>
+
+  <div class="roadmap-phase">
+    <div class="phase-header">
+      <div class="phase-num f3">3</div>
+      <div class="phase-title">Integración</div>
+      <div class="phase-days">Días 8-12</div>
+    </div>
+    <ul class="roadmap-items">
+      <li>Frontend: Reel Studio en dashboard</li>
+      <li>Bot: comando /reel + notificaciones</li>
+      <li>n8n workflows de automatización</li>
+      <li>Cron jobs + eventos</li>
+      <li>Migración DB (009_abe_studio.sql)</li>
+    </ul>
+  </div>
+
+  <div class="roadmap-phase">
+    <div class="phase-header">
+      <div class="phase-num f4">4</div>
+      <div class="phase-title">Producción</div>
+      <div class="phase-days">Días 13-15</div>
+    </div>
+    <ul class="roadmap-items">
+      <li>Test E2E completo</li>
+      <li>Deploy en VPS (OVH)</li>
+      <li>Onboarding Héctor Rubio (@character)</li>
+      <li>Generación real con Seedance API</li>
+    </ul>
+  </div>
+
+  <div style="background:#0d0d0d;border:1px solid #1a1a1a;border-radius:12px;padding:16px;text-align:center;margin-top:12px">
+    <p style="font-size:13px;color:#888">Cada fase termina con <span style="color:#10B981">tests pasando</span> y <span style="color:#D4AF37">Docker compose up</span> funcionando.</p>
+  </div>
+</section>
+
+</div>
+
+<script>
+const slides = document.querySelector('.slides');
+const dots = document.querySelectorAll('.nav-dots a');
+const progress = document.getElementById('progress');
+
+function updateNav() {
+  const scrollTop = slides.scrollTop;
+  const slideEls = document.querySelectorAll('.slide');
+  const total = slides.scrollHeight - slides.clientHeight;
+  const pct = (scrollTop / total) * 100;
+  progress.style.width = pct + '%';
+
+  slideEls.forEach((slide, i) => {
+    const rect = slide.getBoundingClientRect();
+    const midpoint = rect.top + rect.height / 2;
+    if (midpoint > 0 && midpoint < window.innerHeight) {
+      dots.forEach(d => d.classList.remove('active'));
+      dots[i]?.classList.add('active');
+    }
+  });
+}
+
+slides.addEventListener('scroll', updateNav);
+updateNav();
+
+// Fade in cards on scroll
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.card, .pipeline, .docker-box, .prod-card, .roadmap-phase, .flow .step, .tag, h2').forEach(el => {
+  el.classList.add('fade-in');
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>

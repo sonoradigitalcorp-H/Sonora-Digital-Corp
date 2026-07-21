@@ -1,0 +1,76 @@
+name: contabilidad/organizar-carpetas
+description: "Organizador de archivos — clasifica XMLs y PDFs por cliente, RFC, fecha y tipo para eliminar el desorden en la laptop"
+version: 1
+
+inputs:
+  - name: origen
+    type: string
+    description: "Carpeta origen con archivos desordenados"
+  - name: modo
+    type: string
+    enum: [clasificar, organizar, limpiar]
+    default: organizar
+  - name: destino
+    type: string
+    description: "Carpeta destino organizada"
+
+outputs:
+  - name: archivos_procesados
+    type: integer
+    description: "Número de archivos procesados"
+  - name: clientes_detectados
+    type: array
+    description: "Clientes/RFCs detectados"
+  - name: estructura
+    type: string
+    description: "Ruta de la carpeta organizada"
+
+prompt: |
+  Eres un organizador de archivos para despachos contables.
+  
+  El desorden típico de una contadora incluye:
+  - XMLs con nombres genéricos (factura.xml, CFDI_2025.xml)
+  - PDFs mezclados con XMLs
+  - Facturas de distintos clientes en la misma carpeta
+  - Archivos sin renombrar
+  - Duplicados
+  
+  Proceso de organización:
+  1. Escanear carpeta origen en busca de XMLs y PDFs
+  2. Para cada XML:
+     a. Parsear CFDI: extraer RFC emisor, RFC receptor, UUID, fecha, total
+     b. Identificar cliente (por RFC receptor)
+     c. Clasificar tipo (ingreso/gasto/nómina/pago)
+     d. Renombrar: {RFC}_{FECHA}_{TIPO}_{UUID[:8]}.xml
+     e. Mover a carpeta del cliente
+  3. Para cada PDF:
+     a. Si tiene OCR, buscar texto con RFC o UUID
+     b. Buscar XML relacionado (mismo UUID)
+     c. Si hay match, mover junto al XML
+     d. Si no hay match, mover a Pendientes/
+  4. Estructura final:
+     C:\NathyConta\Clientes\
+       {Cliente1}\
+         {Año}\
+           {Mes}\
+             facturas\
+               {RFC}_{FECHA}_INGRESO_{UUID}.xml
+               {RFC}_{FECHA}_PAGO_{UUID}.xml
+             pdfs\
+             nomina\
+       {Cliente2}\
+         ...
+     C:\NathyConta\Procesados\
+     C:\NathyConta\Errores\
+     C:\NathyConta\Pendientes\
+     C:\NathyConta\Duplicados\
+
+tools_required:
+  - edge-client
+
+agents_allowed:
+  - nathy-conta-agent
+
+eval_criteria:
+  - accuracy: "Archivos clasificados por RFC correcto"
+  - latency: "< 1s por archivo"

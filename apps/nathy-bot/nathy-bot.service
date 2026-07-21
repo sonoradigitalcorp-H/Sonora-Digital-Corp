@@ -1,0 +1,17 @@
+[Unit]
+Description=Nathy Conta Telegram Bot
+After=network.target
+
+[Service]
+Type=simple
+User=mystic
+WorkingDirectory=/home/mystic/sonora-digital-corp/apps/nathy-bot
+Environment="NATHY_BOT_TOKEN=8269193231:AAF70NVpEMsrP_fePAc_qLdNEsJkBIGUy4g"
+Environment="NATHY_CHANNEL_ID=@NathyConta"
+Environment="OPENROUTER_API_KEY=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"
+ExecStart=/usr/bin/python3 /home/mystic/sonora-digital-corp/apps/nathy-bot/nathy_bot.py
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

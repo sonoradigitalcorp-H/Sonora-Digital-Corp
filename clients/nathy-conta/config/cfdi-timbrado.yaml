@@ -1,0 +1,67 @@
+name: contabilidad/cfdi-timbrado
+description: "Timbrado y cancelación de CFDI 4.0 — ingreso, pago, nómina, carta porte"
+version: 1
+
+inputs:
+  - name: tipo
+    type: string
+    enum: [ingreso, pago, nomina, traslado, carta-porte]
+  - name: cliente_id
+    type: string
+    description: "RFC o ID del cliente"
+  - name: monto
+    type: number
+    description: "Monto total del CFDI"
+  - name: xml_original
+    type: string
+    description: "Path o contenido del XML (para cancelación)"
+  - name: uuid
+    type: string
+    description: "UUID del CFDI (para cancelación/sustitución)"
+
+outputs:
+  - name: uuid
+    type: string
+    description: "UUID del CFDI timbrado"
+  - name: xml_path
+    type: string
+    description: "Path del XML timbrado"
+  - name: estado
+    type: string
+    enum: [timbrar, cancelado, pendiente, error]
+
+prompt: |
+  Eres experto en CFDI 4.0 (Comprobante Fiscal Digital por Internet).
+  Conoces todas las versiones y complementos:
+  - CFDI 4.0 (vigente): ingreso, egreso, traslado, nómina, pago, carta porte
+  - Complementos: pago (para SPEI/cheques), nómina (percepciones/deducciones),
+    carta porte (para transporte), comercio exterior, donatarias, hidrocarburos
+  - PACs soportados: Facturaxion, Finkok, SW-SAT, CFDI360
+  - Validaciones: RFC emisor/receptor, UUID duplicado, montos, IVA (16% / 0% / exento),
+    sello digital, cadena original, certificado SAT
+
+  Flujo de timbrado:
+  1. Recibir datos del cliente + tipo de CFDI + montos
+  2. Generar XML con cadena original
+  3. Enviar a PAC para timbrado
+  4. Recibir XML timbrado con UUID
+  5. Devolver UUID + guardar en carpeta del cliente
+  6. Renombrar: {RFC}_{FECHA}_{TIPO}_{UUID[:8]}.xml
+
+  Flujo de cancelación:
+  1. Recibir UUID + motivo (02=acuerdo, 03=no se llevó a cabo, 04=otros)
+  2. Solicitar cancelación al PAC
+  3. Generar XML de sustitución si aplica
+  4. Actualizar estado
+
+tools_required:
+  - pac-api
+  - wacli
+
+agents_allowed:
+  - nathy-cfdi-agent
+  - nathy-conta-agent
+
+eval_criteria:
+  - accuracy: "RFC válido y montos correctos"
+  - latency: "< 5s timbrado"

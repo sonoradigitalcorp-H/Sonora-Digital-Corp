@@ -59,3 +59,38 @@ collectors/state/
 products/mystika/web/.next/
 apps/voice/*.vpsbak
 scripts/sync-brain-vault.sh
+
+# Unification — archive data we don't version
+archive/**/*.tgz
+archive/**/*.tar.gz
+archive/**/*.zip
+
+# Hermes runtime (not config)
+.hermes/
+state.db
+memory_store.db
+
+# Wacli session data
+.wacli/
+**/wacli.db*
+
+# OpenClaw runtime
+.openclaw/state/
+.openclaw/logs/
+
+# Obsidian workspace lock
+*.obsidian/workspace.json
+*.obsidian/workspace
+
+# IDE
+*.swp
+*.swo
+*~
+
+# Big generated artifacts
+products/archive/**/*.pdf
+products/archive/**/*.html
+docs/sdc-brain-vault/
+archive/
+credentials/
+data/

@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="none">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f1b4d"/>
+      <stop offset="100%" stop-color="#1a237e"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#c9a84c"/>
+      <stop offset="100%" stop-color="#f0d478"/>
+    </linearGradient>
+  </defs>
+  <rect width="400" height="400" rx="80" fill="url(#bg)"/>
+  <!-- Balance Scale -->
+  <g transform="translate(200,160)">
+    <!-- Base -->
+    <rect x="-60" y="80" width="120" height="6" rx="3" fill="url(#gold)"/>
+    <rect x="-10" y="56" width="20" height="30" rx="2" fill="url(#gold)"/>
+    <!-- Beam -->
+    <rect x="-120" y="50" width="240" height="5" rx="2.5" fill="url(#gold)"/>
+    <!-- Left pan -->
+    <path d="M-110 55 L-130 75 L-70 75 Z" fill="url(#gold)" opacity="0.9"/>
+    <rect x="-130" y="75" width="60" height="4" rx="2" fill="url(#gold)"/>
+    <!-- Right pan -->
+    <path d="M110 55 L130 75 L70 75 Z" fill="url(#gold)" opacity="0.9"/>
+    <rect x="70" y="75" width="60" height="4" rx="2" fill="url(#gold)"/>
+    <!-- Dollar sign on left pan -->
+    <text x="-100" y="62" font-family="serif" font-size="24" font-weight="bold" fill="#0f1b4d" text-anchor="middle">$</text>
+    <!-- Percent on right pan -->
+    <text x="100" y="62" font-family="serif" font-size="22" font-weight="bold" fill="#0f1b4d" text-anchor="middle">%</text>
+  </g>
+  <!-- Chart line below -->
+  <path d="M80 280 Q140 240 200 260 Q260 280 320 220" stroke="url(#gold)" stroke-width="3" fill="none" stroke-linecap="round"/>
+  <circle cx="320" cy="220" r="5" fill="url(#gold)"/>
+  <!-- Text -->
+  <text x="200" y="335" font-family="Georgia, serif" font-size="32" font-weight="bold" fill="#ffffff" text-anchor="middle" letter-spacing="3">NATHY</text>
+  <text x="200" y="365" font-family="Georgia, serif" font-size="14" fill="#c9a84c" text-anchor="middle" letter-spacing="6">CONTA</text>
+</svg>

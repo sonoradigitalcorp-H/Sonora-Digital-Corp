@@ -11,12 +11,12 @@ routing:
     name: "Luis Daniel"
     notes: "Dueño del sistema"
 
-  # Contactos personales
+  # Nathy Conta
   - phone: "+5216622681111"
-    tenant: sdc_contact_nathaly
-    type: contact
-    name: "Nathaly Hermosillo"
-    notes: "Novia de Perroni"
+    tenant: nathy_conta
+    type: client
+    name: "Nathy"
+    notes: "Contadora — Nathy Conta. Skills: CFDI, SAT, RESICO, nóminas, CONTPAQi, conciliación"
 
   # Partners
   - phone: "+5216621072254"
@@ -25,8 +25,8 @@ routing:
     name: "César Holguín"
     notes: "CEO AztroTech"
 
-  # Default para números desconocidos
-  default:
-    type: unknown
-    action: "send_welcome"
-    message: "¡Bienvenido a Sonora Digital Corp! 🚀 ¿Tienes un código de activación? Escríbelo aquí para empezar."
+# Default para números desconocidos
+default:
+  type: unknown
+  action: "send_welcome"
+  message: "¡Bienvenido a Sonora Digital Corp! 🚀 ¿Tienes un código de activación? Escríbelo aquí para empezar."

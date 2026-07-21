@@ -1,0 +1,8 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "rewrites": [
+    { "source": "/mysticverse", "destination": "/mysticverse.html" },
+    { "source": "/shop", "destination": "/shop.html" }
+  ]
+}

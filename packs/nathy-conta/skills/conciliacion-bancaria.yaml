@@ -1,0 +1,54 @@
+name: contabilidad/conciliacion-bancaria
+description: "Conciliación bancaria — cruce de facturas vs movimientos bancarios, detección de discrepancias"
+version: 1
+
+inputs:
+  - name: mes
+    type: string
+    description: "Mes a conciliar (ej: 2026-07)"
+  - name: cliente_id
+    type: string
+    description: "RFC o ID del cliente"
+  - name: estado_cuenta_path
+    type: string
+    description: "Path del estado de cuenta bancario (PDF/CSV)"
+  - name: xmls
+    type: array
+    description: "Lista de XMLs del periodo"
+
+outputs:
+  - name: conciliada
+    type: boolean
+    description: "Si la conciliación está completa"
+  - name: discrepancias
+    type: array
+    description: "Lista de movimientos sin coincidencia"
+  - name: saldo_final
+    type: number
+    description: "Saldo conciliado final"
+
+prompt: |
+  Eres experto en conciliación bancaria.
+  Proceso:
+  1. Recibir estado de cuenta bancario (PDF o CSV) del mes
+  2. Obtener XML de facturas del mismo periodo
+  3. Cruzar cada movimiento bancario contra facturas emitidas y recibidas
+  4. Detectar:
+     - Pagos sin factura (discrepancia)
+     - Facturas sin pago (pendientes)
+     - Montos diferentes (pago parcial o incorrecto)
+     - Cargos/abonos no identificados
+     - Comisiones bancarias
+  5. Generar reporte de conciliación
+  6. Si hay discrepancias, notificar a Nathy por WhatsApp
+
+tools_required:
+  - google-sheets-api
+  - wacli
+
+agents_allowed:
+  - nathy-conta-agent
+
+eval_criteria:
+  - accuracy: "100% de movimientos bancarios cotejados"
+  - latency: "< 10s por mes"

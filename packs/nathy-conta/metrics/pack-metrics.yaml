@@ -1,0 +1,20 @@
+name: nathy-conta
+version: 1
+created: 2026-07-19
+
+agents: 4
+skills: 7
+use_cases: 6
+tests: 10
+
+coverage:
+  cfdi: full
+  sat: full
+  resico: full
+  nominas: full
+  conciliacion: full
+  contpaq: full
+  organizador: full
+
+status: active
+last_gate: pending

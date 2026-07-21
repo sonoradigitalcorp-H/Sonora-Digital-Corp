@@ -1,0 +1,25 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "username": "ABE Music — Sonora Digital Corp",
+  "model": "opencode/deepseek-v4-flash-free",
+  "default_agent": "mystic",
+  "instructions": [
+    "/home/mystic/sonora-digital-corp/sonora-enterprise-os/constitution/OMEGA-PROMPT-v10.0.md",
+    "/home/mystic/sonora-digital-corp/sonora-enterprise-os/constitution/TRUTH.md",
+    "/home/mystic/sonora-digital-corp/sonora-enterprise-os/constitution/SOUL.md",
+    "/home/mystic/sonora-digital-corp/sonora-enterprise-os/constitution/10-RULES.md",
+    "/home/mystic/sonora-digital-corp/sonora-enterprise-os/prompts/prompts/CLIENTS/abe-music.md",
+    "CLAUDE.md"
+  ],
+  "agent": {
+    "mystic": {
+      "mode": "primary",
+      "description": "Mystic — ABE Music Hub"
+    },
+    "dev": {
+      "mode": "subagent",
+      "description": "Dev OS — ABE Music software delivery",
+      "permission": { "read": "allow", "edit": "allow", "bash": { "git *": "allow", "npm *": "allow", "pip *": "allow", "*": "ask" } }
+    }
+  }
+}
