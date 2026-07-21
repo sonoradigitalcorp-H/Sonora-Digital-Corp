@@ -23,6 +23,7 @@ ollama>=0.6.2
 
 # Testing
 pytest>=9.1.0
+pytest-bdd>=8.0.0
 pytest-asyncio>=0.24.0
 pytest-cov>=6.0.0
 coverage>=7.15.0

@@ -1,0 +1,13 @@
+pyproject.toml
+sdd/__init__.py
+sdd/adr.py
+sdd/cli.py
+sdd/gherkin.py
+sdd/init.py
+sdd/spec.py
+sdd.egg-info/PKG-INFO
+sdd.egg-info/SOURCES.txt
+sdd.egg-info/dependency_links.txt
+sdd.egg-info/entry_points.txt
+sdd.egg-info/requires.txt
+sdd.egg-info/top_level.txt

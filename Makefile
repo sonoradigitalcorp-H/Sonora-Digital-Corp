@@ -31,7 +31,19 @@ lint-fix:  ## Auto-fix lint issues
 eval: eval-structural eval-promptfoo  ## Run all evaluations
 
 eval-structural:  ## Run structural evals (agent/cap/sdd/skill/event)
-	PYTHONPATH=. python3 -m pytest evals/test_evals.py -v --tb=short
+	PYTHONPATH=. python3 -m pytest evals/test_evals.py -v --tb=short; \
+	PYTHONPATH=. python3 -m pytest evals/structural/ -v --tb=short
+
+# ─── SDD ───────────────────────────────────────────────────────────────────
+
+sdd-test:  ## Run SDD BDD tests
+	sdd test
+
+sdd-eval:  ## Run SDD evals (structural + promptfoo)
+	sdd eval
+
+sdd-init:  ## Initialize SDD framework structure
+	sdd init
 
 eval-promptfoo:  ## Run promptfoo LLM evals
 	cd tests/promptfoo && promptfoo eval && cd ../..

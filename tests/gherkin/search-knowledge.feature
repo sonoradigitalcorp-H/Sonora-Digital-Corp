@@ -1,0 +1,1 @@
+/home/ubuntu/sonora-digital-corp/specs/capabilities/search-knowledge/gherkin/search-knowledge.feature

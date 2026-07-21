@@ -1,0 +1,1 @@
+/home/ubuntu/sonora-digital-corp/specs/capabilities/clone-person/gherkin/clone-person.feature
