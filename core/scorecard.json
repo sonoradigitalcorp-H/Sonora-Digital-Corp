@@ -1,5 +1,5 @@
 {
-  "overall": 52,
+  "overall": 53,
   "metrics": {
     "agents": 0,
     "capabilities": 9,
@@ -9,9 +9,13 @@
     "tests_total": 0,
     "violations": 0,
     "memory_count": 0,
-    "events_count": 1,
+    "events_count": 0,
     "git_ahead": 0,
-    "git_behind": 0
+    "git_behind": 0,
+    "specs": 9,
+    "gherkin_features": 4,
+    "step_definitions": 5,
+    "adrs": 1
   },
-  "updated": "2026-07-21T20:48:09.148092Z"
+  "updated": "2026-07-21T21:10:21.850033Z"
 }

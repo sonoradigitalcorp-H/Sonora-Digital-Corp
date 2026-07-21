@@ -22,11 +22,16 @@ def collect():
         "events_count": 0,
         "git_ahead": 0,
         "git_behind": 0,
+        "specs": 0,
+        "gherkin_features": 0,
+        "step_definitions": 0,
+        "adrs": 0,
     }
     metrics.update(_get_test_counts())
     metrics.update(_get_git_status())
     metrics.update(_get_memory_count())
     metrics.update(_get_events_count())
+    metrics.update(_count_sdd_artifacts())
     return metrics
 
 
@@ -122,3 +127,33 @@ def _get_events_count():
         except Exception:
             pass
     return {}
+
+
+def _count_sdd_artifacts():
+    import yaml
+    specs = 0
+    gherkin = 0
+    steps = 0
+    adrs = 0
+
+    specs_index = REPO / "specs" / "index.yaml"
+    if specs_index.exists():
+        try:
+            data = yaml.safe_load(specs_index.read_text())
+            specs = len(data.get("capabilities", []))
+        except Exception:
+            pass
+
+    gherkin_dir = REPO / "tests" / "gherkin"
+    if gherkin_dir.exists():
+        gherkin = len(list(gherkin_dir.glob("*.feature")))
+
+    steps_dir = REPO / "tests" / "steps"
+    if steps_dir.exists():
+        steps = len(list(steps_dir.glob("*_steps.py")))
+
+    adrs_dir = REPO / "adrs"
+    if adrs_dir.exists():
+        adrs = len(list(adrs_dir.glob("ADR-*.md")))
+
+    return {"specs": specs, "gherkin_features": gherkin, "step_definitions": steps, "adrs": adrs}

@@ -14,5 +14,5 @@ with open('core/scorecard.json', 'w') as f:
         'metrics': metrics,
         'updated': __import__('datetime').datetime.utcnow().isoformat() + 'Z'
     }, f, indent=2)
-print(f'Score: {score} | Agents: {metrics[\"agents\"]} | Capabilities: {metrics[\"capabilities\"]} | Events: {metrics[\"events_count\"]}')
+print(f'Score: {score} | Agents: {metrics[\"agents\"]} | Caps: {metrics[\"capabilities\"]} | Specs: {metrics[\"specs\"]} | Gherkin: {metrics[\"gherkin_features\"]} | ADRs: {metrics[\"adrs\"]} | Events: {metrics[\"events_count\"]}')
 "

@@ -1,0 +1,1 @@
+/home/ubuntu/sonora-digital-corp/specs/capabilities/generate-video/gherkin/generate-video.feature
