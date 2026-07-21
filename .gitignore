@@ -99,3 +99,5 @@ data/
 nathy-bot/*.log
 nathy-bot/data/
 nathy-bot/bot*.log
+*.ed25519*
+config/noel_ed25519_sdc
