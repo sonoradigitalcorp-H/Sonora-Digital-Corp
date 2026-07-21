@@ -6,7 +6,7 @@ import yaml
 
 logger = logging.getLogger(__name__)
 
-REGISTRY_PATH = Path("capabilities/index.yaml")
+REGISTRY_PATH = Path("skills/index.yaml")
 
 
 def load_registry() -> dict:

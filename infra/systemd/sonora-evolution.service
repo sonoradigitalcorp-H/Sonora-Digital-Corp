@@ -9,10 +9,9 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/env PYTHONPATH=__REPO__ /usr/bin/python3 -m evolution.auto_evolve --daily
-WorkingDirectory=__REPO__
-User=mystic
-Group=mystic
+ExecStart=/usr/bin/env python3 /home/ubuntu/sonora-digital-corp/scripts/evolution-cron.sh
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+User=ubuntu
 
 # Security hardening
 NoNewPrivileges=yes

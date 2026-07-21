@@ -1,0 +1,17 @@
+[Unit]
+Description=SDC Event Listener — unified event bus (HAS-003)
+Documentation=https://github.com/sonoradigitalcorp-H/Sonora-Digital-Corp
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/env python3 /home/ubuntu/sonora-digital-corp/events/run_listener.py
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+Restart=on-failure
+RestartSec=5
+User=ubuntu
+StandardOutput=append:/home/ubuntu/sonora-digital-corp/state/logs/event-listener.log
+StandardError=append:/home/ubuntu/sonora-digital-corp/state/logs/event-listener.log
+
+[Install]
+WantedBy=multi-user.target

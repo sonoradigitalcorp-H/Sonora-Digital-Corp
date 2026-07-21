@@ -1,7 +1,7 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 
-from capabilities.bus.router import load_registry, route, get_capability
+from skills.bus.router import load_registry, route, get_capability
 
 router = APIRouter(prefix="/api/v1/capability-bus", tags=["capability-bus"])
 
