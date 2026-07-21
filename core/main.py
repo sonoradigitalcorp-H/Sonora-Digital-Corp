@@ -1,133 +1,150 @@
 #!/usr/bin/env python3
-"""Hermes Kernel — HAS-004
-Central nervous system of the OS.
-Processes requests through Context → Planner → Policy → Router → Executor → Reflector.
+"""Evolution Engine — HAS-008
+8-module pipeline: Observe → Score → Detect → Propose → Generate → Update → Reflect
 """
 import argparse
-import asyncio
 import json
 import sys
 from pathlib import Path
 
-from kernel.context import ContextEngine
-from kernel.planner import Planner
-from kernel.policy import PolicyEngine
-from kernel.router import AgentRouter
-from kernel.executor import Executor
-from kernel.reflector import Reflector
-from capabilities.bus import CapabilityBus
-from agents.runtime import AgentRuntime
-from tenants.manager import TenantManager
+from evolution.observer import collect
+from evolution.scorecard import calculate, save, load
+from evolution.error_detector import detect
+from evolution.proposer import propose as run_propose
+from evolution.adr_generator import generate as gen_adr
+from evolution.prompt_updater import update as update_prompts
+from evolution.auto_doc import generate as gen_docs
+from evolution.reflector import reflect
 
 
-ROOT = Path(__file__).resolve().parent.parent
+REPO = Path(__file__).resolve().parent.parent
 
 
-class HermesKernel:
-    def __init__(self, config: dict | None = None):
-        self.tenants = TenantManager()
-        self.context = ContextEngine(tenant_manager=self.tenants)
-        self.planner = Planner()
-        self.policy = PolicyEngine(config or {})
-        self.router = AgentRouter()
-        self.executor = Executor()
-        self.reflector = Reflector()
-        self.config = config or {}
-        self.bus = CapabilityBus()
-        self.agent_runtime = AgentRuntime()
-
-    async def process(self, raw_input: dict) -> list[dict]:
-        ctx = await self.context.build(raw_input)
-        tasks = await self.planner.plan(ctx)
-        results = []
-        for task in tasks:
-            if task.capability and not self.tenants.is_capability_allowed(ctx.tenant, task.capability):
-                results.append({
-                    "task_id": task.id,
-                    "status": "rejected",
-                    "reason": f"Capability '{task.capability}' not allowed for tenant '{ctx.tenant}'",
-                })
-                continue
-            gate_results = await self.policy.validate(task)
-            if not self.policy.all_passed(gate_results):
-                results.append({
-                    "task_id": task.id,
-                    "status": "rejected",
-                    "gates": [g.to_dict() for g in gate_results],
-                })
-                continue
-            agent_id = self.router.route(task)
-            result = await self.executor.execute(task, agent_id)
-            reflection = await self.reflector.reflect(task, result)
-            results.append({
-                "task_id": task.id,
-                "status": result.status,
-                "agent": agent_id,
-                "duration_ms": result.duration_ms,
-                "output": result.output,
-                "reflection": reflection,
-            })
-        return results
-
-    async def health(self) -> dict:
-        return {
-            "status": "running",
-            "context": self.context.get_stats(),
-            "executor": self.executor.get_stats(),
-            "agents": len(self.router.list_agents()),
-            "agent_runtime": self.agent_runtime.get_stats(),
-            "capabilities": len(self.bus.list_status()),
-            "capability_list": [c["id"] for c in self.bus.list_status()],
-            "tenants": self.tenants.get_stats(),
-            "config": {"max_cost_per_task": self.config.get("max_cost_per_task", 1.0)},
-        }
+def run_observe():
+    print("[observe] Collecting metrics...")
+    metrics = collect()
+    for k, v in metrics.items():
+        print(f"  {k}: {v}")
+    return metrics
 
 
-async def main():
-    parser = argparse.ArgumentParser(description="Hermes Kernel (HAS-004)")
-    parser.add_argument("--mode", choices=["once", "health"], default="once")
-    parser.add_argument("--input", help="JSON input for once mode")
-    parser.add_argument("--config", help="Path to kernel config JSON")
+def run_score(metrics):
+    print("[score] Calculating score...")
+    s = calculate(metrics)
+    card = save(s, metrics)
+    print(f"  Overall: {s}/100")
+    return card
+
+
+def run_detect(metrics):
+    print("[detect] Checking for issues...")
+    issues = detect(metrics)
+    if issues:
+        for issue in issues:
+            print(f"  [{issue['severity']}] {issue['subsystem']}: {issue['message']}")
+    else:
+        print("  No issues detected")
+    return issues
+
+
+def run_propose_phase(metrics, issues):
+    print("[propose] Generating improvement proposals...")
+    proposals = run_propose(metrics, issues)
+    if proposals:
+        for p in proposals:
+            print(f"  {p['id']}: {p['title']} (impact={p['impact']}, effort={p['effort']})")
+    else:
+        print("  No proposals generated")
+    return proposals
+
+
+def run_generate(proposals):
+    print("[generate] Generating ADRs...")
+    for p in proposals:
+        p["status"] = "accepted"
+        path = gen_adr(p)
+        if path:
+            print(f"  ADR generated: {path}")
+
+
+def run_update(proposals):
+    print("[update] Updating prompts...")
+    for p in proposals:
+        updated = update_prompts(p)
+        for u in updated:
+            print(f"  Updated: {u}")
+
+
+def run_docs(spec_id, title, tier, summary):
+    print("[auto-doc] Generating documentation...")
+    path = gen_docs(spec_id, title, tier, summary)
+    print(f"  Generated: {path}")
+    return path
+
+
+def run_reflect(metrics, issues, proposals):
+    print("[reflect] Meta-cognition...")
+    result = reflect(metrics, issues, proposals)
+    print(f"  Health: {result['system_health']}")
+    for rec in result.get("recommendations", []):
+        print(f"  → {rec}")
+    return result
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Evolution Engine (HAS-008)")
+    parser.add_argument("--mode", choices=["check", "observe", "score", "detect", "propose",
+                                            "generate", "update", "auto-doc", "reflect", "full"],
+                        default="check", help="Evolution mode")
+    parser.add_argument("--spec-id", default="SPEC-auto", help="Spec ID for auto-doc")
+    parser.add_argument("--title", default="Evolution Engine", help="Title for auto-doc")
+    parser.add_argument("--tier", type=int, default=2, help="Tier for auto-doc")
+    parser.add_argument("--summary", default="", help="Summary for auto-doc")
     args = parser.parse_args()
 
-    config = {}
-    if args.config:
-        config_path = Path(args.config)
-        if config_path.exists():
-            config = json.loads(config_path.read_text())
+    if args.mode == "full":
+        metrics = run_observe()
+        card = run_score(metrics)
+        issues = run_detect(metrics)
+        proposals = run_propose_phase(metrics, issues)
+        run_generate(proposals)
+        run_update(proposals)
+        run_reflect(metrics, issues, proposals)
+    elif args.mode == "check":
+        card = load()
+        print(f"[check] Current score: {card.get('overall', 'N/A')}/100")
+    elif args.mode == "observe":
+        run_observe()
+    elif args.mode == "score":
+        metrics = run_observe()
+        run_score(metrics)
+    elif args.mode == "detect":
+        metrics = run_observe()
+        run_detect(metrics)
+    elif args.mode == "propose":
+        metrics = run_observe()
+        issues = run_detect(metrics)
+        run_propose_phase(metrics, issues)
+    elif args.mode == "generate":
+        proposals_dir = REPO / "evolution" / "proposals"
+        if proposals_dir.exists():
+            for f in sorted(proposals_dir.glob("*.json")):
+                p = json.loads(f.read_text())
+                p["status"] = "accepted"
+                path = gen_adr(p)
+                if path:
+                    print(f"  ADR: {path}")
+    elif args.mode == "update":
+        run_update([])
+    elif args.mode == "auto-doc":
+        run_docs(args.spec_id, args.title, args.tier, args.summary)
+    elif args.mode == "reflect":
+        metrics = run_observe()
+        issues = run_detect(metrics)
+        run_reflect(metrics, issues, [])
 
-    kernel = HermesKernel(config)
-
-    if args.mode == "health":
-        result = await kernel.health()
-        print(json.dumps(result, indent=2))
-        return
-
-    if args.mode == "once":
-        raw_input = json.loads(args.input or '{"input": "hello"}')
-        results = await kernel.process(raw_input)
-        print(json.dumps(results, indent=2))
-        return
-
-
-def cli():
-    """CLI entry point."""
-    parser = argparse.ArgumentParser(description="Hermes Kernel (HAS-004)")
-    parser.add_argument("--mode", choices=["daemon", "once", "health"], default="once")
-    parser.add_argument("--input", help="JSON input for once mode")
-    parser.add_argument("--config", help="Path to kernel config JSON")
-    parser.add_argument("--host", default="127.0.0.1", help="Bind address (daemon mode)")
-    parser.add_argument("--port", type=int, default=8001, help="Bind port (daemon mode)")
-    args, _ = parser.parse_known_args()
-
-    if args.mode == "daemon":
-        import uvicorn
-        print(f"[kernel] Starting daemon on {args.host}:{args.port}")
-        uvicorn.run("kernel.app:app", host=args.host, port=args.port, reload=False, log_level="info")
-        return
-
-    asyncio.run(main())
+    print(f"[done] Evolution mode={args.mode}")
 
 
 if __name__ == "__main__":
-    cli()
+    main()
