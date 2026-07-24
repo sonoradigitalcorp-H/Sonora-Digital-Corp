@@ -1,0 +1,8 @@
+bot/.env
+bot/bot.log
+bot/__pycache__/
+*.pyc
+__pycache__/
+.secrets.yaml
+.env
+*.log

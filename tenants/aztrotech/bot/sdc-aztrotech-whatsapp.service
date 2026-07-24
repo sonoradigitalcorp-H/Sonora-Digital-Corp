@@ -1,0 +1,15 @@
+[Unit]
+Description=AztroTech Mystic WhatsApp Assistant
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+EnvironmentFile=/home/ubuntu/sonora-digital-corp/tenants/aztrotech/bot/.env
+ExecStart=/home/ubuntu/sonora-digital-corp/.venv/bin/python3 -m tenants.aztrotech.bot.whatsapp_bot
+Restart=always
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

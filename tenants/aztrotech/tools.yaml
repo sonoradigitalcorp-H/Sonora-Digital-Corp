@@ -1,0 +1,34 @@
+allowed_tools:
+  - telegram_send_message
+  - telegram_send_voice
+  - whatsapp_send_message
+  - calendar_get_available_slots
+  - calendar_create_booking
+  - calendar_check_availability
+  - crm_create_lead
+  - crm_search_lead
+  - crm_update_lead
+  - crm_sync
+  - web_search
+  - knowledge_base_query
+  - knowledge_catalog_search
+  - knowledge_services_search
+  - knowledge_faq_search
+  - catalog_search
+  - pricing_lookup
+  - contact_form_submit
+  - voice_send_audio
+  - voice_clone_generate
+  - voice_stt_transcribe
+  - marketing_campaign_list
+  - marketing_campaign_create
+
+blocked_tools:
+  - github_create_issue
+  - vps_execute_command
+  - internal_billing_access
+  - system_prompt_view
+  - neo4j_write
+  - qdrant_write
+  - infra_docker_exec
+  - core_config_modify

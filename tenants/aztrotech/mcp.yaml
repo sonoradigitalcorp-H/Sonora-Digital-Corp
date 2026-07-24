@@ -1,0 +1,48 @@
+mcp_servers:
+  - name: telegram
+    type: local
+    config:
+      credentials_ref: aztrotech_telegram_bot_token
+      bot_token: "8825008004:AAE8tfTjAoMS930ozb6FgoJacPhaOS1DzYc"
+      chat_id_cesar: "5738935134"
+
+  - name: calendar
+    type: http
+    url: "http://localhost:9001/mcp"
+    config:
+      provider: aztrotech
+      data_dir: skills/calendar
+
+  - name: crm
+    type: http
+    url: "http://localhost:9002/mcp"
+    config:
+      provider: aztrotech
+      data_dir: skills/crm
+
+  - name: voice
+    type: local
+    config:
+      stt_engine: faster-whisper
+      tts_engine: edge-tts
+      voice_clone_ref: aztrotech_ceo_voice
+      voice_dir: skills/voice
+
+  - name: knowledge
+    type: local
+    config:
+      rag_source: knowledge/
+      qdrant_collection: tenant_aztrotech_memory
+
+  - name: whatsapp
+    type: http
+    url: "http://localhost:8901/mcp"
+    config:
+      script: skills/whatsapp/wacli_mcp.py
+      binary: ~/.local/bin/wacli
+
+  - name: openclaw
+    type: remote
+    url: "http://149.56.46.173:18789"
+    config:
+      tenant_id: aztrotech
