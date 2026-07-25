@@ -1,0 +1,21 @@
+allowed_tools:
+  - telegram_send_message
+  - whatsapp_send_message
+  - shopify_products_read
+  - shopify_orders_create
+  - shopify_orders_read
+  - crm_create_lead
+  - crm_read
+  - crm_write
+  - calendar_create_event
+  - web_search
+  - knowledge_base_query
+  - contact_form_submit
+
+blocked_tools:
+  - github_create_issue
+  - vps_execute_command
+  - internal_billing_access
+  - bash_execute
+  - neo4j_write
+  - qdrant_write

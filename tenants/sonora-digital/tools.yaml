@@ -1,0 +1,27 @@
+allowed_tools:
+  - telegram_send_message
+  - whatsapp_send_message
+  - calendar_create_event
+  - crm_create_lead
+  - crm_update_lead
+  - web_search
+  - knowledge_base_query
+  - github_create_issue
+  - github_push
+  - vps_execute_command
+  - docker_manage
+  - neo4j_read
+  - neo4j_write
+  - qdrant_read
+  - qdrant_write
+  - postgres_query
+  - bash_execute
+  - n8n_trigger
+  - stripe_create_invoice
+  - facturama_create_cfdi
+  - voice_send_audio
+  - voice_clone
+  - content_generate
+  - social_publish
+
+blocked_tools: []

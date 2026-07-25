@@ -1,0 +1,11 @@
+allowed_tools:
+  - telegram_send_message
+  - github_create_issue
+  - github_push
+  - vercel_deploy
+  - postgres_query
+  - vps_execute_command
+  - web_search
+  - knowledge_base_query
+
+blocked_tools: []

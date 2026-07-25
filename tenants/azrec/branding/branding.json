@@ -1,0 +1,12 @@
+{
+  "company": "Alejandro Zamora Records",
+  "short_name": "AzREC",
+  "primary_color": "#E05A2A",
+  "secondary_color": "#2B1D3B",
+  "accent_color": "#F4A261",
+  "logo": "azrec-logo.png",
+  "powered_by": true,
+  "tone": "energetic",
+  "language": "es",
+  "tagline": "De la A a la Z, del desierto al mundo"
+}

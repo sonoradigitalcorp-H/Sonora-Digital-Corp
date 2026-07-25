@@ -1,0 +1,15 @@
+[Unit]
+Description=Nathy Conta MCP Server (OpenClaw skills)
+After=network.target
+
+[Service]
+Type=simple
+User=mystic
+WorkingDirectory=__REPO__/apps/nathy-bot
+EnvironmentFile=/etc/opencode/nathy-conta.env
+ExecStart=/usr/bin/python3 __REPO__/apps/nathy-bot/nathy_mcp_server.py
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

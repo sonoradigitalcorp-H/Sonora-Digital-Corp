@@ -1,0 +1,19 @@
+prompt_injection:
+  enabled: true
+  model: mystic-shield
+
+rate_limits:
+  api_calls: 2000/hour
+  github: 60/hour
+
+data_masking:
+  pii_detection: true
+  auto_redact:
+    - password
+
+tool_sandbox:
+  enabled: true
+  allowed_domains:
+    - "*"
+  blocked_commands:
+    - rm -rf /

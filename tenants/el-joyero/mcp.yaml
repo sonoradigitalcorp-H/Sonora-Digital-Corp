@@ -1,0 +1,17 @@
+mcp_servers:
+  - name: shopify
+    type: http
+    url: "https://eljoyero.myshopify.com/admin/api/mcp"
+    auth: bearer_token_ref
+    credentials_ref: el_joyero_shopify_token
+
+  - name: whatsapp
+    type: local
+    config:
+      credentials_ref: el_joyero_wacli_creds
+
+  - name: crm
+    type: http
+    url: "https://crm.eljoyero.mcp/mcp"
+    auth: bearer_token_ref
+    credentials_ref: el_joyero_crm_token

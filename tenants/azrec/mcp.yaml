@@ -1,0 +1,17 @@
+mcp_servers:
+  - name: telegram
+    type: local
+    config:
+      credentials_ref: azrec_telegram_bot_token
+
+  - name: shopify
+    type: http
+    url: "https://azrec.myshopify.com/admin/api/mcp"
+    auth: bearer_token_ref
+    credentials_ref: azrec_shopify_token
+
+  - name: n8n
+    type: http
+    url: "http://localhost:5678"
+    auth: bearer_token_ref
+    credentials_ref: azrec_n8n_token

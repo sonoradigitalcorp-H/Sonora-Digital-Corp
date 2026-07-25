@@ -1,0 +1,8 @@
+tenant_id: "${TENANT_ID}"
+display_name: "${DISPLAY_NAME}"
+language: "es"
+timezone: "America/Mexico_City"
+default_model: "openrouter/anthropic/claude-3.5-sonnet"
+max_tokens: 4096
+qdrant_collection: "tenant_${TENANT_ID}_memory"
+neo4j_database: "${TENANT_ID}"

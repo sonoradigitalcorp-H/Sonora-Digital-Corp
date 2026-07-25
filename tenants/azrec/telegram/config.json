@@ -1,0 +1,46 @@
+{
+  "bot_name": "AzREC Sales Assistant",
+  "token_env_var": "AZREC_TELEGRAM_TOKEN",
+  "shopify_url": "https://azrec.mx",
+  "group": {
+    "name": "AzREC Community",
+    "username": "AzREC",
+    "id": ""
+  },
+  "internal_bots": {
+    "hermes": {
+      "name": "Hermes AI",
+      "token_env_var": "HERMES_TELEGRAM_TOKEN",
+      "commands": ["/hermes"],
+      "description": "Asistente principal del sistema"
+    },
+    "abe_music": {
+      "name": "Abe Music Bot",
+      "token_env_var": "ABE_TELEGRAM_TOKEN",
+      "commands": ["/abe"],
+      "description": "Bot de Abe Music Inc"
+    },
+    "sdc": {
+      "name": "SDC Bot",
+      "token_env_var": "SONORA_TELEGRAM_TOKEN",
+      "commands": ["/sdc"],
+      "description": "Bot de Sonora Digital Corp"
+    }
+  },
+  "mini_apps": {
+    "catalogo": {
+      "type": "inline_keyboard",
+      "enabled": true
+    },
+    "trivia": {
+      "type": "inline_keyboard",
+      "enabled": false,
+      "description": "Trivia musical — proximamente"
+    },
+    "pedidos": {
+      "type": "webhook",
+      "enabled": false,
+      "description": "Seguimiento de pedidos — proximamente"
+    }
+  }
+}

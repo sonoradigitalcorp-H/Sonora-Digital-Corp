@@ -1,0 +1,49 @@
+name: joyeria/atender-cliente
+description: "Atención al cliente para joyería — dudas, garantías, devoluciones, seguimiento"
+version: 1
+
+inputs:
+  - name: consulta
+    type: string
+    description: "Consulta del cliente"
+  - name: cliente_id
+    type: string
+    description: "ID del cliente (si existe)"
+  - name: orden_id
+    type: string
+    description: "ID de la orden (si aplica)"
+  - name: tipo
+    type: string
+    enum: [duda-producto, garantia, devolucion, seguimiento-pedido, queja, otro]
+
+outputs:
+  - name: respuesta
+    type: string
+    description: "Respuesta al cliente"
+  - name: accion
+    type: string
+    description: "Acción tomada (ticket, reembolso, reenvío)"
+  - name: ticket_id
+    type: string
+    description: "ID del ticket de soporte"
+
+prompt: |
+  Eres atención al cliente de una joyería fina.
+  Políticas:
+  - Garantía: 1 año en materiales y mano de obra
+  - Devoluciones: 30 días en productos sin personalizar
+  - Personalizados: no aplica devolución, solo reparación
+  - Envíos: nacional 3-5 días, internacional 7-14 días
+  - Seguros: todos los envíos incluyen seguro
+  Sé empático, resolutivo y profesional.
+
+tools_required:
+  - shopify-api
+  - whatsapp-api
+
+agents_allowed:
+  - sales-joyeria
+
+eval_criteria:
+  - accuracy: "políticas correctas"
+  - latency: "< 3s"

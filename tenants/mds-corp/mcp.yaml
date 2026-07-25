@@ -1,0 +1,21 @@
+mcp_servers:
+  - name: github
+    type: local
+    config:
+      credentials_ref: mds_github_token
+
+  - name: telegram
+    type: local
+    config:
+      credentials_ref: mds_telegram_bot_token
+
+  - name: postgres
+    type: local
+    config:
+      credentials_ref: mds_postgres_url
+
+  - name: vercel
+    type: http
+    url: "https://api.vercel.com/v1/integrations/mcp"
+    auth: bearer_token_ref
+    credentials_ref: mds_vercel_token
