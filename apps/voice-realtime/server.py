@@ -22,6 +22,8 @@ from fastapi.responses import HTMLResponse
 
 from apps.voice_realtime.pipeline.stt import transcribe, VoiceActivityDetector
 from apps.voice_realtime.pipeline.wakeword import WakeWordDetector
+from apps.voice_realtime.pipeline.monitor import SystemMonitor
+from apps.voice_realtime.pipeline.session_db import SessionDB
 from apps.voice_realtime.actions.browser import BrowserActions
 from apps.voice_realtime.pipeline.tts import TTSEngine
 from apps.voice_realtime.pipeline.audio_mixer import AudioMixer, SOUNDSCAPES
@@ -42,6 +44,8 @@ intent_router = IntentRouter(use_llm_fallback=True)
 template_engine = VoiceTemplateEngine()
 wakeword = WakeWordDetector(threshold=0.5)
 browser = BrowserActions()
+system_monitor = SystemMonitor()
+session_db = SessionDB()
 
 app = FastAPI(title="Mystic Voice Realtime")
 
@@ -237,6 +241,7 @@ async def handle_voice_interaction(
         session["tone"] = "warm"
 
     session["interaction_count"] += 1
+    session["_last_interaction_start"] = time.time()
     session["history"].append({"role": "user", "content": text})
     session["history"] = session["history"][-10:]
 
@@ -268,6 +273,19 @@ async def handle_voice_interaction(
             route.payload["response_text"] = f"No encontré resultados para {route.destination}."
         route.type = "talk"
 
+    # ─── 2d. System Status ───
+    if route.type == "system":
+        await _send_status(ws, "thinking")
+        status = await system_monitor.get_status()
+        if "error" in status:
+            route.payload["response_text"] = "No tengo acceso al monitor del sistema en este momento."
+        else:
+            tts_text = await system_monitor.format_for_tts(status)
+            route.payload["response_text"] = tts_text
+            # Guardar status en sesión para referencia
+            session["_last_system_status"] = status
+        route.type = "talk"
+
     # ─── 3. Elegir tono según intención ───
     tone_map = {
         "book_appointment": "warm",
@@ -276,6 +294,7 @@ async def handle_voice_interaction(
         "go_services": "warm",
         "go_contact": "professional",
         "general_chat": "warm",
+        "check_system": "professional",
     }
     session["tone"] = tone_map.get(route.payload.get("intent_id", ""), "warm")
     template_engine.set_tone(session["tone"])
@@ -365,8 +384,27 @@ async def handle_voice_interaction(
         )
         await _send_redirect(ws, route.redirect_url, msg)
 
-    # ─── 9. Guardar en Engram vía MCP (memoria persistente) ───
+    # ─── 9. Guardar interacción en SQLite ───
     session_id_str = session.get("session_id", "unknown")
+    start_time = session.get("_last_interaction_start", time.time())
+    latency_ms = int((time.time() - start_time) * 1000)
+    try:
+        loop = asyncio.get_running_loop()
+        await loop.run_in_executor(None, session_db.add_interaction,
+            session_id_str, "user", text,
+            route.payload.get("intent_id", ""), latency_ms)
+        if response_text:
+            await loop.run_in_executor(None, session_db.add_interaction,
+                session_id_str, "assistant", response_text,
+                route.payload.get("intent_id", ""), None)
+        # Auto-save session history cada interacción
+        await loop.run_in_executor(None, session_db.save_session,
+            session_id_str, session.get("history", []),
+            {"tone": session.get("tone", "warm"), "interactions": session.get("interaction_count", 0)})
+    except Exception as e:
+        logger.warning(f"Session DB save failed (non-critical): {e}")
+
+    # ─── 10. Guardar en Engram vía MCP (memoria persistente) ───
     try:
         mcp = get_mcp_client()
         await mcp.engram_save(
@@ -387,7 +425,7 @@ async def handle_voice_interaction(
     except Exception as e:
         logger.warning(f"Engram save failed (non-critical): {e}")
 
-    # ─── 10. Finalizar ───
+    # ─── 11. Finalizar ───
     await _send(ws, {"type": "response.done"})
 
 
@@ -400,11 +438,27 @@ async def session_handler(ws: WebSocket, session_id: str):
         "mode": "wakeword",
         "wakeword_triggered": False,
     })
+    session["ws"] = ws  # Guardar ref para proactive monitor
     SESSIONS[session_id] = session
 
     vad = VoiceActivityDetector(silence_timeout_ms=800)
     soundscape_task = None
     current_soundscape = b""
+
+    # ─── Cargar historial desde SQLite ───
+    loop = asyncio.get_running_loop()
+    saved = await loop.run_in_executor(None, session_db.get_session, session_id)
+    if saved and saved.get("history"):
+        try:
+            history = json.loads(saved["history"]) if isinstance(saved["history"], str) else saved["history"]
+            session["history"] = history[-10:]
+            session["interaction_count"] = len(history)
+            logger.info(f"[{session_id}] Restored {len(history)} messages from DB")
+        except (json.JSONDecodeError, TypeError) as e:
+            logger.warning(f"[{session_id}] History parse error: {e}")
+            session["history"] = []
+    else:
+        session["history"] = []
 
     # ─── Iniciar sesión ───
     await _send(ws, {
@@ -412,9 +466,10 @@ async def session_handler(ws: WebSocket, session_id: str):
         "session": {
             "id": session_id,
             "version": "2.0",
-            "features": ["text", "audio", "soundscape", "redirect"],
+            "features": ["text", "audio", "soundscape", "redirect", "system", "memory"],
             "soundscapes": audio_mixer.get_soundscape_list(),
             "agent": "Mystic",
+            "history_restored": len(session.get("history", [])),
         },
     })
 
@@ -539,6 +594,17 @@ async def session_handler(ws: WebSocket, session_id: str):
     finally:
         if soundscape_task:
             soundscape_task.cancel()
+        # ─── Guardar sesión en SQLite ───
+        try:
+            history = session.get("history", [])
+            if history:
+                loop = asyncio.get_running_loop()
+                loop.run_in_executor(None, session_db.save_session,
+                    session_id, history,
+                    {"tone": session.get("tone", "warm"), "interactions": len(history)}
+                )
+        except Exception as e:
+            logger.warning(f"[{session_id}] Save error: {e}")
         SESSIONS.pop(session_id, None)
 
 
@@ -584,6 +650,88 @@ async def health():
         "soundscape": audio_mixer.soundscape_name,
         "active_sessions": len(SESSIONS),
     }
+
+
+@app.get("/api/system")
+async def system_status():
+    """Estado del sistema VPS (CPU, RAM, disco, uptime)."""
+    status = await system_monitor.get_status()
+    return status
+
+
+@app.get("/manifest.json")
+async def manifest():
+    """PWA manifest."""
+    from fastapi.responses import FileResponse
+    manifest_path = Path(__file__).parent / "frontend" / "manifest.json"
+    if manifest_path.exists():
+        return FileResponse(str(manifest_path), media_type="application/json")
+    return HTMLResponse("{}")
+
+
+@app.get("/sw.js")
+async def service_worker():
+    """Service worker para PWA."""
+    from fastapi.responses import FileResponse
+    sw_path = Path(__file__).parent / "frontend" / "sw.js"
+    if sw_path.exists():
+        return FileResponse(str(sw_path), media_type="application/javascript")
+    return HTMLResponse("")
+
+
+@app.get("/icon.svg")
+@app.get("/icon-192.png")
+@app.get("/icon-512.png")
+async def pwa_icon():
+    """Icono PWA."""
+    from fastapi.responses import FileResponse
+    icon_path = Path(__file__).parent / "frontend" / "icon.svg"
+    if icon_path.exists():
+        return FileResponse(str(icon_path), media_type="image/svg+xml")
+    return HTMLResponse("")
+
+
+# ─── Inicializar DB al arrancar ───
+@app.on_event("startup")
+async def startup():
+    """Inicializa componentes al arrancar."""
+    # init_db ya se llama en el constructor de SessionDB
+    logger.info(f"Session DB ready at {session_db.db_path}")
+    logger.info("Session DB initialized ✓")
+    # Log system status at startup
+    status = await system_monitor.get_status()
+    if "error" not in status:
+        logger.info(f"System: CPU {status.get('cpu_percent', '?')}% | "
+                    f"RAM {status.get('ram_percent', '?')}% | "
+                    f"Disk {status.get('disk_percent', '?')}%")
+    # Start proactive monitor
+    asyncio.create_task(_proactive_monitor_loop())
+    logger.info("Proactive monitor started ✓")
+
+
+async def _proactive_monitor_loop():
+    """Monitoreo proactivo cada 30s. Notifica a sesiones activas si CPU/RAM alta."""
+    while True:
+        try:
+            await asyncio.sleep(30)
+            alert = await system_monitor.get_cpu_alert()
+            if alert and SESSIONS:
+                msg = {
+                    "type": "proactive_alert",
+                    "alert": alert,
+                    "message": f"⚠️ {alert.get('message', 'Alerta del sistema')}",
+                }
+                # Enviar a todas las sesiones activas
+                for sid, session in SESSIONS.items():
+                    if session.get("ws"):
+                        try:
+                            await _send(session["ws"], msg)
+                        except Exception:
+                            pass
+        except asyncio.CancelledError:
+            break
+        except Exception as e:
+            logger.warning(f"Proactive monitor error: {e}")
 
 
 if __name__ == "__main__":

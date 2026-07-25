@@ -133,6 +133,21 @@ INTENT_PATTERNS = [
         ],
         "action": {"type": "buy", "destination": "whatsapp-agent"},
     },
+    # ── System Status ──
+    {
+        "id": "check_system",
+        "name": "Estado del sistema",
+        "description": "El usuario pregunta cómo está el servidor o sistema",
+        "patterns": [
+            r"\b(c[oó]mo\s*est[áa]\s*(el\s*)?(sistema|servidor|vps|server))\b",
+            r"\b(estado\s*(del\s*)?(sistema|servidor))\b",
+            r"\b(qu[eé]\s*tal\s*(est[áa]\s*)?(el\s*)?(sistema|servidor))\b",
+            r"\b(monitor|monitoreo|monitorea)\s*(del\s*)?(sistema|servidor)?\b",
+            r"\b(revisa|checa|verifica)\s*(el\s*)?(sistema|servidor|estado)\b",
+            r"\b(c[oó]mo\s*vamos|qu[eé]\s*hay|qu[eé]\s*cuentas)\s*(del\s*)?(sistema|servidor)?\b",
+        ],
+        "action": {"type": "system", "destination": "status"},
+    },
     # ── Conversación general (fallback) ──
     {
         "id": "general_chat",

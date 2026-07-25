@@ -4,6 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,viewport-fit=cover">
 <meta name="theme-color" content="#0a0b12">
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mystic Voice">
 <title>Mystic — Voz en Tiempo Real</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -491,11 +496,11 @@ body{
 
   <!-- Soundscape Selector -->
   <div class="soundscape-selector" id="soundscapeSelector">
-    <button class="sc-btn active" data-sc="minimal">🌫️ Minimal</button>
-    <button class="sc-btn" data-sc="nature">🌿 Naturaleza</button>
-    <button class="sc-btn" data-sc="calido">🔥 Cálido</button>
-    <button class="sc-btn" data-sc="futurista">💠 Futurista</button>
-    <button class="sc-btn" data-sc="energetico">⚡ Energético</button>
+    <button class="sc-btn active" data-sc="minimal">Minimal</button>
+    <button class="sc-btn" data-sc="nature">Naturaleza</button>
+    <button class="sc-btn" data-sc="calido">Cálido</button>
+    <button class="sc-btn" data-sc="futurista">Futurista</button>
+    <button class="sc-btn" data-sc="energetico">Energético</button>
   </div>
 
   <!-- Controls -->
@@ -538,7 +543,12 @@ document.addEventListener('DOMContentLoaded', () => {
   createVolumeBars();
   connectWS();
   setupSoundscapeButtons();
-  showWakeWordHelp();
+  // Auto-activar wake word después de conectar WebSocket
+  setTimeout(() => {
+    if (wakeWordMode === 'off') {
+      toggleWakeWord();
+    }
+  }, 1500);
 });
 
 // ─── Wake Word Mode ───
@@ -720,6 +730,12 @@ function handleWSMessage(msg) {
       break;
 
     case 'pong':
+      break;
+
+    case 'proactive_alert':
+      setStatus(msg.message || '⚠️ Alerta del sistema', '');
+      setOrbState('error');
+      setTimeout(() => setOrbState('listening'), 3000);
       break;
   }
 }
@@ -988,6 +1004,17 @@ document.addEventListener('keydown', (e) => {
     cycleTone();
   }
 });
+
+// ─── PWA Registration ───
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').then(reg => {
+      console.log('PWA Service Worker registered:', reg.scope);
+    }).catch(err => {
+      console.log('PWA Service Worker registration skipped:', err.message);
+    });
+  });
+}
 
 // ─── Graceful shutdown ───
 window.addEventListener('beforeunload', () => {
