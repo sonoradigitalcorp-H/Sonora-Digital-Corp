@@ -17,11 +17,11 @@ log() { echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | tee -a "$LOG"; }
 
 log "=== ABE Report Push ==="
 
-# 1. Verify JARVIS is up
-if curl -sf http://localhost:5174/health > /dev/null 2>&1; then
-    log "✅ JARVIS API up"
+# 1. Verify API health
+if curl -sf http://localhost:5174/api/health > /dev/null 2>&1; then
+    log "✅ API up"
 else
-    log "❌ JARVIS API DOWN - report generation skipped"
+    log "❌ API DOWN - report generation skipped"
     exit 1
 fi
 

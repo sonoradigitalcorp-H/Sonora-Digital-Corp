@@ -73,3 +73,11 @@ capabilities:
     status: active
     owner: research-agent
     business_domain: music
+
+  - id: multi-tenant-platform
+    name: Multi-Tenant Platform Architecture
+    path: specs/capabilities/multi-tenant-platform/
+    spec_version: 1.0.0
+    status: draft
+    owner: mystic
+    business_domain: system

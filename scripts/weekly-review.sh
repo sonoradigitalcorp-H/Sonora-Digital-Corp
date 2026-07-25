@@ -2,12 +2,12 @@
 # Weekly Strategic Review — Auto-generates enterprise health report
 set -euo pipefail
 
-JARVIS_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-EVENTS="$JARVIS_HOME/state/logs/events.jsonl"
-FIN_OPS="$JARVIS_HOME/state/finops.jsonl"
-INITIATIVES_DIR="$JARVIS_HOME/initiatives"
-REPORTS_DIR="$JARVIS_HOME/state/reports"
-SKILLS_LOG_DIR="$JARVIS_HOME/state/logs/skills"
+SDC_HOME="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+EVENTS="$SDC_HOME/state/logs/events.jsonl"
+FIN_OPS="$SDC_HOME/state/finops.jsonl"
+INITIATIVES_DIR="$SDC_HOME/initiatives"
+REPORTS_DIR="$SDC_HOME/state/reports"
+SKILLS_LOG_DIR="$SDC_HOME/state/logs/skills"
 
 mkdir -p "$REPORTS_DIR"
 

@@ -6,7 +6,7 @@
       "rate_limit": 1000,
       "period_seconds": 60,
       "max_tokens_monthly": -1,
-      "qdrant_collection": "jarvis_knowledge",
+      "qdrant_collection": "sdc_knowledge",
       "features": [
         "chat",
         "agents",
@@ -22,7 +22,7 @@
       "rate_limit": 200,
       "period_seconds": 60,
       "max_tokens_monthly": 500000,
-      "qdrant_collection": "jarvis_knowledge",
+      "qdrant_collection": "sdc_knowledge",
       "features": [
         "chat",
         "agents",
@@ -38,7 +38,7 @@
       "rate_limit": 10,
       "period_seconds": 60,
       "max_tokens_monthly": 10000,
-      "qdrant_collection": "jarvis_knowledge",
+      "qdrant_collection": "sdc_knowledge",
       "features": [
         "chat"
       ],
@@ -50,7 +50,7 @@
       "rate_limit": 50,
       "period_seconds": 60,
       "max_tokens_monthly": 100000,
-      "qdrant_collection": "jarvis_knowledge",
+      "qdrant_collection": "sdc_knowledge",
       "features": [
         "chat",
         "agents",
@@ -66,7 +66,7 @@
       "rate_limit": 200,
       "period_seconds": 60,
       "max_tokens_monthly": 1000000,
-      "qdrant_collection": "jarvis_knowledge",
+      "qdrant_collection": "sdc_knowledge",
       "features": [
         "chat",
         "agents",
@@ -88,7 +88,7 @@
       "rate_limit": 50,
       "period_seconds": 60,
       "max_tokens_monthly": 100000,
-      "qdrant_collection": "jarvis_knowledge",
+      "qdrant_collection": "sdc_knowledge",
       "features": [
         "chat",
         "agents",
@@ -103,6 +103,6 @@
     "rate_limit": 10,
     "period_seconds": 60,
     "max_tokens_monthly": 10000,
-    "qdrant_collection": "jarvis_knowledge"
+    "qdrant_collection": "sdc_knowledge"
   }
 }

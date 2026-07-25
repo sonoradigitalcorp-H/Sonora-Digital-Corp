@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Instrumentacion LangFuse para JARVIS y agentes SDC.
+"""Instrumentacion LangFuse para agentes SDC.
 Agrega tracing a cualquier agente con 1 decorador.
 
 Requiere: pip install langfuse

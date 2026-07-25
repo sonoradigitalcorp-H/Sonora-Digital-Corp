@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
-<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ABE Music — Portal</title>
+<head>
+<script src="gateway-config.js"></script><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>ABE Music — Portal</title>
 <style>@import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap');
 :root{--bg:#0a0a12;--surface:rgba(255,255,255,.05);--border:rgba(255,255,255,.1);--text:#f0f0f0;--dim:rgba(255,255,255,.4);--gold:#FFD700;--accent:#7c5cfc;--green:#34d399;--red:#ff3b5c;--radius:16px;--font:'Inter',-apple-system,sans-serif}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -101,7 +102,7 @@ pre{font-size:.7rem;color:var(--dim);white-space:pre-wrap;max-height:200px;overf
 
 <script>
 const G='http://127.0.0.1:18989';let t='';
-async function auth(){const r=await fetch(G+'/api/auth/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id:'abe-fenix',client_secret:'abe_f3n1x_pr0_k3y_2026'})});const d=await r.json();t=d.access_token||''}
+async function auth(){const r=await fetch(G+'/api/auth/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id:'abe-fenix',client_secret:GATEWAY_CLIENT_SECRET})});const d=await r.json();t=d.access_token||''}
 async function call(tool,p){if(!t)await auth();const r=await fetch(G+'/api/call',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+t},body:JSON.stringify({tool,params:p||{}})});return await r.json()}
 async function load(){
   const artists=await call('abe_list_artists',{});

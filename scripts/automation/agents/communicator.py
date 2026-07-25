@@ -1,6 +1,6 @@
 """
 Agent-to-Agent Communication Protocol
-Hermes ↔ OpenClaw ↔ JARVIS ↔ n8n ↔ Telegram
+Hermes ↔ OpenClaw ↔ n8n ↔ Telegram
 """
 import logging
 from datetime import datetime
@@ -12,7 +12,7 @@ log = logging.getLogger("agents.communicator")
 AGENTS = {
     "hermes": {"url": "http://localhost:8000", "type": "api"},
     "openclaw": {"url": "http://localhost:18789", "type": "mcp"},
-    "jarvis": {"url": "http://localhost:8000", "type": "api"},
+
     "n8n": {"url": "http://localhost:5678", "type": "webhook"},
     "telegram": {"token": "8875376383:AAG4dDoxdUfHqR7oIqW0lC4ygLxfzfg1EMA", "type": "bot"},
 }

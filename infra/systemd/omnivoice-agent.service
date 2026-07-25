@@ -1,0 +1,19 @@
+[Unit]
+Description=OmniVoice WhatsApp Agent — 24/7 bridge between WhatsApp and AI
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+Environment=PYTHONPATH=/home/ubuntu/sonora-digital-corp/apps
+Environment=WACLI_STORE_DIR=/home/ubuntu/.wacli
+ExecStartPre=-/usr/bin/pkill wacli
+ExecStart=/usr/bin/python3 /home/ubuntu/sonora-digital-corp/apps/voice/whatsapp_agent.py --listen
+Restart=always
+RestartSec=10
+StandardOutput=append:/var/log/omnivoice-agent.log
+StandardError=append:/var/log/omnivoice-agent.log
+
+[Install]
+WantedBy=multi-user.target

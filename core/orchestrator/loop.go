@@ -21,6 +21,8 @@ type AudioSink = meow.AudioSink
 type Config struct {
 	OpenRouterKey string
 	Model         string
+	TenantID      string
+	SystemPrompt  string
 	LeadName      string
 	LeadID        string
 	Objective     string
@@ -54,7 +56,9 @@ func (e *Engine) Run(ctx context.Context, call CallInterface, player interface{ 
 		fmt.Printf("[call] %s\n", msg)
 	}
 
-	systemPrompt := fmt.Sprintf(`Eres un agente de ventas de Sonora Digital Corp.
+	systemPrompt := e.cfg.SystemPrompt
+	if systemPrompt == "" {
+		systemPrompt = fmt.Sprintf(`Eres un agente de ventas de Sonora Digital Corp.
 LLAMAS a: %s
 OBJETIVO: %s
 CONTEXTO: %s
@@ -69,7 +73,8 @@ Reglas:
 - Responde en español, directo, natural
 
 LLAMADA INICIADA. Saluda al lead y comienza la conversación.`,
-		e.cfg.LeadName, e.cfg.Objective, e.cfg.LeadContext, e.cfg.Tone)
+			e.cfg.LeadName, e.cfg.Objective, e.cfg.LeadContext, e.cfg.Tone)
+	}
 
 	var messages []map[string]string
 	messages = append(messages, map[string]string{"role": "system", "content": systemPrompt})

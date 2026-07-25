@@ -2,10 +2,7 @@ import os
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-DATABASE_URL = os.environ.get(
-    "ABE_DATABASE_URL",
-    "postgresql://sdc:vXLDhhbiSWt3FHK1MZri@127.0.0.1:5432/sdc"
-)
+DATABASE_URL = os.environ["ABE_DATABASE_URL"]
 
 engine = create_engine(DATABASE_URL, pool_pre_ping=True, pool_size=5)
 SessionLocal = sessionmaker(bind=engine)

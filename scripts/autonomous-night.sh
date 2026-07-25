@@ -30,7 +30,7 @@ emit_event() {
 authenticate() {
   TOKEN=$(curl -s -X POST "$GATEWAY/api/auth/token" \
     -H "Content-Type: application/json" \
-    -d '{"client_id":"sdc-core","client_secret":"sdc_secret_ent3rpr1s3_k3y_2026"}' \
+    -d '{"client_id":"sdc-core","client_secret":"${MCP_CLIENT_SECRET:-sdc_secret_ent3rpr1s3_k3y_2026}"}' \
     2>/dev/null | python3 -c "import sys,json;print(json.load(sys.stdin).get('access_token',''))" 2>/dev/null || echo "")
   [ -n "$TOKEN" ]
 }

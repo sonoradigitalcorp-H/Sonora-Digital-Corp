@@ -50,7 +50,7 @@ class ChaosMonkey {
     // Test 3: Tool inexistente
     results.push(await this._test('Tool inexistente → error', async () => {
       // Get token first
-      const t = await fetch('http://127.0.0.1:18989/api/auth/token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ client_id: 'sdc-core', client_secret: 'sdc_secret_ent3rpr1s3_k3y_2026' }) });
+      const t = await fetch('http://127.0.0.1:18989/api/auth/token', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ client_id: 'sdc-core', client_secret: process.env.MCP_CLIENT_SECRET }) });
       const d = await t.json();
       // Call nonexistent tool
       const r = await fetch('http://127.0.0.1:18989/api/call', { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + d.access_token }, body: JSON.stringify({ tool: 'nonexistent_tool_xyz', params: {} }) });

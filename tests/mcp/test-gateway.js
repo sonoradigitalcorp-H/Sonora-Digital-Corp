@@ -43,7 +43,7 @@ async function fetch(path, opts = {}) {
 async function getToken() {
   const r = await fetch('/api/auth/token', {
     method: 'POST',
-    body: { client_id: 'sdc-core', client_secret: 'sdc_secret_ent3rpr1s3_k3y_2026' },
+    body: { client_id: 'sdc-core', client_secret: process.env.MCP_CLIENT_SECRET },
   });
   return r.data?.access_token || '';
 }
@@ -179,7 +179,7 @@ async function runTests() {
 
   const t = await fetch('/api/auth/token', {
     method: 'POST',
-    body: { client_id: 'sdc-core', client_secret: 'sdc_secret_ent3rpr1s3_k3y_2026' },
+    body: { client_id: 'sdc-core', client_secret: process.env.MCP_CLIENT_SECRET },
   });
   assert('POST /api/auth/token returns token', !!t.data?.access_token);
   const token = t.data.access_token;

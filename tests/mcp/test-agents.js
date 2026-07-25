@@ -23,7 +23,7 @@ async function fetch(path, opts) {
 }
 
 async function getToken() {
-  const r = await fetch('/api/auth/token', { method: 'POST', body: { client_id: 'sdc-core', client_secret: 'sdc_secret_ent3rpr1s3_k3y_2026' } });
+  const r = await fetch('/api/auth/token', { method: 'POST', body: { client_id: 'sdc-core', client_secret: process.env.MCP_CLIENT_SECRET } });
   return r.data?.access_token || '';
 }
 

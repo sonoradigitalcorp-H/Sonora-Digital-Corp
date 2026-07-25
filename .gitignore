@@ -101,3 +101,5 @@ nathy-bot/data/
 nathy-bot/bot*.log
 *.ed25519*
 config/noel_ed25519_sdc
+skills/mcp/gateway/gateway-config.js
+frontends/dashboard/gateway-config.js

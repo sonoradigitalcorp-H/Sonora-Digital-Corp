@@ -6,9 +6,7 @@ After=network.target
 Type=simple
 User=mystic
 WorkingDirectory=__REPO__/apps/nathy-bot
-Environment="NATHY_BOT_TOKEN=8269193231:AAF70NVpEMsrP_fePAc_qLdNEsJkBIGUy4g"
-Environment="NATHY_CHANNEL_ID=@NathyConta"
-Environment="OPENROUTER_API_KEY=[REDACTED: clave OpenRouter backup]a8b7f810eee4c66f9b79e4b4e7603c8e0b42f548f86fee6adb"
+EnvironmentFile=/etc/opencode/nathy-conta.env
 ExecStart=/usr/bin/python3 __REPO__/apps/nathy-bot/nathy_bot.py
 Restart=always
 RestartSec=10

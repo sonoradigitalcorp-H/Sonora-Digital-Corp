@@ -9,13 +9,13 @@ import sys
 from pathlib import Path
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(name)s] %(levelname)s %(message)s")
-log = logging.getLogger("jarvis.migrate")
+log = logging.getLogger("sdc.migrate")
 
 PROJECT_DIR = Path(__file__).parent.parent
 LEGACY_DIRS = [
     PROJECT_DIR / "backups" / "sessions",
     PROJECT_DIR / "cache" / "sessions",
-    Path.home() / ".jarvis" / "sessions",
+    Path.home() / ".sdc" / "sessions",
     Path.home() / ".hermes" / "sessions",
 ]
 
@@ -59,7 +59,7 @@ def parse_legacy_md(path: Path) -> dict:
                 messages.append({"role": current_role, "content": "\n".join(current_content).strip()})
             current_role = "user"
             current_content = []
-        elif line.startswith("### ") and ("Asistente" in line or "Assistant" in line or "🤖" in line or "JARVIS" in line):
+        elif line.startswith("### ") and ("Asistente" in line or "Assistant" in line or "🤖" in line):
             if current_role and current_content:
                 messages.append({"role": current_role, "content": "\n".join(current_content).strip()})
             current_role = "assistant"

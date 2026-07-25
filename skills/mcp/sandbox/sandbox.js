@@ -48,7 +48,7 @@ class Sandbox {
     // 2. Auth
     await this.test('Auth JWT', async () => {
       return new Promise(r => {
-        const data = JSON.stringify({ client_id: 'sdc-core', client_secret: 'sdc_secret_ent3rpr1s3_k3y_2026' });
+        const data = JSON.stringify({ client_id: 'sdc-core', client_secret: process.env.MCP_CLIENT_SECRET });
         const req = http.request({ hostname: '127.0.0.1', port: 18989, path: '/api/auth/token', method: 'POST', headers: { 'Content-Type': 'application/json' } }, res => { let d = ''; res.on('data', c => d += c); res.on('end', () => { try { const j = JSON.parse(d); r(j.access_token ? { ok: true } : { error: 'No token' }); } catch { r({ error: 'Parse error' }); } }); });
         req.write(data); req.end();
       });
@@ -136,7 +136,7 @@ class Sandbox {
 
   async _getToken() {
     const r = await new Promise(r => {
-      const data = JSON.stringify({ client_id: 'sdc-core', client_secret: 'sdc_secret_ent3rpr1s3_k3y_2026' });
+      const data = JSON.stringify({ client_id: 'sdc-core', client_secret: process.env.MCP_CLIENT_SECRET });
       const req = http.request({ hostname: '127.0.0.1', port: 18989, path: '/api/auth/token', method: 'POST', headers: { 'Content-Type': 'application/json' } }, res => { let d = ''; res.on('data', c => d += c); res.on('end', () => { try { r(JSON.parse(d)); } catch { r({}); } }); });
       req.write(data); req.end();
     });

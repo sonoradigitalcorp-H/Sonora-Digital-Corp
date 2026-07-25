@@ -34,7 +34,7 @@ async function fetch(path, opts) {
 }
 
 async function getToken() {
-  const r = await fetch('/api/auth/token', { method: 'POST', body: { client_id: 'sdc-core', client_secret: 'sdc_secret_ent3rpr1s3_k3y_2026' } });
+  const r = await fetch('/api/auth/token', { method: 'POST', body: { client_id: 'sdc-core', client_secret: process.env.MCP_CLIENT_SECRET } });
   return r.data?.access_token || '';
 }
 
@@ -44,7 +44,7 @@ async function call(tool, params) {
 }
 
 async function abeCall(tool, params) {
-  const r = await fetch('/api/auth/token', { method: 'POST', body: { client_id: 'abe-fenix', client_secret: 'abe_f3n1x_pr0_k3y_2026' } });
+  const r = await fetch('/api/auth/token', { method: 'POST', body: { client_id: 'abe-fenix', client_secret: process.env.MCP_CLIENT_SECRET } });
   const token = r.data?.access_token || '';
   return fetch('/api/call', { method: 'POST', headers: { 'Authorization': 'Bearer ' + token }, body: { tool, params: params || {} } });
 }
@@ -59,7 +59,7 @@ async function main() {
   const h = await fetch('/api/health');
   assert('Gateway responde', h.status === 200 && h.data?.status === 'ok', JSON.stringify(h.data));
   
-  const t = await fetch('/api/auth/token', { method: 'POST', body: { client_id: 'sdc-core', client_secret: 'sdc_secret_ent3rpr1s3_k3y_2026' } });
+  const t = await fetch('/api/auth/token', { method: 'POST', body: { client_id: 'sdc-core', client_secret: process.env.MCP_CLIENT_SECRET } });
   assert('Auth JWT funciona', !!t.data?.access_token, 'No token received');
   const token = t.data?.access_token || '';
   

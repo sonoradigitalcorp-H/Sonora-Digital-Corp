@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="gateway-config.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Workflow Editor — Native Agent OS</title>
@@ -56,10 +57,10 @@ pre{font-size:.7rem;color:var(--dim);white-space:pre-wrap}
 </div>
 
 <script>
-const GATEWAY = 'http://127.0.0.1:18989';
+const GATEWAY = GATEWAY_URL;
 
 async function auth() {
-  const r = await fetch(GATEWAY + '/api/auth/token', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({client_id:'sdc-core',client_secret:'sdc_secret_ent3rpr1s3_k3y_2026'})});
+  const r = await fetch(GATEWAY + '/api/auth/token', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({client_id:'sdc-core',client_secret:GATEWAY_CLIENT_SECRET})});
   const d = await r.json();
   return d.access_token || '';
 }

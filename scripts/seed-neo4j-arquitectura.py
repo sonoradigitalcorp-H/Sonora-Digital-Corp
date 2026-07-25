@@ -25,7 +25,7 @@ BASE = Path(__file__).resolve().parent.parent
 
 NEO4J_URI = "bolt://localhost:7687"
 NEO4J_USER = "neo4j"
-NEO4J_PASS = "jarvis2026"
+NEO4J_PASS = "sdc2026"
 
 
 def get_driver():
@@ -65,7 +65,7 @@ def seed(tx, recreate: bool = False):
 
     # ── Servicios ──
     services = [
-        {"id": "jarvis-webui", "name": "JARVIS Web UI", "port": 5174, "type": "Service"},
+        {"id": "sdc-gateway", "name": "SDC Gateway", "port": 18989, "type": "Service"},
         {"id": "abe-service", "name": "ABE Music OS", "port": 5180, "type": "Service"},
         {"id": "hermes-mcp", "name": "Hermes MCP Gateway", "port": 8000, "type": "Service"},
         {"id": "openclaw", "name": "OpenClaw Gateway", "port": 18789, "type": "Service"},
@@ -94,16 +94,12 @@ def seed(tx, recreate: bool = False):
         ("luis-daniel", "OWNS", "ollama"),
         ("luis-daniel", "MANAGES", "abe-service"),
         ("noel", "COLLABORATES_ON", "abe-service"),
-        ("noel", "COLLABORATES_ON", "jarvis-webui"),
-        ("abraham", "USES", "abe-service"),
         ("abe-service", "DEPENDS_ON", "qdrant"),
         ("abe-service", "DEPENDS_ON", "neo4j"),
         ("abe-service", "DEPENDS_ON", "redis"),
-        ("jarvis-webui", "DEPENDS_ON", "ollama"),
-        ("jarvis-webui", "DEPENDS_ON", "qdrant"),
-        ("jarvis-webui", "DEPENDS_ON", "neo4j"),
-        ("jarvis-webui", "DEPENDS_ON", "redis"),
-        ("jarvis-webui", "CONNECTS_VIA", "hermes-mcp"),
+        ("sdc-gateway", "DEPENDS_ON", "qdrant"),
+        ("sdc-gateway", "DEPENDS_ON", "neo4j"),
+        ("sdc-gateway", "CONNECTS_VIA", "hermes-mcp"),
         ("hermes-mcp", "ROUTES_TO", "openclaw"),
         ("n8n", "TRIGGERS", "hermes-mcp"),
         ("telegram-bot", "NOTIFIES", "abe-service"),

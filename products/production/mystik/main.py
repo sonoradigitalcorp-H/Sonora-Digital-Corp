@@ -965,7 +965,7 @@ async def get_gallery(request: Request):
 
 # ── ABE Music Database API (PostgreSQL) ──
 
-ABE_DB = "postgresql://mystik:mystik2026@127.0.0.1:5433/mystik"
+ABE_DB = os.environ.get("MYSTIK_DATABASE_URL", "postgresql://mystik:mystik2026@127.0.0.1:5433/mystik")
 
 def _query_abe(query: str, params: tuple = ()) -> list:
     try:

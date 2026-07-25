@@ -29,7 +29,7 @@ log = logging.getLogger('abe-daemon')
 # Config
 TOKEN = os.environ.get('ABE_TELEGRAM_TOKEN')
 CHAT_ID = os.environ.get('ABE_TELEGRAM_CHAT') or '5738935134'
-JARVIS_URL = 'http://localhost:5174'
+API_URL = 'http://localhost:8000'
 ABE_SERVICE_URL = 'http://127.0.0.1:5180'
 CYCLE_10M = 600
 CYCLE_6H = 21600
@@ -104,11 +104,11 @@ class AbeDaemon:
                 fixes.append(f"killed {proc}")
 
         # JARVIS caído
-        if not status.get('jarvis', False):
-            log.warning("JARVIS caído — intentando restart via Docker")
-            subprocess.run(['docker', 'restart', 'sdc-jarvis-webui', 'sdc-mcp-server'],
+        if not status.get('api', False):
+            log.warning("API caída — intentando restart via Docker")
+            subprocess.run(['docker', 'restart', 'sdc-mcp-server'],
                          capture_output=True, timeout=30)
-            fixes.append("restarted JARVIS containers")
+            fixes.append("restarted MCP containers")
 
         # Bot caído
         if not status.get('bot_ok', False):
@@ -137,7 +137,7 @@ class AbeDaemon:
                 f"💿 Releases: {data.get('total_releases', '?')}\n"
                 f"📊 Streams: {data.get('total_streams', 0):,}\n"
                 f"💰 Revenue: ${data.get('total_revenue', 0):,.2f}\n\n"
-                f"[Dashboard]({JARVIS_URL}/static/dashboard-abe.html)"
+                f"[Dashboard]({API_URL}/static/dashboard-abe.html)"
             )
             self.send_alert(message)
             log.info("Report pushed to Telegram")
@@ -189,7 +189,7 @@ class AbeDaemon:
         log.info(f"=== Cycle #{self.cycle_count} ===")
         log.info(f"RAM: {status.get('ram_free', '?')}MB | "
                 f"Containers: {status.get('container_count', '?')} | "
-                f"JARVIS: {'✅' if status.get('jarvis') else '❌'} | "
+                f"API: {'✅' if status.get('api') else '❌'} | "
                 f"ABE: {'✅' if status.get('abe_service') else '❌'} | "
                 f"Bot: {'✅' if status.get('bot_ok') else '❌'}")
 
@@ -215,7 +215,7 @@ class AbeDaemon:
     def run(self):
         log.info("🚀 ABE Daemon started")
         self.send_alert("🚀 *ABE Daemon 24/7 activado*\n"
-                       "Monitoreando JARVIS + Telegram cada 10 min")
+                       "Monitoreando API + Telegram cada 10 min")
         self.last_6h = time.time()
         self.last_24h = time.time()
 

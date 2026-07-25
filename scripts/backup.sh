@@ -1,5 +1,5 @@
 #!/bin/bash
-# JARVIS Backup Script — v2.0
+# SDC Backup Script — v2.0
 # Crea backups con timestamp, comprime en .tar.gz, verifica integridad
 
 SOURCE_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -66,7 +66,7 @@ backup_dir "${SOURCE_DIR}/state"
 
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] Backing up key files..." >> "${LOG_FILE}"
 backup_file "${SOURCE_DIR}/opencode.json"
-backup_file "${SOURCE_DIR}/apps/jarvis/main.py"
+# backup_file "${SOURCE_DIR}/apps/jarvis/main.py"  # JARVIS eliminado
 backup_file "${SOURCE_DIR}/infra/docker-compose.yml"
 backup_file "${SOURCE_DIR}/CLAUDE.md"
 backup_file "${SOURCE_DIR}/AGENTS.md"

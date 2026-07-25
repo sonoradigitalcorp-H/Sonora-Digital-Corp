@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-ABE MUSIC Telegram Bot — Live data from JARVIS API
+ABE MUSIC Telegram Bot — Live data from SDC API
 """
 import logging
 import os
@@ -97,7 +97,7 @@ def handle_update(token, update):
             "/full — Reporte completo\n"
             "/artistas — Top artistas\n"
             "/dashboard — Abrir panel\n\n"
-            "_Powered by JARVIS AI Agency_"
+            "_Powered by SDC AI Agency_"
         )
     elif text == '/kpi':
         reply = format_message(kpis)
