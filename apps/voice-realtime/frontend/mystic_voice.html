@@ -173,6 +173,17 @@ body{
 }
 
 /* Orb states */
+.orb-container.wakeword .orb-core{
+  animation:wake-glow 2s ease-in-out infinite;
+  box-shadow:
+    0 0 30px rgba(168,181,137,0.1),
+    0 0 60px rgba(168,181,137,0.05),
+    inset 0 -20px 40px rgba(0,0,0,0.3);
+}
+@keyframes wake-glow{
+  0%,100%{transform:translate(-50%,-50%) scale(1);opacity:0.5;box-shadow:0 0 20px rgba(168,181,137,0.05)}
+  50%{transform:translate(-50%,-50%) scale(1.02);opacity:0.7;box-shadow:0 0 40px rgba(168,181,137,0.15)}
+}
 .orb-container.listening .orb-core{
   animation:breathing 3s ease-in-out infinite;
 }
@@ -489,6 +500,7 @@ body{
 
   <!-- Controls -->
   <div class="controls">
+    <button class="ctrl-btn" id="wakeBtn" onclick="toggleWakeWord()" title="Wake word: Hey Jarvis">🔮</button>
     <button class="ctrl-btn" id="toneBtn" onclick="cycleTone()" title="Tono de voz">🎭</button>
     <button class="ctrl-btn mic" id="micBtn" onclick="toggleMic()">🎤</button>
     <button class="ctrl-btn" id="chatBtn" onclick="toggleChat()" title="Conversación">💬</button>
@@ -515,6 +527,10 @@ const TONE_ICONS = ['🎭', '⚡', '🌊', '🎯'];
 // Soundscape audio playback
 let soundscapeAudio = null;
 let soundscapeQueue = [];
+let wakeWordMode = 'off'; // 'off' | 'auto'
+let wakeStream = null;
+let wakeRecorder = null;
+let wakeInterval = null;
 
 // ─── Initialize ───
 document.addEventListener('DOMContentLoaded', () => {
@@ -522,7 +538,87 @@ document.addEventListener('DOMContentLoaded', () => {
   createVolumeBars();
   connectWS();
   setupSoundscapeButtons();
+  showWakeWordHelp();
 });
+
+// ─── Wake Word Mode ───
+function toggleWakeWord() {
+  if (wakeWordMode === 'off') {
+    wakeWordMode = 'auto';
+    document.getElementById('wakeBtn').classList.add('active');
+    document.getElementById('wakeBtn').textContent = '🔊';
+    setStatus('🔮 Wake word activado', 'Di "Hey Jarvis" para activarme');
+    setOrbState('wakeword');
+    startWakeStream();
+  } else {
+    wakeWordMode = 'off';
+    document.getElementById('wakeBtn').classList.remove('active');
+    document.getElementById('wakeBtn').textContent = '🔮';
+    setStatus('🔮 Wake word desactivado', 'Presiona el orbe para hablar');
+    setOrbState('listening');
+    stopWakeStream();
+  }
+}
+
+async function startWakeStream() {
+  try {
+    wakeStream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+        sampleRate: 16000,
+      }
+    });
+
+    // Usar MediaRecorder para enviar chunks continuos
+    wakeRecorder = new MediaRecorder(wakeStream, {
+      mimeType: 'audio/webm;codecs=opus'
+    });
+
+    wakeRecorder.ondataavailable = (e) => {
+      if (e.data.size > 0 && ws && ws.readyState === WebSocket.OPEN) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          const base64 = reader.result.split(',')[1];
+          ws.send(JSON.stringify({
+            type: 'input_audio_buffer.append',
+            audio: base64,
+          }));
+        };
+        reader.readAsDataURL(e.data);
+      }
+    };
+
+    // Enviar chunks cada 200ms para detección continua
+    wakeRecorder.start(200);
+    console.log('Wake word streaming started');
+
+  } catch(e) {
+    console.error('Wake stream error:', e);
+    setStatus('⚠️ Error micrófono', 'No puedo acceder al micrófono');
+    wakeWordMode = 'off';
+    document.getElementById('wakeBtn').classList.remove('active');
+    document.getElementById('wakeBtn').textContent = '🔮';
+  }
+}
+
+function stopWakeStream() {
+  if (wakeRecorder && wakeRecorder.state !== 'inactive') {
+    wakeRecorder.stop();
+  }
+  if (wakeStream) {
+    wakeStream.getTracks().forEach(t => t.stop());
+    wakeStream = null;
+  }
+  wakeRecorder = null;
+  console.log('Wake word streaming stopped');
+}
+
+function showWakeWordHelp() {
+  setTimeout(() => {
+    setStatus('🔮 Presiona 🔮 para activar', 'Di "Hey Jarvis" por voz');
+  }, 3000);
+}
 
 // ─── WebSocket ───
 function connectWS() {
@@ -587,6 +683,17 @@ function handleWSMessage(msg) {
 
     case 'response.audio.delta':
       playAudioResponse(msg.delta, msg.mime_type || 'audio/mpeg');
+      break;
+
+    case 'wakeword.detected':
+      setStatus('🔮 ¡Hey Jarvis detectado!', 'Te escucho, di tu comando');
+      setOrbState('speaking');
+      // Vibrar si el dispositivo lo soporta
+      if (navigator.vibrate) navigator.vibrate(100);
+      // Si estamos en modo wakeword auto, empezar a grabar
+      if (wakeWordMode === 'auto') {
+        setTimeout(() => startRecording(), 500);
+      }
       break;
 
     case 'soundscape.delta':
