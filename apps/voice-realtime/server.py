@@ -34,7 +34,7 @@ INPUT_SAMPLE_RATE = 16000
 logger = logging.getLogger("voice-realtime.server")
 
 # ─── Inicializar componentes ───
-tts_engine = TTSEngine(provider="edge", voice="es-MX-DaliaNeural")
+tts_engine = TTSEngine(provider="kokoro", voice="em_alex")
 audio_mixer = AudioMixer(soundscape="minimal")
 intent_router = IntentRouter(use_llm_fallback=True)
 template_engine = VoiceTemplateEngine()
