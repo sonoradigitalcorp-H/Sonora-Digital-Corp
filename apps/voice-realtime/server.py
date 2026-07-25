@@ -21,6 +21,8 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 
 from apps.voice_realtime.pipeline.stt import transcribe, VoiceActivityDetector
+from apps.voice_realtime.pipeline.wakeword import WakeWordDetector
+from apps.voice_realtime.actions.browser import BrowserActions
 from apps.voice_realtime.pipeline.tts import TTSEngine
 from apps.voice_realtime.pipeline.audio_mixer import AudioMixer, SOUNDSCAPES
 from apps.voice_realtime.intent_router import IntentRouter, RoutedAction
@@ -38,16 +40,22 @@ tts_engine = TTSEngine(provider="kokoro", voice="em_alex")
 audio_mixer = AudioMixer(soundscape="minimal")
 intent_router = IntentRouter(use_llm_fallback=True)
 template_engine = VoiceTemplateEngine()
+wakeword = WakeWordDetector(threshold=0.5)
+browser = BrowserActions()
 
 app = FastAPI(title="Mystic Voice Realtime")
 
 # ─── Mensajes de estado ───
 STATUS_MESSAGES = {
+    "wakeword": "🔮 Di \"Hey Jarvis\" para activarme",
+    "wakeword_detected": "🎯 ¡Te escucho!",
     "listening": "🎙️ Te escucho...",
     "listening_with_music": "🎵 Te escucho...",
     "understanding": "🧠 Entendiendo...",
     "routing": "🎯 Buscando destino...",
     "thinking": "✨ Pensando...",
+    "browsing": "🌐 Navegando...",
+    "reading": "📖 Leyendo resultados...",
     "generating_voice": "🎤 Preparando respuesta...",
     "speaking": "🔊 Mystic habla...",
     "redirecting": "↪️ Redirigiendo...",
@@ -237,6 +245,28 @@ async def handle_voice_interaction(
     route = intent_router.route(text, session["history"])
 
     logger.info(f"Intent: {route.type}/{route.destination} (conf={route.payload.get('confidence', 0):.2f})")
+    
+    # ─── 2b. Browser actions: navegación web por voz ───
+    if route.type == "browse" and route.destination:
+        await _send_status(ws, "browsing")
+        result = await browser.navigate_and_read(route.destination)
+        if result["status"] == "ok":
+            await _send_status(ws, "reading")
+            route.payload["response_text"] = f"He navegado a {result['title']}.\n\n{result['text'][:600]}"
+        else:
+            route.payload["response_text"] = f"Lo siento, no pude acceder a {route.destination}."
+        route.type = "talk"
+    
+    # ─── 2c. Búsqueda web ───
+    if route.type == "search" and route.destination:
+        await _send_status(ws, "browsing")
+        result = await browser.search_and_read(route.destination)
+        if result["status"] == "ok":
+            await _send_status(ws, "reading")
+            route.payload["response_text"] = result["text"][:600]
+        else:
+            route.payload["response_text"] = f"No encontré resultados para {route.destination}."
+        route.type = "talk"
 
     # ─── 3. Elegir tono según intención ───
     tone_map = {
@@ -253,8 +283,12 @@ async def handle_voice_interaction(
     # ─── 4. Generar respuesta ───
     response_text = None
 
-    # 4a. Intentar template primero
-    if route.type != "talk":
+    # 4a. Usar respuesta pre-generada (browser action)
+    if route.payload.get("response_text"):
+        response_text = route.payload["response_text"]
+
+    # 4b. Intentar template primero
+    if not response_text and route.type != "talk":
         variables = {
             "min_price": "199",
             "max_price": "1,499",
@@ -363,6 +397,8 @@ async def session_handler(ws: WebSocket, session_id: str):
     session = SESSIONS.get(session_id, {
         "created_at": time.time(),
         "session_id": session_id,
+        "mode": "wakeword",
+        "wakeword_triggered": False,
     })
     SESSIONS[session_id] = session
 
@@ -394,7 +430,7 @@ async def session_handler(ws: WebSocket, session_id: str):
         soundscape = "minimal"
     audio_mixer.set_soundscape(soundscape)
 
-    await _send_status(ws, "listening_with_music")
+    await _send_status(ws, "wakeword")
 
     # ─── Tarea de fondo: enviar soundscape continuo ───
     async def soundscape_loop():
@@ -431,14 +467,41 @@ async def session_handler(ws: WebSocket, session_id: str):
 
             elif msg_type == "input_audio_buffer.append":
                 try:
-                    audio_buffer.extend(base64.b64decode(msg["audio"]))
-                except Exception:
-                    pass
+                    chunk = base64.b64decode(msg["audio"])
+                    audio_buffer.extend(chunk)
+                    
+                    # Wake word detection en modo wakeword
+                    if session.get("mode") == "wakeword" and not session.get("wakeword_triggered"):
+                        result = wakeword.process_chunk(chunk)
+                        if result and result["detected"]:
+                            session["wakeword_triggered"] = True
+                            session["mode"] = "listening"
+                            audio_buffer.clear()
+                            wakeword.reset()
+                            await _send_status(ws, "wakeword_detected")
+                            logger.info(f"[{session_id}] 🔮 Wake word: {result['keyword']} ({result['score']:.2f})")
+                            await _send(ws, {
+                                "type": "wakeword.detected",
+                                "keyword": result["keyword"],
+                                "score": result["score"],
+                            })
+                except Exception as e:
+                    logger.warning(f"Audio error: {e}")
 
             elif msg_type == "input_audio_buffer.commit":
-                if len(audio_buffer) < 640:  # Mínimo 40ms de audio
+                # Si modo wakeword y no activado, ignorar
+                if session.get("mode") == "wakeword" and not session.get("wakeword_triggered"):
+                    audio_buffer.clear()
                     continue
-
+                
+                # Resetear wakeword para próximo ciclo
+                was_wakeword = session.get("wakeword_triggered", False)
+                session["wakeword_triggered"] = False
+                session["mode"] = "wakeword"
+                
+                if len(audio_buffer) < 640:
+                    continue
+                
                 await _send_status(ws, "listening_with_music")
                 await _send(ws, {"type": "input_audio_buffer.speech_stopped"})
 

@@ -183,16 +183,29 @@ class IntentRouter:
             if score > best_score:
                 best_score = score
                 action = intent_def.get("action", {})
+                # Extraer URL o query de búsqueda
+                entities = {
+                    "response": intent_def.get("response", ""),
+                    "redirect_url": self._get_redirect_url(action),
+                }
+                if intent_def["id"] == "browse_web":
+                    url = self._extract_url(text)
+                    if url:
+                        action["destination"] = url
+                        entities["url"] = url
+                elif intent_def["id"] == "search_web":
+                    query = self._extract_search_query(text)
+                    if query:
+                        action["destination"] = query
+                        entities["query"] = query
+                
                 best_intent = Intent(
                     id=intent_def["id"],
                     name=intent_def["name"],
                     description=intent_def["description"],
                     confidence=min(score / 3.0, 1.0),
                     action=action,
-                    entities={
-                        "response": intent_def.get("response", ""),
-                        "redirect_url": self._get_redirect_url(action),
-                    },
+                    entities=entities,
                 )
 
         return best_intent or self._fallback()
@@ -260,6 +273,43 @@ class IntentRouter:
 
         logger.info(f"Route: '{text[:50]}...' → {route.type}/{route.destination} (conf={intent.confidence:.2f})")
         return route
+
+    def _extract_url(self, text: str) -> Optional[str]:
+        """Extrae una URL del texto del usuario."""
+        # URL completa
+        url_match = re.search(r'https?://[\w\-./%?#&=]+', text)
+        if url_match:
+            return url_match.group(0)
+        # Dominio simple (ej: "google.com", "sonoradigitalcorp.com")
+        domain_match = re.search(r'(?:a|visitar|entrar|navegar)\s+(?:en\s+)?(https?://)?([\w\-]+\.[\w\-]+(?:\.[\w\-]+)?)', text, re.IGNORECASE)
+        if domain_match:
+            return "https://" + domain_match.group(2)
+        # Detectar dominio suelto
+        domain_only = re.search(r'\b([\w\-]+\.(com|mx|org|net|io|app|dev|ai)(?:\/[\w\-./%?#&=]*)?)\b', text)
+        if domain_only:
+            url = domain_only.group(0)
+            if not url.startswith("http"):
+                url = "https://" + url
+            return url
+        return None
+
+    def _extract_search_query(self, text: str) -> Optional[str]:
+        """Extrae la consulta de búsqueda del texto del usuario."""
+        # "busca X", "investiga sobre X", "dime sobre X", etc.
+        patterns = [
+            r'(?:busca|investiga|consulta|googlea|google|bing|averigua|encuentra)\s+(?:en\s+)?(?:internet|web|google|bing)?\s*(.+?)(?:\?|$)',
+            r'(?:dime|cuéntame|explícame|cuenta|diga)\s+(?:sobre|acerca|de)\s+(.+?)(?:\?|$)',
+            r'(?:quiero|quisiera|necesito)\s+(?:saber|encontrar|buscar|investigar)\s+(?:sobre|acerca|información\s+de|de)\s+(.+?)(?:\?|$)',
+            r'qué\s+(?:hay|sabes|conoces)\s+(?:de|sobre|acerca)\s+(.+?)(?:\?|$)',
+        ]
+        for pat in patterns:
+            m = re.search(pat, text, re.IGNORECASE)
+            if m:
+                query = m.group(1).strip()
+                if len(query) > 2:
+                    return query
+        # Fallback: si no hay patrón de búsqueda pero el intent es search, usar todo el texto
+        return text.strip()[:100] if len(text.strip()) > 5 else None
 
     def _get_redirect_url(self, action: dict) -> Optional[str]:
         """Obtiene URL de redirección para una acción."""
