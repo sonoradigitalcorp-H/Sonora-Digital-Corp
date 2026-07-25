@@ -1,0 +1,12 @@
+mcp_servers:
+  - name: calendar
+    type: local
+    config:
+      provider: google
+      credentials_ref: "${TENANT_ID}_gcal_creds"
+
+  - name: crm
+    type: http
+    url: "${CRM_API_URL}/mcp"
+    auth: bearer_token_ref
+    credentials_ref: "${TENANT_ID}_crm_token"

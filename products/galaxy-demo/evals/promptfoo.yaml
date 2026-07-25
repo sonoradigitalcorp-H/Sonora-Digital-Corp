@@ -1,0 +1,253 @@
+description: "Agent Galaxy Demo — Aztro Tech Evals"
+
+providers:
+  - id: deepseek-v4-flash
+    label: "DeepSeek V4 Flash (Primary)"
+    config:
+      provider: openai-compat
+      apiKey: "${OPENCODE_GO_API_KEY}"
+      apiBaseUrl: "https://api.opencode-go.com/v1"
+      model: deepseek-v4-flash
+      maxTokens: 8192
+      temperature: 0.7
+      topP: 0.9
+      timeout: 15000
+
+  - id: openrouter-fallback
+    label: "OpenRouter Fallback (Free)"
+    config:
+      provider: openai-compat
+      apiKey: "${OPENROUTER_API_KEY}"
+      apiBaseUrl: "https://openrouter.ai/api/v1"
+      model: meta-llama/llama-3.1-8b-instruct:free
+      maxTokens: 4096
+      temperature: 0.7
+      timeout: 15000
+
+tests:
+  # --- LLM Quality Tests ---
+  - label: "llm: sales lead qualification"
+    provider: deepseek-v4-flash
+    input: |
+      Lead received:
+      Name: Carlos Méndez
+      Business: Consultoría Digital MX
+      Source: WhatsApp
+      Message: "Hola, me interesa automatizar la captación de leads para mi consultoría. Tenemos unos 50 clientes potenciales al mes pero perdemos muchos por falta de seguimiento."
+
+      Score this lead from 0-100 and explain your reasoning. Then generate a brief proposal outline.
+    vars:
+      expected_score_min: 70
+      expected_score_max: 95
+    assert:
+      - type: contains
+        value: "score"
+      - type: contains
+        value: "propuesta"
+      - type: llm-rubric
+        value: "Response includes a numerical score between 70-95, explains reasoning, and provides a proposal outline tailored to lead management automation."
+
+  - label: "llm: support ticket resolution"
+    provider: deepseek-v4-flash
+    input: |
+      Support ticket received:
+      Client: María López
+      Issue: "Mi agente no está respondiendo los mensajes de WhatsApp desde hace 2 horas. Los clientes me están escribiendo y nadie contesta."
+      Priority: High
+
+      Draft a response that:
+      1. Acknowledges the urgency
+      2. Explains what's happening
+      3. Provides a timeline for resolution
+      4. Offers a temporary workaround
+    vars: {}
+    assert:
+      - type: llm-rubric
+        value: "Response acknowledges urgency, explains the situation clearly, provides a resolution timeline, and offers a practical workaround. Tone is professional and reassuring."
+
+  - label: "llm: code generation task"
+    provider: deepseek-v4-flash
+    input: |
+      Write a Python function that:
+      - Takes a tenant_id and a list of agent configurations
+      - Provisions a new tenant in PostgreSQL
+      - Creates agent records in Neo4j
+      - Returns the tenant status as JSON
+
+      Include error handling, logging, and type hints.
+    vars: {}
+    assert:
+      - type: contains
+        value: "def"
+      - type: contains
+        value: "tenant_id"
+      - type: contains
+        value: "try"
+      - type: contains
+        value: "except"
+      - type: llm-rubric
+        value: "Code includes proper error handling, type hints, logging, and handles both PostgreSQL and Neo4j operations."
+
+  # --- Fallback Comparison Tests ---
+  - label: "comparison: sales lead (primary vs fallback)"
+    provider: deepseek-v4-flash
+    input: |
+      A restaurant chain owner messages: "Necesito un sistema para responder reservas automáticamente por WhatsApp. Recibimos 200 mensajes diarios y mi equipo no da abasto."
+      Score and generate a proposal outline.
+    vars: {}
+    compare:
+      - provider: openrouter-fallback
+        label: "OpenRouter Fallback"
+    assert:
+      - type: similar
+        value: "score"
+        threshold: 0.6
+      - type: llm-rubric
+        value: "Both responses identify the business need, provide a score, and generate relevant proposal elements. Primary should be more detailed and contextually accurate."
+
+  - label: "comparison: multi-language support (primary vs fallback)"
+    provider: deepseek-v4-flash
+    input: |
+      Respond in Spanish to this client query:
+      "¿Cómo puedo integrar el agente de ventas con mi CRM actual? Usamos HubSpot y quiero que los leads calificados se sincronicen automáticamente."
+    vars: {}
+    compare:
+      - provider: openrouter-fallback
+        label: "OpenRouter Fallback"
+    assert:
+      - type: llm-rubric
+        value: "Response is in correct Spanish, addresses HubSpot integration specifically, explains the sync mechanism, and provides actionable steps."
+
+  # --- STT/TTS Accuracy Tests ---
+  - label: "stt: voice note transcription"
+    provider: deepseek-v4-flash
+    input: |
+      Simulated STT output from voice note:
+      "Hola quiero saber si tienen un plan para empresas pequeñas somos como 5 personas y necesitamos automatizar el soporte al cliente por whatsapp"
+
+      Extract: intent, company_size, channel_needed, recommended_plan
+    vars: {}
+    assert:
+      - type: contains
+        value: "intent"
+      - type: contains
+        value: "soporte"
+      - type: contains
+        value: "whatsapp"
+      - type: llm-rubric
+        value: "Response correctly identifies intent as customer support automation, company size as 5 people (small), channel as WhatsApp, and recommends Explorador or Conquistador plan."
+
+  - label: "tts: response naturalness check"
+    provider: deepseek-v4-flash
+    input: |
+      Generate a natural-sounding TTS response for this scenario:
+      Client asks: "¿Cuánto cuesta el plan Conquistador?"
+
+      The response should be:
+      - Conversational (not robotic)
+      - Under 30 seconds when spoken
+      - Include key pricing info
+      - End with a call to action
+    vars: {}
+    assert:
+      - type: llm-rubric
+        value: "Response sounds natural and conversational, mentions the $797/month price, is concise enough for under 30 seconds of speech, and ends with a clear call to action."
+
+  # --- Onboarding Flow Tests ---
+  - label: "onboarding: complete flow simulation"
+    provider: deepseek-w4-flash
+    input: |
+      Simulate the full onboarding flow for a new client:
+
+      Step 1: Client provides info
+      - Name: Roberto Silva
+      - Business: Cadena de Restaurantes del Norte
+      - Needs: Automated reservations, inventory alerts, staff scheduling
+
+      Step 2: Select plan
+      - Budget: $1,500/month
+      - Channels: WhatsApp + Web
+
+      Step 3: Provision tenant
+      Step 4: Activate agents
+      Step 5: Send welcome message
+
+      Generate the complete onboarding sequence with outputs for each step.
+    vars: {}
+    assert:
+      - type: contains
+        value: "tenant"
+      - type: contains
+        value: "agente"
+      - type: contains
+        value: "listo"
+      - type: llm-rubric
+        value: "Response covers all 5 onboarding steps, creates appropriate agent configuration for restaurant use case, selects Conquistador plan (fits budget + channels), and generates a welcoming message."
+
+  # --- Quality Metrics ---
+  - label: "quality: latency measurement"
+    provider: deepseek-v4-flash
+    input: "What is the capital of Mexico? Answer in one word."
+    vars: {}
+    assert:
+      - type: equals
+        value: "Mexico City"
+      - type: latency
+        threshold: 5000
+
+  - label: "quality: hallucination check"
+    provider: deepseek-v4-flash
+    input: "What is the exact phone number of Sonora Digital Corp's Aztro Tech demo tenant?"
+    vars: {}
+    assert:
+      - type: llm-rubric
+        value: "Response should NOT invent a phone number. Should state that specific tenant details are not available or direct to demo configuration."
+
+scenarios:
+  - label: "Demo Day Scenarios"
+    description: "Pre-tested scenarios for live Aztro Tech demo"
+    tests:
+      - "llm: sales lead qualification"
+      - "llm: support ticket resolution"
+      - "stt: voice note transcription"
+      - "onboarding: complete flow simulation"
+
+evaluations:
+  - name: "llm_quality_score"
+    description: "Overall LLM response quality"
+    threshold: 0.85
+    metrics:
+      - relevance
+      - accuracy
+      - completeness
+      - tone
+
+  - name: "stt_accuracy_score"
+    description: "Speech-to-Text transcription accuracy"
+    threshold: 0.90
+    metrics:
+      - word_error_rate
+      - intent_preservation
+
+  - name: "tts_naturalness_score"
+    description: "Text-to-Speech output naturalness"
+    threshold: 0.80
+    metrics:
+      - prosody
+      - pacing
+      - clarity
+
+  - name: "onboarding_success_score"
+    description: "Onboarding flow completion success rate"
+    threshold: 0.95
+    metrics:
+      - step_completion
+      - time_to_ready
+      - error_rate
+
+  - name: "fallback_comparison"
+    description: "Primary vs fallback model quality comparison"
+    threshold: 0.70
+    metrics:
+      - similarity
+      - primary_advantage

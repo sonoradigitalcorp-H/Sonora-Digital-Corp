@@ -1,0 +1,42 @@
+mcp_servers:
+  - name: calendar
+    type: local
+    config:
+      provider: google
+      credentials_ref: sdc_gcal_creds
+
+  - name: telegram
+    type: local
+    config:
+      credentials_ref: sdc_telegram_bot_token
+
+  - name: github
+    type: local
+    config:
+      credentials_ref: sdc_github_token
+
+  - name: postgres
+    type: local
+    config:
+      credentials_ref: sdc_postgres_url
+
+  - name: qdrant
+    type: http
+    url: "http://localhost:6333"
+
+  - name: neo4j
+    type: http
+    url: "http://localhost:7687"
+
+  - name: n8n
+    type: http
+    url: "http://localhost:5678"
+    auth: bearer_token_ref
+    credentials_ref: sdc_n8n_token
+
+  - name: voice
+    type: local
+    config:
+      stt_engine: faster-whisper
+      tts_engine: coqui-xtts-v2
+      voice_clone_ref: mystic_default_voice

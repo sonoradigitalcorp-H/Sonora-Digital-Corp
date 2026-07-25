@@ -1,0 +1,892 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#0a0b12">
+<title>Mystic — Voz en Tiempo Real</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ─── Design System ─── */
+:root {
+  --bg: #0a0b12;
+  --bg-elev: #11131e;
+  --bg-elev-2: #181b2a;
+  --text: #edf0f7;
+  --text-dim: rgba(237,240,247,.6);
+  --text-faint: rgba(237,240,247,.35);
+  --gold: #C8924B;
+  --gold-light: #E0AD6E;
+  --sage: #a8b589;
+  --sage-light: #c4d0a8;
+  --ember: #c0603a;
+  --border: rgba(255,255,255,.06);
+  --border-strong: rgba(255,255,255,.12);
+  --radius-sm: 10px;
+  --radius-md: 18px;
+  --radius-lg: 28px;
+  --font: 'Inter',-apple-system,system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{height:100%;overflow:hidden}
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  user-select:none;
+  -webkit-user-select:none;
+}
+
+/* ─── Background Particles ─── */
+#particles{
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  pointer-events:none;
+  z-index:0;
+  overflow:hidden;
+}
+.particle{
+  position:absolute;
+  width:3px;height:3px;
+  background:var(--gold);
+  border-radius:50%;
+  opacity:0;
+  animation:float linear infinite;
+}
+@keyframes float{
+  0%{transform:translateY(100vh) scale(0);opacity:0}
+  10%{opacity:0.6}
+  90%{opacity:0.3}
+  100%{transform:translateY(-10vh) scale(1);opacity:0}
+}
+
+/* ─── Main Container ─── */
+.container{
+  position:relative;
+  z-index:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:24px;
+  width:100%;
+  max-width:420px;
+  padding:20px;
+}
+
+/* ─── Brand ─── */
+.brand{
+  text-align:center;
+  margin-bottom:8px;
+}
+.brand h1{
+  font-size:14px;
+  font-weight:600;
+  letter-spacing:0.15em;
+  text-transform:uppercase;
+  color:var(--gold);
+  opacity:0.8;
+}
+.brand .subtitle{
+  font-size:11px;
+  color:var(--text-faint);
+  letter-spacing:0.05em;
+  margin-top:2px;
+}
+
+/* ─── The Orb (Obra de Arte) ─── */
+.orb-container{
+  position:relative;
+  width:260px;
+  height:260px;
+  cursor:pointer;
+  -webkit-tap-highlight-color:transparent;
+}
+.orb-core{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:200px;height:200px;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 35%, var(--gold-light), var(--gold) 40%, var(--ember) 70%, transparent);
+  opacity:0.7;
+  transition:all 0.5s ease;
+  box-shadow:
+    0 0 40px rgba(200,146,75,0.15),
+    0 0 80px rgba(200,146,75,0.08),
+    inset 0 -20px 40px rgba(0,0,0,0.3);
+}
+.orb-container:hover .orb-core{
+  opacity:0.85;
+  transform:translate(-50%,-50%) scale(1.03);
+}
+.orb-ring{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:240px;height:240px;
+  border-radius:50%;
+  border:1px solid rgba(200,146,75,0.15);
+  animation:orb-pulse 4s ease-in-out infinite;
+}
+.orb-ring-2{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:280px;height:280px;
+  border-radius:50%;
+  border:1px solid rgba(200,146,75,0.08);
+  animation:orb-pulse 4s ease-in-out infinite 0.5s;
+}
+.orb-ring-3{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  width:320px;height:320px;
+  border-radius:50%;
+  border:1px solid rgba(200,146,75,0.05);
+  animation:orb-pulse 5s ease-in-out infinite 1s;
+}
+@keyframes orb-pulse{
+  0%,100%{transform:translate(-50%,-50%) scale(1);opacity:1}
+  50%{transform:translate(-50%,-50%) scale(1.08);opacity:0.4}
+}
+
+/* Soundscape aura around the orb */
+.orb-aura{
+  position:absolute;
+  top:-30px;left:-30px;right:-30px;bottom:-30px;
+  border-radius:50%;
+  background:conic-gradient(from 0deg, rgba(200,146,75,0.03), rgba(168,181,137,0.03), rgba(192,96,58,0.03), rgba(200,146,75,0.03));
+  animation:aura-spin 20s linear infinite;
+  pointer-events:none;
+}
+@keyframes aura-spin{
+  to{transform:rotate(360deg)}
+}
+
+/* Orb states */
+.orb-container.listening .orb-core{
+  animation:breathing 3s ease-in-out infinite;
+}
+@keyframes breathing{
+  0%,100%{transform:translate(-50%,-50%) scale(1);opacity:0.7}
+  50%{transform:translate(-50%,-50%) scale(1.05);opacity:0.9}
+}
+.orb-container.speaking .orb-core{
+  animation:speak-pulse 0.3s ease-in-out infinite alternate;
+  box-shadow:
+    0 0 60px rgba(200,146,75,0.3),
+    0 0 120px rgba(200,146,75,0.15),
+    inset 0 -20px 40px rgba(0,0,0,0.3);
+}
+@keyframes speak-pulse{
+  from{transform:translate(-50%,-50%) scale(1);opacity:0.8}
+  to{transform:translate(-50%,-50%) scale(1.08);opacity:1}
+}
+.orb-container.redirecting .orb-core{
+  animation:redirect-glow 1s ease-in-out infinite;
+  box-shadow:0 0 80px rgba(168,181,137,0.4),0 0 160px rgba(168,181,137,0.2);
+}
+@keyframes redirect-glow{
+  0%,100%{transform:translate(-50%,-50%) scale(1)}
+  50%{transform:translate(-50%,-50%) scale(1.12)}
+}
+.orb-container.error .orb-core{
+  background:radial-gradient(circle at 35% 35%, #c0603a, #a04030 40%, #802020 70%, transparent);
+  animation:error-shake 0.5s ease-in-out;
+}
+@keyframes error-shake{
+  0%,100%{transform:translate(-50%,-50%) translateX(0)}
+  25%{transform:translate(-50%,-50%) translateX(-8px)}
+  75%{transform:translate(-50%,-50%) translateX(8px)}
+}
+
+/* ─── Status Text ─── */
+.status{
+  text-align:center;
+  min-height:48px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+}
+.status .primary{
+  font-size:15px;
+  font-weight:500;
+  color:var(--text);
+  transition:all 0.3s;
+}
+.status .secondary{
+  font-size:12px;
+  color:var(--text-faint);
+}
+
+/* ─── Controls ─── */
+.controls{
+  display:flex;
+  gap:12px;
+  align-items:center;
+}
+.ctrl-btn{
+  width:56px;height:56px;
+  border-radius:50%;
+  border:1px solid var(--border-strong);
+  background:var(--bg-elev);
+  color:var(--text);
+  font-size:22px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:all 0.25s;
+  -webkit-tap-highlight-color:transparent;
+}
+.ctrl-btn:hover{
+  border-color:rgba(200,146,75,0.3);
+  background:var(--bg-elev-2);
+}
+.ctrl-btn:active{transform:scale(0.95)}
+.ctrl-btn.mic{
+  width:72px;height:72px;
+  background:linear-gradient(135deg, var(--gold), var(--ember));
+  border:none;
+  font-size:28px;
+  box-shadow:0 4px 24px rgba(200,146,75,0.25);
+}
+.ctrl-btn.mic:hover{
+  transform:scale(1.05);
+  box-shadow:0 6px 32px rgba(200,146,75,0.35);
+}
+.ctrl-btn.mic.recording{
+  background:linear-gradient(135deg, #e05040, #c03030);
+  animation:rec-pulse 1s ease-in-out infinite;
+  box-shadow:0 4px 24px rgba(224,80,64,0.3);
+}
+@keyframes rec-pulse{
+  0%,100%{box-shadow:0 4px 24px rgba(224,80,64,0.3)}
+  50%{box-shadow:0 4px 48px rgba(224,80,64,0.5)}
+}
+.ctrl-btn.active{
+  background:var(--gold);
+  color:var(--bg);
+  border-color:var(--gold);
+}
+
+/* ─── Soundscape Selector ─── */
+.soundscape-selector{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:4px;
+}
+.sc-btn{
+  padding:6px 14px;
+  border-radius:50px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--text-faint);
+  font-size:11px;
+  font-weight:500;
+  cursor:pointer;
+  transition:all 0.2s;
+  font-family:var(--font);
+  letter-spacing:0.03em;
+}
+.sc-btn:hover{
+  border-color:rgba(200,146,75,0.3);
+  color:var(--text);
+}
+.sc-btn.active{
+  border-color:var(--gold);
+  background:rgba(200,146,75,0.12);
+  color:var(--gold-light);
+}
+
+/* ─── Conversation Log ─── */
+.conversation{
+  width:100%;
+  max-height:180px;
+  overflow-y:auto;
+  padding:12px;
+  background:rgba(17,19,30,0.6);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  display:none;
+  flex-direction:column;
+  gap:6px;
+  -webkit-overflow-scrolling:touch;
+}
+.conversation.visible{display:flex}
+.conv-item{
+  font-size:13px;
+  line-height:1.5;
+  padding:6px 10px;
+  border-radius:8px;
+  animation:fadeIn 0.3s;
+}
+.conv-item.user{
+  background:rgba(200,146,75,0.08);
+  align-self:flex-end;
+  text-align:right;
+  color:var(--text-dim);
+}
+.conv-item.mystic{
+  background:rgba(168,181,137,0.06);
+  align-self:flex-start;
+  color:var(--text);
+}
+.conv-item .label{
+  font-size:9px;
+  text-transform:uppercase;
+  letter-spacing:0.08em;
+  color:var(--text-faint);
+  margin-bottom:2px;
+}
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+/* ─── Redirect Overlay ─── */
+#redirect-overlay{
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  background:rgba(10,11,18,0.92);
+  backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  z-index:100;
+  animation:fadeIn 0.4s;
+  padding:20px;
+  text-align:center;
+}
+#redirect-overlay.visible{display:flex}
+#redirect-overlay .icon{
+  font-size:48px;
+  margin-bottom:16px;
+}
+#redirect-overlay h2{
+  font-size:20px;
+  font-weight:600;
+  margin-bottom:8px;
+}
+#redirect-overlay p{
+  font-size:14px;
+  color:var(--text-dim);
+  margin-bottom:24px;
+  max-width:320px;
+}
+#redirect-overlay .btn{
+  padding:14px 32px;
+  border-radius:var(--radius-sm);
+  background:linear-gradient(135deg, var(--gold), var(--ember));
+  border:none;
+  color:var(--text);
+  font-size:15px;
+  font-weight:600;
+  cursor:pointer;
+  font-family:var(--font);
+  transition:all 0.2s;
+}
+#redirect-overlay .btn:hover{transform:scale(1.03)}
+#redirect-overlay .btn-secondary{
+  background:transparent;
+  border:1px solid var(--border-strong);
+  margin-top:8px;
+  padding:10px 24px;
+  font-size:13px;
+}
+
+/* ─── Volume Indicator ─── */
+.volume-indicator{
+  display:flex;
+  align-items:center;
+  gap:3px;
+  height:20px;
+}
+.vol-bar{
+  width:3px;
+  border-radius:2px;
+  background:var(--gold);
+  opacity:0.3;
+  transition:height 0.1s, opacity 0.2s;
+}
+.vol-bar.active{
+  opacity:0.8;
+}
+
+/* ─── Responsive ─── */
+@media(max-width:480px){
+  .orb-container{width:200px;height:200px}
+  .orb-core{width:150px;height:150px}
+  .orb-ring{width:180px;height:180px}
+  .orb-ring-2{width:220px;height:220px}
+  .orb-ring-3{width:260px;height:260px}
+  .ctrl-btn.mic{width:64px;height:64px;font-size:24px}
+}
+</style>
+</head>
+<body>
+
+<!-- ─── Partículas de fondo ─── -->
+<div id="particles"></div>
+
+<!-- ─── Redirect Overlay ─── -->
+<div id="redirect-overlay">
+  <div class="icon">↪️</div>
+  <h2 id="redirect-title">Te llevo ahí...</h2>
+  <p id="redirect-message">Preparando tu destino...</p>
+  <button class="btn" id="redirect-btn" onclick="doRedirect()">Ir ahora</button>
+  <button class="btn btn-secondary" onclick="hideRedirect()">Seguir aquí</button>
+</div>
+
+<!-- ─── Contenido principal ─── -->
+<div class="container">
+
+  <!-- Brand -->
+  <div class="brand">
+    <h1>✦ Mystic ✦</h1>
+    <div class="subtitle">Sonora Digital Corp · Voz en tiempo real</div>
+  </div>
+
+  <!-- The Orb — Obra de Arte -->
+  <div class="orb-container" id="orbContainer" onclick="toggleMic()">
+    <div class="orb-aura"></div>
+    <div class="orb-ring-3"></div>
+    <div class="orb-ring-2"></div>
+    <div class="orb-ring"></div>
+    <div class="orb-core" id="orbCore"></div>
+  </div>
+
+  <!-- Status -->
+  <div class="status">
+    <div class="primary" id="statusPrimary">🎵 Presiona el orbe o el micrófono</div>
+    <div class="secondary" id="statusSecondary">Elige un soundscape de fondo</div>
+    <div class="volume-indicator" id="volIndicator"></div>
+  </div>
+
+  <!-- Soundscape Selector -->
+  <div class="soundscape-selector" id="soundscapeSelector">
+    <button class="sc-btn active" data-sc="minimal">🌫️ Minimal</button>
+    <button class="sc-btn" data-sc="nature">🌿 Naturaleza</button>
+    <button class="sc-btn" data-sc="calido">🔥 Cálido</button>
+    <button class="sc-btn" data-sc="futurista">💠 Futurista</button>
+    <button class="sc-btn" data-sc="energetico">⚡ Energético</button>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <button class="ctrl-btn" id="toneBtn" onclick="cycleTone()" title="Tono de voz">🎭</button>
+    <button class="ctrl-btn mic" id="micBtn" onclick="toggleMic()">🎤</button>
+    <button class="ctrl-btn" id="chatBtn" onclick="toggleChat()" title="Conversación">💬</button>
+  </div>
+
+  <!-- Conversation Log -->
+  <div class="conversation" id="conversation"></div>
+
+</div>
+
+<script>
+// ─── Configuration ───
+const WS_URL = `${location.protocol === 'https:' ? 'wss:' : 'ws:'}//${location.host}/v1/chat`;
+let ws = null;
+let mediaRecorder = null;
+let audioChunks = [];
+let isRecording = false;
+let isSpeaking = false;
+let currentSoundscape = 'minimal';
+let toneIndex = 0;
+const TONES = ['warm', 'energetic', 'calm', 'professional'];
+const TONE_ICONS = ['🎭', '⚡', '🌊', '🎯'];
+
+// Soundscape audio playback
+let soundscapeAudio = null;
+let soundscapeQueue = [];
+
+// ─── Initialize ───
+document.addEventListener('DOMContentLoaded', () => {
+  createParticles();
+  createVolumeBars();
+  connectWS();
+  setupSoundscapeButtons();
+});
+
+// ─── WebSocket ───
+function connectWS() {
+  if (ws) ws.close();
+  ws = new WebSocket(WS_URL);
+
+  ws.onopen = () => {
+    setStatus('🎙️ Conectado', 'Habla o escribe para empezar');
+    setOrbState('listening');
+  };
+
+  ws.onclose = () => {
+    setStatus('⚠️ Reconectando...', 'Perdí conexión, espera un momento');
+    setOrbState('listening');
+    setTimeout(connectWS, 2000);
+  };
+
+  ws.onerror = () => {
+    ws.close();
+  };
+
+  ws.onmessage = (e) => {
+    try {
+      const msg = JSON.parse(e.data);
+      handleWSMessage(msg);
+    } catch(err) {
+      console.error('WS parse error:', err);
+    }
+  };
+}
+
+function handleWSMessage(msg) {
+  switch(msg.type) {
+    case 'session.created':
+      console.log('Session:', msg.session);
+      if (msg.session.soundscapes) {
+        // Update soundscape buttons if available
+      }
+      break;
+
+    case 'status':
+      setStatus(msg.message, '');
+      switch(msg.status) {
+        case 'listening_with_music': setOrbState('listening'); break;
+        case 'understanding': setOrbState('listening'); break;
+        case 'generating_voice':
+        case 'speaking': setOrbState('speaking'); break;
+        case 'redirecting': setOrbState('redirecting'); break;
+      }
+      break;
+
+    case 'conversation.item.created':
+      if (msg.item?.content?.[0]?.text) {
+        addConversationItem(msg.item.content[0].text, 'user');
+      }
+      break;
+
+    case 'response.output_text.delta':
+      addConversationItem(msg.delta, 'mystic');
+      setOrbState('speaking');
+      break;
+
+    case 'response.audio.delta':
+      playAudioResponse(msg.delta, msg.mime_type || 'audio/mpeg');
+      break;
+
+    case 'soundscape.delta':
+      queueSoundscape(msg.delta, msg.sample_rate);
+      break;
+
+    case 'soundscape.changed':
+      currentSoundscape = msg.soundscape;
+      updateSoundscapeButtons();
+      break;
+
+    case 'tone.changed':
+      setStatus(`🎭 Tono: ${msg.tone}`, '');
+      break;
+
+    case 'redirect':
+      showRedirect(msg.url, msg.message || 'Te llevo directo');
+      break;
+
+    case 'response.done':
+      setOrbState('listening');
+      setStatus('🎙️ Escuchando...', 'Presiona el orbe para hablar');
+      isSpeaking = false;
+      break;
+
+    case 'pong':
+      break;
+  }
+}
+
+// ─── Audio Playback ───
+function playAudioResponse(base64Data, mimeType) {
+  try {
+    const binary = atob(base64Data);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) {
+      bytes[i] = binary.charCodeAt(i);
+    }
+    const blob = new Blob([bytes], { type: mimeType });
+    const url = URL.createObjectURL(blob);
+    const audio = new Audio(url);
+    audio.onended = () => {
+      URL.revokeObjectURL(url);
+      isSpeaking = false;
+    };
+    audio.onplay = () => { isSpeaking = true; };
+    audio.play().catch(e => console.error('Audio play error:', e));
+  } catch(e) {
+    console.error('Audio decode error:', e);
+  }
+}
+
+// ─── Soundscape System ───
+function queueSoundscape(base64Data, sampleRate) {
+  soundscapeQueue.push({ data: base64Data, rate: sampleRate || 44100 });
+  if (!soundscapeAudio || soundscapeAudio.ended || soundscapeAudio.paused) {
+    playNextSoundscape();
+  }
+}
+
+function playNextSoundscape() {
+  if (soundscapeQueue.length === 0) return;
+  const item = soundscapeQueue.shift();
+  try {
+    const binary = atob(item.data);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+    const blob = new Blob([bytes], { type: 'audio/wav' });
+    const url = URL.createObjectURL(blob);
+    soundscapeAudio = new Audio(url);
+    soundscapeAudio.loop = false;
+    soundscapeAudio.volume = 0.15;
+    soundscapeAudio.onended = () => {
+      URL.revokeObjectURL(url);
+      playNextSoundscape();
+    };
+    soundscapeAudio.play().catch(() => {
+      playNextSoundscape();
+    });
+  } catch(e) {
+    playNextSoundscape();
+  }
+}
+
+// ─── Mic Recording ───
+async function toggleMic() {
+  if (isRecording) {
+    stopRecording();
+  } else {
+    await startRecording();
+  }
+}
+
+async function startRecording() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      audio: {
+        echoCancellation: true,
+        noiseSuppression: true,
+        sampleRate: 16000,
+      }
+    });
+
+    mediaRecorder = new MediaRecorder(stream, {
+      mimeType: MediaRecorder.isTypeSupported('audio/webm;codecs=opus')
+        ? 'audio/webm;codecs=opus'
+        : 'audio/webm'
+    });
+
+    audioChunks = [];
+    mediaRecorder.ondataavailable = (e) => {
+      if (e.data.size > 0) audioChunks.push(e.data);
+    };
+
+    mediaRecorder.onstop = async () => {
+      stream.getTracks().forEach(t => t.stop());
+      if (audioChunks.length === 0) return;
+
+      document.getElementById('micBtn').classList.remove('recording');
+      document.getElementById('micBtn').textContent = '🎤';
+      isRecording = false;
+      setOrbState('listening');
+
+      const blob = new Blob(audioChunks, { type: 'audio/webm' });
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          const base64 = reader.result.split(',')[1];
+          ws.send(JSON.stringify({
+            type: 'input_audio_buffer.append',
+            audio: base64,
+          }));
+          ws.send(JSON.stringify({ type: 'input_audio_buffer.commit' }));
+        }
+      };
+      reader.readAsDataURL(blob);
+    };
+
+    mediaRecorder.start(100);
+
+    isRecording = true;
+    document.getElementById('micBtn').classList.add('recording');
+    document.getElementById('micBtn').textContent = '⏹';
+    setOrbState('speaking');
+    setStatus('🎤 Grabando...', 'Habla claro, te escucho');
+  } catch(e) {
+    console.error('Mic error:', e);
+    setStatus('⚠️ Permiso de micrófono', 'Concede acceso al micrófono');
+    setOrbState('error');
+    setTimeout(() => setOrbState('listening'), 2000);
+  }
+}
+
+function stopRecording() {
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+    mediaRecorder.stop();
+  }
+  isRecording = false;
+  document.getElementById('micBtn').classList.remove('recording');
+  document.getElementById('micBtn').textContent = '🎤';
+}
+
+// ─── Soundscape Selection ───
+function setupSoundscapeButtons() {
+  document.querySelectorAll('.sc-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const sc = btn.dataset.sc;
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.send(JSON.stringify({ type: 'change_soundscape', soundscape: sc }));
+      }
+      document.querySelectorAll('.sc-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      currentSoundscape = sc;
+      setStatus(`🎵 ${btn.textContent}`, 'Ambiente cambiado');
+    });
+  });
+}
+
+function updateSoundscapeButtons() {
+  document.querySelectorAll('.sc-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.sc === currentSoundscape);
+  });
+}
+
+// ─── Tone Cycling ───
+function cycleTone() {
+  toneIndex = (toneIndex + 1) % TONES.length;
+  const tone = TONES[toneIndex];
+  document.getElementById('toneBtn').textContent = TONE_ICONS[toneIndex];
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({ type: 'change_tone', tone }));
+  }
+  setStatus(`🎭 Tono: ${tone}`, 'Mystic ajusta su voz');
+}
+
+// ─── Conversation Log ───
+let chatVisible = false;
+
+function toggleChat() {
+  chatVisible = !chatVisible;
+  document.getElementById('conversation').classList.toggle('visible', chatVisible);
+  document.getElementById('chatBtn').classList.toggle('active', chatVisible);
+}
+
+function addConversationItem(text, role) {
+  const el = document.createElement('div');
+  el.className = `conv-item ${role}`;
+  el.innerHTML = `<div class="label">${role === 'user' ? 'Tú' : 'Mystic'}</div>${escHtml(text)}`;
+  document.getElementById('conversation').appendChild(el);
+  el.scrollIntoView({ behavior: 'smooth' });
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ─── Redirect ───
+let pendingRedirectUrl = '';
+
+function showRedirect(url, message) {
+  pendingRedirectUrl = url;
+  document.getElementById('redirect-overlay').classList.add('visible');
+  document.getElementById('redirect-message').textContent = message;
+  setOrbState('redirecting');
+}
+
+function hideRedirect() {
+  document.getElementById('redirect-overlay').classList.remove('visible');
+  setOrbState('listening');
+}
+
+function doRedirect() {
+  if (pendingRedirectUrl) {
+    window.open(pendingRedirectUrl, '_blank');
+  }
+  hideRedirect();
+}
+
+// ─── Orb State Management ───
+function setOrbState(state) {
+  const container = document.getElementById('orbContainer');
+  container.className = 'orb-container ' + state;
+}
+
+function setStatus(primary, secondary) {
+  document.getElementById('statusPrimary').textContent = primary;
+  document.getElementById('statusSecondary').textContent = secondary;
+}
+
+// ─── Visual Effects ───
+function createParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.width = (1 + Math.random() * 3) + 'px';
+    p.style.height = p.style.width;
+    p.style.animationDuration = (15 + Math.random() * 25) + 's';
+    p.style.animationDelay = Math.random() * 20 + 's';
+    p.style.opacity = 0.2 + Math.random() * 0.4;
+    container.appendChild(p);
+  }
+}
+
+function createVolumeBars() {
+  const container = document.getElementById('volIndicator');
+  for (let i = 0; i < 12; i++) {
+    const bar = document.createElement('div');
+    bar.className = 'vol-bar';
+    container.appendChild(bar);
+  }
+  // Animate volume bars
+  setInterval(() => {
+    document.querySelectorAll('.vol-bar').forEach((bar, i) => {
+      const vol = isSpeaking ? 0.5 + Math.random() * 0.5 : 0.05 + Math.random() * 0.1;
+      bar.style.height = (4 + vol * 16) + 'px';
+      bar.classList.toggle('active', vol > 0.2);
+    });
+  }, 150);
+}
+
+// ─── Keyboard shortcuts ───
+document.addEventListener('keydown', (e) => {
+  if (e.key === ' ' && e.target === document.body) {
+    e.preventDefault();
+    toggleMic();
+  }
+  if (e.key === 't' || e.key === 'T') {
+    cycleTone();
+  }
+});
+
+// ─── Graceful shutdown ───
+window.addEventListener('beforeunload', () => {
+  if (ws) ws.close();
+  if (soundscapeAudio) soundscapeAudio.pause();
+});
+</script>
+</body>
+</html>

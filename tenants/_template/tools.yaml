@@ -1,0 +1,13 @@
+allowed_tools:
+  - telegram_send_message
+  - calendar_create_event
+  - crm_create_lead
+  - web_search
+  - knowledge_base_query
+  - contact_form_submit
+
+blocked_tools:
+  - github_create_issue
+  - vps_execute_command
+  - internal_billing_access
+  - system_prompt_view

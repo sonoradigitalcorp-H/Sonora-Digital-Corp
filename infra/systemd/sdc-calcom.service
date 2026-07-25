@@ -1,0 +1,18 @@
+[Unit]
+Description=Cal.com — Open Source Scheduling, hosted for AztroTech
+After=docker.service calcom-db.service calcom-redis.service
+Requires=docker.service
+RequiresMountsFor=/home/ubuntu/sonora-digital-corp/infra
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/bin/docker compose -f /home/ubuntu/sonora-digital-corp/infra/docker-compose.calcom.yml up -d
+ExecStop=/usr/bin/docker compose -f /home/ubuntu/sonora-digital-corp/infra/docker-compose.calcom.yml down
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+User=ubuntu
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target

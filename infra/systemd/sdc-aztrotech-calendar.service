@@ -1,0 +1,14 @@
+[Unit]
+Description=AztroTech Calendar API — custom booking system
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+ExecStart=/usr/bin/python3 -m clients.aztrotech.calendar.api_server
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

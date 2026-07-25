@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Galaxy × Aztro Tech — Sonora Digital Corp</title>
+    <style>
+        :root {
+            --bg-primary: #0a0a1a;
+            --bg-secondary: #12122a;
+            --bg-card: #1a1a3a;
+            --text-primary: #e8e8f0;
+            --text-secondary: #a0a0c0;
+            --accent-cyan: #00d4ff;
+            --accent-purple: #8b5cf6;
+            --accent-gold: #f59e0b;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-blue: #3b82f6;
+            --border: rgba(100, 100, 180, 0.2);
+            --glow-cyan: 0 0 20px rgba(0, 212, 255, 0.3);
+            --glow-purple: 0 0 20px rgba(139, 92, 246, 0.3);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .stars {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: radial-gradient(ellipse at center, #1a1a3a 0%, #0a0a1a 70%);
+            z-index: -1;
+        }
+
+        .stars::before {
+            content: '';
+            position: absolute;
+            width: 100%; height: 100%;
+            background-image:
+                radial-gradient(1px 1px at 10% 20%, white 50%, transparent 100%),
+                radial-gradient(1px 1px at 30% 60%, white 50%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 50% 10%, rgba(255,255,255,0.8) 50%, transparent 100%),
+                radial-gradient(1px 1px at 70% 80%, white 50%, transparent 100%),
+                radial-gradient(1px 1px at 90% 40%, white 50%, transparent 100%),
+                radial-gradient(1.5px 1.5px at 15% 85%, rgba(255,255,255,0.6) 50%, transparent 100%),
+                radial-gradient(1px 1px at 85% 15%, white 50%, transparent 100%),
+                radial-gradient(1px 1px at 45% 45%, rgba(255,255,255,0.5) 50%, transparent 100%),
+                radial-gradient(1px 1px at 25% 35%, white 50%, transparent 100%),
+                radial-gradient(1px 1px at 65% 25%, white 50%, transparent 100%);
+            animation: twinkle 4s ease-in-out infinite alternate;
+        }
+
+        @keyframes twinkle {
+            0% { opacity: 0.6; }
+            100% { opacity: 1; }
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+        /* Header */
+        .header {
+            padding: 40px 0 20px;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header__logo {
+            font-size: 14px;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+            margin-bottom: 8px;
+        }
+
+        .header__title {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 12px;
+        }
+
+        .header__subtitle {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+        }
+
+        .badge--demo {
+            display: inline-block;
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--accent-gold);
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            margin-top: 12px;
+        }
+
+        /* Sections */
+        .section {
+            padding: 60px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .section__title {
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .section__subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+        }
+
+        /* Galaxy Preview */
+        .galaxy-preview {
+            width: 100%;
+            height: 500px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: var(--glow-purple);
+            background: var(--bg-secondary);
+        }
+
+        .galaxy-preview iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Agent Cards */
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .agent-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .agent-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--glow-cyan);
+        }
+
+        .agent-card__planet {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            margin-bottom: 16px;
+            box-shadow: 0 0 15px currentColor;
+        }
+
+        .agent-card__name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .agent-card__desc {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+        }
+
+        .agent-card__metric {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-top: 1px solid var(--border);
+            font-size: 0.85rem;
+        }
+
+        .agent-card__metric-value {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        /* Pricing */
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .pricing-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 32px 24px;
+            text-align: center;
+            position: relative;
+            transition: transform 0.3s;
+        }
+
+        .pricing-card:hover { transform: translateY(-6px); }
+
+        .pricing-card--featured {
+            border-color: var(--accent-purple);
+            box-shadow: var(--glow-purple);
+        }
+
+        .pricing-card--featured::before {
+            content: 'MÁS POPULAR';
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--accent-purple);
+            color: white;
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .pricing-card__name {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .pricing-card__price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            margin-bottom: 4px;
+        }
+
+        .pricing-card__period {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 24px;
+        }
+
+        .pricing-card__features {
+            list-style: none;
+            text-align: left;
+            margin-bottom: 24px;
+        }
+
+        .pricing-card__features li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            font-size: 0.9rem;
+        }
+
+        .pricing-card__features li::before {
+            content: '✓';
+            color: var(--accent-green);
+            margin-right: 8px;
+            font-weight: 700;
+        }
+
+        .pricing-card__features li--no::before {
+            content: '✗';
+            color: var(--text-secondary);
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 12px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            border: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn:hover { transform: translateY(-2px); }
+
+        .btn--primary {
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            color: white;
+            box-shadow: var(--glow-cyan);
+        }
+
+        .btn--outline {
+            background: transparent;
+            border: 1px solid var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        /* Tech Stack */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+        }
+
+        .tech-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 8px 16px;
+            border-radius: 24px;
+            font-size: 0.85rem;
+            transition: border-color 0.3s;
+        }
+
+        .tech-badge:hover { border-color: var(--accent-cyan); }
+
+        .tech-badge__dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+        }
+
+        /* Onboarding */
+        .onboarding-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .step {
+            text-align: center;
+            flex: 1;
+            min-width: 120px;
+        }
+
+        .step__number {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin: 0 auto 12px;
+        }
+
+        .step__label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .step__time {
+            font-size: 0.75rem;
+            color: var(--accent-green);
+            margin-top: 4px;
+        }
+
+        /* CTA */
+        .cta {
+            text-align: center;
+            padding: 80px 0;
+        }
+
+        .cta__title {
+            font-size: 2rem;
+            margin-bottom: 16px;
+            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-gold));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta__text {
+            color: var(--text-secondary);
+            margin-bottom: 32px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta__actions {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 24px 0;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+        }
+
+        @media (max-width: 768px) {
+            .galaxy-preview { height: 350px; }
+            .agents-grid { grid-template-columns: 1fr; }
+            .pricing-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="stars"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header__logo">Sonora Digital Corp</div>
+            <h1 class="header__title">Agent Galaxy × Aztro Tech</h1>
+            <p class="header__subtitle">Un ecosistema vivo de agentes inteligentes para tus clientes</p>
+            <span class="badge--demo">⚡ Demo Preview — No Production</span>
+        </div>
+    </header>
+
+    <!-- Galaxy Preview -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section__title">La Galaxia en Acción</h2>
+            <p class="section__subtitle">Cada planeta es un agente autónomo. Cada órbita es un workflow en ejecución.</p>
+            <div class="galaxy-preview">
+                <iframe src="../galaxy-3d/index.html" title="Agent Galaxy 3D Visualization"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- Agent Showcase -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section__title">6 Agentes. 6 Planetas. Infinitas Posibilidades.</h2>
+            <p class="section__subtitle">Cada agente opera de forma autónoma, con habilidades específicas y métricas en tiempo real.</p>
+            <div class="agents-grid">
+                <div class="agent-card">
+                    <div class="agent-card__planet" style="background: radial-gradient(circle at 30% 30%, #ff6b6b, #c0392b); color: #e74c3c;"></div>
+                    <div class="agent-card__name">Sales Agent — Mars</div>
+                    <div class="agent-card__desc">Captura, califica y convierte leads automáticamente. Genera propuestas personalizadas en segundos.</div>
+                    <div class="agent-card__metric"><span>Conversión</span><span class="agent-card__metric-value">34%</span></div>
+                    <div class="agent-card__metric"><span>Tiempo respuesta</span><span class="agent-card__metric-value">12s</span></div>
+                </div>
+                <div class="agent-card">
+                    <div class="agent-card__planet" style="background: radial-gradient(circle at 30% 30%, #74b9ff, #2980b9); color: #3498db;"></div>
+                    <div class="agent-card__name">Support Agent — Neptune</div>
+                    <div class="agent-card__desc">Resuelve tickets sin intervención humana. Triaje automático, respuestas contextuales, encuestas de satisfacción.</div>
+                    <div class="agent-card__metric"><span>Resueltos hoy</span><span class="agent-card__metric-value">14</span></div>
+                    <div class="agent-card__metric"><span>Satisfacción</span><span class="agent-card__metric-value">4.7/5</span></div>
+                </div>
+                <div class="agent-card">
+                    <div class="agent-card__planet" style="background: radial-gradient(circle at 30% 30%, #55efc4, #27ae60); color: #2ecc71;"></div>
+                    <div class="agent-card__name">Dev Agent — Earth</div>
+                    <div class="agent-card__desc">Escribe, prueba y deploya código. Code review automático. Integración continua sin supervisión.</div>
+                    <div class="agent-card__metric"><span>Tests passing</span><span class="agent-card__metric-value">96%</span></div>
+                    <div class="agent-card__metric"><span>Deploy rate</span><span class="agent-card__metric-value">99%</span></div>
+                </div>
+                <div class="agent-card">
+                    <div class="agent-card__planet" style="background: radial-gradient(circle at 30% 30%, #ffeaa7, #d4a017); color: #f1c40f;"></div>
+                    <div class="agent-card__name">Knowledge Agent — Saturn</div>
+                    <div class="agent-card__desc">Preserva y organiza todo el conocimiento. Búsqueda semántica, gestión de ADRs, captura de lecciones.</div>
+                    <div class="agent-card__metric"><span>Documentos</span><span class="agent-card__metric-value">1,247</span></div>
+                    <div class="agent-card__metric"><span>Relevancia</span><span class="agent-card__metric-value">91%</span></div>
+                </div>
+                <div class="agent-card">
+                    <div class="agent-card__planet" style="background: radial-gradient(circle at 30% 30%, #d6a4f5, #8e44ad); color: #9b59b6;"></div>
+                    <div class="agent-card__name">Finance Agent — Pluto</div>
+                    <div class="agent-card__desc">Tracks revenue, costos y ROI en tiempo real. Generación de invoices automática. Análisis de rentabilidad.</div>
+                    <div class="agent-card__metric"><span>MRR</span><span class="agent-card__metric-value">$4,791</span></div>
+                    <div class="agent-card__metric"><span>ROI</span><span class="agent-card__metric-value">8.4x</span></div>
+                </div>
+                <div class="agent-card">
+                    <div class="agent-card__planet" style="background: radial-gradient(circle at 30% 30%, #dfe6e9, #b2bec3); color: #ecf0f1;"></div>
+                    <div class="agent-card__name">Ops Agent — Moon</div>
+                    <div class="agent-card__desc">Monitoreo de infraestructura, auto-recovery, alert routing. Mantiene el sistema vivo 24/7.</div>
+                    <div class="agent-card__metric"><span>Uptime</span><span class="agent-card__metric-value">99.97%</span></div>
+                    <div class="agent-card__metric"><span>Recuperación</span><span class="agent-card__metric-value">4.2s</span></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Onboarding -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section__title">De 0 a Agente Operativo en 30 Segundos</h2>
+            <p class="section__subtitle">Sin configuración técnica. Sin infraestructura que montar. Sin código que escribir.</p>
+            <div class="onboarding-steps">
+                <div class="step">
+                    <div class="step__number">1</div>
+                    <div class="step__label">Nombre y negocio</div>
+                    <div class="step__time">5s</div>
+                </div>
+                <div class="step">
+                    <div class="step__number">2</div>
+                    <div class="step__label">Elegir plan</div>
+                    <div class="step__time">5s</div>
+                </div>
+                <div class="step">
+                    <div class="step__number">3</div>
+                    <div class="step__label">Provisionar tenant</div>
+                    <div class="step__time">5s</div>
+                </div>
+                <div class="step">
+                    <div class="step__number">4</div>
+                    <div class="step__label">Activar agentes</div>
+                    <div class="step__time">5s</div>
+                </div>
+                <div class="step">
+                    <div class="step__number">5</div>
+                    <div class="step__label">Enviar bienvenida</div>
+                    <div class="step__time">5s</div>
+                </div>
+                <div class="step">
+                    <div class="step__number">6</div>
+                    <div class="step__label">Agente listo ✓</div>
+                    <div class="step__time">5s</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section__title">Planes Diseñados para Escalar</h2>
+            <p class="section__subtitle">Cada nivel incluye todo lo anterior, más capacidades nuevas. ROI comprobado desde el mes 1.</p>
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <div class="pricing-card__name">Explorador</div>
+                    <div class="pricing-card__price">$297</div>
+                    <div class="pricing-card__period">USD / mes</div>
+                    <ul class="pricing-card__features">
+                        <li>1 Agente dedicado</li>
+                        <li>1 Canal (WhatsApp o Telegram)</li>
+                        <li>3 Skills pre-configuradas</li>
+                        <li class="pricing-card__features li--no">Voz (STT/TTS)</li>
+                        <li class="pricing-card__features li--no">LLM personalizado</li>
+                        <li>SLA 95%</li>
+                        <li>Soporte por email</li>
+                    </ul>
+                    <a href="#" class="btn btn--outline">Empezar</a>
+                </div>
+                <div class="pricing-card pricing-card--featured">
+                    <div class="pricing-card__name">Conquistador</div>
+                    <div class="pricing-card__price">$797</div>
+                    <div class="pricing-card__period">USD / mes</div>
+                    <ul class="pricing-card__features">
+                        <li>3 Agentes dedicados</li>
+                        <li>2 Canales (WhatsApp + Telegram)</li>
+                        <li>8 Skills pre-configuradas</li>
+                        <li>Voz (STT/TTS) incluida</li>
+                        <li class="pricing-card__features li--no">LLM personalizado</li>
+                        <li>SLA 99%</li>
+                        <li>Soporte chat + email</li>
+                    </ul>
+                    <a href="#" class="btn btn--primary">Elegir Plan</a>
+                </div>
+                <div class="pricing-card">
+                    <div class="pricing-card__name">Imperio</div>
+                    <div class="pricing-card__price">$1,997</div>
+                    <div class="pricing-card__period">USD / mes</div>
+                    <ul class="pricing-card__features">
+                        <li>6+ Agentes dedicados</li>
+                        <li>Todos los canales</li>
+                        <li>Todas las skills</li>
+                        <li>Voz (STT/TTS) premium</li>
+                        <li>LLM personalizado</li>
+                        <li>SLA 99.9%</li>
+                        <li>Soporte dedicado</li>
+                    </ul>
+                    <a href="#" class="btn btn--outline">Contactar</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section__title" style="text-align: center;">Tech Stack</h2>
+            <p class="section__subtitle" style="text-align: center;">Infraestructura probada. Componentes reemplazables. Cero vendor lock-in.</p>
+            <div class="tech-stack">
+                <span class="tech-badge"><span class="tech-badge__dot" style="background: #4d6bfe;"></span> DeepSeek V4 Flash</span>
+                <span class="tech-badge"><span class="tech-badge__dot" style="background: #00d4ff;"></span> OpenClaw</span>
+                <span class="tech-badge"><span class="tech-badge__dot" style="background: #8b5cf6;"></span> Hermes Bridge</span>
+                <span class="tech-badge"><span class="tech-badge__dot" style="background: #10b981;"></span> OpenCode Go</span>
+                <span class="tech-badge"><span class="tech-badge__dot" style="background: #f59e0b;"></span> WhatsApp API</span>
+                <span class="tech-badge"><span class="tech-badge__dot" style="background: #229ED9;"></span> Telegram Bot API</span>
+                <span class="tech-badge"><span class="tech-badge__dot" style="background: #ef4444;"></span> PostgreSQL</span>
+                <span class="tech-badge"><span class="tech-badge__dot" style="background: #008080;"></span> Neo4j</span>
+                <span class="tech-badge"><span class="tech-badge__dot" style="background: #3b82f6;"></span> Qdrant Vector DB</span>
+                <span class="tech-badge"><span class="tech-badge__dot" style="background: #e74c3c;"></span> Redis</span>
+                <span class="tech-badge"><span class="tech-badge__dot" style="background: #2496ed;"></span> Docker</span>
+                <span class="tech-badge"><span class="tech-badge__dot" style="background: #e8e8f0;"></span> Whisper STT</span>
+                <span class="tech-badge"><span class="tech-badge__dot" style="background: #10b981;"></span> Edge TTS</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <h2 class="cta__title">¿Listo para tu propia galaxia?</h2>
+            <p class="cta__text">30 días de piloto. Sin compromiso. Sin letra chica. Solo resultados. Empezá con un agente, escalá a seis.</p>
+            <div class="cta__actions">
+                <a href="https://wa.me/52XXXXXXXXXX?text=Quiero%20el%20piloto%20de%20Agent%20Galaxy" class="btn btn--primary">WhatsApp — Empezar Piloto</a>
+                <a href="mailto:partners@sonoradigitalcorp.com" class="btn btn--outline">Email — partners@sonoradigitalcorp.com</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>Sonora Digital Corp © 2026 — Agent Galaxy Demo — PREVIEW MODE</p>
+            <p style="margin-top: 4px;">Built with DeepSeek V4 Flash × OpenClaw × Hermes × OpenCode Go</p>
+        </div>
+    </footer>
+</body>
+</html>

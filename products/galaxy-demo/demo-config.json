@@ -1,0 +1,223 @@
+{
+  "version": "1.0.0",
+  "mode": "preview",
+  "tenant": {
+    "id": "aztro-tech-demo",
+    "name": "Aztro Tech (Demo)",
+    "type": "demo",
+    "created_at": "2026-07-23T00:00:00Z",
+    "expires_at": "2026-08-23T00:00:00Z"
+  },
+  "llm": {
+    "primary": {
+      "provider": "deepseek",
+      "model": "deepseek-v4-flash",
+      "api_key_source": "opencode-go",
+      "max_tokens": 8192,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "timeout_ms": 15000
+    },
+    "fallback": {
+      "provider": "openrouter",
+      "model": "meta-llama/llama-3.1-8b-instruct:free",
+      "api_key_source": "opencode-go",
+      "trigger": "primary_failure || latency > 10000ms",
+      "max_tokens": 4096,
+      "temperature": 0.7
+    }
+  },
+  "demo_mode": {
+    "enabled": true,
+    "skip_real_api_calls": true,
+    "use_cached_responses": true,
+    "simulate_latency_ms": 1200,
+    "preset_scenarios": [
+      {
+        "id": "lead-inbound",
+        "trigger": "new lead via WhatsApp",
+        "response_file": "scenarios/lead-inbound.json"
+      },
+      {
+        "id": "voice-query",
+        "trigger": "voice note received",
+        "response_file": "scenarios/voice-query.json"
+      },
+      {
+        "id": "onboarding-complete",
+        "trigger": "new tenant provisioned",
+        "response_file": "scenarios/onboarding-complete.json"
+      },
+      {
+        "id": "support-ticket",
+        "trigger": "support ticket created",
+        "response_file": "scenarios/support-ticket.json"
+      },
+      {
+        "id": "code-generation",
+        "trigger": "code task requested",
+        "response_file": "scenarios/code-generation.json"
+      }
+    ]
+  },
+  "agents": {
+    "sales": {
+      "enabled": true,
+      "planet": "mars",
+      "color": "#e74c3c",
+      "skills": ["lead-capture", "lead-scoring", "proposal-generator", "pipeline-manager"],
+      "sample_data": {
+        "leads": [
+          {"id": "L001", "name": "Carlos Méndez", "business": "Consultoría Digital", "source": "WhatsApp", "score": 85, "stage": "qualified"},
+          {"id": "L002", "name": "María López", "business": "E-commerce Moda", "source": "Telegram", "score": 72, "stage": "proposal"},
+          {"id": "L003", "name": "Roberto Silva", "business": "Restaurante Chain", "source": "Web", "score": 45, "stage": "lead"}
+        ],
+        "pipeline_stages": ["lead", "qualified", "proposal", "negotiation", "won", "lost"],
+        "conversion_rate": 0.34,
+        "avg_response_time_sec": 12
+      }
+    },
+    "support": {
+      "enabled": true,
+      "planet": "neptune",
+      "color": "#3498db",
+      "skills": ["ticket-triage", "auto-response", "escalation", "satisfaction-survey"],
+      "sample_data": {
+        "open_tickets": 3,
+        "resolved_today": 14,
+        "avg_resolution_min": 8,
+        "satisfaction_score": 4.7
+      }
+    },
+    "dev": {
+      "enabled": true,
+      "planet": "earth",
+      "color": "#2ecc71",
+      "skills": ["code-generation", "test-writing", "code-review", "deploy-automation"],
+      "sample_data": {
+        "tasks_completed": 47,
+        "tests_passing": 0.96,
+        "deploy_success_rate": 0.99,
+        "avg_delivery_hours": 2.3
+      }
+    },
+    "knowledge": {
+      "enabled": true,
+      "planet": "saturn",
+      "color": "#f1c40f",
+      "skills": ["document-indexing", "semantic-search", "adr-management", "lesson-capture"],
+      "sample_data": {
+        "documents_indexed": 1247,
+        "queries_today": 38,
+        "avg_relevance_score": 0.91,
+        "knowledge_layers": 7
+      }
+    },
+    "finance": {
+      "enabled": true,
+      "planet": "pluto",
+      "color": "#9b59b6",
+      "skills": ["revenue-tracking", "cost-analysis", "roi-calculation", "invoice-generation"],
+      "sample_data": {
+        "monthly_recurring_revenue": 4791,
+        "cost_per_agent_hour": 0.12,
+        "roi_multiplier": 8.4,
+        "invoices_generated": 23
+      }
+    },
+    "ops": {
+      "enabled": true,
+      "planet": "moon",
+      "color": "#ecf0f1",
+      "skills": ["health-monitoring", "auto-recovery", "alert-routing", "capacity-planning"],
+      "sample_data": {
+        "uptime_pct": 99.97,
+        "incidents_auto_resolved": 12,
+        "avg_recovery_sec": 4.2,
+        "containers_healthy": 12
+      }
+    }
+  },
+  "channels": {
+    "whatsapp": {
+      "enabled": true,
+      "number": "+52-XXX-XXX-XXXX",
+      "business_profile": "Aztro Tech AI",
+      "voice_enabled": true,
+      "stt_provider": "whisper-compatible",
+      "tts_provider": "edge-tts"
+    },
+    "telegram": {
+      "enabled": true,
+      "bot_username": "@aztrotech_demo_bot",
+      "voice_enabled": false
+    },
+    "web": {
+      "enabled": true,
+      "url": "https://demo.aztrotech.sonoradigitalcorp.com",
+      "voice_enabled": true
+    }
+  },
+  "onboarding": {
+    "steps": [
+      {"id": 1, "name": "collect_info", "label": "Nombre y negocio", "duration_sec": 5},
+      {"id": 2, "name": "select_plan", "label": "Elegir plan", "duration_sec": 5},
+      {"id": 3, "name": "provision_tenant", "label": "Provisionar tenant", "duration_sec": 5},
+      {"id": 4, "name": "activate_agents", "label": "Activar agentes", "duration_sec": 5},
+      {"id": 5, "name": "send_welcome", "label": "Enviar bienvenida", "duration_sec": 5},
+      {"id": 6, "name": "ready", "label": "Agente listo", "duration_sec": 5}
+    ],
+    "total_duration_sec": 30,
+    "welcome_message": "¡Bienvenido a Agent Galaxy! Tu agente personal está listo. ¿En qué puedo ayudarte?"
+  },
+  "pricing": {
+    "explorador": {
+      "price_usd": 297,
+      "agents": 1,
+      "channels": 1,
+      "skills": 3,
+      "voice": false,
+      "custom_llm": false,
+      "sla_pct": 95,
+      "support": "email"
+    },
+    "conquistador": {
+      "price_usd": 797,
+      "agents": 3,
+      "channels": 2,
+      "skills": 8,
+      "voice": true,
+      "custom_llm": false,
+      "sla_pct": 99,
+      "support": "chat+email"
+    },
+    "imperio": {
+      "price_usd": 1997,
+      "agents": 6,
+      "channels": 3,
+      "skills": "all",
+      "voice": true,
+      "custom_llm": true,
+      "sla_pct": 99.9,
+      "support": "dedicated"
+    }
+  },
+  "tech_stack": {
+    "llm_primary": "DeepSeek V4 Flash",
+    "llm_fallback": "OpenRouter (free tier)",
+    "api_provider": "OpenCode Go",
+    "agent_framework": "OpenClaw",
+    "mcp_bridge": "Hermes",
+    "stt": "Whisper-compatible",
+    "tts": "Edge TTS",
+    "channels": ["WhatsApp", "Telegram", "Web"],
+    "infra": ["PostgreSQL", "Neo4j", "Qdrant", "Redis", "Docker"]
+  },
+  "evals": {
+    "llm_quality_threshold": 0.85,
+    "stt_accuracy_threshold": 0.90,
+    "tts_naturalness_threshold": 0.80,
+    "onboarding_success_threshold": 0.95,
+    "latency_p95_ms": 5000
+  }
+}

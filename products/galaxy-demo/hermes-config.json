@@ -1,0 +1,245 @@
+{
+  "version": "1.0.0",
+  "mode": "preview",
+  "tenant": "aztro-tech-demo",
+  "hermes": {
+    "bridge_id": "aztro-tech-galaxy-bridge",
+    "bridge_name": "Aztro Tech Hermes Bridge",
+    "description": "Multi-channel bridge for Aztro Tech Agent Galaxy demo"
+  },
+  "channels": {
+    "whatsapp": {
+      "enabled": true,
+      "type": "whatsapp-business",
+      "phone_number_id": "${WA_PHONE_ID}",
+      "access_token_source": "opencode-go",
+      "webhook_url": "https://api.aztrotech.sonoradigitalcorp.com/webhooks/whatsapp",
+      "webhook_verify_token": "aztro-tech-demo-2026",
+      "features": {
+        "text_messages": true,
+        "voice_notes": true,
+        "image_messages": true,
+        "document_messages": false,
+        "location_messages": false,
+        "interactive_buttons": true,
+        "list_messages": true
+      },
+      "rate_limits": {
+        "messages_per_second": 10,
+        "concurrent_sessions": 50
+      }
+    },
+    "telegram": {
+      "enabled": true,
+      "type": "telegram-bot",
+      "bot_token_source": "opencode-go",
+      "bot_username": "@aztrotech_demo_bot",
+      "webhook_url": "https://api.aztrotech.sonoradigitalcorp.com/webhooks/telegram",
+      "features": {
+        "text_messages": true,
+        "voice_notes": false,
+        "inline_keyboard": true,
+        "polls": false,
+        "channels": false
+      },
+      "rate_limits": {
+        "messages_per_second": 30,
+        "concurrent_sessions": 100
+      }
+    },
+    "web": {
+      "enabled": true,
+      "type": "web-chat",
+      "base_url": "https://demo.aztrotech.sonoradigitalcorp.com",
+      "websocket_url": "wss://demo.aztrotech.sonoradigitalcorp.com/ws",
+      "features": {
+        "text_messages": true,
+        "voice_notes": true,
+        "file_upload": true,
+        "code_blocks": true,
+        "markdown_rendering": true
+      },
+      "rate_limits": {
+        "messages_per_second": 5,
+        "concurrent_sessions": 25
+      }
+    }
+  },
+  "voice_pipeline": {
+    "enabled": true,
+    "stt": {
+      "provider": "whisper-compatible",
+      "model": "base",
+      "language": "es",
+      "audio_format": "ogg",
+      "sample_rate": 16000,
+      "max_duration_sec": 60,
+      "preprocessing": {
+        "noise_reduction": true,
+        "normalize_volume": true,
+        "trim_silence": true
+      },
+      "postprocessing": {
+        "punctuation_restoration": true,
+        "capitalization": true,
+        "confidence_threshold": 0.7
+      }
+    },
+    "llm_processing": {
+      "primary": "deepseek-v4-flash",
+      "fallback": "openrouter-free",
+      "intent_extraction": true,
+      "entity_extraction": true,
+      "context_window_messages": 10
+    },
+    "tts": {
+      "provider": "edge-tts",
+      "voice": "es-MX-DaliaNeural",
+      "language": "es-MX",
+      "rate": "0%",
+      "pitch": "0Hz",
+      "output_format": "mp3",
+      "bitrate": "128k",
+      "preprocessing": {
+        "ssml_support": true,
+        "pause_insertion": true,
+        "emphasis_support": true
+      }
+    },
+    "pipeline_flow": [
+      {
+        "step": 1,
+        "name": "receive_voice",
+        "description": "Receive voice note from channel"
+      },
+      {
+        "step": 2,
+        "name": "preprocess_audio",
+        "description": "Noise reduction, normalization, silence trimming"
+      },
+      {
+        "step": 3,
+        "name": "stt_transcribe",
+        "description": "Convert audio to text using Whisper"
+      },
+      {
+        "step": 4,
+        "name": "postprocess_text",
+        "description": "Punctuation, capitalization, confidence check"
+      },
+      {
+        "step": 5,
+        "name": "llm_process",
+        "description": "Process transcribed text with DeepSeek V4 Flash"
+      },
+      {
+        "step": 6,
+        "name": "generate_response",
+        "description": "Generate conversational response"
+      },
+      {
+        "step": 7,
+        "name": "tts_synthesize",
+        "description": "Convert response text to speech"
+      },
+      {
+        "step": 8,
+        "name": "deliver_voice",
+        "description": "Send voice note back to original channel"
+      }
+    ],
+    "expected_latency_ms": {
+      "stt": 2000,
+      "llm": 3000,
+      "tts": 1500,
+      "total_p95": 5000
+    }
+  },
+  "routing": {
+    "strategy": "channel-agnostic",
+    "session_management": {
+      "session_timeout_min": 30,
+      "max_history_messages": 50,
+      "cross_channel_identity": true,
+      "identity_resolution": {
+        "phone_number": true,
+        "telegram_user_id": true,
+        "web_session_id": false
+      }
+    },
+    "message_routing": [
+      {
+        "id": "route-voice",
+        "condition": "message.type == 'voice'",
+        "pipeline": "voice_pipeline",
+        "channels": ["whatsapp", "web"]
+      },
+      {
+        "id": "route-text-sales",
+        "condition": "message.type == 'text' AND intent IN ['lead', 'pricing', 'proposal']",
+        "pipeline": "sales_pipeline",
+        "channels": ["whatsapp", "telegram", "web"]
+      },
+      {
+        "id": "route-text-support",
+        "condition": "message.type == 'text' AND intent IN ['support', 'ticket', 'help']",
+        "pipeline": "support_pipeline",
+        "channels": ["whatsapp", "telegram", "web"]
+      },
+      {
+        "id": "route-text-default",
+        "condition": "message.type == 'text'",
+        "pipeline": "general_pipeline",
+        "channels": ["whatsapp", "telegram", "web"]
+      }
+    ]
+  },
+  "multi_tenant": {
+    "isolation": "tenant-scoped",
+    "tenant_resolution": {
+      "by_phone_prefix": true,
+      "by_bot_token": true,
+      "by_web_subdomain": true
+    },
+    "aztro-tech-demo": {
+      "whatsapp_prefix": "+52-XXX",
+      "telegram_bot": "@aztrotech_demo_bot",
+      "web_subdomain": "demo.aztrotech",
+      "agents_enabled": ["sales", "support", "dev", "knowledge", "finance", "ops"],
+      "voice_enabled": true,
+      "custom_branding": {
+        "logo_url": "https://assets.sonoradigitalcorp.com/aztro-tech/logo.png",
+        "primary_color": "#8b5cf6",
+        "welcome_message": "¡Bienvenido a Aztro Tech! ¿En qué puedo ayudarte hoy?"
+      }
+    }
+  },
+  "observability": {
+    "log_level": "info",
+    "track_metrics": true,
+    "metrics": [
+      "messages_received_per_channel",
+      "messages_sent_per_channel",
+      "voice_pipeline_latency_ms",
+      "stt_accuracy",
+      "tts_quality",
+      "channel_uptime_pct",
+      "routing_decisions",
+      "error_rate_per_channel",
+      "session_count",
+      "avg_session_duration_min"
+    ],
+    "health_check": {
+      "endpoint": "/health",
+      "interval_sec": 30,
+      "checks": [
+        "whatsapp_connection",
+        "telegram_connection",
+        "websocket_server",
+        "voice_pipeline_ready",
+        "stt_service",
+        "tts_service"
+      ]
+    }
+  }
+}

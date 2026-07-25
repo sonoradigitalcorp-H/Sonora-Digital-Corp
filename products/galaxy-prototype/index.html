@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Galaxy — Sonora Digital Corp × Aztro Tech</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Segoe UI',system-ui,-apple-system,sans-serif;color:#fff}
+#canvas-container{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1}
+#css3d-container{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;pointer-events:none}
+#css3d-container *{pointer-events:auto}
+
+/* Top Bar */
+#top-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:linear-gradient(180deg,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0) 100%);pointer-events:auto}
+#top-bar h1{font-size:18px;font-weight:700;background:linear-gradient(135deg,#00d4ff,#7b2fff,#ff006e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px;text-transform:uppercase}
+#top-bar .subtitle{font-size:11px;color:rgba(255,255,255,0.5);letter-spacing:1px}
+
+/* Bottom Bar */
+#bottom-bar{position:fixed;bottom:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:12px 24px;background:linear-gradient(0deg,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0) 100%);pointer-events:auto}
+#bottom-bar .tech-info{font-size:11px;color:rgba(255,255,255,0.4)}
+#bottom-bar .voice-indicator{font-size:12px;color:rgba(255,255,255,0.7);display:flex;align-items:center;gap:8px}
+#bottom-bar .voice-indicator span{animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* Connect Button */
+#connect-btn{position:fixed;bottom:60px;right:24px;z-index:100;padding:12px 24px;background:linear-gradient(135deg,#7b2fff,#00d4ff);border:none;border-radius:30px;color:#fff;font-size:14px;font-weight:600;cursor:pointer;letter-spacing:1px;transition:all 0.3s;box-shadow:0 0 30px rgba(123,47,255,0.4)}
+#connect-btn:hover{transform:scale(1.05);box-shadow:0 0 50px rgba(123,47,255,0.7)}
+
+/* Focus Panel */
+#focus-panel{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:200;background:rgba(10,10,30,0.95);border:1px solid rgba(123,47,255,0.4);border-radius:16px;padding:32px;max-width:500px;width:90%;display:none;backdrop-filter:blur(20px);box-shadow:0 0 60px rgba(123,47,255,0.3)}
+#focus-panel.active{display:block;animation:fadeIn 0.4s ease}
+@keyframes fadeIn{from{opacity:0;transform:translate(-50%,-50%) scale(0.9)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+#focus-panel h2{font-size:24px;margin-bottom:8px;background:linear-gradient(135deg,var(--accent1),var(--accent2));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+#focus-panel .role{font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:16px}
+#focus-panel .caps{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+#focus-panel .cap-tag{padding:4px 12px;background:rgba(123,47,255,0.15);border:1px solid rgba(123,47,255,0.3);border-radius:20px;font-size:11px;color:rgba(255,255,255,0.8)}
+#focus-panel .close-btn{position:absolute;top:12px;right:16px;background:none;border:none;color:rgba(255,255,255,0.5);font-size:24px;cursor:pointer}
+#focus-panel .close-btn:hover{color:#fff}
+
+/* Galaxy Label */
+.galaxy-label{position:absolute;pointer-events:none;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;white-space:nowrap;text-shadow:0 0 10px currentColor,0 0 20px currentColor;transform:translate(-50%,-50%)}
+
+/* Card Styles */
+.orbital-card{width:180px;height:260px;perspective:800px;cursor:pointer}
+.card-inner{position:relative;width:100%;height:100%;transition:transform 0.6s;transform-style:preserve-3d}
+.orbital-card:hover .card-inner{transform:rotateY(180deg) scale(1.1)}
+.card-front,.card-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:12px;overflow:hidden}
+.card-front{background:linear-gradient(135deg,rgba(20,20,50,0.95),rgba(10,10,30,0.98));border:1px solid var(--card-color);box-shadow:0 0 20px rgba(var(--card-rgb),0.3),inset 0 0 30px rgba(var(--card-rgb),0.1)}
+.card-back{background:linear-gradient(135deg,rgba(30,10,50,0.95),rgba(10,10,30,0.98));border:1px solid var(--card-color);transform:rotateY(180deg);box-shadow:0 0 20px rgba(var(--card-rgb),0.3)}
+.card-front::before{content:'';position:absolute;inset:0;background:linear-gradient(45deg,transparent 30%,rgba(255,255,255,0.05) 50%,transparent 70%);animation:holoShine 3s infinite}
+@keyframes holoShine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.card-icon{width:50px;height:50px;margin:16px auto 8px;border-radius:50%;background:radial-gradient(circle,var(--card-color) 0%,transparent 70%);display:flex;align-items:center;justify-content:center;font-size:24px}
+.card-title{font-size:13px;font-weight:700;text-align:center;color:#fff;margin:0 12px;text-transform:uppercase;letter-spacing:1px}
+.card-divider{width:60%;height:1px;margin:8px auto;background:linear-gradient(90deg,transparent,var(--card-color),transparent)}
+.card-desc{font-size:10px;text-align:center;padding:0 12px;color:rgba(255,255,255,0.7);line-height:1.4}
+.card-stats{position:absolute;bottom:12px;left:0;right:0;display:flex;justify-content:center;gap:16px}
+.card-stat{text-align:center}
+.card-stat .val{font-size:14px;font-weight:700;color:var(--card-color)}
+.card-stat .lbl{font-size:8px;color:rgba(255,255,255,0.4);text-transform:uppercase}
+.card-back .card-desc{padding:16px 12px;text-align:center}
+.card-back .card-desc h4{font-size:11px;color:var(--card-color);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.card-back .card-desc p{font-size:10px;line-height:1.5}
+
+/* Animated text */
+.animated-text{position:absolute;bottom:36px;left:0;right:0;text-align:center;font-size:9px;color:var(--card-color);animation:textFade 4s infinite;letter-spacing:1px}
+@keyframes textFade{0%,100%{opacity:0;transform:translateY(5px)}20%,80%{opacity:1;transform:translateY(0)}}
+
+/* Loading */
+#loading{position:fixed;inset:0;z-index:9999;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1s}
+#loading.hidden{opacity:0;pointer-events:none}
+#loading h2{font-size:28px;background:linear-gradient(135deg,#00d4ff,#7b2fff,#ff006e);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:20px;letter-spacing:3px}
+.loader-ring{width:60px;height:60px;border:2px solid rgba(123,47,255,0.2);border-top-color:#7b2fff;border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loading .progress{margin-top:20px;font-size:12px;color:rgba(255,255,255,0.4)}
+
+/* Responsive */
+@media(max-width:768px){
+#top-bar h1{font-size:14px}
+#top-bar .subtitle{display:none}
+.orbital-card{width:140px;height:200px}
+.card-icon{width:40px;height:40px;font-size:20px}
+.card-title{font-size:11px}
+.card-desc{font-size:9px}
+#focus-panel{padding:20px}
+#connect-btn{bottom:50px;right:16px;padding:10px 18px;font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<div id="loading">
+<h2>AGENT GALAXY</h2>
+<div class="loader-ring"></div>
+<div class="progress">Initializing galaxy systems...</div>
+</div>
+
+<div id="canvas-container"></div>
+<div id="css3d-container"></div>
+
+<div id="top-bar">
+<div>
+<h1>Agent Galaxy</h1>
+<div class="subtitle">Sonora Digital Corp × Aztro Tech</div>
+</div>
+<div style="display:flex;gap:16px;align-items:center">
+<span style="font-size:11px;color:rgba(255,255,255,0.4)">9 Agentes · 45+ Capabilidades</span>
+</div>
+</div>
+
+<div id="bottom-bar">
+<div class="tech-info">LLM: DeepSeek V4 Flash | Powered by OpenCode Go</div>
+<div class="voice-indicator"><span>🎙️</span> Voice: WhatsApp · Telegram · Web</div>
+</div>
+
+<button id="connect-btn">Conecta tu agente →</button>
+
+<div id="focus-panel">
+<button class="close-btn">&times;</button>
+<h2 id="fp-title"></h2>
+<div class="role" id="fp-role"></div>
+<div class="caps" id="fp-caps"></div>
+<div id="fp-details" style="font-size:13px;color:rgba(255,255,255,0.6);line-height:1.6"></div>
+</div>
+
+<script type="importmap">
+{
+"imports": {
+"three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+"three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+}
+}
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS3DRenderer, CSS3DObject } from 'three/addons/renderers/CSS3DRenderer.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { UnrealBloomPass } from 'three/addons/postprocessing/UnrealBloomPass.js';
+
+const agents = [
+{ id:'mercurio', name:'Mercurio', role:'Comunicaciones', color:'#c0c0c0', rgb:[192,192,192], pos:[8,0,0], zone:'inner',
+caps:['STT/TTS Voice AI','WhatsApp Business API','Telegram Bot Engine','Web Chat Integration','Multi-language Support','Real-time Translation'],
+desc:'El mensajero cósmico. Conecta tu negocio con clientes en WhatsApp, Telegram y web. Voz, texto, traducción en tiempo real.'},
+{ id:'venus', name:'Venus', role:'Creatividad & Branding', color:'#d4af37', rgb:[212,175,55], pos:[0,10,6], zone:'inner',
+caps:['Content Generation','Brand Identity','Social Media Design','Video Scripting','Copywriting AI','Visual Storytelling'],
+desc:'La diosa de la belleza creativa. Genera contenido, branding y diseño que enamora a tu audiencia.'},
+{ id:'tauro', name:'Tauro', role:'Finanzas & Revenue', color:'#50c878', rgb:[80,200,120], pos:[-8,0,0], zone:'inner',
+caps:['Automated Billing','Payment Processing','ROI Tracking','Revenue Analytics','Invoice Generation','Financial Forecasting'],
+desc:'El guardián del oro. Automatiza facturación, pagos y tracking de revenue. Tu CFO digital.'},
+{ id:'marte', name:'Marte', role:'DevOps & Automation', color:'#ff4500', rgb:[255,69,0], pos:[16,0,12], zone:'middle',
+caps:['CI/CD Pipelines','Auto Deployment','Infrastructure as Code','Monitoring & Alerts','Auto-scaling','Incident Response'],
+desc:'El guerrero de la automatización. Despliega, monitorea y escala tu infraestructura sin intervención humana.'},
+{ id:'jupiter', name:'Júpiter', role:'Sales & Growth', color:'#7b2fff', rgb:[123,47,255], pos:[0,0,-18], zone:'middle',
+caps:['Lead Generation','CRM Automation','Sales Pipeline','Proposal Generator','Follow-up AI','Deal Scoring'],
+desc:'El rey de las ventas. Genera leads, califica oportunidades y cierra deals automáticamente.'},
+{ id:'saturno', name:'Saturno', role:'Infraestructura', color:'#cd7f32', rgb:[205,127,50], pos:[-16,0,-12], zone:'outer',
+caps:['Cloud Management','Security Hardening','Backup & Recovery','Performance Tuning','Disaster Recovery','Compliance'],
+desc:'El anillo de protección. Tu infraestructura segura, respaldada y optimizada 24/7.'},
+{ id:'urano', name:'Urano', role:'AI Research', color:'#00ced1', rgb:[0,206,209], pos:[24,8,-16], zone:'outer',
+caps:['Model Training','Prompt Engineering','AI Experiments','Data Analysis','Pattern Recognition','Innovation Lab'],
+desc:'El explorador del futuro. Experimenta con IA, entrena modelos y descubre patrones ocultos.'},
+{ id:'neptuno', name:'Neptuno', role:'Knowledge & Memory', color:'#0047ab', rgb:[0,71,171], pos:[-24,-8,16], zone:'outer',
+caps:['RAG Systems','Vector Search','Knowledge Graph','Memory Management','Document AI','Semantic Search'],
+desc:'El océano del conocimiento. RAG, memoria vectorial y graphs que nunca olvidan.'},
+{ id:'pluton', name:'Plutón', role:'Admin & Control', color:'#2c2c2c', rgb:[44,44,44], pos:[0,28,0], zone:'edge',
+caps:['Tenant Management','Access Control','Billing Admin','Usage Analytics','Policy Engine','Audit Trail'],
+desc:'El señor del imperio. Solo Imperio: gestión de tenants, control de acceso y administración total.'}
+];
+
+const cardData = {
+mercurio:[
+{icon:'🎤',title:'STT/TTS',desc:'Speech-to-Text & Text-to-Speech con IA local',stats:{acc:'97%',lat:'<200ms'}},
+{icon:'💬',title:'WhatsApp',desc:'API Business con mensajes automáticos y catálogos',stats:{msg:'24/7',rate:'99.9%'}},
+{icon:'✈️',title:'Telegram',desc:'98+ skills, bot multi-idioma con memoria',stats:{sk:'98+',lang:'5+'}},
+{icon:'🌐',title:'Web Chat',desc:'Chat widget con contexto y engram memory',stats:{ctx:'∞',mem:'7 capas'}}
+],
+venus:[
+{icon:'🎨',title:'Design',desc:'Generación de branding y diseño visual con IA',stats:{res:'4K',style:'∞'}},
+{icon:'📝',title:'Copywriting',desc:'Textos persuasivos para landing y redes sociales',stats:{conv:'3x',seo:'95+'}},
+{icon:'🎬',title:'Video Scripts',desc:'Guiones para reels, shorts y contenido viral',stats:['vrl','hook']}
+],
+tauro:[
+{icon:'💰',title:'Billing',desc:'Facturación automática con tracking de pagos',stats:['auto','real']},
+{icon:'📊',title:'ROI',desc:'Analytics de retorno de inversión en tiempo real',stats:['live','pred']},
+{icon:'📈',title:'Forecast',desc:'Predicción de revenue con modelos ML',stats:['ML','95%']}
+],
+marte:[
+{icon:'🚀',title:'Deploy',desc:'CI/CD con auto-deploy y rollback inteligente',stats:['zero','downtime']},
+{icon:'🔧',title:'IaC',desc:'Infrastructure as Code con Terraform + Docker',stats:['tf','docker']},
+{icon:'🛡️',title:'Monitor',desc:'Monitoreo 24/7 con alertas inteligentes',stats:['24/7','AI']}
+],
+jupiter:[
+{icon:'🎯',title:'Leads',desc:'Generación y scoring automático de leads',stats:['score','auto']},
+{icon:'📋',title:'Pipeline',desc:'CRM con pipeline visual y automatización',stats:['vis','auto']},
+{icon:'📄',title:'Proposals',desc:'Generador de propuestas en markdown profesional',stats:['md','pro']}
+],
+saturno:[
+{icon:'☁️',title:'Cloud',desc:'Gestión multi-cloud con optimización de costos',stats:['aws','gcp']},
+{icon:'🔒',title:'Security',desc:'Hardening, escaneo y compliance automático',stats:['scan','comp']},
+{icon:'💾',title:'Backup',desc:'Backups automáticos con recovery testing',stats:['auto','test']}
+],
+urano:[
+{icon:'🧠',title:'ML Lab',desc:'Entrenamiento de modelos con datos propios',stats:['train','fine']},
+{icon:'🔬',title:'Research',desc:'Experimentación y prototipado de IA',stats:['proto','test']},
+{icon:'📡',title:'Patterns',desc:'Detección de patrones y anomalías en datos',stats:['detect','alert']}
+],
+neptuno:[
+{icon:'🔍',title:'RAG',desc:'Retrieval Augmented Generation con vectores',stats:['qdrant','fast']},
+{icon:'🧬',title:'Graph',desc:'Knowledge graph con Neo4j y relaciones',stats:['neo4j','rel']},
+{icon:'📚',title:'Memory',desc:'7 capas de memoria con búsqueda semántica',stats:['7','layers']}
+],
+pluton:[
+{icon:'👑',title:'Tenants',desc:'Gestión multi-tenant con aislamiento total',stats:['iso','multi']},
+{icon:'🔑',title:'Access',desc:'Control de acceso con RBAC y políticas',stats:['rbac','policy']},
+{icon:'📊',title:'Audit',desc:'Trail de auditoría completo e inmutable',stats:['full','chain']}
+]
+};
+
+let scene, camera, renderer, cssRenderer, controls, composer;
+let galaxies = [];
+let starField;
+let focusedAgent = null;
+let targetCameraPos = null;
+let targetLookAt = null;
+let clock = new THREE.Clock();
+let cardObjects = [];
+let labelSprites = [];
+
+function init() {
+scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x000011, 0.003);
+
+camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+camera.position.set(0, 40, 80);
+
+renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+cssRenderer = new CSS3DRenderer();
+cssRenderer.setSize(window.innerWidth, window.innerHeight);
+cssRenderer.domElement.style.position = 'absolute';
+cssRenderer.domElement.style.top = '0';
+cssRenderer.domElement.style.pointerEvents = 'none';
+document.getElementById('css3d-container').appendChild(cssRenderer.domElement);
+
+controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.05;
+controls.minDistance = 10;
+controls.maxDistance = 200;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.3;
+controls.maxPolarAngle = Math.PI * 0.8;
+
+const ambientLight = new THREE.AmbientLight(0x222244, 0.5);
+scene.add(ambientLight);
+
+const pointLight = new THREE.PointLight(0x7b2fff, 2, 200);
+pointLight.position.set(0, 20, 0);
+scene.add(pointLight);
+
+createStarField();
+createGalaxies();
+createLabels();
+setupPostProcessing();
+setupInteraction();
+
+window.addEventListener('resize', onResize);
+
+setTimeout(() => {
+document.getElementById('loading').classList.add('hidden');
+}, 1500);
+
+animate();
+}
+
+function createStarField() {
+const starsCount = 15000;
+const geometry = new THREE.BufferGeometry();
+const positions = new Float32Array(starsCount * 3);
+const colors = new Float32Array(starsCount * 3);
+const sizes = new Float32Array(starsCount);
+
+for (let i = 0; i < starsCount; i++) {
+const radius = 200 + Math.random() * 800;
+const theta = Math.random() * Math.PI * 2;
+const phi = Math.acos(2 * Math.random() - 1);
+
+positions[i * 3] = radius * Math.sin(phi) * Math.cos(theta);
+positions[i * 3 + 1] = radius * Math.sin(phi) * Math.sin(theta);
+positions[i * 3 + 2] = radius * Math.cos(phi);
+
+const temp = Math.random();
+colors[i * 3] = 0.8 + temp * 0.2;
+colors[i * 3 + 1] = 0.8 + temp * 0.1;
+colors[i * 3 + 2] = 0.9 + temp * 0.1;
+
+sizes[i] = 0.5 + Math.random() * 2;
+}
+
+geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+const material = new THREE.PointsMaterial({
+size: 1.5,
+vertexColors: true,
+transparent: true,
+opacity: 0.8,
+sizeAttenuation: true,
+blending: THREE.AdditiveBlending
+});
+
+starField = new THREE.Points(geometry, material);
+scene.add(starField);
+}
+
+function createGalaxy(agent) {
+const group = new THREE.Group();
+group.position.set(...agent.pos);
+
+const particleCount = 8000;
+const positions = new Float32Array(particleCount * 3);
+const colors = new Float32Array(particleCount * 3);
+const sizes = new Float32Array(particleCount);
+const randoms = new Float32Array(particleCount);
+
+const r = agent.rgb[0] / 255;
+const g = agent.rgb[1] / 255;
+const b = agent.rgb[2] / 255;
+
+const arms = 3;
+const armSpread = 0.6;
+const maxRadius = 12;
+
+for (let i = 0; i < particleCount; i++) {
+const arm = i % arms;
+const t = Math.random();
+const radius = t * maxRadius;
+const angle = (arm / arms) * Math.PI * 2 + t * 2.5 + (Math.random() - 0.5) * armSpread;
+
+const spiralX = Math.cos(angle) * radius;
+const spiralZ = Math.sin(angle) * radius;
+
+const spread = (1 - t * 0.7) * 2;
+const x = spiralX + (Math.random() - 0.5) * spread;
+const y = (Math.random() - 0.5) * spread * 0.3;
+const z = spiralZ + (Math.random() - 0.5) * spread;
+
+positions[i * 3] = x;
+positions[i * 3 + 1] = y;
+positions[i * 3 + 2] = z;
+
+const brightness = 0.5 + Math.random() * 0.5;
+const mixFactor = Math.random() * 0.3;
+colors[i * 3] = Math.min(1, r * brightness + mixFactor);
+colors[i * 3 + 1] = Math.min(1, g * brightness + mixFactor * 0.5);
+colors[i * 3 + 2] = Math.min(1, b * brightness + mixFactor * 0.7);
+
+sizes[i] = 0.3 + Math.random() * 1.2 * (1 - t * 0.5);
+randoms[i] = Math.random();
+}
+
+const geometry = new THREE.BufferGeometry();
+geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+geometry.setAttribute('aRandom', new THREE.BufferAttribute(randoms, 1));
+
+const vertexShader = `
+attribute float size;
+attribute float aRandom;
+varying vec3 vColor;
+varying float vRandom;
+void main() {
+vColor = color;
+vRandom = aRandom;
+vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+gl_PointSize = size * (200.0 / -mvPosition.z);
+gl_Position = projectionMatrix * mvPosition;
+}
+`;
+
+const fragmentShader = `
+varying vec3 vColor;
+varying float vRandom;
+void main() {
+float d = length(gl_PointCoord - vec2(0.5));
+if (d > 0.5) discard;
+float alpha = 1.0 - smoothstep(0.0, 0.5, d);
+alpha *= 0.8 + vRandom * 0.2;
+gl_FragColor = vec4(vColor, alpha);
+}
+`;
+
+const material = new THREE.ShaderMaterial({
+vertexShader,
+fragmentShader,
+vertexColors: true,
+transparent: true,
+blending: THREE.AdditiveBlending,
+depthWrite: false
+});
+
+const particles = new THREE.Points(geometry, material);
+group.add(particles);
+
+const coreGeometry = new THREE.SphereGeometry(0.8, 32, 32);
+const coreMaterial = new THREE.MeshBasicMaterial({
+color: new THREE.Color(agent.color),
+transparent: true,
+opacity: 0.6
+});
+const core = new THREE.Mesh(coreGeometry, coreMaterial);
+group.add(core);
+
+const glowGeometry = new THREE.SphereGeometry(1.5, 32, 32);
+const glowMaterial = new THREE.MeshBasicMaterial({
+color: new THREE.Color(agent.color),
+transparent: true,
+opacity: 0.15,
+side: THREE.BackSide
+});
+const glow = new THREE.Mesh(glowGeometry, glowMaterial);
+group.add(glow);
+
+const ringGeo = new THREE.RingGeometry(1.8, 2.2, 64);
+const ringMat = new THREE.MeshBasicMaterial({
+color: new THREE.Color(agent.color),
+transparent: true,
+opacity: 0.2,
+side: THREE.DoubleSide
+});
+const ring = new THREE.Mesh(ringGeo, ringMat);
+ring.rotation.x = Math.PI / 2;
+group.add(ring);
+
+scene.add(group);
+
+return {
+group,
+particles,
+core,
+glow,
+ring,
+agent,
+orbitAngle: Math.random() * Math.PI * 2,
+baseRotation: 0.0003 + Math.random() * 0.0003
+};
+}
+
+function createGalaxies() {
+agents.forEach(agent => {
+const galaxy = createGalaxy(agent);
+galaxies.push(galaxy);
+createCards(galaxy);
+});
+}
+
+function createCardElement(card, agent, index) {
+const div = document.createElement('div');
+div.className = 'orbital-card';
+div.style.setProperty('--card-color', agent.color);
+div.style.setProperty('--card-rgb', agent.rgb.join(','));
+
+const statsHTML = card.stats
+? Object.entries(card.stats).map(([k, v]) => `<div class="card-stat"><div class="val">${v}</div><div class="lbl">${k}</div></div>`).join('')
+: card.stats.map(s => `<div class="card-stat"><div class="val">${s}</div></div>`).join('');
+
+div.innerHTML = `
+<div class="card-inner">
+<div class="card-front">
+<div class="card-icon">${card.icon}</div>
+<div class="card-title">${card.title}</div>
+<div class="card-divider"></div>
+<div class="card-desc">${card.desc}</div>
+<div class="animated-text" style="animation-delay:${index * 0.5}s">[${agent.name.toUpperCase()}]</div>
+<div class="card-stats">${statsHTML}</div>
+</div>
+<div class="card-back">
+<div style="padding:16px;text-align:center">
+<div style="font-size:32px;margin-bottom:12px">${card.icon}</div>
+<h4 style="color:${agent.color};margin-bottom:8px">${card.title}</h4>
+<p style="font-size:10px;color:rgba(255,255,255,0.7);line-height:1.5">${card.desc}</p>
+<div style="margin-top:16px;padding-top:12px;border-top:1px solid ${agent.color}40">
+<div style="font-size:9px;color:${agent.color};text-transform:uppercase;letter-spacing:1px">Powered by</div>
+<div style="font-size:10px;color:rgba(255,255,255,0.5);margin-top:4px">Sonora Digital Corp</div>
+</div>
+</div>
+</div>
+</div>
+`;
+
+div.addEventListener('click', (e) => {
+e.stopPropagation();
+showFocusPanel(agent);
+});
+
+return div;
+}
+
+function createCards(galaxy) {
+const { agent } = galaxy;
+const cards = cardData[agent.id] || [];
+
+cards.forEach((card, i) => {
+const div = createCardElement(card, agent, i);
+const cssObject = new CSS3DObject(div);
+
+const orbitRadius = 18 + i * 6;
+const orbitSpeed = 0.1 + Math.random() * 0.15;
+const orbitTilt = (Math.random() - 0.5) * 0.5;
+
+cssObject.position.set(
+Math.cos(i * Math.PI * 2 / cards.length) * orbitRadius,
+orbitTilt * 5,
+Math.sin(i * Math.PI * 2 / cards.length) * orbitRadius
+);
+
+scene.add(cssObject);
+cardObjects.push({
+object: cssObject,
+div,
+agentId: agent.id,
+orbitRadius,
+orbitSpeed,
+orbitTilt,
+baseAngle: i * Math.PI * 2 / cards.length,
+visible: true
+});
+});
+}
+
+function createLabels() {
+agents.forEach(agent => {
+const div = document.createElement('div');
+div.className = 'galaxy-label';
+div.style.color = agent.color;
+div.textContent = agent.name.toUpperCase();
+
+const cssObject = new CSS3DObject(div);
+cssObject.position.set(agent.pos[0], agent.pos[1] + 16, agent.pos[2]);
+cssObject.scale.set(0.08, 0.08, 0.08);
+
+scene.add(cssObject);
+labelSprites.push({ object: cssObject, agent });
+});
+}
+
+function setupPostProcessing() {
+composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+
+const bloomPass = new UnrealBloomPass(
+new THREE.Vector2(window.innerWidth, window.innerHeight),
+0.8,
+0.4,
+0.85
+);
+composer.addPass(bloomPass);
+}
+
+function setupInteraction() {
+renderer.domElement.addEventListener('click', onCanvasClick);
+document.querySelector('.close-btn').addEventListener('click', closeFocusPanel);
+document.getElementById('connect-btn').addEventListener('click', () => {
+alert('QR Code placeholder — Integration coming soon!');
+});
+}
+
+function onCanvasClick(event) {
+const rect = renderer.domElement.getBoundingClientRect();
+const mouse = new THREE.Vector2(
+((event.clientX - rect.left) / rect.width) * 2 - 1,
+-((event.clientY - rect.top) / rect.height) * 2 + 1
+);
+
+const raycaster = new THREE.Raycaster();
+raycaster.setFromCamera(mouse, camera);
+
+for (const galaxy of galaxies) {
+const intersects = raycaster.intersectObject(galaxy.core);
+if (intersects.length > 0) {
+focusOnAgent(galaxy.agent);
+return;
+}
+}
+}
+
+function focusOnAgent(agent) {
+focusedAgent = agent;
+controls.autoRotate = false;
+
+const pos = agent.pos;
+targetCameraPos = new THREE.Vector3(pos[0] + 15, pos[1] + 10, pos[2] + 15);
+targetLookAt = new THREE.Vector3(...pos);
+
+showFocusPanel(agent);
+}
+
+function showFocusPanel(agent) {
+const panel = document.getElementById('focus-panel');
+panel.style.setProperty('--accent1', agent.color);
+panel.style.setProperty('--accent2', agent.color);
+
+document.getElementById('fp-title').textContent = agent.name;
+document.getElementById('fp-title').style.background = `linear-gradient(135deg, ${agent.color}, #ffffff)`;
+document.getElementById('fp-title').style.webkitBackgroundClip = 'text';
+document.getElementById('fp-title').style.webkitTextFillColor = 'transparent';
+
+document.getElementById('fp-role').textContent = agent.role;
+document.getElementById('fp-details').textContent = agent.desc;
+
+const capsContainer = document.getElementById('fp-caps');
+capsContainer.innerHTML = agent.caps.map(c => `<span class="cap-tag">${c}</span>`).join('');
+
+panel.classList.add('active');
+}
+
+function closeFocusPanel() {
+document.getElementById('focus-panel').classList.remove('active');
+focusedAgent = null;
+controls.autoRotate = true;
+targetCameraPos = new THREE.Vector3(0, 40, 80);
+targetLookAt = new THREE.Vector3(0, 0, 0);
+}
+
+function onResize() {
+camera.aspect = window.innerWidth / window.innerHeight;
+camera.updateProjectionMatrix();
+renderer.setSize(window.innerWidth, window.innerHeight);
+cssRenderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+function animate() {
+requestAnimationFrame(animate);
+
+const elapsed = clock.getElapsedTime();
+const delta = clock.getDelta();
+
+galaxies.forEach((galaxy, i) => {
+galaxy.particles.rotation.y += galaxy.baseRotation;
+galaxy.core.rotation.y += 0.005;
+galaxy.glow.scale.setScalar(1 + Math.sin(elapsed * 2 + i) * 0.1);
+galaxy.ring.rotation.z += 0.002;
+});
+
+starField.rotation.y += 0.0001;
+
+cardObjects.forEach((card, i) => {
+const angle = card.baseAngle + elapsed * card.orbitSpeed;
+const galaxy = galaxies.find(g => g.agent.id === card.agentId);
+if (!galaxy) return;
+
+const pos = galaxy.group.position;
+card.object.position.set(
+pos.x + Math.cos(angle) * card.orbitRadius,
+pos.y + card.orbitTilt * 5 + Math.sin(elapsed * 0.5 + i) * 2,
+pos.z + Math.sin(angle) * card.orbitRadius
+);
+
+card.object.lookAt(camera.position);
+});
+
+labelSprites.forEach(label => {
+label.object.lookAt(camera.position);
+});
+
+if (targetCameraPos) {
+camera.position.lerp(targetCameraPos, 0.03);
+if (camera.position.distanceTo(targetCameraPos) < 0.5) {
+targetCameraPos = null;
+}
+}
+
+if (targetLookAt) {
+controls.target.lerp(targetLookAt, 0.03);
+if (controls.target.distanceTo(targetLookAt) < 0.5) {
+targetLookAt = null;
+}
+}
+
+controls.update();
+composer.render();
+cssRenderer.render(scene, camera);
+}
+
+init();
+</script>
+</body>
+</html>

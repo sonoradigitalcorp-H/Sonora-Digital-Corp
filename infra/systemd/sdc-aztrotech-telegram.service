@@ -1,0 +1,15 @@
+[Unit]
+Description=AztroTech Mystic Telegram Bot
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+Environment=OPENROUTER_API_KEY=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
+ExecStart=/usr/bin/python3 -m clients.aztrotech.telegram.bot
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

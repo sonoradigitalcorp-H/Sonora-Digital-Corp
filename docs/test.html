@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head><title>TEST - SDC</title></head>
+<body style="background:#05050a;color:#00d4ff;font-family:monospace;padding:40px;">
+<h1>✅ SDC Server OK</h1>
+<p>Si ves esto, la conexión funciona.</p>
+<p>Tu IP: <span id="ip"></span></p>
+<p>Hora: <span id="time"></span></p>
+<script>
+document.getElementById('ip').textContent = window.location.hostname || 'unknown';
+document.getElementById('time').textContent = new Date().toLocaleTimeString();
+</script>
+</body>
+</html>

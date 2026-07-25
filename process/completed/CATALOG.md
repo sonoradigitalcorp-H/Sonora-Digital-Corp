@@ -39,3 +39,4 @@
 | 2026-07-11 | 20260711-AE-FIXES | ... | ... | ... | completed | ... |
 | 2026-07-10 | 20260710-mystik-abe-complete | ... | ... | ... | completed | ... |
 | 2026-07-21 | SPEC-20260721-MYSTIC-SHIELD | Mystic Shield — Diagnóstico IA de ciberseguridad | 3 | 80 | activo | [link](../active/SPEC-20260721-MYSTIC-SHIELD/LECCION.md) |
+| 2026-07-24 | 20260724-sdd-stabilization | ... | ... | ... | completed | ... |

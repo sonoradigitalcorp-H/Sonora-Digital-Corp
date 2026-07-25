@@ -1,0 +1,256 @@
+{
+  "version": "1.0.0",
+  "mode": "preview",
+  "tenant": "aztro-tech-demo",
+  "openclaw": {
+    "agent_id": "galaxy-sales-agent",
+    "agent_name": "Aztro Tech Sales Agent",
+    "agent_type": "sales",
+    "description": "Autonomous sales agent for Aztro Tech — lead capture, scoring, proposal generation, pipeline management"
+  },
+  "llm": {
+    "primary": {
+      "provider": "deepseek",
+      "model": "deepseek-v4-flash",
+      "api_key_source": "opencode-go",
+      "api_base_url": "https://api.opencode-go.com/v1",
+      "max_tokens": 8192,
+      "temperature": 0.7,
+      "top_p": 0.9,
+      "frequency_penalty": 0.1,
+      "presence_penalty": 0.1,
+      "stop_sequences": [],
+      "timeout_ms": 15000
+    },
+    "fallback": {
+      "provider": "openrouter",
+      "model": "meta-llama/llama-3.1-8b-instruct:free",
+      "api_key_source": "opencode-go",
+      "api_base_url": "https://openrouter.ai/api/v1",
+      "max_tokens": 4096,
+      "temperature": 0.7,
+      "trigger_conditions": {
+        "on_primary_failure": true,
+        "on_latency_above_ms": 10000,
+        "on_rate_limit": true,
+        "on_quota_exceeded": true
+      }
+    },
+    "routing": {
+      "strategy": "primary-first-fallback",
+      "retry_on_failure": true,
+      "max_retries": 2,
+      "circuit_breaker": {
+        "enabled": true,
+        "failure_threshold": 5,
+        "recovery_timeout_sec": 60
+      }
+    }
+  },
+  "events": {
+    "onboarding": {
+      "event_name": "tenant_provisioned",
+      "handler": "onboarding_handler",
+      "payload_schema": {
+        "tenant_id": "string",
+        "tenant_name": "string",
+        "plan": "string",
+        "channels": ["string"],
+        "agents": ["string"],
+        "created_at": "string"
+      },
+      "actions": [
+        "create_agent_instances",
+        "assign_skills",
+        "configure_channels",
+        "send_welcome_message"
+      ]
+    },
+    "lead_received": {
+      "event_name": "lead_received",
+      "handler": "lead_capture_handler",
+      "payload_schema": {
+        "lead_id": "string",
+        "name": "string",
+        "phone": "string",
+        "message": "string",
+        "source": "string",
+        "timestamp": "string"
+      },
+      "actions": [
+        "score_lead",
+        "classify_intent",
+        "update_pipeline",
+        "notify_if_qualified"
+      ]
+    },
+    "lead_qualified": {
+      "event_name": "lead_qualified",
+      "handler": "qualification_handler",
+      "payload_schema": {
+        "lead_id": "string",
+        "score": "number",
+        "reason": "string"
+      },
+      "actions": [
+        "generate_proposal",
+        "assign_to_agent",
+        "schedule_followup"
+      ]
+    },
+    "proposal_generated": {
+      "event_name": "proposal_generated",
+      "handler": "proposal_handler",
+      "payload_schema": {
+        "lead_id": "string",
+        "proposal_url": "string",
+        "plan": "string",
+        "price": "number"
+      },
+      "actions": [
+        "send_to_client",
+        "track_delivery",
+        "set_followup_reminder"
+      ]
+    },
+    "voice_message_received": {
+      "event_name": "voice_message_received",
+      "handler": "voice_handler",
+      "payload_schema": {
+        "message_id": "string",
+        "channel": "string",
+        "audio_url": "string",
+        "duration_sec": "number"
+      },
+      "actions": [
+        "transcribe_stt",
+        "process_intent",
+        "generate_tts_response",
+        "send_voice_reply"
+      ]
+    }
+  },
+  "task_routing": {
+    "rules": [
+      {
+        "id": "rule-sales",
+        "condition": "intent IN ['lead_capture', 'qualification', 'proposal', 'pricing']",
+        "route_to": "sales-agent",
+        "skills": ["lead-capture", "lead-scoring", "proposal-generator"]
+      },
+      {
+        "id": "rule-support",
+        "condition": "intent IN ['ticket_create', 'ticket_resolve', 'escalation', 'faq']",
+        "route_to": "support-agent",
+        "skills": ["ticket-triage", "auto-response", "escalation"]
+      },
+      {
+        "id": "rule-dev",
+        "condition": "intent IN ['code_generate', 'code_review', 'deploy', 'test']",
+        "route_to": "dev-agent",
+        "skills": ["code-generation", "test-writing", "code-review"]
+      },
+      {
+        "id": "rule-knowledge",
+        "condition": "intent IN ['search', 'document', 'learn', 'adr']",
+        "route_to": "knowledge-agent",
+        "skills": ["semantic-search", "document-indexing", "lesson-capture"]
+      },
+      {
+        "id": "rule-finance",
+        "condition": "intent IN ['revenue', 'cost', 'invoice', 'roi']",
+        "route_to": "finance-agent",
+        "skills": ["revenue-tracking", "cost-analysis", "invoice-generation"]
+      },
+      {
+        "id": "rule-ops",
+        "condition": "intent IN ['health', 'monitor', 'recover', 'alert']",
+        "route_to": "ops-agent",
+        "skills": ["health-monitoring", "auto-recovery", "alert-routing"]
+      },
+      {
+        "id": "rule-default",
+        "condition": "true",
+        "route_to": "sales-agent",
+        "skills": ["lead-capture"]
+      }
+    ]
+  },
+  "skills_activation": {
+    "aztro-tech-demo": {
+      "enabled_skills": [
+        "lead-capture",
+        "lead-scoring",
+        "proposal-generator",
+        "pipeline-manager",
+        "ticket-triage",
+        "auto-response",
+        "code-generation",
+        "semantic-search",
+        "revenue-tracking",
+        "health-monitoring",
+        "voice-stt",
+        "voice-tts",
+        "onboarding-flow",
+        "multi-tenant-routing",
+        "alert-routing"
+      ],
+      "skill_config": {
+        "lead-capture": {
+          "auto_capture": true,
+          "dedup_window_min": 30,
+          "enrich_from_web": true
+        },
+        "lead-scoring": {
+          "threshold_qualified": 70,
+          "factors": ["interest_level", "budget_fit", "timeline", "authority"],
+          "weights": {"interest_level": 0.35, "budget_fit": 0.25, "timeline": 0.25, "authority": 0.15}
+        },
+        "proposal-generator": {
+          "template": "aztro-tech-standard",
+          "include_pricing_table": true,
+          "include_case_studies": true,
+          "language": "es"
+        },
+        "voice-stt": {
+          "provider": "whisper-compatible",
+          "language": "es",
+          "model": "base",
+          "max_duration_sec": 60
+        },
+        "voice-tts": {
+          "provider": "edge-tts",
+          "voice": "es-MX-DaliaNeural",
+          "rate": "0%",
+          "pitch": "0Hz"
+        },
+        "onboarding-flow": {
+          "steps": 6,
+          "auto_provision": true,
+          "welcome_channel": "whatsapp",
+          "welcome_message": "¡Bienvenido a Agent Galaxy! Tu agente personal está listo. ¿En qué puedo ayudarte?"
+        }
+      }
+    }
+  },
+  "observability": {
+    "log_level": "info",
+    "track_metrics": true,
+    "metrics": [
+      "llm_latency_ms",
+      "llm_cost_per_request",
+      "llm_tokens_used",
+      "fallback_activation_count",
+      "task_routing_decisions",
+      "skill_activation_count",
+      "event_processing_time_ms",
+      "error_rate"
+    ],
+    "alert_on": {
+      "latency_p95_above_ms": 5000,
+      "error_rate_above_pct": 5,
+      "fallback_activation_above_per_hour": 10,
+      "cost_per_hour_above_usd": 50
+    }
+  }
+}

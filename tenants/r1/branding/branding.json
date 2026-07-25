@@ -1,0 +1,12 @@
+{
+  "company": "Ce-Son",
+  "tagline": "El sabor que conecta",
+  "primary_color": "#ff6b35",
+  "secondary_color": "#004e89",
+  "logo": "ceson-logo.png",
+  "powered_by": true,
+  "tone": "friendly",
+  "language": "es",
+  "currency": "MXN",
+  "hours": "09:00-23:00"
+}

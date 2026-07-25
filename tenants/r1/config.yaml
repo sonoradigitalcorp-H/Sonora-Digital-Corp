@@ -1,0 +1,8 @@
+tenant_id: r1
+display_name: "Ce-Son"
+language: es
+timezone: America/Hermosillo
+default_model: openrouter/anthropic/claude-3-haiku
+max_tokens: 2048
+qdrant_collection: tenant_r1_memory
+neo4j_database: r1

@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonora Digital Corp — Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #c85a3e;
+  --primary-hover: #d46b4f;
+  --secondary: #d4a34a;
+  --secondary-hover: #deb55e;
+  --bg: #120c0a;
+  --text: #f5e6d3;
+  --text-muted: rgba(245,230,211,0.55);
+  --surface: rgba(245,230,211,0.04);
+  --border: rgba(245,230,211,0.08);
+  --font: 'Inter', system-ui, sans-serif;
+  --radius: 12px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --radius-lg: 16px;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Landing Page Styles */
+.landing-header {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  padding: 16px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: rgba(18,12,10,0.85); backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+}
+.landing-header .logo {
+  font-size: 1.25rem; font-weight: 700; color: var(--text);
+  display: flex; align-items: center; gap: 8px;
+}
+.landing-header .logo span { color: var(--primary); }
+.landing-header nav { display: flex; align-items: center; gap: 24px; }
+.landing-header nav a {
+  color: var(--text-muted); text-decoration: none; font-size: 0.9rem;
+  transition: color 0.2s;
+}
+.landing-header nav a:hover { color: var(--text); }
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 24px; border-radius: 8px; font-size: 0.9rem;
+  font-weight: 600; cursor: pointer; transition: all 0.2s;
+  border: none; text-decoration: none; font-family: var(--font);
+}
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+.btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { border-color: var(--primary); color: var(--primary); }
+.btn-sm { padding: 6px 16px; font-size: 0.8rem; }
+.btn-ghost { background: transparent; color: var(--text-muted); border: 1px solid var(--border); }
+.btn-ghost:hover { border-color: var(--primary); color: var(--primary); }
+.btn-danger { background: #c0392b; color: #fff; }
+.btn-danger:hover { background: #e74c3c; }
+
+.hero {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  padding: 120px 24px 80px; text-align: center; position: relative; overflow: hidden;
+  background: radial-gradient(ellipse at 50% 0%, rgba(200,90,62,0.12) 0%, transparent 60%),
+              radial-gradient(ellipse at 80% 50%, rgba(212,163,74,0.06) 0%, transparent 50%);
+}
+.hero-bg-glow {
+  position: absolute; width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(200,90,62,0.08) 0%, transparent 70%);
+  top: -200px; right: -200px; pointer-events: none;
+}
+.hero-content { max-width: 800px; position: relative; z-index: 1; }
+.hero-badge {
+  display: inline-block; padding: 6px 16px; border-radius: 20px;
+  background: rgba(200,90,62,0.1); border: 1px solid rgba(200,90,62,0.3);
+  color: var(--primary); font-size: 0.85rem; font-weight: 500;
+  margin-bottom: 24px; backdrop-filter: blur(4px);
+}
+.hero h1 {
+  font-size: clamp(2.5rem, 6vw, 4rem); font-weight: 800;
+  line-height: 1.1; margin-bottom: 20px;
+}
+.hero h1 span { 
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero p {
+  font-size: 1.15rem; color: var(--text-muted); margin-bottom: 36px;
+  max-width: 600px; margin-left: auto; margin-right: auto;
+}
+.hero .btn-group { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+.btn-lg { padding: 14px 36px; font-size: 1rem; }
+.hero-stats {
+  display: flex; gap: 32px; justify-content: center; margin-top: 48px;
+  flex-wrap: wrap;
+}
+.hero-stat { text-align: center; }
+.hero-stat-num {
+  display: block; font-size: 1.75rem; font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-stat-label { font-size: 0.85rem; color: var(--text-muted); margin-top: 4px; }
+
+.features { padding: 80px 24px; }
+.features h2 { text-align: center; font-size: 2rem; margin-bottom: 48px; }
+.features h2 span { color: var(--primary); }
+.features-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px; max-width: 1100px; margin: 0 auto;
+}
+.feature-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 32px; transition: all 0.3s;
+}
+.feature-card:hover { border-color: rgba(200,90,62,0.3); transform: translateY(-4px); }
+.feature-card .icon { font-size: 2rem; margin-bottom: 16px; }
+.feature-card h3 { font-size: 1.1rem; margin-bottom: 12px; }
+.feature-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; }
+
+.footer {
+  border-top: 1px solid var(--border); padding: 32px 24px;
+  text-align: center; color: var(--text-muted); font-size: 0.85rem;
+}
+
+/* Section Block */
+.section-block { padding: 100px 24px; }
+.section-content { max-width: 1100px; margin: 0 auto; }
+.section-title-centered {
+  font-size: clamp(1.75rem, 4vw, 2.5rem); font-weight: 700; text-align: center; margin-bottom: 12px;
+}
+.section-title-centered span { color: var(--primary); }
+.section-sub-centered {
+  font-size: 1.05rem; color: var(--text-muted); text-align: center; margin-bottom: 56px; max-width: 560px; margin-left: auto; margin-right: auto;
+}
+
+/* How It Works */
+.steps-grid {
+  display: flex; align-items: flex-start; gap: 0; justify-content: center;
+  max-width: 900px; margin: 0 auto;
+}
+.step-card { text-align: center; flex: 1; padding: 0 24px; }
+.step-num {
+  width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px; font-weight: 700; font-size: 1.2rem;
+  background: rgba(200,90,62,0.1); border: 1px solid rgba(200,90,62,0.3); color: var(--primary);
+}
+.step-icon { font-size: 2.5rem; margin-bottom: 16px; }
+.step-card h3 { font-size: 1.1rem; margin-bottom: 12px; }
+.step-card p { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; }
+.step-connector {
+  width: 60px; height: 2px; background: linear-gradient(90deg, var(--primary), var(--secondary));
+  margin-top: 72px; flex-shrink: 0;
+}
+
+/* Pricing */
+.pricing-section { background: radial-gradient(ellipse at 50% 0%, rgba(200,90,62,0.04) 0%, transparent 60%); }
+.pricing-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; max-width: 960px; margin: 0 auto;
+}
+.pricing-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 40px 32px; text-align: center; position: relative; transition: all 0.3s;
+}
+.pricing-card:hover { border-color: rgba(200,90,62,0.3); transform: translateY(-4px); }
+.pricing-card.featured {
+  border-color: rgba(200,90,62,0.4); background: rgba(200,90,62,0.04);
+  transform: scale(1.05); z-index: 1;
+}
+.pricing-card.featured:hover { transform: scale(1.05) translateY(-4px); }
+.pricing-badge {
+  position: absolute; top: -12px; left: 50%; transform: translateX(-50%);
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #fff; padding: 4px 20px; border-radius: 20px; font-size: 0.8rem; font-weight: 600;
+}
+.pricing-card h3 { font-size: 1.1rem; margin-bottom: 8px; }
+.pricing-price { font-size: 2.5rem; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+.pricing-price small { font-size: 1rem; font-weight: 400; color: var(--text-muted); }
+.pricing-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 24px; }
+.pricing-card ul { list-style: none; text-align: left; margin-bottom: 28px; }
+.pricing-card ul li {
+  padding: 6px 0; font-size: 0.9rem; color: var(--text); display: flex; align-items: center; gap: 8px;
+}
+.pricing-card ul li::before { content: '✓'; color: var(--primary); font-weight: 700; }
+
+/* Testimonials */
+.testimonials-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; max-width: 960px; margin: 0 auto;
+}
+.testimonial-card {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+  padding: 32px; transition: all 0.3s;
+}
+.testimonial-card:hover { border-color: rgba(200,90,62,0.3); transform: translateY(-4px); }
+.testimonial-stars { color: var(--secondary); font-size: 1.1rem; margin-bottom: 16px; }
+.testimonial-text { font-size: 0.9rem; color: var(--text); line-height: 1.7; margin-bottom: 24px; font-style: italic; }
+.testimonial-author { display: flex; align-items: center; gap: 12px; }
+.testimonial-avatar {
+  width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.85rem; color: #fff; flex-shrink: 0;
+}
+.testimonial-name { font-size: 0.9rem; font-weight: 600; }
+.testimonial-role { font-size: 0.8rem; color: var(--text-muted); }
+
+/* CTA Section */
+.cta-section {
+  background: radial-gradient(ellipse at 50% 50%, rgba(200,90,62,0.08) 0%, transparent 60%);
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+}
+.cta-title { font-size: clamp(1.5rem, 4vw, 2.2rem); font-weight: 700; line-height: 1.3; }
+.cta-title span { 
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.cta-sub { font-size: 1.05rem; color: var(--text-muted); margin-top: 16px; max-width: 560px; margin-left: auto; margin-right: auto; }
+
+/* Enhanced Footer */
+.footer-enhanced {
+  border-top: 1px solid var(--border); padding: 64px 24px 32px;
+}
+.footer-grid {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px;
+  max-width: 1100px; margin: 0 auto 48px;
+}
+.footer-logo { font-size: 1.1rem; font-weight: 700; margin-bottom: 16px; }
+.footer-logo span { color: var(--primary); }
+.footer-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; max-width: 320px; }
+.footer-col h4 { font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 16px; color: var(--text); }
+.footer-col a {
+  display: block; font-size: 0.85rem; color: var(--text-muted); text-decoration: none;
+  padding: 4px 0; transition: color 0.2s;
+}
+.footer-col a:hover { color: var(--primary); }
+.footer-bottom {
+  border-top: 1px solid var(--border); padding-top: 24px; max-width: 1100px; margin: 0 auto;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px;
+  font-size: 0.8rem; color: var(--text-muted);
+}
+.footer-social { display: flex; gap: 16px; }
+.footer-social a {
+  width: 36px; height: 36px; border-radius: 8px; border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text-muted); text-decoration: none; transition: all 0.2s; font-size: 0.9rem;
+}
+.footer-social a:hover { border-color: var(--primary); color: var(--primary); }
+
+/* ===== APP STYLES ===== */
+.page { display: none; }
+
+/* App Layout */
+.app-layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 260px; background: var(--surface); border-right: 1px solid var(--border);
+  padding: 24px 0; display: flex; flex-direction: column; position: fixed;
+  top: 0; left: 0; bottom: 0; z-index: 90; transition: transform 0.3s;
+}
+.sidebar-logo {
+  padding: 0 20px 24px; border-bottom: 1px solid var(--border);
+  margin-bottom: 16px; font-weight: 700; font-size: 1.1rem;
+  display: flex; align-items: center; gap: 8px;
+}
+.sidebar-logo span { color: var(--primary); }
+.sidebar nav { flex: 1; overflow-y: auto; padding: 0 12px; }
+.sidebar nav a {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px; border-radius: 8px; color: var(--text-muted);
+  text-decoration: none; font-size: 0.9rem; transition: all 0.15s;
+  margin-bottom: 2px;
+}
+.sidebar nav a:hover, .sidebar nav a.active {
+  background: rgba(200,90,62,0.1); color: var(--text);
+}
+.sidebar nav a.active { color: var(--primary); }
+.sidebar-nav-icon { width: 20px; text-align: center; font-size: 1.1rem; }
+.sidebar-footer {
+  padding: 16px 20px 0; border-top: 1px solid var(--border); margin-top: 16px;
+}
+.sidebar-footer a { width: 100%; }
+.main-content { flex: 1; margin-left: 260px; padding: 32px; min-height: 100vh; }
+.page-title { font-size: 1.5rem; font-weight: 700; margin-bottom: 24px; }
+.mobile-header {
+  display: none; position: sticky; top: 0; z-index: 85;
+  background: var(--bg); padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+  align-items: center; justify-content: space-between;
+}
+.hamburger {
+  background: none; border: none; color: var(--text); font-size: 1.5rem;
+  cursor: pointer; padding: 4px;
+}
+.sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 89; }
+
+/* Cards */
+.card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px;
+}
+.stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 28px; }
+.stat-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 20px 24px;
+}
+.stat-card .stat-label { font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+.stat-card .stat-value { font-size: 1.75rem; font-weight: 700; }
+.stat-card .stat-change { font-size: 0.8rem; margin-top: 4px; }
+.stat-card .stat-change.up { color: #27ae60; }
+.stat-card .stat-change.down { color: #e74c3c; }
+
+/* Chart */
+.chart-container { margin-bottom: 28px; }
+.chart-container h3 { font-size: 1rem; margin-bottom: 16px; color: var(--text-muted); }
+.chart-bars {
+  display: flex; align-items: flex-end; gap: 8px; height: 160px;
+  padding: 16px 0; border-bottom: 1px solid var(--border);
+}
+.chart-bar {
+  flex: 1; display: flex; flex-direction: column; align-items: center;
+  justify-content: flex-end; gap: 6px;
+}
+.chart-bar .bar {
+  width: 100%; max-width: 40px; border-radius: 4px 4px 0 0;
+  background: linear-gradient(to top, var(--primary), var(--secondary));
+  min-height: 4px; transition: height 0.5s;
+}
+.chart-bar .bar-label { font-size: 0.7rem; color: var(--text-muted); }
+
+/* Tables */
+.table-wrapper { overflow-x: auto; margin-bottom: 28px; }
+.table-wrapper table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+.table-wrapper th {
+  text-align: left; padding: 12px 16px; font-size: 0.75rem;
+  text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted);
+  border-bottom: 1px solid var(--border); font-weight: 500;
+}
+.table-wrapper td { padding: 12px 16px; border-bottom: 1px solid var(--border); }
+.table-wrapper tr:hover td { background: rgba(200,90,62,0.04); }
+.badge {
+  display: inline-block; padding: 2px 10px; border-radius: 20px;
+  font-size: 0.75rem; font-weight: 500;
+}
+.badge-success { background: rgba(39,174,96,0.15); color: #27ae60; }
+.badge-warning { background: rgba(212,163,74,0.15); color: var(--secondary); }
+.badge-danger { background: rgba(192,57,43,0.15); color: #e74c3c; }
+.badge-info { background: rgba(200,90,62,0.15); color: var(--primary); }
+
+/* Form styles */
+.form-group { margin-bottom: 18px; }
+.form-group label {
+  display: block; font-size: 0.85rem; font-weight: 500;
+  margin-bottom: 6px; color: var(--text-muted);
+}
+.form-group input, .form-group select {
+  width: 100%; padding: 10px 14px; border-radius: 8px;
+  border: 1px solid var(--border); background: rgba(245,230,211,0.04);
+  color: var(--text); font-size: 0.9rem; font-family: var(--font);
+  outline: none; transition: border-color 0.2s;
+}
+.form-group input:focus, .form-group select:focus { border-color: var(--primary); }
+.form-group input.error { border-color: #e74c3c; }
+.form-group input.success { border-color: #27ae60; }
+.form-group .error-text { font-size: 0.75rem; color: #e74c3c; margin-top: 4px; display: none; }
+.form-group input.error ~ .error-text { display: block; }
+.form-checkbox {
+  display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--text-muted);
+}
+.form-checkbox input[type="checkbox"] { width: auto; accent-color: var(--primary); }
+.form-link { font-size: 0.85rem; color: var(--primary); text-decoration: none; }
+.form-link:hover { text-decoration: underline; }
+.form-divider { height: 1px; background: var(--border); margin: 24px 0; }
+
+/* Auth pages */
+.auth-page {
+  display: none; min-height: 100vh;
+  background: radial-gradient(ellipse at 50% 0%, rgba(200,90,62,0.1) 0%, transparent 60%);
+  align-items: center; justify-content: center; padding: 24px;
+}
+.auth-box {
+  width: 100%; max-width: 420px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 40px 32px;
+}
+.auth-box h1 { font-size: 1.5rem; margin-bottom: 8px; text-align: center; }
+.auth-box .subtitle { text-align: center; color: var(--text-muted); font-size: 0.9rem; margin-bottom: 28px; }
+.auth-box .auth-footer { text-align: center; margin-top: 20px; font-size: 0.85rem; color: var(--text-muted); }
+.auth-box .auth-footer a { color: var(--primary); text-decoration: none; }
+.auth-box .auth-footer a:hover { text-decoration: underline; }
+
+/* Agent card grid */
+.agent-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;
+}
+.agent-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 28px;
+  position: relative; transition: all 0.3s;
+}
+.agent-card:hover { border-color: rgba(200,90,62,0.3); transform: translateY(-2px); }
+.agent-card .badge-float {
+  position: absolute; top: 12px; right: 12px;
+  background: var(--primary); color: #fff; font-size: 0.7rem;
+  padding: 3px 10px; border-radius: 20px; font-weight: 600;
+}
+.agent-card .badge-float.best-value { background: var(--secondary); color: #120c0a; }
+.agent-card .agent-icon { font-size: 2.5rem; margin-bottom: 12px; }
+.agent-card h3 { font-size: 1.15rem; margin-bottom: 8px; }
+.agent-card .price { font-size: 1.5rem; font-weight: 700; color: var(--primary); margin-bottom: 4px; }
+.agent-card .price-sub { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px; }
+.agent-card p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.6; }
+.agent-card ul { list-style: none; margin-bottom: 20px; }
+.agent-card ul li {
+  font-size: 0.85rem; color: var(--text-muted); padding: 4px 0;
+  display: flex; align-items: center; gap: 8px;
+}
+.agent-card ul li::before { content: '✓'; color: var(--primary); font-weight: 700; }
+.agent-card .btn { width: 100%; justify-content: center; }
+.coming-soon .btn { opacity: 0.5; cursor: not-allowed; }
+
+/* My Agents */
+.my-agent-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px; margin-bottom: 16px;
+  display: flex; align-items: center; justify-content: space-between; gap: 20px;
+  flex-wrap: wrap;
+}
+.my-agent-info { display: flex; align-items: center; gap: 16px; }
+.my-agent-info .agent-avatar {
+  width: 48px; height: 48px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.5rem;
+}
+.my-agent-info h4 { font-size: 1rem; margin-bottom: 2px; }
+.my-agent-info .meta { font-size: 0.8rem; color: var(--text-muted); }
+.my-agent-stats { display: flex; gap: 24px; }
+.my-agent-stats .stat { text-align: center; }
+.my-agent-stats .stat .num { font-weight: 700; font-size: 1.1rem; }
+.my-agent-stats .stat .lbl { font-size: 0.7rem; color: var(--text-muted); }
+.my-agent-actions { display: flex; gap: 8px; }
+
+/* Reseller */
+.reseller-markup {
+  display: flex; align-items: center; gap: 16px; margin-bottom: 24px; flex-wrap: wrap;
+}
+.reseller-markup label { font-size: 0.85rem; color: var(--text-muted); }
+.reseller-markup input {
+  width: 100px; padding: 8px 12px; border-radius: 8px;
+  border: 1px solid var(--border); background: rgba(245,230,211,0.04);
+  color: var(--text); font-size: 0.9rem; font-family: var(--font); outline: none;
+}
+.reseller-markup input:focus { border-color: var(--primary); }
+.reseller-revenue {
+  font-size: 1.5rem; font-weight: 700; color: var(--secondary); margin-bottom: 24px;
+}
+/* Profile */
+.profile-section { max-width: 560px; }
+.profile-section .card { margin-bottom: 20px; }
+.profile-actions { display: flex; gap: 12px; margin-top: 8px; }
+
+/* Section title */
+.section-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 16px; }
+.section-subtitle { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 60px 24px; }
+.empty-state .icon { font-size: 3rem; margin-bottom: 16px; opacity: 0.4; }
+.empty-state h3 { font-size: 1.1rem; margin-bottom: 8px; }
+.empty-state p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; }
+
+/* Responsive */
+@media (max-width: 900px) {
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .pricing-card.featured { transform: none; }
+  .pricing-card.featured:hover { transform: translateY(-4px); }
+}
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+  .sidebar.open { transform: translateX(0); }
+  .sidebar-overlay.open { display: block; }
+  .main-content { margin-left: 0; padding: 20px; }
+  .mobile-header { display: flex; }
+  .stat-grid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); }
+  .my-agent-card { flex-direction: column; align-items: flex-start; }
+  .my-agent-stats { width: 100%; justify-content: space-around; }
+  .my-agent-actions { width: 100%; justify-content: flex-end; }
+  .agent-grid { grid-template-columns: 1fr; }
+  .auth-box { padding: 28px 20px; }
+  .landing-header .hamburger { display: block !important; }
+  .landing-header nav { display: none; flex-direction: column; position: fixed; top: 64px; left: 0; right: 0; background: var(--bg); padding: 16px 24px; border-bottom: 1px solid var(--border); z-index: 99; }
+  .landing-header nav.open { display: flex; }
+  .landing-header nav a { padding: 8px 0; }
+  .hero-stats { gap: 24px; }
+  .hero-stat-num { font-size: 1.5rem; }
+  .steps-grid { flex-direction: column; align-items: center; }
+  .step-connector { width: 2px; height: 40px; margin: 8px 0; }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+  .testimonials-grid { grid-template-columns: 1fr; }
+  .cta-title { font-size: 1.5rem; }
+}
+@media (max-width: 480px) {
+  .stat-grid { grid-template-columns: 1fr 1fr; }
+  .reseller-markup { flex-direction: column; align-items: flex-start; }
+  .footer-grid { grid-template-columns: 1fr; gap: 24px; }
+  .footer-bottom { flex-direction: column; text-align: center; }
+  .hero-stats { gap: 16px; }
+  .hero-stat { min-width: 80px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== LANDING PAGE ===== -->
+<header class="landing-header">
+  <div class="logo">⚡ <span>SONORA</span> DIGITAL</div>
+  <div class="hamburger" onclick="document.querySelector('.landing-header nav').classList.toggle('open')" style="display:none;background:none;border:none;color:var(--text);font-size:1.5rem;cursor:pointer">☰</div>
+  <nav>
+    <a href="#home">Inicio</a>
+    <a href="#agents-showcase">Agentes</a>
+    <a href="#pricing">Precios</a>
+    <a href="#how">Cómo Funciona</a>
+    <a href="#login" onclick="navigate('login')">Iniciar Sesión</a>
+    <a href="#register" onclick="navigate('register')" class="btn btn-primary btn-sm">Empezar</a>
+  </nav>
+</header>
+
+<section class="hero" id="home">
+  <div class="hero-bg-glow"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🚀 Nueva plataforma de agentes IA</div>
+    <h1>El Sistema Operativo<br>de IA para tu <span>Negocio</span></h1>
+    <p>Compra licencias de agentes de IA white-label y véndelos a tus clientes con tu propia marca. Voice, CRM, X y más — todo desde una plataforma.</p>
+    <div class="btn-group">
+      <a href="#register" onclick="navigate('register')" class="btn btn-primary btn-lg">Comenzar Ahora →</a>
+      <a href="#agents-showcase" class="btn btn-secondary btn-lg">Ver Agentes</a>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><span class="hero-stat-num">12+</span><span class="hero-stat-label">Agentes IA</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">50+</span><span class="hero-stat-label">Clientes Activos</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">98%</span><span class="hero-stat-label">Satisfacción</span></div>
+      <div class="hero-stat"><span class="hero-stat-num">24/7</span><span class="hero-stat-label">Soporte</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="agents-showcase">
+  <h2>Tu <span>plataforma</span> de agentes</h2>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="icon">🎙️</div>
+      <h3>Voice Agent</h3>
+      <p>Asistente telefónico con IA que atiende llamadas, agenda citas y califica leads 24/7.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">📊</div>
+      <h3>CRM Agent</h3>
+      <p>Gestión de clientes automatizada con seguimiento de oportunidades y pipeline de ventas.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🐦</div>
+      <h3>X Agent</h3>
+      <p>Automatización de contenido en X (Twitter): posts, respuestas y análisis de tendencias.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🔄</div>
+      <h3>White Label</h3>
+      <p>Revende nuestros agentes con tu propia marca. Markup configurable, facturación incluida.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">📦</div>
+      <h3>Bundle Completo</h3>
+      <p>Todos los agentes en un solo paquete. Ahorra 40% vs compra individual.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🔐</div>
+      <h3>Multi-tenant</h3>
+      <p>Arquitectura segura por cliente. Datos aislados, facturación separada, control total.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section class="section-block" id="how">
+  <div class="section-content">
+    <h2 class="section-title-centered">Cómo <span>Funciona</span></h2>
+    <p class="section-sub-centered">Tres pasos para empezar a vender agentes IA</p>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <div class="step-icon">📦</div>
+        <h3>Elige tus Agentes</h3>
+        <p>Explora el catálogo de Voice, CRM y X Agents. Selecciona los que necesitas para tus clientes.</p>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <div class="step-icon">🎨</div>
+        <h3>Personaliza y Marca</h3>
+        <p>Configura cada agente con tu marca, colores, voz y estilo. White-label completo.</p>
+      </div>
+      <div class="step-connector"></div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <div class="step-icon">💰</div>
+        <h3>Revende a tus Clientes</h3>
+        <p>Ofrece IA white-label a tus clientes. Tú pones el markup, nosotros facturamos.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRICING ===== -->
+<section class="section-block pricing-section" id="pricing">
+  <div class="section-content">
+    <h2 class="section-title-centered">Planes <span>Flexibles</span></h2>
+    <p class="section-sub-centered">Escala tu negocio de reventa de IA con el plan adecuado</p>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <h3>Small</h3>
+        <div class="pricing-price">$149<small>/mes</small></div>
+        <p class="pricing-desc">Perfecto para empezar</p>
+        <ul>
+          <li>2 licencias de agente</li>
+          <li>Hasta 10 clientes</li>
+          <li>Markup hasta 50%</li>
+          <li>Soporte por email</li>
+          <li>Dashboard básico</li>
+        </ul>
+        <a href="#register" onclick="navigate('register')" class="btn btn-secondary" style="width:100%;justify-content:center">Empezar</a>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-badge">Popular</div>
+        <h3>Medium</h3>
+        <div class="pricing-price">$499<small>/mes</small></div>
+        <p class="pricing-desc">Para agencias en crecimiento</p>
+        <ul>
+          <li>5 licencias de agente</li>
+          <li>Clientes ilimitados</li>
+          <li>Markup hasta 100%</li>
+          <li>Soporte prioritario</li>
+          <li>Dashboard avanzado + reportes</li>
+          <li>API white-label</li>
+        </ul>
+        <a href="#register" onclick="navigate('register')" class="btn btn-primary" style="width:100%;justify-content:center">Elegir Medium</a>
+      </div>
+      <div class="pricing-card">
+        <h3>Enterprise</h3>
+        <div class="pricing-price">$1,499<small>/mes</small></div>
+        <p class="pricing-desc">Para empresas con demanda alta</p>
+        <ul>
+          <li>Agentes ilimitados</li>
+          <li>Clientes ilimitados</li>
+          <li>Markup personalizado</li>
+          <li>Soporte 24/7 dedicado</li>
+          <li>Dashboard completo + analytics</li>
+          <li>API completa + webhooks</li>
+          <li>Onboarding dedicado</li>
+        </ul>
+        <a href="#register" onclick="navigate('register')" class="btn btn-secondary" style="width:100%;justify-content:center">Contactar</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="section-block testimonials-section" id="testimonials">
+  <div class="section-content">
+    <h2 class="section-title-centered">Lo que dicen nuestros <span>clientes</span></h2>
+    <p class="section-sub-centered">Agencias y empresas que ya revenden agentes IA</p>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"Empecé revendiendo Voice Agent a 3 clientes. Ahora tengo 15 y genero más de $8,000/mes en revenue recurrente. La plataforma white-label es increíble."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#c85a3e">CM</div>
+          <div>
+            <div class="testimonial-name">Carlos Méndez</div>
+            <div class="testimonial-role">CEO, Agencia Nova</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"La integración con nuestro CRM existente fue sencilla. Mis clientes creen que desarrollé la IA yo mismo. El markup del 40% me da un margen excelente."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#d4a34a">AL</div>
+          <div>
+            <div class="testimonial-name">Ana López</div>
+            <div class="testimonial-role">Directora de Tecnología, InnovaTech</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-stars">★★★★★</div>
+        <p class="testimonial-text">"El Bundle Completo me permitió ofrecer una solución integral a mis clientes. En 3 meses ya recuperé mi inversión y estoy expandiendo a más agencias."</p>
+        <div class="testimonial-author">
+          <div class="testimonial-avatar" style="background:#27ae60">RD</div>
+          <div>
+            <div class="testimonial-name">Roberto Díaz</div>
+            <div class="testimonial-role">Fundador, Agencia Roble Digital</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="section-block cta-section">
+  <div class="section-content" style="text-align:center">
+    <h2 class="cta-title">¿Listo para transformar tu negocio<br>con <span>IA white-label</span>?</h2>
+    <p class="cta-sub">Únete a las agencias que ya generan ingresos recurrentes revendiendo agentes IA</p>
+    <div class="btn-group" style="justify-content:center;margin-top:32px">
+      <a href="#register" onclick="navigate('register')" class="btn btn-primary btn-lg">Crear tu Cuenta Gratis →</a>
+      <a href="#" class="btn btn-secondary btn-lg">Hablar con Ventas</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer-enhanced">
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div class="footer-logo">⚡ <span>SONORA</span> DIGITAL</div>
+      <p class="footer-desc">Plataforma de agentes IA white-label para agencias y empresas. Compra licencias, personaliza y revende con tu propia marca.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Producto</h4>
+      <a href="#agents-showcase">Agentes IA</a>
+      <a href="#pricing">Precios</a>
+      <a href="#how">Cómo Funciona</a>
+      <a href="#testimonials">Testimonios</a>
+    </div>
+    <div class="footer-col">
+      <h4>Empresa</h4>
+      <a href="#">Sobre Nosotros</a>
+      <a href="#">Blog</a>
+      <a href="#">Contacto</a>
+      <a href="#">Trabaja con Nosotros</a>
+    </div>
+    <div class="footer-col">
+      <h4>Soporte</h4>
+      <a href="#">Documentación</a>
+      <a href="#">API</a>
+      <a href="#">Estado del Sistema</a>
+      <a href="#">Privacidad</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Sonora Digital Corp — Todos los derechos reservados</p>
+    <div class="footer-social">
+      <a href="#" aria-label="X">𝕏</a>
+      <a href="#" aria-label="LinkedIn">in</a>
+      <a href="#" aria-label="Instagram">📷</a>
+      <a href="#" aria-label="GitHub">⌘</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ===== APP SECTIONS ===== -->
+
+<!-- LOGIN -->
+<div class="page auth-page" data-page="login" style="display:flex">
+  <div class="auth-box">
+    <h1>Iniciar Sesión</h1>
+    <p class="subtitle">Accede a tu panel de control</p>
+    <form onsubmit="event.preventDefault(); navigate('dashboard')">
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" placeholder="tu@email.com" required>
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px">Iniciar Sesión</button>
+    </form>
+    <div class="auth-footer">¿No tienes cuenta? <a href="#register" onclick="navigate('register')">Regístrate</a></div>
+  </div>
+</div>
+
+<!-- REGISTER -->
+<div class="page auth-page" data-page="register" style="display:flex">
+  <div class="auth-box">
+    <h1>Crear Cuenta</h1>
+    <p class="subtitle">Empieza a vender agentes IA</p>
+    <form onsubmit="event.preventDefault(); navigate('dashboard')">
+      <div class="form-group">
+        <label>Nombre completo</label>
+        <input type="text" placeholder="Tu nombre" required>
+      </div>
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" placeholder="tu@email.com" required>
+      </div>
+      <div class="form-group">
+        <label>Teléfono</label>
+        <input type="tel" placeholder="+52 55 1234 5678">
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" placeholder="Mínimo 8 caracteres" required>
+      </div>
+      <div class="form-group">
+        <label>Confirmar contraseña</label>
+        <input type="password" placeholder="Repite la contraseña" required>
+      </div>
+      <div class="form-group">
+        <label class="form-checkbox">
+          <input type="checkbox" required> Acepto los <a href="#" class="form-link">términos y condiciones</a>
+        </label>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px">Crear Cuenta</button>
+    </form>
+    <div class="auth-footer">¿Ya tienes cuenta? <a href="#login" onclick="navigate('login')">Inicia Sesión</a></div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div class="page" data-page="dashboard">
+  <div class="app-layout">
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-logo">⚡ <span>SONORA</span> DIGITAL</div>
+      <nav>
+        <a href="#dashboard" class="active" onclick="navigate('dashboard')"><span class="sidebar-nav-icon">📊</span> Dashboard</a>
+        <a href="#agents" onclick="navigate('agents')"><span class="sidebar-nav-icon">📦</span> Catálogo</a>
+        <a href="#my-agents" onclick="navigate('my-agents')"><span class="sidebar-nav-icon">🤖</span> Mis Agentes</a>
+        <a href="#reseller" onclick="navigate('reseller')"><span class="sidebar-nav-icon">🔄</span> Revender</a>
+        <a href="#profile" onclick="navigate('profile')"><span class="sidebar-nav-icon">⚙️</span> Ajustes</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#home" onclick="navigate('home')" class="btn btn-ghost btn-sm" style="justify-content:center">Cerrar Sesión</a>
+      </div>
+    </aside>
+    <div class="main-content">
+      <div class="mobile-header">
+        <button class="hamburger" onclick="toggleSidebar()">☰</button>
+        <span style="font-weight:600">Dashboard</span>
+        <span></span>
+      </div>
+      <h1 class="page-title">Dashboard</h1>
+      <div class="stat-grid">
+        <div class="stat-card">
+          <div class="stat-label">Agentes Activos</div>
+          <div class="stat-value">12</div>
+          <div class="stat-change up">↑ 3 este mes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Clientes</div>
+          <div class="stat-value">48</div>
+          <div class="stat-change up">↑ 12 este mes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Revenue Mensual</div>
+          <div class="stat-value">$8,450</div>
+          <div class="stat-change up">↑ 22% vs mes ant.</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Licencias Vendidas</div>
+          <div class="stat-value">64</div>
+          <div class="stat-change up">↑ 18 este mes</div>
+        </div>
+      </div>
+
+      <div class="chart-container">
+        <h3>Actividad Mensual — Licencias vendidas</h3>
+        <div class="chart-bars" id="activityChart"></div>
+      </div>
+
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="padding:20px 24px 12px;font-weight:600;border-bottom:1px solid var(--border)">Últimas Transacciones</div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Cliente</th><th>Agente</th><th>Plan</th><th>Monto</th><th>Estado</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Carlos Méndez</td><td>Voice Agent</td><td>Mensual</td><td>$149</td><td><span class="badge badge-success">Completado</span></td></tr>
+              <tr><td>Ana López</td><td>CRM Agent</td><td>Anual</td><td>$990</td><td><span class="badge badge-success">Completado</span></td></tr>
+              <tr><td>Roberto Díaz</td><td>Bundle</td><td>Mensual</td><td>$299</td><td><span class="badge badge-warning">Pendiente</span></td></tr>
+              <tr><td>María García</td><td>X Agent</td><td>Mensual</td><td>$79</td><td><span class="badge badge-success">Completado</span></td></tr>
+              <tr><td>José Ruiz</td><td>Voice Agent</td><td>Mensual</td><td>$149</td><td><span class="badge badge-danger">Rechazado</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AGENTS CATALOG -->
+<div class="page" data-page="agents">
+  <div class="app-layout">
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <aside class="sidebar" id="sidebar-agents">
+      <div class="sidebar-logo">⚡ <span>SONORA</span> DIGITAL</div>
+      <nav>
+        <a href="#dashboard" onclick="navigate('dashboard')"><span class="sidebar-nav-icon">📊</span> Dashboard</a>
+        <a href="#agents" class="active" onclick="navigate('agents')"><span class="sidebar-nav-icon">📦</span> Catálogo</a>
+        <a href="#my-agents" onclick="navigate('my-agents')"><span class="sidebar-nav-icon">🤖</span> Mis Agentes</a>
+        <a href="#reseller" onclick="navigate('reseller')"><span class="sidebar-nav-icon">🔄</span> Revender</a>
+        <a href="#profile" onclick="navigate('profile')"><span class="sidebar-nav-icon">⚙️</span> Ajustes</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#home" onclick="navigate('home')" class="btn btn-ghost btn-sm" style="justify-content:center">Cerrar Sesión</a>
+      </div>
+    </aside>
+    <div class="main-content">
+      <div class="mobile-header">
+        <button class="hamburger" onclick="toggleSidebar('sidebar-agents')">☰</button>
+        <span style="font-weight:600">Catálogo</span>
+        <span></span>
+      </div>
+      <h1 class="page-title">Catálogo de Agentes</h1>
+      <p class="section-subtitle">Selecciona los agentes que quieres revender a tus clientes.</p>
+      <div class="agent-grid">
+        <div class="agent-card">
+          <span class="badge-float">Más Popular</span>
+          <div class="agent-icon">🎙️</div>
+          <h3>Voice Agent</h3>
+          <div class="price">$149</div>
+          <div class="price-sub">/licencia mensual</div>
+          <p>Asistente telefónico con IA que atiende llamadas, agenda citas y califica leads 24/7.</p>
+          <ul>
+            <li>Recepción de llamadas automatizada</li>
+            <li>Agenda inteligente de citas</li>
+            <li>Calificación de leads</li>
+            <li>Integración con CRM</li>
+          </ul>
+          <button class="btn btn-primary" onclick="alert('Licencia Voice Agent agregada a tu carrito')">Comprar Licencia</button>
+        </div>
+        <div class="agent-card">
+          <div class="agent-icon">📊</div>
+          <h3>CRM Agent</h3>
+          <div class="price">$99</div>
+          <div class="price-sub">/licencia mensual</div>
+          <p>Gestión de clientes automatizada con pipeline de ventas y seguimiento de oportunidades.</p>
+          <ul>
+            <li>Pipeline de ventas visual</li>
+            <li>Captura automática de leads</li>
+            <li>Seguimiento de oportunidades</li>
+            <li>Reportes de conversión</li>
+          </ul>
+          <button class="btn btn-primary" onclick="alert('Licencia CRM Agent agregada a tu carrito')">Comprar Licencia</button>
+        </div>
+        <div class="agent-card">
+          <div class="agent-icon">🐦</div>
+          <h3>X Agent</h3>
+          <div class="price">$79</div>
+          <div class="price-sub">/licencia mensual</div>
+          <p>Automatización de contenido y engagement en X (Twitter) para tus clientes.</p>
+          <ul>
+            <li>Programación de posts</li>
+            <li>Respuestas automáticas</li>
+            <li>Análisis de tendencias</li>
+            <li>Métrica de engagement</li>
+          </ul>
+          <button class="btn btn-primary" onclick="alert('Licencia X Agent agregada a tu carrito')">Comprar Licencia</button>
+        </div>
+        <div class="agent-card">
+          <span class="badge-float best-value">Mejor Valor</span>
+          <div class="agent-icon">📦</div>
+          <h3>Bundle Completo</h3>
+          <div class="price">$299</div>
+          <div class="price-sub">/licencia mensual (ahorra 40%)</div>
+          <p>Todos los agentes en un solo paquete. La solución completa para tus clientes.</p>
+          <ul>
+            <li>Voice Agent incluido</li>
+            <li>CRM Agent incluido</li>
+            <li>X Agent incluido</li>
+            <li>Soporte prioritario</li>
+          </ul>
+          <button class="btn btn-primary" onclick="alert('Bundle Completo agregado a tu carrito')">Comprar Licencia</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MY AGENTS -->
+<div class="page" data-page="my-agents">
+  <div class="app-layout">
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <aside class="sidebar" id="sidebar-myagents">
+      <div class="sidebar-logo">⚡ <span>SONORA</span> DIGITAL</div>
+      <nav>
+        <a href="#dashboard" onclick="navigate('dashboard')"><span class="sidebar-nav-icon">📊</span> Dashboard</a>
+        <a href="#agents" onclick="navigate('agents')"><span class="sidebar-nav-icon">📦</span> Catálogo</a>
+        <a href="#my-agents" class="active" onclick="navigate('my-agents')"><span class="sidebar-nav-icon">🤖</span> Mis Agentes</a>
+        <a href="#reseller" onclick="navigate('reseller')"><span class="sidebar-nav-icon">🔄</span> Revender</a>
+        <a href="#profile" onclick="navigate('profile')"><span class="sidebar-nav-icon">⚙️</span> Ajustes</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#home" onclick="navigate('home')" class="btn btn-ghost btn-sm" style="justify-content:center">Cerrar Sesión</a>
+      </div>
+    </aside>
+    <div class="main-content">
+      <div class="mobile-header">
+        <button class="hamburger" onclick="toggleSidebar('sidebar-myagents')">☰</button>
+        <span style="font-weight:600">Mis Agentes</span>
+        <span></span>
+      </div>
+      <h1 class="page-title">Mis Agentes</h1>
+      <p class="section-subtitle">Gestiona los agentes que has adquirido y asígnalos a tus clientes.</p>
+
+      <div class="my-agent-card">
+        <div class="my-agent-info">
+          <div class="agent-avatar" style="background:rgba(200,90,62,0.15)">🎙️</div>
+          <div>
+            <h4>Voice Agent</h4>
+            <div class="meta">Licencia #V-001 · Adquirido: 15 Jun 2026</div>
+          </div>
+        </div>
+        <div class="my-agent-stats">
+          <div class="stat"><div class="num">8</div><div class="lbl">Clientes</div></div>
+          <div class="stat"><div class="num">$1,192</div><div class="lbl">Revenue</div></div>
+          <div class="stat"><span class="badge badge-success">Activo</span></div>
+        </div>
+        <div class="my-agent-actions">
+          <button class="btn btn-secondary btn-sm">Configurar</button>
+          <button class="btn btn-ghost btn-sm">Desactivar</button>
+          <button class="btn btn-primary btn-sm">White-label</button>
+        </div>
+      </div>
+
+      <div class="my-agent-card">
+        <div class="my-agent-info">
+          <div class="agent-avatar" style="background:rgba(212,163,74,0.15)">📊</div>
+          <div>
+            <h4>CRM Agent</h4>
+            <div class="meta">Licencia #C-003 · Adquirido: 20 Jun 2026</div>
+          </div>
+        </div>
+        <div class="my-agent-stats">
+          <div class="stat"><div class="num">5</div><div class="lbl">Clientes</div></div>
+          <div class="stat"><div class="num">$495</div><div class="lbl">Revenue</div></div>
+          <div class="stat"><span class="badge badge-success">Activo</span></div>
+        </div>
+        <div class="my-agent-actions">
+          <button class="btn btn-secondary btn-sm">Configurar</button>
+          <button class="btn btn-ghost btn-sm">Desactivar</button>
+          <button class="btn btn-primary btn-sm">White-label</button>
+        </div>
+      </div>
+
+      <div class="my-agent-card">
+        <div class="my-agent-info">
+          <div class="agent-avatar" style="background:rgba(39,174,96,0.15)">🐦</div>
+          <div>
+            <h4>X Agent</h4>
+            <div class="meta">Licencia #X-002 · Adquirido: 1 Jul 2026</div>
+          </div>
+        </div>
+        <div class="my-agent-stats">
+          <div class="stat"><div class="num">3</div><div class="lbl">Clientes</div></div>
+          <div class="stat"><div class="num">$237</div><div class="lbl">Revenue</div></div>
+          <div class="stat"><span class="badge badge-success">Activo</span></div>
+        </div>
+        <div class="my-agent-actions">
+          <button class="btn btn-secondary btn-sm">Configurar</button>
+          <button class="btn btn-ghost btn-sm">Desactivar</button>
+          <button class="btn btn-primary btn-sm">White-label</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESELLER -->
+<div class="page" data-page="reseller">
+  <div class="app-layout">
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <aside class="sidebar" id="sidebar-reseller">
+      <div class="sidebar-logo">⚡ <span>SONORA</span> DIGITAL</div>
+      <nav>
+        <a href="#dashboard" onclick="navigate('dashboard')"><span class="sidebar-nav-icon">📊</span> Dashboard</a>
+        <a href="#agents" onclick="navigate('agents')"><span class="sidebar-nav-icon">📦</span> Catálogo</a>
+        <a href="#my-agents" onclick="navigate('my-agents')"><span class="sidebar-nav-icon">🤖</span> Mis Agentes</a>
+        <a href="#reseller" class="active" onclick="navigate('reseller')"><span class="sidebar-nav-icon">🔄</span> Revender</a>
+        <a href="#profile" onclick="navigate('profile')"><span class="sidebar-nav-icon">⚙️</span> Ajustes</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#home" onclick="navigate('home')" class="btn btn-ghost btn-sm" style="justify-content:center">Cerrar Sesión</a>
+      </div>
+    </aside>
+    <div class="main-content">
+      <div class="mobile-header">
+        <button class="hamburger" onclick="toggleSidebar('sidebar-reseller')">☰</button>
+        <span style="font-weight:600">Revender</span>
+        <span></span>
+      </div>
+      <h1 class="page-title">Portal de Reventa</h1>
+      <div class="reseller-revenue">Revenue total: <span style="color:var(--primary)">$12,840</span></div>
+      <div class="reseller-markup">
+        <label>Tu markup (%):</label>
+        <input type="number" value="30" min="0" max="200" id="markupInput">
+        <span style="font-size:0.85rem;color:var(--text-muted)">Sobrepuesto al precio base del agente</span>
+        <button class="btn btn-primary btn-sm">Guardar</button>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+        <h3 style="font-size:1rem;font-weight:600">Mis Clientes</h3>
+        <button class="btn btn-secondary btn-sm">+ Invitar Cliente</button>
+      </div>
+      <div class="card" style="padding:0;overflow:hidden">
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Cliente</th><th>Agente</th><th>Plan</th><th>Tu Revenue</th><th>Estado</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Carlos Méndez</td><td>Voice Agent</td><td>Mensual</td><td>$44.70</td><td><span class="badge badge-success">Activo</span></td></tr>
+              <tr><td>Ana López</td><td>CRM Agent</td><td>Anual</td><td>$297.00</td><td><span class="badge badge-success">Activo</span></td></tr>
+              <tr><td>Roberto Díaz</td><td>Bundle</td><td>Mensual</td><td>$89.70</td><td><span class="badge badge-warning">Pendiente</span></td></tr>
+              <tr><td>María García</td><td>X Agent</td><td>Mensual</td><td>$23.70</td><td><span class="badge badge-success">Activo</span></td></tr>
+              <tr><td>José Ruiz</td><td>Voice Agent</td><td>Mensual</td><td>$44.70</td><td><span class="badge badge-danger">Inactivo</span></td></tr>
+              <tr><td>Laura Martínez</td><td>CRM Agent</td><td>Mensual</td><td>$29.70</td><td><span class="badge badge-success">Activo</span></td></tr>
+              <tr><td>Pedro Sánchez</td><td>Voice Agent</td><td>Mensual</td><td>$44.70</td><td><span class="badge badge-success">Activo</span></td></tr>
+              <tr><td>Sofía Ramírez</td><td>Bundle</td><td>Anual</td><td>$897.00</td><td><span class="badge badge-success">Activo</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="page" data-page="profile">
+  <div class="app-layout">
+    <div class="sidebar-overlay" onclick="toggleSidebar()"></div>
+    <aside class="sidebar" id="sidebar-profile">
+      <div class="sidebar-logo">⚡ <span>SONORA</span> DIGITAL</div>
+      <nav>
+        <a href="#dashboard" onclick="navigate('dashboard')"><span class="sidebar-nav-icon">📊</span> Dashboard</a>
+        <a href="#agents" onclick="navigate('agents')"><span class="sidebar-nav-icon">📦</span> Catálogo</a>
+        <a href="#my-agents" onclick="navigate('my-agents')"><span class="sidebar-nav-icon">🤖</span> Mis Agentes</a>
+        <a href="#reseller" onclick="navigate('reseller')"><span class="sidebar-nav-icon">🔄</span> Revender</a>
+        <a href="#profile" class="active" onclick="navigate('profile')"><span class="sidebar-nav-icon">⚙️</span> Ajustes</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#home" onclick="navigate('home')" class="btn btn-ghost btn-sm" style="justify-content:center">Cerrar Sesión</a>
+      </div>
+    </aside>
+    <div class="main-content">
+      <div class="mobile-header">
+        <button class="hamburger" onclick="toggleSidebar('sidebar-profile')">☰</button>
+        <span style="font-weight:600">Ajustes</span>
+        <span></span>
+      </div>
+      <h1 class="page-title">Ajustes de Perfil</h1>
+      <div class="profile-section">
+        <div class="card">
+          <h3 class="section-title">Información Personal</h3>
+          <form onsubmit="event.preventDefault();alert('Cambios guardados')">
+            <div class="form-group">
+              <label>Nombre completo</label>
+              <input type="text" value="Luis Daniel Reyes">
+            </div>
+            <div class="form-group">
+              <label>Correo electrónico</label>
+              <input type="email" value="luis@sonora.digital">
+            </div>
+            <div class="form-group">
+              <label>Empresa</label>
+              <input type="text" value="Sonora Digital Corp">
+            </div>
+            <div class="form-group">
+              <label>Teléfono</label>
+              <input type="tel" value="+52 55 1234 5678">
+            </div>
+            <div class="profile-actions">
+              <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </div>
+          </form>
+        </div>
+        <div class="card">
+          <h3 class="section-title">Seguridad</h3>
+          <form onsubmit="event.preventDefault();alert('Contraseña actualizada')">
+            <div class="form-group">
+              <label>Contraseña actual</label>
+              <input type="password" placeholder="••••••••">
+            </div>
+            <div class="form-group">
+              <label>Nueva contraseña</label>
+              <input type="password" placeholder="Mínimo 8 caracteres">
+            </div>
+            <div class="form-group">
+              <label>Confirmar nueva contraseña</label>
+              <input type="password" placeholder="Repite la contraseña">
+            </div>
+            <div class="profile-actions">
+              <button type="submit" class="btn btn-primary">Actualizar Contraseña</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Landing hamburger menu
+document.querySelector('.landing-header .hamburger')?.addEventListener('click', function() {
+  document.querySelector('.landing-header nav').classList.toggle('open');
+});
+
+// Router SPA
+function navigate(hash) {
+  document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+  document.querySelectorAll('.auth-page').forEach(p => p.style.display = 'none');
+  const pageName = hash.replace('#','') || 'home';
+  const page = document.querySelector(`[data-page="${pageName}"]`);
+  if (page) {
+    if (page.classList.contains('auth-page')) {
+      page.style.display = 'flex';
+    } else {
+      page.style.display = 'block';
+    }
+  } else {
+    const home = document.querySelector('[data-page="home"]');
+    if (home) home.style.display = 'block';
+  }
+  window.scrollTo(0, 0);
+  // Close sidebar on mobile
+  document.querySelectorAll('.sidebar').forEach(s => s.classList.remove('open'));
+  document.querySelectorAll('.sidebar-overlay').forEach(o => o.classList.remove('open'));
+}
+
+window.addEventListener('hashchange', () => navigate(window.location.hash));
+navigate(window.location.hash || '#home');
+
+// Sidebar toggle
+function toggleSidebar(id) {
+  const sidebar = document.getElementById(id || 'sidebar');
+  const overlay = sidebar?.previousElementSibling;
+  if (sidebar) sidebar.classList.toggle('open');
+  if (overlay?.classList.contains('sidebar-overlay')) overlay.classList.toggle('open');
+}
+
+// Render chart bars
+(function() {
+  const chart = document.getElementById('activityChart');
+  if (!chart) return;
+  const data = [
+    { label: 'Ene', value: 8 },
+    { label: 'Feb', value: 12 },
+    { label: 'Mar', value: 10 },
+    { label: 'Abr', value: 15 },
+    { label: 'May', value: 20 },
+    { label: 'Jun', value: 14 },
+    { label: 'Jul', value: 18 },
+  ];
+  const max = Math.max(...data.map(d => d.value));
+  data.forEach(d => {
+    const bar = document.createElement('div');
+    bar.className = 'chart-bar';
+    const barInner = document.createElement('div');
+    barInner.className = 'bar';
+    barInner.style.height = (d.value / max * 100) + '%';
+    barInner.style.background = 'linear-gradient(to top, var(--primary), var(--secondary))';
+    const label = document.createElement('span');
+    label.className = 'bar-label';
+    label.textContent = d.label;
+    bar.appendChild(barInner);
+    bar.appendChild(label);
+    chart.appendChild(bar);
+  });
+})();
+</script>
+</body>
+</html>

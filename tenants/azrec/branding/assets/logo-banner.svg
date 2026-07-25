@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200">
+  <defs>
+    <linearGradient id="bgBanner" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#1A1A2E"/>
+      <stop offset="100%" style="stop-color:#2B1D3B"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="200" fill="url(#bgBanner)" rx="20"/>
+  <text x="80" y="130" font-family="Montserrat, Arial, sans-serif" font-weight="900" font-size="90" fill="#E05A2A" letter-spacing="4">AZ</text>
+  <text x="300" y="130" font-family="Montserrat, Arial, sans-serif" font-weight="900" font-size="90" fill="#F4A261" letter-spacing="4">REC</text>
+  <text x="500" y="130" font-family="Inter, Arial, sans-serif" font-weight="300" font-size="28" fill="#F5E6D3" opacity="0.5">✦</text>
+  <text x="540" y="120" font-family="Inter, Arial, sans-serif" font-weight="600" font-size="14" fill="#F5E6D3" opacity="0.6">SELLO MUSICAL</text>
+  <text x="540" y="142" font-family="Inter, Arial, sans-serif" font-weight="600" font-size="14" fill="#F5E6D3" opacity="0.6">HERMOSILLO · SONORA</text>
+  <text x="80" y="170" font-family="Inter, Arial, sans-serif" font-size="12" fill="#F5E6D3" opacity="0.4">DE LA A A LA Z, DEL DESIERTO AL MUNDO</text>
+</svg>

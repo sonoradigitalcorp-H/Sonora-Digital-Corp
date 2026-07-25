@@ -1,0 +1,9 @@
+tenant_id: mds-corp
+display_name: "MDS Corp — Modular and Data Services"
+language: es
+timezone: America/Mexico_City
+default_model: openrouter/anthropic/claude-sonnet-4-20250514
+fallback_model: openrouter/deepseek/deepseek-chat
+max_tokens: 8192
+qdrant_collection: tenant_mds_corp_memory
+neo4j_database: mds_corp

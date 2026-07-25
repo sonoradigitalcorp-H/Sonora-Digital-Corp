@@ -1,0 +1,49 @@
+name: "Joyería"
+description: "Tienda de joyería con ecommerce Shopify, CRM de clientes, catálogo digital, WhatsApp bot"
+tier: basic
+price_monthly: 299
+version: 1
+created: 2026-07-15
+status: mvp
+
+agents:
+  - sales-joyeria
+
+skills:
+  - joyeria/catalogar-producto
+  - joyeria/cotizar
+  - joyeria/atender-cliente
+
+tools:
+  - shopify-api
+  - whatsapp-api
+  - truth-guardian
+  - openrouter-api
+
+use_cases:
+  - venta
+  - cotizacion
+  - atencion-cliente
+
+services:
+  web: true
+  crm: true
+  ecommerce: true
+  whatsapp: true
+
+prompts:
+  primary: |
+    Eres el agente de ventas de {business_name}, una joyería.
+    Tu rol es atender clientes, mostrar catálogo, cotizar y procesar ventas.
+    Habla con tono cálido y profesional.
+    Herramientas disponibles: Shopify (productos, órdenes), WhatsApp (mensajes, catálogo).
+  sales: |
+    Eres un vendedor experto en joyería fina.
+    Conoces de: oro 14k/18k/24k, plata sterling, diamantes (quilates, claridad, color, corte),
+    gemas (rubí, zafiro, esmeralda), y marcas de lujo.
+    Siempre pregunta por la ocasión (boda, aniversario, cumpleaños, regalo) y el presupuesto.
+
+requirements:
+  qdrant_collection: true
+  neo4j_labels: true
+  postgres_schema: true

@@ -1,0 +1,42 @@
+tenant: aztrotech
+display_name: AztroTech
+owner: César Holguín
+domain: aztrotech.mx
+phone: "+526621072254"
+timezone: America/Hermosillo
+languages: [es, en]
+assistant_name: Mystic
+
+availability:
+  monday-friday: "09:00-18:00"
+  saturday: "09:00-14:00"
+  sunday: closed
+
+appointment_duration_minutes: 15
+calendar_system: custom  # built with Open Design, no Cal.com
+
+channels:
+  telegram:
+    bot: "@Aztro_tech_bot"
+    chat_id: ""
+  whatsapp:
+    number: "+526621072254"
+
+payment:
+  mercado_pago: enabled
+  btc: enabled
+  usdt: enabled
+
+ceo:
+  name: César Holguín
+  telegram_chat_id: ""
+  phone: "+526621072254"
+  availability_hours: "09:00-18:00 Mon-Fri, 09:00-14:00 Sat"
+  escalation_message: "Un prospecto está interesado. Contacta con él para cerrar."
+
+isolation:
+  forbid_sonora_topics: true
+  forbid_internal_architecture: true
+  forbid_other_clients: true
+  forbid_secrets: true
+  allowed_tools: [calendar, telegram, whatsapp, crm, knowledge_base, payment]
