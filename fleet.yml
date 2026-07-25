@@ -21,7 +21,7 @@ machines:
     user: mystic
     os: Linux
     role: workstation
-    notes: "Luis Daniel laptop, NAT, thin client only"
+    notes: "Luis Daniel laptop, 4GB RAM, NAT, thin client only"
 
 networking:
   policy: "Policy P3 — No service binds 0.0.0.0 without nginx proxy"
@@ -145,7 +145,7 @@ services:
     protocol: http
     systemd: openclaw-gateway.service
     proxy: false
-    notes: OpenClaw gateway
+    notes: OpenClaw gateway — subordinado a Hermes
 
   - name: sdc-postgres
     machine: sdc-prod
@@ -216,7 +216,7 @@ services:
     bind: 127.0.0.1
     protocol: http
     proxy: false
-    notes: Hermes gateway (node)
+    notes: Hermes gateway — ORQUESTADOR PRINCIPAL
 
   - name: openclaw-node
     machine: sdc-prod

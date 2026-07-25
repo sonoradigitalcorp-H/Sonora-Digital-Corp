@@ -47,6 +47,7 @@
       "ip_known": "187.245.106.218",
       "ip_note": "IP dinamica desde Mexico, no accesible directamente desde VPS",
       "role": "maquina local de Luis Daniel — desde aqui se conecta al VPS",
+      "ram": "4GB",
       "browser": "xdg-open / firefox / chrome",
       "display": true,
       "note": "Para ver presentaciones del VPS en laptop: ssh -L 8080:localhost:8080 ubuntu@149.56.46.173 y abrir http://localhost:8080/"

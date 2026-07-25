@@ -505,7 +505,7 @@ gateway:
   trust_recent_files: true
   trust_recent_files_seconds: 600
   enabled: true
-  port: 18789
+  port: 8643
 streaming:
   enabled: true
   transport: auto
@@ -601,15 +601,6 @@ mcp_servers:
   higgsfield:
     enabled: true
     url: https://mcp.higgsfield.ai
-  jarvis:
-    args:
-    - __REPO__/apps/hermes/hermes_bridge.py
-    command: /usr/bin/python3
-    connect_timeout: 30
-    enabled: true
-    env:
-      JARVIS_HOME: __HOME__/jarvis
-    timeout: 120
   kubernetes:
     args:
     - -y
