@@ -45,7 +45,7 @@ MCP_TOOLS = {
         "input_schema": {
             "type": "object",
             "properties": {
-                "partner_id": {"type": "string", "description": "Partner ID (aztrotech)"},
+                "partner_id": {"type": "string", "description": "Partner ID (e.g. abe_music)"},
                 "name": {"type": "string", "description": "Partner full name or company"},
                 "contact": {"type": "string", "description": "Contact info (optional)"},
             },

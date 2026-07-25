@@ -5,11 +5,11 @@ Usage:
     ti = TenantIntegration()
     
     # Before processing a request for a tenant:
-    ctx = ti.resolve("astrotech")
+    ctx = ti.resolve("sonora-digital")
     system_prompt = ti.build_system_prompt(ctx, user_message="...")
     
     # Before calling an MCP tool:
-    if not ti.is_tool_allowed("astrotech", "github_push"):
+    if not ti.is_tool_allowed("sonora-digital", "github_push"):
         raise PermissionError("Tool not allowed for this tenant")
 """
 

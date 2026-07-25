@@ -36,7 +36,7 @@ class TestCalculatePrice:
         assert result["monthly_base"] == 2499
 
     def test_partner_discount_applied(self):
-        result = calculate_price("tecnologia", "medium", 1.0, partner="aztrotech")
+        result = calculate_price("tecnologia", "medium", 1.0, partner="abe_music")
         assert result["partner_monthly"] is not None
         assert result["partner_monthly"] < result["monthly_base"]
         assert result["partner_discount_pct"] == 30
@@ -77,7 +77,7 @@ class TestCalculateFromCost:
         assert high_margin["required_revenue"] > low_margin["required_revenue"]
 
     def test_partner_discount_included(self):
-        result = calculate_from_cost(10.0, "tecnologia", partner="aztrotech")
+        result = calculate_from_cost(10.0, "tecnologia", partner="abe_music")
         assert result["partner_monthly"] is not None
 
     def test_zero_cost_does_not_crash(self):

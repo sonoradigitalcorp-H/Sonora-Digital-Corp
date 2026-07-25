@@ -195,7 +195,7 @@ def collect_session_data() -> list:
         "type": "learning",
         "category": "business",
         "title": "Modelo de negocio enterprise wholesale",
-        "content": "SDC vende wholesale a partners (AztroTech, ABE Music). Partners ponen markup y venden a clientes enterprise. 3 planes: Medium ($5k/mes), Premium ($7.5k/mes — recomendado), Enterprise ($15k/mes). Revenue share 7% en contratos enterprise >$50k. Embajadores: 4 niveles (Hunter 20%, Ammo 25%, Warrior 30%, Legend 35%). Setup bajo o cero para eliminar barrera de entrada.",
+        "content": "SDC vende wholesale a partners (ABE Music). Partners ponen markup y venden a clientes enterprise. 3 planes: Medium ($5k/mes), Premium ($7.5k/mes — recomendado), Enterprise ($15k/mes). Revenue share 7% en contratos enterprise >$50k. Embajadores: 4 niveles (Hunter 20%, Ammo 25%, Warrior 30%, Legend 35%). Setup bajo o cero para eliminar barrera de entrada.",
         "source": "sesion-completa",
         "tags": ["learning", "business", "pricing", "enterprise"],
     })
@@ -204,7 +204,7 @@ def collect_session_data() -> list:
         "type": "learning",
         "category": "person",
         "title": "Personas clave del ecosistema",
-        "content": "Luis Daniel Guerrero Enciso (Perroni) — dueño SDC, founder técnico. César Holguín — AztroTech, partner enterprise. Abraham Ortega — ABE Music, partner música. Noel Nichols — socio creativo. Nathaly Hermosillo — contacto personal. Email perrykingla.69@gmail.com para Obsidian/Google.",
+        "content": "Luis Daniel Guerrero Enciso (Perroni) — dueño SDC, founder técnico. Abraham Ortega — ABE Music, partner música. Noel Nichols — socio creativo. Nathaly Hermosillo — contacto personal. Email perrykingla.69@gmail.com para Obsidian/Google.",
         "source": "conocimiento-general",
         "tags": ["learning", "person", "contact"],
     })

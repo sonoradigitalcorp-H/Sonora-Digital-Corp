@@ -48,7 +48,7 @@ MCP_TOOLS = {
                 "industry": {"type": "string", "enum": ["musica", "tecnologia", "marketing", "legal", "salud"], "description": "Industry segment"},
                 "size": {"type": "string", "enum": ["small", "medium", "enterprise"], "description": "Client size"},
                 "volume_multiplier": {"type": "number", "description": "Volume multiplier (default 1.0)"},
-                "partner": {"type": "string", "description": "Partner ID for discount (aztrotech, abe_music)"},
+                "partner": {"type": "string", "description": "Partner ID for discount (e.g. abe_music)"},
                 "estimated_revenue": {"type": "number", "description": "Estimated monthly client revenue for rev share calc"},
             },
             "required": ["industry"],

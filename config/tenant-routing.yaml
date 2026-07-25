@@ -18,13 +18,6 @@ routing:
     name: "Nathy"
     notes: "Contadora — Nathy Conta. Skills: CFDI, SAT, RESICO, nóminas, CONTPAQi, conciliación"
 
-  # Partners
-  - phone: "+5216621072254"
-    tenant: aztrotech
-    type: partner
-    name: "César Holguín"
-    notes: "CEO AztroTech"
-
 # Default para números desconocidos
 default:
   type: unknown

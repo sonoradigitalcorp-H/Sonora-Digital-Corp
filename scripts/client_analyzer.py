@@ -190,7 +190,7 @@ def evaluate_signals(client: dict, activity: dict) -> list:
         then_block = signal.get("then", {})
 
         # Filter by audience
-        if "Embajadores" in audience and client.get("partner") in ("aztrotech", "abe_music"):
+        if "Embajadores" in audience and client.get("partner") in ("abe_music",):
             pass  # It's a partner/ambassador
         elif "Clientes Pro" in audience and client.get("pack") != "pro":
             continue

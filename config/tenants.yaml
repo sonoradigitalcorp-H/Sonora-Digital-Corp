@@ -16,23 +16,6 @@ master:
     - all
 
 partners:
-  - id: aztrotech
-    name: "AztroTech"
-    owner: "César Holguín"
-    website: aztrotech.mx
-    type: partner
-    plan: partner_pro
-    branding:
-      logo: aztrotech-logo.png
-      primary_color: "#00d4ff"
-      secondary_color: "#0ea5e9"
-      powered_by: true
-    capabilities:
-      - clone_service
-      - digital_brain
-      - memory
-    clients: []
-
   - id: abe_music
     name: "ABE Music Group"
     owner: "Abraham Ortega"

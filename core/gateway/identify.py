@@ -58,7 +58,7 @@ def identify_tenant(
         if tid:
             return tid
 
-    # 4. Subdomain: astrotech.myserver.com -> astrotech
+    # 4. Subdomain: tenant.myserver.com -> tenant_id
     if host:
         subdomain = host.split(".")[0].strip().lower()
         try:

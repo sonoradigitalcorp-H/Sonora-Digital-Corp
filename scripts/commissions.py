@@ -1,14 +1,13 @@
 """Commissions Tracker — Enterprise deal tracking and partner commissions.
 
-Tracks wholesale deals, partner markups, and projects revenue.
-CLI for partners like AztroTech (César) to see their earnings.
+CLI for tracking wholesale deals, partner markups, and revenue projections.
 
 Usage:
-  python3 scripts/commissions.py --add-partner aztrotech "César Holguín"
-  python3 scripts/commissions.py --add-deal aztrotech "Corp ABC" business 15000 7500 28000 14000
+  python3 scripts/commissions.py --add-partner <partner_id> "Partner Name"
+  python3 scripts/commissions.py --add-deal <partner_id> "Corp ABC" business 15000 7500 28000 14000
   python3 scripts/commissions.py --partners
-  python3 scripts/commissions.py --summary aztrotech
-  python3 scripts/commissions.py --projection aztrotech
+  python3 scripts/commissions.py --summary <partner_id>
+  python3 scripts/commissions.py --projection <partner_id>
 """
 
 import argparse
@@ -250,7 +249,7 @@ def get_projection(partner_id: str, months: int = 12) -> str:
 
 def main():
     parser = argparse.ArgumentParser(description="SDC Enterprise Commissions Tracker")
-    parser.add_argument("--add-partner", nargs=2, metavar=("ID", "NAME"), help="Add a new partner (ej: --add-partner aztrotech 'César Holguín')")
+    parser.add_argument("--add-partner", nargs=2, metavar=("ID", "NAME"), help="Add a new partner (ej: --add-partner abe_music 'Abraham Ortega')")
     parser.add_argument("--add-deal", nargs=6,
         metavar=("PARTNER", "CLIENT", "PLAN", "W_SETUP", "W_MONTHLY", "R_MONTHLY"),
         help="Add deal: partner/client/plan/w_setup/w_monthly/r_monthly")
@@ -258,7 +257,7 @@ def main():
     parser.add_argument("--powered-by", default="hidden", choices=["hidden", "footer_only", "public_mentions", "full_branding"], help="Powered by SDC level")
     parser.add_argument("--summary", metavar="PARTNER", help="Get partner summary")
     parser.add_argument("--partners", action="store_true", help="List all partners")
-    parser.add_argument("--projection", nargs="?", const="aztrotech", metavar="PARTNER", help="Revenue projection for partner")
+    parser.add_argument("--projection", nargs="?", const="sonora-digital", metavar="PARTNER", help="Revenue projection for partner")
 
     args = parser.parse_args()
     _init_db()

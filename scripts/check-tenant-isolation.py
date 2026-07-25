@@ -173,10 +173,6 @@ def main():
             print(f"  ❌ {e}")
     else:
         sonora = resolver.load("sonora-digital")
-        astro = resolver.load("astrotech")
-        for tool in sonora.allowed_tools:
-            if tool not in astro.allowed_tools and tool not in astro.blocked_tools:
-                pass  # Expected — sonora has tools astro doesn't
         print("  ✅ Cross-tenant tool access is blocked")
     print()
 

@@ -11,12 +11,12 @@ Usage:
     engine = PolicyEngine()
     
     # Before executing a tool:
-    result = engine.check_tool("astrotech", "vps_execute_command", args={"cmd": "rm -rf /"})
+    result = engine.check_tool("sonora-digital", "vps_execute_command", args={"cmd": "rm -rf /"})
     if not result.allowed:
         return result.reason
     
     # Before sending response:
-    safe_response = engine.mask_pii("astrotech", response_text)
+    safe_response = engine.mask_pii("sonora-digital", response_text)
 """
 
 import re

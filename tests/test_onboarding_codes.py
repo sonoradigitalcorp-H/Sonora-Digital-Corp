@@ -18,10 +18,10 @@ from scripts.onboarding import generate, list_codes, validate
 
 class TestGenerate:
     def test_generates_valid_code(self):
-        result = json.loads(generate("aztrotech", "Juan Pérez"))
+        result = json.loads(generate("abe_music", "Juan Pérez"))
         assert result["code"].startswith("SDC")
         assert len(result["code"]) == 9  # SDCXXXXXX (sin guión)
-        assert result["partner_id"] == "aztrotech"
+        assert result["partner_id"] == "abe_music"
         assert result["client_name"] == "Juan Pérez"
         assert "wa_link" in result
         assert "BIENVENIDO_" in result["wa_link"]
@@ -31,40 +31,40 @@ class TestGenerate:
         assert "error" in result
 
     def test_requires_client_name(self):
-        result = json.loads(generate("aztrotech", ""))
+        result = json.loads(generate("abe_music", ""))
         assert "error" in result
 
     def test_generates_unique_codes(self):
         codes = set()
         for i in range(10):
-            result = json.loads(generate("aztrotech", f"Client {i}"))
+            result = json.loads(generate("abe_music", f"Client {i}"))
             codes.add(result["code"])
         assert len(codes) == 10
 
     def test_code_expires_in_6_hours(self):
-        result = json.loads(generate("aztrotech", "Test"))
+        result = json.loads(generate("abe_music", "Test"))
         assert "validity_hours" in result
         assert result["validity_hours"] == 6
 
     def test_default_plan_is_pro(self):
-        result = json.loads(generate("aztrotech", "Test"))
+        result = json.loads(generate("abe_music", "Test"))
         assert result["plan"] == "pro"
 
     def test_custom_plan(self):
-        result = json.loads(generate("aztrotech", "Test", "enterprise"))
+        result = json.loads(generate("abe_music", "Test", "enterprise"))
         assert result["plan"] == "enterprise"
 
 
 class TestValidate:
     def test_validates_active_code(self):
-        gen = json.loads(generate("aztrotech", "Juan"))
+        gen = json.loads(generate("abe_music", "Juan"))
         result = json.loads(validate(gen["code"], "+5216622681111"))
         assert result["valid"] is True
         assert result["tenant_id"] is not None
         assert result["phone"] == "+5216622681111"
 
     def test_rejects_used_code(self):
-        gen = json.loads(generate("aztrotech", "Maria"))
+        gen = json.loads(generate("abe_music", "Maria"))
         validate(gen["code"], "+5216622682222")
         result = json.loads(validate(gen["code"], "+5216622683333"))
         assert result["valid"] is False
@@ -81,18 +81,18 @@ class TestValidate:
         assert result["valid"] is False
 
     def test_tenant_id_contains_partner_prefix(self):
-        gen = json.loads(generate("aztrotech", "Pedro"))
+        gen = json.loads(generate("abe_music", "Pedro"))
         result = json.loads(validate(gen["code"], "+5216622684444"))
-        assert result["tenant_id"].startswith("aztrotech_")
+        assert result["tenant_id"].startswith("abe_music_")
 
     def test_tenant_id_contains_phone_hash(self):
-        gen = json.loads(generate("aztrotech", "Luis"))
+        gen = json.loads(generate("abe_music", "Luis"))
         phone = "+5216622685555"
         result = json.loads(validate(gen["code"], phone))
         assert phone[:-4] in result["tenant_id"] or len(result["tenant_id"]) > 15
 
     def test_activation_creates_routing_entry(self):
-        gen = json.loads(generate("aztrotech", "Ana"))
+        gen = json.loads(generate("abe_music", "Ana"))
         phone = "+5216622686666"
         validate(gen["code"], phone)
         from scripts.onboarding import detect_tenant
@@ -103,13 +103,13 @@ class TestValidate:
 
 class TestListCodes:
     def test_lists_all_codes(self):
-        generate("aztrotech", "A")
-        generate("aztrotech", "B")
+        generate("abe_music", "A")
+        generate("abe_music", "B")
         result = json.loads(list_codes())
         assert result["count"] >= 2
 
     def test_filters_by_partner(self):
-        generate("aztrotech", "C")
-        result = json.loads(list_codes("aztrotech"))
+        generate("abe_music", "C")
+        result = json.loads(list_codes("abe_music"))
         for c in result["codes"]:
-            assert c["partner_id"] == "aztrotech"
+            assert c["partner_id"] == "abe_music"
