@@ -1,7 +1,7 @@
 [Unit]
-Description=SDC Notifier Worker — OpenClaw bridge for proactive notifications
-After=network.target sdc-event-listener.service openclaw-gateway.service
-Requires=openclaw-gateway.service
+Description=SDC Notifier Worker — Hermes-driven proactive notifications
+After=network.target sdc-event-listener.service hermes-gateway.service
+Requires=hermes-gateway.service
 
 [Service]
 Type=simple
@@ -11,6 +11,7 @@ User=ubuntu
 Restart=on-failure
 RestartSec=5
 Environment="NOTIFIER_POLL_INTERVAL=10"
+Environment="HERMES_URL=http://localhost:8643"
 Environment="OPENCLAW_URL=http://localhost:18789"
 Environment="PYTHONPATH=/home/ubuntu/sonora-digital-corp"
 
