@@ -1,0 +1,16 @@
+allowed_tools:
+  - telegram_send_message
+  - calendar_create_event
+  - crm_create_lead
+  - web_search
+  - knowledge_base_query
+  - music_analytics_query
+  - booking_lookup
+  - studio_schedule
+  - contact_form_submit
+
+blocked_tools:
+  - github_create_issue
+  - vps_execute_command
+  - internal_billing_access
+  - social_publish

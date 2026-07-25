@@ -1,0 +1,8 @@
+tenant_id: abe-music
+display_name: "ABE Music Group"
+language: es
+timezone: America/Mexico_City
+default_model: openrouter/anthropic/claude-3.5-sonnet
+max_tokens: 4096
+qdrant_collection: tenant_abe_music_memory
+neo4j_database: abe_music

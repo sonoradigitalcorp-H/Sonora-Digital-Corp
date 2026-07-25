@@ -1,0 +1,8 @@
+tenant_id: azrec
+display_name: "AzREC — Alejandro Zamora Records"
+language: es
+timezone: America/Hermosillo
+default_model: openrouter/anthropic/claude-3-haiku
+max_tokens: 4096
+qdrant_collection: tenant_azrec_memory
+neo4j_database: azrec

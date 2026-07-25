@@ -1,0 +1,21 @@
+allowed_tools:
+  - telegram_send_message
+  - whatsapp_send_message
+  - cfdi_timbrado
+  - sat_declaraciones
+  - conciliacion_bancaria
+  - nominas_calculo
+  - resico_calculo
+  - contpaq_polizas
+  - organizar_carpetas
+  - crm_create_lead
+  - calendar_create_event
+  - knowledge_base_query
+  - web_search
+
+blocked_tools:
+  - github_create_issue
+  - vps_execute_command
+  - internal_billing_access
+  - bash_execute
+  - neo4j_write
