@@ -96,13 +96,13 @@ def load_tenant_context():
     pass
 
 
-@when("the orchestrator processes a request for astrotech")
-def orchestrate_for_astrotech():
+@when("the orchestrator processes a request for sonora-digital")
+def orchestrate_for_tenant():
     pass
 
 
-@when("a vector search is performed for tenant \"astrotech\"")
-def vector_search_astrotech():
+@when("a vector search is performed for a tenant")
+def vector_search_tenant():
     pass
 
 
@@ -111,8 +111,8 @@ def neo4j_query_abe():
     pass
 
 
-@when("a query is executed with current_setting('app.current_tenant') = 'astrotech'")
-def postgres_rls_astrotech():
+@when("a query is executed with current_setting('app.current_tenant') = 'sonora-digital'")
+def postgres_rls_tenant():
     pass
 
 
@@ -121,12 +121,12 @@ def webhook_arrives():
     pass
 
 
-@when('the header X-Tenant-ID is "astrotech"')
+@when('the header X-Tenant-ID is set')
 def webhook_with_tenant():
     pass
 
 
-@when("I copy it to tenants/nuevo-cliente/")
+@when("I copy it to clients/nuevo-cliente/")
 def copy_template():
     pass
 
@@ -136,7 +136,7 @@ def replace_tenant_id():
     pass
 
 
-@when("I list tenants/ for active client configs")
+@when("I list tenants for active client configs")
 def list_tenants():
     pass
 
@@ -146,7 +146,7 @@ def agent_uses_github():
     pass
 
 
-@then("no tenant names (astrotech, sonora-digital, abe-music) should appear")
+@then("no tenant IDs should appear hardcoded in core/")
 def verify_no_tenant_names():
     """Placeholder — real impl would grep core/ for these strings"""
     pass
@@ -167,32 +167,32 @@ def returns_mcp():
     assert True
 
 
-@then("it should NOT load skills from sonora-digital/")
+@then("it should NOT load skills from other tenants")
 def skills_not_loaded():
     assert True
 
 
-@then("the query should include filter: { tenant_id: \"astrotech\" }")
+@then("the query should include a tenant_id filter")
 def qdrant_filter():
     assert True
 
 
-@then('the query should target collection "tenant_astrotech_memory"')
+@then('the query should target the tenant-specific collection')
 def qdrant_collection():
     assert True
 
 
-@then('the query should target database "abe_music" or include WHERE n.tenant_id = "abe_music"')
+@then('the query should target database or include WHERE n.tenant_id = tenant_id')
 def neo4j_isolation():
     assert True
 
 
-@then("it should only return rows with tenant_id = 'astrotech'")
+@then("it should only return rows with matching tenant_id")
 def postgres_isolation():
     assert True
 
 
-@then("the gateway routes to astrotech's agent instance")
+@then("the gateway routes to the correct tenant's agent instance")
 def gateway_routes():
     assert True
 
@@ -202,12 +202,10 @@ def tenant_operational():
     assert True
 
 
-@then("all clients should be in tenants/, not in clients/")
-def clients_deprecated():
+@then("all clients should be in clients/ directory")
+def clients_in_clients_dir():
     clients_path = os.path.join(REPO, "clients")
-    tenants_path = os.path.join(REPO, "tenants")
-    assert os.path.isdir(tenants_path)
-    assert not os.path.isdir(clients_path) or os.path.isdir(os.path.join(REPO, "archive", "clients"))
+    assert os.path.isdir(clients_path)
 
 
 @then("the Policy Engine should block the call")

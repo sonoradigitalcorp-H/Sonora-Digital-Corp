@@ -2,7 +2,7 @@
 
 Usage:
     resolver = TenantResolver()
-    ctx = resolver.load("astrotech")
+    ctx = resolver.load("sonora-digital")
     print(ctx.prompt)
     print(ctx.allowed_tools)
     print(ctx.mcp_servers)

@@ -5,7 +5,7 @@ Funcionalidad: Cost Intelligence — Tracking de costos reales por tenant
   Para poder cobrarles de forma dinámica y mantener márgenes saludables
 
   Escenario: Registrar costo de LLM call
-    Dado el tenant "aztrotech_cliente_1"
+    Dado el tenant "abe_music_cliente_1"
     Cuando se ejecuta una llamada LLM con modelo "gpt-4o-mini", 450 tokens in, 120 tokens out
     Y el costo calculado es $0.0021
     Entonces el sistema registra el costo en cost_log con tenant_id y timestamp

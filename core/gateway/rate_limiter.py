@@ -6,7 +6,7 @@ Usage:
     from core.gateway.rate_limiter import RateLimiter
     limiter = RateLimiter()
     
-    if not limiter.check("astrotech", "whatsapp"):
+    if not limiter.check("sonora-digital", "whatsapp"):
         return 429 "Rate limit exceeded"
 """
 

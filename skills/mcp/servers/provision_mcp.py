@@ -26,7 +26,7 @@ MCP_TOOLS = {
         "input_schema": {
             "type": "object",
             "properties": {
-                "partner_id": {"type": "string", "description": "Partner ID (aztrotech, abe_music)"},
+                "partner_id": {"type": "string", "description": "Partner ID (e.g. abe_music)"},
                 "client_name": {"type": "string", "description": "Client name"},
                 "plan": {"type": "string", "enum": ["basic", "pro", "enterprise"], "description": "Plan type"},
             },

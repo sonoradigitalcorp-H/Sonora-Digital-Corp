@@ -18,7 +18,7 @@ from scripts.onboarding import detect_tenant, generate, validate
 
 class TestDetectTenant:
     def test_detects_known_tenant(self):
-        gen = json.loads(generate("aztrotech", "Test", "pro"))
+        gen = json.loads(generate("abe_music", "Test", "pro"))
         validate(gen["code"], "+5216620000001")
         result = json.loads(detect_tenant("+5216620000001"))
         assert result["tenant_id"] is not None
@@ -35,7 +35,7 @@ class TestDetectTenant:
         assert result["type"] == "unknown"
 
     def test_multiple_clients_detected_correctly(self):
-        gen1 = json.loads(generate("aztrotech", "Client A"))
+        gen1 = json.loads(generate("abe_music", "Client A"))
         gen2 = json.loads(generate("abe_music", "Client B"))
         validate(gen1["code"], "+5216620000010")
         validate(gen2["code"], "+5216620000020")
@@ -46,10 +46,10 @@ class TestDetectTenant:
         assert r2["name"] == "Client B"
 
     def test_detects_partner_routing(self):
-        gen = json.loads(generate("aztrotech", "Partner", "enterprise"))
+        gen = json.loads(generate("abe_music", "Partner", "enterprise"))
         validate(gen["code"], "+5216620000030")
         result = json.loads(detect_tenant("+5216620000030"))
-        assert result["partner_id"] == "aztrotech"
+        assert result["partner_id"] == "abe_music"
 
     def test_unknown_phone_gets_welcome_message(self):
         result = json.loads(detect_tenant("+5216629999999"))

@@ -5,7 +5,7 @@ Funcionalidad: Onboarding por Código — Generación y validación
   Para que activen su cerebro digital con solo enviar el código por WhatsApp
 
   Escenario: Generar código para nuevo cliente
-    Dado que el partner "aztrotech" quiere agregar al cliente "Juan Pérez"
+    Dado que el partner "abe_music" quiere agregar al cliente "Juan Pérez"
     Cuando genero un código de onboarding
     Entonces recibo un código en formato "SDC-XXXXXX"
     Y el código tiene una validez de 6 horas

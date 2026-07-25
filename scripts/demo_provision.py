@@ -5,8 +5,8 @@ The demo is a fully functional digital brain that expires in 7 days.
 If client buys, the demo is migrated to a full enterprise tenant.
 
 Usage:
-  python3 scripts/demo_provision.py --partner aztrotech --client "Juan Pérez" --email juan@empresa.com
-  python3 scripts/demo_provision.py --partner aztrotech --list
+  python3 scripts/demo_provision.py --partner abe_music --client "Juan Pérez" --email juan@empresa.com
+  python3 scripts/demo_provision.py --partner abe_music --list
 """
 
 import argparse
@@ -85,7 +85,7 @@ async def create_demo(partner_id: str, client_name: str, client_email: str = "")
     branding = get_partner_branding(partner_id)
     expires = (datetime.now() + timedelta(days=7)).isoformat()
 
-    demo_url = f"https://demo.aztrotech.mx/d/{demo_id}" if partner_id == "aztrotech" else f"https://demo.sonoradigitalcorp.com/d/{demo_id}"
+    demo_url = f"https://demo.sonoradigitalcorp.com/d/{demo_id}"
     qr_data = f"demo:sdc:{demo_id}"
 
     conn.execute(
@@ -142,7 +142,7 @@ async def mark_converted(demo_id: str, deal_id: int = 0) -> str:
 
 def main():
     parser = argparse.ArgumentParser(description="SDC Enterprise Demo Provisioning")
-    parser.add_argument("--partner", required=True, help="Partner ID (aztrotech)")
+    parser.add_argument("--partner", required=True, help="Partner ID")
     parser.add_argument("--client", default="", help="Client name for demo")
     parser.add_argument("--email", default="", help="Client email (optional)")
     parser.add_argument("--list", action="store_true", help="List demos for partner")

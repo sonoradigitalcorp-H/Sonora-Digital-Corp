@@ -4,7 +4,7 @@ Crea: tenant_id, Engram namespace, Supabase bucket, Qdrant collection,
 Neo4j sub-graph, OpenClaw session, Clone Service pack, y envía invitación.
 
 Usage:
-  python3 provision_tenant.py --partner aztrotech --client "Juan Pérez" --plan pro
+  python3 provision_tenant.py --partner abe_music --client "Juan Pérez" --plan pro
   python3 provision_tenant.py --partner abe_music --client "Artista X" --plan enterprise
 """
 
@@ -192,7 +192,7 @@ async def get_stats() -> str:
 
 def main():
     parser = argparse.ArgumentParser(description="Provisioning Pipeline — SDC Multi-Tenant")
-    parser.add_argument("--partner", required=True, help="Partner ID (aztrotech, abe_music)")
+    parser.add_argument("--partner", required=True, help="Partner ID")
     parser.add_argument("--client", required=True, help="Client name")
     parser.add_argument("--plan", default="pro", choices=["basic", "pro", "enterprise"])
     parser.add_argument("--action", default="provision", choices=["provision", "list", "stats"])

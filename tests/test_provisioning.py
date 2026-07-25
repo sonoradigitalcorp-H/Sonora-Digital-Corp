@@ -27,20 +27,20 @@ def _setup():
 
 
 class TestProvision:
-    def test_creates_aztrotech_tenant(self):
+    def test_creates_tenant(self):
         _setup()
         import asyncio
 
         from scripts.provision_tenant import provision
-        result = json.loads(asyncio.run(provision("aztrotech", "Juan Pérez", "pro")))
+        result = json.loads(asyncio.run(provision("abe_music", "Juan Pérez", "pro")))
         assert result["status"] == "active"
-        assert result["partner_id"] == "aztrotech"
+        assert result["partner_id"] == "abe_music"
         assert result["client_name"] == "Juan Pérez"
         assert result["plan"] == "pro"
         assert "tenant_id" in result
-        assert result["tenant_id"].startswith("aztrotech_")
+        assert result["tenant_id"].startswith("abe_music_")
 
-    def test_creates_abe_music_tenant(self):
+    def test_creates_tenant_basic_plan(self):
         _setup()
         import asyncio
 
@@ -54,7 +54,7 @@ class TestProvision:
         import asyncio
 
         from scripts.provision_tenant import provision
-        result = json.loads(asyncio.run(provision("aztrotech", "Test", "basic")))
+        result = json.loads(asyncio.run(provision("abe_music", "Test", "basic")))
         assert result["provisioning_ms"] < 5000
 
     def test_rejects_empty_partner(self):
@@ -70,7 +70,7 @@ class TestProvision:
         import asyncio
 
         from scripts.provision_tenant import provision
-        result = json.loads(asyncio.run(provision("aztrotech", "", "basic")))
+        result = json.loads(asyncio.run(provision("abe_music", "", "basic")))
         assert "error" in result
 
     def test_rejects_unknown_partner(self):
@@ -86,7 +86,7 @@ class TestProvision:
         import asyncio
 
         from scripts.provision_tenant import provision
-        result = json.loads(asyncio.run(provision("aztrotech", "Test", "platinum")))
+        result = json.loads(asyncio.run(provision("abe_music", "Test", "platinum")))
         assert "error" in result
 
     def test_branding_included(self):
@@ -94,7 +94,7 @@ class TestProvision:
         import asyncio
 
         from scripts.provision_tenant import provision
-        result = json.loads(asyncio.run(provision("aztrotech", "Cliente A", "basic")))
+        result = json.loads(asyncio.run(provision("abe_music", "Cliente A", "basic")))
         assert "branding" in result
         assert result["branding"]["primary_color"] == "#00d4ff"
         assert result["branding"]["powered_by"] is True
@@ -113,8 +113,8 @@ class TestProvision:
         import asyncio
 
         from scripts.provision_tenant import provision
-        r1 = json.loads(asyncio.run(provision("aztrotech", "A", "basic")))
-        r2 = json.loads(asyncio.run(provision("aztrotech", "B", "basic")))
+        r1 = json.loads(asyncio.run(provision("abe_music", "A", "basic")))
+        r2 = json.loads(asyncio.run(provision("abe_music", "B", "basic")))
         assert r1["tenant_id"] != r2["tenant_id"]
 
     def test_engram_namespace_generated(self):
@@ -122,16 +122,16 @@ class TestProvision:
         import asyncio
 
         from scripts.provision_tenant import provision
-        result = json.loads(asyncio.run(provision("aztrotech", "Test", "basic")))
+        result = json.loads(asyncio.run(provision("abe_music", "Test", "basic")))
         assert result["engram_namespace"].endswith("/")
-        assert result["engram_namespace"].startswith("aztrotech_")
+        assert result["engram_namespace"].startswith("abe_music_")
 
     def test_supabase_path_generated(self):
         _setup()
         import asyncio
 
         from scripts.provision_tenant import provision
-        result = json.loads(asyncio.run(provision("aztrotech", "Test", "basic")))
+        result = json.loads(asyncio.run(provision("abe_music", "Test", "basic")))
         assert result["supabase_path"].startswith("tenants/")
 
     def test_qdrant_collection_generated(self):
@@ -139,7 +139,7 @@ class TestProvision:
         import asyncio
 
         from scripts.provision_tenant import provision
-        result = json.loads(asyncio.run(provision("aztrotech", "Test", "basic")))
+        result = json.loads(asyncio.run(provision("abe_music", "Test", "basic")))
         assert result["qdrant_collection"].startswith("vectors_")
 
     def test_neo4j_label_generated(self):
@@ -147,7 +147,7 @@ class TestProvision:
         import asyncio
 
         from scripts.provision_tenant import provision
-        result = json.loads(asyncio.run(provision("aztrotech", "Test", "basic")))
+        result = json.loads(asyncio.run(provision("abe_music", "Test", "basic")))
         assert result["neo4j_label"].startswith("Tenant_")
 
 
@@ -157,8 +157,8 @@ class TestListTenants:
         import asyncio
 
         from scripts.provision_tenant import list_tenants, provision
-        asyncio.run(provision("aztrotech", "A", "basic"))
-        asyncio.run(provision("aztrotech", "B", "pro"))
+        asyncio.run(provision("abe_music", "A", "basic"))
+        asyncio.run(provision("abe_music", "B", "pro"))
         result = json.loads(asyncio.run(list_tenants()))
         assert result["count"] == 2
 
@@ -167,11 +167,11 @@ class TestListTenants:
         import asyncio
 
         from scripts.provision_tenant import list_tenants, provision
-        asyncio.run(provision("aztrotech", "A", "basic"))
+        asyncio.run(provision("abe_music", "A", "basic"))
         asyncio.run(provision("abe_music", "B", "pro"))
-        result = json.loads(asyncio.run(list_tenants("aztrotech")))
+        result = json.loads(asyncio.run(list_tenants("abe_music")))
         assert result["count"] == 1
-        assert result["partner_filter"] == "aztrotech"
+        assert result["partner_filter"] == "abe_music"
 
 
 class TestStats:
@@ -180,8 +180,8 @@ class TestStats:
         import asyncio
 
         from scripts.provision_tenant import get_stats, provision
-        asyncio.run(provision("aztrotech", "A", "basic"))
-        asyncio.run(provision("aztrotech", "B", "pro"))
+        asyncio.run(provision("abe_music", "A", "basic"))
+        asyncio.run(provision("abe_music", "B", "pro"))
         result = json.loads(asyncio.run(get_stats()))
         assert result["total_tenants"] >= 2
         assert result["total_partners"] >= 1

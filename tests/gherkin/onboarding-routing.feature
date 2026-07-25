@@ -5,7 +5,7 @@ Funcionalidad: Onboarding — Routing por número de teléfono
   Para que reciban la experiencia correcta sin preguntar quiénes son
 
   Escenario: Cliente conocido es identificado automáticamente
-    Dado que el número "+5216622681111" está asociado al tenant "aztrotech_cliente_1"
+    Dado que el número "+5216622681111" está asociado al tenant "abe_music_cliente_1"
     Cuando el cliente envía "Hola" desde ese número
     Entonces el sistema detecta el tenant automáticamente
     Y responde con el contexto de ese cliente

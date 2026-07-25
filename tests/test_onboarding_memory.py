@@ -14,7 +14,7 @@ class TestMemory:
             "timestamp": "2026-07-18T12:00:00",
             "type": "milestone",
             "title": "onboarding: Juan Pérez",
-            "content": "Cliente Juan Pérez activado via onboarding. Partner: aztrotech. Plan: pro.",
+            "content": "Cliente Juan Pérez activado via onboarding. Partner: abe_music. Plan: pro.",
         }
         assert entry["type"] == "milestone"
         assert "onboarding:" in entry["title"]
@@ -22,14 +22,14 @@ class TestMemory:
 
     def test_qdrant_vector_profile(self):
         profile = {
-            "tenant_id": "aztrotech_a1b2c3d4",
+            "tenant_id": "abe_music_a1b2c3d4",
             "name": "Juan Pérez",
-            "partner": "aztrotech",
+            "partner": "abe_music",
             "plan": "pro",
             "phone": "+5216622681111",
             "tags": ["cliente", "activo", "pro"],
         }
-        assert profile["tenant_id"].startswith("aztrotech_")
+        assert profile["tenant_id"].startswith("abe_music_")
         assert profile["plan"] in ("basic", "pro", "enterprise")
         assert "cliente" in profile["tags"]
 
@@ -49,9 +49,9 @@ class TestMemory:
     def test_onboarding_log_created(self):
         log_entry = {
             "timestamp": "2026-07-18T12:00:00",
-            "tenant_id": "aztrotech_a1b2c3d4",
+            "tenant_id": "abe_music_a1b2c3d4",
             "client_name": "Juan Pérez",
-            "partner_id": "aztrotech",
+            "partner_id": "abe_music",
             "plan": "pro",
         }
         assert "tenant_id" in log_entry

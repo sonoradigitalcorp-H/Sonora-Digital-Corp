@@ -74,6 +74,5 @@ industries:
     notes: "Clínicas, terapeutas. Requiere compliance HIPAA."
 
 partner_discounts:
-  aztrotech: 0.30
   abe_music: 0.25
   default: 0.20
