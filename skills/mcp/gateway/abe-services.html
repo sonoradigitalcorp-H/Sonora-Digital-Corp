@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="gateway-config.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>ABE Music — Servicios</title>
@@ -88,7 +89,7 @@ const GATEWAY='http://127.0.0.1:18989';
 let token='';
 
 async function auth(){
-  const r=await fetch(GATEWAY+'/api/auth/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id:'abe-fenix',client_secret:'abe_f3n1x_pr0_k3y_2026'})});
+  const r=await fetch(GATEWAY+'/api/auth/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id:'abe-fenix',client_secret:GATEWAY_CLIENT_SECRET})});
   const d=await r.json();token=d.access_token||'';
 }
 async function call(tool,params){

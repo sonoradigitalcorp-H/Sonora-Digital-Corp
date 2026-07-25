@@ -13,8 +13,8 @@ from playwright.async_api import async_playwright
 HOME = os.path.expanduser("~")
 CHROME_PATH = "/opt/google/chrome/chrome"
 USER_DATA_DIR = os.path.join(HOME, ".config/google-chrome")
-LOG_DIR = os.path.join(HOME, "jarvis/logs/social")
-SCREENSHOT_DIR = os.path.join(HOME, "jarvis/screenshots/social")
+LOG_DIR = os.path.join(HOME, "sdc/logs/social")
+SCREENSHOT_DIR = os.path.join(HOME, "sdc/screenshots/social")
 os.makedirs(LOG_DIR, exist_ok=True)
 os.makedirs(SCREENSHOT_DIR, exist_ok=True)
 

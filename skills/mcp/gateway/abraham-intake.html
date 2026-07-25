@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="gateway-config.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>Abraham OS — Intake</title>
@@ -117,11 +118,11 @@ pre{font-size:.7rem;color:var(--dim);white-space:pre-wrap;max-height:300px;overf
 </div>
 
 <script>
-const GATEWAY = 'http://127.0.0.1:18989';
+const GATEWAY = GATEWAY_URL;
 let authToken = '';
 
 async function getToken() {
-  const r = await fetch(GATEWAY+'/api/auth/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id:'abe-fenix',client_secret:'abe_f3n1x_pr0_k3y_2026'})});
+  const r = await fetch(GATEWAY+'/api/auth/token',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({client_id:'abe-fenix',client_secret:GATEWAY_CLIENT_SECRET})});
   const d=await r.json(); authToken=d.access_token||'';
 }
 async function call(tool,params) {

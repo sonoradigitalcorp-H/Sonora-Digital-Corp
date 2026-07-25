@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="gateway-config.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Native Agent OS — Dashboard</title>
@@ -49,7 +50,7 @@
 <div class="grid" id="main"></div>
 
 <script>
-const GATEWAY = 'http://127.0.0.1:18989';
+const GATEWAY = GATEWAY_URL;
 
 async function api(path, opts = {}) {
   try {
@@ -65,7 +66,7 @@ async function api(path, opts = {}) {
 async function getToken() {
   const r = await api('/api/auth/token', {
     method: 'POST',
-    body: { client_id: 'sdc-core', client_secret: 'sdc_secret_ent3rpr1s3_k3y_2026' },
+    body: { client_id: 'sdc-core', client_secret: GATEWAY_CLIENT_SECRET },
   });
   return r.access_token || '';
 }

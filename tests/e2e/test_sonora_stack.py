@@ -6,6 +6,7 @@ Run: python3 tests/e2e/test_sonora_stack.py
 """
 
 import json
+import os
 import subprocess
 import sys
 import time
@@ -122,7 +123,7 @@ def test_redis():
     print("\n🔍 Redis")
     try:
         import redis as redis_lib
-        r = redis_lib.Redis(host="localhost", port=6379, password="redis2026")
+        r = redis_lib.Redis(host="localhost", port=6379, password=os.environ.get("REDIS_PASSWORD", ""))
         ping = r.ping()
         check("Redis responds to PING", ping)
         r.close()

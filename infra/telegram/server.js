@@ -6,12 +6,13 @@ const { Telegraf } = require('telegraf');
 const axios = require('axios');
 const fs = require('fs');
 const path = require('path');
+require('dotenv').config({ path: path.join(__dirname, '..', '.env') });
 const express = require('express');
 const { startAlertScheduler } = require('./sat-alerts');
 const log = require('./logger');
 
 const API_BASE = process.env.API_BASE || 'http://api:8000';
-const DEFAULT_BOT_TOKEN = process.env.DEFAULT_BOT_TOKEN || process.env.TELEGRAM_BOT_TOKEN;
+const DEFAULT_BOT_TOKEN = process.env.DEFAULT_BOT_TOKEN || process.env.SONORA_BOT_TOKEN;
 
 // ── LangFuse tracing ──────────────────────────────────────────────────────────
 const LANGFUSE_HOST = process.env.LANGFUSE_HOST || 'http://localhost:3000';
@@ -34,40 +35,33 @@ async function traceLangFuse(name, input, output, metadata = {}) {
   }
 }
 
-// ── ClawdBot (OpenRouter directo — mismo modelo que OpenClaw) ──────────────────
-const CLAWD_API_KEY = process.env.OPENROUTER_API_KEY || '';
-const CLAWD_MODEL   = process.env.CLAWD_MODEL || 'meta-llama/llama-3.3-70b-instruct:free';
-const CLAWD_SYSTEM  = `Eres HERMES, asistente de IA de Sonora Digital Corp.
+// ── Ollama Local (modelo potente local) ─────────────────────────────────────────
+const OLLAMA_BASE = process.env.OLLAMA_BASE || 'http://localhost:11434';
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen3:4b';
+const OLLAMA_SYSTEM = `Eres HERMES, asistente de IA de Sonora Digital Corp.
 Ayudas a Luis Daniel (CEO) con contabilidad, automatización, código y estrategia de negocio para PYMEs mexicanas.
 Responde siempre en español, de forma directa y práctica. Sin rodeos.`;
 
-async function askClawd(message, history = []) {
-  if (!CLAWD_API_KEY) throw new Error('OPENROUTER_API_KEY no configurada');
+async function askOllama(message, history = []) {
   const startTime = Date.now();
   const messages = [
-    { role: 'system', content: CLAWD_SYSTEM },
+    { role: 'system', content: OLLAMA_SYSTEM },
     ...history.slice(-6),
     { role: 'user', content: message },
   ];
-  const res = await axios.post('https://openrouter.ai/api/v1/chat/completions', {
-    model: CLAWD_MODEL,
+  const res = await axios.post(`${OLLAMA_BASE}/api/chat`, {
+    model: OLLAMA_MODEL,
     messages,
-    max_tokens: 800,
+    stream: false,
+    options: { num_predict: 800 },
   }, {
-    headers: {
-      'Authorization': `Bearer ${CLAWD_API_KEY}`,
-      'HTTP-Referer': 'https://hermesai.mx',
-      'X-Title': 'HERMES AI',
-    },
-    timeout: 30000,
+    timeout: 120000,
   });
-  const reply = res.data?.choices?.[0]?.message?.content || 'Sin respuesta.';
+  const reply = res.data?.message?.content || res.data?.response || 'Sin respuesta.';
   const duration = Date.now() - startTime;
-  const tokens = res.data?.usage?.total_tokens || 0;
-  // Fire-and-forget trace a LangFuse
-  traceLangFuse('telegram.askClawd', { message, history_length: history.length },
-    { reply_length: reply.length, tokens },
-    { duration_ms: duration, cost_usd: tokens * 1e-7, model: CLAWD_MODEL, agent: 'telegram.clawd', tenant: 'sdc-core' }
+  traceLangFuse('telegram.askOllama', { message, history_length: history.length },
+    { reply_length: reply.length },
+    { duration_ms: duration, cost_usd: 0, model: OLLAMA_MODEL, agent: 'telegram.ollama', tenant: 'sdc-core' }
   );
   return reply;
 }
@@ -188,31 +182,30 @@ function createTelegrafInstance(tenantId, token) {
     }
   });
 
-  // /clawd — ClawdBot directo (OpenRouter, Llama 3.3 70B)
-  bot.command('clawd', async (ctx) => {
+  // /ai — Chat directo con Ollama local
+  bot.command('ai', async (ctx) => {
     try {
-      const question = ctx.message.text.replace(/^\/clawd\s*/i, '').trim();
-      if (!question) { await ctx.reply('Escríbeme algo después de /clawd\nEjemplo: /clawd ¿qué workflows tengo activos?'); return; }
+      const question = ctx.message.text.replace(/^\/ai\s*/i, '').trim();
+      if (!question) { await ctx.reply('Escríbeme algo después de /ai\nEjemplo: /ai ¿cómo está el sistema?'); return; }
       await ctx.sendChatAction('typing');
       const userId = String(ctx.from.id);
       const history = clawdHistory.get(userId) || [];
-      const answer = await askClawd(question, history);
-      // Guardar historial (últimas 6 rondas)
+      const answer = await askOllama(question, history);
       history.push({ role: 'user', content: question });
       history.push({ role: 'assistant', content: answer });
       clawdHistory.set(userId, history.slice(-12));
       await ctx.reply(answer, { parse_mode: 'Markdown' });
     } catch (err) {
-      log.error('[bot.command/clawd] error:', { err: err.message });
-      await ctx.reply('ClawdBot no disponible en este momento. Verifica OPENROUTER_API_KEY.');
+      log.error('[bot.command/ai] error:', { err: err.message });
+      await ctx.reply('Ollama no disponible en este momento.');
     }
   });
 
-  // /reset — limpia historial de ClawdBot
+  // /reset — limpia historial de conversación
   bot.command('reset', async (ctx) => {
     try {
       clawdHistory.delete(String(ctx.from.id));
-      await ctx.reply('Historial de ClawdBot limpiado. ¿En qué te ayudo?');
+      await ctx.reply('Historial limpiado. ¿En qué te ayudo?');
     } catch (err) {
       log.error('[bot.command/reset] error:', { err: err.message });
     }
@@ -257,10 +250,10 @@ function createTelegrafInstance(tenantId, token) {
     const CEO_CHAT_ID = process.env.HERMES_ADMIN_CHAT_ID || '';
 
     try {
-      // Modo CEO: si el mensaje viene del dueño, va directo a ClawdBot
-      if (CEO_CHAT_ID && userId === CEO_CHAT_ID && CLAWD_API_KEY) {
+      // Modo CEO: si el mensaje viene del dueño, va directo a Ollama
+      if (CEO_CHAT_ID && userId === CEO_CHAT_ID) {
         const history = clawdHistory.get(userId) || [];
-        const answer = await askClawd(msg, history);
+        const answer = await askOllama(msg, history);
         history.push({ role: 'user', content: msg });
         history.push({ role: 'assistant', content: answer });
         clawdHistory.set(userId, history.slice(-12));
@@ -274,12 +267,7 @@ function createTelegrafInstance(tenantId, token) {
         text = await invokeSkill(skill, msg, tenantId);
         actions = skill.actions || [];
       } else {
-        const res = await axios.post(`${API_BASE}/api/brain/ask`, {
-          question: msg, tenant_id: tenantId, channel: 'telegram'
-        }, { timeout: 25000 });
-        const d = res.data;
-        text = d.answer || d.response || 'Procesando...';
-        actions = d.suggested_actions || [];
+        text = await askOllama(msg);
       }
       if (actions.length > 0) {
         const kb = actions.map(a => [{ text: a.label || a.text, callback_data: a.callback || `action_${a.action}` }]);
@@ -341,14 +329,14 @@ async function launchBot(tenantId, token, attempt = 1) {
   _activeBot = bot;
 
   try {
-    await bot.launch();
+    await bot.telegram.getMe();
+    bot.startPolling();
     log.info(`[${tenantId}] Bot conectado a Telegram ✅`);
     startAlertScheduler(bot, process.env.HERMES_ALERT_CHANNEL_ID || null);
   } catch (err) {
     const is409 = err.response?.error_code === 409;
     const isNet = err.code === 'ETIMEDOUT' || err.code === 'ECONNREFUSED' || err.type === 'system';
     if (is409 || isNet) {
-      // Esperar 35s en ambos casos — Telegram necesita ese tiempo para liberar la sesión
       const wait = 35000;
       log.warn(`[${tenantId}] ${is409 ? '409 Conflict' : 'Red timeout'} → retry en ${wait/1000}s (intento ${attempt}/${MAX_RETRIES})`);
       setTimeout(() => launchBot(tenantId, token, attempt + 1), wait);
@@ -393,28 +381,22 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', activeBots: botInstances.size, skills: skills.length });
 });
 
-// Auto-start — delay inicial 40s para que Telegram libere sesión del container anterior
-if (DEFAULT_BOT_TOKEN) {
-  log.info('[default] Bot iniciando...');
-  setTimeout(() => launchBot('default', DEFAULT_BOT_TOKEN), 40000);
-}
-
-const AUREA_BOT_TOKEN = process.env.AUREA_BOT_TOKEN;
-if (AUREA_BOT_TOKEN) {
-  log.info('[aurea] Bot iniciando...');
-  setTimeout(() => launchBot('aurea', AUREA_BOT_TOKEN), 50000);
-}
-
-const DEEPSEEK_BOT_TOKEN = process.env.DEEPSEEK_BOT_TOKEN;
-if (DEEPSEEK_BOT_TOKEN) {
-  log.info('[clawd] Bot iniciando...');
-  setTimeout(() => launchBot('clawd', DEEPSEEK_BOT_TOKEN), 60000);
-}
-
-const ABE_FENIX_BOT_TOKEN = process.env.ABE_FENIX_BOT_TOKEN;
-if (ABE_FENIX_BOT_TOKEN) {
-  log.info('[abe-fenix] Bot iniciando...');
-  setTimeout(() => launchBot('abe-fenix', ABE_FENIX_BOT_TOKEN), 70000);
+// ── Multi-tenant bots ──────────────────────────────────────────────────────────
+const BOT_TOKENS = [
+  { id: 'default',        token: process.env.DEFAULT_BOT_TOKEN,      delay: 40000 },
+  { id: 'aurea',          token: process.env.AUREA_BOT_TOKEN,        delay: 50000 },
+  { id: 'clawd',          token: process.env.DEEPSEEK_BOT_TOKEN,     delay: 60000 },
+  { id: 'abe-fenix',      token: process.env.ABE_FENIX_BOT_TOKEN,    delay: 70000 },
+  { id: 'sonora-digital', token: process.env.SONORA_BOT_TOKEN,       delay: 75000 },
+  { id: 'aztrotech',      token: process.env.AZTROTECH_BOT_TOKEN,    delay: 80000 },
+  { id: 'abe-personal',   token: process.env.ABE_BOT_TOKEN,          delay: 85000 },
+  { id: 'mystika',        token: process.env.MYSTIKA_BOT_TOKEN,      delay: 90000 },
+];
+for (const bot of BOT_TOKENS) {
+  if (bot.token) {
+    log.info(`[${bot.id}] Bot iniciando...`);
+    setTimeout(() => launchBot(bot.id, bot.token), bot.delay);
+  }
 }
 
 const PORT = process.env.PORT || 3003;

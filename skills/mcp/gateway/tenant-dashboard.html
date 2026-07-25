@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
+<script src="gateway-config.js"></script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>SDC — Mi Panel</title>
@@ -43,11 +44,11 @@ select,input{background:rgba(255,255,255,.03);border:1px solid var(--border);bor
 <div class="grid" id="content" style="margin-top:.5rem"></div>
 
 <script>
-const GATEWAY = 'http://127.0.0.1:18989';
+const GATEWAY = GATEWAY_URL;
 let currentTenant = 'sdc-core';
 
 function getToken() {
-  const secrets = { 'sdc-core': 'sdc_secret_ent3rpr1s3_k3y_2026', 'abe-fenix': 'abe_f3n1x_pr0_k3y_2026' };
+  const secrets = { 'sdc-core': GATEWAY_CLIENT_SECRET, 'abe-fenix': GATEWAY_CLIENT_SECRET };
   return fetch(GATEWAY + '/api/auth/token', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({client_id:currentTenant, client_secret:secrets[currentTenant]}) }).then(r=>r.json()).then(d=>d.access_token).catch(()=>null);
 }
 

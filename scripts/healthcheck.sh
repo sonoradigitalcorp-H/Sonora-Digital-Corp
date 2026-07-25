@@ -18,7 +18,7 @@ fi
 # ── Capability Registry ──
 TOKEN=$(curl -s -X POST http://127.0.0.1:18989/api/auth/token \
   -H 'Content-Type: application/json' \
-  -d "{\"client_id\":\"sdc-core\",\"client_secret\":\"${SONORA_CLIENT_SECRET:-sdc_secret_ent3rpr1s3_k3y_2026}\"}" 2>/dev/null | \
+  -d "{\"client_id\":\"sdc-core\",\"client_secret\":\"${SONORA_CLIENT_SECRET:-${MCP_CLIENT_SECRET:-sdc_secret_ent3rpr1s3_k3y_2026}}\"}" 2>/dev/null | \
   python3 -c "import sys,json; print(json.load(sys.stdin).get('access_token',''))" 2>/dev/null || echo "")
 if [ -n "$TOKEN" ]; then
   CAPS=$(curl -s http://127.0.0.1:18989/api/capability/list -H "Authorization: Bearer $TOKEN" 2>/dev/null | \

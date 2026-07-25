@@ -7,7 +7,7 @@ import re
 from playwright.async_api import async_playwright
 
 HOME = os.path.expanduser("~")
-SCREENSHOT_DIR = os.path.join(HOME, "jarvis/screenshots/revoke_keys")
+SCREENSHOT_DIR = os.path.join(HOME, "sdc/screenshots/revoke_keys")
 os.makedirs(SCREENSHOT_DIR, exist_ok=True)
 
 KEEP_KEYS = set(os.environ.get("OPENROUTER_KEEP_KEYS", "").split(",")) - {""}

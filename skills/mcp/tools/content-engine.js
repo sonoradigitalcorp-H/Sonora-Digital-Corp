@@ -282,7 +282,7 @@ const tools = {
 async function _getToken() {
   return new Promise(r => {
     const http = require('http');
-    const d = JSON.stringify({ client_id: 'sdc-core', client_secret: 'sdc_secret_ent3rpr1s3_k3y_2026' });
+    const d = JSON.stringify({ client_id: 'sdc-core', client_secret: process.env.MCP_CLIENT_SECRET });
     const req = http.request({ hostname: '127.0.0.1', port: 18989, path: '/api/auth/token', method: 'POST', headers: { 'Content-Type': 'application/json' } }, res => {
       let d = ''; res.on('data', c => d += c); res.on('end', () => { try { r(JSON.parse(d).access_token); } catch { r(''); } });
     }); req.write(d); req.end();

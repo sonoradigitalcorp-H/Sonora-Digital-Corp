@@ -1,17 +1,16 @@
 #!/bin/bash
-# JARVIS 24/7 Autonomous Agent System
+# SDC 24/7 Autonomous Agent System
 # Ejecuta tareas de forma autónoma: ideas, tests, mejoras, reportes
-# Correr vía cron: */15 * * * * /home/ubuntu/sonora-digital-corp/scripts/autonomous.sh
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-JARVIS_HOME="$(cd "${SCRIPT_DIR}/.." && pwd)"
-LOG="${JARVIS_HOME}/state/logs/autonomous.log"
-EVENTS="${JARVIS_HOME}/state/logs/events.jsonl"
-LOCK="/tmp/jarvis-autonomous.lock"
-ENGAM_DB="${JARVIS_HOME}/state/engram.db"
-SKILLS_LOG_DIR="${JARVIS_HOME}/state/logs/skills"
+SDC_HOME="$(cd "${SCRIPT_DIR}/.." && pwd)"
+LOG="${SDC_HOME}/state/logs/autonomous.log"
+EVENTS="${SDC_HOME}/state/logs/events.jsonl"
+LOCK="/tmp/sdc-autonomous.lock"
+ENGAM_DB="${SDC_HOME}/state/engram.db"
+SKILLS_LOG_DIR="${SDC_HOME}/state/logs/skills"
 NOW=$(date '+%Y-%m-%d %H:%M:%S')
 
 mkdir -p "$SKILLS_LOG_DIR"
@@ -141,13 +140,13 @@ else
 fi
 
 # ── Tarea 3: Cleanup de logs antiguos ─────
-find "$JARVIS_HOME/state/logs" -name "*.log" -mtime +7 -delete 2>/dev/null
-find "$JARVIS_HOME/state/backups" -maxdepth 1 -type d -ctime +30 -exec rm -rf {} \; 2>/dev/null || true
+find "$SDC_HOME/state/logs" -name "*.log" -mtime +7 -delete 2>/dev/null
+find "$SDC_HOME/state/backups" -maxdepth 1 -type d -ctime +30 -exec rm -rf {} \; 2>/dev/null || true
 
 # ── Tarea 4: Backup automático (diario) ────
 HOUR=$(date +%H)
 if [ "$HOUR" = "03" ]; then
-    bash "$JARVIS_HOME/scripts/backup.sh" >> "$LOG" 2>&1
+    bash "$SDC_HOME/scripts/backup.sh" >> "$LOG" 2>&1
 fi
 
 # ── Tarea 5: Reporte de status ─────────────
@@ -155,21 +154,21 @@ fi
     echo "=== Resumen ==="
     echo "  Brain: $(curl -s http://localhost:5174/api/brain/graph | python3 -c 'import sys,json;d=json.load(sys.stdin);print(len(d[\"nodes\"]))' 2>/dev/null || echo '?') nodos"
     echo "  Productos en tienda: $(curl -s http://localhost:5174/api/store/products | python3 -c 'import sys,json;d=json.load(sys.stdin);print(len(d[\"products\"]))' 2>/dev/null || echo '?')"
-    echo "  GitHub commits hoy: $(git -C $JARVIS_HOME log --oneline --since=midnight 2>/dev/null | wc -l)"
+    echo "  GitHub commits hoy: $(git -C $SDC_HOME log --oneline --since=midnight 2>/dev/null | wc -l)"
     # FinOps snapshot
-    bash "$JARVIS_HOME/scripts/finops.sh snapshot" 2>/dev/null || echo "  ⚠️ FinOps snapshot failed"
+    bash "$SDC_HOME/scripts/finops.sh snapshot" 2>/dev/null || echo "  ⚠️ FinOps snapshot failed"
 } >> "$LOG" 2>&1
 
 # ── Tarea 6: Trigger all OMEGA skills ──────
-bash "$JARVIS_HOME/scripts/skill-triggers.sh" >> "$LOG" 2>&1 || log_skill_execution "skill-triggers" "1.0.0" "Agent" "fail" "skill-triggers.sh failed"
+bash "$SDC_HOME/scripts/skill-triggers.sh" >> "$LOG" 2>&1 || log_skill_execution "skill-triggers" "1.0.0" "Agent" "fail" "skill-triggers.sh failed"
 
 # ── Enterprise Score snapshot ──────────────
-bash "$JARVIS_HOME/scripts/enterprise-score.sh" >> "$LOG" 2>&1 || true
+bash "$SDC_HOME/scripts/enterprise-score.sh" >> "$LOG" 2>&1 || true
 
 # ── Weekly review (Sundays only) ──────────
 DOW=$(date +%u)
 if [ "$DOW" = "7" ]; then
-    bash "$JARVIS_HOME/scripts/weekly-review.sh" >> "$LOG" 2>&1 || true
+    bash "$SDC_HOME/scripts/weekly-review.sh" >> "$LOG" 2>&1 || true
 fi
 
 echo "[$NOW] ✅ Ciclo completado" >> "$LOG"

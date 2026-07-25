@@ -20,3 +20,4 @@ Each ADR documents a significant architecture decision, including context, optio
 | ADR-20260719-UNIFICACION-ECOSISTEMAS | Ecosystem Unification | accepted | 2026-07-19 |
 | ADR-20260719-WHATSAPP-OS-FASE1 | WhatsApp OS Phase 1 | accepted | 2026-07-19 |
 | ADR-20260721-SDD-FRAMEWORK | SDD Framework Implementation | accepted | 2026-07-21 |
+| ADR-20260722-001 | Multi-Tenant Core/Tenant Architecture | proposed | 2026-07-22 |

@@ -20,7 +20,7 @@ QDRANT_PORT = int(os.getenv("QDRANT_PORT", "6333"))
 MCP_HOST = os.getenv("MCP_HOST", "0.0.0.0")
 MCP_PORT = int(os.getenv("MCP_PORT", "8000"))
 
-# Allowed commands for jarvis_execute
+# Allowed commands for sdc_execute
 ALLOWED_COMMANDS = [
     "ls",
     "pwd",

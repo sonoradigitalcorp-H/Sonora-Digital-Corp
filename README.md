@@ -26,7 +26,7 @@ Request → MCP Gateway (:18989) → CapabilityRegistry → Tools/Agents/Workflo
 
 ```bash
 curl -X POST https://sonoradigitalcorp.com/api/auth/token \
-  -d '{"client_id":"sdc-core","client_secret":"sdc_secret_ent3rpr1s3_k3y_2026"}'
+  -d '{"client_id":"sdc-core","client_secret":"$MCP_CLIENT_SECRET"}'
 
 curl https://sonoradigitalcorp.com/api/tools \
   -H "Authorization: Bearer <token>"
