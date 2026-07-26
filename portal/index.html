@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✦ Mystic Grimoire — Portal de la Creación</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{overflow:hidden;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#fff;cursor:grab}
+body:active{cursor:grabbing}
+#canvas-container{width:100vw;height:100vh;display:block}
+#label-renderer{position:absolute;top:0;left:0;pointer-events:none;width:100%;height:100%}
+
+#brand{position:fixed;top:24px;left:28px;z-index:100;pointer-events:none}
+#brand h1{font-size:14px;font-weight:400;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,.5)}
+#brand .title{font-size:28px;font-weight:700;background:linear-gradient(135deg,#ff6b35,#e8e8ff,#4a7c59,#2196f3);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:4px 0 0}
+#brand .sub{font-size:12px;color:rgba(255,255,255,.3);letter-spacing:2px}
+#brand .yo-soy{font-size:11px;color:rgba(255,255,255,.2);margin-top:8px;font-style:italic;letter-spacing:1px}
+
+#scene-label{position:fixed;top:24px;right:28px;z-index:100;font-size:11px;color:rgba(255,255,255,.15);letter-spacing:2px;text-transform:uppercase;pointer-events:none}
+#template-selector{position:fixed;top:60px;right:28px;z-index:100;display:flex;flex-direction:column;gap:4px;background:rgba(0,0,0,.4);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:6px;backdrop-filter:blur(12px)}
+.tpl-btn{background:none;border:1px solid transparent;border-radius:4px;padding:5px 10px;font-size:10px;color:rgba(255,255,255,.4);cursor:pointer;letter-spacing:1px;text-transform:uppercase;transition:all .2s;font-family:inherit}
+.tpl-btn:hover{color:rgba(255,255,255,.7);background:rgba(255,255,255,.05)}
+.tpl-btn.active{color:#fff;border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.08)}
+
+#audio-toggle{position:fixed;bottom:28px;left:28px;z-index:100;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;font-size:20px;cursor:pointer;color:rgba(255,255,255,.5);transition:all .3s;backdrop-filter:blur(12px)}
+#audio-toggle:hover{background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.2)}
+#audio-toggle.active{color:#4fc3f7;border-color:rgba(79,195,247,.4);box-shadow:0 0 20px rgba(79,195,247,.15)}
+#freq-label{position:fixed;bottom:28px;left:88px;z-index:100;font-size:11px;color:rgba(255,255,255,.25);letter-spacing:1px;pointer-events:none;line-height:48px}
+
+#legend{position:fixed;right:28px;top:50%;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.legend-item{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:6px;background:rgba(0,0,0,.3);backdrop-filter:blur(8px);font-size:11px;color:rgba(255,255,255,.5);transition:all .3s;opacity:.6}
+.legend-item .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.legend-item .lbl{letter-spacing:1px;font-weight:400}
+.legend-item.active{opacity:1;color:#fff}
+
+.dashboard-wave{position:fixed;z-index:50;pointer-events:none;opacity:0;transition:opacity 1.2s ease}
+.dashboard-wave.visible{opacity:1}
+.dashboard-wave .glass{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:24px 32px;backdrop-filter:blur(20px);max-width:420px;box-shadow:0 8px 32px rgba(0,0,0,.3)}
+.dashboard-wave .glass .icon{font-size:24px;margin-bottom:4px}
+.dashboard-wave .glass .name{font-size:13px;font-weight:600;letter-spacing:1px;text-transform:uppercase;color:rgba(255,255,255,.6)}
+.dashboard-wave .glass .content{font-size:14px;margin-top:8px;color:rgba(255,255,255,.4);line-height:1.6}
+.dw-top-right{top:24px;right:28px}
+.dw-bottom-right{bottom:90px;right:28px}
+.dw-center{top:50%;left:50%;transform:translate(-50%,-50%)}
+.dw-top-left{top:100px;left:28px}
+.dw-bottom-left{bottom:90px;left:28px}
+
+#info-panel{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);z-index:200;background:rgba(0,0,0,.6);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:16px 24px;backdrop-filter:blur(20px);opacity:0;transition:all .4s ease;pointer-events:none;text-align:center;min-width:280px}
+#info-panel.visible{opacity:1;bottom:100px}
+#info-panel .ip-title{font-size:16px;font-weight:600;color:#fff;letter-spacing:1px}
+#info-panel .ip-desc{font-size:13px;color:rgba(255,255,255,.5);margin-top:4px}
+#info-panel .ip-status{font-size:11px;margin-top:6px;letter-spacing:1px}
+.ip-status.active{color:#66bb6a}
+.ip-status.inactive{color:#ef5350}
+
+#hint{position:fixed;bottom:28px;left:50%;transform:translateX(-50%);z-index:100;font-size:11px;color:rgba(255,255,255,.15);letter-spacing:1px;pointer-events:none;text-align:center}
+#hint span{display:inline-block;margin:0 8px;padding:4px 10px;border:1px solid rgba(255,255,255,.06);border-radius:4px}
+
+#loader{position:fixed;inset:0;z-index:9999;background:#0a0a12;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity 1s}
+#loader.hidden{opacity:0;pointer-events:none}
+#loader .spinner{width:32px;height:32px;border:2px solid rgba(255,255,255,.08);border-top-color:#ff6b35;border-radius:50%;animation:spin 1s linear infinite}
+#loader .txt{margin-top:16px;font-size:13px;color:rgba(255,255,255,.3);letter-spacing:3px;text-transform:uppercase}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+@media(max-width:768px){
+  #brand .title{font-size:20px}
+  #legend{display:none}
+  #template-selector{top:auto;bottom:90px;right:12px;flex-direction:row;flex-wrap:wrap}
+  .dashboard-wave .glass{max-width:280px;padding:16px 20px}
+  #info-panel{min-width:auto;width:80%;padding:12px 16px}
+}
+</style>
+</head>
+<body>
+
+<div id="loader"><div class="spinner"></div><div class="txt">Abriendo el portal...</div></div>
+<div id="canvas-container"></div>
+<div id="label-renderer"></div>
+
+<div id="brand">
+  <h1>✦ Mystic Grimoire</h1>
+  <div class="title">Sonora Digital Corp</div>
+  <div class="sub">El Portal de la Creación</div>
+  <div class="yo-soy">Yo Soy — El que crea — El que todo lo puede</div>
+</div>
+
+<div id="scene-label">Galaxia ◆ <span id="tpl-name">Cósmica</span></div>
+
+<div id="template-selector"></div>
+
+<button id="audio-toggle">♪</button>
+<div id="freq-label">γ <span id="gamma-display">40</span> Hz</div>
+
+<div id="legend"></div>
+
+<div id="info-panel">
+  <div class="ip-title"></div>
+  <div class="ip-desc"></div>
+  <div class="ip-status"></div>
+</div>
+
+<div id="hint">
+  <span>⟳ Arrastra</span>
+  <span>↕ Scroll</span>
+  <span>Click para explorar</span>
+</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+const SYSTEM_DATA = './data/system.json';
+const TEMPLATES_DATA = './data/templates.json';
+
+let scene, camera, renderer, labelRenderer, controls;
+let systemData, templates, activeTemplate;
+let nodeMap = {}, elementMeshes = [], layerMeshes = [];
+let dashboardInterval, audioCtx, oscillators = [], audioActive = false;
+let currentNode = null;
+let clock = new THREE.Clock();
+let currentGroup = null;
+
+/* === INIT === */
+async function init() {
+  const [sysRes, tplRes] = await Promise.all([
+    fetch(SYSTEM_DATA),
+    fetch(TEMPLATES_DATA)
+  ]);
+  systemData = await sysRes.json();
+  templates = await tplRes.json();
+
+  scene = new THREE.Scene();
+
+  camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 200);
+  camera.position.set(20, 15, 45);
+
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.2;
+  document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+  labelRenderer = new CSS2DRenderer();
+  labelRenderer.setSize(window.innerWidth, window.innerHeight);
+  labelRenderer.domElement.style.position = 'absolute';
+  labelRenderer.domElement.style.top = '0';
+  labelRenderer.domElement.style.left = '0';
+  labelRenderer.domElement.style.pointerEvents = 'none';
+  document.getElementById('label-renderer').appendChild(labelRenderer.domElement);
+
+  controls = new OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.dampingFactor = 0.05;
+  controls.minDistance = 5;
+  controls.maxDistance = 80;
+  controls.target.set(0, 0, 0);
+
+  buildTemplateSelector();
+
+  const saved = localStorage.getItem('sdc-grimoire-template') || 'cosmic';
+  await applyTemplate(saved);
+
+  buildLegend(systemData.layers);
+  buildDashboards(systemData.dashboards);
+  setupAudio();
+  setupInteraction();
+
+  document.getElementById('loader').classList.add('hidden');
+  animate();
+  window.addEventListener('resize', onResize);
+}
+
+/* === TEMPLATE SYSTEM === */
+function buildTemplateSelector() {
+  const container = document.getElementById('template-selector');
+  templates.templates.forEach(tpl => {
+    const btn = document.createElement('button');
+    btn.className = 'tpl-btn';
+    btn.textContent = tpl.name;
+    btn.dataset.tpl = tpl.id;
+    btn.title = tpl.desc;
+    btn.addEventListener('click', () => applyTemplate(tpl.id));
+    container.appendChild(btn);
+  });
+}
+
+async function applyTemplate(tplId) {
+  const tpl = templates.templates.find(t => t.id === tplId);
+  if (!tpl) return;
+  activeTemplate = tpl;
+
+  if (currentGroup) {
+    scene.remove(currentGroup);
+    currentGroup.traverse(c => {
+      if (c.geometry) c.geometry.dispose();
+      if (c.material) c.material.dispose();
+    });
+  }
+  nodeMap = {};
+  elementMeshes = [];
+  layerMeshes = [];
+  currentGroup = new THREE.Group();
+
+  document.querySelectorAll('.tpl-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.tpl === tplId);
+  });
+  document.getElementById('tpl-name').textContent = tpl.name;
+  document.getElementById('gamma-display').textContent = tpl.gammaFreq || 40;
+
+  scene.background = new THREE.Color(tpl.bg.top);
+  scene.fog = new THREE.Fog(tpl.fogColor, 30, 100);
+
+  if (controls) controls.autoRotateSpeed = tpl.autoRotateSpeed || 0.5;
+
+  createStars(tpl);
+  createYoSoj(tpl);
+  createElements(tpl);
+  createLayers(tpl);
+  createConnections();
+
+  scene.add(currentGroup);
+  localStorage.setItem('sdc-grimoire-template', tplId);
+}
+
+/* === STARS === */
+function createStars(tpl) {
+  const count = tpl.starCount || 2000;
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(count * 3);
+  const colors = new Float32Array(count * 3);
+  const sizes = new Float32Array(count);
+  const col = new THREE.Color(tpl.starColor || '#ffffff');
+
+  for (let i = 0; i < count; i++) {
+    const r = 60 + Math.random() * 100;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    pos[i*3] = r * Math.sin(phi) * Math.cos(theta);
+    pos[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+    pos[i*3+2] = r * Math.cos(phi);
+    const c = 0.3 + Math.random() * 0.7;
+    colors[i*3] = col.r * c; colors[i*3+1] = col.g * c; colors[i*3+2] = col.b * c;
+    sizes[i] = 0.2 + Math.random() * 0.6;
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+  const mat = new THREE.PointsMaterial({
+    size: tpl.particleStyle === 'grid' ? 0.15 : 0.35,
+    vertexColors: true, transparent: true, opacity: 0.7,
+    sizeAttenuation: true, blending: THREE.AdditiveBlending, depthWrite: false
+  });
+  const stars = new THREE.Points(geo, mat);
+  scene.add(stars);
+}
+
+/* === GLOW === */
+function glowTexture(color = '#ffffff', size = 64) {
+  const c = document.createElement('canvas');
+  c.width = c.height = size;
+  const ctx = c.getContext('2d');
+  const grad = ctx.createRadialGradient(size/2, size/2, 0, size/2, size/2, size/2);
+  grad.addColorStop(0, color);
+  grad.addColorStop(0.3, color.replace(')', ',0.4)').replace('rgb', 'rgba'));
+  grad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, size, size);
+  return new THREE.CanvasTexture(c);
+}
+
+/* === YO SOY === */
+function createYoSoj(tpl) {
+  const geo = new THREE.SphereGeometry(1.8, 32, 32);
+  const mat = new THREE.MeshBasicMaterial({ color: 0xffdd88 });
+  const core = new THREE.Mesh(geo, mat);
+  core.position.y = 0.3;
+  currentGroup.add(core);
+
+  if (tpl.elementGlow !== false) {
+    const glowMat = new THREE.SpriteMaterial({
+      map: glowTexture('#ffdd88'), blending: THREE.AdditiveBlending,
+      transparent: true, opacity: 0.6, depthWrite: false
+    });
+    const glow = new THREE.Sprite(glowMat);
+    glow.scale.set(10, 10, 1);
+    core.add(glow);
+  }
+
+  const light = new THREE.PointLight(0xffdd88, 1.5, 30);
+  core.add(light);
+
+  const lblDiv = document.createElement('div');
+  lblDiv.textContent = '⦿ YO SOY';
+  lblDiv.style.color = 'rgba(255,221,136,0.6)';
+  lblDiv.style.fontSize = '11px';
+  lblDiv.style.letterSpacing = '3px';
+  lblDiv.style.textTransform = 'uppercase';
+  lblDiv.style.fontWeight = '300';
+  const lbl = new CSS2DObject(lblDiv);
+  lbl.position.set(0, 3.5, 0);
+  core.add(lbl);
+}
+
+/* === ELEMENTS === */
+function createElements(tpl) {
+  const els = systemData.elements;
+  const angles = [0, Math.PI/2, Math.PI, 3*Math.PI/2];
+  els.forEach((el, i) => {
+    const color = new THREE.Color(el.color);
+    const r = 4.5;
+    const angle = angles[i];
+    const x = r * Math.cos(angle);
+    const z = r * Math.sin(angle);
+
+    const geo = new THREE.SphereGeometry(0.6, 16, 16);
+    const mat = new THREE.MeshBasicMaterial({ color });
+    const mesh = new THREE.Mesh(geo, mat);
+    mesh.position.set(x, 0.5, z);
+    mesh.userData = { elementId: el.id, baseY: 0.5, angle, radius: r, speed: 0.15 + Math.random() * 0.1 };
+    currentGroup.add(mesh);
+
+    if (tpl.elementGlow !== false) {
+      const glowMat = new THREE.SpriteMaterial({
+        map: glowTexture(el.color), blending: THREE.AdditiveBlending,
+        transparent: true, opacity: 0.4, depthWrite: false
+      });
+      const glow = new THREE.Sprite(glowMat);
+      glow.scale.set(3, 3, 1);
+      mesh.add(glow);
+    }
+
+    const lblDiv = document.createElement('div');
+    lblDiv.textContent = `${el.symbol} ${el.name}`;
+    lblDiv.style.color = el.color;
+    lblDiv.style.fontSize = '12px';
+    lblDiv.style.fontWeight = '600';
+    lblDiv.style.letterSpacing = '2px';
+    lblDiv.style.textShadow = '0 0 10px rgba(0,0,0,0.8)';
+    const lbl = new CSS2DObject(lblDiv);
+    lbl.position.set(0, 1.4, 0);
+    mesh.add(lbl);
+
+    elementMeshes.push(mesh);
+  });
+}
+
+/* === LAYERS + NODES === */
+function createLayers(tpl) {
+  const layers = systemData.layers;
+  const maxNodes = 18;
+
+  layers.forEach((layer) => {
+    const r = layer.radius;
+    const color = new THREE.Color(layer.color);
+
+    const ringGeo = new THREE.RingGeometry(r - 0.12, r + 0.12, 96);
+    const ringMat = new THREE.MeshBasicMaterial({
+      color, side: THREE.DoubleSide, transparent: true, opacity: 0.08, depthWrite: false
+    });
+    const ring = new THREE.Mesh(ringGeo, ringMat);
+    ring.rotation.x = -Math.PI / 2;
+    currentGroup.add(ring);
+    layerMeshes.push(ring);
+
+    const nodes = layer.nodes.slice(0, maxNodes);
+    const nodeAngleStep = (Math.PI * 2) / nodes.length;
+    const startAngle = -Math.PI / 2;
+
+    nodes.forEach((node, i) => {
+      const angle = startAngle + i * nodeAngleStep;
+      const x = r * Math.cos(angle);
+      const z = r * Math.sin(angle);
+
+      const nodeColor = new THREE.Color(node.status === 'active' ? layer.color : '#666');
+      const nodeGeo = new THREE.SphereGeometry(0.4, 10, 10);
+      const nodeMat = new THREE.MeshBasicMaterial({ color: nodeColor });
+      const nodeMesh = new THREE.Mesh(nodeGeo, nodeMat);
+      nodeMesh.position.set(x, 0, z);
+      nodeMesh.userData = { nodeId: node.id, layerId: layer.id };
+      currentGroup.add(nodeMesh);
+
+      const glowMat = new THREE.SpriteMaterial({
+        map: glowTexture(node.status === 'active' ? layer.color : '#666'),
+        blending: THREE.AdditiveBlending, transparent: true, opacity: 0.25, depthWrite: false
+      });
+      const glow = new THREE.Sprite(glowMat);
+      glow.scale.set(2.2, 2.2, 1);
+      nodeMesh.add(glow);
+
+      const lblDiv = document.createElement('div');
+      lblDiv.textContent = node.name.length > 16 ? node.name.slice(0, 14) + '…' : node.name;
+      lblDiv.style.color = node.status === 'active' ? layer.color : '#666';
+      lblDiv.style.fontSize = '9px';
+      lblDiv.style.fontWeight = '500';
+      lblDiv.style.letterSpacing = '1px';
+      lblDiv.style.textShadow = '0 0 8px rgba(0,0,0,0.9), 0 0 20px rgba(0,0,0,0.5)';
+      lblDiv.style.whiteSpace = 'nowrap';
+      lblDiv.style.background = 'rgba(0,0,0,0.4)';
+      lblDiv.style.padding = '2px 6px';
+      lblDiv.style.borderRadius = '3px';
+      lblDiv.style.backdropFilter = 'blur(3px)';
+      const lbl = new CSS2DObject(lblDiv);
+      lbl.position.set(0, 0.9, 0);
+      nodeMesh.add(lbl);
+
+      nodeMap[node.id] = { mesh: nodeMesh, data: node, layer, angle, glow, lblDiv };
+    });
+  });
+}
+
+/* === CONNECTIONS === */
+function createConnections() {
+  if (!systemData.conexiones || systemData.conexiones.length === 0) return;
+  const points = [];
+  systemData.conexiones.forEach(conn => {
+    const from = nodeMap[conn.from];
+    const to = nodeMap[conn.to];
+    if (!from || !to) return;
+    const p1 = from.mesh.position;
+    const p2 = to.mesh.position;
+    points.push(p1.x, p1.y, p1.z, p2.x, p2.y, p2.z);
+  });
+  if (points.length === 0) return;
+  const geo = new THREE.BufferGeometry();
+  geo.setAttribute('position', new THREE.Float32BufferAttribute(points, 3));
+  const mat = new THREE.LineBasicMaterial({ color: 0x444466, transparent: true, opacity: 0.1 });
+  const lineSegments = new THREE.LineSegments(geo, mat);
+  currentGroup.add(lineSegments);
+}
+
+/* === LEGEND === */
+function buildLegend(layers) {
+  const container = document.getElementById('legend');
+  layers.forEach(layer => {
+    const item = document.createElement('div');
+    item.className = 'legend-item';
+    const symbol = { kernel: '△', infra: '○', data: '▽', services: '~', products: '◆', clients: '◇' }[layer.id] || '●';
+    item.innerHTML = `<span class="dot" style="background:${layer.color}"></span><span class="lbl">${symbol} ${layer.name} (${layer.nodes.length})</span>`;
+    container.appendChild(item);
+  });
+}
+
+/* === DASHBOARDS === */
+function buildDashboards(dbs) {
+  if (!dbs || dbs.length === 0) return;
+  const positions = ['dw-top-right', 'dw-bottom-right', 'dw-center', 'dw-top-left', 'dw-bottom-left'];
+  const wrappers = [];
+
+  dbs.forEach((db, i) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = `dashboard-wave ${positions[i % positions.length]}`;
+    wrapper.innerHTML = `
+      <div class="glass">
+        <div class="icon">${db.icon}</div>
+        <div class="name">${db.name}</div>
+        <div class="content">${db.content}</div>
+      </div>`;
+    document.body.appendChild(wrapper);
+    wrappers.push(wrapper);
+  });
+
+  let idx = 0;
+  function cycleWaves() {
+    wrappers.forEach(w => w.classList.remove('visible'));
+    wrappers[idx].classList.add('visible');
+    idx = (idx + 1) % wrappers.length;
+  }
+  cycleWaves();
+  dashboardInterval = setInterval(cycleWaves, 5000);
+}
+
+/* === AUDIO === */
+function setupAudio() {
+  document.getElementById('audio-toggle').addEventListener('click', toggleAudio);
+}
+
+function toggleAudio() {
+  const btn = document.getElementById('audio-toggle');
+  const freq = activeTemplate?.gammaFreq || 40;
+
+  if (audioActive) {
+    oscillators.forEach(o => { try { o.stop(); } catch(e) {} });
+    oscillators = [];
+    if (audioCtx) audioCtx.close();
+    audioCtx = null;
+    audioActive = false;
+    btn.classList.remove('active');
+    return;
+  }
+
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const leftOsc = audioCtx.createOscillator();
+  leftOsc.type = 'sine';
+  leftOsc.frequency.value = 200;
+
+  const rightOsc = audioCtx.createOscillator();
+  rightOsc.type = 'sine';
+  rightOsc.frequency.value = 200 + freq;
+
+  const gainNode = audioCtx.createGain();
+  gainNode.gain.value = 0.03;
+
+  const leftGain = audioCtx.createGain(); leftGain.gain.value = 0.5;
+  const rightGain = audioCtx.createGain(); rightGain.gain.value = 0.5;
+  const merger = audioCtx.createChannelMerger(2);
+
+  leftOsc.connect(leftGain);
+  leftGain.connect(merger, 0, 0);
+  rightOsc.connect(rightGain);
+  rightGain.connect(merger, 0, 1);
+  merger.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+
+  leftOsc.start(); rightOsc.start();
+  oscillators = [leftOsc, rightOsc];
+  audioActive = true;
+  btn.classList.add('active');
+}
+
+/* === INTERACTION === */
+function setupInteraction() {
+  const raycaster = new THREE.Raycaster();
+  const pointer = new THREE.Vector2();
+  let hoveredNode = null;
+
+  renderer.domElement.addEventListener('pointermove', (e) => {
+    pointer.x = (e.clientX / window.innerWidth) * 2 - 1;
+    pointer.y = -(e.clientY / window.innerHeight) * 2 + 1;
+  });
+
+  renderer.domElement.addEventListener('click', (e) => {
+    raycaster.setFromCamera(pointer, camera);
+    const meshes = Object.values(nodeMap).map(n => n.mesh);
+    meshes.push(...elementMeshes);
+    const intersects = raycaster.intersectObjects(meshes);
+
+    if (intersects.length > 0) {
+      const hit = intersects[0].object;
+      const nodeId = hit.userData?.nodeId;
+      if (nodeId && nodeMap[nodeId]) {
+        showNodeInfo(nodeId);
+        return;
+      }
+      const elId = hit.userData?.elementId;
+      if (elId) {
+        const el = systemData.elements.find(e => e.id === elId);
+        if (el) showInfo(el.name, el.desc, el.color);
+        return;
+      }
+    }
+    hideInfo();
+  });
+
+  function checkHover() {
+    raycaster.setFromCamera(pointer, camera);
+    const meshes = Object.values(nodeMap).map(n => n.mesh);
+    const intersects = raycaster.intersectObjects(meshes);
+
+    if (hoveredNode) {
+      if (hoveredNode.glow) hoveredNode.glow.scale.set(2.2, 2.2, 1);
+      if (hoveredNode.lblDiv) hoveredNode.lblDiv.style.color = hoveredNode.data.status === 'active' ? hoveredNode.layer.color : '#666';
+      hoveredNode = null;
+    }
+    if (intersects.length > 0) {
+      const nodeId = intersects[0].object.userData?.nodeId;
+      if (nodeId && nodeMap[nodeId]) {
+        hoveredNode = nodeMap[nodeId];
+        if (hoveredNode.glow) hoveredNode.glow.scale.set(3.5, 3.5, 1);
+        if (hoveredNode.lblDiv) hoveredNode.lblDiv.style.color = '#fff';
+      }
+    }
+  }
+
+  function showNodeInfo(id) {
+    const node = nodeMap[id];
+    if (!node) return;
+    showInfo(node.data.name, node.data.desc, node.layer.color, node.data.status);
+    currentNode = id;
+    if (node.mesh) {
+      node.mesh.scale.set(1.5, 1.5, 1.5);
+      setTimeout(() => { if (node.mesh) node.mesh.scale.set(1, 1, 1); }, 600);
+    }
+  }
+
+  function showInfo(title, desc, color, status) {
+    const panel = document.getElementById('info-panel');
+    panel.querySelector('.ip-title').textContent = title;
+    panel.querySelector('.ip-title').style.color = color;
+    panel.querySelector('.ip-desc').textContent = desc || '';
+    const st = panel.querySelector('.ip-status');
+    if (status) {
+      st.textContent = status === 'active' ? '◉ Activo' : '◯ Inactivo';
+      st.className = `ip-status ${status}`;
+      st.style.display = '';
+    } else { st.style.display = 'none'; }
+    panel.classList.add('visible');
+  }
+
+  function hideInfo() {
+    document.getElementById('info-panel').classList.remove('visible');
+    currentNode = null;
+  }
+
+  setInterval(checkHover, 100);
+  window.hideInfo = hideInfo;
+}
+
+/* === RESIZE === */
+function onResize() {
+  const w = window.innerWidth, h = window.innerHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+  labelRenderer.setSize(w, h);
+}
+
+/* === ANIMATION === */
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+
+  elementMeshes.forEach(mesh => {
+    const ud = mesh.userData;
+    mesh.position.y = ud.baseY + Math.sin(t * ud.speed + ud.angle) * 0.4;
+    mesh.position.x = ud.radius * Math.cos(t * 0.08 + ud.angle);
+    mesh.position.z = ud.radius * Math.sin(t * 0.08 + ud.angle);
+  });
+
+  controls.update();
+  renderer.render(scene, camera);
+  labelRenderer.render(scene, camera);
+}
+
+init();
+</script>
+</body>
+</html>

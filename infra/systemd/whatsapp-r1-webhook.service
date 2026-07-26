@@ -4,7 +4,7 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/mystic/sonora-digital-corp
+WorkingDirectory=__REPO__
 EnvironmentFile=%h/.env.ce-son
 ExecStart=/usr/bin/python3 -m apps.whatsapp.webhook --interval 3
 Restart=always

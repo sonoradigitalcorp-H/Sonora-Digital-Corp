@@ -1,0 +1,11 @@
+{
+  "id": "PROP-20260721-134848",
+  "status": "proposed",
+  "subsystem": "agents",
+  "severity": "critical",
+  "title": "Register agents",
+  "description": "No agents registered in system",
+  "impact": "critical",
+  "effort": "high",
+  "created": "2026-07-21T13:48:48.380963"
+}

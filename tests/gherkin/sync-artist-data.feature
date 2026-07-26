@@ -1,0 +1,1 @@
+/home/ubuntu/sonora-digital-corp/specs/capabilities/sync-artist-data/gherkin/sync-artist-data.feature

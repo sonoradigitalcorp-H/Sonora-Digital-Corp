@@ -24,6 +24,8 @@ credentials/
 AUDITORIA-COMPLETA.md
 .vercel
 .env*
+# SECURITY: infra .env has secrets — never commit
+infra/.env
 .age/
 age-key.txt
 age-key*.txt
@@ -94,3 +96,8 @@ docs/sdc-brain-vault/
 archive/
 credentials/
 data/
+nathy-bot/*.log
+nathy-bot/data/
+nathy-bot/bot*.log
+*.ed25519*
+config/noel_ed25519_sdc

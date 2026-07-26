@@ -4,7 +4,7 @@
 # bash scripts/self-improve.sh
 set -euo pipefail
 
-cd /home/mystic/sonora-digital-corp
+cd "$(cd "$(dirname "$0")/.." && pwd)"
 LOG="logs/self-improve.log"
 mkdir -p logs
 

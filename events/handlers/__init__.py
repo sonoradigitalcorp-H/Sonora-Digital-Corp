@@ -1,5 +1,5 @@
-from events.handlers.base import EventHandler
-from events.handlers.memory_handler import MemoryHandler
-from events.handlers.alert_handler import AlertHandler
+from .alert_handler import AlertHandler
+from .memory_handler import MemoryHandler
+from .notification_handler import NotificationHandler
 
-__all__ = ["EventHandler", "MemoryHandler", "AlertHandler"]
+__all__ = ["AlertHandler", "MemoryHandler", "NotificationHandler"]

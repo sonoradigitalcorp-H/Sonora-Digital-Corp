@@ -1,0 +1,1 @@
+/home/ubuntu/sonora-digital-corp/state/logs/events.jsonl

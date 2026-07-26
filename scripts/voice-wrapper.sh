@@ -1,9 +1,10 @@
 #!/bin/bash
-cd /home/mystic/sonora-digital-corp
-export PATH="/home/mystic/sonora-digital-corp/venv/bin:/usr/bin:/bin:$PATH"
-exec /home/mystic/sonora-digital-corp/venv/bin/python -c "
+REPO="$(cd "$(dirname "$0")/.." && pwd)"
+cd "$REPO"
+export PATH="$REPO/venv/bin:/usr/bin:/bin:$PATH"
+exec "$REPO/venv/bin/python" -c "
 import sys, time, logging
-sys.path.insert(0, '/home/mystic/sonora-digital-corp')
+sys.path.insert(0, '$REPO')
 logging.basicConfig(level=logging.INFO)
 print('JARVIS Voice service ready')
 while True:

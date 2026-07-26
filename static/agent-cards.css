@@ -1,0 +1,442 @@
+/* ===== AGENT CARDS — Sonora Digital Corp ===== */
+/* Yu-Gi-Oh / Trading Card Style                */
+/* ============================================= */
+
+:root {
+  --primary: #c85a3e;
+  --secondary: #d4a34a;
+  --gold: #d4a34a;
+  --dark-bg: #120c0a;
+  --card-width: 320px;
+  --card-height: 520px;
+  --text-light: #f0e6d0;
+  --text-muted: #a09080;
+  --stat-bar-bg: #2a1f12;
+  --stat-fill-start: #c85a3e;
+  --stat-fill-end: #d4a34a;
+}
+
+/* ===== FONTS ===== */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Inter:wght@400;500;600;700&display=swap');
+
+/* ===== PAGE BACKGROUND ===== */
+.agent-cards-body {
+  background: var(--dark-bg);
+  background-image:
+    radial-gradient(ellipse at 20% 50%, rgba(200, 90, 62, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 50%, rgba(212, 163, 74, 0.06) 0%, transparent 60%),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.008) 2px,
+      rgba(255, 255, 255, 0.008) 4px
+    );
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+  padding: 40px 20px;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+}
+
+/* ===== GRID ===== */
+.agent-cards-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+  perspective: 1200px;
+}
+
+/* ===== CARD CONTAINER ===== */
+.agent-card {
+  width: var(--card-width);
+  height: var(--card-height);
+  position: relative;
+  cursor: pointer;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  animation: card-appear 0.8s cubic-bezier(0.23, 1, 0.32, 1) both;
+}
+
+.agent-card:nth-child(1) { animation-delay: 0.1s; }
+.agent-card:nth-child(2) { animation-delay: 0.3s; }
+.agent-card:nth-child(3) { animation-delay: 0.5s; }
+
+@keyframes card-appear {
+  0% {
+    opacity: 0;
+    transform: scale(0.85) translateY(30px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* ===== FOIL BORDER ===== */
+.card-foil {
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  padding: 3px;
+  background: linear-gradient(
+    135deg,
+    #b8860b 0%,
+    #ffd700 20%,
+    #daa520 40%,
+    #ffd700 55%,
+    #b8860b 75%,
+    #ffd700 100%
+  );
+  background-size: 300% 300%;
+  animation: foil-shimmer 4s ease-in-out infinite;
+  box-shadow:
+    0 0 20px rgba(212, 163, 74, 0.3),
+    0 0 60px rgba(212, 163, 74, 0.1),
+    inset 0 0 30px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes foil-shimmer {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+/* ===== CARD INNER ===== */
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  background: linear-gradient(
+    180deg,
+    #1a1210 0%,
+    #1f1510 30%,
+    #1a1210 100%
+  );
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.6);
+}
+
+/* Card inner texture */
+.card-inner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 3px,
+      rgba(255, 255, 255, 0.012) 3px,
+      rgba(255, 255, 255, 0.012) 5px
+    );
+  pointer-events: none;
+}
+
+/* ===== HOVER 3D EFFECT ===== */
+.agent-card:hover {
+  transform: rotateY(-8deg) rotateX(4deg) scale(1.02);
+}
+
+.agent-card:hover .card-foil {
+  box-shadow:
+    0 0 30px rgba(212, 163, 74, 0.5),
+    0 0 80px rgba(212, 163, 74, 0.2),
+    inset 0 0 40px rgba(0, 0, 0, 0.4);
+}
+
+.agent-card:active {
+  transform: rotateY(-3deg) rotateX(2deg) scale(0.98);
+}
+
+/* ===== SPECULAR BRIGHTNESS OVERLAY ===== */
+.card-foil::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  background: linear-gradient(
+    105deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.15) 45%,
+    rgba(255, 255, 255, 0.25) 48%,
+    rgba(255, 255, 255, 0.15) 51%,
+    transparent 65%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.agent-card:hover .card-foil::after {
+  opacity: 1;
+}
+
+/* ===== RARITY BADGE ===== */
+.card-rarity {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #ffd700;
+  text-shadow:
+    0 0 10px rgba(255, 215, 0, 0.6),
+    0 0 20px rgba(255, 215, 0, 0.3);
+  background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.08), transparent);
+  padding: 4px 16px;
+  z-index: 2;
+  animation: rarity-glow 2s ease-in-out infinite;
+}
+
+@keyframes rarity-glow {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.4); }
+}
+
+/* ===== AGENT ICON ===== */
+.card-icon {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 52px;
+  margin-top: 36px;
+  margin-bottom: 8px;
+  position: relative;
+  z-index: 1;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(212, 163, 74, 0.15) 0%,
+    rgba(200, 90, 62, 0.08) 100%
+  );
+  border: 2px solid rgba(212, 163, 74, 0.3);
+  box-shadow:
+    0 0 30px rgba(212, 163, 74, 0.1),
+    inset 0 0 30px rgba(212, 163, 74, 0.05);
+}
+
+/* ===== AGENT NAME ===== */
+.card-name {
+  font-family: 'Playfair Display', 'Times New Roman', serif;
+  font-weight: 900;
+  font-size: 20px;
+  color: var(--text-light);
+  text-align: center;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 6px 0 4px;
+  position: relative;
+  z-index: 1;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+}
+
+.card-name-underline {
+  width: 60%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 4px auto 10px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== DIVIDER ===== */
+.card-divider {
+  width: 85%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212, 163, 74, 0.4), transparent);
+  margin: 8px 0;
+  position: relative;
+  z-index: 1;
+}
+
+/* ===== STATS ===== */
+.card-stats {
+  width: 85%;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  position: relative;
+  z-index: 1;
+}
+
+.stat {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+}
+
+.stat-label {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  color: var(--text-muted);
+  min-width: 88px;
+  text-transform: uppercase;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.stat-value {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  color: var(--text-light);
+  min-width: 36px;
+  text-align: right;
+  font-size: 10px;
+}
+
+.stat-bar-track {
+  flex: 1;
+  height: 6px;
+  background: var(--stat-bar-bg);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(212, 163, 74, 0.15);
+}
+
+.stat-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  background: linear-gradient(90deg, var(--stat-fill-start), var(--stat-fill-end));
+  transition: width 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+}
+
+.stat-bar-fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.2) 50%,
+    transparent 70%
+  );
+}
+
+/* Numeric stats (no bar) */
+.stat-numeric {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+}
+
+.stat-numeric .stat-label {
+  min-width: 88px;
+}
+
+.stat-numeric .stat-value {
+  font-size: 11px;
+  color: var(--gold);
+}
+
+.stat-highlight {
+  color: #4ade80;
+}
+
+/* ===== EFFECT TEXT ===== */
+.card-effect {
+  width: 85%;
+  margin: 8px 0;
+  padding: 8px 10px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 6px;
+  border-left: 2px solid var(--gold);
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.card-effect-text {
+  font-family: 'Inter', sans-serif;
+  font-size: 10px;
+  line-height: 1.5;
+  color: #c8b898;
+  margin: 0;
+  font-style: italic;
+}
+
+/* ===== FOOTER ===== */
+.card-footer {
+  width: 100%;
+  padding: 8px 14px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid rgba(212, 163, 74, 0.2);
+  background: rgba(0, 0, 0, 0.25);
+  position: relative;
+  z-index: 1;
+  margin-top: auto;
+}
+
+.card-brand {
+  font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  font-size: 10px;
+  color: var(--gold);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.card-serial {
+  font-family: 'Inter', sans-serif;
+  font-size: 9px;
+  font-weight: 500;
+  color: rgba(160, 144, 128, 0.6);
+  letter-spacing: 1px;
+}
+
+/* ===== HOLOGRAPHIC FOIL OVERLAY ===== */
+.card-foil-overlay {
+  position: absolute;
+  inset: 0;
+  border-radius: 16px;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.4s;
+  background: conic-gradient(
+    from 0deg at 50% 50%,
+    transparent 0deg,
+    rgba(255, 215, 0, 0.04) 60deg,
+    transparent 120deg,
+    rgba(200, 90, 62, 0.04) 180deg,
+    transparent 240deg,
+    rgba(255, 215, 0, 0.04) 300deg,
+    transparent 360deg
+  );
+}
+
+.agent-card:hover .card-foil-overlay {
+  opacity: 1;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 720px) {
+  .agent-cards-grid {
+    gap: 24px;
+  }
+  .agent-card {
+    width: 290px;
+    height: 500px;
+  }
+}

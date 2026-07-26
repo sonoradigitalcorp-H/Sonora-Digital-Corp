@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SDC / ABE Music — Process Engineering Manual</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',sans-serif;background:#080c18;color:#e2e8f0;padding:16px;max-width:1200px;margin:0 auto;}
+  .header{background:rgba(15,23,42,0.8);border:1px solid #1e3a5f;border-radius:12px;padding:16px 20px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+  .header h1{font-size:1.1em;font-weight:700;color:#3b82f6;}
+  .header .sub{color:#64748b;font-size:0.6em;text-transform:uppercase;letter-spacing:0.5px;}
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:0.65em;font-weight:600;}
+  .bg-green{background:rgba(34,197,94,0.15);color:#22c55e;}
+  .bg-red{background:rgba(239,68,68,0.15);color:#ef4444;}
+  .bg-amber{background:rgba(234,179,8,0.15);color:#eab308;}
+  .bg-blue{background:rgba(59,130,246,0.15);color:#3b82f6;}
+  .bg-purple{background:rgba(139,92,246,0.15);color:#8b5cf6;}
+  .bg-gray{background:rgba(100,116,139,0.15);color:#64748b;}
+  .code{font-family:'JetBrains Mono',monospace;font-size:0.7em;background:rgba(15,23,42,0.9);padding:2px 6px;border-radius:4px;color:#22c55e;}
+  h2{font-size:0.8em;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;border-bottom:1px solid #1e3a5f;padding-bottom:6px;margin-top:16px;}
+  h3{font-size:0.75em;font-weight:600;color:#94a3b8;margin:10px 0 6px;}
+  .card{background:rgba(15,23,42,0.7);border:1px solid #1e3a5f;border-radius:10px;padding:14px;margin-bottom:10px;overflow-x:auto;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:10px;margin-bottom:10px;}
+  table{width:100%;border-collapse:collapse;font-size:0.7em;}
+  th{color:#64748b;font-weight:500;text-align:left;padding:4px 5px;border-bottom:1px solid #1e3a5f;}
+  td{padding:4px 5px;border-bottom:1px solid rgba(30,58,95,0.3);}
+  .num{text-align:right;font-variant-numeric:tabular-nums;}
+  .diagram{border:1px solid #1e3a5f;border-radius:8px;padding:16px;background:rgba(15,23,42,0.5);font-size:0.6em;color:#94a3b8;line-height:1.7;overflow-x:auto;white-space:pre;font-family:'JetBrains Mono',monospace;}
+  .ok{color:#22c55e;} .warn{color:#eab308;} .fail{color:#ef4444;}
+  .acierto{background:rgba(34,197,94,0.1);border-left:3px solid #22c55e;padding:8px 12px;margin:4px 0;font-size:0.7em;border-radius:0 6px 6px 0;}
+  .error{background:rgba(239,68,68,0.1);border-left:3px solid #ef4444;padding:8px 12px;margin:4px 0;font-size:0.7em;border-radius:0 6px 6px 0;}
+  .leccion{background:rgba(234,179,8,0.1);border-left:3px solid #eab308;padding:8px 12px;margin:4px 0;font-size:0.7em;border-radius:0 6px 6px 0;}
+  .flow-step{background:rgba(15,23,42,0.5);border:1px solid #1e3a5f;border-radius:8px;padding:10px;font-size:0.68em;margin:4px 0;}
+  .flow-step .arrow{color:#3b82f6;font-weight:700;}
+  .footer{text-align:center;padding:20px;color:#64748b;font-size:0.65em;border-top:1px solid #1e3a5f;margin-top:16px;}
+  .toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:6px;margin-bottom:14px;}
+  .toc a{color:#94a3b8;text-decoration:none;font-size:0.65em;padding:6px 10px;background:rgba(15,23,42,0.5);border:1px solid #1e3a5f;border-radius:6px;transition:all 0.2s;}
+  .toc a:hover{border-color:#3b82f6;color:#3b82f6;}
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <h1>🧬 Process Engineering Manual</h1>
+    <div class="sub">Sonora Digital Corp — Metodologia · Reglas · KPIs · Ingenieria de Procesos</div>
+  </div>
+  <div style="display:flex;gap:4px;flex-wrap:wrap;">
+    <span class="badge bg-purple">v10.0</span>
+    <span class="badge bg-blue">21 specs completadas</span>
+    <span class="badge bg-green">Score max: 84</span>
+  </div>
+</div>
+
+<div class="toc">
+  <a href="#metodologia">1. Metodologia</a>
+  <a href="#jerarquia">2. Decision Hierarchy</a>
+  <a href="#sdd">3. Pipeline SDD</a>
+  <a href="#constitucion">4. Constitucion</a>
+  <a href="#kpis">5. KPI Framework</a>
+  <a href="#aciertos">6. Aciertos</a>
+  <a href="#errores">7. Errores</a>
+  <a href="#reglas">8. Reglas Configuradas</a>
+  <a href="#10-os">9. Los 10 OS</a>
+  <a href="#sub-os">10. Sub-OS Architecture</a>
+  <a href="#score">11. Enterprise Score</a>
+  <a href="#completadas">12. Specs Completadas</a>
+  <a href="#logica">13. Logica de Ingenieria</a>
+  <a href="#flow">14. Data Flow de Procesos</a>
+  <a href="#lecciones">15. Lecciones</a>
+</div>
+
+<h2 id="metodologia">📐 1. Metodologia</h2>
+<div class="card">
+  <div style="font-size:0.72em;line-height:1.7;">
+    <p>Sonora Digital Corp opera bajo una <strong>jerarquia de desarrollo en 7 capas</strong> que va desde el valor puro hasta la implementacion tecnica. Ningun codigo se escribe sin pasar por las capas superiores primero.</p>
+  </div>
+  <div class="diagram">JERARQUIA DE DESARROLLO (OMEGA PROMPT v10.0)
+
+  ┌─────────────────────────────────────────────────────┐
+  │  VDD  Value Driven Development       ¿CREA VALOR?   │
+  ├─────────────────────────────────────────────────────┤
+  │  EDD  Evidence Driven Development     ¿HAY DATOS?   │
+  ├─────────────────────────────────────────────────────┤
+  │  PDD  Policy Driven Development       ¿CUMPLE REGLAS?│
+  ├─────────────────────────────────────────────────────┤
+  │  ODD  Operational Driven Development  ¿ES OPERABLE?  │
+  ├─────────────────────────────────────────────────────┤
+  │  SDD  Specification Driven Dev.       ¿TIENE SPEC?   │
+  ├─────────────────────────────────────────────────────┤
+  │  BDD  Behavior Driven Development     ¿GHERKIN?      │
+  ├─────────────────────────────────────────────────────┤
+  │  TDD  Test Driven Development         ¿PASAN TESTS?  │
+  └─────────────────────────────────────────────────────┘
+                      │
+                      ▼
+              IMPLEMENTACION
+                      │
+                      ▼
+               TECNOLOGIA
+                      │
+                      ▼
+               HERRAMIENTAS</div>
+  <div style="font-size:0.7em;color:#94a3b8;margin-top:6px;">
+    <strong>Regla de oro:</strong> Tools never drive decisions. Value drives decisions.<br>
+    <strong>Nunca optimizar por:</strong> Actividad, Novedad, Adopcion de tools, Frameworks, Modelos.<br>
+    <strong>Siempre optimizar por:</strong> Valor, Revenue, Confiabilidad, Simplicidad, Reusabilidad, Supervivencia, Automatizacion.
+  </div>
+</div>
+
+<h2 id="jerarquia">🏛️ 2. Decision Hierarchy</h2>
+<div class="grid">
+  <div class="card">
+    <h3>Las 7 Capas en detalle</h3>
+    <table>
+      <tr><th>Capa</th><th>Pregunta</th><th>Artefacto</th><th>Quien valida</th></tr>
+      <tr><td>VDD</td><td>¿Crea valor de negocio?</td><td>Business Case</td><td>Strategy OS</td></tr>
+      <tr><td>EDD</td><td>¿Hay evidencia que lo soporte?</td><td>Data / Research</td><td>Research OS</td></tr>
+      <tr><td>PDD</td><td>¿Cumple las reglas?</td><td>Policy Check</td><td>Security OS</td></tr>
+      <tr><td>ODD</td><td>¿Es operable?</td><td>Ops Plan</td><td>Ops OS</td></tr>
+      <tr><td>SDD</td><td>¿Tiene spec aprobada?</td><td>SPEC.md</td><td>Dev OS</td></tr>
+      <tr><td>BDD</td><td>¿Tiene Gherkin?</td><td>.feature</td><td>Quality OS</td></tr>
+      <tr><td>TDD</td><td>¿Pasan los tests?</td><td>pytest</td><td>CI</td></tr>
+    </table>
+    <div style="margin-top:8px;font-size:0.65em;color:#94a3b8;">
+      Cada capa es <strong>gatekeeper</strong> de la siguiente. No se puede saltar ninguna.
+    </div>
+  </div>
+  <div class="card">
+    <h3>Pipeline System (3 Tiers)</h3>
+    <div class="flow-step">
+      <strong>Tier 1 — Rapid</strong><br>
+      Execute → Leccion<br>
+      <span style="color:#64748b;">Para fixes simples, cambios menores</span>
+    </div>
+    <div class="flow-step">
+      <strong>Tier 2 — Standard</strong><br>
+      Spec → Score → Gherkin → Tests → Code → Events → ADR → Leccion<br>
+      <span style="color:#64748b;">Para features nuevas, mejoras</span>
+    </div>
+    <div class="flow-step">
+      <strong>Tier 3 — Enterprise</strong><br>
+      VDD → EDD → PDD → ODD → SDD → BDD → TDD → ADR → Events → Leccion<br>
+      <span style="color:#64748b;">Para iniciativas estrategicas, nuevos productos</span>
+    </div>
+  </div>
+</div>
+
+<h2 id="sdd">⚙️ 3. Pipeline SDD (Specification Driven Development)</h2>
+<div class="card">
+  <div class="diagram">SDD PIPELINE (6 fases, 6 agentes especializados)
+
+  ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
+  │  SPEC    │───►│  DESIGN  │───►│  APPLY   │───►│  VERIFY  │───►│ ARCHIVE  │───►│  CLOSE   │
+  │ Agent    │    │  Agent   │    │  Agent   │    │  Agent   │    │  Agent   │    │  Out     │
+  │ deepseek │    │ qwen3:4b │    │llama3.2  │    │llama3.2  │    │ qwen2.5  │    │          │
+  │ :7b-64k  │    │ -64k     │    │ :3b-64k  │    │ :3b-64k  │    │ :1.5b    │    │          │
+  └────┬─────┘    └────┬─────┘    └────┬─────┘    └────┬─────┘    └────┬─────┘    └──────────┘
+       │               │               │               │               │
+       ▼               ▼               ▼               ▼               ▼
+  ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐    ┌──────────┐
+  │ Spec.md  │    │Plan.md   │    │ Codigo   │    │ Tests    │    │ ADR      │
+  │ FRs      │    │Tasks.md  │    │ Impl.    │    │ CI verde │    │ Leccion  │
+  │ Gherkin  │    │          │    │          │    │ Score    │    │ Score    │
+  └──────────┘    └──────────┘    └──────────┘    └──────────┘    └──────────┘</div>
+  <div style="font-size:0.7em;color:#94a3b8;margin-top:6px;">
+    <strong>Comando:</strong> <span class="code">/sdd-new</span> — inicia el pipeline completo desde un briefing.<br>
+    <strong>6 agentes</strong> con modelos especializados (deepseek para spec, qwen3 para diseño, llama3.2 para codigo).<br>
+    <strong>Orquestador:</strong> <span class="code">sdd</span> agent (qwen3:4b) coordina las 6 fases via <span class="code">task()</span> tool.
+  </div>
+</div>
+
+<h2 id="constitucion">📜 4. Constitucion</h2>
+<div class="grid">
+  <div class="card">
+    <h3>Documentos</h3>
+    <table>
+      <tr><th>Documento</th><th>Version</th><th>Funcion</th></tr>
+      <tr><td>OMEGA-PROMPT-v10.0.md</td><td>v10.0</td><td>Constitucion operativa — 6956 bytes</td></tr>
+      <tr><td>10-RULES.md</td><td>v1.0</td><td>10 reglas absolutas — 1373 bytes</td></tr>
+      <tr><td>SOUL.md</td><td>v1.0</td><td>Alma de la empresa — 2848 bytes</td></tr>
+      <tr><td>TRUTH.md</td><td>v1.0</td><td>Single source of truth — 13127 bytes</td></tr>
+      <tr><td>CONTRATO.md</td><td>v1.0</td><td>Contrato fundacional — 667 bytes</td></tr>
+      <tr><td>CHECKSUMS.sha256</td><td>v1.0</td><td>Integridad de la constitucion</td></tr>
+      <tr><td>PROTOCOLO.md</td><td>—</td><td>7 mandamientos de construccion</td></tr>
+      <tr><td>CONDUCT.md</td><td>—</td><td>Conducta del pipeline</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h3>Las 10 Reglas Absolutas</h3>
+    <table>
+      <tr><th>#</th><th>Regla</th><th>Enforced by</th></tr>
+      <tr><td>1</td><td>Spec First, Always</td><td>Git hooks + CI gate</td></tr>
+      <tr><td>2</td><td>Tests Must Be Green</td><td>CI pipeline</td></tr>
+      <tr><td>3</td><td>Humans Decide</td><td>PR approval required</td></tr>
+      <tr><td>4</td><td>Everything in the Repo</td><td>Git</td></tr>
+      <tr><td>5</td><td>PR Required + 1 Approval</td><td>Branch protection</td></tr>
+      <tr><td>6</td><td>OpenCode Always</td><td>Config enforced</td></tr>
+      <tr><td>7</td><td>Stack is Fixed</td><td>Python 3.10+, pytest, GHA</td></tr>
+      <tr><td>8</td><td>Continuous Learning</td><td>memory/lecciones.json</td></tr>
+      <tr><td>9</td><td>Value First</td><td>Score ≥ 60 required</td></tr>
+      <tr><td>10</td><td>One Brain</td><td>Monorepo + MCP</td></tr>
+    </table>
+  </div>
+</div>
+
+<h2 id="kpis">📊 5. KPI Framework</h2>
+<div class="card">
+  <h3>Enterprise Score — 10 Metricas, Ponderacion Uniforme</h3>
+  <table>
+    <tr><th>#</th><th>Metrica</th><th>Peso</th><th>Target</th><th>Formula</th><th>Fuente</th></tr>
+    <tr><td>1</td><td>Revenue Impact</td><td>10</td><td>> $1k/mes</td><td>impact/revenue * 10</td><td>Finance OS</td></tr>
+    <tr><td>2</td><td>Scalability</td><td>10</td><td>10x load</td><td>can_handle_10x ? 10 : 0</td><td>Ops OS</td></tr>
+    <tr><td>3</td><td>Reusability</td><td>10</td><td>≥ 3 OS</td><td>reusable_os / total_os * 10</td><td>Agent OS</td></tr>
+    <tr><td>4</td><td>Automation Impact</td><td>10</td><td>> 80%</td><td>automated / total * 10</td><td>Agent OS</td></tr>
+    <tr><td>5</td><td>Knowledge Impact</td><td>10</td><td>> 90% ADR</td><td>adrs / decisions * 10</td><td>Knowledge OS</td></tr>
+    <tr><td>6</td><td>Reliability</td><td>10</td><td>> 99.9%</td><td>uptime / 10</td><td>Ops OS</td></tr>
+    <tr><td>7</td><td>Founder Independence</td><td>10</td><td>> 90% auto</td><td>auto_decisions / total * 10</td><td>Strategy OS</td></tr>
+    <tr><td>8</td><td>Operational Simplicity</td><td>10</td><td>< 5 comps</td><td>10 - (comps / max_comps)</td><td>Ops OS</td></tr>
+    <tr><td>9</td><td>Customer Value</td><td>10</td><td>> 4.5/5</td><td>satisfaction / 10</td><td>Support OS</td></tr>
+    <tr><td>10</td><td>FinOps Efficiency</td><td>10</td><td>< $0.001/llamada</td><td>10 - (cost/budget * 10)</td><td>Finance OS</td></tr>
+  </table>
+</div>
+<div class="grid">
+  <div class="card">
+    <h3>Thresholds</h3>
+    <table>
+      <tr><th>Score</th><th>Veredicto</th><th>Accion</th></tr>
+      <tr><td>≥ 90</td><td>Exceptional</td><td>Scale immediately</td></tr>
+      <tr><td>80-89</td><td>Strong</td><td>Approve and fund</td></tr>
+      <tr><td>70-79</td><td>Good</td><td>Approve with monitoring</td></tr>
+      <tr><td>60-69</td><td>Acceptable</td><td>Approve conditionally</td></tr>
+      <tr><td>40-59</td><td>Weak</td><td>Require improvements</td></tr>
+      <tr><td>< 40</td><td>Poor</td><td>Kill or reject</td></tr>
+    </tbody>
+    </table>
+    <div style="margin-top:6px;font-size:0.65em;color:#94a3b8;">
+      <strong>Umbral minimo:</strong> 60/100 para aprobar cualquier iniciativa.
+    </div>
+  </div>
+  <div class="card">
+    <h3>Otros KPIs activos</h3>
+    <table>
+      <tr><th>KPI</th><th>Ubicacion</th></tr>
+      <tr><td>CEO KPIs</td><td><span class="code">platforms/telegram/skills/ceo-kpis.json</span></td></tr>
+      <tr><td>Entropy Reduction</td><td><span class="code">metrics/entropy-reduction.md</span></td></tr>
+      <tr><td>Survival Test</td><td><span class="code">metrics/survival-test.md</span></td></tr>
+      <tr><td>Enterprise Score</td><td><span class="code">metrics/enterprise-score.md</span></td></tr>
+      <tr><td>KPICard TSX</td><td><span class="code">clients/abe-music/web/components/KPICard.tsx</span></td></tr>
+      <tr><td>Health Dashboard</td><td><span class="code">:8080/dashboard-salud.html</span></td></tr>
+      <tr><td>Quality Violations</td><td><span class="code">state/quality/violations.jsonl</span></td></tr>
+    </table>
+    <div style="margin-top:8px;font-size:0.65em;color:#94a3b8;">
+      <strong>Frecuencia:</strong> Score por iniciativa (creacion + completion) · Enterprise-wide semanal · Quarterly
+    </div>
+  </div>
+</div>
+
+<h2 id="aciertos">✅ 6. Aciertos (Lo que funciona bien)</h2>
+<div class="card">
+  <div class="acierto">
+    <strong>1. Jerarquia VDD→TDD</strong> — Ningun codigo se escribe sin pasar por 7 capas de validacion. Previene building-at-the-wrong-level. Score maximo alcanzado: 84/100.
+  </div>
+  <div class="acierto">
+    <strong>2. Pipeline SDD con agentes especializados</strong> — 6 agentes con modelos distintos (deepseek para spec, llama para codigo, qwen para diseño). Cada agente optimo para su fase.
+  </div>
+  <div class="acierto">
+    <strong>3. Constitucion v10.0</strong> — 6 documentos que definen absolutamente todo: identidad (SOUL), reglas (10-RULES), paths (TRUTH), operacion (OMEGA-PROMPT), contrato (CONTRATO), integridad (CHECKSUMS).
+  </div>
+  <div class="acierto">
+    <strong>4. 10 Sub-OS Architecture</strong> — Sales, Dev, Support, Agent, Knowledge, Finance, Security, Ops, Quality, Strategy. Cada uno con prompt, agent, habilidades y metricas propias.
+  </div>
+  <div class="acierto">
+    <strong>5. Enterprise Score ≥ 60</strong> — Sistema de scoring que obliga a medir cada iniciativa contra 10 dimensiones. Previene feature creep y work-for-work.
+  </div>
+  <div class="acierto">
+    <strong>6. Git hooks + CI gates</strong> — pre-commit bloquea sin spec activa. post-commit actualiza CATALOG y emite eventos. CI enforce tests + lint + score.
+  </div>
+  <div class="acierto">
+    <strong>7. Event-driven nervous system</strong> — Todo negocio emite eventos (lead_received, contract_signed, payment_received, workflow_failed). Nada depende de memoria humana.
+  </div>
+  <div class="acierto">
+    <strong>8. Capability-first, not project-first</strong> — No se construyen proyectos aislados. Se construyen capacidades reusables (Lead Gen, Sales Ops, Content Production, Software Delivery).
+  </div>
+  <div class="acierto">
+    <strong>9. Founder Elimination Framework</strong> — Identificar y automatizar toda dependencia del fundador: manual work, decisions, follow-up, coordination, memory.
+  </div>
+  <div class="acierto">
+    <strong>10. Product Factory Principle</strong> — Toda solucion exitosa se convierte en: Template → Framework → Capability → Product → Marketplace Asset.
+  </div>
+</div>
+
+<h2 id="errores">❌ 7. Errores (Lo que aprendimos)</h2>
+<div class="card">
+  <div class="error">
+    <strong>1. HTTPS certs caidos</strong> — Los certificados SSL de sonoradigitalcorp.com y api.sonoradigitalcorp.com expiraron. Nginx apunta a <span class="code">/etc/letsencrypt/live/</span> que no existe. Todo el trafico HTTPS muerto.
+    <div style="color:#64748b;margin-top:2px;"><strong>Por que paso:</strong> Sin renovacion automatica (certbot renew cron no configurado).</div>
+    <div style="color:#22c55e;margin-top:2px;"><strong>Fix:</strong> <span class="code">certbot certonly --nginx -d sonoradigitalcorp.com -d www.sonoradigitalcorp.com -d api.sonoradigitalcorp.com && systemctl reload nginx</span></div>
+  </div>
+  <div class="error">
+    <strong>2. Hermes Gateway caido permanentemente</strong> — <span class="code">hermes-gateway.service</span> no existe (unit not found). El MCP endpoint :8000 lleva muerto ~7 dias.
+    <div style="color:#64748b;margin-top:2px;"><strong>Por que paso:</strong> El unit file se elimino o nunca se reinstalo tras un deploy. Nadie lo monitoreo.</div>
+    <div style="color:#22c55e;margin-top:2px;"><strong>Fix:</strong> Reinstalar unit systemd o migrar el servicio a Docker compose.</div>
+  </div>
+  <div class="error">
+    <strong>3. Telegram Bot Token muerto</strong> — ABE_FENIX_BOT token no funciona. Abe-daemon reporta cada 10 minutos. @ABEfenix_bot no responde.
+    <div style="color:#64748b;margin-top:2px;"><strong>Por que paso:</strong> Token probablemente revocado por inactividad o recreacion del bot en BotFather.</div>
+    <div style="color:#22c55e;margin-top:2px;"><strong>Fix:</strong> Ir a @BotFather → regenerar token → actualizar <span class="code">.env</span></div>
+  </div>
+  <div class="error">
+    <strong>4. OpenClaw no puede usar deepseek-r1:7b</strong> — Error: "Unknown model" aunque el modelo existe en Ollama. OpenClaw exige OLLAMA_API_KEY incluso para modelos locales.
+    <div style="color:#64748b;margin-top:2px;"><strong>Por que paso:</strong> Bug de OpenClaw — requiere auth key aunque el provider sea local. El mejor modelo (7B reasoning) no disponible para el gateway.</div>
+    <div style="color:#22c55e;margin-top:2px;"><strong>Fix:</strong> <span class="code">export OLLAMA_API_KEY=dummy</span> en ~/.openclaw/gateway.env</div>
+  </div>
+  <div class="error">
+    <strong>5. Swap al 65%</strong> — 1.3GB/2GB usados. Con 12 containers + 6 modelos Ollama + Python processes, la RAM es el cuello de botella.
+    <div style="color:#64748b;margin-top:2px;"><strong>Por que paso:</strong> 11.6GB RAM total con multiples servicios compitiendo. Sin limits en containers.</div>
+    <div style="color:#22c55e;margin-top:2px;"><strong>Fix:</strong> Agregar swap (4GB), reducir modelos no usados, limitar RAM de containers.</div>
+  </div>
+  <div class="error">
+    <strong>6. Sin disaster recovery plan</strong> — Single VPS sin replica, sin backup caliente, sin failover. Si OVH cae, todo cae.
+    <div style="color:#64748b;margin-top:2px;"><strong>Leccion:</strong> Se automatizo backup diario pero no restauracion ni failover.</div>
+  </div>
+  <div class="error">
+    <strong>7. Browser scraping fragil</strong> — Instagram bloqueado (login wall), Wikipedia bloquea datacenter IPs (403). Los scrapers de estas fuentes fallan constantemente.
+    <div style="color:#64748b;margin-top:2px;"><strong>Leccion:</strong> Sin API keys oficiales, el scraping es inherentemente fragil. Necesario fallback por weight > health-first.</div>
+  </div>
+  <div class="error">
+    <strong>8. ACERTIEMPOS.md vacio</strong> — El archivo de lecciones y errores esta creado pero nunca se poblo. Las lecciones se pierden entre sesiones.
+    <div style="color:#64748b;margin-top:2px;"><strong>Leccion:</strong> El ENGRAm captura sesiones, pero no hay un catalogo centralizado de errores.</div>
+  </div>
+</div>
+
+<h2 id="reglas">⚖️ 8. Reglas Configuradas</h2>
+<div class="grid">
+  <div class="card">
+    <h3>En opencode.json</h3>
+    <table>
+      <tr><th>Config</th><th>Valor</th></tr>
+      <tr><td>Primary Agent</td><td>mystic (qwen3:4b-64k)</td></tr>
+      <tr><td>Sub-agents</td><td>20 (explore, builder, reviewer, sdd/*, OS agents)</td></tr>
+      <tr><td>MCP endpoints</td><td>5 (hermes, openclaw, qdrant, neo4j, n8n)</td></tr>
+      <tr><td>Custom commands</td><td>16 (/status, /backup, /brain, /gsd, /sdd-new, /build, 10 OS commands)</td></tr>
+      <tr><td>Permissions</td><td>Edit: ask · Bash: git/pip/npm allow, docker/systemctl ask</td></tr>
+      <tr><td>External directory</td><td>config/.secrets/** deny</td></tr>
+      <tr><td>Instructions</td><td>6 documentos (OMEGA, SOUL, TRUTH, 10-RULES, AGENTS, CLAUDE, MAPA)</td></tr>
+      <tr><td>Skills paths</td><td>.opencode/skills, .opencode/agents, ~/.hermes/skills</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h3>En GitHub / CI</h3>
+    <table>
+      <tr><th>Regla</th><th>Enforcement</th></tr>
+      <tr><td>Spec required before code</td><td>Git pre-commit hook</td></tr>
+      <tr><td>CI verde para merge</td><td>tests.yml workflow</td></tr>
+      <tr><td>PR required + 1 approval</td><td>Branch protection</td></tr>
+      <tr><td>JR-Lite 15-point compliance</td><td>process-gate.yml</td></tr>
+      <tr><td>Score ≥ 60</td><td>process-gate.yml</td></tr>
+      <tr><td>Events logged</td><td>process-gate.yml</td></tr>
+      <tr><td>Lint (ruff check)</td><td>tests.yml</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h3>En Systemd / Cron</h3>
+    <table>
+      <tr><th>Regla</th><th>Donde</th></tr>
+      <tr><td>Auto-healing cada 15 min</td><td>cron → autonomous.sh</td></tr>
+      <tr><td>Healthcheck cada 15 min</td><td>cron → health-monitor.sh</td></tr>
+      <tr><td>Backup diario 3am</td><td>cron → backup.sh</td></tr>
+      <tr><td>Pipeline diario 8am</td><td>cron → daily-pipeline.sh</td></tr>
+      <tr><td>Sync scrapers cada 6h</td><td>cron → scrapers.sync</td></tr>
+      <tr><td>Reporte ABE semanal</td><td>cron → abe-report-push.sh</td></tr>
+      <tr><td>Git pull automatico cada hora</td><td>cron → git pull --ff-only</td></tr>
+      <tr><td>ABE Daemon 24/7</td><td>systemd → abe-daemon.service</td></tr>
+      <tr><td>OpenClaw Gateway</td><td>systemd → openclaw-gateway.service</td></tr>
+      <tr><td>MCP Gateway</td><td>systemd → sonora-mcp-gateway.service</td></tr>
+    </table>
+  </div>
+</div>
+
+<h2 id="10-os">🧠 9. Los 10 Sub-OS</h2>
+<div class="card">
+  <table>
+    <tr><th>OS</th><th>Modelo</th><th>Prompt</th><th>Que hace</th></tr>
+    <tr><td>Sales</td><td>llama3.2:3b</td><td>Sales-OS.md</td><td>Lead gen, qualification, proposals, pipeline</td></tr>
+    <tr><td>Dev</td><td>qwen3:4b-64k</td><td>Dev-OS.md</td><td>Software delivery, CI/CD, architecture, tests</td></tr>
+    <tr><td>Support</td><td>qwen3:1.7b</td><td>Support-OS.md</td><td>Tickets, SLAs, client satisfaction</td></tr>
+    <tr><td>Agent</td><td>qwen3:4b-64k</td><td>Agent-OS.md</td><td>Harness lifecycle, skill registry, MCP governance</td></tr>
+    <tr><td>Knowledge</td><td>qwen3:4b-64k</td><td>Knowledge-OS.md</td><td>7-layer memory, ADRs, knowledge capture</td></tr>
+    <tr><td>Finance</td><td>qwen3:1.7b</td><td>Finance-OS.md</td><td>FinOps, revenue tracking, ROI, invoicing</td></tr>
+    <tr><td>Security</td><td>deepseek-r1:7b</td><td>Security-OS.md</td><td>Secrets, audit, incident response, compliance</td></tr>
+    <tr><td>Ops</td><td>qwen2.5:1.5b</td><td>Ops-OS.md</td><td>Infrastructure, monitoring, recovery, scaling</td></tr>
+    <tr><td>Quality</td><td>llama3.2:3b</td><td>Quality-OS.md</td><td>Test frameworks, process audits, evaluations</td></tr>
+    <tr><td>Strategy</td><td>deepseek-r1:7b</td><td>Strategy-OS.md</td><td>Initiatives, enterprise score, quarterly planning</td></tr>
+  </table>
+  <div style="margin-top:8px;font-size:0.65em;color:#94a3b8;">
+    Cada OS tiene: prompt dedicado en <span class="code">prompts/prompts/OS/</span>, sub-agent en opencode.json, comandos shortcut (/sales, /dev, etc.), y responsabilidades especificas.
+  </div>
+</div>
+
+<h2 id="sub-os">🏗️ 10. Sub-OS Architecture</h2>
+<div class="card">
+  <div class="diagram">SUB-OS ARCHITECTURE — 10 Operating Systems interconectados
+
+  ┌─────────────────────────────────────────────────────────────────────┐
+  │                        STRATEGY OS (deepseek-r1)                    │
+  │              Coordina iniciativas, enterprise score                  │
+  └────┬────────────┬────────────┬────────────┬────────────┬────────────┘
+       │            │            │            │            │
+  ┌────▼───┐  ┌────▼───┐  ┌────▼───┐  ┌────▼───┐  ┌────▼───┐
+  │ SALES  │  │  DEV   │  │SUPPORT │  │FINANCE │  │SECURITY│
+  │ llma3  │  │qwen3:4 │  │qwen:1.7│  │qwen:1.7│  │deepseek│
+  │ Lead   │  │Delivery│  │Tickets │  │FinOps  │  │Audit   │
+  │ gen    │  │CI/CD   │  │SLAs    │  │Revenue │  │Comply  │
+  └────────┘  └────────┘  └────────┘  └────────┘  └────────┘
+       │            │            │            │            │
+  ┌────▼───┐  ┌────▼───┐  ┌────▼───┐  ┌────▼───┐  ┌────▼───┐
+  │ AGENT  │  │KNOWLEDGE│  │  OPS   │  │QUALITY │  │PRIMARY │
+  │qwen3:4 │  │qwen3:4 │  │qwen1.5 │  │llama3  │  │ mystic │
+  │Harness │  │Memory  │  │Infra   │  │Tests   │  │Orchest │
+  │Skills  │  │ADRs    │  │Monitor │  │Eval    │  │┌──────┐│
+  │MCP     │  │Capture │  │Recover │  │Score   │  ││← USER││
+  └────────┘  └────────┘  └────────┘  └────────┘  │└──────┘│
+                                                  └────────┘</div>
+  <div style="font-size:0.65em;color:#94a3b8;margin-top:6px;">
+    <strong>Flujo:</strong> Usuario → mystic (primary) → delega a sub-agent segun OS → cada OS tiene su prompt, skills, y metricas.
+  </div>
+</div>
+
+<h2 id="score">📈 11. Enterprise Score History</h2>
+<div class="card">
+  <table>
+    <tr><th>Spec</th><th>Titulo</th><th>Score</th><th>Estado</th></tr>
+    <tr><td>SPEC-20260630-002</td><td>Revenue Pipeline: Sales Agent Automation</td><td class="ok">84/100</td><td>Strong ✅</td></tr>
+    <tr><td>SPEC-20260701-004</td><td>Capability Registry + Decision Engine</td><td class="ok">77/100</td><td>Good ✅</td></tr>
+    <tr><td>SPEC-20260701-006</td><td>CI + Mock Tests</td><td class="ok">—/100</td><td>Completed ✅</td></tr>
+    <tr><td>SPEC-20260701-007</td><td>Self-Healing Loop + Telegram</td><td class="ok">—/100</td><td>Completed ✅</td></tr>
+    <tr><td>SPEC-20260701-008</td><td>Primer Agente Real con Modelo Local</td><td class="ok">—/100</td><td>Completed ✅</td></tr>
+    <tr><td>SPEC-20260701-009</td><td>OpenClaw como interfaz conversacional</td><td class="ok">—/100</td><td>Completed ✅</td></tr>
+    <tr><td>SPEC-20260701-010</td><td>Hermes Bridge + Memory MCP</td><td class="ok">—/100</td><td>Completed ✅</td></tr>
+    <tr><td>SPEC-20260701-012</td><td>Migrar JARVIS agents a V2</td><td class="ok">66/100</td><td>Acceptable ✅</td></tr>
+    <tr><td>SPEC-20260701-013</td><td>Migracion V2 completa + MCP tools</td><td class="warn">—/100</td><td>Active 🟡</td></tr>
+  </table>
+  <div style="margin-top:8px;font-size:0.65em;color:#94a3b8;">
+    <strong>Score mas alto:</strong> 84 (Revenue Pipeline). <strong>Score mas bajo:</strong> 66 (Migration V2).<br>
+    <strong>Promedio:</strong> ~75/100. <strong>Tendencia:</strong> Scores mejoran con la madurez del proceso.
+  </div>
+</div>
+
+<h2 id="completadas">📦 12. Specs Completadas</h2>
+<div class="card">
+  <table>
+    <tr><th>Fecha</th><th>ID</th><th>Titulo</th><th>Score</th></tr>
+    <tr><td>2026-06-30</td><td>SPEC-20260630-001</td><td>Pipeline System Initial Setup</td><td>—</td></tr>
+    <tr><td>2026-06-30</td><td>SPEC-20260630-002</td><td>Revenue Pipeline: Sales Agent Automation</td><td class="ok">84</td></tr>
+    <tr><td>2026-06-30</td><td>SPEC-20260630-007</td><td>Auth MCP Gateway</td><td>—</td></tr>
+    <tr><td>2026-07-01</td><td>SPEC-20260701-001</td><td>Dockerizacion</td><td>—</td></tr>
+    <tr><td>2026-07-01</td><td>SPEC-20260701-002</td><td>Corte Final MCP Gateway</td><td>—</td></tr>
+    <tr><td>2026-07-01</td><td>SPEC-20260701-003</td><td>Next-Gen Agent OS</td><td>—</td></tr>
+    <tr><td>2026-07-01</td><td>SPEC-20260701-004</td><td>Capability Registry + Decision Engine</td><td class="ok">77</td></tr>
+    <tr><td>2026-07-01</td><td>SPEC-20260701-005</td><td>Live Data Pipeline</td><td class="ok">84</td></tr>
+    <tr><td>2026-07-01</td><td>SPEC-20260701-006</td><td>CI + Mock Tests (138 tests)</td><td>—</td></tr>
+    <tr><td>2026-07-01</td><td>SPEC-20260701-007</td><td>Self-Healing Loop + Telegram</td><td>—</td></tr>
+    <tr><td>2026-07-01</td><td>SPEC-20260701-008</td><td>Primer Agente Real con Modelo Local</td><td>—</td></tr>
+    <tr><td>2026-07-01</td><td>SPEC-20260701-009</td><td>OpenClaw como interfaz conversacional</td><td>—</td></tr>
+    <tr><td>2026-07-01</td><td>SPEC-20260701-010</td><td>Hermes Bridge + Memory MCP</td><td>—</td></tr>
+    <tr><td>2026-07-01</td><td>SPEC-20260701-012</td><td>Migrar JARVIS agents a V2</td><td class="ok">66</td></tr>
+    <tr><td>2026-07-02</td><td>SPEC-20260701-013</td><td>Migracion V2 completa + MCP tools</td><td class="warn">🟡 active</td></tr>
+  </table>
+  <div style="margin-top:6px;font-size:0.65em;color:#94a3b8;">
+    <strong>Total completadas:</strong> 14 specs + 1 activa. <strong>Total archivos:</strong> 15,179 en el repositorio.
+  </div>
+</div>
+
+<h2 id="logica">🔬 13. Logica de Ingenieria de Procesos</h2>
+<div class="card">
+  <div style="font-size:0.7em;line-height:1.8;">
+    <h3>Principios Fundamentales</h3>
+    <div style="margin:6px 0;">
+      <strong>1. Event-Driven Everything</strong> — Toda actividad de negocio empieza con un evento. No hay workflow que dependa de memoria humana. Ejemplos: <span class="code">lead_received</span>, <span class="code">contract_signed</span>, <span class="code">workflow_failed</span>.
+    </div>
+    <div style="margin:6px 0;">
+      <strong>2. Capability-First, Not Project-First</strong> — No se construyen proyectos. Se construyen capacidades reusables. Cada implementacion debe incrementar el catalogo de capacidades.
+    </div>
+    <div style="margin:6px 0;">
+      <strong>3. Product Factory</strong> — Toda solucion exitosa sigue la cadena: Template → Framework → Capability → Product → Marketplace Asset.
+    </div>
+    <div style="margin:6px 0;">
+      <strong>4. Founder Elimination</strong> — Identificar y convertir toda dependencia del fundador en: Evento, Politica, Workflow, Skill, Capability, o Responsabilidad de agente.
+    </div>
+    <div style="margin:6px 0;">
+      <strong>5. Evidence Over Intuition</strong> — Toda decision requiere evidencia (EDD layer). No se construye por "sentir" que es buena idea.
+    </div>
+    <div style="margin:6px 0;">
+      <strong>6. Anti-Fragility by Design</strong> — El sistema debe sobrevivir: cambios tecnologicos, caidas de vendors, outages de infraestructura, incidentes de seguridad, ausencia del fundador.
+    </div>
+    <div style="margin:6px 0;">
+      <strong>7. Measurement Before Action</strong> — Toda iniciativa arranca con un Score baseline. Toda iniciativa termina con un Score comparativo. Si no se puede medir, no se construye.
+    </div>
+  </div>
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h3>Cadena de Validacion</h3>
+    <div class="diagram">ESPEC → SCORE → GHERKIN → TESTS → CODE → EVENTS → ADR → LECCION
+
+  Cada spec debe pasar por:
+  1. Aprobacion humana (PR con 1 approval)
+  2. Score ≥ 60 (10 metricas)
+  3. Gherkin scenarios escritos
+  4. Tests pasando (CI verde)
+  5. Events emitidos
+  6. ADR registrado
+  7. Leccion documentada
+  8. Score post-mortem</div>
+  </div>
+  <div class="card">
+    <h3>Ciclo de Vida de una Iniciativa</h3>
+    <div class="diagram">1. IDEA → Strategy OS evalúa
+  2. SPEC → sdd-spec (deepseek) genera
+  3. SCORE → Se calcula baseline
+  4. GATE → Score ≥ 60? Si no, kill
+  5. DESIGN → sdd-design (qwen3) planifica
+  6. APPLY → sdd-apply (llama3) codifica
+  7. VERIFY → sdd-verify (llama3) tests + quality
+  8. ARCHIVE → sdd-archive documenta
+  9. EVENTS → Todo queda registrado
+  10. SCORE → Post-mortem, comparar delta</div>
+  </div>
+</div>
+
+<h2 id="flow">🌊 14. Data Flow de Procesos</h2>
+<div class="diagram">DATA FLOW COMPLETO — Como fluye un requerimiento a produccion
+
+  ┌────────┐    ┌────────┐    ┌────────┐    ┌────────┐    ┌────────┐    ┌────────┐
+  │ USUARIO│───►│ MYSTIC │───►│ SUB-OS │───►│ SPEC   │───►│ SDD    │───►│ CODIGO │
+  │ LuisD  │    │primary │    │agent   │    │pipeline│    │agents  │    │        │
+  └────────┘    └───┬────┘    └────────┘    └────────┘    └───┬────┘    └───┬────┘
+                    │                                         │             │
+                    ▼                                         ▼             ▼
+              ┌──────────────────┐                    ┌──────────────┐     ┌──────┐
+              │ 6 INSTRUCCIONES  │                    │ opencode.json │     │ TESTS│
+              │ OMEGA-PROMPT     │                    │ 21 agents     │     │ CI   │
+              │ 10-RULES         │                    │ 5 MCP         │     │ lint │
+              │ SOUL/TRUTH       │                    │ 16 comandos   │     │      │
+              │ AGENTS/CLAUDE    │                    │ permisos      │     │      │
+              └──────────────────┘                    └──────────────┘     └──┬───┘
+                                                                             │
+                                                                             ▼
+                                                                     ┌──────────┐
+                                                                     │ DEPLOY   │
+                                                                     │ :8080    │
+                                                                     │ :5180    │
+                                                                     │ :5174    │
+                                                                     │ 443/80   │
+                                                                     └──────────┘
+                                                                             │
+                                                                             ▼
+                                                                     ┌──────────┐
+                                                                     │ MONITOR  │
+                                                                     │abe-daemon│
+                                                                     │cron cada │
+                                                                     │15min     │
+                                                                     └──────────┘</div>
+
+<h2 id="lecciones">📓 15. Lecciones Aprendidas (de las specs)</h2>
+<div class="card">
+  <div class="leccion">
+    <strong>SPEC-20260701-004:</strong> Capability-first abstractions: registry fuerza todas las abstracciones. SDK executor bridge necesario para conectar engine con collectors multi-step. Fallback por weight > health-first (mas robusto).
+  </div>
+  <div class="leccion">
+    <strong>SPEC-20260701-005:</strong> Browser scraping es fragil pero necesario sin API keys. Instagram bloqueado (login wall). Wikipedia bloquea datacenter IPs (403). Sync cron no instalado — script disponible en <span class="code">scripts/install-sync-cron.sh</span>.
+  </div>
+  <div class="leccion">
+    <strong>PROTOCOLO:</strong> 7 mandamientos. Los errores mas repetidos: construir sin verificar output, probar solo localhost, hacer varias cosas en paralelo, ignorar CI rojo, documentar al final, asumir que uno recuerda.
+  </div>
+  <div class="leccion">
+    <strong>ESPEC-20260701-007:</strong> El auto-healing loop funciona pero depende de que el abe-daemon este vivo. Si el daemon muere, no hay watchdog. Se necesita un watchdog externo (cron-based o HW).
+  </div>
+  <div class="leccion">
+    <strong>ESPEC-20260701-010:</strong> Hermes Bridge necesita reinicio periodico. El MCP gateway en Node.js es estable pero el bridge Python muere por memory leaks. Suggested fix: <span class="code">Restart=always</span> con <span class="code">RestartSec=30</span>.
+  </div>
+  <div class="leccion">
+    <strong>ESPEC-20260701-012:</strong> La migracion V2 de agents necesita compatibilidad hacia atras. Los tests legacy no se actualizaron automaticamente. Score 66 — el mas bajo. Leccion: no mezclar migracion con features nuevas.
+  </div>
+</div>
+
+<div class="footer">
+  Sonora Digital Corp · Process Engineering Manual v1.0 · 2026-07-02<br>
+  <span style="color:#3b82f6;">14 specs completadas · 10 OS · 6 capas de decision · Score system activo</span>
+</div>
+</body>
+</html>

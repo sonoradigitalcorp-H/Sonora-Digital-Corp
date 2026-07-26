@@ -100,14 +100,23 @@ if [ -f "${TARBALL}" ]; then
   TAR_SIZE=$(stat --format="%s" "${TARBALL}")
   TAR_FILES=$(tar -tzf "${TARBALL}" 2>/dev/null | wc -l)
   echo "[$(date '+%Y-%m-%d %H:%M:%S')] Tarball size: ${TAR_SIZE} bytes, ${TAR_FILES} entries" >> "${LOG_FILE}"
+  # ── Remove source directory after successful tarball ──
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] Removing source directory (tarball OK)..." >> "${LOG_FILE}"
+  rm -rf "${BACKUP_PATH}"
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] Source directory removed." >> "${LOG_FILE}"
 else
-  echo "[$(date '+%Y-%m-%d %H:%M:%S')] Tarball NOT FOUND" >> "${LOG_FILE}"
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] Tarball NOT FOUND - keeping source directory" >> "${LOG_FILE}"
 fi
 
-# ── Clean old backups (keep last KEEP_DAYS days) ──
-echo "[$(date '+%Y-%m-%d %H:%M:%S')] Cleaning backups >${KEEP_DAYS} days old..." >> "${LOG_FILE}"
-find "${BACKUP_DIR}" -maxdepth 1 -name "*.tar.gz" -type f -mtime +${KEEP_DAYS} -delete 2>> "${ERROR_LOG}"
-find "${BACKUP_DIR}" -maxdepth 1 -type d -name "2*" -mtime +${KEEP_DAYS} -exec rm -rf {} \; 2>> "${ERROR_LOG}"
+# ── Clean old tarballs (keep last KEEP_DAYS) ──
+echo "[$(date '+%Y-%m-%d %H:%M:%S')] Cleaning tarballs >${KEEP_DAYS} days (by name)..." >> "${LOG_FILE}"
+# También limpiar directorios huerfanos que hayan quedado de antes
+find "${BACKUP_DIR}" -maxdepth 1 -type d -name "2*" -exec rm -rf {} \; 2>/dev/null || true
+# Limpiar tarballs viejos (keep KEEP_DAYS)
+ls -t "${BACKUP_DIR}" 2>/dev/null | grep -E '^sdc-2[0-9]{7}_[0-9]{6}\.tar\.gz$' | tail -n +$((KEEP_DAYS + 1)) | while read -r old; do
+  rm -f "${BACKUP_DIR}/${old}"
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] Deleted old tarball: ${old}" >> "${LOG_FILE}"
+done
 
 # ── Summary ──
 echo "[$(date '+%Y-%m-%d %H:%M:%S')] ========================================" >> "${LOG_FILE}"

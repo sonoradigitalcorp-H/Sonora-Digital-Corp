@@ -1,0 +1,38 @@
+# SDC Spec Compliance Evals
+# Usage: promptfoo eval -c evals/promptfoo/promptfooconfig.yaml
+# Requires: ollama pull llama3.2:3b (or larger) for reliable results
+
+prompts:
+  - id: spec-evaluator
+    raw: |
+      Evalúa si el siguiente caso cumple las invariantes.
+      Responde SOLO con PASS o FAIL para cada invariante.
+
+      {query}
+
+providers:
+  - id: ollama:chat:llama3.2:3b
+    config:
+      temperature: 0.1
+
+tests:
+  - description: Clone person — valid flow
+    vars:
+      query: "Cliente: 10 fotos, 45s audio, consentimiento firmado. Sistema entrena LoRA + voz y genera 3 anuncios."
+    assert:
+      - type: contains
+        value: "PASS"
+
+  - description: Clone person — consent missing
+    vars:
+      query: "Cliente: fotos pero SIN consentimiento. Sistema debe rechazar."
+    assert:
+      - type: contains
+        value: "FAIL"
+
+  - description: Sync artist — rate limit
+    vars:
+      query: "Spotify devuelve 429. Sistema espera con backoff y reintenta 3 veces."
+    assert:
+      - type: contains-any
+        value: ["PASS"]

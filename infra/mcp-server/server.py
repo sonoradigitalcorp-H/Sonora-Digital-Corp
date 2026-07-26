@@ -1,6 +1,6 @@
 """
-JARVIS MCP Server
-Model Context Protocol server for JARVIS AI Assistant
+SDC MCP Server
+Model Context Protocol server for SDC AI Assistant
 Now with real embeddings instead of [0.0]*384 placeholders.
 """
 
@@ -40,12 +40,12 @@ except ImportError:
     EMBEDDINGS_AVAILABLE = False
 
 # Inicializar MCP Server
-mcp = FastMCP("jarvis")
+mcp = FastMCP("sdc-mcp")
 
 # Configuración desde variables de entorno
 NEO4J_URI = os.environ.get("NEO4J_URI", "bolt://localhost:7687")
 NEO4J_USER = os.environ.get("NEO4J_USER", "neo4j")
-NEO4J_PASSWORD = os.environ.get("NEO4J_PASSWORD", "jarvis2026")
+NEO4J_PASSWORD = os.environ.get("NEO4J_PASSWORD", "sdc2026")
 QDRANT_HOST = os.environ.get("QDRANT_HOST", "localhost")
 QDRANT_PORT = int(os.environ.get("QDRANT_PORT", "6333"))
 EMBEDDING_DIM = int(os.environ.get("EMBEDDING_DIM", "768"))  # nomic-embed-text
@@ -55,7 +55,7 @@ QDRANT_COLLECTIONS = [
     "conversations",
     "documents",
     "tasks",
-    "jarvis_knowledge",
+    "sdc_knowledge",
 ]
 
 # Clientes (inicializar si están disponibles)
@@ -105,9 +105,9 @@ def _get_vector(text: str) -> list:
 
 
 @mcp.tool()
-def jarvis_search(query: str, limit: int = 10, tenant_id: str = "sdc-core") -> dict:
+def sdc_search(query: str, limit: int = 10, tenant_id: str = "sdc-core") -> dict:
     """
-    Buscar en la memoria de JARVIS (Neo4j + Qdrant)
+    Buscar en la memoria de SDC (Neo4j + Qdrant)
 
     Args:
         query: Texto a buscar
@@ -175,9 +175,9 @@ def jarvis_search(query: str, limit: int = 10, tenant_id: str = "sdc-core") -> d
 
 
 @mcp.tool()
-def jarvis_remember(content: str, metadata: Optional[dict] = None, tenant_id: str = "sdc-core") -> dict:
+def sdc_remember(content: str, metadata: Optional[dict] = None, tenant_id: str = "sdc-core") -> dict:
     """
-    Guardar información en la memoria de JARVIS
+    Guardar información en la memoria de SDC
 
     Args:
         content: Texto/contenido a recordar
@@ -232,7 +232,7 @@ def jarvis_remember(content: str, metadata: Optional[dict] = None, tenant_id: st
                     },
                 )
                 qdrant_client.upsert(
-                    collection_name="jarvis_knowledge",
+                    collection_name="sdc_knowledge",
                     points=[point],
                 )
                 result["stored_in"].append("qdrant")
@@ -245,9 +245,9 @@ def jarvis_remember(content: str, metadata: Optional[dict] = None, tenant_id: st
 
 
 @mcp.tool()
-def jarvis_forget(conversation_id: str) -> dict:
+def sdc_forget(conversation_id: str) -> dict:
     """
-    Eliminar información de la memoria de JARVIS
+    Eliminar información de la memoria de SDC
 
     Args:
         conversation_id: ID de la conversación a eliminar
@@ -297,9 +297,9 @@ def jarvis_forget(conversation_id: str) -> dict:
 
 
 @mcp.tool()
-def jarvis_status() -> dict:
+def sdc_status() -> dict:
     """
-    Obtener estado del sistema JARVIS
+    Obtener estado del sistema SDC
 
     Returns:
         Dict con estado de todos los servicios
@@ -337,7 +337,7 @@ def jarvis_status() -> dict:
 
 
 @mcp.tool()
-def jarvis_execute(command: str) -> dict:
+def sdc_execute(command: str) -> dict:
     """
     Executar comandos del sistema (con restricciones de seguridad)
 
@@ -412,14 +412,14 @@ def jarvis_execute(command: str) -> dict:
 
 
 @mcp.tool()
-def jarvis_search_semantic(
+def sdc_search_semantic(
     query: str,
     limit: int = 5,
     threshold: float = 0.7,
-    collection: str = "jarvis_knowledge",
+    collection: str = "sdc_knowledge",
 ) -> dict:
     """
-    Búsqueda semántica vectorial en la memoria de JARVIS.
+    Búsqueda semántica vectorial en la memoria de SDC.
 
     Args:
         query: Texto de búsqueda
@@ -460,7 +460,7 @@ def jarvis_search_semantic(
 
 
 @mcp.tool()
-def jarvis_get_context(query: str, max_tokens: int = 2000) -> dict:
+def sdc_get_context(query: str, max_tokens: int = 2000) -> dict:
     """
     Obtener contexto relevante de la memoria para enriquecer prompts del LLM.
     Combina búsqueda en grafo + vectorial.
@@ -502,9 +502,9 @@ def jarvis_get_context(query: str, max_tokens: int = 2000) -> dict:
 
 
 @mcp.tool()
-def jarvis_list_skills(category: str = None) -> list:
+def sdc_list_skills(category: str = None) -> list:
     """
-    Listar skills disponibles en el sistema JARVIS.
+    Listar skills disponibles en el sistema SDC.
 
     Args:
         category: Filtrar por categoría (opcional)
@@ -558,7 +558,7 @@ def jarvis_list_skills(category: str = None) -> list:
 
 
 @mcp.tool()
-def jarvis_analyze_code(file_path: str, analysis_type: str = "lint") -> dict:
+def sdc_analyze_code(file_path: str, analysis_type: str = "lint") -> dict:
     """
     Análisis estático de código.
 
@@ -635,7 +635,7 @@ def jarvis_analyze_code(file_path: str, analysis_type: str = "lint") -> dict:
 
 
 @mcp.tool()
-def jarvis_web_fetch(
+def sdc_web_fetch(
     url: str, format: str = "markdown", max_length: int = 5000
 ) -> dict:
     """
@@ -661,7 +661,7 @@ def jarvis_web_fetch(
 
     try:
         resp = requests.get(
-            url, timeout=10, headers={"User-Agent": "JARVIS/2.0 (AI Assistant)"}
+            url, timeout=10, headers={"User-Agent": "SDC-MCP/2.0"}
         )
         resp.raise_for_status()
 
@@ -683,7 +683,7 @@ if __name__ == "__main__":
     import uvicorn
     host = os.environ.get("MCP_HOST", "0.0.0.0")
     port = int(os.environ.get("MCP_PORT", "8000"))
-    print(f"Starting JARVIS MCP Server (SSE) on {host}:{port}...")
+    print(f"Starting SDC MCP Server (SSE) on {host}:{port}...")
     print(f"Neo4j available: {NEO4J_AVAILABLE}")
     print(f"Qdrant available: {QDRANT_AVAILABLE}")
     mcp.run(transport="sse", host=host, port=port)

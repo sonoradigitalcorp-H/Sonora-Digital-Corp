@@ -1,39 +1,53 @@
-from enum import Enum
-from dataclasses import dataclass, field
-from typing import Optional
-from datetime import datetime
+"""Unified Brain v2 — Modelos de datos."""
 
-class KnowledgeType(str, Enum):
-    SPEC = "spec"
-    SERVICE = "service"
-    PERSON = "person"
-    ARTIST = "artist"
-    SESSION = "session"
-    MEMORY = "memory"
-    RULE = "rule"
-    EVENT = "event"
-    LECCION = "leccion"
-    ACHIEVEMENT = "achievement"
-    CAPABILITY = "capability"
-    MACHINE = "machine"
+from dataclasses import dataclass, field
+from datetime import datetime
+from typing import Any, Optional
+
 
 @dataclass
 class KnowledgeNode:
+    """Nodo de conocimiento unificado.
+
+    Puede venir de Engram, Neo4j, Qdrant, Hermes, eventos, o lecciones.
+    """
     id: str
-    type: KnowledgeType
+    type: str  # MEMORY | SERVICE | SPEC | PERSON | EVENT | SESSION | LECCION | ACHIEVEMENT
     label: str
-    summary: str
-    details: dict = field(default_factory=dict)
-    tags: list[str] = field(default_factory=list)
-    importance: int = 1
-    embedding: Optional[list[float]] = None
-    source: str = ""
-    created_at: datetime = field(default_factory=datetime.utcnow)
-    updated_at: datetime = field(default_factory=datetime.utcnow)
+    content: str
+    source: str  # engram | neo4j | qdrant | hermes | events | lecciones | truth
+    created_at: Optional[str] = None
+    updated_at: Optional[str] = None
+    tags: list = field(default_factory=list)
+    score: float = 0.0  # Relevancia para la consulta
+    metadata: dict = field(default_factory=dict)
+
 
 @dataclass
-class KnowledgeRelation:
-    source_id: str
-    target_id: str
-    relation_type: str
-    weight: float = 1.0
+class BrainQuery:
+    """Consulta al cerebro unificado."""
+    text: str
+    mode: str = "auto"  # auto | semantic | graph | fts
+    limit: int = 10
+    source: Optional[str] = None  # Filtrar por fuente
+    type_filter: Optional[str] = None  # Filtrar por tipo
+
+
+@dataclass
+class BrainResult:
+    """Resultado de una consulta al cerebro."""
+    query: str
+    mode: str
+    results: list = field(default_factory=list)
+    total: int = 0
+    elapsed_ms: int = 0
+    sources_queried: list = field(default_factory=list)
+
+
+@dataclass
+class SyncStatus:
+    """Estado de la sincronización."""
+    last_sync: Optional[str] = None
+    ingestor_results: dict = field(default_factory=dict)
+    total_nodes: int = 0
+    errors: list = field(default_factory=list)

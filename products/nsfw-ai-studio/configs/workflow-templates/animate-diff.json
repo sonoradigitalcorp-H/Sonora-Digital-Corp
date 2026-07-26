@@ -1,0 +1,103 @@
+{
+  "3": {
+    "class_type": "KSampler",
+    "inputs": {
+      "seed": ${seed},
+      "steps": ${steps},
+      "cfg": ${cfg},
+      "sampler_name": "euler",
+      "scheduler": "normal",
+      "denoise": 1,
+      "model": ["21", 0],
+      "positive": ["26", 0],
+      "negative": ["26", 1],
+      "latent_image": ["17", 0]
+    }
+  },
+  "12": {
+    "class_type": "AnimateDiffLoaderV1",
+    "inputs": {
+      "model_name": "mm_sdxl_v10_beta.ckpt",
+      "unet_attn_mode": "FA",
+      "motion_module_scale": 1,
+      "beta_schedule": "sqrt_linear",
+      "use_motion_scale": false,
+      "motion_scale": 1,
+      "apply_motion_scale_on_latent": false,
+      "latent_power": 1
+    }
+  },
+  "17": {
+    "class_type": "EmptyLatentImage",
+    "inputs": {
+      "width": ${width},
+      "height": ${height},
+      "batch_size": ${frames}
+    }
+  },
+  "21": {
+    "class_type": "ModelPatcher",
+    "inputs": {
+      "model": ["12", 0],
+      "patcher": ["27", 0]
+    }
+  },
+  "26": {
+    "class_type": "DualCLIPLoader",
+    "inputs": {
+      "clip_name1": "clip_l.safetensors",
+      "clip_name2": "t5xxl_fp16.safetensors",
+      "type": "flux"
+    }
+  },
+  "27": {
+    "class_type": "LoraLoader",
+    "inputs": {
+      "lora_name": "${lora_name}.safetensors",
+      "strength_model": 0.8,
+      "strength_clip": 0.8,
+      "model": ["-1", 0],
+      "clip": ["-1", 0]
+    }
+  },
+  "30": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "${prompt}",
+      "clip": ["26", 0]
+    }
+  },
+  "31": {
+    "class_type": "CLIPTextEncode",
+    "inputs": {
+      "text": "${negative}",
+      "clip": ["26", 0]
+    }
+  },
+  "50": {
+    "class_type": "VAEDecode",
+    "inputs": {
+      "samples": ["3", 0],
+      "vae": ["51", 0]
+    }
+  },
+  "51": {
+    "class_type": "VAELoader",
+    "inputs": {
+      "vae_name": "FLUX.1-dev-vae.safetensors"
+    }
+  },
+  "60": {
+    "class_type": "VideoCombine",
+    "inputs": {
+      "images": ["50", 0],
+      "frame_rate": 8,
+      "loop_count": 0,
+      "filename_prefix": "ComfyUI_video",
+      "format": "video/mp4",
+      "pix_fmt": "yuv420p",
+      "crf": 23,
+      "output_type": "video"
+    }
+  }
+}

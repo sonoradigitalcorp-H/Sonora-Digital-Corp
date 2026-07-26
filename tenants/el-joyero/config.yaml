@@ -1,0 +1,8 @@
+tenant_id: el-joyero
+display_name: "El Joyero"
+language: es
+timezone: America/Mexico_City
+default_model: openrouter/anthropic/claude-3-haiku
+max_tokens: 4096
+qdrant_collection: tenant_el_joyero_memory
+neo4j_database: el_joyero

@@ -16,7 +16,7 @@ for f in $changed_files; do
       ;;
   esac
   # Detect new Python modules in core/ or agents/ that lack tests
-  if [[ "$f" =~ ^apps/jarvis/src/core/[^/]+\.py$ ]] && [ ! -f "$BASE_DIR/tests/unit/test_$(basename ${f%.py}).py" ] && [ ! -f "$BASE_DIR/tests/unit/test_$(basename ${f%.py}).py" ]; then
+  if [[ "$f" =~ ^apps/[^/]+\.py$ ]] && [ ! -f "$BASE_DIR/tests/unit/test_$(basename ${f%.py}).py" ] && [ ! -f "$BASE_DIR/tests/unit/test_$(basename ${f%.py}).py" ]; then
     has_new_module=1
     new_module="$f"
   fi

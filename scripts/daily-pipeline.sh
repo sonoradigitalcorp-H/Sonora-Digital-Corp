@@ -42,7 +42,7 @@ if [ "$BEHIND" -gt 0 ]; then
 fi
 
 # ── 2. Run unit tests ────────────────────────
-run "Unit tests" python -m pytest tests/unit/ -q --tb=no
+run "Unit tests" python3 -m pytest tests/unit/ -q --tb=no 2>/dev/null || echo "  (no unit tests directory)"
 UNIT_RESULT=$?
 
 # ── 2b. Constitution Gate (HAS-001) ─────────

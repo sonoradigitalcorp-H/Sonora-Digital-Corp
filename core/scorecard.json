@@ -1,0 +1,21 @@
+{
+  "overall": 56,
+  "metrics": {
+    "agents": 9,
+    "capabilities": 9,
+    "constitution_files": 30,
+    "constitution_rules": 29,
+    "tests_passed": 0,
+    "tests_total": 0,
+    "violations": 0,
+    "memory_count": 6,
+    "events_count": 0,
+    "git_ahead": 0,
+    "git_behind": 8,
+    "specs": 9,
+    "gherkin_features": 28,
+    "step_definitions": 8,
+    "adrs": 16
+  },
+  "updated": "2026-07-26T09:12:36.048978Z"
+}

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>SDC / ABE Music — Full-Stack Deployment Blueprint</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{font-family:'Inter',sans-serif;background:#080c18;color:#e2e8f0;padding:16px;max-width:1200px;margin:0 auto;}
+  .header{background:rgba(15,23,42,0.8);border:1px solid #1e3a5f;border-radius:12px;padding:16px 20px;margin-bottom:16px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;}
+  .header h1{font-size:1.1em;font-weight:700;color:#3b82f6;}
+  .header .sub{color:#64748b;font-size:0.65em;text-transform:uppercase;letter-spacing:0.5px;}
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:5px;font-size:0.65em;font-weight:600;}
+  .bg-green{background:rgba(34,197,94,0.15);color:#22c55e;}
+  .bg-red{background:rgba(239,68,68,0.15);color:#ef4444;}
+  .bg-amber{background:rgba(234,179,8,0.15);color:#eab308;}
+  .bg-blue{background:rgba(59,130,246,0.15);color:#3b82f6;}
+  .bg-purple{background:rgba(139,92,246,0.15);color:#8b5cf6;}
+  .bg-gray{background:rgba(100,116,139,0.15);color:#64748b;}
+  .code{font-family:'JetBrains Mono',monospace;font-size:0.7em;background:rgba(15,23,42,0.9);padding:2px 6px;border-radius:4px;color:#22c55e;}
+  h2{font-size:0.8em;font-weight:600;color:#64748b;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;border-bottom:1px solid #1e3a5f;padding-bottom:6px;margin-top:16px;}
+  h3{font-size:0.75em;font-weight:600;color:#94a3b8;margin:10px 0 6px;}
+  .card{background:rgba(15,23,42,0.7);border:1px solid #1e3a5f;border-radius:10px;padding:14px;margin-bottom:10px;overflow-x:auto;}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:10px;margin-bottom:10px;}
+  table{width:100%;border-collapse:collapse;font-size:0.7em;}
+  th{color:#64748b;font-weight:500;text-align:left;padding:4px 5px;border-bottom:1px solid #1e3a5f;}
+  td{padding:4px 5px;border-bottom:1px solid rgba(30,58,95,0.3);}
+  .num{text-align:right;font-variant-numeric:tabular-nums;}
+  .ok{color:#22c55e;} .warn{color:#eab308;} .fail{color:#ef4444;}
+  .diagram{border:1px solid #1e3a5f;border-radius:8px;padding:16px;background:rgba(15,23,42,0.5);font-size:0.6em;color:#94a3b8;line-height:1.7;overflow-x:auto;white-space:pre;font-family:'JetBrains Mono',monospace;}
+  .tree{font-family:'JetBrains Mono',monospace;font-size:0.6em;color:#94a3b8;line-height:1.6;}
+  .tree .hl{color:#3b82f6;} .tree .gr{color:#22c55e;} .tree .am{color:#eab308;} .tree .rd{color:#ef4444;}
+  .status-bar{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0;}
+  .status-item{padding:4px 10px;border-radius:6px;font-size:0.65em;border:1px solid transparent;}
+  .footer{text-align:center;padding:20px;color:#64748b;font-size:0.65em;border-top:1px solid #1e3a5f;margin-top:16px;}
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <h1>🏗️ Full-Stack Deployment Blueprint</h1>
+    <div class="sub">Sonora Digital Corp + ABE Music Inc — 15,179 archivos · 12 containers · 6 sistemas · 21 agentes</div>
+  </div>
+  <div style="display:flex;gap:4px;flex-wrap:wrap;">
+    <span class="badge bg-green">8/10 ok</span>
+    <span class="badge bg-amber">2 failures</span>
+    <span class="badge bg-purple">v2.95</span>
+  </div>
+</div>
+
+<h2>📡 1. ENDPOINTS MAP</h2>
+<div class="card">
+  <table>
+    <tr><th>Endpoint</th><th>Puerto</th><th>Protocolo</th><th>Servicio</th><th>Status</th><th>Notas</th></tr>
+    <tr><td><span class="code">149.56.46.173:80</span></td><td>80</td><td>HTTP</td><td>Nginx → redirect HTTPS</td><td class="ok">✅</td><td>sonoradigitalcorp.com</td></tr>
+    <tr><td><span class="code">149.56.46.173:443</span></td><td>443</td><td>HTTPS</td><td>Nginx SSL</td><td class="fail">❌</td><td>Certs no existen → <span class="code">certbot certonly</span></td></tr>
+    <tr><td><span class="code">sonoradigitalcorp.com</span></td><td>→443→18989</td><td>HTTPS→HTTP</td><td>OpenClaw Gateway</td><td class="fail">❌</td><td>⬆ certs caidos</td></tr>
+    <tr><td><span class="code">api.sonoradigitalcorp.com</span></td><td>→443→5174</td><td>HTTPS→HTTP</td><td>Jarvis WebUI</td><td class="fail">❌</td><td>⬆ certs caidos</td></tr>
+    <tr><td><span class="code">mystika.sonoradigitalcorp.com</span></td><td>80</td><td>HTTP</td><td>Mystika (Next.js:3001 + API:4000)</td><td class="ok">✅</td><td>Sin SSL configurado</td></tr>
+    <tr><td><span class="code">:8080</span></td><td>8080</td><td>HTTP</td><td>Evolucion Dashboard</td><td class="ok">✅</td><td>Python http.server → ~/evolucion/</td></tr>
+    <tr><td><span class="code">:5180</span></td><td>5180</td><td>HTTP</td><td>ABE Service (FastAPI)</td><td class="ok">✅</td><td>PWA backend + estado.html</td></tr>
+    <tr><td><span class="code">:5174</span></td><td>5174</td><td>HTTP</td><td>Jarvis WebUI (Docker)</td><td class="ok">✅</td><td>Interfaz de agentes</td></tr>
+    <tr><td><span class="code">:8000</span></td><td>8000</td><td>HTTP</td><td>Hermes MCP</td><td class="fail">❌</td><td>Service unit not found</td></tr>
+    <tr><td><span class="code">:8931</span></td><td>8931</td><td>HTTP</td><td>Playwright MCP (Docker)</td><td class="ok">✅</td><td>Browser automation</td></tr>
+    <tr><td><span class="code">:18789</span></td><td>18789</td><td>HTTP</td><td>OpenClaw Gateway</td><td class="ok">✅</td><td>55 skills, 331MB RAM</td></tr>
+    <tr><td><span class="code">:18989</span></td><td>18989</td><td>HTTP</td><td>Sonora MCP Gateway (Node)</td><td class="ok">✅</td><td>18.5MB RAM</td></tr>
+    <tr><td><span class="code">:3001</span></td><td>3001</td><td>TCP</td><td>Mystika Web (Next.js)</td><td class="ok">✅</td><td>Node</td></tr>
+    <tr><td><span class="code">:4000</span></td><td>4000</td><td>TCP</td><td>Mystika API (Node)</td><td class="ok">✅</td><td>Node</td></tr>
+    <tr><td><span class="code">:5432</span></td><td>5432</td><td>TCP</td><td>PostgreSQL (Docker)</td><td class="ok">✅</td><td>Infra + Langfuse DB</td></tr>
+    <tr><td><span class="code">:5678</span></td><td>5678</td><td>HTTP</td><td>n8n (Docker)</td><td class="ok">✅</td><td>42 workflows</td></tr>
+    <tr><td><span class="code">:6379</span></td><td>6379</td><td>TCP</td><td>Redis (Docker)</td><td class="ok">✅</td><td>Cache + queue</td></tr>
+    <tr><td><span class="code">:6333-6334</span></td><td>6333</td><td>HTTP</td><td>Qdrant (Docker)</td><td class="ok">✅</td><td>Vector DB</td></tr>
+    <tr><td><span class="code">:7474</span></td><td>7474</td><td>HTTP</td><td>Neo4j Browser (Docker)</td><td class="ok">✅</td><td>v5.19.0 Community</td></tr>
+    <tr><td><span class="code">:7687</span></td><td>7687</td><td>Bolt</td><td>Neo4j (Docker)</td><td class="ok">✅</td><td>Graph DB</td></tr>
+    <tr><td><span class="code">:3000</span></td><td>3000</td><td>HTTP</td><td>Langfuse (Docker)</td><td class="ok">✅</td><td>LLM observability</td></tr>
+    <tr><td><span class="code">:3003</span></td><td>3003</td><td>HTTP</td><td>Telegram Bot (Docker)</td><td class="ok">✅</td><td>Container running</td></tr>
+    <tr><td><span class="code">:11434</span></td><td>11434</td><td>HTTP</td><td>Ollama</td><td class="ok">✅</td><td>6 modelos locales</td></tr>
+    <tr><td><span class="code">:8643</span></td><td>8643</td><td>TCP</td><td>Hermes (Python)</td><td class="ok">✅</td><td>PID 780329</td></tr>
+  </table>
+</div>
+
+<h2>🔐 2. HTTPS STATUS</h2>
+<div class="card">
+  <div class="grid">
+    <div>
+      <div class="status-bar">
+        <span class="status-item" style="background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.3);color:#ef4444;">❌ sonoradigitalcorp.com</span>
+        <span class="status-item" style="background:rgba(239,68,68,0.15);border-color:rgba(239,68,68,0.3);color:#ef4444;">❌ api.sonoradigitalcorp.com</span>
+        <span class="status-item" style="background:rgba(34,197,94,0.15);border-color:rgba(34,197,94,0.3);color:#22c55e;">✅ mystika.sonoradigitalcorp.com</span>
+      </div>
+      <div style="font-size:0.7em;color:#94a3b8;">
+        Nginx configs apuntan a <span class="code">/etc/letsencrypt/live/*/fullchain.pem</span> que NO EXISTE.<br>
+        <strong>Solucion:</strong><br>
+        1. <span class="code">certbot certonly --nginx -d sonoradigitalcorp.com -d www.sonoradigitalcorp.com</span><br>
+        2. <span class="code">certbot certonly --nginx -d api.sonoradigitalcorp.com</span><br>
+        3. <span class="code">systemctl reload nginx</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<h2>🗺️ 3. ROUTING MAP</h2>
+<div class="diagram">INTERNET
+  │
+  ├─ :80  ──► nginx ──┬─ sonoradigitalcorp.com ──► 301 HTTPS
+  │                    ├─ mystika.sonoradigitalcorp.com ──► proxy_pass :3001 (Next.js)
+  │                    │                                    └─ /api/ ──► proxy_pass :4000 (Node)
+  │                    ├─ api.sonoradigitalcorp.com ──► 301 HTTPS
+  │                    └─ (catch-all) ──► 404
+  │
+  ├─ :443 ──► nginx SSL ──┬─ sonoradigitalcorp.com ──► proxy_pass :18989 (MCP Gateway)
+  │                       └─ api.sonoradigitalcorp.com ──► proxy_pass :5174 (Jarvis WebUI)
+  │
+  ├─ :8080 ──► Python http.server ──► ~/evolucion/ (HTML dashboard)
+  │            /abe-dashboard.html  /abe-artists.html
+  │            /abe-revenue.html    /abe-contracts.html
+  │            /abe-blueprint.html  /index.html (War Room)
+  │
+  ├─ :5180 ──► ABE Service (FastAPI/PWA) ──► /api/health  /docs  /ws  /pwa/estado.html
+  │
+  ├─ :18789 ──► OpenClaw Gateway ──► 55 skills + Telegram bridge
+  │            └─ /ws ──► WebSocket para agentes
+  │
+  ├─ :18989 ──► Sonora MCP Gateway (Node) ──► MCP protocol
+  │            └─ / ──► OpenClaw via nginx reverse proxy
+  │
+  └─ :8931 ──► Playwright MCP (Docker) ──► Browser automation</div>
+
+<h2>🧠 4. AGENT ECOSYSTEM</h2>
+<div class="grid">
+  <div class="card">
+    <h3>Primary</h3>
+    <table>
+      <tr><th>Agente</th><th>Modelo</th><th>Role</th><th>Status</th></tr>
+      <tr><td>mystic</td><td>qwen3:4b-64k</td><td>Primary — alma del sistema</td><td class="ok">✅</td></tr>
+    </table>
+    <h3 style="margin-top:8px;">Sub-agents (20)</h3>
+    <table>
+      <tr><th>Agente</th><th>Modelo</th><th>Funcion</th></tr>
+      <tr><td>explore</td><td>qwen2.5:1.5b-32k</td><td>Explorador del sistema</td></tr>
+      <tr><td>builder</td><td>llama3.2:3b-64k</td><td>Constructor de features</td></tr>
+      <tr><td>reviewer</td><td>llama3.2:3b-64k</td><td>Code review / calidad</td></tr>
+      <tr><td>hermes</td><td>qwen2.5:1.5b-32k</td><td>Bridge multi-canal</td></tr>
+      <tr><td>openclaw</td><td>qwen2.5:1.5b-32k</td><td>Gateway 55 skills</td></tr>
+      <tr><td>sdd / spec</td><td>deepseek-r1:7b-64k</td><td>SDD pipeline (spec)</td></tr>
+      <tr><td>sdd / design</td><td>qwen3:4b-64k</td><td>SDD pipeline (design)</td></tr>
+      <tr><td>sdd / apply</td><td>llama3.2:3b-64k</td><td>SDD pipeline (apply)</td></tr>
+      <tr><td>sdd / verify</td><td>llama3.2:3b-64k</td><td>SDD pipeline (verify)</td></tr>
+      <tr><td>sdd / archive</td><td>qwen2.5:1.5b-32k</td><td>SDD pipeline (archive)</td></tr>
+      <tr><td>memory</td><td>qwen2.5:1.5b-32k</td><td>Engram + Neo4j + Qdrant</td></tr>
+      <tr><td>research</td><td>deepseek-r1:7b-64k</td><td>Investigacion profunda</td></tr>
+      <tr><td>code</td><td>llama3.2:3b-64k</td><td>Codigo general</td></tr>
+      <tr><td>sales</td><td>llama3.2:3b-64k</td><td>Sales OS (lead gen, pipeline)</td></tr>
+      <tr><td>dev</td><td>qwen3:4b-64k</td><td>Dev OS (CI/CD, tests)</td></tr>
+      <tr><td>support</td><td>qwen3:1.7b-32k</td><td>Support OS (tickets, SLAs)</td></tr>
+      <tr><td>agent-os</td><td>qwen3:4b-64k</td><td>Agent OS (harnesses, skills)</td></tr>
+      <tr><td>knowledge</td><td>qwen3:4b-64k</td><td>Knowledge OS (ADRs, memoria)</td></tr>
+      <tr><td>finance</td><td>qwen3:1.7b-32k</td><td>Finance OS (FinOps, revenue)</td></tr>
+      <tr><td>security</td><td>deepseek-r1:7b-64k</td><td>Security OS (auditoria)</td></tr>
+      <tr><td>ops</td><td>qwen2.5:1.5b-32k</td><td>Ops OS (infra, monitoreo)</td></tr>
+      <tr><td>quality</td><td>llama3.2:3b-64k</td><td>Quality OS (tests, eval)</td></tr>
+      <tr><td>strategy</td><td>deepseek-r1:7b-64k</td><td>Strategy OS (initiatives, score)</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h3>MCP Servers</h3>
+    <table>
+      <tr><th>MCP</th><th>URL</th><th>Status</th></tr>
+      <tr><td>hermes</td><td>localhost:8000</td><td class="fail">❌ process dead</td></tr>
+      <tr><td>openclaw</td><td>localhost:18789</td><td class="ok">✅ active</td></tr>
+      <tr><td>qdrant</td><td>localhost:6333</td><td class="ok">✅ active</td></tr>
+      <tr><td>neo4j</td><td>localhost:7687</td><td class="ok">✅ v5.19.0</td></tr>
+      <tr><td>n8n</td><td>localhost:5678</td><td class="ok">✅ 42 workflows</td></tr>
+      <tr><td>playwright</td><td>:8931</td><td class="ok">✅ browser</td></tr>
+    </table>
+    <h3>Ollama Models</h3>
+    <table>
+      <tr><th>Modelo</th><th>Tamaño</th><th>Contexto</th></tr>
+      <tr><td>deepseek-r1:7b-64k</td><td>4.7 GB</td><td>64k</td></tr>
+      <tr><td>qwen3:4b-64k</td><td>2.5 GB</td><td>64k</td></tr>
+      <tr><td>llama3.2:3b-64k</td><td>2.0 GB</td><td>64k</td></tr>
+      <tr><td>qwen3:1.7b-32k</td><td>1.4 GB</td><td>32k</td></tr>
+      <tr><td>qwen2.5:1.5b-32k</td><td>986 MB</td><td>32k</td></tr>
+      <tr><td>nomic-embed-text</td><td>274 MB</td><td>—</td></tr>
+    </table>
+  </div>
+</div>
+
+<h2>📁 5. PROJECT TREE</h2>
+<div class="card">
+<div class="tree">sonora-digital-corp/              15,179 files · 96GB disk (46% used)
+├── apps/                          Applications layer
+│   ├── jarvis/                    18 agents · RAG · Neo4j · Qdrant
+│   ├── webui/                     FastAPI frontend + WebSocket
+│   ├── voice/                     Whisper + TTS
+│   ├── hermes/                    MCP bridge + services
+│   └── abe-service/               ABE Music OS (FastAPI PWA)
+├── mcp/                           MCP Gateway + servers
+│   └── gateway/mcp-server-http.js Node HTTP MCP gateway
+├── scrapers/                      8 collectors (Deezer, Apple, YouTube, etc.)
+├── planner/                       Capability Registry + Decision Engine (70 tests)
+├── platforms/                     Multi-channel
+│   ├── telegram/                   Bot + 97 skills
+│   └── whatsapp/                  Bridge
+├── config/                        Registry, machines, secrets
+├── tests/                         79+ tests (unit · integration · e2e)
+├── infra/                         Docker, compose, n8n, monitoring
+├── products/                      ABE Music, AZREC, Masterclass
+├── scripts/                       50+ DevOps scripts
+├── sonora-enterprise-os/          Enterprise OS (constitution, prompts, harnesses)
+├── state/logs/                    Events, health, metrics
+├── backups/                       Daily snapshots (n8n, docker, nginx)
+├── docs/                          Documentation, PROTOCOLO, sessions
+├── business/                      Business entities, contracts
+└── opencode.json                  Agent ecosystem config (278 lines)
+</div>
+</div>
+
+<h2>🐳 6. DOCKER CONTAINERS</h2>
+<div class="card">
+  <table>
+    <tr><th>Container</th><th>Imagen</th><th>Puerto</th><th>Funcion</th></tr>
+    <tr><td>sdc-neo4j</td><td>neo4j:latest</td><td>7474 · 7687</td><td>Graph DB (sesiones, relaciones, CRM)</td></tr>
+    <tr><td>sdc-postgres</td><td>postgres:15</td><td>5432</td><td>SQL DB principal</td></tr>
+    <tr><td>sdc-langfuse-db</td><td>postgres:15</td><td>—</td><td>Langfuse backend DB</td></tr>
+    <tr><td>sdc-langfuse</td><td>langfuse/langfuse:2</td><td>3000</td><td>LLM observability</td></tr>
+    <tr><td>sdc-qdrant</td><td>qdrant/qdrant</td><td>6333-6334</td><td>Vector DB para RAG semantic</td></tr>
+    <tr><td>sdc-redis</td><td>redis:7-alpine</td><td>6379</td><td>Cache + queue (Celery/ Bull)</td></tr>
+    <tr><td>sdc-n8n</td><td>n8nio/n8n:latest</td><td>5678</td><td>Workflow automation (42 workflows)</td></tr>
+    <tr><td>sdc-jarvis-core</td><td>infra-jarvis-core</td><td>—</td><td>JARVIS agent core engine</td></tr>
+    <tr><td>sdc-jarvis-webui</td><td>infra-jarvis-webui</td><td>5174</td><td>JARVIS web interface</td></tr>
+    <tr><td>sdc-mcp-server</td><td>infra-mcp-server</td><td>8000</td><td>MCP protocol server</td></tr>
+    <tr><td>sdc-playwright-mcp</td><td>playwright:v1.51.0</td><td>8931</td><td>Browser automation MCP</td></tr>
+    <tr><td>sdc-telegram-bot</td><td>infra-telegram-bot</td><td>3003</td><td>Telegram bot bridge</td></tr>
+  </table>
+</div>
+
+<h2>⚙️ 7. SYSTEMD SERVICES</h2>
+<div class="card">
+  <table>
+    <tr><th>Servicio</th><th>Status</th><th>PID</th><th>RAM</th><th>Notas</th></tr>
+    <tr><td>nginx</td><td class="ok">✅ active</td><td>—</td><td>—</td><td>3 server blocks</td></tr>
+    <tr><td>docker</td><td class="ok">✅ active</td><td>—</td><td>—</td><td>12 containers</td></tr>
+    <tr><td>ollama</td><td class="ok">✅ active</td><td>214761</td><td>125.9M</td><td>6 modelos locales</td></tr>
+    <tr><td>abe-daemon</td><td class="ok">✅ active</td><td>592798</td><td>20.3M</td><td>24/7 monitoreo, ciclo cada 10min</td></tr>
+    <tr><td>openclaw-gateway</td><td class="ok">✅ active</td><td>177629</td><td>331M</td><td>55 skills, fallas con deepseek</td></tr>
+    <tr><td>sonora-mcp-gateway</td><td class="ok">✅ active</td><td>3800291</td><td>18.5M</td><td>Node.js MCP gateway</td></tr>
+    <tr><td>mystika-web</td><td class="ok">✅ active</td><td>1644832</td><td>—</td><td>Next.js</td></tr>
+    <tr><td>mystika-api</td><td class="ok">✅ active</td><td>1644812</td><td>—</td><td>Node API</td></tr>
+    <tr><td>mystika-bot</td><td class="ok">✅ active</td><td>—</td><td>—</td><td>Telegram bot</td></tr>
+    <tr><td>hermes-gateway</td><td class="fail">❌ failed</td><td>—</td><td>—</td><td>Unit hermes-gateway.service not found</td></tr>
+    <tr><td>evolucion-dashboard</td><td class="ok">✅ active</td><td>19742</td><td>18M</td><td>Python :8080 → ~/evolucion/</td></tr>
+  </table>
+</div>
+
+<h2>⏰ 8. CRON SCHEDULE</h2>
+<div class="card">
+  <table>
+    <tr><th>Intervalo</th><th>Comando</th><th>Funcion</th></tr>
+    <tr><td>cada 10 min</td><td>disk alert check</td><td>df -h / → alerta si >85%</td></tr>
+    <tr><td>cada 15 min</td><td>health-monitor.sh</td><td>Healthcheck general</td></tr>
+    <tr><td>cada 15 min</td><td>autonomous.sh</td><td>Auto-healing loop</td></tr>
+    <tr><td>cada 15 min</td><td>telegram-alerts.sh</td><td>Alertas a Telegram</td></tr>
+    <tr><td>cada hora</td><td>git pull --ff-only</td><td>Sync automatico con GitHub</td></tr>
+    <tr><td>cada hora</td><td>memory-save.py</td><td>Persistencia de memoria</td></tr>
+    <tr><td>cada 2h</td><td>autonomous-night.sh</td><td>Tareas nocturnas automaticas</td></tr>
+    <tr><td>cada 6h</td><td>scrapers.sync</td><td>Sincronizacion de datos de artistas</td></tr>
+    <tr><td>diario (2am)</td><td>logs rotation</td><td>find logs -mtime +14 -delete</td></tr>
+    <tr><td>diario (3am)</td><td>backup.sh</td><td>Backup completo del sistema</td></tr>
+    <tr><td>diario (8am)</td><td>daily-pipeline.sh</td><td>Pipeline diario de datos</td></tr>
+    <tr><td>semanal (lun 9:30)</td><td>abe-report-push.sh</td><td>Reporte semanal ABE Music</td></tr>
+  </table>
+</div>
+
+<h2>📊 9. RESOURCES</h2>
+<div class="grid">
+  <div class="card">
+    <h3>System</h3>
+    <table>
+      <tr><td>CPU</td><td>—</td></tr>
+      <tr><td>RAM</td><td>11.67 GB total · 4.4 GB used · 7.2 GB available</td></tr>
+      <tr><td>Swap</td><td>2 GB · 1.3 GB used (65%)</td></tr>
+      <tr><td>Disk</td><td>96 GB · 44 GB used (46%) · 52 GB free</td></tr>
+      <tr><td>Containers</td><td>12 Docker · 7 systemd</td></tr>
+      <tr><td>Procesos Python</td><td>4 (abe-daemon, :8080, :5180, :8643)</td></tr>
+      <tr><td>Archivos</td><td>15,179 en sonora-digital-corp</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h3>Git</h3>
+    <table>
+      <tr><td>Branch</td><td>main</td></tr>
+      <tr><td>Remote</td><td>github.com:sonoradigitalcorp-H/Sonora-Digital-Corp.git</td></tr>
+      <tr><td>Status</td><td class="ok">✅ clean</td></tr>
+      <tr><td>Ultimo commit</td><td>2aafb5e — fix: planner test_timeout</td></tr>
+      <tr><td>Commits total</td><td>300+</td></tr>
+      <tr><td>Sync</td><td>up to date with origin/main</td></tr>
+    </table>
+  </div>
+</div>
+
+<h2>⚠️ 10. WHAT'S BROKEN</h2>
+<div class="card">
+  <table>
+    <tr><th>#</th><th>Issue</th><th>Severidad</th><th>Impacto</th><th>Solucion</th></tr>
+    <tr>
+      <td>1</td>
+      <td><strong>HTTPS certs caidos</strong> — sonoradigitalcorp.com + api.sonoradigitalcorp.com</td>
+      <td><span class="badge bg-red">CRITICAL</span></td>
+      <td>Todo el trafico HTTPS muerto. dominios inaccesibles via browser</td>
+      <td><span class="code">certbot certonly --nginx -d ... && systemctl reload nginx</span></td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td><strong>Hermes Gateway caido</strong> — unit hermes-gateway.service not found</td>
+      <td><span class="badge bg-red">CRITICAL</span></td>
+      <td>MCP endpoint :8000 muerto. Comunicacion multi-canal caida</td>
+      <td>Reinstalar unit o migrar a Docker</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td><strong>Telegram Bot Token muerto</strong> — ABE_FENIX_BOT token no funciona</td>
+      <td><span class="badge bg-amber">HIGH</span></td>
+      <td>Bot no responde. Abe-daemon reporta cada 10min</td>
+      <td>Regenerar token en @BotFather y actualizar .env</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td><strong>OpenClaw falla con deepseek-r1</strong> — necesita OLLAMA_API_KEY incluso para local</td>
+      <td><span class="badge bg-amber">HIGH</span></td>
+      <td>OpenClaw no puede usar el modelo mas potente (7B). Fallback al siguiente</td>
+      <td><span class="code">export OLLAMA_API_KEY=dummy</span> en .env de OpenClaw</td>
+    </tr>
+    <tr>
+      <td>5</td>
+      <td><strong>Swap al 65%</strong> — 1.3GB de 2GB usados</td>
+      <td><span class="badge bg-amber">MEDIUM</span></td>
+      <td>Rendimiento degradado bajo carga sostenida</td>
+      <td>Agregar mas swap o reducir modelos Ollama</td>
+    </tr>
+    <tr>
+      <td>6</td>
+      <td><strong>Sin autoscaling / HA</strong> — single VPS, sin replica</td>
+      <td><span class="badge bg-amber">MEDIUM</span></td>
+      <td>Single point of failure. Caida del VPS = caida total</td>
+      <td>Plan de disaster recovery + second VPS</td>
+    </tr>
+    <tr>
+      <td>7</td>
+      <td><strong>No monitoring dashboard</strong> — sin Grafana / Prometheus visible</td>
+      <td><span class="badge bg-amber">LOW</span></td>
+      <td>No hay visibilidad centralizada de metricas</td>
+      <td>Configurar Prometheus + Grafana stack</td>
+    </tr>
+  </table>
+</div>
+
+<h2>🧰 11. TOOLS & CLI REFERENCE</h2>
+<div class="grid">
+  <div class="card">
+    <table>
+      <tr><th>Comando</th><th>Que hace</th></tr>
+      <tr><td><span class="code">/status</span></td><td>Healthcheck completo de todos los servicios</td></tr>
+      <tr><td><span class="code">/backup</span></td><td>Backup completo (apps, config, DBs)</td></tr>
+      <tr><td><span class="code">/brain</span></td><td>Dashboard brain graph en vivo</td></tr>
+      <tr><td><span class="code">/gsd</span></td><td>Get Shit Done — planifica + ejecuta</td></tr>
+      <tr><td><span class="code">/sdd-new</span></td><td>Pipeline SDD completo (6 fases)</td></tr>
+      <tr><td><span class="code">/build</span></td><td>Construir feature siguiendo SDD</td></tr>
+      <tr><td><span class="code">/sales</span></td><td>Sales OS — pipeline de ventas</td></tr>
+      <tr><td><span class="code">/dev</span></td><td>Dev OS — CI/CD, tests, builds</td></tr>
+      <tr><td><span class="code">/ops</span></td><td>Ops OS — infra, monitoreo</td></tr>
+      <tr><td><span class="code">/security</span></td><td>Security OS — auditoria</td></tr>
+      <tr><td><span class="code">/quality</span></td><td>Quality OS — tests, evaluacion</td></tr>
+      <tr><td><span class="code">/strategy</span></td><td>Strategy OS — score, iniciativas</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <table>
+      <tr><th>Bash</th><th>Funcion</th></tr>
+      <tr><td><span class="code">pytest tests/planner/ -v</span></td><td>70 planner tests</td></tr>
+      <tr><td><span class="code">ruff check planner/ scrapers/</span></td><td>Lint todo</td></tr>
+      <tr><td><span class="code">docker compose -f infra/docker-compose.yml up -d</span></td><td>Levantar todos los containers</td></tr>
+      <tr><td><span class="code">python3 scripts/abe-daemon.py</span></td><td>ABE daemon manual</td></tr>
+      <tr><td><span class="code">python3 -m scrapers.sync</span></td><td>Sync datos artistas</td></tr>
+      <tr><td><span class="code">PYTHONPATH=. python scrapers/sync.py</span></td><td>Full sync cycle</td></tr>
+      <tr><td><span class="code">pm2 monit</span></td><td>PM2 monitoring</td></tr>
+      <tr><td><span class="code">systemctl status abe-daemon</span></td><td>ABE service health</td></tr>
+      <tr><td><span class="code">ss -tlnp</span></td><td>Ver todos los puertos</td></tr>
+      <tr><td><span class="code">docker ps -a</span></td><td>Estado containers</td></tr>
+    </table>
+  </div>
+</div>
+
+<h2>🔗 12. MCP NETWORK</h2>
+<div class="diagram">┌────────────────────────────────────────────────────────────────────┐
+│                        MCP ECOSYSTEM                                │
+│                                                                    │
+│  opencode.json ──► 5 MCP endpoints registrados                     │
+│                                                                    │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────┐  ┌──────────┐   │
+│  │  hermes      │  │  openclaw    │  │  qdrant  │  │  neo4j   │   │
+│  │  :8000 ❌    │  │  :18789 ✅   │  │  :6333 ✅│  │  :7687 ✅│   │
+│  │  multi-canal │  │  55 skills   │  │  vector  │  │  graph   │   │
+│  │  telegram    │  │  browser     │  │  DB      │  │  DB      │   │
+│  │  whatsapp    │  │  payments    │  │  RAG     │  │  CRM     │   │
+│  └──────────────┘  └──────────────┘  └──────────┘  └──────────┘   │
+│                                      ┌──────────┐                  │
+│                                      │  n8n     │                  │
+│                                      │  :5678 ✅│                  │
+│                                      │  workflow│                  │
+│                                      │  42 flows│                  │
+│                                      └──────────┘                  │
+│                                                                    │
+│  Gateway: sonora-mcp-gateway (:18989) → Node.js HTTP               │
+│  Gateway: openclaw-gateway (:18789) → Go binary                    │
+└────────────────────────────────────────────────────────────────────┘</div>
+
+<h2>📦 13. ABE MUSIC PRODUCT SUITE</h2>
+<div class="card">
+  <table>
+    <tr><th>Producto</th><th>URL</th><th>Datos clave</th><th>Status</th></tr>
+    <tr><td>Dashboard</td><td><span class="code">:8080/abe-dashboard.html</span></td><td>$479K revenue · 119.7M streams · 3 artistas</td><td class="ok">✅ v1</td></tr>
+    <tr><td>Artist Profiles</td><td><span class="code">:8080/abe-artists.html</span></td><td>Hector 115M · Jesus 4.6M · Javier 50K</td><td class="ok">✅ v1</td></tr>
+    <tr><td>Revenue Intelligence</td><td><span class="code">:8080/abe-revenue.html</span></td><td>$0.004/stream · 100% Spotify · proyecciones</td><td class="ok">✅ v1</td></tr>
+    <tr><td>Contracts Portal</td><td><span class="code">:8080/abe-contracts.html</span></td><td>Oplaai · Colonize Media · Revenue Ledger</td><td class="ok">✅ v1</td></tr>
+    <tr><td>Project Blueprint</td><td><span class="code">:8080/abe-blueprint.html</span></td><td>Arquitectura · Stack · Roadmap</td><td class="ok">✅ v1</td></tr>
+    <tr><td>War Room</td><td><span class="code">:8080/index.html</span></td><td>Centro de comando ejecutivo</td><td class="ok">✅ v2</td></tr>
+    <tr><td>ABE PWA (Legacy)</td><td><span class="code">:5180/pwa/</span></td><td>Asistente de voz con avatar 3D</td><td class="ok">✅ legacy</td></tr>
+  </table>
+</div>
+
+<h2>📈 14. DATA FLOW</h2>
+<div class="diagram">EXTERNAL SOURCES                    INTERNAL PIPELINE                  PRODUCTS
+─────────────────                  ──────────────────                  ────────
+Spotify API ─────┐                 ┌──────────────┐                   ┌────────────┐
+Deezer API ──────┤                 │  scrapers/   │                   │  ABE       │
+Apple Music ─────┤──► Python ──►   │  sync.py     │──► JSON ──────►   │  Dashboard │
+YouTube ─────────┤    scraping     │  (cada 6h)   │                   │  (HTML)    │
+Instagram ───────┘                 └──────┬───────┘                   └────────────┘
+                                          │                           ┌────────────┐
+CEO Dashboard ────► manual ──────────────►┤  JSON Lake                │  Revenue   │
+(screenshots)                              │  ~/evolucion/            │  Intel     │
+                                          │                           └────────────┘
+STATS.FM ─────────► Python ──────────────►┤                          ┌────────────┐
+(scraper-smoking)                          │                           │  Artists   │
+                                          │                           └────────────┘
+n8n Workflows ────► 42 automation ───────►┤                          ┌────────────┐
+(Telegram, alerts)                         │                           │  Contracts │
+                                          │                           └────────────┘
+Memory Pipeline                            │
+Neo4j ◄── Engram ◄── agents ◄── opencode  │   ┌──────────────────────┐
+Qdrant ◄── RAG ──── agents ◄── opencode   │   │  Agent Ecosystem     │
+                                          └──►│  21 agents · 6 models │
+                                              │  MCP · SDD · OS       │
+                                              └──────────────────────┘</div>
+
+<h2>🔧 15. QUICK FIXES (URGENT)</h2>
+<div class="card">
+  <div style="font-size:0.72em;">
+    <div style="padding:8px 0;border-bottom:1px solid rgba(30,58,95,0.3);">
+      <strong style="color:#ef4444;">1. HTTPS —</strong> <span class="code">certbot certonly --nginx -d sonoradigitalcorp.com -d www.sonoradigitalcorp.com && certbot certonly --nginx -d api.sonoradigitalcorp.com && systemctl reload nginx</span>
+    </div>
+    <div style="padding:8px 0;border-bottom:1px solid rgba(30,58,95,0.3);">
+      <strong style="color:#ef4444;">2. Hermes —</strong> <span class="code">systemctl status hermes-gateway</span> → reinstalar unit o migrar a Docker compose
+    </div>
+    <div style="padding:8px 0;border-bottom:1px solid rgba(30,58,95,0.3);">
+      <strong style="color:#eab308;">3. Telegram Bot —</strong> <span class="code">Ir a @BotFather → regenerar token → actualizar .env ABE_FENIX_BOT_TOKEN</span>
+    </div>
+    <div style="padding:8px 0;">
+      <strong style="color:#eab308;">4. OpenClaw + deepseek —</strong> <span class="code">export OLLAMA_API_KEY=dummy</span> en <span class="code">~/.openclaw/gateway.env</span>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  Sonora Digital Corp · ABE Music Inc · Full-Stack Blueprint v2.95 · 2026-07-02
+</div>
+</body>
+</html>

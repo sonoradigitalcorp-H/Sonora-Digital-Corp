@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Sistema Solar de Agentes — Mystic OS</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0b12;font-family:-apple-system,BlinkMacSystemFont,'Inter','Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;color:#edf0f7;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+#scene-container{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
+#scene-container canvas{display:block;width:100%;height:100%}
+#title{position:fixed;top:24px;left:50%;transform:translateX(-50%);z-index:20;text-align:center;pointer-events:none;user-select:none}
+#title h1{font-size:20px;font-weight:600;letter-spacing:2px;text-transform:uppercase;background:linear-gradient(135deg,#edf0f7 0%,#c8924b 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+#title p{font-size:11px;color:rgba(237,240,247,0.35);letter-spacing:3px;text-transform:uppercase;margin-top:4px}
+.labels-container{position:fixed;top:0;left:0;width:100%;height:100%;z-index:5;pointer-events:none}
+.label{position:absolute;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;transform:translate(-50%,-50%);transition:transform 0.15s,opacity 0.2s;pointer-events:none}
+.label .emoji{font-size:22px;line-height:1;filter:drop-shadow(0 0 8px rgba(255,255,255,0.15))}
+.label .name{font-size:9px;letter-spacing:1.5px;text-transform:uppercase;color:rgba(237,240,247,0.5);white-space:nowrap;text-shadow:0 0 8px rgba(0,0,0,0.8)}
+#info-backdrop{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.4);z-index:90;opacity:0;pointer-events:none;transition:opacity 0.3s ease}
+#info-backdrop.visible{opacity:1;pointer-events:all}
+#info-panel{position:fixed;z-index:100;background:rgba(15,15,26,0.85);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,0.06);color:#edf0f7;transition:transform 0.4s cubic-bezier(0.16,1,0.3,1),opacity 0.3s ease;overflow:hidden}
+#info-panel.hidden{opacity:0;pointer-events:none}
+@media(min-width:768px){
+#info-panel{top:50%;left:50%;transform:translate(-50%,-50%) scale(0.92);max-width:380px;width:90%;padding:36px 32px 32px;border-radius:20px}
+#info-panel.visible{opacity:1;transform:translate(-50%,-50%) scale(1);pointer-events:all}
+}
+@media(max-width:767px){
+#info-panel{bottom:0;left:0;right:0;top:auto;transform:translateY(100%);border-radius:20px 20px 0 0;max-width:100%;width:100%;padding:28px 24px 32px}
+#info-panel.visible{opacity:1;transform:translateY(0);pointer-events:all}
+}
+.close-btn{position:absolute;top:12px;right:14px;background:none;border:none;color:rgba(237,240,247,0.35);font-size:22px;cursor:pointer;padding:6px;line-height:1;transition:color 0.2s;z-index:2}
+.close-btn:hover{color:rgba(237,240,247,0.8)}
+.agent-icon{font-size:42px;margin-bottom:8px;line-height:1}
+#info-panel h2{font-size:24px;font-weight:600;margin-bottom:4px;letter-spacing:-0.3px}
+.badge{display:inline-block;background:rgba(200,146,75,0.15);color:#c8924b;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;padding:3px 10px;border-radius:4px;border:1px solid rgba(200,146,75,0.2);margin-bottom:14px;font-weight:500}
+.benefit{font-size:15px;line-height:1.5;color:#edf0f7;margin-bottom:10px;font-weight:500}
+.desc{font-size:13px;line-height:1.6;color:rgba(237,240,247,0.6);margin-bottom:16px}
+.ask{font-size:12px;line-height:1.5;color:rgba(237,240,247,0.45);margin-bottom:20px;padding:10px 14px;background:rgba(255,255,255,0.03);border-radius:10px;border:1px solid rgba(255,255,255,0.04)}
+.ask strong{color:rgba(237,240,247,0.6)}
+.activate-btn{display:inline-block;padding:10px 28px;background:linear-gradient(135deg,#c8924b 0%,#a6753a 100%);color:#0a0b12;font-size:14px;font-weight:600;border-radius:10px;text-decoration:none;transition:transform 0.2s,box-shadow 0.2s;border:none;cursor:pointer;letter-spacing:0.3px}
+.activate-btn:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(200,146,75,0.3)}
+@media(max-width:480px){
+#title h1{font-size:16px}
+#title p{font-size:9px;letter-spacing:2px}
+.label .emoji{font-size:18px}
+.label .name{font-size:8px}
+#info-panel{padding:24px 18px 28px}
+.agent-icon{font-size:34px}
+#info-panel h2{font-size:20px}
+.benefit{font-size:14px}
+.desc{font-size:12px}
+}
+@media(max-height:500px){
+#title{top:12px}
+#title h1{font-size:14px}
+#title p{font-size:8px;margin-top:2px}
+.label .emoji{font-size:16px}
+.label .name{font-size:7px}
+#info-panel{padding:16px 16px 20px}
+#info-panel .agent-icon{font-size:28px;margin-bottom:4px}
+#info-panel h2{font-size:18px}
+.benefit{font-size:13px}
+.desc{font-size:11px;margin-bottom:10px}
+.ask{font-size:11px;margin-bottom:12px;padding:8px 12px}
+.activate-btn{padding:8px 20px;font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<div id="scene-container"></div>
+
+<div id="title">
+<h1>Sistema Solar de Agentes</h1>
+<p>Mystic OS</p>
+</div>
+
+<div class="labels-container" id="labels-container"></div>
+
+<div id="info-backdrop"></div>
+
+<div id="info-panel" class="hidden"></div>
+
+<script>
+(function(){
+'use strict';
+
+var agents = [
+{name:'Social',emoji:'\u{1F300}',color:'#4FC3F7',orbit:3.5,size:0.30,benefit:'Gestiona tus redes sociales autom\u00e1ticamente',desc:'Programa contenido, analiza engagement, responde comentarios y mantiene tu presencia online activa 24/7.',ask:'Di: \u201cQuiero una campa\u00f1a en redes\u201d o \u201cPublica en Instagram\u201d'},
+{name:'Sales',emoji:'\u{1F4B0}',color:'#F59E0B',orbit:4.0,size:0.35,benefit:'Convierte leads en clientes sin esfuerzo',desc:'Llama a leads, califica prospectos, env\u00eda propuestas y cierra ventas sin intervenci\u00f3n humana.',ask:'Di: \u201cNecesito vender m\u00e1s\u201d o \u201cLlama al lead de ayer\u201d'},
+{name:'Booking',emoji:'\u{1F4C5}',color:'#34D399',orbit:4.5,size:0.25,benefit:'Agenda citas y reuniones sin fricci\u00f3n',desc:'Sincroniza calendarios, agenda llamadas y gestiona tu disponibilidad en tiempo real.',ask:'Di: \u201cAgenda una reuni\u00f3n ma\u00f1ana\u201d o \u201cReserva una cita\u201d'},
+{name:'Security',emoji:'\u{1F6E1}\uFE0F',color:'#EF4444',orbit:5.0,size:0.30,benefit:'Protege tu negocio 24/7',desc:'Monitorea amenazas, detecta intrusiones y protege tus datos con defensa automatizada.',ask:'Di: \u201cRevisa la seguridad del sistema\u201d o \u201cEscanear vulnerabilidades\u201d'},
+{name:'Support',emoji:'\u{1F91D}',color:'#8B5CF6',orbit:5.5,size:0.32,benefit:'Atenci\u00f3n al cliente sin l\u00edmites',desc:'Responde tickets, resuelve dudas y mantiene a tus clientes felices sin colas de espera.',ask:'Di: \u201cAyuda al cliente de ABE Music\u201d o \u201cNuevo ticket\u201d'},
+{name:'Content',emoji:'\u270D\uFE0F',color:'#EC4899',orbit:6.0,size:0.25,benefit:'Crea contenido que conecta',desc:'Genera blogs, videos, copywriting y estrategias de contenido para tu marca.',ask:'Di: \u201cEscribe un art\u00edculo sobre m\u00fasica\u201d o \u201cCrea un post\u201d'},
+{name:'Analytics',emoji:'\u{1F4CA}',color:'#06B6D4',orbit:6.5,size:0.22,benefit:'Datos que impulsan decisiones',desc:'Dashboards en vivo, reportes de KPIs y an\u00e1lisis predictivo para tu negocio.',ask:'Di: \u201cMu\u00e9strame las m\u00e9tricas del mes\u201d o \u201cDashboard de ventas\u201d'},
+{name:'Voice',emoji:'\u{1F399}\uFE0F',color:'#F97316',orbit:7.0,size:0.28,benefit:'Tu asistente de voz inteligente',desc:'STT/TTS, llamadas automatizadas y asistentes de voz para tu operaci\u00f3n diaria.',ask:'Di: \u201cLlama al proveedor\u201d o \u201cEnv\u00eda un mensaje de voz\u201d'},
+{name:'Automation',emoji:'\u26A1',color:'#14B8A6',orbit:7.5,size:0.26,benefit:'Automatiza todo tu negocio',desc:'Workflows, n8n, procesos autom\u00e1ticos y orquestaci\u00f3n de tareas repetitivas.',ask:'Di: \u201cAutomatiza la facturaci\u00f3n mensual\u201d o \u201cCrea un workflow\u201d'}
+];
+
+var scene=new THREE.Scene();
+var camera=new THREE.PerspectiveCamera(45,window.innerWidth/window.innerHeight,0.1,100);
+camera.position.set(0,4,16);
+camera.lookAt(0,0,0);
+
+var renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});
+renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.2;
+document.getElementById('scene-container').appendChild(renderer.domElement);
+
+var clock=new THREE.Clock();
+var planetMeshes=[];
+var labelsContainer=document.getElementById('labels-container');
+
+var hemiLight=new THREE.HemisphereLight(0x445566,0x221122,0.4);
+scene.add(hemiLight);
+var ambientLight=new THREE.AmbientLight(0x222244,0.3);
+scene.add(ambientLight);
+var sunLight=new THREE.PointLight(0xffd080,1.8,30);
+sunLight.position.set(0,0,0);
+scene.add(sunLight);
+
+var sunGeo=new THREE.SphereGeometry(0.6,32,32);
+var sunMat=new THREE.MeshBasicMaterial({color:0xfdb813});
+var sun=new THREE.Mesh(sunGeo,sunMat);
+scene.add(sun);
+
+function makeGlowTexture(){
+var c=document.createElement('canvas');
+c.width=256;c.height=256;
+var ctx=c.getContext('2d');
+var g=ctx.createRadialGradient(128,128,0,128,128,128);
+g.addColorStop(0,'rgba(255,220,140,1)');
+g.addColorStop(0.15,'rgba(255,200,100,0.8)');
+g.addColorStop(0.4,'rgba(255,180,80,0.3)');
+g.addColorStop(0.7,'rgba(200,120,40,0.08)');
+g.addColorStop(1,'rgba(200,100,30,0)');
+ctx.fillStyle=g;
+ctx.fillRect(0,0,256,256);
+return new THREE.CanvasTexture(c);
+}
+var glowTex=makeGlowTexture();
+var glowMat=new THREE.SpriteMaterial({map:glowTex,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false});
+var glowSprite=new THREE.Sprite(glowMat);
+glowSprite.scale.set(4.5,4.5,1);
+scene.add(glowSprite);
+
+var innerGlowMat=new THREE.SpriteMaterial({map:glowTex,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:0.3});
+var innerGlow=new THREE.Sprite(innerGlowMat);
+innerGlow.scale.set(2.2,2.2,1);
+scene.add(innerGlow);
+
+function makeStarField(){
+var count=2500;
+var positions=new Float32Array(count*3);
+var sizes=new Float32Array(count);
+for(var i=0;i<count;i++){
+var r=40+Math.random()*60;
+var theta=Math.random()*Math.PI*2;
+var phi=Math.acos(2*Math.random()-1);
+positions[i*3]=r*Math.sin(phi)*Math.cos(theta);
+positions[i*3+1]=r*Math.cos(phi);
+positions[i*3+2]=r*Math.sin(phi)*Math.sin(theta);
+sizes[i]=0.3+Math.random()*0.7;
+}
+var geo=new THREE.BufferGeometry();
+geo.setAttribute('position',new THREE.BufferAttribute(positions,3));
+geo.setAttribute('size',new THREE.BufferAttribute(sizes,1));
+var mat=new THREE.PointsMaterial({
+color:0xffffff,
+size:0.12,
+transparent:true,
+opacity:0.8,
+sizeAttenuation:true
+});
+var stars=new THREE.Points(geo,mat);
+scene.add(stars);
+return stars;
+}
+var starField=makeStarField();
+
+function hexToThree(c){
+c=c.replace('#','');
+return new THREE.Color(parseInt(c.substring(0,2),16)/255,parseInt(c.substring(2,4),16)/255,parseInt(c.substring(4,6),16)/255);
+}
+
+agents.forEach(function(agent,i){
+var col=hexToThree(agent.color);
+var mat=new THREE.MeshStandardMaterial({
+color:col,
+emissive:col,
+emissiveIntensity:0.1,
+metalness:0.2,
+roughness:0.7
+});
+var geo=new THREE.SphereGeometry(agent.size,24,24);
+var mesh=new THREE.Mesh(geo,mat);
+agent.angle=(i/agents.length)*Math.PI*2+Math.random()*0.3;
+agent.speed=0.6/agent.orbit;
+mesh.position.x=Math.cos(agent.angle)*agent.orbit;
+mesh.position.z=Math.sin(agent.angle)*agent.orbit;
+scene.add(mesh);
+agent.mesh=mesh;
+planetMeshes.push(mesh);
+
+var orbitPoints=[];
+var segs=64;
+for(var j=0;j<=segs;j++){
+var a=(j/segs)*Math.PI*2;
+orbitPoints.push(new THREE.Vector3(Math.cos(a)*agent.orbit,0,Math.sin(a)*agent.orbit));
+}
+var orbitGeo=new THREE.BufferGeometry().setFromPoints(orbitPoints);
+var orbitMat=new THREE.LineBasicMaterial({
+color:col,
+transparent:true,
+opacity:0.12,
+depthWrite:false
+});
+var orbitLine=new THREE.LineLoop(orbitGeo,orbitMat);
+scene.add(orbitLine);
+
+var label=document.createElement('div');
+label.className='label';
+label.innerHTML='<span class="emoji">'+agent.emoji+'</span><span class="name">'+agent.name+'</span>';
+labelsContainer.appendChild(label);
+agent.label=label;
+});
+
+var raycaster=new THREE.Raycaster();
+var mouse=new THREE.Vector2();
+var pointerStart={x:0,y:0};
+var interactionMode='none';
+var hoveredIndex=-1;
+var infoPanel=document.getElementById('info-panel');
+var backdrop=document.getElementById('info-backdrop');
+
+function getIntersections(event){
+mouse.x=(event.clientX/window.innerWidth)*2-1;
+mouse.y=-(event.clientY/window.innerHeight)*2+1;
+raycaster.setFromCamera(mouse,camera);
+return raycaster.intersectObjects(planetMeshes);
+}
+
+function resetGlow(){
+agents.forEach(function(a,i){
+if(i!==hoveredIndex){
+a.mesh.material.emissiveIntensity=0.1;
+}
+});
+}
+
+function handleHover(event){
+var hits=getIntersections(event);
+resetGlow();
+if(hits.length>0){
+var idx=planetMeshes.indexOf(hits[0].object);
+if(idx>=0){
+hoveredIndex=idx;
+agents[idx].mesh.material.emissiveIntensity=0.9;
+renderer.domElement.style.cursor='pointer';
+}else{
+hoveredIndex=-1;
+renderer.domElement.style.cursor='default';
+}
+}else{
+hoveredIndex=-1;
+renderer.domElement.style.cursor='default';
+}
+}
+
+function handleClick(event){
+var hits=getIntersections(event);
+if(hits.length>0){
+var idx=planetMeshes.indexOf(hits[0].object);
+if(idx>=0){
+showInfo(agents[idx]);
+return;
+}
+}
+hideInfo();
+}
+
+function showInfo(agent){
+backdrop.classList.add('visible');
+infoPanel.classList.remove('hidden');
+infoPanel.classList.add('visible');
+infoPanel.innerHTML=
+'<button class="close-btn" id="panel-close-btn">\u2715</button>'+
+'<div class="agent-icon">'+agent.emoji+'</div>'+
+'<h2>'+agent.name+'</h2>'+
+'<div class="badge">24/7</div>'+
+'<p class="benefit">'+agent.benefit+'</p>'+
+'<p class="desc">'+agent.desc+'</p>'+
+'<p class="ask"><strong>C\u00f3mo pedirle:</strong> '+agent.ask+'</p>'+
+'<a href="/chat" class="activate-btn">Activar ahora \u2192</a>';
+document.getElementById('panel-close-btn').onclick=function(e){
+e.stopPropagation();
+hideInfo();
+};
+backdrop.onclick=hideInfo;
+}
+
+function hideInfo(){
+backdrop.classList.remove('visible');
+infoPanel.classList.remove('visible');
+infoPanel.classList.add('hidden');
+hoveredIndex=-1;
+resetGlow();
+}
+
+function onPointerDown(e){
+pointerStart={x:e.clientX,y:e.clientY};
+interactionMode='click';
+}
+
+function onPointerMove(e){
+if(interactionMode==='click'){
+var dx=e.clientX-pointerStart.x;
+var dy=e.clientY-pointerStart.y;
+if(dx*dx+dy*dy>16){
+interactionMode='drag';
+}
+}
+if(interactionMode==='drag'){
+var dx=e.clientX-pointerStart.x;
+cameraAngle-=dx*0.005;
+pointerStart.x=e.clientX;
+pointerStart.y=e.clientY;
+resetGlow();
+renderer.domElement.style.cursor='grabbing';
+}else{
+handleHover(e);
+}
+}
+
+function onPointerUp(e){
+if(interactionMode==='click'){
+handleClick(e);
+resetGlow();
+}else if(interactionMode==='drag'){
+renderer.domElement.style.cursor='default';
+resetGlow();
+}
+interactionMode='none';
+}
+
+renderer.domElement.addEventListener('pointerdown',onPointerDown);
+renderer.domElement.addEventListener('pointermove',onPointerMove);
+renderer.domElement.addEventListener('pointerup',onPointerUp);
+
+renderer.domElement.addEventListener('touchstart',function(e){
+if(e.touches.length===1){
+var t=e.touches[0];
+pointerStart={x:t.clientX,y:t.clientY};
+interactionMode='click';
+}
+},{passive:true});
+
+renderer.domElement.addEventListener('touchmove',function(e){
+if(e.touches.length===1&&interactionMode==='click'){
+var t=e.touches[0];
+var dx=t.clientX-pointerStart.x;
+var dy=t.clientY-pointerStart.y;
+if(dx*dx+dy*dy>16){
+interactionMode='drag';
+}
+}
+if(interactionMode==='drag'&&e.touches.length===1){
+var t=e.touches[0];
+var dx=t.clientX-pointerStart.x;
+cameraAngle-=dx*0.005;
+pointerStart.x=t.clientX;
+pointerStart.y=t.clientY;
+resetGlow();
+}
+},{passive:true});
+
+renderer.domElement.addEventListener('touchend',function(e){
+if(interactionMode==='click'){
+var rect=renderer.domElement.getBoundingClientRect();
+handleClick({clientX:pointerStart.x,clientY:pointerStart.y});
+resetGlow();
+}else if(interactionMode==='drag'){
+resetGlow();
+}
+interactionMode='none';
+});
+
+var cameraAngle=0;
+var cameraElevation=Math.PI/6;
+
+function updateCamera(){
+var dist=16;
+camera.position.x=Math.sin(cameraAngle)*dist*Math.cos(cameraElevation);
+camera.position.y=4+Math.sin(cameraElevation)*dist;
+camera.position.z=Math.cos(cameraAngle)*dist*Math.cos(cameraElevation);
+camera.lookAt(0,0,0);
+}
+
+var _labelVec=new THREE.Vector3();
+function updateLabels(){
+var w=window.innerWidth;
+var h=window.innerHeight;
+agents.forEach(function(agent){
+_labelVec.copy(agent.mesh.position);
+_labelVec.project(camera);
+if(_labelVec.z>1){
+agent.label.style.display='none';
+return;
+}
+var x=(_labelVec.x*0.5+0.5)*w;
+var y=(-_labelVec.y*0.5+0.5)*h;
+agent.label.style.display='flex';
+agent.label.style.left=x+'px';
+agent.label.style.top=y+'px';
+var scale=1+Math.max(0,1-_labelVec.z)*0.3;
+agent.label.style.transform='translate(-50%,-50%) scale('+scale+')';
+});
+}
+
+function animate(){
+requestAnimationFrame(animate);
+var delta=Math.min(clock.getDelta(),0.05);
+var elapsed=clock.getElapsedTime();
+if(interactionMode!=='drag'){
+cameraAngle+=delta*0.04;
+}
+updateCamera();
+agents.forEach(function(agent){
+agent.angle+=agent.speed*delta;
+agent.mesh.position.x=Math.cos(agent.angle)*agent.orbit;
+agent.mesh.position.z=Math.sin(agent.angle)*agent.orbit;
+});
+sun.rotation.y+=delta*0.3;
+var pulse=1+Math.sin(elapsed*0.4)*0.04;
+glowSprite.scale.set(pulse*4.5,pulse*4.5,1);
+innerGlow.scale.set(pulse*2.2,pulse*2.2,1);
+innerGlow.material.opacity=0.25+Math.sin(elapsed*0.3)*0.08;
+updateLabels();
+renderer.render(scene,camera);
+}
+
+function onResize(){
+var w=window.innerWidth;
+var h=window.innerHeight;
+camera.aspect=w/h;
+camera.updateProjectionMatrix();
+renderer.setSize(w,h);
+}
+window.addEventListener('resize',onResize);
+
+animate();
+
+})();
+</script>
+</body>
+</html>

@@ -1,28 +1,24 @@
-"""Event Handler: stores events into Memory System (HAS-002/003)"""
+import json
+import logging
 from pathlib import Path
 from typing import Any
 
-from events.handlers.base import EventHandler
+log = logging.getLogger("events.memory_handler")
 
-REPO = Path(__file__).resolve().parent.parent.parent
+PROCESSED_DIR = Path("state/events/processed")
+PROCESSED_DIR.mkdir(parents=True, exist_ok=True)
+MEMORY_FILE = Path("state/events/memory.jsonl")
 
 
-class MemoryHandler(EventHandler):
-    name = "memory"
-
-    def __init__(self):
-        self._enabled = True
-
-    async def handle(self, event: dict) -> None:
-        if not self._enabled:
-            return
+class MemoryHandler:
+    def handle(self, event: dict[str, Any]) -> None:
+        event_id = event.get("id", "unknown")
+        batch_path = PROCESSED_DIR / f"event-{event_id}.json"
         try:
-            memory_dir = REPO / "state" / "events" / "processed"
-            memory_dir.mkdir(parents=True, exist_ok=True)
-            evt_type = event.get("type", event.get("event", "unknown"))
-            safe_type = evt_type.replace(".", "_").replace("/", "_")
-            path = memory_dir / f"{event.get('id', safe_type)}.json"
-            import json
-            path.write_text(json.dumps(event, indent=2, default=str))
-        except Exception:
-            pass
+            with open(batch_path, "w") as f:
+                json.dump(event, f, indent=2)
+            with open(MEMORY_FILE, "a") as f:
+                f.write(json.dumps(event) + "\n")
+            log.debug("Event stored: %s", event_id)
+        except Exception as e:
+            log.error("Failed to store event %s: %s", event_id, e)

@@ -1,0 +1,9 @@
+tenant_id: sonora-digital
+display_name: "Sonora Digital Corp"
+language: es
+timezone: America/Mexico_City
+default_model: openrouter/anthropic/claude-sonnet-4-20250514
+fallback_model: openrouter/deepseek/deepseek-chat
+max_tokens: 8192
+qdrant_collection: tenant_sonora_digital_memory
+neo4j_database: sonora_digital

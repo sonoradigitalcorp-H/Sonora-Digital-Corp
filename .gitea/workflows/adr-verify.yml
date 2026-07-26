@@ -1,0 +1,41 @@
+name: ADR/Spec Verification
+on: [push, pull_request]
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Validate ADR content
+        run: python3 scripts/verify-adr.py --all
+
+      - name: Check spec coverage
+        run: python3 scripts/verify-adr.py --spec-coverage
+
+      - name: Verify ADR compliance (fast)
+        run: |
+          for adr in process/active/ADR-*.md; do
+            python3 scripts/verify-adr.py --adr "$adr"
+          done
+
+      - name: Emit verification event
+        run: |
+          python3 scripts/emit-verification-event.py \
+            --event adr_verification_completed \
+            --passed true \
+            --details '{"workflow":"adr-verify","status":"completed"}'
+        if: success()
+
+      - name: Emit verification failure event
+        run: |
+          python3 scripts/emit-verification-event.py \
+            --event adr_verification_completed \
+            --passed false \
+            --details '{"workflow":"adr-verify","status":"failed"}'
+        if: failure()

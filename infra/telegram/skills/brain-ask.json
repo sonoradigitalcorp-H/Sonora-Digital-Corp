@@ -1,0 +1,9 @@
+{
+  "name": "brain-ask",
+  "version": "2.0.0", 
+  "description": "Consulta libre a OpenClaw IA (fallback general).",
+  "triggers": ["*"],
+  "priority": -1,
+  "method": "OPENCLAW",
+  "question_template": "{{message}}"
+}

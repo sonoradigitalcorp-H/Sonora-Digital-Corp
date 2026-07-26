@@ -1,5 +1,5 @@
 # Sonora Evolution — daily improvement cycle
-# Install: sudo ln -s /home/mystic/sonora-digital-corp/infra/systemd/sonora-evolution.service /etc/systemd/system/
+# Install: sudo ln -s __REPO__/infra/systemd/sonora-evolution.service /etc/systemd/system/
 # Enable:  sudo systemctl enable --now sonora-evolution.timer
 
 [Unit]
@@ -9,10 +9,9 @@ After=network.target
 
 [Service]
 Type=oneshot
-ExecStart=/usr/bin/env PYTHONPATH=/home/mystic/sonora-digital-corp /usr/bin/python3 -m evolution.auto_evolve --daily
-WorkingDirectory=/home/mystic/sonora-digital-corp
-User=mystic
-Group=mystic
+ExecStart=/usr/bin/env python3 /home/ubuntu/sonora-digital-corp/scripts/evolution-cron.sh
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+User=ubuntu
 
 # Security hardening
 NoNewPrivileges=yes

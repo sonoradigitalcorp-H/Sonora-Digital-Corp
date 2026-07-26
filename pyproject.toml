@@ -1,7 +1,7 @@
 [project]
-name = "jarvis"
+name = "sonora-digital-corp"
 version = "2.0.0"
-description = "JARVIS — Multi-agent AI Platform"
+description = "SDC — Sonora Digital Corp Multi-agent Platform"
 requires-python = ">=3.10"
 
 [tool.ruff]
@@ -12,16 +12,16 @@ select = ["E", "F", "I", "UP", "B"]
 ignore = ["B008", "UP042", "E402", "UP017"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests", "evals", "memory/tests"]
+testpaths = ["tests", "core/tests"]
 asyncio_mode = "auto"
 markers = ["asyncio: async tests"]
 
 [tool.coverage.run]
-source = ["apps", "memory", "core", "scripts", "metrics"]
+source = ["apps", "core", "scripts", "skills"]
 omit = ["*/tests/*", "*/venv/*", "*/node_modules/*", "*/migrations/*"]
 
 [tool.coverage.report]
 fail_under = 60
 
 [tool.pytest-bdd]
-features_base = "gherkin/"
+features_base = "tests/gherkin/"

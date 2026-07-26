@@ -1,0 +1,56 @@
+name: calcom
+
+services:
+  maildev:
+    image: maildev/maildev:latest
+    restart: always
+    container_name: calcom-maildev
+    ports:
+      - "127.0.0.1:1080:1080"
+      - "127.0.0.1:1025:1025"
+    networks:
+      - sdc-network
+
+  calcom-db:
+    image: postgres:15-alpine
+    restart: always
+    container_name: calcom-db
+    volumes:
+      - calcom-db-data:/var/lib/postgresql/data
+    env_file: ./calcom/.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U calcom"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sdc-network
+
+  calcom:
+    image: calcom.docker.scarf.sh/calcom/cal.com
+    restart: always
+    container_name: calcom-app
+    ports:
+      - "127.0.0.1:3000:3000"
+    env_file: ./calcom/.env
+    environment:
+      - DATABASE_URL=postgresql://calcom:calcom_secret@calcom-db:5432/calcom
+      - DATABASE_DIRECT_URL=postgresql://calcom:calcom_secret@calcom-db:5432/calcom
+      - REDIS_URL=redis://sdc-redis:6379
+      - EMAIL_FROM=noreply@sonoradigitalcorp.com
+      - EMAIL_SERVER_HOST=maildev
+      - EMAIL_SERVER_PORT=1025
+      - EMAIL_SERVER_USER=
+      - EMAIL_SERVER_PASSWORD=
+    depends_on:
+      calcom-db:
+        condition: service_healthy
+    networks:
+      - sdc-network
+
+networks:
+  sdc-network:
+    external: true
+
+volumes:
+  calcom-db-data:

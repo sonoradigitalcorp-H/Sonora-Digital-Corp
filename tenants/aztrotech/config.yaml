@@ -1,0 +1,12 @@
+tenant_id: aztrotech
+display_name: "AstroTech"
+language: es
+timezone: America/Mexico_City
+default_model: opencode-go/deepseek-v4-flash
+fallback_model: openrouter/nvidia/nemotron-3-nano-30b-a3b:free
+max_tokens: 4096
+qdrant_collection: tenant_aztrotech_memory
+neo4j_database: aztrotech
+cesar_chat_id: "5738935134"
+bot_token_ref: aztrotech_telegram_bot_token
+features: [chat, agents, rag, crm, scheduling, voice, calendar]

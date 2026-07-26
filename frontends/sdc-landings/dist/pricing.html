@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#0a0b12" />
+  <title>Precios — Mystic OS</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #0a0b12;
+      color: #e8e8ed;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+    a { color: inherit; text-decoration: none; }
+    ul { list-style: none; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 24px; height: 64px;
+      background: rgba(10,11,18,0.85);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    .logo {
+      font-size: 1.25rem; font-weight: 700;
+      background: linear-gradient(135deg, #f7c948, #d4a017);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: -0.02em;
+    }
+    .nav-links { display: flex; gap: 32px; font-size: 0.875rem; font-weight: 500; }
+    .nav-links a { color: rgba(255,255,255,0.6); transition: color 0.3s; }
+    .nav-links a:hover { color: #f7c948; }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 120px 0 80px; text-align: center;
+      background: radial-gradient(ellipse 80% 50% at 50% 30%, rgba(247,201,72,0.06) 0%, transparent 70%);
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.5rem); font-weight: 800; line-height: 1.15;
+      background: linear-gradient(135deg, #f7c948 0%, #e6b800 40%, #f7c948 100%);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 16px;
+    }
+    .hero p {
+      font-size: clamp(0.95rem, 2vw, 1.15rem); color: rgba(255,255,255,0.6);
+      max-width: 600px; margin: 0 auto 32px; font-weight: 400;
+    }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 14px 36px; border-radius: 12px; font-size: 1rem; font-weight: 600;
+      background: linear-gradient(135deg, #f7c948, #d4a017);
+      color: #0a0b12; border: none; cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(247,201,72,0.35); }
+
+    /* ── PRICING ── */
+    .pricing { padding: 80px 0; }
+    .pricing .section-title {
+      text-align: center; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .pricing .section-sub {
+      text-align: center; color: rgba(255,255,255,0.5); font-size: 0.95rem;
+      margin-bottom: 56px;
+    }
+    .pricing-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+    }
+
+    .card {
+      position: relative;
+      display: flex; flex-direction: column;
+      padding: 32px 24px; border-radius: 20px;
+      background: rgba(255,255,255,0.04);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+    }
+    .card:hover { transform: translateY(-6px); }
+
+    .card .badge {
+      display: inline-block; font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
+      letter-spacing: 0.08em; padding: 4px 12px; border-radius: 20px;
+      margin-bottom: 20px; width: fit-content;
+      background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.5);
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+    .card .plan-name { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
+    .card .plan-desc { font-size: 0.8rem; color: rgba(255,255,255,0.45); margin-bottom: 20px; }
+    .card .price { font-size: 2.25rem; font-weight: 800; margin-bottom: 4px; }
+    .card .price span { font-size: 1rem; font-weight: 500; color: rgba(255,255,255,0.4); }
+    .card .price-sub { font-size: 0.75rem; color: rgba(255,255,255,0.35); margin-bottom: 24px; }
+    .card ul { flex: 1; margin-bottom: 28px; }
+    .card ul li {
+      font-size: 0.85rem; color: rgba(255,255,255,0.7); padding: 6px 0;
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .card ul li::before { content: "✦"; color: #f7c948; font-size: 0.65rem; margin-top: 4px; flex-shrink: 0; }
+    .card .btn-card {
+      display: flex; align-items: center; justify-content: center;
+      padding: 12px; border-radius: 12px; font-size: 0.9rem; font-weight: 600;
+      background: rgba(255,255,255,0.06); color: #e8e8ed;
+      border: 1px solid rgba(255,255,255,0.08); cursor: pointer;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .card .btn-card:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.15); }
+
+    /* Card 1 — Freemium */
+    .card-freemium { border-color: rgba(255,255,255,0.06); }
+    .card-freemium:hover { box-shadow: 0 8px 32px rgba(0,0,0,0.3); border-color: rgba(255,255,255,0.12); }
+
+    /* Card 2 — Starter (destacada) */
+    .card-starter {
+      border-color: rgba(247,201,72,0.25);
+      box-shadow: 0 0 24px rgba(247,201,72,0.08);
+    }
+    .card-starter .badge {
+      background: linear-gradient(135deg, rgba(247,201,72,0.2), rgba(212,160,23,0.2));
+      color: #f7c948; border-color: rgba(247,201,72,0.2);
+    }
+    .card-starter:hover {
+      box-shadow: 0 0 40px rgba(247,201,72,0.18), 0 8px 32px rgba(0,0,0,0.3);
+      border-color: rgba(247,201,72,0.45);
+    }
+    .card-starter .btn-card {
+      background: linear-gradient(135deg, #f7c948, #d4a017);
+      color: #0a0b12; border: none;
+    }
+    .card-starter .btn-card:hover { box-shadow: 0 4px 20px rgba(247,201,72,0.35); }
+
+    /* Card 3 — Pro */
+    .card-pro {
+      border-color: rgba(247,201,72,0.35);
+      box-shadow: 0 0 32px rgba(247,201,72,0.12);
+    }
+    .card-pro .badge {
+      background: linear-gradient(135deg, rgba(247,201,72,0.25), rgba(212,160,23,0.25));
+      color: #f7c948; border-color: rgba(247,201,72,0.25);
+    }
+    .card-pro:hover {
+      box-shadow: 0 0 48px rgba(247,201,72,0.22), 0 8px 32px rgba(0,0,0,0.3);
+      border-color: rgba(247,201,72,0.55);
+    }
+
+    /* Card 4 — Enterprise */
+    .card-enterprise {
+      border: 1px solid transparent;
+      background-clip: padding-box;
+      position: relative;
+    }
+    .card-enterprise::before {
+      content: ""; position: absolute; inset: -1px; border-radius: 20px; z-index: -1;
+      background: linear-gradient(135deg, #f7c948, #c084fc, #60a5fa, #f7c948);
+      background-size: 300% 300%;
+      animation: gradBorder 4s ease infinite;
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      padding: 1px;
+    }
+    @keyframes gradBorder {
+      0%,100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    .card-enterprise .badge {
+      background: linear-gradient(135deg, rgba(192,132,252,0.2), rgba(96,165,250,0.2));
+      color: #c084fc; border-color: rgba(192,132,252,0.2);
+    }
+    .card-enterprise:hover {
+      box-shadow: 0 0 56px rgba(247,201,72,0.15), 0 0 40px rgba(192,132,252,0.12), 0 8px 32px rgba(0,0,0,0.3);
+      transform: translateY(-6px);
+    }
+    .card-enterprise .btn-card {
+      background: linear-gradient(135deg, #c084fc, #60a5fa);
+      color: #fff; border: none;
+    }
+    .card-enterprise .btn-card:hover { box-shadow: 0 4px 20px rgba(192,132,252,0.35); }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials { padding: 80px 0; }
+    .testimonials .section-title { text-align: center; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; margin-bottom: 48px; }
+    .testimonial-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .testimonial-card {
+      padding: 28px 24px; border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      transition: transform 0.3s, border-color 0.3s;
+    }
+    .testimonial-card:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.12); }
+    .testimonial-card .avatar {
+      width: 44px; height: 44px; border-radius: 50%; margin-bottom: 16px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.25rem; font-weight: 700; color: #0a0b12;
+    }
+    .testimonial-card blockquote {
+      font-size: 0.9rem; color: rgba(255,255,255,0.7); font-style: italic; line-height: 1.6; margin-bottom: 16px;
+    }
+    .testimonial-card .name { font-size: 0.85rem; font-weight: 600; }
+    .testimonial-card .role { font-size: 0.75rem; color: rgba(255,255,255,0.4); }
+
+    /* ── BENEFITS ── */
+    .benefits { padding: 80px 0; }
+    .benefits .section-title { text-align: center; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; margin-bottom: 48px; }
+    .benefits-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .benefit-item {
+      padding: 24px; border-radius: 16px;
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.06);
+      text-align: center; transition: transform 0.3s, border-color 0.3s;
+    }
+    .benefit-item:hover { transform: translateY(-4px); border-color: rgba(255,255,255,0.12); }
+    .benefit-item .icon { font-size: 2rem; margin-bottom: 12px; }
+    .benefit-item h4 { font-size: 0.95rem; font-weight: 600; margin-bottom: 6px; }
+    .benefit-item p { font-size: 0.8rem; color: rgba(255,255,255,0.5); }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding: 40px 0; text-align: center;
+    }
+    footer .footer-links { display: flex; justify-content: center; gap: 24px; margin-bottom: 16px; }
+    footer .footer-links a { font-size: 0.8rem; color: rgba(255,255,255,0.4); transition: color 0.3s; }
+    footer .footer-links a:hover { color: #f7c948; }
+    footer .footer-brand { font-size: 0.8rem; color: rgba(255,255,255,0.25); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 640px) {
+      .pricing-grid { grid-template-columns: 1fr; }
+      .nav-links { display: none; }
+      .testimonial-grid { grid-template-columns: 1fr; }
+      .benefits-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <span class="logo">✦ Mystic OS</span>
+    <div class="nav-links">
+      <a href="/">Inicio</a>
+      <a href="/agentes">Agentes</a>
+      <a href="pricing.html">Precios</a>
+      <a href="/chat">Chat</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container">
+      <h1>El Sistema Operativo de tu Negocio</h1>
+      <p>Automatización con IA para PYMEs mexicanas — sin programar, sin equipos grandes, sin complicaciones</p>
+      <a href="/chat" class="btn-primary">Comenzar gratis →</a>
+    </div>
+  </section>
+
+  <!-- PRICING -->
+  <section class="pricing" id="pricing">
+    <div class="container">
+      <h2 class="section-title">Planes para cada etapa</h2>
+      <p class="section-sub">Elige el plan adecuado para tu negocio. Escala cuando lo necesites.</p>
+      <div class="pricing-grid">
+
+        <!-- Freemium -->
+        <div class="card card-freemium">
+          <span class="badge">Empieza hoy</span>
+          <div class="plan-name">Freemium</div>
+          <div class="plan-desc">Emprendedores individuales</div>
+          <div class="price">$0<span>/mes</span></div>
+          <div class="price-sub">Sin compromiso</div>
+          <ul>
+            <li>1 agente (Chat básico)</li>
+            <li>50 interacciones/mes</li>
+            <li>Acceso a dashboard</li>
+            <li>Comunidad Discord</li>
+          </ul>
+          <button class="btn-card">Comenzar gratis</button>
+        </div>
+
+        <!-- Starter -->
+        <div class="card card-starter">
+          <span class="badge">Más popular</span>
+          <div class="plan-name">Starter</div>
+          <div class="plan-desc">PYMEs pequeñas</div>
+          <div class="price">$299<span>/mes</span></div>
+          <div class="price-sub">Para equipos que inician</div>
+          <ul>
+            <li>3 agentes (Chat, Social, Booking)</li>
+            <li>500 interacciones/mes</li>
+            <li>Dashboard completo</li>
+            <li>Soporte por chat</li>
+            <li>1 integración</li>
+          </ul>
+          <button class="btn-card">Elegir Starter</button>
+        </div>
+
+        <!-- Pro -->
+        <div class="card card-pro">
+          <span class="badge">Recomendado</span>
+          <div class="plan-name">Pro</div>
+          <div class="plan-desc">Negocios en crecimiento</div>
+          <div class="price">$799<span>/mes</span></div>
+          <div class="price-sub">Para equipos que escalan</div>
+          <ul>
+            <li>6 agentes (todos excepto Enterprise)</li>
+            <li>5,000 interacciones/mes</li>
+            <li>Dashboard + analytics</li>
+            <li>Soporte prioritario 24/7</li>
+            <li>5 integraciones</li>
+            <li>Agente de voz</li>
+          </ul>
+          <button class="btn-card">Elegir Pro</button>
+        </div>
+
+        <!-- Enterprise -->
+        <div class="card card-enterprise">
+          <span class="badge">Solución completa</span>
+          <div class="plan-name">Enterprise</div>
+          <div class="plan-desc">Empresas</div>
+          <div class="price">$1,999<span>/mes</span></div>
+          <div class="price-sub">Para empresas que dominan</div>
+          <ul>
+            <li>Todos los 9 agentes</li>
+            <li>Interacciones ilimitadas</li>
+            <li>Agente de ventas con llamadas</li>
+            <li>Onboarding dedicado</li>
+            <li>Soporte VIP 24/7</li>
+            <li>Integraciones ilimitadas</li>
+            <li>SLA 99.9%</li>
+            <li>Whitelabel</li>
+          </ul>
+          <button class="btn-card">Elegir Enterprise</button>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <div class="container">
+      <h2 class="section-title">Lo que dicen nuestros clientes</h2>
+      <div class="testimonial-grid">
+
+        <div class="testimonial-card">
+          <div class="avatar" style="background:linear-gradient(135deg,#f7c948,#d4a017);">L</div>
+          <blockquote>"Desde que implementamos Mystic OS, nuestras ventas nocturnas aumentaron 40%. Los clientes reciben atención al instante."</blockquote>
+          <div class="name">Luis Mendoza</div>
+          <div class="role">CEO — SocialBeats MX</div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="avatar" style="background:linear-gradient(135deg,#c084fc,#7c3aed);">C</div>
+          <blockquote>"Pensé que la IA era cara y complicada. Con Starter teníamos 3 agentes funcionando en una tarde. Increíble."</blockquote>
+          <div class="name">Carmina Rivas</div>
+          <div class="role">Directora — Agencia Nova</div>
+        </div>
+
+        <div class="testimonial-card">
+          <div class="avatar" style="background:linear-gradient(135deg,#60a5fa,#2563eb);">R</div>
+          <blockquote>"El plan Enterprise nos permitió reemplazar 3 herramientas separadas por un solo sistema. ROI en 2 meses."</blockquote>
+          <div class="name">Ricardo Ojeda</div>
+          <div class="role">CTO — Grupo Zapata</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- BENEFITS -->
+  <section class="benefits">
+    <div class="container">
+      <h2 class="section-title">¿Por qué Mystic OS?</h2>
+      <div class="benefits-grid">
+
+        <div class="benefit-item">
+          <div class="icon">🕐</div>
+          <h4>Libertad de tiempo</h4>
+          <p>La IA trabaja 24/7 mientras tú te enfocas en lo que importa</p>
+        </div>
+
+        <div class="benefit-item">
+          <div class="icon">💵</div>
+          <h4>Múltiples fuentes de ingreso</h4>
+          <p>Agentes que venden, agendan, atienden y cobran por ti</p>
+        </div>
+
+        <div class="benefit-item">
+          <div class="icon">🤖</div>
+          <h4>Automatización 24/7</h4>
+          <p>Tu negocio nunca duerme. Respuestas al instante, siempre.</p>
+        </div>
+
+        <div class="benefit-item">
+          <div class="icon">📈</div>
+          <h4>Más leads, más ventas</h4>
+          <p>Captura y califica leads automáticamente sin perder uno</p>
+        </div>
+
+        <div class="benefit-item">
+          <div class="icon">🔒</div>
+          <h4>Seguridad empresarial</h4>
+          <p>Datos cifrados, cumplimiento RGPD, infraestructura protegida</p>
+        </div>
+
+        <div class="benefit-item">
+          <div class="icon">🎯</div>
+          <h4>Enfoque en lo que importa</h4>
+          <p>Deja las tareas repetitivas en manos de la IA. Tú creces el negocio.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="container">
+      <div class="footer-links">
+        <a href="#">Política de Privacidad</a>
+        <a href="#">Términos y Condiciones</a>
+        <a href="#">Contacto</a>
+      </div>
+      <div class="footer-brand">Hecho por Sonora Digital Corp © 2026</div>
+    </div>
+  </footer>
+
+</body>
+</html>

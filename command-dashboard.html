@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDC — Command Dashboard</title>
+<style>
+  :root {
+    --bg: #0b0d10;
+    --surface: #13161c;
+    --surface2: #1a1f2a;
+    --border: #252b3a;
+    --text: #e2e8f0;
+    --text-dim: #8892a4;
+    --accent: #06d6a0;
+    --accent2: #ffd166;
+    --accent3: #ef476f;
+    --blue: #118ab2;
+    --purple: #7b2d8e;
+    --orange: #f9844a;
+    --cmd-bg: #1e232f;
+    --cmd-hover: #262d3b;
+    --radius: 10px;
+    --shadow: 0 4px 24px rgba(0,0,0,.4);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
+    background: var(--bg);
+    color: var(--text);
+    padding: 24px;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  .header {
+    max-width: 1440px;
+    margin: 0 auto 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .header-left h1 {
+    font-size: 28px;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -.5px;
+  }
+  .header-left .sub {
+    color: var(--text-dim);
+    font-size: 13px;
+    margin-top: 4px;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .header-right .count {
+    font-size: 13px;
+    color: var(--text-dim);
+    background: var(--surface);
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+  }
+  .header-right .count strong { color: var(--accent); }
+  .search-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text);
+    outline: none;
+    width: 220px;
+    transition: border-color .2s;
+  }
+  .search-box:focus { border-color: var(--accent); }
+  .search-box::placeholder { color: var(--text-dim); }
+
+  /* ── GRID ── */
+  .grid {
+    max-width: 1440px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+    gap: 20px;
+  }
+
+  /* ── CARD ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color .2s, box-shadow .2s;
+  }
+  .card:hover {
+    border-color: var(--accent);
+    box-shadow: var(--shadow);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+  }
+  .card-header .icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .card-header h2 {
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: .3px;
+  }
+  .card-header .badge {
+    margin-left: auto;
+    font-size: 11px;
+    padding: 2px 10px;
+    border-radius: 12px;
+    background: var(--surface2);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+  }
+  .card-header .arrow {
+    margin-left: 8px;
+    font-size: 12px;
+    color: var(--text-dim);
+    transition: transform .2s;
+  }
+  .card-header.collapsed .arrow { transform: rotate(-90deg); }
+
+  .card-body {
+    padding: 12px 18px 16px;
+  }
+  .card-body.hidden { display: none; }
+
+  .cmd-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    padding: 6px 8px;
+    border-radius: 6px;
+    transition: background .15s;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+  .cmd-row:hover { background: var(--cmd-hover); }
+  .cmd-row + .cmd-row { margin-top: 2px; }
+
+  .cmd {
+    color: var(--accent);
+    white-space: nowrap;
+    font-weight: 500;
+    flex-shrink: 0;
+  }
+  .cmd-desc {
+    color: var(--text-dim);
+    text-align: right;
+    font-size: 12px;
+    line-height: 1.4;
+  }
+
+  .cmd-row.long .cmd {
+    font-size: 11px;
+    white-space: normal;
+    word-break: break-all;
+  }
+
+  /* ── COLOR ICONS ── */
+  .icon-make { background: #1a3a2a; color: var(--accent); }
+  .icon-docker { background: #0f2b3d; color: #0db7ed; }
+  .icon-pipeline { background: #2a1a3a; color: #b388ff; }
+  .icon-score { background: #3a2a1a; color: var(--orange); }
+  .icon-secret { background: #2a1a1a; color: var(--accent3); }
+  .icon-memory { background: #1a2a3a; color: var(--blue); }
+  .icon-devops { background: #1a2a1a; color: var(--accent); }
+  .icon-abe { background: #2a1a2a; color: var(--purple); }
+  .icon-auto { background: #1a1a2a; color: var(--accent2); }
+  .icon-monitor { background: #1a2a2a; color: #4ecdc4; }
+  .icon-git { background: #2a1a1a; color: #f05033; }
+  .icon-quality { background: #1a1a1a; color: var(--accent3); }
+  .icon-alias { background: #2a2a1a; color: var(--accent2); }
+  .icon-db { background: #1a1a3a; color: #6c5ce7; }
+
+  /* ── FOOTER ── */
+  .footer {
+    max-width: 1440px;
+    margin: 40px auto 0;
+    padding: 20px 0;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--text-dim);
+  }
+  .footer a { color: var(--accent); text-decoration: none; }
+  .footer a:hover { text-decoration: underline; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    body { padding: 12px; }
+    .grid { grid-template-columns: 1fr; }
+    .header { flex-direction: column; align-items: stretch; }
+    .search-box { width: 100%; }
+    .cmd-row { flex-direction: column; align-items: flex-start; gap: 2px; }
+    .cmd-desc { text-align: left; }
+  }
+
+  /* ── SCROLLBAR ── */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<div class="header">
+  <div class="header-left">
+    <h1>⬡ SDC Command Dashboard</h1>
+    <div class="sub">Sonora Digital Corp · Todos los comandos del sistema</div>
+  </div>
+  <div class="header-right">
+    <span class="count" id="totalCount"><strong>0</strong> comandos</span>
+    <input class="search-box" id="search" type="text" placeholder="Buscar comando o descripción…" oninput="filterCommands()">
+  </div>
+</div>
+
+<!-- ═══ GRID ═══ -->
+<div class="grid" id="grid">
+
+<!-- ===== 1. MAKEFILE ===== -->
+<div class="card" data-category="make">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="icon icon-make">⚡</span>
+    <h2>Makefile</h2>
+    <span class="badge">8 comandos</span>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="cmd-row"><span class="cmd">make</span><span class="cmd-desc">Muestra ayuda con todos los targets</span></div>
+    <div class="cmd-row"><span class="cmd">make test</span><span class="cmd-desc">Tests unitarios (subconjunto estable)</span></div>
+    <div class="cmd-row"><span class="cmd">make test-all</span><span class="cmd-desc">Todos los tests (unit + bdd + integration)</span></div>
+    <div class="cmd-row"><span class="cmd">make test-v</span><span class="cmd-desc">Todos los tests en verbose</span></div>
+    <div class="cmd-row"><span class="cmd">make test-integration</span><span class="cmd-desc">Solo tests de integración (servicios reales)</span></div>
+    <div class="cmd-row"><span class="cmd">make lint</span><span class="cmd-desc">Ruff lint (solo LOCAL)</span></div>
+    <div class="cmd-row"><span class="cmd">make lint-fix</span><span class="cmd-desc">Ruff --fix (solo LOCAL)</span></div>
+    <div class="cmd-row"><span class="cmd">make eval</span><span class="cmd-desc">Todas las evaluaciones (structural + promptfoo)</span></div>
+    <div class="cmd-row"><span class="cmd">make eval-structural</span><span class="cmd-desc">Evaluaciones estructurales</span></div>
+    <div class="cmd-row"><span class="cmd">make eval-promptfoo</span><span class="cmd-desc">Evaluaciones LLM con promptfoo</span></div>
+    <div class="cmd-row"><span class="cmd">make eval-dashboard</span><span class="cmd-desc">Genera dashboard HTML de evaluaciones</span></div>
+    <div class="cmd-row"><span class="cmd">make score</span><span class="cmd-desc">Ejecuta observer y muestra scorecard</span></div>
+    <div class="cmd-row"><span class="cmd">make constitution-gate</span><span class="cmd-desc">Valúa constitution gate sobre PLAN activo</span></div>
+    <div class="cmd-row"><span class="cmd">make clean</span><span class="cmd-desc">Limpia cachés (pycache, pytest, ruff)</span></div>
+  </div>
+</div>
+
+<!-- ===== 2. DOCKER ===== -->
+<div class="card" data-category="docker">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="icon icon-docker">🐳</span>
+    <h2>Docker / Infraestructura</h2>
+    <span class="badge">7 comandos</span>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="cmd-row"><span class="cmd">docker compose -f infra/docker-compose.yml up -d</span><span class="cmd-desc">Levanta toda la infra</span></div>
+    <div class="cmd-row"><span class="cmd">docker compose -f infra/docker-compose.yml -f infra/docker-compose.vps.yml up -d</span><span class="cmd-desc">Con override del VPS</span></div>
+    <div class="cmd-row"><span class="cmd">docker ps -a --format 'table {{.Names}}\t{{.Status}}'</span><span class="cmd-desc">Estado de todos los contenedores</span></div>
+    <div class="cmd-row"><span class="cmd">docker stats --no-stream</span><span class="cmd-desc">Uso de recursos en vivo</span></div>
+    <div class="cmd-row"><span class="cmd">docker compose logs &lt;container&gt;</span><span class="cmd-desc">Logs de un contenedor</span></div>
+    <div class="cmd-row"><span class="cmd">docker compose restart &lt;container&gt;</span><span class="cmd-desc">Reinicia un contenedor</span></div>
+    <div class="cmd-row"><span class="cmd">docker compose ps</span><span class="cmd-desc">Lista servicios del compose</span></div>
+  </div>
+</div>
+
+<!-- ===== 3. PIPELINE ===== -->
+<div class="card" data-category="pipeline">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="icon icon-pipeline">📋</span>
+    <h2>Pipeline System</h2>
+    <span class="badge">7 comandos</span>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="cmd-row"><span class="cmd">bash scripts/process-pipeline.sh spec-new "Título"</span><span class="cmd-desc">Crea nueva SPEC desde template</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/process-pipeline.sh score [archivo]</span><span class="cmd-desc">Calcula enterprise score</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/process-pipeline.sh complete</span><span class="cmd-desc">Marca SPEC como completada</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/process-pipeline.sh event</span><span class="cmd-desc">Registra un evento</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/process-pipeline.sh adr-new</span><span class="cmd-desc">Crea nuevo ADR</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/process-pipeline.sh leccion-new</span><span class="cmd-desc">Crea nueva lección aprendida</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/process-pipeline.sh gherkin-new</span><span class="cmd-desc">Crea nuevo escenario Gherkin</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/process-pipeline.sh status</span><span class="cmd-desc">Estado del pipeline</span></div>
+  </div>
+</div>
+
+<!-- ===== 4. ENTERPRISE SCORE & FINOPS ===== -->
+<div class="card" data-category="score">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="icon icon-score">📊</span>
+    <h2>Enterprise Score &amp; FinOps</h2>
+    <span class="badge">6 comandos</span>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="cmd-row"><span class="cmd">bash scripts/enterprise-score.sh</span><span class="cmd-desc">Calcula score enterprise (10 métricas)</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/observer-run.sh</span><span class="cmd-desc">Recolecta métricas y actualiza scorecard</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/finops.sh log &lt;model&gt; &lt;prov&gt; &lt;in&gt; &lt;out&gt; &lt;svc&gt;</span><span class="cmd-desc">Registra costo de llamada AI</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/finops.sh snapshot --json|--summary</span><span class="cmd-desc">Snapshot de costos</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/finops.sh daily-report</span><span class="cmd-desc">Reporte diario de gastos AI</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/finops.sh cost-calc &lt;model&gt; &lt;in&gt; &lt;out&gt;</span><span class="cmd-desc">Calcula costo de una llamada</span></div>
+  </div>
+</div>
+
+<!-- ===== 5. SECRETOS ===== -->
+<div class="card" data-category="secret">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="icon icon-secret">🔐</span>
+    <h2>Secretos &amp; Configuración</h2>
+    <span class="badge">4 comandos</span>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="cmd-row"><span class="cmd">bash scripts/decrypt-env.sh</span><span class="cmd-desc">Descifra .env.age y carga variables</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/generate-configs.py</span><span class="cmd-desc">Genera configs desde fleet.yml (SSOT)</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/install-hooks.sh</span><span class="cmd-desc">Instala git hooks (pre-commit + post-commit)</span></div>
+    <div class="cmd-row"><span class="cmd">age -d -i ~/.age/key.txt -o &lt;out&gt; &lt;file&gt;.age</span><span class="cmd-desc">Descifra archivo .age manualmente</span></div>
+  </div>
+</div>
+
+<!-- ===== 6. MEMORIA ===== -->
+<div class="card" data-category="memory">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="icon icon-memory">🧠</span>
+    <h2>Memoria &amp; Conocimiento</h2>
+    <span class="badge">6 comandos</span>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="cmd-row"><span class="cmd">bash scripts/sync-brain-vault.sh</span><span class="cmd-desc">Sincroniza bóveda Obsidian con el repo</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/ingest-session-knowledge.py</span><span class="cmd-desc">Ingiere conocimiento de sesiones a engram</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/memory-save.py</span><span class="cmd-desc">Guarda un recuerdo en Engram</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/memory-api.py</span><span class="cmd-desc">API de memoria</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/feed_memory.py</span><span class="cmd-desc">Alimenta memoria desde archivos</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/knowledge-sync.sh</span><span class="cmd-desc">Sincroniza knowledge base</span></div>
+  </div>
+</div>
+
+<!-- ===== 7. DEVOPS ===== -->
+<div class="card" data-category="devops">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="icon icon-devops">🚀</span>
+    <h2>DevOps &amp; Deployment</h2>
+    <span class="badge">12 comandos</span>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="cmd-row"><span class="cmd">bash scripts/deploy.sh</span><span class="cmd-desc">Despliegue general</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/deploy-all.sh</span><span class="cmd-desc">Despliegue completo</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/sync-to-vps.sh</span><span class="cmd-desc">Sincroniza repo al VPS</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/up.sh</span><span class="cmd-desc">Levanta servicios</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/down.sh</span><span class="cmd-desc">Baja servicios</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/start-production.sh</span><span class="cmd-desc">Inicia modo producción</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/backup.sh</span><span class="cmd-desc">Backup completo con timestamp (.tar.gz)</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/secure-backup.sh</span><span class="cmd-desc">Backup cifrado</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/volume-backup.sh</span><span class="cmd-desc">Backup de volúmenes Docker</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/healthcheck.sh</span><span class="cmd-desc">Healthcheck general</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/health-monitor.sh</span><span class="cmd-desc">Monitor de salud continuo</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/ssl-auto.sh</span><span class="cmd-desc">Renovación automática de SSL</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/monitor-service.sh</span><span class="cmd-desc">Monitorea un servicio específico</span></div>
+  </div>
+</div>
+
+<!-- ===== 8. ABE / CLIENTES ===== -->
+<div class="card" data-category="abe">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="icon icon-abe">🎵</span>
+    <h2>ABE Music &amp; Clientes</h2>
+    <span class="badge">9 comandos</span>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="cmd-row"><span class="cmd">python3 scripts/abe-daemon.py</span><span class="cmd-desc">Daemon de ABE Music</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/abe-telegram-bot.py</span><span class="cmd-desc">Bot de Telegram de ABE</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/abe-delivery-gate.sh</span><span class="cmd-desc">Gate de entregas ABE</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/abe-report-push.sh</span><span class="cmd-desc">Push de reportes ABE</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/clone_pipeline.py --client-id X --action create-pack --pack-type basic</span><span class="cmd-desc">Crea pack para cliente (Clone Service)</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/clone_pipeline.py --client-id X --action status</span><span class="cmd-desc">Estado del cliente Clone</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/test_clone_flow.sh</span><span class="cmd-desc">Test del flujo Clone</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/provision_tenant.py</span><span class="cmd-desc">Provisiona un tenant nuevo</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/seed-tenants.py</span><span class="cmd-desc">Siembra tenants en DB</span></div>
+  </div>
+</div>
+
+<!-- ===== 9. AUTOMATIZACIÓN ===== -->
+<div class="card" data-category="auto">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="icon icon-auto">🤖</span>
+    <h2>Automatización &amp; Agentes</h2>
+    <span class="badge">9 comandos</span>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="cmd-row"><span class="cmd">bash scripts/autonomous.sh</span><span class="cmd-desc">Modo autónomo</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/autonomous-night.sh</span><span class="cmd-desc">Operaciones nocturnas autónomas</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/agency-pipeline.sh</span><span class="cmd-desc">Pipeline de agencia</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/agency-github-sync.sh</span><span class="cmd-desc">Sincroniza agencia con GitHub</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/agency-e2e-simulate.sh</span><span class="cmd-desc">Simulación end-to-end de agencia</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/skill-creator.sh</span><span class="cmd-desc">Crea una nueva skill</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/skill-triggers.sh</span><span class="cmd-desc">Dispara skills por evento</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/sdc-doctor.py</span><span class="cmd-desc">Diagnóstico completo del sistema</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/turbo-loop.sh</span><span class="cmd-desc">Modo turbo loop de mejora continua</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/self-improve.sh</span><span class="cmd-desc">Auto-mejora del sistema</span></div>
+  </div>
+</div>
+
+<!-- ===== 10. MONITOREO ===== -->
+<div class="card" data-category="monitor">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="icon icon-monitor">📡</span>
+    <h2>Monitoreo &amp; Reportes</h2>
+    <span class="badge">9 comandos</span>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="cmd-row"><span class="cmd">python3 scripts/weekly-executive-report.py</span><span class="cmd-desc">Reporte ejecutivo semanal</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/weekly-review.sh</span><span class="cmd-desc">Revisión semanal</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/nightly-report.sh</span><span class="cmd-desc">Reporte nocturno</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/daily-pipeline.sh</span><span class="cmd-desc">Pipeline diario</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/daily-error-correction.sh</span><span class="cmd-desc">Corrección diaria de errores</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/dashboard-salud.py</span><span class="cmd-desc">Dashboard de salud del sistema</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/gateway-healthcheck.sh</span><span class="cmd-desc">Healthcheck del gateway</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/monitor-status.sh</span><span class="cmd-desc">Estado de monitores</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/behavior-analyzer.py</span><span class="cmd-desc">Analizador de comportamiento</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/reporte-kiosk.py</span><span class="cmd-desc">Reporte kiosk / punto de venta</span></div>
+  </div>
+</div>
+
+<!-- ===== 11. GIT ===== -->
+<div class="card" data-category="git">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="icon icon-git">🔀</span>
+    <h2>Git &amp; Sincronización</h2>
+    <span class="badge">9 comandos</span>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="cmd-row"><span class="cmd">bash scripts/git-sync.sh</span><span class="cmd-desc">Sincroniza git</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/git-push-all.sh</span><span class="cmd-desc">Push a todos los remotos</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/push-to-github.sh</span><span class="cmd-desc">Push a GitHub</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/auto-pr.sh</span><span class="cmd-desc">Crea PR automático</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/close-session.sh</span><span class="cmd-desc">Cierra sesión y guarda cambios</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/end-session.sh</span><span class="cmd-desc">Finaliza sesión</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/setup-github.sh</span><span class="cmd-desc">Configura GitHub</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/mirror-gh-actions.sh</span><span class="cmd-desc">Espejo de GitHub Actions</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/install-sync-cron.sh</span><span class="cmd-desc">Instala cron de sincronización</span></div>
+  </div>
+</div>
+
+<!-- ===== 12. CALIDAD ===== -->
+<div class="card" data-category="quality">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="icon icon-quality">🧪</span>
+    <h2>Calidad &amp; Verificación</h2>
+    <span class="badge">8 comandos</span>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="cmd-row"><span class="cmd">python3 scripts/constitution-gate.py --plan process/active/PLAN.yaml</span><span class="cmd-desc">Valúa constitution sobre un plan</span></div>
+    <div class="cmd-row"><span class="cmd">bash scripts/quality-gate.sh</span><span class="cmd-desc">Quality gate completo</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/verify-adr.py</span><span class="cmd-desc">Verifica ADRs</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/verify-gate.py</span><span class="cmd-desc">Verifica gate</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/self-audit.py</span><span class="cmd-desc">Auto-auditoría del sistema</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/validate-truth.py</span><span class="cmd-desc">Valida consistencia de TRUTH.md</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/emit-event.py</span><span class="cmd-desc">Emite un evento al system log</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/emit-verification-event.py</span><span class="cmd-desc">Emite evento de verificación</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/plan-gate.py</span><span class="cmd-desc">Gate de planes</span></div>
+  </div>
+</div>
+
+<!-- ===== 13. ALIASES ===== -->
+<div class="card" data-category="alias">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="icon icon-alias">💡</span>
+    <h2>Aliases Útiles</h2>
+    <span class="badge">12 comandos</span>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="cmd-row"><span class="cmd">sdc-status</span><span class="cmd-desc">Verifica que estás en el repo correcto</span></div>
+    <div class="cmd-row"><span class="cmd">brain-sync</span><span class="cmd-desc">Sincroniza bóveda Obsidian</span></div>
+    <div class="cmd-row"><span class="cmd">brain-open</span><span class="cmd-desc">Abre Obsidian con el vault SDC</span></div>
+    <div class="cmd-row"><span class="cmd">brain-status</span><span class="cmd-desc">Estado del cerebro digital</span></div>
+    <div class="cmd-row"><span class="cmd">clone-test</span><span class="cmd-desc">Corre tests de Clone Service</span></div>
+    <div class="cmd-row"><span class="cmd">clone-ls</span><span class="cmd-desc">Lista archivos del Clone Service</span></div>
+    <div class="cmd-row"><span class="cmd">clone-spec</span><span class="cmd-desc">Lee la SPEC del Clone Service</span></div>
+    <div class="cmd-row"><span class="cmd">clone-flow</span><span class="cmd-desc">Corre el flujo completo de prueba</span></div>
+    <div class="cmd-row"><span class="cmd">clone-status X</span><span class="cmd-desc">Estado del cliente X</span></div>
+    <div class="cmd-row"><span class="cmd">clone-help</span><span class="cmd-desc">Ayuda del Clone Service</span></div>
+    <div class="cmd-row"><span class="cmd">sdc</span><span class="cmd-desc">Alias: cd ~/sdc && opencode</span></div>
+    <div class="cmd-row"><span class="cmd">clone-quantum</span><span class="cmd-desc">Abre presentación cuántica</span></div>
+  </div>
+</div>
+
+<!-- ===== 14. BASE DE DATOS ===== -->
+<div class="card" data-category="db">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="icon icon-db">🗄️</span>
+    <h2>Base de Datos &amp; Seed</h2>
+    <span class="badge">6 comandos</span>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="cmd-row"><span class="cmd">python3 scripts/seed-neo4j-arquitectura.py</span><span class="cmd-desc">Siembra arquitectura en Neo4j</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/seed-qdrant.py</span><span class="cmd-desc">Siembra vectores en Qdrant</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/seed-business-docs.py</span><span class="cmd-desc">Siembra documentos de negocio</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/populate-graph.py</span><span class="cmd-desc">Puebla el grafo de conocimiento</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/migrate-events.py</span><span class="cmd-desc">Migra eventos a nuevo formato</span></div>
+    <div class="cmd-row"><span class="cmd">python3 scripts/migrate_legacy_sessions.py</span><span class="cmd-desc">Migra sesiones legacy</span></div>
+  </div>
+</div>
+
+<!-- ===== 15. SDD ===== -->
+<div class="card" data-category="sdd">
+  <div class="card-header" onclick="toggleCard(this)">
+    <span class="icon icon-make">🏗️</span>
+    <h2>SDD — Specification Driven Development</h2>
+    <span class="badge">3 comandos</span>
+    <span class="arrow">▼</span>
+  </div>
+  <div class="card-body">
+    <div class="cmd-row"><span class="cmd">make sdd-test</span><span class="cmd-desc">Corre SDD BDD + structural tests</span></div>
+    <div class="cmd-row"><span class="cmd">make sdd-eval</span><span class="cmd-desc">Corre SDD evals (structural)</span></div>
+    <div class="cmd-row"><span class="cmd">make sdd-init</span><span class="cmd-desc">Inicializa estructura SDD framework</span></div>
+  </div>
+</div>
+
+</div><!-- /.grid -->
+
+<!-- ═══ FOOTER ═══ -->
+<div class="footer">
+  <span>Sonora Digital Corp · <span id="footerCount">0</span> comandos totales</span>
+  <span>⚡ <a href="https://github.com/sonoradigitalcorp-H/Sonora-Digital-Corp" target="_blank">GitHub</a> · <span id="date"></span></span>
+</div>
+
+<script>
+// ── Toggle ──
+function toggleCard(header) {
+  header.classList.toggle('collapsed');
+  const body = header.nextElementSibling;
+  body.classList.toggle('hidden');
+}
+
+// ── Filter ──
+function filterCommands() {
+  const q = document.getElementById('search').value.toLowerCase();
+  const cards = document.querySelectorAll('.card');
+  let totalVisible = 0;
+
+  cards.forEach(card => {
+    const rows = card.querySelectorAll('.cmd-row');
+    let visible = 0;
+
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      if (!q || text.includes(q)) {
+        row.style.display = '';
+        visible++;
+      } else {
+        row.style.display = 'none';
+      }
+    });
+
+    if (visible > 0) {
+      card.style.display = '';
+      totalVisible += visible;
+      // Update badge to show filtered count
+      const badge = card.querySelector('.badge');
+      const total = rows.length;
+      if (q) badge.textContent = visible + '/' + total;
+      else badge.textContent = total + ' comando' + (total !== 1 ? 's' : '');
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  document.getElementById('totalCount').innerHTML = '<strong>' + totalVisible + '</strong> comandos' + (q ? ' filtrados' : '');
+  document.getElementById('footerCount').textContent = totalVisible;
+}
+
+// ── Date ──
+document.getElementById('date').textContent = new Date().toLocaleDateString('es-MX', {
+  year: 'numeric', month: 'long', day: 'numeric'
+});
+
+// ── Count on load ──
+window.addEventListener('DOMContentLoaded', () => {
+  const all = document.querySelectorAll('.cmd-row');
+  document.getElementById('totalCount').innerHTML = '<strong>' + all.length + '</strong> comandos';
+  document.getElementById('footerCount').textContent = all.length;
+});
+</script>
+
+</body>
+</html>

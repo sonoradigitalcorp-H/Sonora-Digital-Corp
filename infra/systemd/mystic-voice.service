@@ -1,0 +1,21 @@
+[Unit]
+Description=Mystic Voice Realtime — Voz en tiempo real con soundscapes y routing
+After=network.target
+Wants=nginx.service
+
+[Service]
+Type=simple
+User=ubuntu
+Group=ubuntu
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+Environment=PYTHONPATH=/home/ubuntu/sonora-digital-corp
+Environment=VOICE_PORT=8900
+Environment=VOICE_LOG=info
+ExecStart=/home/ubuntu/sonora-digital-corp/scripts/run-mystic-voice.sh
+Restart=always
+RestartSec=5
+StandardOutput=append:/var/log/mystic-voice.log
+StandardError=append:/var/log/mystic-voice.log
+
+[Install]
+WantedBy=multi-user.target

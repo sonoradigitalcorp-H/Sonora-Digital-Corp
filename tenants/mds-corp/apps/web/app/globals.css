@@ -1,0 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --mds-blue: #1A3A5C;
+  --mds-orange: #E85D04;
+  --mds-white: #F8F9FA;
+}

@@ -1,0 +1,48 @@
+name: joyeria/catalogar-producto
+description: "Cataloga un producto de joyería con fotos, descripción, precio y métricas"
+version: 1
+
+inputs:
+  - name: nombre
+    type: string
+    description: "Nombre del producto"
+  - name: tipo
+    type: string
+    enum: [anillo, collar, pulsera, aretes, dije, reloj, conjunto]
+    description: "Tipo de joya"
+  - name: material
+    type: string
+    enum: [oro-14k, oro-18k, oro-24k, plata-sterling, acero-quirurgico, otros]
+  - name: piedras
+    type: string
+    description: "Descripción de piedras preciosas (tipo, quilates, color)"
+  - name: precio
+    type: number
+    description: "Precio en MXN"
+  - name: fotos
+    type: array[string]
+    description: "URLs de fotos del producto"
+
+outputs:
+  - name: producto_id
+    type: string
+    description: "ID del producto en Shopify"
+  - name: url_catalogo
+    type: string
+    description: "URL del producto en tienda"
+
+prompt: |
+  Eres un catalogador experto en joyería.
+  Recibe datos del producto y genera una descripción atractiva para tienda online.
+  Incluye: material, peso aproximado, tipo de piedra, cuidados, ocasión sugerida.
+  Usa lenguaje que venda: "elegancia atemporal", "brillo excepcional".
+
+tools_required:
+  - shopify-api
+
+agents_allowed:
+  - sales-joyeria
+
+eval_criteria:
+  - accuracy: "material y piedras correctos"
+  - latency: "< 5s"

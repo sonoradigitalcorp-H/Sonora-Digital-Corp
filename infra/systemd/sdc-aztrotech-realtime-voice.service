@@ -1,0 +1,15 @@
+[Unit]
+Description=AztroTech Realtime Voice — WebSocket server for STT/LLM/TTS
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+EnvironmentFile=/home/ubuntu/sonora-digital-corp/clients/aztrotech/telegram/.env
+ExecStart=/usr/bin/python3 -m clients.aztrotech.realtime_voice.server
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

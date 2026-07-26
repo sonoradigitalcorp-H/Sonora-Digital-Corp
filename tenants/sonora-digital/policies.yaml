@@ -1,0 +1,23 @@
+prompt_injection:
+  enabled: true
+  model: mystic-shield
+
+rate_limits:
+  whatsapp: 300/minute
+  telegram: 600/minute
+  api_calls: 10000/hour
+  github: 60/hour
+
+data_masking:
+  pii_detection: true
+  auto_redact:
+    - credit_card
+    - password
+
+tool_sandbox:
+  enabled: true
+  allowed_domains:
+    - "*"
+  blocked_commands:
+    - rm -rf /
+    - dd

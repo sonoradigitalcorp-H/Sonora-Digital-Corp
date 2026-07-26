@@ -1,0 +1,20 @@
+mcp_servers:
+  - name: whatsapp
+    type: local
+    config:
+      credentials_ref: r1_wacli_creds
+      phone: "5216623446953"
+
+  - name: payment
+    type: http
+    url: "https://api.ceson.mcp/payment"
+    auth: bearer_token_ref
+    credentials_ref: r1_payment_token
+
+  - name: dispatch
+    type: local
+    config:
+      group_jid_ref: r1_dispatch_group
+      response_timeout_min: 5
+      delivery_timeout_min: 20
+      max_redispatch: 3

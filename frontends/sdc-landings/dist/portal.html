@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Portal Cliente — Mystic OS</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0a0f;font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Oxygen,Ubuntu,sans-serif;color:#f8fafc;-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+#scene-container{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
+#scene-container canvas{display:block;width:100%;height:100%}
+
+/* NAV */
+#nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:16px 32px;background:rgba(10,10,15,0.6);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.04)}
+#nav-logo{font-size:18px;font-weight:700;letter-spacing:-0.5px;background:linear-gradient(135deg,#f8fafc 0%,rgba(248,250,252,0.6) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+#nav-links{display:flex;gap:24px;list-style:none}
+#nav-links a{color:rgba(248,250,252,0.4);text-decoration:none;font-size:13px;font-weight:500;letter-spacing:0.2px;transition:color 0.2s;position:relative}
+#nav-links a:hover,#nav-links a.active{color:#f8fafc}
+#nav-links a.active::after{content:'';position:absolute;bottom:-17px;left:0;right:0;height:2px;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:1px}
+#nav-right{display:flex;align-items:center;gap:16px}
+#nav-notif{position:relative;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);cursor:pointer;transition:background 0.2s}
+#nav-notif:hover{background:rgba(255,255,255,0.08)}
+#nav-notif svg{width:18px;height:18px;color:rgba(248,250,252,0.5)}
+#nav-notif-badge{position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:linear-gradient(135deg,#ef4444,#dc2626);color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #0a0a0f}
+#nav-avatar{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,#6366f1,#8b5cf6);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;cursor:pointer;transition:transform 0.2s,box-shadow 0.2s;user-select:none}
+#nav-avatar:hover{transform:scale(1.05);box-shadow:0 0 20px rgba(99,102,241,0.3)}
+
+/* CARDS OVERLAY (HTML layer on top of 3D) */
+#cards-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:20;pointer-events:none}
+.card-html{position:absolute;pointer-events:all;width:280px;background:rgba(255,255,255,0.03);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:24px;cursor:pointer;transition:transform 0.3s cubic-bezier(0.16,1,0.3,1),box-shadow 0.3s ease,opacity 0.3s;box-shadow:0 8px 32px rgba(0,0,0,0.3);will-change:transform}
+.card-html:hover{transform:translateY(-4px);box-shadow:0 12px 48px rgba(0,0,0,0.4),0 0 40px rgba(99,102,241,0.06)}
+.card-html .card-metric{font-size:36px;font-weight:700;letter-spacing:-1.5px;line-height:1.1;margin-bottom:4px}
+.card-html .card-label{font-size:13px;color:rgba(248,250,252,0.5);font-weight:400;margin-bottom:16px}
+.card-html .card-trend{display:inline-flex;align-items:center;gap:4px;font-size:12px;font-weight:600;padding:4px 10px;border-radius:6px;background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.15)}
+.card-html .card-trend.down{background:rgba(239,68,68,0.1);color:#ef4444;border-color:rgba(239,68,68,0.15)}
+.card-html .card-chart{margin-top:16px;height:40px;display:flex;align-items:flex-end;gap:4px}
+.card-html .card-chart .bar{flex:1;border-radius:2px;background:linear-gradient(180deg,rgba(99,102,241,0.5),rgba(139,92,246,0.2));transition:height 0.4s}
+.card-html .card-chart .bar:hover{opacity:0.8}
+.card-circle-progress{width:48px;height:48px;position:relative;margin-top:8px}
+.card-circle-progress svg{transform:rotate(-90deg);width:48px;height:48px}
+.card-circle-progress circle{fill:none;stroke-width:4;cx:24;cy:24;r:20}
+.card-circle-progress .bg{stroke:rgba(255,255,255,0.06)}
+.card-circle-progress .fg{stroke:url(#progressGrad);stroke-linecap:round;transition:stroke-dashoffset 0.6s}
+.card-circle-progress .pct{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:11px;font-weight:700;color:rgba(248,250,252,0.7)}
+.card-dots{display:flex;gap:6px;margin-top:12px}
+.card-dots .dot{width:8px;height:8px;border-radius:50%;animation:dotPulse 1.5s ease-in-out infinite}
+.card-dots .dot:nth-child(1){background:#6366f1;animation-delay:0s}
+.card-dots .dot:nth-child(2){background:#8b5cf6;animation-delay:0.2s}
+.card-dots .dot:nth-child(3){background:#a78bfa;animation-delay:0.4s}
+.card-dots .dot:nth-child(4){background:#6366f1;animation-delay:0.6s}
+.card-dots .dot:nth-child(5){background:#8b5cf6;animation-delay:0.8s}
+@keyframes dotPulse{0%,100%{transform:scale(1);opacity:0.4}50%{transform:scale(1.3);opacity:1}}
+.card-hbar{margin-top:12px;display:flex;flex-direction:column;gap:4px}
+.card-hbar .hbar-track{height:4px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden}
+.card-hbar .hbar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,#6366f1,#8b5cf6);transition:width 0.6s}
+.card-hbar .hbar-label{display:flex;justify-content:space-between;font-size:11px;color:rgba(248,250,252,0.4)}
+.card-expanded{position:fixed!important;top:50%!important;left:50%!important;right:auto!important;bottom:auto!important;transform:translate(-50%,-50%)!important;width:440px!important;max-width:90vw!important;z-index:200!important;pointer-events:all!important;background:rgba(15,15,25,0.95)!important;backdrop-filter:blur(32px)!important;border-color:rgba(99,102,241,0.2)!important;padding:32px!important}
+.card-expanded .card-metric{font-size:52px}
+.card-expanded .card-extra{display:block!important}
+.card-extra{display:none;margin-top:20px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.06)}
+.card-extra-row{display:flex;justify-content:space-between;padding:8px 0;font-size:13px;color:rgba(248,250,252,0.6)}
+.card-extra-row span:last-child{color:#f8fafc;font-weight:500}
+#card-backdrop{position:fixed;top:0;left:0;width:100%;height:100%;z-index:150;background:rgba(0,0,0,0.5);opacity:0;pointer-events:none;transition:opacity 0.3s}
+#card-backdrop.visible{opacity:1;pointer-events:all}
+
+/* VOICE ASSISTANT */
+#va-btn{position:fixed;bottom:28px;right:28px;z-index:300;width:56px;height:56px;border-radius:16px;background:linear-gradient(135deg,#6366f1,#8b5cf6);border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 24px rgba(99,102,241,0.3);transition:transform 0.2s,box-shadow 0.2s;pointer-events:all}
+#va-btn:hover{transform:scale(1.05);box-shadow:0 6px 32px rgba(99,102,241,0.4)}
+#va-btn svg{width:22px;height:22px;color:#fff}
+#va-btn .pulse-ring{position:absolute;inset:-4px;border-radius:20px;border:2px solid rgba(99,102,241,0.15);animation:pulseRing 2s ease-out infinite;pointer-events:none}
+#va-btn.has-message .pulse-ring{border-color:rgba(16,185,129,0.3);animation-duration:1s}
+@keyframes pulseRing{0%{transform:scale(1);opacity:0}50%{opacity:1}100%{transform:scale(1.2);opacity:0}}
+#va-btn-badge{position:absolute;top:-4px;right:-4px;width:20px;height:20px;border-radius:50%;background:#10b981;color:#fff;font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #0a0a0f}
+
+#va-panel{position:fixed;bottom:96px;right:28px;z-index:290;width:380px;max-width:calc(100vw - 56px);height:520px;max-height:calc(100vh - 160px);background:rgba(15,15,25,0.95);backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);border:1px solid rgba(255,255,255,0.06);border-radius:20px;display:flex;flex-direction:column;transform:scale(0.9) translateY(20px);opacity:0;pointer-events:none;transition:transform 0.3s cubic-bezier(0.16,1,0.3,1),opacity 0.25s;box-shadow:0 16px 64px rgba(0,0,0,0.5);overflow:hidden}
+#va-panel.visible{transform:scale(1) translateY(0);opacity:1;pointer-events:all}
+#va-panel-header{display:flex;align-items:center;justify-content:space-between;padding:20px 24px 16px;border-bottom:1px solid rgba(255,255,255,0.04)}
+#va-panel-header h3{font-size:16px;font-weight:600;display:flex;align-items:center;gap:10px}
+#va-panel-header h3 .dot{width:8px;height:8px;border-radius:50%;background:#10b981;animation:dotPulse 1.5s ease-in-out infinite}
+#va-panel-close{background:none;border:none;color:rgba(248,250,252,0.3);font-size:20px;cursor:pointer;padding:4px;transition:color 0.2s}
+#va-panel-close:hover{color:rgba(248,250,252,0.7)}
+#va-messages{flex:1;overflow-y:auto;padding:16px 24px;display:flex;flex-direction:column;gap:12px;scroll-behavior:smooth}
+#va-messages::-webkit-scrollbar{width:4px}
+#va-messages::-webkit-scrollbar-track{background:transparent}
+#va-messages::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.08);border-radius:2px}
+.va-msg{max-width:85%;padding:12px 16px;border-radius:14px;font-size:14px;line-height:1.5;animation:msgIn 0.25s ease-out}
+@keyframes msgIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.va-msg.user{background:linear-gradient(135deg,#6366f1,#7c3aed);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+.va-msg.assistant{background:rgba(255,255,255,0.06);color:#f8fafc;align-self:flex-start;border-bottom-left-radius:4px}
+.va-msg.assistant .typing{display:flex;gap:4px;padding:4px 0}
+.va-msg.assistant .typing span{width:6px;height:6px;border-radius:50%;background:rgba(248,250,252,0.4);animation:typingBounce 1s ease-in-out infinite}
+.va-msg.assistant .typing span:nth-child(2){animation-delay:0.15s}
+.va-msg.assistant .typing span:nth-child(3){animation-delay:0.3s}
+@keyframes typingBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-6px)}}
+#va-input-area{display:flex;align-items:center;gap:10px;padding:12px 20px 20px;border-top:1px solid rgba(255,255,255,0.04)}
+#va-input{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:10px 14px;font-size:14px;color:#f8fafc;outline:none;font-family:'Inter',sans-serif;transition:border-color 0.2s}
+#va-input:focus{border-color:rgba(99,102,241,0.4)}
+#va-input::placeholder{color:rgba(248,250,252,0.25)}
+#va-send{width:38px;height:38px;border-radius:10px;border:none;background:linear-gradient(135deg,#6366f1,#8b5cf6);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform 0.2s,opacity 0.2s;flex-shrink:0}
+#va-send:active{transform:scale(0.92)}
+#va-send:disabled{opacity:0.3;cursor:not-allowed}
+#va-send svg{width:16px;height:16px;color:#fff}
+
+/* PARALLAX LAYERS */
+#parallax-layer{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none}
+
+/* RESPONSIVE OVERRIDES */
+@media(max-width:1024px){.card-html{width:240px;padding:20px}.card-html .card-metric{font-size:28px}#nav{padding:14px 20px}}
+@media(max-width:768px){
+  #nav-links{display:none}
+  #cards-overlay{position:relative;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:80px 20px 120px;overflow-y:auto;pointer-events:all}
+  .card-html{position:relative!important;top:auto!important;left:auto!important;right:auto!important;bottom:auto!important;width:100%;max-width:360px;transform:none!important}
+  .card-html:hover{transform:translateY(-2px)!important}
+  #va-panel{right:14px;bottom:88px;width:calc(100vw - 28px);max-height:calc(100vh - 140px)}
+  #va-btn{bottom:20px;right:20px;width:50px;height:50px}
+  #nav{padding:12px 16px}
+  .card-expanded{width:calc(100vw - 32px)!important;padding:24px!important;max-height:90vh!important;overflow-y:auto!important}
+}
+@media(max-width:480px){
+  .card-html .card-metric{font-size:24px}
+  .card-html{padding:16px}
+  #va-panel-header{padding:16px 18px 12px}
+  #va-messages{padding:12px 18px}
+}
+@media(prefers-reduced-motion:reduce){.card-html,.card-html *,.va-msg{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<div id="scene-container"></div>
+<div id="parallax-layer"></div>
+
+<nav id="nav">
+  <div id="nav-logo">Mystic OS</div>
+  <ul id="nav-links">
+    <li><a href="#" class="active">Dashboard</a></li>
+    <li><a href="#">Agentes</a></li>
+    <li><a href="#">Analytics</a></li>
+    <li><a href="#">Configuración</a></li>
+  </ul>
+  <div id="nav-right">
+    <div id="nav-notif">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+      <div id="nav-notif-badge">3</div>
+    </div>
+    <div id="nav-avatar">JD</div>
+  </div>
+</nav>
+
+<div id="card-backdrop"></div>
+
+<div id="cards-overlay">
+  <div class="card-html" data-card="revenue" style="top:18%;left:8%">
+    <div class="card-metric" style="background:linear-gradient(135deg,#f8fafc,#94a3b8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">$12,430</div>
+    <div class="card-label">Ingresos este mes</div>
+    <div class="card-trend"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>+23%</div>
+    <div class="card-chart" id="chart-revenue"></div>
+    <div class="card-extra">
+      <div class="card-extra-row"><span>Semana pasada</span><span>$10,100</span></div>
+      <div class="card-extra-row"><span>Proyección mensual</span><span>$18,600</span></div>
+      <div class="card-extra-row"><span>MRR</span><span>$12,430</span></div>
+      <div class="card-extra-row"><span>ARR</span><span>$149,160</span></div>
+    </div>
+  </div>
+  <div class="card-html" data-card="users" style="top:18%;left:38%">
+    <div class="card-metric" style="background:linear-gradient(135deg,#f8fafc,#94a3b8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">847</div>
+    <div class="card-label">Usuarios activos</div>
+    <div class="card-trend"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>+12%</div>
+    <div class="card-circle-progress">
+      <svg viewBox="0 0 48 48">
+        <defs><linearGradient id="progressGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs>
+        <circle class="bg" cx="24" cy="24" r="20"/>
+        <circle class="fg" cx="24" cy="24" r="20" stroke-dasharray="125.6" stroke-dashoffset="37.7"/>
+      </svg>
+      <span class="pct">70%</span>
+    </div>
+    <div class="card-extra">
+      <div class="card-extra-row"><span>Nuevos hoy</span><span>24</span></div>
+      <div class="card-extra-row"><span>Tasa retención</span><span>94%</span></div>
+      <div class="card-extra-row"><span>DAU/MAU</span><span>0.42</span></div>
+    </div>
+  </div>
+  <div class="card-html" data-card="agents" style="top:18%;left:68%">
+    <div class="card-metric" style="background:linear-gradient(135deg,#f8fafc,#94a3b8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">2,391</div>
+    <div class="card-label">Interacciones con IA</div>
+    <div class="card-trend"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>+47%</div>
+    <div class="card-dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div><div class="dot"></div></div>
+    <div class="card-extra">
+      <div class="card-extra-row"><span>Agente más usado</span><span>Sales</span></div>
+      <div class="card-extra-row"><span>Tasa de éxito</span><span>89%</span></div>
+      <div class="card-extra-row"><span>Tiempo promedio</span><span>1.2s</span></div>
+    </div>
+  </div>
+  <div class="card-html" data-card="response" style="top:18%;left:calc(98% - 280px)">
+    <div class="card-metric" style="background:linear-gradient(135deg,#f8fafc,#94a3b8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">1.2s</div>
+    <div class="card-label">Tiempo promedio</div>
+    <div class="card-trend"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>-8%</div>
+    <div class="card-hbar">
+      <div class="hbar-track"><div class="hbar-fill" style="width:76%"></div></div>
+      <div class="hbar-label"><span>0.5s</span><span>2.0s</span></div>
+    </div>
+    <div class="card-extra">
+      <div class="card-extra-row"><span>P99</span><span>3.4s</span></div>
+      <div class="card-extra-row"><span>P95</span><span>2.1s</span></div>
+      <div class="card-extra-row"><span>Uptime</span><span>99.97%</span></div>
+    </div>
+  </div>
+</div>
+
+<button id="va-btn">
+  <div class="pulse-ring"></div>
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</button>
+
+<div id="va-panel">
+  <div id="va-panel-header">
+    <h3><span class="dot"></span> Mystic Assistant</h3>
+    <button id="va-panel-close">✕</button>
+  </div>
+  <div id="va-messages">
+    <div class="va-msg assistant">Hola, soy Mystic. ¿En qué puedo ayudarte hoy?</div>
+  </div>
+  <div id="va-input-area">
+    <input id="va-input" type="text" placeholder="Escribe un mensaje..." autocomplete="off">
+    <button id="va-send" disabled>
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+    </button>
+  </div>
+</div>
+
+<svg width="0" height="0"><defs><linearGradient id="progressGradDef" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient></defs></svg>
+
+<script>
+(function(){
+'use strict';
+
+/* ─── Three.js Scene ─── */
+var scene=new THREE.Scene();
+scene.background=new THREE.Color(0x0a0a0f);
+
+var camera=new THREE.PerspectiveCamera(50,window.innerWidth/window.innerHeight,0.1,100);
+camera.position.set(0,0,12);
+
+var renderer=new THREE.WebGLRenderer({antialias:true,alpha:false});
+renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.0;
+document.getElementById('scene-container').appendChild(renderer.domElement);
+
+var clock=new THREE.Clock();
+
+/* ─── Lights ─── */
+var ambient=new THREE.AmbientLight(0x222244,0.2);
+scene.add(ambient);
+var dirLight=new THREE.DirectionalLight(0x6366f1,0.3);
+dirLight.position.set(1,2,1);
+scene.add(dirLight);
+var dirLight2=new THREE.DirectionalLight(0x8b5cf6,0.2);
+dirLight2.position.set(-1,-1,0.5);
+scene.add(dirLight2);
+
+/* ─── Particles ─── */
+(function(){
+var count=1200;
+var positions=new Float32Array(count*3);
+for(var i=0;i<count;i++){
+var r=8+Math.random()*18;
+var theta=Math.random()*Math.PI*2;
+var phi=Math.acos(2*Math.random()-1);
+positions[i*3]=r*Math.sin(phi)*Math.cos(theta);
+positions[i*3+1]=r*Math.cos(phi)*0.4;
+positions[i*3+2]=r*Math.sin(phi)*Math.sin(theta);
+}
+var geo=new THREE.BufferGeometry();
+geo.setAttribute('position',new THREE.BufferAttribute(positions,3));
+var mat=new THREE.PointsMaterial({
+color:0x818cf8,
+size:0.04,
+transparent:true,
+opacity:0.4,
+sizeAttenuation:true,
+blending:THREE.AdditiveBlending,
+depthWrite:false
+});
+var particles=new THREE.Points(geo,mat);
+scene.add(particles);
+})();
+
+/* ─── Holographic Grid ─── */
+var gridLines;
+var gridSize=14;
+var divisions=20;
+var step=gridSize/divisions;
+var half=gridSize/2;
+var vertices=[];
+var fadeStart=gridSize*0.35;
+
+for(var i=0;i<=divisions;i++){
+var pos=-half+i*step;
+for(var j=0;j<=divisions;j++){
+var z=-half+j*step;
+var dist=Math.sqrt(pos*pos+z*z);
+var alpha=1-Math.max(0,(dist-fadeStart)/(half-fadeStart));
+alpha=Math.max(0,Math.min(1,alpha))*0.12;
+vertices.push(pos,0,z,alpha);
+}
+}
+var geo=new THREE.BufferGeometry();
+var posArr=[];
+var alphaArr=[];
+// horizontal lines
+for(var i=0;i<=divisions;i++){
+var pos=-half+i*step;
+var pts=[];
+for(var j=0;j<=divisions;j++){
+var z=-half+j*step;
+var dist=Math.sqrt(pos*pos+z*z);
+var alpha=1-Math.max(0,(dist-fadeStart)/(half-fadeStart));
+alpha=Math.max(0,Math.min(1,alpha))*0.2;
+pts.push({x:pos,y:0,z:z,a:alpha});
+}
+for(var j=0;j<pts.length-1;j++){
+posArr.push(pts[j].x,pts[j].y,pts[j].z);
+alphaArr.push(pts[j].a);
+posArr.push(pts[j+1].x,pts[j+1].y,pts[j+1].z);
+alphaArr.push(pts[j+1].a);
+}
+}
+// vertical lines
+for(var j=0;j<=divisions;j++){
+var z=-half+j*step;
+var pts=[];
+for(var i=0;i<=divisions;i++){
+var pos=-half+i*step;
+var dist=Math.sqrt(pos*pos+z*z);
+var alpha=1-Math.max(0,(dist-fadeStart)/(half-fadeStart));
+alpha=Math.max(0,Math.min(1,alpha))*0.2;
+pts.push({x:pos,y:0,z:z,a:alpha});
+}
+for(var i=0;i<pts.length-1;i++){
+posArr.push(pts[i].x,pts[i].y,pts[i].z);
+alphaArr.push(pts[i].a);
+posArr.push(pts[i+1].x,pts[i+1].y,pts[i+1].z);
+alphaArr.push(pts[i+1].a);
+}
+}
+var gridGeo=new THREE.BufferGeometry();
+gridGeo.setAttribute('position',new THREE.Float32BufferAttribute(posArr,3));
+gridGeo.setAttribute('alpha',new THREE.Float32BufferAttribute(alphaArr,1));
+var gridMat=new THREE.LineBasicMaterial({
+color:0x6366f1,
+transparent:true,
+opacity:0.3,
+depthWrite:false
+});
+var gridLines=new THREE.LineSegments(gridGeo,gridMat);
+gridLines.position.y=-1.2;
+scene.add(gridLines);
+
+// subtle glow ring on grid
+var ringGeo=new THREE.RingGeometry(5.8,6.2,64);
+var ringMat=new THREE.MeshBasicMaterial({
+color:0x6366f1,
+transparent:true,
+opacity:0.04,
+side:THREE.DoubleSide,
+depthWrite:false
+});
+var ring=new THREE.Mesh(ringGeo,ringMat);
+ring.rotation.x=-Math.PI/2;
+ring.position.y=-1.15;
+scene.add(ring);
+
+/* ─── Card Floats (3D planes as subtle glow behind HTML cards) ─── */
+var cardPlanes=[];
+var cardPositions=[
+{x:-3.6,y:1.2,z:-1.5},
+{x:-0.8,y:1.2,z:-1.0},
+{x:2.0,y:1.2,z:-0.5},
+{x:4.6,y:1.2,z:-1.8},
+];
+cardPositions.forEach(function(pos){
+var geo=new THREE.PlaneGeometry(3.2,2.0);
+var mat=new THREE.MeshBasicMaterial({
+color:0x6366f1,
+transparent:true,
+opacity:0.02,
+side:THREE.DoubleSide,
+depthWrite:false
+});
+var mesh=new THREE.Mesh(geo,mat);
+mesh.position.set(pos.x,pos.y,pos.z);
+scene.add(mesh);
+cardPlanes.push(mesh);
+});
+
+var cardGlows=[];
+cardPositions.forEach(function(pos){
+var tex=makeGlowTexture(0x6366f1,0.4);
+var mat=new THREE.SpriteMaterial({map:tex,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false,opacity:0.15});
+var sprite=new THREE.Sprite(mat);
+sprite.scale.set(3.0,1.8,1);
+sprite.position.set(pos.x,pos.y,pos.z-0.2);
+scene.add(sprite);
+cardGlows.push(sprite);
+});
+
+function makeGlowTexture(colorHex,intensity){
+var c=document.createElement('canvas');
+c.width=128;c.height=128;
+var ctx=c.getContext('2d');
+var g=ctx.createRadialGradient(64,64,0,64,64,64);
+var col=new THREE.Color(colorHex);
+g.addColorStop(0,'rgba('+(col.r*255|0)+','+(col.g*255|0)+','+(col.b*255|0)+','+intensity+')');
+g.addColorStop(0.3,'rgba('+(col.r*255|0)+','+(col.g*255|0)+','+(col.b*255|0)+','+(intensity*0.3)+')');
+g.addColorStop(1,'rgba('+(col.r*255|0)+','+(col.g*255|0)+','+(col.b*255|0)+',0)');
+ctx.fillStyle=g;
+ctx.fillRect(0,0,128,128);
+return new THREE.CanvasTexture(c);
+}
+
+/* ─── Card Bar Chart (HTML) ─── */
+(function(){
+function buildBars(container,values){
+for(var i=0;i<values.length;i++){
+var bar=document.createElement('div');
+bar.className='bar';
+var h=values[i];
+bar.style.height=h+'%';
+container.appendChild(bar);
+}
+}
+buildBars(document.getElementById('chart-revenue'),[30,45,38,52,48,65,72,55,68,82,74,90,85,78]);
+})();
+
+/* ─── Drag Rotation (manual OrbitControls) ─── */
+var isDragging=false;
+var prevX=0;
+var cameraAngleY=0;
+var cameraAngleX=0;
+var targetAngleY=0;
+var targetAngleX=0;
+var autoRotateSpeed=0.04;
+var isMobile=window.innerWidth<768;
+
+if(!isMobile){
+renderer.domElement.addEventListener('pointerdown',function(e){
+isDragging=true;
+prevX=e.clientX;
+renderer.domElement.style.cursor='grabbing';
+});
+window.addEventListener('pointermove',function(e){
+if(!isDragging)return;
+var dx=e.clientX-prevX;
+cameraAngleY+=dx*0.003;
+prevX=e.clientX;
+});
+window.addEventListener('pointerup',function(){
+isDragging=false;
+renderer.domElement.style.cursor='default';
+});
+}
+
+/* ─── Parallax Scroll ─── */
+var scrollY=0;
+window.addEventListener('wheel',function(e){
+scrollY+=e.deltaY*0.001;
+scrollY=Math.max(-1,Math.min(1,scrollY));
+},{passive:true});
+
+/* ─── Touch drag for 3D rotation ─── */
+if(!isMobile){
+renderer.domElement.addEventListener('touchstart',function(e){
+if(e.touches.length===1){
+isDragging=true;
+prevX=e.touches[0].clientX;
+}
+},{passive:true});
+renderer.domElement.addEventListener('touchmove',function(e){
+if(isDragging&&e.touches.length===1){
+var dx=e.touches[0].clientX-prevX;
+cameraAngleY+=dx*0.003;
+prevX=e.touches[0].clientX;
+}
+},{passive:true});
+renderer.domElement.addEventListener('touchend',function(){
+isDragging=false;
+},{passive:true});
+}
+
+/* ─── Card interactions ─── */
+var cards=document.querySelectorAll('.card-html');
+var backdrop=document.getElementById('card-backdrop');
+
+cards.forEach(function(card){
+card.addEventListener('click',function(e){
+e.stopPropagation();
+var isExpanded=this.classList.contains('card-expanded');
+if(isExpanded){
+collapseCard(this);
+}else{
+collapseAllCards();
+expandCard(this);
+}
+});
+});
+
+function expandCard(card){
+card.classList.add('card-expanded');
+backdrop.classList.add('visible');
+}
+
+function collapseCard(card){
+card.classList.remove('card-expanded');
+backdrop.classList.remove('visible');
+}
+
+function collapseAllCards(){
+cards.forEach(function(c){c.classList.remove('card-expanded');});
+backdrop.classList.remove('visible');
+}
+
+backdrop.addEventListener('click',collapseAllCards);
+
+document.addEventListener('keydown',function(e){
+if(e.key==='Escape')collapseAllCards();
+});
+
+/* ─── Hover on 3D card glows ─── */
+cards.forEach(function(card,i){
+card.addEventListener('mouseenter',function(){
+if(cardGlows[i]){
+cardGlows[i].material.opacity=0.35;
+}
+});
+card.addEventListener('mouseleave',function(){
+if(cardGlows[i]){
+cardGlows[i].material.opacity=0.15;
+}
+});
+});
+
+/* ─── Voice Assistant ─── */
+var vaBtn=document.getElementById('va-btn');
+var vaPanel=document.getElementById('va-panel');
+var vaClose=document.getElementById('va-panel-close');
+var vaInput=document.getElementById('va-input');
+var vaSend=document.getElementById('va-send');
+var vaMessages=document.getElementById('va-messages');
+var badge=document.getElementById('va-btn-badge');
+var panelVisible=false;
+var ws=null;
+var wsConnected=false;
+var msgCount=0;
+
+vaBtn.addEventListener('click',function(){
+panelVisible=!panelVisible;
+vaPanel.classList.toggle('visible',panelVisible);
+if(panelVisible&&!wsConnected){
+connectWS();
+}
+});
+
+vaClose.addEventListener('click',function(){
+panelVisible=false;
+vaPanel.classList.remove('visible');
+});
+
+vaInput.addEventListener('input',function(){
+vaSend.disabled=!this.value.trim();
+});
+
+vaInput.addEventListener('keydown',function(e){
+if(e.key==='Enter'&&!vaSend.disabled){
+sendMessage();
+}
+});
+
+vaSend.addEventListener('click',sendMessage);
+
+function sendMessage(){
+var text=vaInput.value.trim();
+if(!text)return;
+addMessage(text,'user');
+vaInput.value='';
+vaSend.disabled=true;
+if(ws&&ws.readyState===WebSocket.OPEN){
+ws.send(JSON.stringify({type:'message',content:text}));
+}else{
+addMessage('Conectando con Mystic...','assistant');
+connectWS();
+setTimeout(function(){
+if(ws&&ws.readyState===WebSocket.OPEN){
+ws.send(JSON.stringify({type:'message',content:text}));
+}
+},1500);
+}
+}
+
+function addMessage(text,role){
+var div=document.createElement('div');
+div.className='va-msg '+role;
+if(role==='assistant'&&text==='...typing'){
+div.innerHTML='<div class="typing"><span></span><span></span><span></span></div>';
+}else{
+div.textContent=text;
+}
+vaMessages.appendChild(div);
+vaMessages.scrollTop=vaMessages.scrollHeight;
+}
+
+function connectWS(){
+var proto=location.protocol==='https:'?'wss:':'ws:';
+var url=proto+'//'+location.host+'/v1/chat';
+try{
+ws=new WebSocket(url);
+ws.onopen=function(){
+wsConnected=true;
+ws.send(JSON.stringify({type:'identify',user_id:localStorage.getItem('mystic_user_id')||'anonymous'}));
+};
+ws.onmessage=function(e){
+var data;
+try{data=JSON.parse(e.data);}catch(d){data={content:e.data};}
+if(data.type==='message'||data.content){
+addMessage(data.content,'assistant');
+}else if(data.type==='typing'){
+addMessage('...typing','assistant');
+setTimeout(function(){
+vaMessages.removeChild(vaMessages.lastChild);
+},1000);
+}
+};
+ws.onclose=function(){
+wsConnected=false;
+};
+ws.onerror=function(){
+wsConnected=false;
+};
+}catch(e){
+wsConnected=false;
+}
+}
+
+/* ─── Update card positions from 3D ─── */
+var cardEls=document.querySelectorAll('.card-html');
+var card3DPositions=cardPositions;
+
+function updateCardPositions(){
+if(cardEls.length===0)return;
+// On mobile, don't position from 3D
+if(isMobile){
+cardEls.forEach(function(el,i){
+if(i<4){
+var order=['0','1','2','3'];
+el.style.top='auto';
+el.style.left='auto';
+el.style.position='relative';
+el.style.transform='none';
+}
+});
+return;
+}
+cardEls.forEach(function(el,i){
+if(i>=card3DPositions.length||el.classList.contains('card-expanded'))return;
+var pos=card3DPositions[i];
+var vec=new THREE.Vector3(pos.x,pos.y,pos.z+0.5);
+vec.project(camera);
+var w=window.innerWidth;
+var h=window.innerHeight;
+var x=(vec.x*0.5+0.5)*w;
+var y=(-vec.y*0.5+0.5)*h;
+if(vec.z>1){
+el.style.opacity='0';
+el.style.pointerEvents='none';
+return;
+}
+el.style.opacity='1';
+el.style.pointerEvents='all';
+el.style.position='absolute';
+el.style.left=x+'px';
+el.style.top=y+'px';
+el.style.transform='translate(-50%,-50%)';
+var scale=1+Math.max(0,0.8-vec.z)*0.06;
+el.style.transform='translate(-50%,-50%) scale('+scale+')';
+});
+}
+
+/* ─── Resize ─── */
+function onResize(){
+var w=window.innerWidth;
+var h=window.innerHeight;
+camera.aspect=w/h;
+camera.updateProjectionMatrix();
+renderer.setSize(w,h);
+isMobile=window.innerWidth<768;
+if(isMobile){
+camera.position.set(0,0,6);
+}else{
+camera.position.set(0,0,12);
+}
+}
+window.addEventListener('resize',onResize);
+
+/* ─── Animate ─── */
+function animate(){
+requestAnimationFrame(animate);
+var delta=Math.min(clock.getDelta(),0.05);
+var elapsed=clock.getElapsedTime();
+
+// Auto-rotate
+if(!isDragging&&!isMobile){
+cameraAngleY+=delta*autoRotateSpeed;
+}
+
+// Smooth camera
+var targetDist=isMobile?6:12;
+camera.position.x=Math.sin(cameraAngleY)*targetDist*Math.cos(cameraAngleX);
+camera.position.y=Math.sin(cameraAngleX)*targetDist*0.3+scrollY*0.5;
+camera.position.z=Math.cos(cameraAngleY)*targetDist*Math.cos(cameraAngleX);
+camera.lookAt(0,scrollY*0.2,0);
+
+// Float cards
+cardPlanes.forEach(function(mesh,i){
+mesh.position.y=cardPositions[i].y+Math.sin(elapsed*0.5+i*1.2)*0.06;
+mesh.rotation.y=Math.sin(elapsed*0.3+i*0.8)*0.02;
+});
+cardGlows.forEach(function(sprite,i){
+sprite.position.y=cardPositions[i].y+Math.sin(elapsed*0.5+i*1.2)*0.06;
+sprite.material.opacity=0.12+Math.sin(elapsed*0.8+i*0.5)*0.03;
+});
+
+// Pulse grid opacity
+gridLines.material.opacity=0.2+Math.sin(elapsed*0.2)*0.05;
+
+updateCardPositions();
+renderer.render(scene,camera);
+}
+
+/* ─── Mini bar chart animation ─── */
+setTimeout(function(){
+var bars=document.querySelectorAll('#chart-revenue .bar');
+bars.forEach(function(bar,i){
+var h=bar.style.height;
+bar.style.height='0%';
+setTimeout(function(){
+bar.style.height=h;
+},50+i*40);
+});
+},300);
+
+animate();
+
+})();
+</script>
+</body>
+</html>

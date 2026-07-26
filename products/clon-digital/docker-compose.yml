@@ -1,0 +1,68 @@
+version: "3.8"
+
+services:
+  orchestrator:
+    build:
+      context: .
+      dockerfile: Dockerfile.orchestrator
+    ports:
+      - "8000:8000"
+    env_file: .env
+    volumes:
+      - data_photos:/data/photos
+      - data_audio:/data/audio
+      - data_videos:/data/videos
+    depends_on:
+      - redis
+      - fal-wrapper
+    restart: unless-stopped
+    networks:
+      - clon-net
+
+  fal-wrapper:
+    build:
+      context: .
+      dockerfile: Dockerfile.fal-wrapper
+    ports:
+      - "8001:8001"
+    env_file: .env
+    restart: unless-stopped
+    networks:
+      - clon-net
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    restart: unless-stopped
+    networks:
+      - clon-net
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - data_photos:/data/photos:ro
+      - data_audio:/data/audio:ro
+      - data_videos:/data/videos:ro
+    depends_on:
+      - orchestrator
+      - fal-wrapper
+    restart: unless-stopped
+    networks:
+      - clon-net
+
+volumes:
+  redis_data:
+  data_photos:
+  data_audio:
+  data_videos:
+
+networks:
+  clon-net:
+    driver: bridge

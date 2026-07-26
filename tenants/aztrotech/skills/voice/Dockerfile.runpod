@@ -1,0 +1,21 @@
+FROM pytorch/pytorch:2.5.0-cuda12.4-cudnn9-runtime
+
+WORKDIR /app
+
+# Instalar dependencias
+RUN pip install --no-cache-dir \
+    runpod==1.7.0 \
+    soundfile \
+    transformers \
+    huggingface_hub
+
+# Copiar handler
+COPY runpod_tts_handler.py /app/
+COPY cesar/ref_text_short.txt /app/
+COPY cesar/processed/cesar-ref-short.wav /app/
+
+# La primera vez descargará Qwen3-TTS de Hugging Face (~1.2GB)
+# Se cachea en /root/.cache/huggingface/
+RUN python3 -c "from qwen_tts import Qwen3TTSModel; print('pre-cached')" 2>/dev/null || true
+
+CMD ["python3", "-u", "runpod_tts_handler.py"]

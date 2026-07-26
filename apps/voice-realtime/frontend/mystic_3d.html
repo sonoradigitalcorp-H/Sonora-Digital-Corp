@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#0a0b12">
+<title>Mystic — Asistente 3D</title>
+<link rel="manifest" href="/manifest.json">
+<link rel="icon" href="/icon.svg" type="image/svg+xml">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#0a0b12;font-family:'Inter','Segoe UI',system-ui,sans-serif;color:#edf0f7}
+#canvas-container{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
+#ui-overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none}
+#brand{position:fixed;top:20px;left:24px;z-index:10;pointer-events:none}
+#brand h1{font-size:11px;font-weight:600;letter-spacing:3px;text-transform:uppercase;color:rgba(200,146,75,.6)}
+#brand .sub{font-size:9px;color:rgba(255,255,255,.2);letter-spacing:1px;margin-top:2px}
+#status-text{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:10;text-align:center;pointer-events:none;width:90%;max-width:500px}
+#status-text .primary{font-size:18px;font-weight:500;color:#edf0f7;text-shadow:0 0 40px rgba(200,146,75,.3);transition:all .3s}
+#status-text .secondary{font-size:12px;color:rgba(255,255,255,.35);margin-top:4px;font-weight:300}
+#sys-info{position:fixed;bottom:140px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:12px;pointer-events:none;flex-wrap:wrap;justify-content:center;opacity:0;transition:opacity .5s}
+#sys-info.visible{opacity:1}
+.sys-chip{padding:4px 12px;border-radius:20px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);font-size:10px;color:rgba(255,255,255,.5);letter-spacing:.5px;backdrop-filter:blur(10px)}
+.sys-chip .val{color:rgba(200,146,75,.9);font-weight:600}
+#conv-log{position:fixed;bottom:170px;left:50%;transform:translateX(-50%);z-index:10;width:90%;max-width:500px;max-height:120px;overflow-y:auto;pointer-events:auto;display:none;gap:4px;flex-direction:column;background:rgba(10,11,18,.6);backdrop-filter:blur(20px);border-radius:12px;padding:8px;border:1px solid rgba(255,255,255,.04)}
+#conv-log.visible{display:flex}
+.conv-item{font-size:12px;padding:4px 8px;border-radius:6px;animation:fadeIn .3s;line-height:1.4}
+.conv-item.user{background:rgba(200,146,75,.08);align-self:flex-end;color:rgba(255,255,255,.6);text-align:right}
+.conv-item.mystic{background:rgba(168,181,137,.06);align-self:flex-start;color:#edf0f7}
+@keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+#controls{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:10px;pointer-events:auto;align-items:center}
+.ctrl-btn{width:44px;height:44px;border-radius:50%;border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.03);color:rgba(255,255,255,.5);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .25s;backdrop-filter:blur(10px);pointer-events:auto}
+.ctrl-btn:hover{border-color:rgba(200,146,75,.3);color:rgba(255,255,255,.8);background:rgba(255,255,255,.06)}
+.ctrl-btn.active{background:rgba(200,146,75,.15);border-color:rgba(200,146,75,.3);color:#C8924B}
+.ctrl-btn.mic{width:56px;height:56px;background:linear-gradient(135deg,#C8924B,#c0603a);border:none;font-size:22px;color:#fff;box-shadow:0 4px 24px rgba(200,146,75,.2)}
+.ctrl-btn.mic:hover{transform:scale(1.05);box-shadow:0 6px 32px rgba(200,146,75,.3)}
+.ctrl-btn.mic.recording{background:linear-gradient(135deg,#e05040,#c03030);animation:rec-pulse 1s infinite}
+@keyframes rec-pulse{0%,100%{box-shadow:0 4px 24px rgba(224,80,64,.3)}50%{box-shadow:0 4px 48px rgba(224,80,64,.5)}}
+#wake-indicator{position:fixed;top:20px;right:24px;z-index:10;padding:6px 12px;border-radius:20px;font-size:10px;letter-spacing:1px;text-transform:uppercase;border:1px solid rgba(255,255,255,.06);background:rgba(255,255,255,.03);backdrop-filter:blur(10px);transition:all .3s;pointer-events:none}
+#wake-indicator.on{color:#a8b589;border-color:rgba(168,181,137,.3);background:rgba(168,181,137,.08)}
+#wake-indicator.off{color:rgba(255,255,255,.25);border-color:rgba(255,255,255,.06)}
+#input-bar{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);z-index:10;display:flex;gap:8px;align-items:center;pointer-events:auto;width:90%;max-width:400px}
+#textInput{flex:1;padding:10px 16px;border-radius:24px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);color:#edf0f7;font-size:14px;font-family:'Inter',sans-serif;outline:none;backdrop-filter:blur(10px);transition:border-color .2s}
+#textInput:focus{border-color:rgba(200,146,75,.4)}
+#textInput::placeholder{color:rgba(255,255,255,.25)}
+#sendBtn{width:40px;height:40px;border-radius:50%;border:none;background:linear-gradient(135deg,#C8924B,#c0603a);color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 12px rgba(200,146,75,.2)}
+#sendBtn:active{transform:scale(.95)}
+@media(max-width:480px){
+  #brand{top:12px;left:16px}
+  #status-text .primary{font-size:15px}
+  .ctrl-btn{width:38px;height:38px;font-size:14px}
+  .ctrl-btn.mic{width:48px;height:48px;font-size:18px}
+  #input-bar{bottom:72px}
+}
+</style>
+</head>
+<body>
+<div id="canvas-container"></div>
+<div id="ui-overlay"></div>
+
+<div id="brand">
+  <h1>✦ Mystic</h1>
+  <div class="sub">Sonora Digital Corp</div>
+</div>
+
+<div id="wake-indicator" class="off">🔮 Wake Word</div>
+
+<div id="sys-info"></div>
+
+<div id="conv-log"></div>
+
+<div id="status-text">
+  <div class="primary" id="statusPrimary">Inicializando...</div>
+  <div class="secondary" id="statusSecondary">Conectando... di "Hey Jarvis" o 👏👏</div>
+</div>
+
+<div id="controls">
+  <button class="ctrl-btn" id="toneBtn" onclick="cycleTone()">🎭</button>
+  <button class="ctrl-btn mic" id="micBtn" onclick="toggleMic()">🎤</button>
+  <button class="ctrl-btn" id="chatBtn" onclick="toggleChat()">💬</button>
+  <button class="ctrl-btn" id="clapBtn" onclick="startClapDetection()" title="Activar por aplausos">👏</button>
+</div>
+<div id="input-bar">
+  <input type="text" id="textInput" placeholder="Escribe un mensaje..." autocomplete="off">
+  <button id="sendBtn" onclick="sendText()">➤</button>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ─── Configuration ───
+const WS_PROTO = location.protocol === 'https:' ? 'wss:' : 'ws:';
+const WS_URL = `${WS_PROTO}//${location.host}/v1/chat`;
+let ws = null, scene, camera, renderer, orb, particles, ring, ring2;
+let clock = new THREE.Clock();
+let isRecording = false, isSpeaking = false, chatVisible = false;
+let mediaRecorder = null, audioChunks = [], wakeActive = false;
+let toneIndex = 0, currentSoundscape = 'minimal';
+const TONES = ['warm','energetic','calm','professional'];
+const TONE_ICONS = ['🎭','⚡','🌊','🎯'];
+
+// ─── Three.js Scene ───
+
+// ─── Two-Clap Detection ───
+let clapAudioContext = null;
+let clapAnalyser = null;
+let clapDataArray = null;
+let clapCount = 0;
+let lastClapTime = 0;
+const CLAP_WINDOW_MS = 1500; // 1.5s para contar dos aplausos
+const CLAP_THRESHOLD = 0.3; // sensibilidad
+
+function startClapDetection() {
+  try {
+    clapAudioContext = new (window.AudioContext || window.webkitAudioContext)();
+    clapAnalyser = clapAudioContext.createAnalyser();
+    clapAnalyser.fftSize = 512;
+    clapDataArray = new Uint8Array(clapAnalyser.frequencyBinCount);
+    
+    navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false}})
+      .then(stream => {
+        const source = clapAudioContext.createMediaStreamSource(stream);
+        source.connect(clapAnalyser);
+        monitorClaps();
+      }).catch(() => {});
+  } catch(e) {}
+}
+
+function monitorClaps() {
+  if(!clapAnalyser) return;
+  clapAnalyser.getByteTimeDomainData(clapDataArray);
+  
+  let sum = 0;
+  for(let i=0; i<clapDataArray.length; i++) {
+    const val = (clapDataArray[i] - 128) / 128;
+    sum += val * val;
+  }
+  const rms = Math.sqrt(sum / clapDataArray.length);
+  
+  const now = Date.now();
+  if(rms > CLAP_THRESHOLD) {
+    if(now - lastClapTime > 300) {
+      clapCount++;
+      lastClapTime = now;
+      setStatus(`👏 Aplauso ${clapCount}/2`, '');
+      
+      if(clapCount >= 2) {
+        clapCount = 0;
+        setStatus('🎤 ¡Activado!', 'Te escucho, di tu comando');
+        setOrbState('speaking');
+        startWakeStream();
+      }
+    }
+  }
+  
+  if(clapCount > 0 && now - lastClapTime > CLAP_WINDOW_MS) {
+    clapCount = 0;
+    setStatus('🎙️ Escuchando...', 'Dos aplausos para activar');
+  }
+  
+  setTimeout(monitorClaps, 100);
+}
+
+function startWakeStream() {
+  if(isRecording) return;
+  startRecording();
+}
+
+function initThreeJS() {
+  const container = document.getElementById('canvas-container');
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+  camera.position.set(0, 0, 8);
+  
+  renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x0a0b12, 1);
+  container.appendChild(renderer.domElement);
+
+  // ─── Orb principal (icosahedron con glow) ───
+  const geo = new THREE.IcosahedronGeometry(1.6, 3);
+  const mat = new THREE.MeshPhongMaterial({
+    color: 0xC8924B,
+    emissive: 0xC8924B,
+    emissiveIntensity: 0.08,
+    wireframe: false,
+    transparent: true,
+    opacity: 0.85,
+    shininess: 40,
+  });
+  orb = new THREE.Mesh(geo, mat);
+  scene.add(orb);
+
+  // ─── Anillo exterior 1 ───
+  const ringGeo = new THREE.TorusGeometry(2.0, 0.015, 16, 100);
+  const ringMat = new THREE.MeshBasicMaterial({ color: 0xC8924B, transparent: true, opacity: 0.15 });
+  ring = new THREE.Mesh(ringGeo, ringMat);
+  ring.rotation.x = Math.PI / 3;
+  ring.rotation.z = 0.3;
+  scene.add(ring);
+
+  // ─── Anillo exterior 2 ───
+  const ring2Geo = new THREE.TorusGeometry(2.3, 0.01, 16, 100);
+  const ring2Mat = new THREE.MeshBasicMaterial({ color: 0xa8b589, transparent: true, opacity: 0.08 });
+  ring2 = new THREE.Mesh(ring2Geo, ring2Mat);
+  ring2.rotation.x = -Math.PI / 4;
+  ring2.rotation.z = 0.6;
+  scene.add(ring2);
+
+  // ─── Partículas ───
+  const particleCount = 2000;
+  const pGeo = new THREE.BufferGeometry();
+  const positions = new Float32Array(particleCount * 3);
+  const sizes = new Float32Array(particleCount);
+  for(let i=0; i<particleCount; i++){
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos((Math.random() * 2) - 1);
+    const r = 3 + Math.random() * 4;
+    positions[i*3] = r * Math.sin(phi) * Math.cos(theta);
+    positions[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+    positions[i*3+2] = r * Math.cos(phi);
+    sizes[i] = 0.5 + Math.random() * 1.5;
+  }
+  pGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  pGeo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+  
+  const pMat = new THREE.PointsMaterial({
+    color: 0xC8924B,
+    size: 0.03,
+    transparent: true,
+    opacity: 0.4,
+    blending: THREE.AdditiveBlending,
+    sizeAttenuation: true,
+  });
+  particles = new THREE.Points(pGeo, pMat);
+  scene.add(particles);
+
+  // ─── Luz ───
+  const light = new THREE.DirectionalLight(0xC8924B, 0.5);
+  light.position.set(2, 3, 4);
+  scene.add(light);
+  const ambient = new THREE.AmbientLight(0x222233, 0.3);
+  scene.add(ambient);
+  const backLight = new THREE.PointLight(0xa8b589, 0.2);
+  backLight.position.set(-3, -1, -2);
+  scene.add(backLight);
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  animate();
+}
+
+let orbTargetScale = 1;
+let ringTargetSpeed = 1;
+let pulsePhase = 0;
+
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+  
+  // Orb rotation
+  orb.rotation.x += 0.002;
+  orb.rotation.y += 0.005;
+  
+  // Orb pulse
+  const pulse = Math.sin(t * 1.5 + pulsePhase) * 0.02 + 1;
+  const scale = orbTargetScale * pulse;
+  orb.scale.set(scale, scale, scale);
+  
+  // Rings rotation
+  ring.rotation.y += 0.008 * ringTargetSpeed;
+  ring.rotation.x += 0.003 * ringTargetSpeed;
+  ring2.rotation.y -= 0.005 * ringTargetSpeed;
+  ring2.rotation.x += 0.002 * ringTargetSpeed;
+  
+  // Particles rotation
+  particles.rotation.y += 0.001;
+  particles.rotation.x += 0.0005;
+  
+  // Emissive glow pulse
+  const glow = 0.06 + Math.sin(t * 0.8) * 0.04;
+  orb.material.emissiveIntensity = glow * orbTargetScale;
+  
+  renderer.render(scene, camera);
+}
+
+function setOrbState(state) {
+  switch(state) {
+    case 'idle':
+      orbTargetScale = 1;
+      ringTargetSpeed = 1;
+      orb.material.color.setHex(0xC8924B);
+      orb.material.emissive.setHex(0xC8924B);
+      break;
+    case 'listening':
+      orbTargetScale = 1.05;
+      ringTargetSpeed = 1.2;
+      orb.material.color.setHex(0xC8924B);
+      orb.material.emissive.setHex(0xC8924B);
+      break;
+    case 'thinking':
+      orbTargetScale = 0.95;
+      ringTargetSpeed = 0.5;
+      orb.material.color.setHex(0xa8b589);
+      orb.material.emissive.setHex(0xa8b589);
+      break;
+    case 'speaking':
+      orbTargetScale = 1.1;
+      ringTargetSpeed = 1.8;
+      pulsePhase = t => Math.sin(t * 4) * 0.5;
+      orb.material.color.setHex(0xE0AD6E);
+      orb.material.emissive.setHex(0xE0AD6E);
+      break;
+    case 'alert':
+      orbTargetScale = 1.15;
+      ringTargetSpeed = 2.5;
+      orb.material.color.setHex(0xc0603a);
+      orb.material.emissive.setHex(0xc0603a);
+      break;
+    default:
+      orbTargetScale = 1;
+      ringTargetSpeed = 1;
+  }
+}
+
+// ─── System Info Display ───
+function showSystemStatus(data) {
+  const el = document.getElementById('sys-info');
+  el.innerHTML = `
+    <span class="sys-chip">CPU <span class="val">${data.cpu_percent}%</span></span>
+    <span class="sys-chip">RAM <span class="val">${data.ram_percent}%</span></span>
+    <span class="sys-chip">DISK <span class="val">${data.disk_percent}%</span></span>
+    <span class="sys-chip">UP <span class="val">${Math.round(data.uptime_days)}d</span></span>
+  `;
+  el.classList.add('visible');
+  setTimeout(() => el.classList.remove('visible'), 8000);
+}
+
+// ─── Cliente persistente ───
+function getClientId() {
+  let id = localStorage.getItem('mystic_client_id');
+  if(!id) {
+    id = 'user_' + Math.random().toString(36).substr(2, 9) + Date.now().toString(36);
+    localStorage.setItem('mystic_client_id', id);
+  }
+  return id;
+}
+
+// ─── WebSocket ───
+let wsReconnectTimer = null;
+let wsPingTimer = null;
+let wsConnected = false;
+let wsRetries = 0;
+const WS_MAX_RETRIES = 5;
+
+function startPingLoop() {
+  if(wsPingTimer) clearInterval(wsPingTimer);
+  wsPingTimer = setInterval(() => {
+    if(ws && ws.readyState === WebSocket.OPEN) {
+      ws.send(JSON.stringify({type:'ping'}));
+    } else {
+      clearInterval(wsPingTimer);
+    }
+  }, 25000); // Ping cada 25s para mantener vivo
+}
+
+function connectWS() {
+  if(ws && ws.readyState === WebSocket.OPEN) return;
+  
+  try { if(ws) { ws.onclose = null; ws.onerror = null; ws.close(); } } catch(e) {}
+  
+  setStatus('🔌 Conectando...', '');
+  
+  ws = new WebSocket(WS_URL);
+  ws.binaryType = 'blob';
+  
+  ws.onopen = () => {
+    wsConnected = true;
+    wsRetries = 0;
+    // Identificar al usuario con ID persistente
+    ws.send(JSON.stringify({type: 'identify', user_id: getClientId()}));
+    setStatus('🎙️ Conectado', 'Escribe o presiona el micrófono');
+    setOrbState('listening');
+    document.getElementById('wake-indicator').className = 'on';
+    document.getElementById('wake-indicator').textContent = '🔊 Conectado';
+    document.getElementById('textInput').disabled = false;
+    document.getElementById('textInput').placeholder = 'Escribe un mensaje...';
+    fetchSystemStatus();
+    startPingLoop();
+  };
+  
+  ws.onclose = (e) => {
+    wsConnected = false;
+    if(wsPingTimer) { clearInterval(wsPingTimer); wsPingTimer = null; }
+    
+    if(wsRetries < WS_MAX_RETRIES) {
+      wsRetries++;
+      const delay = Math.min(3000 * wsRetries, 15000);
+      setStatus(`⚠️ Reconectando (${wsRetries}/${WS_MAX_RETRIES})...`, `Espera ${delay/1000}s`);
+      setOrbState('idle');
+      document.getElementById('wake-indicator').className = 'off';
+      document.getElementById('wake-indicator').textContent = '🔮 Desconectado';
+      
+      if(wsReconnectTimer) clearTimeout(wsReconnectTimer);
+      wsReconnectTimer = setTimeout(connectWS, delay);
+    } else {
+      setStatus('❌ Sin conexión', 'Recarga la página para intentar de nuevo');
+      document.getElementById('wake-indicator').className = 'off';
+      document.getElementById('wake-indicator').textContent = '🔮 Sin conexión';
+      document.getElementById('textInput').disabled = true;
+      document.getElementById('textInput').placeholder = 'Sin conexión...';
+    }
+  };
+  
+  ws.onerror = () => {};
+  
+  ws.onmessage = (e) => {
+    try {
+      const msg = JSON.parse(e.data);
+      handleWSMessage(msg);
+    } catch(err) {
+      console.error('WS parse error:', err);
+    }
+  };
+}
+
+function fetchSystemStatus() {
+  fetch('/api/system').then(r=>r.json()).then(d => {
+    if(!d.error) showSystemStatus(d);
+  }).catch(()=>{});
+}
+
+function handleWSMessage(msg) {
+  switch(msg.type) {
+    case 'session.created':
+      if(msg.session.history_restored > 0) {
+        setStatus(`🔄 Bienvenido de nuevo`, `${msg.session.history_restored} mensajes recuperados`);
+      }
+      break;
+    case 'status':
+      setStatus(msg.message || '', '');
+      const s = msg.status || '';
+      if(s === 'listening' || s === 'listening_with_music' || s === 'wakeword') setOrbState('listening');
+      else if(s === 'understanding' || s === 'thinking') setOrbState('thinking');
+      else if(s === 'speaking' || s === 'generating_voice') setOrbState('speaking');
+      else if(s === 'browsing' || s === 'reading') setOrbState('thinking');
+      else if(s === 'wakeword_detected') {
+        setOrbState('speaking');
+        if(navigator.vibrate) navigator.vibrate(80);
+      }
+      break;
+    case 'conversation.item.created':
+      if(msg.item?.content?.[0]?.text) addConv(msg.item.content[0].text, 'user');
+      break;
+    case 'response.output_text.delta':
+      addConv(msg.delta, 'mystic');
+      setOrbState('speaking');
+      // Si es system status, obtener datos
+      if(msg.delta.includes('CPU')) fetchSystemStatus();
+      break;
+    case 'response.audio.url':
+      playAudioUrl(msg.url);
+      break;
+    case 'response.done':
+      setOrbState('listening');
+      setStatus('🎙️ Escuchando...', 'Siempre aquí para ti');
+      isSpeaking = false;
+      break;
+    case 'wakeword.detected':
+      setStatus('🔮 ¡Hey Jarvis!', 'Te escucho');
+      setOrbState('speaking');
+      if(navigator.vibrate) navigator.vibrate(80);
+      break;
+    case 'proactive_alert':
+      setStatus(msg.message || '⚠️ Alerta', '');
+      setOrbState('alert');
+      setTimeout(() => setOrbState('listening'), 3000);
+      break;
+    case 'memory.restored':
+      setStatus(`🧠 ${msg.summary || 'Memoria restaurada'}`, `${msg.count} mensajes recordados`);
+      break;
+    case 'pong': break;
+  }
+}
+
+// ─── Audio Playback ───
+let audioUnlocked = false;
+document.addEventListener('click', () => {
+  if(!audioUnlocked) {
+    audioUnlocked = true;
+    new Audio().play().catch(()=>{});
+  }
+}, {once: true});
+
+function playAudioUrl(url) {
+  try {
+    const audio = new Audio(url);
+    audio.onended = () => { isSpeaking = false; };
+    audio.onerror = () => { isSpeaking = false; };
+    audio.play().then(() => {
+      isSpeaking = true;
+    }).catch(() => {
+      isSpeaking = false;
+    });
+  } catch(e) {}
+}
+
+// ─── Voz (Web Speech API — STT en el navegador) ───
+let speechRec = null;
+let speechRecRunning = false;
+
+function getSpeechRec() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR) return null;
+  const rec = new SR();
+  rec.lang = 'es-MX';
+  rec.continuous = false;
+  rec.interimResults = true;
+  rec.maxAlternatives = 1;
+  return rec;
+}
+
+async function toggleMic() {
+  if(speechRecRunning) { stopSpeechRec(); return; }
+  await startSpeechRec();
+}
+
+async function startSpeechRec() {
+  try {
+    // Pedir permiso de microfono
+    await navigator.mediaDevices.getUserMedia({audio: true});
+    
+    if(!speechRec) speechRec = getSpeechRec();
+    if(!speechRec) { setStatus('⚠️ Voz no soportada', 'Tu navegador no tiene reconocimiento de voz'); return; }
+    
+    speechRec.onresult = (e) => {
+      let finalText = '';
+      for(let i = e.resultIndex; i < e.results.length; i++) {
+        if(e.results[i].isFinal) finalText += e.results[i][0].transcript;
+      }
+      if(finalText) {
+        addConv(finalText, 'user');
+        if(ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({type:'input_text', text: finalText}));
+          setStatus('🧠 Pensando...', '');
+          setOrbState('thinking');
+        }
+      }
+    };
+    
+    speechRec.onstart = () => {
+      speechRecRunning = true;
+      document.getElementById('micBtn').classList.add('recording');
+      document.getElementById('micBtn').textContent = '⏹';
+      setOrbState('speaking');
+      setStatus('🎤 Escuchando...', 'Habla claro');
+    };
+    
+    speechRec.onend = () => {
+      speechRecRunning = false;
+      document.getElementById('micBtn').classList.remove('recording');
+      document.getElementById('micBtn').textContent = '🎤';
+      if(!isSpeaking) setOrbState('listening');
+    };
+    
+    speechRec.onerror = (e) => {
+      speechRecRunning = false;
+      document.getElementById('micBtn').classList.remove('recording');
+      document.getElementById('micBtn').textContent = '🎤';
+      if(e.error === 'not-allowed') setStatus('⚠️ Micrófono bloqueado', 'Permite el acceso al micrófono');
+      else if(e.error === 'no-speech') setStatus('🎙️ No te escuché', 'Presiona el micrófono y habla');
+      else setStatus(`⚠️ Error: ${e.error}`, '');
+    };
+    
+    speechRec.start();
+  } catch(e) {
+    setStatus('⚠️ Micrófono no disponible', 'Concede permiso o escribe tu mensaje');
+  }
+}
+
+function stopSpeechRec() {
+  if(speechRec) {
+    try { speechRec.stop(); } catch(e) {}
+  }
+  speechRecRunning = false;
+  document.getElementById('micBtn').classList.remove('recording');
+  document.getElementById('micBtn').textContent = '🎤';
+}
+
+// ─── UI ───
+function setStatus(p, s) {
+  document.getElementById('statusPrimary').textContent = p;
+  document.getElementById('statusSecondary').textContent = s;
+}
+
+function addConv(text, role) {
+  const log = document.getElementById('conv-log');
+  const el = document.createElement('div');
+  el.className = `conv-item ${role}`;
+  el.innerHTML = `<div class="label">${role==='user'?'Tú':'Mystic'}</div>${escHtml(text)}`;
+  log.appendChild(el);
+  el.scrollIntoView({behavior:'smooth'});
+  if(!chatVisible && role==='mystic') {
+    log.classList.add('visible');
+    setTimeout(() => { if(!chatVisible) log.classList.remove('visible'); }, 4000);
+  }
+}
+
+function toggleChat() {
+  chatVisible = !chatVisible;
+  document.getElementById('conv-log').classList.toggle('visible',chatVisible);
+  document.getElementById('chatBtn').classList.toggle('active',chatVisible);
+}
+
+function cycleTone() {
+  toneIndex = (toneIndex+1)%TONES.length;
+  document.getElementById('toneBtn').textContent = TONE_ICONS[toneIndex];
+  if(ws && ws.readyState===WebSocket.OPEN)
+    ws.send(JSON.stringify({type:'change_tone',tone:TONES[toneIndex]}));
+  setStatus(`🎭 Tono: ${TONES[toneIndex]}`, '');
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+// ─── Send Text ───
+function sendText() {
+  const input = document.getElementById('textInput');
+  const text = input.value.trim();
+  if(!text || !ws || ws.readyState !== WebSocket.OPEN) return;
+  input.value = '';
+  addConv(text, 'user');
+  ws.send(JSON.stringify({type:'input_text', text}));
+  setStatus('🧠 Pensando...', '');
+  setOrbState('thinking');
+}
+
+// Enter key to send
+document.addEventListener('keydown', e => {
+  if(e.key==='Enter' && document.activeElement === document.getElementById('textInput')) {
+    e.preventDefault();
+    sendText();
+  }
+  if(e.key===' ' && e.target===document.body) { e.preventDefault(); toggleMic(); }
+  if(e.key==='t'||e.key==='T') cycleTone();
+});
+
+// ─── Init ───
+document.addEventListener('DOMContentLoaded', () => {
+  initThreeJS();
+  document.getElementById('textInput').disabled = true;
+  document.getElementById('textInput').placeholder = 'Conectando...';
+  connectWS();
+  setStatus('🔌 Conectando...', 'Estableciendo conexión segura');
+  setTimeout(fetchSystemStatus, 3000);
+});
+
+window.addEventListener('beforeunload', () => {
+  if(wsReconnectTimer) clearTimeout(wsReconnectTimer);
+  if(wsPingTimer) clearInterval(wsPingTimer);
+  if(ws) { ws.onclose = null; ws.close(); }
+  if(clapAudioContext) clapAudioContext.close();
+  stopRecording();
+});
+</script>
+</body>
+</html>

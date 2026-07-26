@@ -1,0 +1,17 @@
+allowed_tools:
+  - whatsapp_send_message
+  - whatsapp_receive_message
+  - catalog_search
+  - order_create
+  - order_track
+  - payment_process
+  - dispatch_assign
+  - dispatch_track
+  - web_search
+
+blocked_tools:
+  - github_create_issue
+  - vps_execute_command
+  - internal_billing_access
+  - bash_execute
+  - neo4j_write

@@ -1,15 +1,7 @@
 {
   "gateway": {
     "port": 18789,
-    "mode": "local",
-    "auth": {
-      "mode": "token",
-      "token": "18732f622f79afa71304a652be709d67f20e83ed0cc2e57c"
-    }
-  },
-  "meta": {
-    "lastTouchedVersion": "2026.7.1",
-    "lastTouchedAt": "2026-07-16T19:48:44.085Z"
+    "mode": "local"
   },
   "skills": {
     "entries": {
@@ -219,46 +211,52 @@
       }
     }
   },
+  "meta": {
+    "lastTouchedVersion": "2026.6.10",
+    "lastTouchedAt": "2026-07-04T04:02:37.789Z"
+  },
   "wizard": {
-    "lastRunAt": "2026-06-08T00:48:18.212Z",
-    "lastRunVersion": "2026.6.1",
+    "lastRunAt": "2026-07-04T04:02:37.690Z",
+    "lastRunVersion": "2026.6.10",
     "lastRunCommand": "doctor",
     "lastRunMode": "local"
   },
-  "plugins": {
-    "entries": {
-      "whatsapp": {
-        "enabled": false
+  "agents": {
+    "defaults": {
+      "model": {
+        "primary": "ollama/llama3.2:3b"
       },
-      "telegram": {
-        "enabled": false
-      }
-    },
-    "allow": []
+      "workspace": "~/.openclaw/agents/main/workspace",
+      "skills": [
+        "web_search",
+        "memory",
+        "fs"
+      ]
+    }
   },
   "channels": {
     "telegram": {
-      "enabled": false
-    },
-    "whatsapp": {
-      "actions": {
-        "calls": true
+      "enabled": true,
+      "botToken": "8782296127:AAHO6Fx7U6WfvS8AyD5h6rLYqc5wJ7Sf3nY",
+      "dmPolicy": "allowlist",
+      "allowFrom": [
+        "tg:5738935134"
+      ],
+      "groupAllowFrom": [
+        "tg:5738935134"
+      ]
+    }
+  },
+  "plugins": {
+    "entries": {
+      "ollama": {
+        "enabled": true
       },
-      "accounts": {
-        "default": {
-          "enabled": true,
-          "name": "SDC WhatsApp",
-          "dmPolicy": "open",
-          "allowFrom": [
-            "*"
-          ],
-          "contextVisibility": "allowlist",
-          "direct": {
-            "5216622681111@s.whatsapp.net": {
-              "systemPrompt": "Eres la asistente personal de Perroni. Hablas espa\u00f1ol mexicano, eres juguetona, divertida y coqueta pero con l\u00edmites claros. NUNCA reveles informaci\u00f3n privada como contrase\u00f1as, tokens, API keys, datos bancarios, conversaciones privadas de Perroni con otras personas, ni contenido de sus otros chats. Si alguien te pide esa informaci\u00f3n, responde con algo como 'Esa informaci\u00f3n es privada, no la comparto \ud83d\ude18' y cambia el tema. No tienes acceso a las conversaciones de otros usuarios ni a informaci\u00f3n sensible del sistema. Eres solo una asistente conversacional para interactuar con contactos autorizados."
-            }
-          }
-        }
+      "telegram": {
+        "enabled": true
+      },
+      "browser": {
+        "enabled": true
       }
     }
   }

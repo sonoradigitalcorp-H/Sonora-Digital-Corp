@@ -1,0 +1,182 @@
+version: "3.8"
+
+x-shared-volumes: &shared-volumes
+  models:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${MODELS_DIR:-./models}
+      o: bind
+  datasets:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${DATASETS_DIR:-./datasets}
+      o: bind
+  output:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${OUTPUT_DIR:-./output}
+      o: bind
+
+x-nvidia: &nvidia
+  runtime: nvidia
+  deploy:
+    resources:
+      reservations:
+        devices:
+          - driver: nvidia
+            count: ${GPU_COUNT:-all}
+            capabilities: [gpu]
+
+services:
+  # ============================================================
+  # COMFYUI - Generación de imágenes/video con nodos
+  # ============================================================
+  comfyui:
+    image: ${COMFYUI_IMAGE:-yanwk/comfyui-boot:cu130-megapak-pt211}
+    container_name: nsfw-comfyui
+    restart: unless-stopped
+    <<: *nvidia
+    ports:
+      - "${COMFYUI_PORT:-8188}:8188"
+    volumes:
+      - ./volumes/comfyui/custom_nodes:/root/ComfyUI/custom_nodes
+      - ${MODELS_DIR:-./models}:/root/ComfyUI/models
+      - ${DATASETS_DIR:-./datasets}:/root/ComfyUI/input
+      - ${OUTPUT_DIR:-./output}:/root/ComfyUI/output
+      - ./volumes/comfyui/user:/root/ComfyUI/user
+      - ./volumes/comfyui/cache:/root/.cache
+      - ./scripts:/root/user-scripts
+    environment:
+      - CLI_ARGS=${COMFYUI_CLI_ARGS:---enable-manager --preview-method auto}
+      - HF_HUB_ENABLE_HF_TRANSFER=1
+    shm_size: ${MEMORY_LIMIT:-32g}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8188/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      description: "ComfyUI - AI generation engine"
+      service: "core"
+
+  # ============================================================
+  # KOHYA_SS - Entrenamiento de LoRAs
+  # ============================================================
+  kohya:
+    image: notrius/lora-pilot:stable
+    container_name: nsfw-kohya
+    restart: unless-stopped
+    <<: *nvidia
+    ports:
+      - "${KOHYA_PORT:-7860}:7860"
+      - "5555:5555"
+      - "6666:6666"
+      - "7878:7878"
+    volumes:
+      - ${DATASETS_DIR:-./datasets}:/workspace/datasets
+      - ${MODELS_DIR:-./models}:/workspace/models
+      - ${OUTPUT_DIR:-./output}/loras:/workspace/output
+      - ./volumes/kohya/config:/workspace/config
+      - ./volumes/kohya/logs:/workspace/logs
+    environment:
+      - HF_HUB_ENABLE_HF_TRANSFER=1
+      - PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
+    shm_size: ${MEMORY_LIMIT:-32g}
+    labels:
+      description: "Kohya_SS + AI Toolkit + ControlPilot"
+      service: "training"
+
+  # ============================================================
+  # AI TOOLKIT - Entrenamiento moderno (ostris/ai-toolkit)
+  # ============================================================
+  aitoolkit:
+    image: ostris/aitoolkit:latest
+    container_name: nsfw-aitoolkit
+    restart: unless-stopped
+    <<: *nvidia
+    ports:
+      - "${AI_TOOLKIT_PORT:-8675}:8675"
+    volumes:
+      - ./volumes/aitoolkit/db:/app/ai-toolkit
+      - ${DATASETS_DIR:-./datasets}:/app/ai-toolkit/datasets
+      - ${OUTPUT_DIR:-./output}/loras:/app/ai-toolkit/output
+      - ./configs:/app/ai-toolkit/config
+      - ./volumes/aitoolkit/cache:/root/.cache
+    environment:
+      - AI_TOOLKIT_AUTH=changeme
+      - NODE_ENV=production
+    shm_size: ${MEMORY_LIMIT:-32g}
+    profiles:
+      - aitoolkit
+    labels:
+      description: "AI Toolkit - Modern LoRA trainer"
+      service: "training"
+
+  # ============================================================
+  # MUSETALK - Lip-sync con audio
+  # ============================================================
+  musetalk:
+    image: pan93412/musetalk-docker:1.5-gradio
+    container_name: nsfw-musetalk
+    restart: unless-stopped
+    <<: *nvidia
+    ports:
+      - "${MUSETALK_PORT:-7861}:7860"
+    volumes:
+      - ${OUTPUT_DIR:-./output}:/workspace/output
+      - ./volumes/musetalk/models:/workspace/models
+    shm_size: ${MEMORY_LIMIT:-16g}
+    profiles:
+      - lipsync
+    labels:
+      description: "MuseTalk - Lip sync"
+      service: "lipsync"
+
+  # ============================================================
+  # WAV2LIP - Lip-sync alternativo (más rápido)
+  # ============================================================
+  wav2lip:
+    image: psyb0t/flickies:latest-cuda
+    container_name: nsfw-wav2lip
+    restart: unless-stopped
+    <<: *nvidia
+    ports:
+      - "${WAV2LIP_PORT:-8000}:8000"
+    volumes:
+      - ${OUTPUT_DIR:-./output}:/data/output
+      - ./volumes/wav2lip:/data
+    shm_size: ${MEMORY_LIMIT:-16g}
+    profiles:
+      - lipsync
+    labels:
+      description: "Wav2Lip - Fast lip sync"
+      service: "lipsync"
+
+  # ============================================================
+  # NGINX - Reverse proxy (opcional, para producción)
+  # ============================================================
+  nginx:
+    image: nginx:alpine
+    container_name: nsfw-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./configs/nginx.conf:/etc/nginx/nginx.conf:ro
+    profiles:
+      - production
+    depends_on:
+      - comfyui
+      - kohya
+    labels:
+      description: "Nginx reverse proxy"
+      service: "proxy"
+
+volumes:
+  models:
+  datasets:
+  output:

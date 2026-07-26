@@ -1,0 +1,27 @@
+prompt_injection:
+  enabled: true
+  model: mystic-shield
+
+rate_limits:
+  whatsapp: 60/minute
+  telegram: 120/minute
+  api_calls: 1000/hour
+  cfdi: 200/hour
+
+data_masking:
+  pii_detection: true
+  auto_redact:
+    - credit_card
+    - curp
+    - rfc
+    - email
+    - phone
+
+tool_sandbox:
+  enabled: true
+  allowed_domains:
+    - "api.nathyconta.mcp"
+    - "sat.nathyconta.mcp"
+  blocked_commands:
+    - rm
+    - sudo

@@ -1,0 +1,62 @@
+# Políticas de negocio — AztroTech
+# Cada regla se evalua antes de ejecutar acciones con costo.
+# Si alguna gate falla, la acción se bloquea con un mensaje claro.
+
+policies:
+  # ============ PRESUPUESTO ============
+  budget:
+    aztrotech:
+      daily_cap: 10.0            # $10 USD máximo por día
+      max_per_call: 2.0          # $2 USD máximo por llamada individual
+
+  # ============ MODELOS PERMITIDOS ============
+  allowed_models:
+    tts:
+      - "Qwen/Qwen3-TTS-12Hz-0.6B-Base"  # TTS local
+      - "edge-tts"                        # fallback gratuito
+    llm:
+      - "nvidia/nemotron-3-nano-30b-a3b:free"  # free tier
+      - "opencode-go/deepseek-v4-flash"         # modelo principal
+      - "openai/gpt-4o-mini"                    # fallback pago
+    stt:
+      - "whisper-base"       # local, gratis
+      - "whisper-small"      # local, gratis
+    image:
+      - "flux-schnell"       # $0.003 por imagen
+      - "stable-diffusion"   # local, gratis
+
+  # ============ RATE LIMITS ============
+  rate_limits:
+    tts: 10              # máx 10 síntesis de voz por minuto
+    llm: 30              # máx 30 llamadas LLM por minuto
+    stt: 20              # máx 20 transcripciones por minuto
+    image: 5             # máx 5 generaciones de imagen por minuto
+    "*": 60              # default para cualquier otra acción
+
+  # ============ REGLAS DE NEGOCIO ============
+  business:
+    aztrotech:
+      rules:
+        - type: block_hours
+          start: 7
+          end: 23
+          message: "Fuera de horario laboral (7:00–23:00). Intenta de nuevo mañana."
+
+        - type: require_confirmation
+          min_cost: 0.50
+          message: "Esta acción cuesta ${cost:.2f}. ¿Confirmas que quieres ejecutarla?"
+
+    default:
+      rules:
+        - type: block_hours
+          start: 0
+          end: 0
+          message: ""
+
+  # ============ NOTIFICACIONES ============
+  notifications:
+    budget_warning_at: 0.8    # alertar cuando se haya usado el 80% del daily cap
+    alert_channel: "telegram" # dónde enviar alertas de presupuesto
+    alert_recipients:
+      - "Luis Daniel"
+      - "César"

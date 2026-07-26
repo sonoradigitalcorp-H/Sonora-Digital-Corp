@@ -1,0 +1,5 @@
+2026-07-19 18:17:54,667 [INFO] nathy.bot: Nathy Bot iniciado — @NathyCont_bot
+2026-07-19 18:17:55,386 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8269193231:AAF70NVpEMsrP_fePAc_qLdNEsJkBIGUy4g/getMe "HTTP/1.1 200 OK"
+2026-07-19 18:17:55,544 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8269193231:AAF70NVpEMsrP_fePAc_qLdNEsJkBIGUy4g/deleteWebhook "HTTP/1.1 200 OK"
+2026-07-19 18:17:55,546 [INFO] telegram.ext.Application: Application started
+2026-07-19 18:18:06,001 [INFO] httpx: HTTP Request: POST https://api.telegram.org/bot8269193231:AAF70NVpEMsrP_fePAc_qLdNEsJkBIGUy4g/getUpdates "HTTP/1.1 200 OK"

@@ -1,7 +1,7 @@
 # Sonora Digital Corp — Makefile
 # Commands for local development, testing, and evaluation
 
-.PHONY: help test test-all lint lint-fix eval eval-structural eval-promptfoo clean
+.PHONY: help test test-all test-v lint lint-fix eval eval-structural eval-promptfoo clean
 
 help:  ## Show this help
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | \
@@ -9,43 +9,46 @@ help:  ## Show this help
 
 # ─── Tests ───────────────────────────────────────────────────────────────────
 
-test:  ## Run all unit tests
-	PYTHONPATH=. python3 -m pytest tests/ -q --tb=short
+test:  ## Run unit tests (known stable subset)
+	PYTHONPATH=. python3 -m pytest tests/unit/ -q --tb=short
 
-test-all:  ## Run all tests (unit + evals + memory)
-	PYTHONPATH=. python3 -m pytest tests/ evals/ memory/tests/ -q --tb=short
+test-all:  ## Run all tests (unit + bdd + integration)
+	PYTHONPATH=. python3 -m pytest tests/unit/ tests/gherkin/ tests/integration/ core/tests/ -q --tb=short
 
-test-v:  ## Run all tests with verbose output
-	PYTHONPATH=. python3 -m pytest tests/ evals/ memory/tests/ -v --tb=short
+test-v:  ## Run all tests verbose
+	PYTHONPATH=. python3 -m pytest tests/unit/ tests/gherkin/ tests/integration/ core/tests/ -v --tb=short
 
-# ─── Lint ────────────────────────────────────────────────────────────────────
+test-integration:  ## Run integration tests only (real services)
+	PYTHONPATH=. python3 -m pytest tests/integration/ -v --tb=short
 
-lint:  ## Run ruff linter
-	ruff check apps/ memory/ metrics/ scripts/
+# ─── SDD ───────────────────────────────────────────────────────────────────
 
-lint-fix:  ## Auto-fix lint issues
-	ruff check --fix apps/ memory/ metrics/ scripts/
+sdd-test:  ## Run SDD BDD + structural tests
+	sdd test
+
+sdd-eval:  ## Run SDD evals (structural only)
+	sdd eval
+
+sdd-init:  ## Initialize SDD framework structure
+	sdd init
 
 # ─── Evals ───────────────────────────────────────────────────────────────────
 
 eval: eval-structural eval-promptfoo  ## Run all evaluations
 
 eval-structural:  ## Run structural evals (agent/cap/sdd/skill/event)
-	PYTHONPATH=. python3 -m pytest evals/test_evals.py -v --tb=short
+	PYTHONPATH=. python3 -m pytest evals/structural/ -v --tb=short
 
-eval-promptfoo:  ## Run promptfoo LLM evals
-	cd promptfoo && promptfoo eval && cd ..
+eval-promptfoo:  ## Run SDD promptfoo LLM evals
+	cd evals/promptfoo && promptfoo eval && cd ../..
 
 eval-dashboard:  ## Generate eval dashboard HTML
 	PYTHONPATH=. python3 evals/generate-dashboard.py
 
 # ─── Enterprise Score ────────────────────────────────────────────────────────
 
-score:  ## Calculate enterprise score
-	python3 metrics/enterprise_score.py
-
-score-json:  ## Calculate enterprise score (JSON)
-	python3 metrics/enterprise_score.py --json
+score:  ## Run observer and show scorecard
+	bash scripts/observer-run.sh
 
 # ─── Constitution ────────────────────────────────────────────────────────────
 

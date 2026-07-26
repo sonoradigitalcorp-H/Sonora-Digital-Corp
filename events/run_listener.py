@@ -1,40 +1,35 @@
-"""Entry point: starts EventListener with registered handlers.
-Usage: python -m events.run_listener
-"""
+#!/usr/bin/env python3
 import asyncio
+import logging
 import signal
 import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from events.listener import EventListener
-from events.handlers.alert_handler import AlertHandler
-from events.handlers.memory_handler import MemoryHandler
+from events.handlers import AlertHandler, MemoryHandler, NotificationHandler
 
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(name)s] %(levelname)s %(message)s",
+)
 
-def _signal_handler(loop, listener):
-    def _stop():
-        print("\n[events] Shutting down...")
-        loop.create_task(listener.stop())
-    return _stop
+log = logging.getLogger("run_listener")
 
 
 async def main():
     listener = EventListener()
-    listener.register(AlertHandler())
-    listener.register(MemoryHandler())
-    await listener.start()
-    print("[events] Event bus running. PID: %d", sys.pid if hasattr(sys, 'pid') else '?')
+    listener.register_handler(AlertHandler())
+    listener.register_handler(MemoryHandler())
+    listener.register_handler(NotificationHandler())
+    log.info("3 handlers registered: Alert, Memory, Notification")
 
     loop = asyncio.get_running_loop()
-    for sig in (signal.SIGINT, signal.SIGTERM):
-        loop.add_signal_handler(sig, lambda: asyncio.create_task(listener.stop()))
+    for sig in (signal.SIGTERM, signal.SIGINT):
+        loop.add_signal_handler(sig, listener.stop)
 
-    try:
-        while listener.is_running:
-            await asyncio.sleep(1)
-    except asyncio.CancelledError:
-        pass
-
-    print("[events] Shutdown complete.")
+    await listener.poll_loop(interval=1.0)
 
 
 if __name__ == "__main__":

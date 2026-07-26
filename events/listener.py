@@ -1,83 +1,61 @@
-"""EventListener (HAS-003)
-Watches events.jsonl for new lines and dispatches to registered handlers.
-Runs as a background asyncio task in production.
-"""
 import asyncio
 import json
+import logging
 from pathlib import Path
 from typing import Any
 
-from events.handlers.base import EventHandler
+log = logging.getLogger("events.listener")
 
-REPO = Path(__file__).resolve().parent.parent
-EVENTS_FILE = REPO / "state" / "events" / "events.jsonl"
-POLL_INTERVAL = 0.5
+EVENTS_FILE = Path("state/events/events.jsonl")
 
 
 class EventListener:
     def __init__(self):
-        self._handlers: dict[str, EventHandler] = {}
-        self._last_position: int = 0
+        self.handlers: list[Any] = []
+        self._position = 0
         self._running = False
-        self._task: asyncio.Task | None = None
 
-    def register(self, handler: EventHandler):
-        self._handlers[handler.name] = handler
+    def register_handler(self, handler: Any) -> None:
+        self.handlers.append(handler)
+        log.info("Handler registered: %s", type(handler).__name__)
 
-    def unregister(self, name: str):
-        self._handlers.pop(name, None)
+    def _read_new_events(self) -> list[dict]:
+        if not EVENTS_FILE.exists():
+            return []
+        try:
+            with open(EVENTS_FILE) as f:
+                lines = f.readlines()
+            new_lines = lines[self._position:]
+            self._position = len(lines)
+            events = []
+            for line in new_lines:
+                line = line.strip()
+                if line:
+                    try:
+                        events.append(json.loads(line))
+                    except json.JSONDecodeError:
+                        log.warning("Skipping invalid event line")
+            return events
+        except Exception as e:
+            log.error("Error reading events: %s", e)
+            return []
 
-    async def _process_event(self, event: dict):
-        for handler in self._handlers.values():
+    async def _dispatch(self, event: dict) -> None:
+        for handler in self.handlers:
             try:
-                await handler.handle(event)
+                handler.handle(event)
             except Exception as e:
-                print(f"[events] Handler '{handler.name}' error: {e}")
+                log.error("Handler %s failed: %s", type(handler).__name__, e)
 
-    async def _poll(self):
-        while self._running:
-            try:
-                if EVENTS_FILE.exists():
-                    current_size = EVENTS_FILE.stat().st_size
-                    if current_size > self._last_position:
-                        with open(EVENTS_FILE) as f:
-                            f.seek(self._last_position)
-                            for line in f:
-                                line = line.strip()
-                                if line:
-                                    try:
-                                        event = json.loads(line)
-                                        await self._process_event(event)
-                                    except json.JSONDecodeError:
-                                        continue
-                        self._last_position = current_size
-            except Exception:
-                pass
-            await asyncio.sleep(POLL_INTERVAL)
-
-    async def start(self):
-        if self._running:
-            return
+    async def poll_loop(self, interval: float = 0.5) -> None:
         self._running = True
-        if EVENTS_FILE.exists():
-            self._last_position = EVENTS_FILE.stat().st_size
-        print(f"[events] Listener started — watching {EVENTS_FILE}")
-        self._task = asyncio.create_task(self._poll())
+        log.info("EventListener polling started (interval=%ss)", interval)
+        while self._running:
+            events = self._read_new_events()
+            for event in events:
+                await self._dispatch(event)
+            await asyncio.sleep(interval)
 
-    async def stop(self):
+    def stop(self) -> None:
         self._running = False
-        if self._task:
-            self._task.cancel()
-            self._task = None
-        print("[events] Listener stopped")
-
-    @property
-    def is_running(self) -> bool:
-        return self._running
-
-    def get_stats(self) -> dict:
-        return {
-            "running": self._running,
-            "handlers": list(self._handlers.keys()),
-            "file_size": EVENTS_FILE.stat().st_size if EVENTS_FILE.exists() else 0,
-        }
+        log.info("EventListener stopped")

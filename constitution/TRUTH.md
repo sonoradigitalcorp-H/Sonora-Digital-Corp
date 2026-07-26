@@ -1,6 +1,6 @@
 # THE TRUTH — Single Source of Truth for All Agents
 
-All agents (OpenClaw, Hermes, Mystic, JARVIS, ABE) MUST follow these rules.
+All agents (OpenClaw, Hermes, Mystic, SDC Core, ABE) MUST follow these rules.
 
 ## Paths (NO EXCEPTIONS)
 
@@ -39,7 +39,7 @@ All agents (OpenClaw, Hermes, Mystic, JARVIS, ABE) MUST follow these rules.
 | CONTRATO | `constitution/CONTRATO.md` |
 | Checksums | `constitution/CHECKSUMS.sha256` |
 | State (logs, engram, events, quality) | `state/` |
-| JARVIS core engine | `apps/jarvis/src/core/` |
+| SDC core engine | `apps/` |
 | Web UI | `apps/webui/` (FastAPI, port 5174) |
 | Harnesses (10 OS) | `harnesses/` |
 | Skills (10 canonical) | `skills/` |
@@ -199,7 +199,7 @@ Threshold: ≥60 to approve
 | Agent | Role | Level | Status |
 |-------|------|-------|--------|
 | OpenClaw | Primary Operator | L1 | Active |
-| JARVIS Core | System Orchestrator | L1 | Active |
+| SDC Core | System Orchestrator | L1 | Active |
 | ABE | Music Production | L1 | Active |
 | Engram | Memory System | L2 | Active |
 | Enterprise Score | Metrics & Governance | L1 | Active |

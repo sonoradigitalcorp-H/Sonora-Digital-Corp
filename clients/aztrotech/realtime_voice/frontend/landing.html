@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0,user-scalable=yes,viewport-fit=cover">
+<meta name="theme-color" content="#0a0b10">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>AztroTech — IA que vende por ti</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{--copper:#AC6D3E;--copper-light:#CD8D5D;--sage:#B6C08B;--sage-light:#D0D8AE;--bg:#0a0b10;--bg-elev:#13151c;--bg-elev-2:#1b1e29;--text:#f5f6fa;--text-dim:rgba(245,246,250,.65);--text-faint:rgba(245,246,250,.42);--border:rgba(255,255,255,.08);--border-strong:rgba(255,255,255,.16);--radius-sm:8px;--radius-md:14px;--radius-lg:22px;--font-sans:'Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif;--font-display:'Poppins','Inter',-apple-system,BlinkMacSystemFont,system-ui,sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;scroll-behavior:smooth}
+body{font-family:var(--font-sans);background:var(--bg);color:var(--text);line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--copper-light);text-decoration:none}
+.container{width:100%;max-width:1200px;margin:0 auto;padding:0 20px}
+@media(min-width:640px){.container{padding:0 32px}}
+
+/* Header */
+header{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(10,11,16,.85);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+header .container{display:flex;align-items:center;justify-content:space-between;height:56px}
+.logo{display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-weight:700;font-size:18px;color:var(--text);letter-spacing:-.02em}
+.logo span{color:var(--copper)}
+header nav{display:none;gap:24px}
+header nav a{font-size:14px;color:var(--text-dim);transition:color .2s}
+header nav a:hover{color:var(--text)}
+header .btn-outline{display:none}
+@media(min-width:768px){header nav{display:flex}header .btn-outline{display:inline-flex}}
+.menu-btn{display:flex;flex-direction:column;gap:4px;background:none;border:none;cursor:pointer;padding:8px;margin-right:-8px}
+.menu-btn span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:.3s}
+@media(min-width:768px){.menu-btn{display:none}}
+
+/* Sections */
+section{padding:80px 0}
+.section-label{font-family:var(--font-display);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.12em;color:var(--copper);margin-bottom:12px}
+.section-title{font-family:var(--font-display);font-size:clamp(28px,5vw,48px);font-weight:800;line-height:1.1;letter-spacing:-.03em;margin-bottom:16px}
+.section-sub{font-size:clamp(15px,2vw,18px);color:var(--text-dim);max-width:640px;line-height:1.7}
+
+/* Hero */
+#hero{min-height:100dvh;display:flex;align-items:center;padding-top:56px;position:relative;overflow:hidden}
+#hero::before{content:'';position:absolute;top:-40%;right:-20%;width:600px;height:600px;background:radial-gradient(circle,rgba(172,109,62,.15),transparent 70%);pointer-events:none}
+#hero::after{content:'';position:absolute;bottom:-30%;left:-20%;width:500px;height:500px;background:radial-gradient(circle,rgba(182,192,139,.1),transparent 70%);pointer-events:none}
+#hero .container{position:relative;z-index:1}
+.hero-grid{display:grid;gap:40px;align-items:center}
+@media(min-width:900px){.hero-grid{grid-template-columns:1fr 1fr;gap:60px}}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(172,109,62,.12);border:1px solid rgba(172,109,62,.25);border-radius:100px;padding:6px 16px 6px 6px;font-size:13px;color:var(--copper-light);margin-bottom:20px;font-weight:500}
+.hero-badge .dot{width:8px;height:8px;border-radius:50%;background:var(--sage);animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.hero-title{font-family:var(--font-display);font-size:clamp(36px,7vw,64px);font-weight:900;line-height:1.05;letter-spacing:-.04em;margin-bottom:20px}
+.hero-title .highlight{background:linear-gradient(135deg,var(--copper),var(--copper-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-size:clamp(16px,2.2vw,20px);color:var(--text-dim);line-height:1.7;margin-bottom:32px;max-width:520px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:12px}
+/* Voice orb on hero */
+.hero-orb-wrap{display:flex;justify-content:center;align-items:center;position:relative}
+.orb-container{position:relative;width:clamp(200px,35vw,320px);height:clamp(200px,35vw,320px);cursor:pointer}
+.orb{width:100%;height:100%;border-radius:50%;background:conic-gradient(from 0deg,var(--copper),var(--sage),var(--copper-light),var(--copper));animation:orb-spin 6s linear infinite;opacity:.8;transition:transform .5s,opacity .3s;box-shadow:0 0 60px rgba(172,109,62,.2),0 0 120px rgba(182,192,139,.1)}
+.orb-container:hover .orb{transform:scale(1.05);opacity:1}
+@keyframes orb-spin{to{transform:rotate(360deg)}}
+.orb-pulse{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80%;height:80%;border-radius:50%;border:1px solid rgba(172,109,62,.2);animation:orb-pulse 3s ease-in-out infinite}
+@keyframes orb-pulse{0%,100%{transform:translate(-50%,-50%) scale(1);opacity:1}50%{transform:translate(-50%,-50%) scale(1.15);opacity:0}}
+.orb-label{position:absolute;bottom:-40px;left:50%;transform:translateX(-50%);font-size:14px;color:var(--text-dim);white-space:nowrap;font-weight:500}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 28px;border-radius:var(--radius-sm);font-family:var(--font-sans);font-size:15px;font-weight:600;border:none;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent}
+.btn-primary{background:linear-gradient(135deg,var(--copper),var(--copper-light));color:var(--text);box-shadow:0 4px 20px rgba(172,109,62,.25)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(172,109,62,.35)}
+.btn-secondary{background:var(--bg-elev);color:var(--text);border:1px solid var(--border-strong)}
+.btn-secondary:hover{background:var(--bg-elev-2)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border-strong);padding:8px 20px;font-size:14px;border-radius:100px}
+.btn-outline:hover{border-color:var(--copper);color:var(--copper-light)}
+
+/* Features */
+#features{background:var(--bg-elev)}
+.features-grid{display:grid;gap:16px;margin-top:48px}
+@media(min-width:640px){.features-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:900px){.features-grid{grid-template-columns:repeat(3,1fr)}}
+.feature-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-md);padding:28px 24px;transition:all .3s}
+.feature-card:hover{border-color:rgba(172,109,62,.3);transform:translateY(-4px)}
+.feature-icon{width:48px;height:48px;border-radius:12px;background:rgba(172,109,62,.12);display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:16px}
+.feature-card h3{font-family:var(--font-display);font-size:17px;font-weight:700;margin-bottom:8px;letter-spacing:-.01em}
+.feature-card p{font-size:14px;color:var(--text-dim);line-height:1.6}
+
+/* How it works */
+.steps-grid{display:grid;gap:24px;margin-top:48px;counter-reset:step}
+@media(min-width:640px){.steps-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:900px){.steps-grid{grid-template-columns:repeat(4,1fr)}}
+.step-card{text-align:center;padding:32px 20px;position:relative}
+.step-num{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--copper),var(--copper-light));display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-family:var(--font-display);font-weight:800;font-size:18px;color:var(--text)}
+.step-card h3{font-family:var(--font-display);font-size:16px;font-weight:700;margin-bottom:8px}
+.step-card p{font-size:14px;color:var(--text-dim);line-height:1.6}
+
+/* Campaign / Promo */
+#campaigns{background:var(--bg-elev)}
+.campaign-card{background:linear-gradient(135deg,rgba(172,109,62,.08),rgba(182,192,139,.05));border:1px solid rgba(172,109,62,.2);border-radius:var(--radius-lg);padding:32px 28px;margin-top:32px}
+.campaign-badge{display:inline-block;background:rgba(172,109,62,.15);color:var(--copper-light);font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.1em;padding:4px 12px;border-radius:100px;margin-bottom:16px}
+.campaign-card h3{font-family:var(--font-display);font-size:clamp(20px,3vw,28px);font-weight:800;margin-bottom:8px;letter-spacing:-.02em}
+.campaign-price{font-size:clamp(24px,4vw,36px);font-weight:800;color:var(--copper-light);margin:12px 0 8px}
+.campaign-price small{font-size:14px;font-weight:400;color:var(--text-dim)}
+.campaign-promo{background:rgba(182,192,139,.1);border:1px dashed rgba(182,192,139,.3);border-radius:var(--radius-sm);padding:12px 16px;font-size:14px;color:var(--sage-light);margin:12px 0 20px}
+.campaign-benefits{list-style:none;margin:16px 0}
+.campaign-benefits li{display:flex;align-items:flex-start;gap:10px;font-size:14px;color:var(--text-dim);margin-bottom:10px}
+.campaign-benefits li::before{content:'✓';color:var(--sage);font-weight:700;flex-shrink:0}
+
+/* Objections */
+#objections{margin-top:48px}
+.objections-grid{display:grid;gap:12px;margin-top:20px}
+@media(min-width:640px){.objections-grid{grid-template-columns:repeat(2,1fr)}}
+.objection-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-sm);padding:20px;font-size:14px}
+.objection-card q{color:var(--text-dim);font-style:italic}
+.objection-card .answer{display:block;margin-top:8px;color:var(--sage-light);font-size:13px}
+.objection-card .answer::before{content:'→ ';color:var(--copper-light)}
+
+/* Testimonials */
+.testimonials-grid{display:grid;gap:16px;margin-top:48px}
+@media(min-width:640px){.testimonials-grid{grid-template-columns:repeat(2,1fr)}}
+.testimonial-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-md);padding:24px}
+.testimonial-card .stars{color:var(--copper);font-size:16px;margin-bottom:8px}
+.testimonial-card blockquote{font-size:14px;color:var(--text-dim);line-height:1.7;margin-bottom:16px}
+.testimonial-card .author{display:flex;align-items:center;gap:12px}
+.testimonial-card .author-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--copper),var(--sage));display:flex;align-items:center;justify-content:center;font-weight:700;font-size:16px;flex-shrink:0}
+.testimonial-card .author-info .name{font-size:14px;font-weight:600}
+.testimonial-card .author-info .role{font-size:12px;color:var(--text-faint)}
+
+/* Pricing */
+#pricing{background:var(--bg-elev)}
+.pricing-grid{display:grid;gap:16px;margin-top:48px}
+@media(min-width:768px){.pricing-grid{grid-template-columns:repeat(3,1fr)}}
+.pricing-card{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius-md);padding:32px 24px;position:relative;transition:all .3s}
+.pricing-card.featured{border-color:var(--copper);background:linear-gradient(135deg,rgba(172,109,62,.05),transparent)}
+.pricing-card.featured::before{content:'MAS POPULAR';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,var(--copper),var(--copper-light));font-size:11px;font-weight:700;letter-spacing:.08em;padding:4px 16px;border-radius:100px;color:var(--text)}
+.pricing-card h3{font-family:var(--font-display);font-size:18px;font-weight:700;margin-bottom:4px}
+.pricing-card .sub{font-size:13px;color:var(--text-faint);margin-bottom:16px}
+.pricing-card .price{font-size:clamp(28px,4vw,36px);font-weight:800;margin-bottom:4px}
+.pricing-card .price small{font-size:14px;font-weight:400;color:var(--text-dim)}
+.pricing-card .period{font-size:13px;color:var(--text-faint);margin-bottom:20px}
+.pricing-card ul{list-style:none;margin-bottom:24px}
+.pricing-card ul li{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text-dim);margin-bottom:8px}
+.pricing-card ul li::before{content:'✓';color:var(--sage);font-weight:700;flex-shrink:0}
+
+/* Voice chat CTA */
+#voice-cta{text-align:center;position:relative;overflow:hidden}
+#voice-cta::before{content:'';position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:800px;height:800px;background:radial-gradient(circle,rgba(172,109,62,.08),transparent 60%);pointer-events:none}
+.voice-cta-content{position:relative;z-index:1;max-width:600px;margin:0 auto}
+.voice-cta-content .mini-orb{width:72px;height:72px;border-radius:50%;background:conic-gradient(from 0deg,var(--copper),var(--sage),var(--copper-light),var(--copper));animation:orb-spin 4s linear infinite;margin:0 auto 24px;box-shadow:0 0 40px rgba(172,109,62,.15)}
+.voice-cta-content h2{font-family:var(--font-display);font-size:clamp(28px,5vw,40px);font-weight:800;letter-spacing:-.03em;margin-bottom:12px}
+.voice-cta-content p{font-size:16px;color:var(--text-dim);margin-bottom:28px}
+
+/* Chat widget */
+#chat-widget{position:fixed;bottom:20px;right:20px;z-index:1000;width:clamp(320px,90vw,400px);max-height:70dvh;background:var(--bg-elev);border:1px solid var(--border-strong);border-radius:var(--radius-lg);box-shadow:0 16px 64px rgba(0,0,0,.5);display:none;flex-direction:column;overflow:hidden;animation:slideUp .3s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+#chat-widget.open{display:flex}
+.chat-header{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);background:var(--bg)}
+.chat-header .dot{width:8px;height:8px;border-radius:50%;background:#34d399}
+.chat-header h3{font-size:14px;font-weight:600;flex:1}
+.chat-close{background:none;border:none;color:var(--text-dim);font-size:20px;cursor:pointer;padding:4px}
+.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;min-height:200px;max-height:40dvh}
+.chat-msg{max-width:85%;padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.5;animation:fadeIn .3s}
+.chat-msg.user{background:var(--bg-elev-2);align-self:flex-end;border-bottom-right-radius:4px}
+.chat-msg.bot{background:var(--bg);align-self:flex-start;border-bottom-left-radius:4px;border:1px solid var(--border)}
+.chat-msg .role{font-size:9px;text-transform:uppercase;letter-spacing:.1em;color:var(--text-faint);margin-bottom:2px}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.chat-status{display:none;align-items:center;gap:8px;padding:8px 16px;background:var(--bg);font-size:12px;color:var(--text-dim);border-top:1px solid var(--border)}
+.chat-status .spinner{width:12px;height:12px;border:2px solid rgba(172,109,62,.3);border-top-color:var(--copper);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.chat-input{display:flex;align-items:center;gap:8px;padding:10px 12px;border-top:1px solid var(--border);background:var(--bg)}
+.chat-input input{flex:1;background:var(--bg-elev-2);border:1px solid var(--border);border-radius:20px;padding:8px 14px;color:var(--text);font-size:13px;outline:none;font-family:var(--font-sans)}
+.chat-input input::placeholder{color:var(--text-faint)}
+.chat-input input:focus{border-color:rgba(172,109,62,.4)}
+.chat-mic,.chat-send{width:34px;height:34px;border-radius:50%;border:none;display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;transition:all .2s;flex-shrink:0}
+.chat-mic{background:var(--copper);color:var(--text)}
+.chat-mic.recording{background:#ff6a75;animation:pulse 1s infinite}
+.chat-send{background:var(--sage);color:var(--bg)}
+.chat-send:disabled{opacity:.4}
+.chat-toggle{position:fixed;bottom:20px;right:20px;z-index:999;width:56px;height:56px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--copper),var(--copper-light));color:var(--text);font-size:24px;cursor:pointer;box-shadow:0 4px 24px rgba(172,109,62,.3);transition:all .2s;display:flex;align-items:center;justify-content:center}
+.chat-toggle:hover{transform:scale(1.05)}
+.chat-toggle.hidden{display:none}
+@media(max-width:480px){#chat-widget{bottom:0;right:0;width:100%;max-height:100dvh;border-radius:0;border:none}.chat-messages{max-height:60dvh}.chat-toggle{bottom:16px;right:16px}}
+
+/* Footer */
+footer{background:var(--bg);border-top:1px solid var(--border);padding:40px 0}
+footer .container{display:grid;gap:32px}
+@media(min-width:640px){footer .container{grid-template-columns:2fr 1fr 1fr}}
+footer h4{font-family:var(--font-display);font-size:14px;font-weight:700;margin-bottom:12px}
+footer p,footer a{font-size:13px;color:var(--text-faint);line-height:1.8}
+footer a:hover{color:var(--copper-light)}
+.footer-brand .logo{margin-bottom:8px}
+.footer-bottom{margin-top:32px;padding-top:16px;border-top:1px solid var(--border);font-size:12px;color:var(--text-faint);text-align:center}
+@media(max-width:480px){section{padding:60px 0}}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="container">
+    <div class="logo"><span>Aztro</span>Tech</div>
+    <nav>
+      <a href="#features">Servicios</a>
+      <a href="#pricing">Planes</a>
+      <a href="#campaigns">Promos</a>
+      <a href="#objections">FAQ</a>
+    </nav>
+    <a href="#voice-cta" class="btn-outline">Hablar ahora</a>
+    <button class="menu-btn" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<section id="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge"><span class="dot"></span> Disponible 24/7</div>
+        <h1 class="hero-title">IA que <span class="highlight">vende por ti</span> mientras duermes</h1>
+        <p class="hero-sub">Mystic es tu agente de ventas con IA. Atiende llamadas, califica leads, agenda citas y cierra ventas en WhatsApp, Instagram y web. Todo sin que levantes un dedo.</p>
+        <div class="hero-actions">
+          <button class="btn btn-primary" onclick="openChat()">🎯 Probar ahora</button>
+          <a href="#pricing" class="btn btn-secondary">Ver planes</a>
+        </div>
+      </div>
+      <div class="hero-orb-wrap">
+        <div class="orb-container" onclick="openChat()">
+          <div class="orb" id="hero-orb"></div>
+          <div class="orb-pulse"></div>
+          <div class="orb-label">🎤 Presiona y habla</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="features">
+  <div class="container">
+    <div class="section-label">Servicios</div>
+    <h2 class="section-title">Tu equipo de ventas IA</h2>
+    <p class="section-sub">Mystic opera 24/7 en todos tus canales, con voz natural y manejo de objeciones entrenado con metodologia Brian Tracy.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🎙️</div>
+        <h3>Llamadas entrantes y salientes</h3>
+        <p>Recibe llamadas de tus prospectos o programa campañas de salida. Mystic habla con voz natural, califica el interes y agenda.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧠</div>
+        <h3>Manejo de objeciones</h3>
+        <p>Metodologia Brian Tracy: escucha, valida, responde con Feel→Felt→Found. No es un chatbot, es una asesora real.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <h3>Scoring de leads automatico</h3>
+        <p>Cada llamada genera un score de interes, resumen de objeciones y siguiente paso. Datos accionables en tiempo real.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📱</div>
+        <h3>WhatsApp + Instagram + Web</h3>
+        <p>Un solo agente que opera en todos tus canales. Consistencia total en la experiencia de tus clientes.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🎯</div>
+        <h3>Campañas inteligentes</h3>
+        <p>Carga una promocion y Mystic sabe exactamente que ofrecer, a quien y como. Prompt de ventas generado automaticamente.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">⚡</div>
+        <h3>Activacion en 48-72 horas</h3>
+        <p>Sin instalaciones complejas. Sin que sepas programar. Nosotros lo configuramos, tu solo empiezas a recibir leads.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how">
+  <div class="container">
+    <div class="section-label">Como funciona</div>
+    <h2 class="section-title">De lead a cliente en 4 pasos</h2>
+    <div class="steps-grid">
+      <div class="step-card">
+        <div class="step-num">1</div>
+        <h3>Llega un lead</h3>
+        <p>Por WhatsApp, llamada, Instagram o web. Mystic lo recibe al instante con tu tono de voz y personalidad.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">2</div>
+        <h3>Califica y sondea</h3>
+        <p>Descubre que necesita, su presupuesto, urgencia. Aplica sondeo estrategico tipo Brian Tracy.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">3</div>
+        <h3>Maneja objeciones</h3>
+        <p>Si el prospecto duda, aplica Feel→Felt→Found. Hasta 3 intentos antes de salida educada con puerta abierta.</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">4</div>
+        <h3>Agenda o cierra</h3>
+        <p>Si el lead califica, agenda llamada con Cesar o genera un link de pago. Tu solo recibes el resultado.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="campaigns">
+  <div class="container">
+    <div class="section-label">Promocion activa</div>
+    <h2 class="section-title">Campana del mes</h2>
+    <div class="campaign-card">
+      <div class="campaign-badge">🔥 Promocion Q3 2026</div>
+      <h3>Diagnostico de IA Empresarial</h3>
+      <p style="color:var(--text-dim);margin-bottom:12px">Descubre exactamente donde tu negocio pierde ventas y como automatizarlo.</p>
+      <div class="campaign-price">Gratuito <small>valor $5,000 MXN</small></div>
+      <div class="campaign-promo">🎁 Incluye reporte personalizado con oportunidades de automatizacion. Sin compromiso.</div>
+      <ul class="campaign-benefits">
+        <li>Descubre donde tu negocio pierde ventas</li>
+        <li>Reporte con oportunidades de automatizacion</li>
+        <li>30 minutos con un experto en IA</li>
+      </ul>
+      <button class="btn btn-primary" onclick="openChat()" style="width:100%">Agendar diagnostico gratuito</button>
+    </div>
+
+    <div id="objections">
+      <div class="section-label">Objeciones comunes</div>
+      <h2 class="section-title" style="font-size:clamp(20px,3vw,28px)">Lo que los clientes preguntan</h2>
+      <div class="objections-grid">
+        <div class="objection-card">
+          <q>No tengo tiempo ahorita</q>
+          <span class="answer">Entiendo, el tiempo es justo lo que vinimos a resolver. ¿Que tal si en 15 minutos te muestro como recuperas 10 horas a la semana?</span>
+        </div>
+        <div class="objection-card">
+          <q>Ya tengo quien me ayuda</q>
+          <span class="answer">Excelente, eso habla bien de tu negocio. La pregunta es: tu equipo actual trabaja 24/7? Porque Mysti nunca duerme, nunca se enferma y nunca pide aumento.</span>
+        </div>
+        <div class="objection-card">
+          <q>La IA no es para mi negocio</q>
+          <span class="answer">Es lo que la mayoria piensa hasta que ve los numeros. Dame 15 minutos y te muestro casos de negocios exactamente como el tuyo que duplicaron leads.</span>
+        </div>
+        <div class="objection-card">
+          <q>Es muy caro</q>
+          <span class="answer">Te entiendo. La pregunta real es: cuanto te cuesta NO tenerlo? Cuantos leads pierdes al mes porque no alcanzas a atenderlos?</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="testimonials">
+  <div class="container">
+    <div class="section-label">Resultados reales</div>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"Mystic me agenda 3-5 diagnosticos por semana sin que yo haga nada. Antes tenia que estar yo llamando uno por uno."</blockquote>
+        <div class="author">
+          <div class="author-avatar">CH</div>
+          <div class="author-info"><div class="name">Cesar H.</div><div class="role">CEO AztroTech</div></div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"Implementamos el agente de ventas y en la primera semana ya teniamos 12 citas agendadas. Esto es otro nivel."</blockquote>
+        <div class="author">
+          <div class="author-avatar">SP</div>
+          <div class="author-info"><div class="name">Suministros Palominos</div><div class="role">Distribuidora</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container">
+    <div class="section-label">Planes</div>
+    <h2 class="section-title">Invierte en ventas, no en herramientas</h2>
+    <div class="pricing-grid">
+      <div class="pricing-card">
+        <h3>Pilot</h3>
+        <div class="sub">Para empezar</div>
+        <div class="price">$2,500 <small>/mes</small></div>
+        <div class="period">+ $15,000 MXN de setup unico</div>
+        <ul>
+          <li>1 agente IA 24/7</li>
+          <li>WhatsApp + Instagram + Facebook</li>
+          <li>Captura y califica leads</li>
+          <li>Agenda citas automaticamente</li>
+          <li>Activacion en 48-72h</li>
+        </ul>
+        <button class="btn btn-secondary" onclick="openChat()" style="width:100%">Lo quiero</button>
+      </div>
+      <div class="pricing-card featured">
+        <h3>Crecimiento</h3>
+        <div class="sub">Recomendado</div>
+        <div class="price">$8,000 <small>/mes</small></div>
+        <div class="period">+ $40,000 MXN de setup unico</div>
+        <ul>
+          <li>Multiples agentes IA</li>
+          <li>Omnicanal completo</li>
+          <li>CRM a la medida incluido</li>
+          <li>Scoring y reportes</li>
+          <li>Acompanamiento 90 dias</li>
+          <li>Manejo de objeciones BT</li>
+        </ul>
+        <button class="btn btn-primary" onclick="openChat()" style="width:100%">Lo quiero</button>
+      </div>
+      <div class="pricing-card">
+        <h3>Strategic Partner</h3>
+        <div class="sub">Para empresas</div>
+        <div class="price">$60,000 <small>/mes</small></div>
+        <div class="period">Solo 3 empresas por mes</div>
+        <ul>
+          <li>Cesar integrado a tu negocio</li>
+          <li>Desarrollo a la medida</li>
+          <li>App movil incluida</li>
+          <li>Roadmap tecnologico</li>
+          <li>2-3 sesiones semanales con Cesar</li>
+        </ul>
+        <button class="btn btn-secondary" onclick="openChat()" style="width:100%">Lo quiero</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="voice-cta">
+  <div class="voice-cta-content container">
+    <div class="mini-orb"></div>
+    <h2>Habla con Mystic ahora</h2>
+    <p>Presiona el boton y preguntale lo que necesites. Ella te atendera como si estuvieras en una llamada real.</p>
+    <button class="btn btn-primary" onclick="openChat()" style="font-size:18px;padding:18px 36px">🎤 Hablar ahora</button>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-brand">
+      <div class="logo"><span>Aztro</span>Tech</div>
+      <p>IA que vende por ti 24/7. Automatizacion inteligente para negocios que quieren escalar.</p>
+    </div>
+    <div>
+      <h4>Contacto</h4>
+      <p><a href="https://wa.me/526621072254">WhatsApp</a><br>@cesarholguin1<br>aztrotech.mx</p>
+    </div>
+    <div>
+      <h4>Enlaces</h4>
+      <p><a href="#features">Servicios</a><br><a href="#pricing">Planes</a><br><a href="#campaigns">Promos</a><br><a href="https://calendario.sonoradigitalcorp.com">Agendar cita</a></p>
+    </div>
+  </div>
+  <div class="container">
+    <div class="footer-bottom">© 2026 AztroTech — Espiritualidad con Estructura</div>
+  </div>
+</footer>
+
+<div class="chat-toggle" id="chatToggle" onclick="openChat()">💬</div>
+
+<div id="chat-widget">
+  <div class="chat-header">
+    <div class="dot" id="chatDot"></div>
+    <h3>Mystic · AztroTech</h3>
+    <button class="chat-close" onclick="closeChat()">✕</button>
+  </div>
+  <div class="chat-messages" id="chatMessages">
+    <div class="chat-msg bot"><div class="role">Mystic</div>¡Hola! Soy Mystic, la asistente de AztroTech. ¿En que puedo ayudarte? Puedes escribirme o presionar el microfono para hablarme.</div>
+  </div>
+  <div class="chat-status" id="chatStatus"><div class="spinner"></div><span id="chatStatusText">Procesando...</span></div>
+  <div class="chat-input">
+    <button class="chat-mic" id="chatMic" onclick="toggleMic()">🎤</button>
+    <input type="text" id="chatInput" placeholder="Escribe un mensaje..." maxlength="500" autocomplete="off">
+    <button class="chat-send" id="chatSend" onclick="sendChat()" disabled>➤</button>
+  </div>
+</div>
+
+<script>
+let ws = null;
+let isProcessing = false;
+let mediaRecorder = null;
+let audioChunks = [];
+let isRecording = false;
+let chatOpen = false;
+
+function openChat() {
+  document.getElementById('chatToggle').classList.add('hidden');
+  document.getElementById('chat-widget').classList.add('open');
+  chatOpen = true;
+  if (!ws || ws.readyState !== WebSocket.OPEN) connectWS();
+}
+
+function closeChat() {
+  document.getElementById('chat-widget').classList.remove('open');
+  document.getElementById('chatToggle').classList.remove('hidden');
+  chatOpen = false;
+}
+
+function connectWS() {
+  const proto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const host = location.host;
+  ws = new WebSocket(`${proto}//${host}/v1/chat`);
+  ws.onopen = () => { document.getElementById('chatDot').style.background = '#34d399'; };
+  ws.onclose = () => { document.getElementById('chatDot').style.background = '#ff6a75'; setTimeout(connectWS, 3000); };
+  ws.onmessage = (e) => {
+    try { handleWSMessage(JSON.parse(e.data)); } catch(err) { console.error(err); }
+  };
+}
+
+function handleWSMessage(msg) {
+  switch(msg.type) {
+    case 'session.created': break;
+    case 'status':
+      document.getElementById('chatStatus').style.display = 'flex';
+      document.getElementById('chatStatusText').textContent = msg.message;
+      break;
+    case 'conversation.item.created':
+      addChatMessage(msg.item.content[0].text, 'user');
+      break;
+    case 'response.output_text.delta':
+      addChatMessage(msg.delta, 'bot');
+      document.getElementById('chatStatus').style.display = 'none';
+      break;
+    case 'response.output_audio.delta':
+      playChatAudio(msg.delta, msg.mime_type || 'audio/mpeg');
+      break;
+    case 'response.done':
+      isProcessing = false;
+      document.getElementById('chatSend').disabled = false;
+      document.getElementById('chatInput').disabled = false;
+      document.getElementById('chatInput').focus();
+      break;
+  }
+}
+
+function addChatMessage(text, role) {
+  const el = document.createElement('div');
+  el.className = `chat-msg ${role}`;
+  el.innerHTML = `<div class="role">${role === 'user' ? 'Tu' : 'Mystic'}</div>${escHtml(text)}`;
+  document.getElementById('chatMessages').appendChild(el);
+  el.scrollIntoView({ behavior: 'smooth' });
+}
+
+function escHtml(s) {
+  const d = document.createElement('div');
+  d.textContent = s;
+  return d.innerHTML;
+}
+
+function playChatAudio(base64Data, mimeType) {
+  const binary = atob(base64Data);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  const blob = new Blob([bytes], { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const audio = new Audio(url);
+  audio.onended = () => URL.revokeObjectURL(url);
+  audio.play().catch(() => {});
+}
+
+function sendChat() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text || isProcessing) return;
+  isProcessing = true;
+  input.value = '';
+  document.getElementById('chatSend').disabled = true;
+  if (ws && ws.readyState === WebSocket.OPEN) {
+    ws.send(JSON.stringify({ type: 'input_text', text }));
+  }
+}
+
+async function toggleMic() {
+  if (isRecording) { stopRecording(); return; }
+  await startRecording();
+}
+
+async function startRecording() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
+    mediaRecorder = new MediaRecorder(stream, { mimeType: MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm' });
+    audioChunks = [];
+    mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) audioChunks.push(e.data); };
+    mediaRecorder.onstop = async () => {
+      stream.getTracks().forEach(t => t.stop());
+      if (audioChunks.length === 0) return;
+      const blob = new Blob(audioChunks, { type: 'audio/webm' });
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          ws.send(JSON.stringify({ type: 'input_audio_buffer.append', audio: reader.result.split(',')[1] }));
+          ws.send(JSON.stringify({ type: 'input_audio_buffer.commit' }));
+        }
+      };
+      reader.readAsDataURL(blob);
+    };
+    mediaRecorder.start(100);
+    isRecording = true;
+    document.getElementById('chatMic').classList.add('recording');
+    document.getElementById('chatMic').textContent = '⏹';
+  } catch(e) {
+    console.error('Mic error:', e);
+  }
+}
+
+function stopRecording() {
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+  isRecording = false;
+  document.getElementById('chatMic').classList.remove('recording');
+  document.getElementById('chatMic').textContent = '🎤';
+}
+
+document.getElementById('chatInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') sendChat(); });
+document.getElementById('chatInput').addEventListener('input', function() {
+  document.getElementById('chatSend').disabled = !this.value.trim() || isProcessing;
+});
+
+function toggleMenu() {
+  const nav = document.querySelector('header nav');
+  nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+  if (nav.style.display === 'flex') {
+    nav.style.position = 'absolute';
+    nav.style.top = '56px';
+    nav.style.left = '0';
+    nav.style.right = '0';
+    nav.style.flexDirection = 'column';
+    nav.style.background = 'var(--bg-elev)';
+    nav.style.padding = '16px 20px';
+    nav.style.borderBottom = '1px solid var(--border)';
+  }
+}
+</script>
+</body>
+</html>
