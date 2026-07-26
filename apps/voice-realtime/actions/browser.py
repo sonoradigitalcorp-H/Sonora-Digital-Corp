@@ -187,6 +187,30 @@ class BrowserActions:
             logger.error(f"Screenshot error: {e}")
             return None
 
+    async def capture_view(self, label: str = "view") -> str | None:
+        """
+        Toma una captura de la página actual y la guarda para servir por HTTP.
+        Returns: URL type (ej: /api/browser-view/{filename}) o None.
+        """
+        try:
+            import time
+            ts = int(time.time() * 1000)
+            filename = f"browser-view-{label}-{ts}.png"
+            filepath = f"/tmp/{filename}"
+            
+            _, context = await self._get_browser()
+            page = await context.new_page()
+            await page.screenshot(path=filepath, full_page=False)
+            await page.close()
+            
+            if Path(filepath).exists():
+                logger.info(f"Browser view captured: {filepath}")
+                return f"/api/browser-view/{filename}"
+            return None
+        except Exception as e:
+            logger.warning(f"capture_view error: {e}")
+            return None
+
     async def click(self, selector: str, text: str = None) -> dict:
         try:
             _, context = await self._get_browser()

@@ -110,6 +110,16 @@ async def _send_soundscape(ws: WebSocket, audio_b64: str):
     })
 
 
+async def _send_browser_view(ws: WebSocket, view_url: str | None, label: str = "page"):
+    """Envía una captura de pantalla del navegador al frontend."""
+    if view_url:
+        await _send(ws, {
+            "type": "browser.view",
+            "url": view_url,
+            "label": label,
+            "timestamp": time.time(),
+        })
+
 async def _send_redirect(ws: WebSocket, url: str, message: str):
     """Envía redirección al frontend."""
     await _send(ws, {
@@ -240,6 +250,8 @@ async def handle_voice_interaction(
         if result["status"] == "ok":
             await _send_status(ws, "reading")
             route.payload["response_text"] = f"He navegado a {result['title']}.\n\n{result['text'][:600]}"
+            view = await browser.capture_view("navigate")
+            await _send_browser_view(ws, view, result['title'][:40])
         else:
             route.payload["response_text"] = f"Lo siento, no pude acceder a {route.destination}."
         route.type = "talk"
@@ -251,6 +263,8 @@ async def handle_voice_interaction(
         if result["status"] == "ok":
             await _send_status(ws, "reading")
             route.payload["response_text"] = result["text"][:600]
+            view = await browser.capture_view("search")
+            await _send_browser_view(ws, view, f'Busqueda: {route.destination[:30]}')
         else:
             route.payload["response_text"] = f"No encontré resultados para {route.destination}."
         route.type = "talk"
@@ -873,6 +887,19 @@ async def serve_audio(filename: str):
     if audio_path.exists():
         return FileResponse(str(audio_path), media_type="audio/mp3")
     return HTMLResponse("Audio not found", status_code=404)
+
+
+@app.get("/api/browser-view/{filename}")
+async def serve_browser_view(filename: str):
+    """Sirve capturas de pantalla del navegador Playwright."""
+    from fastapi.responses import FileResponse
+    import re
+    if not re.match(r"^browser-view-.+\.png$", filename):
+        return HTMLResponse("Invalid", status_code=400)
+    path = Path(f"/tmp/{filename}")
+    if path.exists():
+        return FileResponse(str(path), media_type="image/png")
+    return HTMLResponse("Not found", status_code=404)
 
 
 if __name__ == "__main__":
