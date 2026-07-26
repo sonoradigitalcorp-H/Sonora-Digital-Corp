@@ -148,6 +148,116 @@ INTENT_PATTERNS = [
         ],
         "action": {"type": "system", "destination": "status"},
     },
+    # ── Navegación web ──
+    {
+        "id": "browse_web",
+        "name": "Navegar a sitio web",
+        "description": "El usuario quiere abrir/navegar/visitar una página web",
+        "patterns": [
+            r"\b(abre|navega|visita|ve a|abrir|navegar|visitar)\s+(https?://)?[\w\-]+(\.[\w\-]+)+(:\d+)?(/[\w\-./%#?&=]*)?\b",
+            r"\b(quiero\s+ver|muéstrame|enseñame|abreme)\s+(la\s+)?(página|web|sitio)\s+(de\s+)?(.+)\b",
+        ],
+        "action": {"type": "browse", "destination": ""},
+    },
+    # ── Búsqueda web ──
+    {
+        "id": "search_web", 
+        "name": "Buscar en internet",
+        "description": "El usuario quiere buscar algo en Google/internet",
+        "patterns": [
+            r"\b(busca|investiga|googlea|consulta|averigua|encuentra)\s+(.*?)(\?)?$",
+            r"\b(quiero\s+saber|dime\s+sobre|cuéntame\s+de|explícame)\s+(.*?)(\?)?$",
+        ],
+        "action": {"type": "search", "destination": ""},
+    },
+    # ── Llenar formulario ──
+    {
+        "id": "fill_form",
+        "name": "Llenar formulario",
+        "description": "El usuario quiere llenar un formulario con datos",
+        "patterns": [
+            r"\b(llena|rellena|completa|llenar|rellenar|completar)\s+(el\s+)?(formulario|campos|form)\b",
+            r"\b(registra|inscribe|crea una cuenta|doy de alta)\b",
+        ],
+        "action": {"type": "form", "destination": "fill"},
+    },
+    # ── Hacer clic ──
+    {
+        "id": "click_element",
+        "name": "Hacer clic en elemento",
+        "description": "El usuario quiere hacer clic en un botón, enlace o elemento",
+        "patterns": [
+            r"\b(da clic|presiona|toca|dale|clickea|pulsa)\s+(en\s+)?(el\s+)?(botón|boton|link|enlace|vínculo|elemento)\s*(.+)?\b",
+            r"\b(acepta|confirma|envía|enviar|siguiente|continuar)\b",
+        ],
+        "action": {"type": "click", "destination": ""},
+    },
+    # ── Extraer información ──
+    {
+        "id": "extract_info",
+        "name": "Extraer información",
+        "description": "El usuario quiere extraer datos de la página actual",
+        "patterns": [
+            r"\b(extrae|saca|obtén|dame)\s+(la\s+)?(información|info|datos|precios|tabla|lista)\b",
+            r"\b(qué\s+hay|qué\s+dice|qué\s+contiene|muestra)\s+(en\s+)?(la\s+)?(página|web)\b",
+        ],
+        "action": {"type": "extract", "destination": "page"},
+    },
+    # ── Captura de pantalla ──
+    {
+        "id": "take_screenshot",
+        "name": "Tomar captura",
+        "description": "El usuario quiere una captura de pantalla de la página",
+        "patterns": [
+            r"\b(toma|saca|haz)\s+(una\s+)?(captura|foto|screenshot|pantallazo)\b",
+            r"\b(muéstrame|enseñame|quiero ver)\s+(la\s+)?(pantalla|vista|interfaz)\b",
+        ],
+        "action": {"type": "screenshot", "destination": "page"},
+    },
+    # ── Monitoreo ──
+    {
+        "id": "monitor_page",
+        "name": "Monitorear página",
+        "description": "El usuario quiere monitorear cambios en una página",
+        "patterns": [
+            r"\b(monitorea|vigila|revisa|supervisa)\s+(cada|periodicamente|automáticamente)\s+(.*?)(\?)?$",
+            r"\b(avísame|notifícame|dime)\s+(cuando|si)\s+(cambia|hay\s+nuevo|se\s+actualiza)\b",
+        ],
+        "action": {"type": "monitor", "destination": ""},
+    },
+    # ── Ejecutar código ──
+    {
+        "id": "run_code",
+        "name": "Ejecutar código",
+        "description": "El usuario quiere ejecutar código Python u otro",
+        "patterns": [
+            r"\b(ejecuta|corre|run|execute)\s+(este\s+)?(código|codigo|script|python|comando)\b",
+            r"\b(hazme|crea|genera)\s+(un\s+)?(script|código|codigo|programa|función|función)\b",
+        ],
+        "action": {"type": "code", "destination": "run"},
+    },
+    # ── Generar PDF ──
+    {
+        "id": "generate_pdf",
+        "name": "Generar PDF",
+        "description": "El usuario quiere crear un PDF",
+        "patterns": [
+            r"\b(crea|genera|haz)\s+(un\s+)?(pdf|documento|archivo|factura|reporte|informe)\b",
+            r"\b(convierte|transforma|exporta)\s+(a|en)\s+pdf\b",
+        ],
+        "action": {"type": "pdf", "destination": "generate"},
+    },
+    # ── Email ──
+    {
+        "id": "send_email",
+        "name": "Enviar correo",
+        "description": "El usuario quiere enviar un email",
+        "patterns": [
+            r"\b(envi[aá]|manda|envía|remite)\s+(un\s+)?(correo|email|mail|mensaje)\s+(a|para)\b",
+            r"\b(leer|revisar|checar|ver)\s+(mis\s+)?(correos|emails|mails|bandeja)\b",
+        ],
+        "action": {"type": "email", "destination": "send"},
+    },
     # ── Conversación general (fallback) ──
     {
         "id": "general_chat",
@@ -296,7 +406,7 @@ class IntentRouter:
         if url_match:
             return url_match.group(0)
         # Dominio simple (ej: "google.com", "sonoradigitalcorp.com")
-        domain_match = re.search(r'(?:a|visitar|entrar|navegar)\s+(?:en\s+)?(https?://)?([\w\-]+\.[\w\-]+(?:\.[\w\-]+)?)', text, re.IGNORECASE)
+        domain_match = re.search(r'(?:a|abre|abrir|navega|navegar|visita|visitar|entrar|ve a)\s+(?:en\s+)?(https?://)?([\w\-]+\.[\w\-]+(?:\.[\w\-]+)?)', text, re.IGNORECASE)
         if domain_match:
             return "https://" + domain_match.group(2)
         # Detectar dominio suelto

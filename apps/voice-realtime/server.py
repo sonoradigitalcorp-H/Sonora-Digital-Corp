@@ -25,10 +25,13 @@ from apps.voice_realtime.pipeline.wakeword import WakeWordDetector
 from apps.voice_realtime.pipeline.monitor import SystemMonitor
 from apps.voice_realtime.pipeline.session_db import SessionDB
 from apps.voice_realtime.actions.browser import BrowserActions
+from apps.voice_realtime.actions.code_executor import CodeExecutor
+from apps.voice_realtime.actions.pdf_generator import PDFGenerator
 from apps.voice_realtime.pipeline.tts import TTSEngine
 from apps.voice_realtime.pipeline.audio_mixer import AudioMixer, SOUNDSCAPES
 from apps.voice_realtime.intent_router import IntentRouter, RoutedAction
 from apps.voice_realtime.voice_templates import VoiceTemplateEngine
+from apps.voice_realtime.pipeline.engram_bridge import EngramBridge, get_engram_bridge
 from apps.voice_realtime.mcp_client import MCPClient, get_mcp_client
 
 # ─── Configuración ───
@@ -44,8 +47,11 @@ intent_router = IntentRouter(use_llm_fallback=True)
 template_engine = VoiceTemplateEngine()
 wakeword = WakeWordDetector(threshold=0.5)
 browser = BrowserActions()
+code_executor = CodeExecutor()
+pdf_generator = PDFGenerator()
 system_monitor = SystemMonitor()
 session_db = SessionDB()
+engram_bridge = get_engram_bridge()
 
 app = FastAPI(title="Mystic Voice Realtime")
 
@@ -114,13 +120,11 @@ async def _send_redirect(ws: WebSocket, url: str, message: str):
 
 
 async def ask_llm(system_prompt: str, messages: list, max_tokens: int = 300,
-                  session_id: str = None, user_text: str = None) -> Optional[str]:
-    """
-    Consulta al LLM vía Ollama (qwen3:4b, local).
-    Fallback: OpenRouter.
-    """
-    context_extra = ""
-    full_messages = [{"role": "system", "content": system_prompt + context_extra}]
+                  session_id: str = None, user_text: str = None,
+                  memory_context: str = "") -> Optional[str]:
+    full_messages = [{"role": "system", "content": system_prompt}]
+    if memory_context:
+        full_messages.append({"role": "system", "content": memory_context})
     full_messages.extend(messages[-6:])
 
     # 1. OpenRouter (tu key con credito)
@@ -264,6 +268,64 @@ async def handle_voice_interaction(
             session["_last_system_status"] = status
         route.type = "talk"
 
+    # ─── 2e. Click en elemento ───
+    if route.type == "click":
+        await _send_status(ws, "browsing")
+        target = route.destination or route.payload.get("text", "")
+        result = await browser.click(text=target) if target else await browser.click(selector=route.payload.get("selector", ""))
+        route.payload["response_text"] = f"He hecho clic en '{target or 'el elemento'}'." if result["status"] == "ok" else f"No pude hacer clic: {result.get('error', 'error desconocido')}"
+        route.type = "talk"
+
+    # ─── 2f. Llenar formulario ───
+    if route.type == "form":
+        await _send_status(ws, "browsing")
+        route.payload["response_text"] = "Dime qué campos quieres llenar y con qué valores. Por ejemplo: 'nombre: Juan, email: juan@mail.com'"
+        route.type = "talk"
+
+    # ─── 2g. Extraer información ───
+    if route.type == "extract":
+        await _send_status(ws, "reading")
+        result = await browser.extract(route.payload.get("query", ""))
+        if result["status"] == "ok":
+            route.payload["response_text"] = f"Extraído: {result.get('data', 'sin datos')[:400]}"
+        else:
+            route.payload["response_text"] = f"No pude extraer información: {result.get('error', 'error desconocido')}"
+        route.type = "talk"
+
+    # ─── 2h. Captura de pantalla ───
+    if route.type == "screenshot":
+        await _send_status(ws, "browsing")
+        result = await browser.screenshot(route.payload.get("url", "about:blank"))
+        if result:
+            route.payload["response_text"] = f"Captura tomada y guardada en {result}. Puedo describirte lo que veo si quieres."
+        else:
+            route.payload["response_text"] = "No pude tomar la captura."
+        route.type = "talk"
+
+    # ─── 2i. Ejecutar código ───
+    if route.type == "code":
+        await _send_status(ws, "thinking")
+        route.payload["response_text"] = "Dime qué código quieres que ejecute o qué tarea necesita un script."
+        route.type = "talk"
+
+    # ─── 2j. Generar PDF ───
+    if route.type == "pdf":
+        await _send_status(ws, "thinking")
+        route.payload["response_text"] = "Dime qué contenido quieres que incluya en el PDF. Por ejemplo: 'un reporte de ventas con...'"
+        route.type = "talk"
+
+    # ─── 2k. Email ───
+    if route.type == "email":
+        await _send_status(ws, "thinking")
+        route.payload["response_text"] = "Para enviar un correo necesito: destinatario, asunto y mensaje. Dímelos y lo hago."
+        route.type = "talk"
+
+    # ─── 2l. Monitoreo ───
+    if route.type == "monitor":
+        await _send_status(ws, "thinking")
+        route.payload["response_text"] = "Puedo monitorear páginas web por ti. Dime qué página quieres vigilar y qué cambios te interesan."
+        route.type = "talk"
+
     # ─── 3. Elegir tono según intención ───
     tone_map = {
         "book_appointment": "warm",
@@ -273,6 +335,16 @@ async def handle_voice_interaction(
         "go_contact": "professional",
         "general_chat": "warm",
         "check_system": "professional",
+        "browse_web": "professional",
+        "search_web": "professional",
+        "fill_form": "professional",
+        "click_element": "professional",
+        "extract_info": "professional",
+        "take_screenshot": "energetic",
+        "monitor_page": "professional",
+        "run_code": "energetic",
+        "generate_pdf": "professional",
+        "send_email": "professional",
     }
     session["tone"] = tone_map.get(route.payload.get("intent_id", ""), "warm")
     template_engine.set_tone(session["tone"])
@@ -300,9 +372,26 @@ async def handle_voice_interaction(
     if not response_text:
         await _send_status(ws, "thinking")
         persona = build_mystic_persona(session["tone"])
+
+        # Buscar memoria relevante en Engram para contexto
+        memory_context = ""
+        try:
+            loop = asyncio.get_running_loop()
+            mem_results = await loop.run_in_executor(
+                None, engram_bridge.get_relevant_context, text, 5
+            )
+            if mem_results:
+                memory_context = await loop.run_in_executor(
+                    None, engram_bridge.format_memory_context, mem_results
+                )
+                logger.info(f"Injected {len(mem_results)} memory entries into context")
+        except Exception as e:
+            logger.warning(f"Memory context fetch failed (non-critical): {e}")
+
         reply = await ask_llm(persona, session["history"],
                               session_id=session.get("session_id"),
-                              user_text=text)
+                              user_text=text,
+                              memory_context=memory_context)
         if reply:
             response_text = reply
         else:
@@ -382,7 +471,23 @@ async def handle_voice_interaction(
     except Exception as e:
         logger.warning(f"Session DB save failed (non-critical): {e}")
 
-    # ─── 10. Guardar en Engram vía MCP (memoria persistente) ───
+    # ─── 10. Guardar en Engram directo (memoria persistente, sin MCP) ───
+    try:
+        loop = asyncio.get_running_loop()
+        await loop.run_in_executor(
+            None, engram_bridge.save_interaction,
+            text, response_text,
+            route.payload.get("intent_id", "chat"),
+            route.destination,
+            session.get("tone", "warm"),
+            session_id_str,
+            "medium",
+            f"voice,{route.payload.get('intent_id', 'chat')}",
+        )
+    except Exception as e:
+        logger.warning(f"Engram save failed (non-critical): {e}")
+
+    # Fallback: intentar MCP si está disponible (no crítico)
     try:
         mcp = get_mcp_client()
         await mcp.engram_save(
@@ -390,7 +495,7 @@ async def handle_voice_interaction(
             key=f"voice_session:{session_id_str}:{int(time.time())}",
             value=json.dumps({
                 "user_text": text[:500],
-                "response": response_text[:500],
+                "response": response_text[:500] if response_text else "",
                 "intent": route.payload.get("intent_id", ""),
                 "destination": route.destination,
                 "tone": session.get("tone", "warm"),
@@ -400,8 +505,8 @@ async def handle_voice_interaction(
             importance=2,
             tags=f"voice,{route.payload.get('intent_id', 'chat')}",
         )
-    except Exception as e:
-        logger.warning(f"Engram save failed (non-critical): {e}")
+    except Exception:
+        pass  # MCP no disponible — el guardado directo ya se hizo
 
     # ─── 11. Finalizar ───
     await _send(ws, {"type": "response.done"})
@@ -597,7 +702,6 @@ async def session_handler(ws: WebSocket, session_id: str):
         try:
             history = session.get("history", [])
             if history:
-                loop = asyncio.get_running_loop()
                 loop.run_in_executor(None, session_db.save_session,
                     session_id, history,
                     {"tone": session.get("tone", "warm"), "interactions": len(history)},
@@ -605,6 +709,19 @@ async def session_handler(ws: WebSocket, session_id: str):
                 )
         except Exception as e:
             logger.warning(f"[{session_id}] Save error: {e}")
+
+        # ─── Guardar resumen de sesión en Engram ───
+        try:
+            history = session.get("history", [])
+            if history:
+                loop.run_in_executor(None, engram_bridge.save_session_summary,
+                    session_id, history,
+                    session.get("tone", "warm"),
+                    session.get("interaction_count", 0),
+                )
+        except Exception as e:
+            logger.warning(f"[{session_id}] Engram session save error: {e}")
+
         SESSIONS.pop(session_id, None)
 
 
