@@ -116,75 +116,53 @@ async def _send_redirect(ws: WebSocket, url: str, message: str):
 async def ask_llm(system_prompt: str, messages: list, max_tokens: int = 300,
                   session_id: str = None, user_text: str = None) -> Optional[str]:
     """
-    Consulta al LLM vía MCP Gateway (Unified Brain).
-    Proveedor unificado: opencode-go → deepseek-v4-flash.
-    Contexto enriquecido con Unified Brain (Engram + Neo4j + Qdrant).
-    Fallback: openrouter → ollama.
+    Consulta al LLM vía Ollama (qwen3:4b, local).
+    Fallback: OpenRouter.
     """
-    mcp = get_mcp_client()
     context_extra = ""
+    full_messages = [{"role": "system", "content": system_prompt + context_extra}]
+    full_messages.extend(messages[-6:])
 
-    # 1. Obtener contexto del Unified Brain (Engram + Neo4j + Qdrant)
-    try:
-        brain_ctx = await mcp.brain_context(user_text or system_prompt[:60], limit=3)
-        if brain_ctx:
-            context_extra += f"\n\n🧠 CONTEXTO DEL SISTEMA:\n{brain_ctx}"
-    except Exception as e:
-        logger.warning(f"Brain context error: {e}")
-
-    # 2. Intentar LLM vía MCP Gateway (proveedor unificado)
-    try:
-        # Construir mensaje completo con contexto
-        full_messages = [{"role": "system", "content": system_prompt + context_extra}]
-        full_messages.extend(messages[-6:])
-
-        result = await mcp.execute("llm_chat", {
-            "messages": full_messages,  # ← array, no string
-            "max_tokens": max_tokens,
-            "temperature": 0.7,
-            "provider": "opencode-go",
-            "brain_context": brain_ctx,
-        })
-        if result:
-            if isinstance(result, dict):
-                return result.get("text") or result.get("content")
-            if isinstance(result, str):
-                try:
-                    d = json.loads(result)
-                    return d.get("text") or d.get("content") or result
-                except json.JSONDecodeError:
-                    return result
-    except Exception as e:
-        logger.warning(f"MCP LLM failed: {e}")
-
-    # 3. Fallback: OpenRouter directo (si hay key)
+    # 1. OpenRouter (tu key con credito)
     api_key = os.environ.get("OPENROUTER_API_KEY", "")
-    if not api_key:
-        logger.warning("No OPENROUTER_API_KEY, giving up")
-        return None
+    if api_key:
+        try:
+            async with httpx.AsyncClient(timeout=30) as client:
+                r = await client.post("https://openrouter.ai/api/v1/chat/completions",
+                    headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
+                    json={"model": "openai/gpt-4o-mini", "messages": full_messages, "max_tokens": max_tokens, "temperature": 0.7})
+                if r.status_code == 200:
+                    return r.json()["choices"][0]["message"]["content"]
+                logger.warning(f"OpenRouter {r.status_code}: {r.text[:80]}")
+        except Exception as e:
+            logger.warning(f"OpenRouter error: {e}")
 
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json",
-    }
-    payload = {
-        "model": "opencode/deepseek-v4-flash-free",
-        "messages": [{"role": "system", "content": system_prompt + context_extra}] + messages[-6:],
-        "max_tokens": max_tokens,
-        "temperature": 0.7,
-    }
+    # 2. OpenCode API (tu suscripción, fallback)
+    api_key2 = os.environ.get("OPENCODE_API_KEY", "")
+    if api_key2:
+        try:
+            async with httpx.AsyncClient(timeout=15) as client:
+                r = await client.post("https://api.opencode.ai/v1/chat/completions", 
+                    headers={"Authorization": f"Bearer {api_key2}", "Content-Type": "application/json"},
+                    json={"model": "gpt-4o-mini", "messages": full_messages, "max_tokens": max_tokens, "temperature": 0.7})
+                if r.status_code == 200 and r.text not in ("Not Found", ""):
+                    try: return r.json().get("choices", [{}])[0].get("message", {}).get("content", "")
+                    except: pass
+        except Exception as e:
+            logger.warning(f"OpenCode error: {e}")
+
+    # 3. Ollama local (ultimo recurso, lento)
     try:
         async with httpx.AsyncClient(timeout=30) as client:
-            r = await client.post(
-                "https://openrouter.ai/api/v1/chat/completions",
-                headers=headers,
-                json=payload,
-            )
+            r = await client.post("http://127.0.0.1:11434/api/chat", json={
+                "model": "qwen3:4b", "messages": full_messages, "stream": False,
+                "options": {"temperature": 0.7, "num_predict": max_tokens}})
             if r.status_code == 200:
-                return r.json()["choices"][0]["message"]["content"]
-            logger.warning(f"LLM {r.status_code}: {r.text[:100]}")
+                reply = r.json().get("message", {}).get("content", "")
+                if reply: return reply
     except Exception as e:
-        logger.error(f"LLM error: {e}")
+        logger.warning(f"Ollama error: {e}")
+
     return None
 
 
@@ -360,18 +338,16 @@ async def handle_voice_interaction(
 
     tts_audio = await tts_engine.synthesize(response_text)
     if tts_audio:
-        # Mezclar con soundscape si hay
-        if soundscape_bytes:
-            mixed = audio_mixer.mix_with_tts(tts_audio, soundscape_bytes, is_speaking=True)
-            audio_b64 = base64.b64encode(mixed).decode()
-        else:
-            audio_b64 = base64.b64encode(tts_audio).decode()
+        # Guardar como archivo temporal y enviar URL
+        sid = session.get("session_id", "unknown")
+        audio_file = Path(f"/tmp/mystic-audio-{sid}-{int(time.time()*1000)}.mp3")
+        audio_file.write_bytes(tts_audio)
+        audio_url = f"/api/audio/{audio_file.name}"
 
         await _send(ws, {
-            "type": "response.audio.delta",
-            "delta": audio_b64,
-            "sample_rate": 24000,
-            "mime_type": "audio/mpeg",
+            "type": "response.audio.url",
+            "url": audio_url,
+            "duration_s": len(tts_audio) / 48000,  # aprox
         })
 
     audio_mixer.set_speaking(False)
@@ -390,6 +366,12 @@ async def handle_voice_interaction(
     latency_ms = int((time.time() - start_time) * 1000)
     try:
         loop = asyncio.get_running_loop()
+        # Primero guardar sesión (para que exista el FK), luego interacciones
+        user_id = session.get("user_id", "")
+        await loop.run_in_executor(None, session_db.save_session,
+            session_id_str, session.get("history", []),
+            {"tone": session.get("tone", "warm"), "interactions": session.get("interaction_count", 0)},
+            user_id)
         await loop.run_in_executor(None, session_db.add_interaction,
             session_id_str, "user", text,
             route.payload.get("intent_id", ""), latency_ms)
@@ -397,10 +379,6 @@ async def handle_voice_interaction(
             await loop.run_in_executor(None, session_db.add_interaction,
                 session_id_str, "assistant", response_text,
                 route.payload.get("intent_id", ""), None)
-        # Auto-save session history cada interacción
-        await loop.run_in_executor(None, session_db.save_session,
-            session_id_str, session.get("history", []),
-            {"tone": session.get("tone", "warm"), "interactions": session.get("interaction_count", 0)})
     except Exception as e:
         logger.warning(f"Session DB save failed (non-critical): {e}")
 
@@ -587,6 +565,27 @@ async def session_handler(ws: WebSocket, session_id: str):
             elif msg_type == "ping":
                 await _send(ws, {"type": "pong"})
 
+            elif msg_type == "identify":
+                user_id = msg.get("user_id", "")
+                if user_id:
+                    session["user_id"] = user_id
+                    # Cargar historial de TODAS las sesiones anteriores de este usuario
+                    try:
+                        loop = asyncio.get_running_loop()
+                        past = await loop.run_in_executor(None, session_db.get_user_interactions, user_id, 20)
+                        if past:
+                            restored = [{"role": p["role"], "content": p["content"]} for p in past]
+                            session["history"] = restored[-10:]
+                            session["interaction_count"] = len(restored)
+                            await _send(ws, {
+                                "type": "memory.restored",
+                                "count": len(restored),
+                                "summary": f"Recuerdo nuestras {len(restored)} interacciones anteriores"
+                            })
+                            logger.info(f"[{session_id}] Restored {len(restored)} messages for user {user_id[:8]}...")
+                    except Exception as e:
+                        logger.warning(f"Memory restore error: {e}")
+
     except WebSocketDisconnect:
         logger.info(f"[{session_id}] disconnected")
     except asyncio.TimeoutError:
@@ -601,7 +600,8 @@ async def session_handler(ws: WebSocket, session_id: str):
                 loop = asyncio.get_running_loop()
                 loop.run_in_executor(None, session_db.save_session,
                     session_id, history,
-                    {"tone": session.get("tone", "warm"), "interactions": len(history)}
+                    {"tone": session.get("tone", "warm"), "interactions": len(history)},
+                    session.get("user_id", "")
                 )
         except Exception as e:
             logger.warning(f"[{session_id}] Save error: {e}")
@@ -627,10 +627,16 @@ async def chat_ws(ws: WebSocket):
 @app.get("/", response_class=HTMLResponse)
 @app.get("/chat", response_class=HTMLResponse)
 async def index():
-    """Sirve el frontend."""
-    frontend_file = Path(__file__).parent / "frontend" / "mystic_voice.html"
-    if frontend_file.exists():
-        return HTMLResponse(frontend_file.read_text(encoding="utf-8"))
+    """Sirve el frontend (Cosmic 3D si existe, fallback al clásico)."""
+    frontend_cosmic = Path(__file__).parent / "frontend" / "mystic_cosmic.html"
+    frontend_3d = Path(__file__).parent / "frontend" / "mystic_3d.html"
+    frontend_classic = Path(__file__).parent / "frontend" / "mystic_voice.html"
+    if frontend_cosmic.exists():
+        return HTMLResponse(frontend_cosmic.read_text(encoding="utf-8"))
+    if frontend_3d.exists():
+        return HTMLResponse(frontend_3d.read_text(encoding="utf-8"))
+    if frontend_classic.exists():
+        return HTMLResponse(frontend_classic.read_text(encoding="utf-8"))
     return HTMLResponse("<h1>Mystic Voice</h1><p>Frontend not found</p>")
 
 
@@ -707,6 +713,11 @@ async def startup():
     # Start proactive monitor
     asyncio.create_task(_proactive_monitor_loop())
     logger.info("Proactive monitor started ✓")
+    # Limpiar audios temporales viejos
+    import glob
+    for f in glob.glob("/tmp/mystic-audio-*.mp3"):
+        try: os.remove(f)
+        except: pass
 
 
 async def _proactive_monitor_loop():
@@ -732,6 +743,19 @@ async def _proactive_monitor_loop():
             break
         except Exception as e:
             logger.warning(f"Proactive monitor error: {e}")
+
+
+@app.get("/api/audio/{filename}")
+async def serve_audio(filename: str):
+    """Sirve archivos de audio temporales."""
+    from fastapi.responses import FileResponse
+    import re
+    if not re.match(r"^mystic-audio-.+\.mp3$", filename):
+        return HTMLResponse("Invalid filename", status_code=400)
+    audio_path = Path(f"/tmp/{filename}")
+    if audio_path.exists():
+        return FileResponse(str(audio_path), media_type="audio/mp3")
+    return HTMLResponse("Audio not found", status_code=404)
 
 
 if __name__ == "__main__":

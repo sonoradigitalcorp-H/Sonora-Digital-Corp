@@ -67,6 +67,7 @@ class SessionDB:
                     """
                     CREATE TABLE IF NOT EXISTS sessions (
                         id TEXT PRIMARY KEY,
+                        user_id TEXT DEFAULT '',
                         history TEXT NOT NULL DEFAULT '[]',
                         context TEXT DEFAULT '{}',
                         created_at TEXT DEFAULT (datetime('now')),
@@ -86,6 +87,16 @@ class SessionDB:
                         ON interactions(session_id, created_at);
                     """
                 )
+                # Migracion: agregar user_id si no existe
+                try:
+                    conn.execute("ALTER TABLE sessions ADD COLUMN user_id TEXT DEFAULT ''")
+                except:
+                    pass  # ya existe
+                # Indice sobre user_id (despues de la migracion)
+                try:
+                    conn.execute("CREATE INDEX IF NOT EXISTS idx_sessions_user ON sessions(user_id, updated_at)")
+                except:
+                    pass
                 conn.commit()
                 conn.close()
         except Exception as exc:
@@ -117,7 +128,8 @@ class SessionDB:
             return None
 
     def save_session(
-        self, session_id: str, history: list, context: dict | None = None
+        self, session_id: str, history: list, context: dict | None = None,
+        user_id: str | None = None
     ) -> None:
         """Crea o actualiza una sesión (upsert)."""
         try:
@@ -137,9 +149,9 @@ class SessionDB:
                     )
                 else:
                     conn.execute(
-                        """INSERT INTO sessions (id, history, context)
-                           VALUES (?, ?, ?)""",
-                        (session_id, history_json, context_json),
+                        """INSERT INTO sessions (id, history, context, user_id)
+                           VALUES (?, ?, ?, ?)""",
+                        (session_id, history_json, context_json, user_id or ""),
                     )
                 conn.commit()
                 conn.close()
@@ -196,6 +208,33 @@ class SessionDB:
                 "get_recent_interactions(%s) falló: %s", session_id, exc
             )
             self._try_recover()
+            return []
+
+    def get_user_interactions(self, user_id: str, limit: int = 20) -> list[dict]:
+        """Devuelve las últimas interacciones de todas las sesiones de un usuario."""
+        try:
+            with self._lock:
+                conn = self._connect()
+                # Buscar sesiones de este usuario
+                session_ids = conn.execute(
+                    "SELECT id FROM sessions WHERE user_id = ? ORDER BY updated_at DESC LIMIT 10",
+                    (user_id,),
+                ).fetchall()
+                if not session_ids:
+                    return []
+                ids = [s["id"] for s in session_ids]
+                placeholders = ",".join("?" * len(ids))
+                rows = conn.execute(
+                    f"""SELECT role, content FROM interactions
+                       WHERE session_id IN ({placeholders})
+                       ORDER BY created_at ASC
+                       LIMIT ?""",
+                    (*ids, limit),
+                ).fetchall()
+                conn.close()
+                return [dict(r) for r in rows]
+        except Exception as exc:
+            logger.error("get_user_interactions(%s) falló: %s", user_id, exc)
             return []
 
     def delete_session(self, session_id: str) -> None:

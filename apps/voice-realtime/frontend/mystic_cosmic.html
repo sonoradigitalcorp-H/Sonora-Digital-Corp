@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>Mystic — Asistente Inteligente</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#0a0b12;color:#edf0f7;-webkit-tap-highlight-color:transparent;user-select:none}
+#scene-container{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
+#scene-container canvas{display:block;width:100%!important;height:100%!important}
+#overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;pointer-events:none;padding:20px}
+#overlay>*{pointer-events:auto}
+header{text-align:center;margin-bottom:clamp(16px,4vh,40px)}
+header h1{font-size:clamp(28px,6vw,52px);font-weight:300;letter-spacing:0.3em;text-transform:uppercase;background:linear-gradient(135deg,#C8924B,#c0603a);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:none}
+header p{font-size:clamp(10px,1.4vw,14px);letter-spacing:0.5em;text-transform:uppercase;color:rgba(200,146,75,0.6);margin-top:4px;font-weight:300}
+.cards{display:flex;gap:clamp(10px,2vw,24px);justify-content:center;align-items:center;flex-wrap:wrap;max-width:900px;width:100%;position:relative}
+.card{width:clamp(130px,16vw,180px);height:clamp(170px,22vw,240px);perspective:1200px;cursor:pointer;position:relative;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1)}
+.card-inner{position:relative;width:100%;height:100%;transform-style:preserve-3d;transition:transform 0.6s cubic-bezier(0.34,1.56,0.64,1);will-change:transform}
+.card.flipped .card-inner{transform:rotateY(180deg)}
+.card-front,.card-back{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:16px;backface-visibility:hidden;-webkit-backface-visibility:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;background:rgba(10,11,18,0.75);border:1px solid rgba(200,146,75,0.2);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);overflow:hidden}
+.card-front::before,.card-back::before{content:'';position:absolute;top:-1px;left:-1px;right:-1px;bottom:-1px;border-radius:17px;background:linear-gradient(135deg,rgba(200,146,75,0.4),rgba(192,96,58,0.2),rgba(139,92,246,0.15));z-index:-1;opacity:0;transition:opacity 0.4s}
+.card:hover .card-front::before,.card:active .card-front::before{opacity:1}
+.card-back{transform:rotateY(180deg);padding:12px;justify-content:flex-start;overflow-y:auto}
+.card-back::-webkit-scrollbar{width:2px}
+.card-back::-webkit-scrollbar-thumb{background:rgba(200,146,75,0.3);border-radius:4px}
+.card-icon{width:clamp(28px,3.5vw,40px);height:clamp(28px,3.5vw,40px);margin-bottom:10px;position:relative}
+.card-icon svg{width:100%;height:100%;fill:none;stroke:#C8924B;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.card h3{font-size:clamp(12px,1.4vw,16px);font-weight:400;letter-spacing:0.15em;text-transform:uppercase;color:#edf0f7}
+.card-sub{font-size:clamp(8px,0.9vw,10px);color:rgba(200,146,75,0.5);margin-top:4px;letter-spacing:0.1em}
+.card-glow{position:absolute;top:0;left:0;width:100%;height:100%;border-radius:16px;box-shadow:0 0 20px rgba(200,146,75,0.1),0 0 40px rgba(200,146,75,0.05);transition:box-shadow 0.4s;pointer-events:none;z-index:-1}
+.card:hover .card-glow,.card:active .card-glow{box-shadow:0 0 25px rgba(200,146,75,0.25),0 0 60px rgba(200,146,75,0.1)}
+.card:hover .card-front{background:rgba(10,11,18,0.85)}
+.card-bg-gradient{position:absolute;bottom:-20px;left:10%;right:10%;height:30px;background:radial-gradient(ellipse at center,rgba(200,146,75,0.2),transparent 70%);filter:blur(10px);pointer-events:none;z-index:-2}
+.card-top-bar{position:absolute;top:0;left:20%;right:20%;height:1px;background:linear-gradient(90deg,transparent,rgba(200,146,75,0.5),transparent);opacity:0;transition:opacity 0.4s}
+.card:hover .card-top-bar,.card:active .card-top-bar{opacity:1}
+.card:nth-child(1){animation:float 5s ease-in-out infinite}
+.card:nth-child(2){animation:float 5s ease-in-out infinite 0.8s}
+.card:nth-child(3){animation:float 5s ease-in-out infinite 1.6s}
+.card:nth-child(4){animation:float 5s ease-in-out infinite 2.4s}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.card-back-content{width:100%;height:100%;display:flex;flex-direction:column;gap:8px;animation:fadeIn 0.4s}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card-back-content h4{font-size:clamp(11px,1.2vw,14px);font-weight:400;letter-spacing:0.15em;text-transform:uppercase;color:#C8924B;margin-bottom:4px}
+.status-item{display:flex;justify-content:space-between;align-items:center;padding:4px 0;border-bottom:1px solid rgba(200,146,75,0.08);font-size:clamp(9px,1vw,11px)}
+.status-item span:first-child{color:rgba(237,240,247,0.6)}
+.status-item span:last-child{color:#edf0f7}
+.status-dot{width:6px;height:6px;border-radius:50%;display:inline-block}
+.live-metric{display:flex;align-items:center;gap:6px;width:100%;font-size:clamp(9px,0.9vw,11px)}
+.metric-label{width:clamp(28px,3vw,36px);color:rgba(237,240,247,0.5);font-weight:300;letter-spacing:0.05em}
+.metric-bar-bg{flex:1;height:clamp(4px,0.5vw,6px);background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden}
+.metric-bar-fill{height:100%;border-radius:3px;background:linear-gradient(90deg,#C8924B,#c0603a);transition:width 0.8s cubic-bezier(0.34,1.56,0.64,1);width:0%}
+.metric-val{width:clamp(28px,3vw,36px);text-align:right;font-weight:400;color:#edf0f7;font-variant-numeric:tabular-nums}
+.status-dot.active{background:#34D399;box-shadow:0 0 8px rgba(52,211,153,0.5)}
+.status-dot.inactive{background:#c0603a;box-shadow:0 0 8px rgba(192,96,58,0.3)}
+.memory-layer{display:flex;justify-content:space-between;align-items:center;padding:3px 0;font-size:clamp(8px,0.9vw,10px);color:rgba(237,240,247,0.7)}
+.memory-layer span:last-child{color:#a8b589;font-size:clamp(7px,0.8vw,9px)}
+.sound-control{display:flex;justify-content:space-between;align-items:center;padding:4px 0;font-size:clamp(9px,1vw,11px)}
+.sound-control span{color:rgba(237,240,247,0.7)}
+.volume-bar{height:4px;border-radius:2px;background:rgba(200,146,75,0.15);overflow:hidden;margin-top:2px}
+.volume-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#C8924B,#c0603a);transition:width 0.3s}
+.chat-container{display:flex;flex-direction:column;height:100%;gap:6px}
+.chat-messages{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:2px;scroll-behavior:smooth}
+.chat-messages::-webkit-scrollbar{width:2px}
+.chat-messages::-webkit-scrollbar-thumb{background:rgba(200,146,75,0.3);border-radius:4px}
+.msg{max-width:85%;padding:6px 10px;border-radius:10px;font-size:clamp(9px,1vw,11px);line-height:1.4;word-wrap:break-word;animation:msgIn 0.3s}
+@keyframes msgIn{from{opacity:0;transform:scale(0.95) translateY(4px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.msg.user{align-self:flex-end;background:linear-gradient(135deg,rgba(200,146,75,0.2),rgba(192,96,58,0.15));border:1px solid rgba(200,146,75,0.25)}
+.msg.mystic{align-self:flex-start;background:rgba(10,11,18,0.5);border:1px solid rgba(200,146,75,0.1);backdrop-filter:blur(8px)}
+.msg.system{align-self:center;background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.15);font-size:clamp(8px,0.8vw,10px);color:rgba(237,240,247,0.5)}
+.chat-input-row{display:flex;gap:6px;align-items:center;padding:4px 0}
+.chat-input-row input{flex:1;background:rgba(10,11,18,0.6);border:1px solid rgba(200,146,75,0.15);border-radius:20px;padding:8px 14px;color:#edf0f7;font-size:clamp(10px,1vw,12px);outline:none;transition:border-color 0.3s,box-shadow 0.3s;font-family:inherit}
+.chat-input-row input:focus{border-color:rgba(200,146,75,0.4);box-shadow:0 0 12px rgba(200,146,75,0.15)}
+.chat-input-row input::placeholder{color:rgba(237,240,247,0.25)}
+.chat-btn{width:clamp(28px,3vw,34px);height:clamp(28px,3vw,34px);border-radius:50%;border:1px solid rgba(200,146,75,0.2);background:rgba(10,11,18,0.6);color:#C8924B;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.2s;font-size:clamp(12px,1.4vw,16px);flex-shrink:0}
+.chat-btn:active{transform:scale(0.92);background:rgba(200,146,75,0.15)}
+.chat-btn:hover{border-color:rgba(200,146,75,0.4)}
+.chat-btn.recording{background:rgba(192,96,58,0.2);border-color:#c0603a;animation:pulse-red 1s ease-in-out infinite}
+@keyframes pulse-red{0%,100%{box-shadow:0 0 5px rgba(192,96,58,0.2)}50%{box-shadow:0 0 15px rgba(192,96,58,0.4)}}
+.typing-dots span{display:inline-block;width:4px;height:4px;border-radius:50%;background:#C8924B;margin:0 1px;animation:dotPulse 1.4s ease-in-out infinite}
+.typing-dots span:nth-child(2){animation-delay:0.2s}
+.typing-dots span:nth-child(3){animation-delay:0.4s}
+@keyframes dotPulse{0%,80%,100%{opacity:0.3;transform:scale(0.8)}40%{opacity:1;transform:scale(1.2)}}
+#toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(100px);background:rgba(10,11,18,0.9);border:1px solid rgba(200,146,75,0.2);backdrop-filter:blur(12px);padding:10px 20px;border-radius:12px;font-size:clamp(11px,1.2vw,13px);color:#edf0f7;z-index:100;transition:transform 0.4s cubic-bezier(0.34,1.56,0.64,1),opacity 0.4s;opacity:0;pointer-events:none;white-space:nowrap}
+#toast.show{transform:translateX(-50%) translateY(0);opacity:1}
+.exit-btn{position:absolute;top:6px;right:8px;width:20px;height:20px;border-radius:50%;border:1px solid rgba(200,146,75,0.2);background:transparent;color:rgba(200,146,75,0.5);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:10px;transition:all 0.2s;z-index:2}
+.exit-btn:active{transform:scale(0.85)}
+@media(max-width:480px){
+#overlay{padding:12px;justify-content:center}
+.card{width:clamp(100px,28vw,140px);height:clamp(135px,38vw,180px)}
+.card-front,.card-back{border-radius:12px;padding:10px}
+.card-icon{width:22px;height:22px;margin-bottom:6px}
+.card h3{font-size:10px}
+.card-back{padding:8px}
+.chat-messages{padding:0}
+.msg{padding:5px 8px;font-size:9px}
+header h1{font-size:22px;letter-spacing:0.2em}
+header p{font-size:8px;letter-spacing:0.3em}
+}
+@media(min-width:481px)and (max-width:768px){
+.card{width:clamp(120px,22vw,160px);height:clamp(155px,30vw,200px)}
+}
+@media(hover:hover){
+.card:hover .card-glow{box-shadow:0 0 30px rgba(200,146,75,0.3),0 0 70px rgba(200,146,75,0.12)}
+.card:hover .card-front::before{opacity:1}
+}
+</style>
+</head>
+<body>
+
+<div id="scene-container"></div>
+
+<div id="overlay">
+  <header>
+    <h1>Mystic</h1>
+    <p>asistente inteligente</p>
+  </header>
+
+  <div class="cards" id="cardsContainer">
+    <div class="card" data-card="sistema">
+      <div class="card-inner">
+        <div class="card-front">
+          <div class="card-glow"></div>
+          <div class="card-top-bar"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          </div>
+          <h3>Sistema</h3>
+          <p class="card-sub">ESTADO</p>
+        </div>
+        <div class="card-back">
+          <button class="exit-btn" data-flip-off>&#x2715;</button>
+          <div class="card-back-content">
+            <h4>⚡ EN VIVO</h4>
+            <div class="live-metric"><span class="metric-label">CPU</span><div class="metric-bar-bg"><div class="metric-bar-fill" id="cpuFill" style="width:0%"></div></div><span class="metric-val" id="cpuVal">—</span></div>
+            <div class="live-metric"><span class="metric-label">RAM</span><div class="metric-bar-bg"><div class="metric-bar-fill" id="ramFill" style="width:0%"></div></div><span class="metric-val" id="ramVal">—</span></div>
+            <div class="live-metric"><span class="metric-label">DISK</span><div class="metric-bar-bg"><div class="metric-bar-fill" id="diskFill" style="width:0%"></div></div><span class="metric-val" id="diskVal">—</span></div>
+            <div class="live-metric"><span class="metric-label">UP</span><span style="flex:1;text-align:center;font-size:clamp(9px,0.9vw,11px);color:rgba(237,240,247,0.6)" id="uptimeVal">—</span><span class="metric-val"></span></div>
+            <div style="margin-top:6px;display:flex;gap:8px;justify-content:center;font-size:clamp(8px,0.8vw,10px);color:rgba(200,146,75,0.5)">
+              <span id="wsBadge" style="display:flex;align-items:center;gap:4px"><span class="status-dot active"></span>WS</span>
+              <span>⚡ auto-actualizando</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-card="chat">
+      <div class="card-inner">
+        <div class="card-front">
+          <div class="card-glow"></div>
+          <div class="card-top-bar"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <h3>Chat</h3>
+          <p class="card-sub">CONVERSAR</p>
+        </div>
+        <div class="card-back">
+          <button class="exit-btn" data-flip-off>&#x2715;</button>
+          <div class="card-back-content">
+            <h4>Chat</h4>
+            <div class="chat-container">
+              <div class="chat-messages" id="chatMessages"></div>
+              <div class="chat-input-row">
+                <input type="text" id="textInput" placeholder="Habla con Mystic..." autocomplete="off">
+                <button class="chat-btn" id="voiceBtn" title="Voz">🎤</button>
+                <button class="chat-btn" id="sendBtn" title="Enviar">➤</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-card="memoria">
+      <div class="card-inner">
+        <div class="card-front">
+          <div class="card-glow"></div>
+          <div class="card-top-bar"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 1 7 7c0 2.38-1.19 4.47-3 5.74V17a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1v-2.26C6.19 13.47 5 11.38 5 9a7 7 0 0 1 7-7z"/><path d="M9 21h6M12 17v4"/></svg>
+          </div>
+          <h3>Memoria</h3>
+          <p class="card-sub">RECUERDOS</p>
+        </div>
+        <div class="card-back">
+          <button class="exit-btn" data-flip-off>&#x2715;</button>
+          <div class="card-back-content">
+            <h4>Memoria</h4>
+            <div class="status-item"><span>Capas</span><span>7/7 activas</span></div>
+            <div class="status-item"><span>Recuerdos</span><span id="memoryCount">—</span></div>
+            <div class="status-item"><span>Estado</span><span style="color:#34D399">Óptimo</span></div>
+            <div style="margin-top:6px;font-size:clamp(8px,0.8vw,10px);color:rgba(200,146,75,0.5);letter-spacing:0.05em">Capas de memoria</div>
+            <div class="memory-layer"><span>Working</span><span>activa</span></div>
+            <div class="memory-layer"><span>Task</span><span>activa</span></div>
+            <div class="memory-layer"><span>Project</span><span>activa</span></div>
+            <div class="memory-layer"><span>Customer</span><span>activa</span></div>
+            <div class="memory-layer"><span>Business</span><span>activa</span></div>
+            <div class="memory-layer"><span>Historical</span><span>activa</span></div>
+            <div class="memory-layer"><span>Strategic</span><span>activa</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" data-card="sonidos">
+      <div class="card-inner">
+        <div class="card-front">
+          <div class="card-glow"></div>
+          <div class="card-top-bar"></div>
+          <div class="card-icon">
+            <svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+          </div>
+          <h3>Sonidos</h3>
+          <p class="card-sub">AUDIO</p>
+        </div>
+        <div class="card-back">
+          <button class="exit-btn" data-flip-off>&#x2715;</button>
+          <div class="card-back-content">
+            <h4>Sonidos</h4>
+            <div class="sound-control"><span>Volumen</span><span id="volumeLabel">80%</span></div>
+            <div class="volume-bar"><div class="volume-fill" id="volumeFill" style="width:80%"></div></div>
+            <div class="sound-control" style="margin-top:8px"><span>Voz</span><span>Mystic</span></div>
+            <div class="sound-control"><span>Tono</span><span id="toneLabel">Neutro</span></div>
+            <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap">
+              <button class="chat-btn" id="toneBtn" style="border-radius:16px;width:auto;padding:4px 12px;font-size:clamp(9px,1vw,11px);letter-spacing:0.05em">🎭 Tono</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  const toast = document.getElementById('toast');
+  let toastTimer = null;
+  window.showToast = function(m){
+    toast.textContent = m;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>toast.classList.remove('show'),2800);
+  };
+
+  function getUserId(){
+    let uid = localStorage.getItem('mystic_user_id');
+    if(!uid){uid='user_'+Date.now()+'_'+Math.random().toString(36).slice(2,8);localStorage.setItem('mystic_user_id',uid)}
+    return uid;
+  }
+
+  const toneOptions = ['Neutro','Profundo','Susurro','Épico'];
+  let toneIndex = 0;
+  const textInput = document.getElementById('textInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const voiceBtn = document.getElementById('voiceBtn');
+  const chatMessages = document.getElementById('chatMessages');
+  const wsStatus = document.getElementById('wsStatus');
+  const toneBtn = document.getElementById('toneBtn');
+  const toneLabel = document.getElementById('toneLabel');
+  const volumeFill = document.getElementById('volumeFill');
+  const volumeLabel = document.getElementById('volumeLabel');
+  const latencyDisplay = document.getElementById('latencyDisplay');
+
+  let ws = null;
+  let wsReconnectTimer = null;
+  let currentAudio = null;
+  let recognition = null;
+  let isRecording = false;
+  let streamText = '';
+  let pingInterval = null;
+  const USER_ID = getUserId();
+
+  const WS_PROTO = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const WS_HOST = window.location.host;
+  let wsUrl = WS_PROTO+'//'+WS_HOST+'/v1/chat';
+
+  function connectWS(){
+    if(ws && (ws.readyState===WebSocket.OPEN||ws.readyState===WebSocket.CONNECTING)) return;
+    try{
+      ws = new WebSocket(wsUrl);
+    }catch(e){scheduleReconnect();return}
+    ws.onopen = ()=>{
+      wsStatus.className='status-dot active';
+      showToast('Conectado');
+      ws.send(JSON.stringify({type:'identify',user_id:USER_ID}));
+      if(pingInterval) clearInterval(pingInterval);
+      pingInterval = setInterval(()=>{
+        if(ws && ws.readyState===WebSocket.OPEN) ws.send(JSON.stringify({type:'ping'}));
+      },25000);
+    };
+    ws.onmessage = (e)=>{
+      try{
+        const msg = JSON.parse(e.data);
+        handleWSMessage(msg);
+      }catch(err){}
+    };
+    ws.onclose = ()=>{
+      wsStatus.className='status-dot inactive';
+      if(pingInterval){clearInterval(pingInterval);pingInterval=null}
+      if(wsReconnectTimer) clearTimeout(wsReconnectTimer);
+      wsReconnectTimer = setTimeout(connectWS,3000);
+    };
+    ws.onerror = ()=>{ws.close()};
+  }
+
+  function scheduleReconnect(){
+    if(wsReconnectTimer) clearTimeout(wsReconnectTimer);
+    wsReconnectTimer = setTimeout(connectWS,3000);
+  }
+
+  let lastMsgTime = 0;
+  function handleWSMessage(msg){
+    if(msg.type==='memory.restored'){
+      addMessage('system','🧠 '+msg.summary+' ('+msg.count+' mensajes)');
+    }else if(msg.type==='response.output_text.delta'){
+      if(msg.delta){
+        streamText += msg.delta;
+        updateStreamingMsg(streamText);
+      }
+      lastMsgTime = Date.now();
+    }else if(msg.type==='response.audio.url'){
+      if(msg.url) playAudioUrl(msg.url);
+    }else if(msg.type==='response.done'){
+      if(streamText){
+        finalizeMsg(streamText);
+        streamText = '';
+      }
+    }else if(msg.type==='status'){
+      if(msg.status==='thinking'||msg.status==='understanding') showToast('🧠 Pensando...');
+      else if(msg.status==='generating_voice') showToast('🔊 Generando voz...');
+      else if(msg.status==='speaking') showToast('🔊 Hablando...');
+      else if(msg.status==='wakeword') showToast('🔮 Di "Hey Jarvis"');
+      else if(msg.status==='wakeword_detected') showToast('🎯 ¡Te escucho!');
+    }else if(msg.type==='pong'){
+      if(latencyDisplay) latencyDisplay.textContent = Math.floor((Date.now()-lastMsgTime)/2)+'ms';
+    }
+  }
+
+  function addMessage(role,content){
+    const div = document.createElement('div');
+    div.className = 'msg '+role;
+    div.textContent = content;
+    chatMessages.appendChild(div);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+    return div;
+  }
+
+  let streamingEl = null;
+  function updateStreamingMsg(text){
+    if(!streamingEl){
+      streamingEl = document.createElement('div');
+      streamingEl.className = 'msg mystic';
+      chatMessages.appendChild(streamingEl);
+    }
+    const content = streamingEl.querySelector('.msg-content');
+    if(content) content.textContent = text;
+    else streamingEl.textContent = text;
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  }
+
+  function finalizeMsg(text){
+    streamingEl = null;
+  }
+
+  function sendText(text){
+    if(!text.trim()) return;
+    addMessage('user',text);
+    if(ws && ws.readyState===WebSocket.OPEN){
+      ws.send(JSON.stringify({type:'input_text',text:text}));
+      lastMsgTime = Date.now();
+    }else{
+      addMessage('system','Desconectado. Reconectando...');
+      connectWS();
+    }
+    textInput.value = '';
+    textInput.style.height = 'auto';
+  }
+
+  // ─── Live System Metrics ───
+  async function refreshSystemMetrics(){
+    try{
+      const r = await fetch('/api/system');
+      const d = await r.json();
+      if(d.error) return;
+      const cpu = d.cpu_percent||0, ram = d.ram_percent||0, disk = d.disk_percent||0;
+      document.getElementById('cpuFill').style.width = cpu+'%';
+      document.getElementById('cpuVal').textContent = cpu.toFixed(1)+'%';
+      document.getElementById('ramFill').style.width = ram+'%';
+      document.getElementById('ramVal').textContent = ram.toFixed(1)+'%';
+      document.getElementById('diskFill').style.width = disk+'%';
+      document.getElementById('diskVal').textContent = disk.toFixed(1)+'%';
+      document.getElementById('uptimeVal').textContent = Math.round(d.uptime_days||0)+'d '+(d.uptime_hours||'')+'h';
+    }catch(e){}
+  }
+  setInterval(refreshSystemMetrics, 5000);
+  setTimeout(refreshSystemMetrics, 1000);
+
+  textInput.addEventListener('keydown',(e)=>{
+    if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendText(textInput.value)}
+  });
+  sendBtn.addEventListener('click',()=>sendText(textInput.value));
+
+  function playAudioUrl(url){
+    try{
+      if(currentAudio){currentAudio.pause();currentAudio=null}
+      const audio = new Audio(url);
+      currentAudio = audio;
+      audio.play().catch(()=>{});
+      audio.onended = ()=>{currentAudio=null};
+    }catch(e){}
+  }
+
+  function initSpeech(){
+    const SR = window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){showToast('Voz no disponible');return null}
+    const recog = new SR();
+    recog.lang = 'es-ES';
+    recog.continuous = false;
+    recog.interimResults = true;
+    recog.onresult = (e)=>{
+      let final = '';
+      let interim = '';
+      for(let i=e.resultIndex;i<e.results.length;i++){
+        if(e.results[i].isFinal) final += e.results[i][0].transcript;
+        else interim += e.results[i][0].transcript;
+      }
+      if(final) textInput.value = final;
+      else textInput.value = interim;
+    };
+    recog.onend = ()=>{
+      isRecording = false;
+      voiceBtn.classList.remove('recording');
+      if(textInput.value.trim()) sendText(textInput.value);
+    };
+    recog.onerror = ()=>{
+      isRecording = false;
+      voiceBtn.classList.remove('recording');
+      showToast('Error de voz');
+    };
+    return recog;
+  }
+
+  voiceBtn.addEventListener('click',()=>{
+    if(isRecording){
+      if(recognition){try{recognition.stop()}catch(e){}}
+      isRecording = false;
+      voiceBtn.classList.remove('recording');
+      return;
+    }
+    if(!recognition) recognition = initSpeech();
+    if(!recognition){showToast('Voz no soportada');return}
+    try{
+      recognition.start();
+      isRecording = true;
+      voiceBtn.classList.add('recording');
+      showToast('Escuchando...');
+    }catch(e){showToast('Error al iniciar voz')}
+  });
+
+  if(toneBtn){
+    toneBtn.addEventListener('click',()=>{
+      toneIndex = (toneIndex+1)%toneOptions.length;
+      toneLabel.textContent = toneOptions[toneIndex];
+      if(ws && ws.readyState===WebSocket.OPEN){
+        ws.send(JSON.stringify({type:'set_tone',tone:toneOptions[toneIndex]}));
+      }
+      showToast('Tono: '+toneOptions[toneIndex]);
+    });
+  }
+
+  connectWS();
+
+  const cards = document.querySelectorAll('.card');
+  cards.forEach(card=>{
+    const inner = card.querySelector('.card-inner');
+    let touchStart = null;
+
+    card.addEventListener('click',(e)=>{
+      if(e.target.closest('[data-flip-off]')){card.classList.remove('flipped');return}
+      if(e.target.closest('.chat-btn')||e.target.closest('input')||e.target.closest('.exit-btn')) return;
+      card.classList.toggle('flipped');
+    });
+
+    card.addEventListener('mousemove',(e)=>{
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX-rect.left)/rect.width;
+      const y = (e.clientY-rect.top)/rect.height;
+      const rotY = (x-0.5)*20;
+      const rotX = (0.5-y)*20;
+      if(!card.classList.contains('flipped')){
+        inner.style.transform = 'rotateY('+rotY+'deg) rotateX('+rotX+'deg)';
+      }
+    });
+
+    card.addEventListener('mouseleave',()=>{
+      inner.style.transform = '';
+    });
+
+    card.addEventListener('touchstart',(e)=>{
+      const t = e.touches[0];
+      touchStart = {x:t.clientX,y:t.clientY};
+    },{passive:true});
+
+    card.addEventListener('touchmove',(e)=>{
+      if(!touchStart||card.classList.contains('flipped')) return;
+      const t = e.touches[0];
+      const rect = card.getBoundingClientRect();
+      const x = (t.clientX-rect.left)/rect.width;
+      const y = (t.clientY-rect.top)/rect.height;
+      const rotY = (x-0.5)*20;
+      const rotX = (0.5-y)*20;
+      inner.style.transform = 'rotateY('+rotY+'deg) rotateX('+rotX+'deg)';
+    },{passive:true});
+
+    card.addEventListener('touchend',()=>{
+      inner.style.transform = '';
+      touchStart = null;
+    });
+  });
+
+  let vol = 80;
+  document.querySelectorAll('.card-back').forEach(back=>{
+    back.addEventListener('wheel',(e)=>{e.stopPropagation()},{passive:true});
+  });
+
+  let threeReady = false;
+  function initThree(){
+    if(typeof THREE==='undefined'){setTimeout(initThree,500);return}
+    threeReady = true;
+    const container = document.getElementById('scene-container');
+    const w = container.clientWidth;
+    const h = container.clientHeight;
+    if(w===0||h===0){setTimeout(initThree,300);return}
+
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45,w/h,0.1,100);
+    camera.position.set(0,1.5,6);
+    camera.lookAt(0,0,0);
+
+    const renderer = new THREE.WebGLRenderer({antialias:true,alpha:true});
+    renderer.setSize(w,h);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.2;
+    container.appendChild(renderer.domElement);
+
+    const sceneGroup = new THREE.Group();
+    scene.add(sceneGroup);
+
+    const starsGeo = new THREE.BufferGeometry();
+    const starCount = 3000;
+    const starPos = new Float32Array(starCount*3);
+    for(let i=0;i<starCount*3;i++) starPos[i]=(Math.random()-0.5)*80;
+    starsGeo.setAttribute('position',new THREE.BufferAttribute(starPos,3));
+    const starsMat = new THREE.PointsMaterial({color:0xffffff,size:0.04,transparent:true,opacity:0.7,blending:THREE.AdditiveBlending,sizeAttenuation:true});
+    const stars = new THREE.Points(starsGeo,starsMat);
+    sceneGroup.add(stars);
+
+    function makeNebula(){
+      const count = 600;
+      const geo = new THREE.BufferGeometry();
+      const pos = new Float32Array(count*3);
+      const col = new Float32Array(count*3);
+      const sizes = new Float32Array(count);
+      const purple=new THREE.Color('#8B5CF6'),gold=new THREE.Color('#C8924B'),emerald=new THREE.Color('#34D399');
+      for(let i=0;i<count;i++){
+        const r=4+Math.random()*8,t=Math.random()*Math.PI*2,p=Math.random()*Math.PI;
+        pos[i*3]=r*Math.sin(p)*Math.cos(t)+(-2+Math.random()*4);
+        pos[i*3+1]=r*Math.cos(p)*0.4;
+        pos[i*3+2]=r*Math.sin(p)*Math.sin(t);
+        const c=i<count*0.33?purple:i<count*0.66?gold:emerald;
+        col[i*3]=c.r;col[i*3+1]=c.g;col[i*3+2]=c.b;
+        sizes[i]=0.05+Math.random()*0.12;
+      }
+      geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+      geo.setAttribute('color',new THREE.BufferAttribute(col,3));
+      geo.setAttribute('size',new THREE.BufferAttribute(sizes,1));
+      const mat=new THREE.PointsMaterial({size:0.1,vertexColors:true,transparent:true,opacity:0.5,blending:THREE.AdditiveBlending,sizeAttenuation:true});
+      return new THREE.Points(geo,mat);
+    }
+    const nebula = makeNebula();
+    sceneGroup.add(nebula);
+
+    function makePlanetTexture(baseColor,variation){
+      const c=document.createElement('canvas');c.width=256;c.height=256;
+      const ctx=c.getContext('2d');
+      const r=parseInt(baseColor.slice(1,3),16),g=parseInt(baseColor.slice(3,5),16),b=parseInt(baseColor.slice(5,7),16);
+      const img=ctx.createImageData(256,256);
+      for(let y=0;y<256;y++) for(let x=0;x<256;x++){
+        const i=(y*256+x)*4;
+        const n=(Math.random()-0.5)*variation;
+        img.data[i]=Math.max(0,Math.min(255,r+n));
+        img.data[i+1]=Math.max(0,Math.min(255,g+n));
+        img.data[i+2]=Math.max(0,Math.min(255,b+n));
+        img.data[i+3]=255;
+      }
+      ctx.putImageData(img,0,0);
+      return new THREE.CanvasTexture(c);
+    }
+
+    const planetTex = makePlanetTexture('#C8924B',40);
+    const planetGeo = new THREE.SphereGeometry(0.7,48,48);
+    const planetMat = new THREE.MeshStandardMaterial({map:planetTex,roughness:0.6,metalness:0.15});
+    const planet = new THREE.Mesh(planetGeo,planetMat);
+    sceneGroup.add(planet);
+
+    const ringGeo = new THREE.TorusGeometry(1.2,0.04,16,120);
+    const ringMat = new THREE.MeshStandardMaterial({color:0xC8924B,transparent:true,opacity:0.3,side:THREE.DoubleSide});
+    const ring = new THREE.Mesh(ringGeo,ringMat);
+    ring.rotation.x = Math.PI/2.5;
+    sceneGroup.add(ring);
+
+    const ring2Geo = new THREE.TorusGeometry(1.5,0.02,16,120);
+    const ring2Mat = new THREE.MeshStandardMaterial({color:0xa8b589,transparent:true,opacity:0.15,side:THREE.DoubleSide});
+    const ring2 = new THREE.Mesh(ring2Geo,ring2Mat);
+    ring2.rotation.x = Math.PI/2.5;
+    ring2.rotation.z = 0.2;
+    sceneGroup.add(ring2);
+
+    const moons = [];
+    const moonDefs = [
+      {radius:2.0,size:0.14,color:0xa8b589,speed:0.6,phase:0},
+      {radius:2.7,size:0.1,color:0xc0603a,speed:0.4,phase:Math.PI*0.7},
+      {radius:3.3,size:0.08,color:0x8B5CF6,speed:0.3,phase:Math.PI*1.4},
+      {radius:3.9,size:0.06,color:0x34D399,speed:0.2,phase:Math.PI*2.1}
+    ];
+    moonDefs.forEach(d=>{
+      const g=new THREE.SphereGeometry(d.size,16,16);
+      const m=new THREE.MeshStandardMaterial({color:d.color,emissive:d.color,emissiveIntensity:0.15});
+      const mesh=new THREE.Mesh(g,m);
+      mesh.position.x=d.radius*Math.cos(d.phase);
+      mesh.position.z=d.radius*Math.sin(d.phase);
+      sceneGroup.add(mesh);
+      const glowGeo=new THREE.SphereGeometry(d.size*2,8,8);
+      const glowMat=new THREE.MeshBasicMaterial({color:d.color,transparent:true,opacity:0.08});
+      const glow=new THREE.Mesh(glowGeo,glowMat);
+      mesh.add(glow);
+      moons.push({mesh,radius:d.radius,speed:d.speed,angle:d.phase});
+    });
+
+    const ambient = new THREE.AmbientLight(0x222244,0.4);
+    scene.add(ambient);
+    const light1 = new THREE.PointLight(0xC8924B,0.8,12);
+    light1.position.set(3,4,5);
+    scene.add(light1);
+    const light2 = new THREE.PointLight(0x8B5CF6,0.4,10);
+    light2.position.set(-4,-1,3);
+    scene.add(light2);
+    const light3 = new THREE.DirectionalLight(0xffffff,0.3);
+    light3.position.set(0,5,0);
+    scene.add(light3);
+
+    let targetRX=0,targetRY=0,curRX=0,curRY=0;
+
+    document.addEventListener('mousemove',(e)=>{
+      targetRX = -((e.clientY/window.innerHeight)*2-1)*0.08;
+      targetRY = ((e.clientX/window.innerWidth)*2-1)*0.08;
+    });
+
+    document.addEventListener('touchmove',(e)=>{
+      const t=e.touches[0];
+      targetRX = -((t.clientY/window.innerHeight)*2-1)*0.08;
+      targetRY = ((t.clientX/window.innerWidth)*2-1)*0.08;
+    },{passive:true});
+
+    document.addEventListener('deviceorientation',(e)=>{
+      if(e.gamma!==null&&e.beta!==null){
+        targetRY = Math.max(-0.08,Math.min(0.08,(-e.gamma/90)*0.08));
+        targetRX = Math.max(-0.08,Math.min(0.08,((-e.beta+45)/90)*0.08));
+      }
+    });
+
+    let time = 0;
+    function animate(){
+      requestAnimationFrame(animate);
+      time += 0.005;
+
+      planet.rotation.y += 0.004;
+      ring.rotation.y += 0.003;
+      ring2.rotation.y += 0.002;
+
+      moons.forEach(m=>{
+        m.angle += 0.008*m.speed;
+        m.mesh.position.x = m.radius*Math.cos(m.angle);
+        m.mesh.position.z = m.radius*Math.sin(m.angle);
+        m.mesh.rotation.y += 0.01;
+      });
+
+      if(nebula.geometry.attributes.position){
+        const nbPos = nebula.geometry.attributes.position.array;
+        for(let i=0;i<nbPos.length;i+=3){
+          nbPos[i] += (Math.random()-0.5)*0.0008;
+          nbPos[i+1] += (Math.random()-0.5)*0.0008;
+          nbPos[i+2] += (Math.random()-0.5)*0.0008;
+        }
+        nebula.geometry.attributes.position.needsUpdate = true;
+      }
+
+      curRX += (targetRX-curRX)*0.03;
+      curRY += (targetRY-curRY)*0.03;
+      sceneGroup.rotation.x = curRX;
+      sceneGroup.rotation.y = curRY;
+
+      stars.rotation.y += 0.0001;
+
+      renderer.render(scene,camera);
+    }
+
+    animate();
+
+    window.addEventListener('resize',()=>{
+      const cw=container.clientWidth,ch=container.clientHeight;
+      if(cw>0&&ch>0){
+        camera.aspect=cw/ch;camera.updateProjectionMatrix();
+        renderer.setSize(cw,ch);
+      }
+    });
+  }
+
+  initThree();
+
+  document.addEventListener('click',(e)=>{
+    if(!e.target.closest('.card')&&!e.target.closest('#toast')){
+      cards.forEach(c=>c.classList.remove('flipped'));
+    }
+  });
+
+  document.addEventListener('keydown',(e)=>{
+    if(e.key==='Escape') cards.forEach(c=>c.classList.remove('flipped'));
+  });
+
+  if(document.querySelector('[data-card="memoria"]')){
+    const mc = document.getElementById('memoryCount');
+    if(mc) mc.textContent = Math.floor(Math.random()*500)+500;
+  }
+
+  window.addEventListener('beforeunload',()=>{
+    if(ws){ws.close()}
+    if(pingInterval) clearInterval(pingInterval);
+  });
+
+})();
+</script>
+</body>
+</html>
