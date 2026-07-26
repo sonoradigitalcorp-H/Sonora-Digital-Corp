@@ -1,0 +1,19 @@
+[Unit]
+Description=Twilio Voice Bridge — Llamadas telefonicas IA
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+Environment=PYTHONPATH=/home/ubuntu/sonora-digital-corp
+Environment=TWILIO_ACCOUNT_SID=
+Environment=TWILIO_AUTH_TOKEN=
+Environment=TWILIO_PHONE_NUMBER=+526621072254
+Environment=BASE_URL=https://voice.sonoradigitalcorp.com
+ExecStart=/usr/bin/python3 -m apps.twilio_voice.server
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target
