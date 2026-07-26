@@ -81,6 +81,16 @@ capabilities:
     cost_tier: 1
     description: "Process payments via Stripe or Mercado Pago"
 
+  - id: multi-tenant-platform
+    path: capabilities/multi-tenant-platform/
+    type: core
+    domain: system
+    version: 1.0.0
+    status: draft
+    agent: mystic
+    cost_tier: 2
+    description: "Multi-tenant platform architecture with tenant isolation, branding, and white-label"
+
   - id: clone-person
     path: capabilities/clone-person/
     type: business
