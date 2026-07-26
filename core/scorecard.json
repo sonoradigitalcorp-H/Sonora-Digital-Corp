@@ -11,11 +11,11 @@
     "memory_count": 6,
     "events_count": 0,
     "git_ahead": 0,
-    "git_behind": 2,
+    "git_behind": 8,
     "specs": 9,
     "gherkin_features": 28,
     "step_definitions": 8,
     "adrs": 16
   },
-  "updated": "2026-07-26T07:32:24.012863Z"
+  "updated": "2026-07-26T09:12:36.048978Z"
 }

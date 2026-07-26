@@ -29,14 +29,12 @@
 | 2026-07-03 | SPEC-20260703-B | Cognitive Kernel: Kernel Separation | 3 | 85 | completed | [link](20260703-cognitive-kernel-b/LECCION.md) |
 | 2026-07-03 | SPEC-20260703-C | Cognitive Kernel: Intelligence Layer | 3 | 84 | completed | [link](20260703-cognitive-kernel-c/LECCION.md) |
 | 2026-07-04 | 20260704-eca-fase1 | Enterprise Cognitive Architecture: Fase 1 | 3 | 88 | completed | [link](20260704-eca-fase1/LECCION.md) |
-
-> **20260704-eca-fase1**: 40 archivos nuevos, 15 movidos, 0 borrados. Execution Kernel (24 tests), Evolution Loop (19 tests), Artist Intelligence (17 tests). Reorganización apps/ en 7 niveles cognitivos. Stack Lock, Control Plane, Scoreboard Dashboard, GitHub Pages, Vercel Secrets.
-| SPEC-202 | SPEC-20260704-ABE-001 | ... | ... | ... | completed | ... |
-| 2026-07-08 | 20260708-evolution | ... | ... | ... | completed | ... |
-
-| 2026-07-08 | SPEC-20260708-HAS-FULL | HAS Architecture Complete — All 11 Phases Implemented | 3 | 50 | completed | [link](20260708-has-full/LECCION.md) || 2026-07-10 | 20260710-content-pipeline | ... | ... | ... | completed | ... |
-| 2026-07-10 | 20260710-full-inventory | ... | ... | ... | completed | ... |
-| 2026-07-11 | 20260711-AE-FIXES | ... | ... | ... | completed | ... |
-| 2026-07-10 | 20260710-mystik-abe-complete | ... | ... | ... | completed | ... |
-| 2026-07-21 | SPEC-20260721-MYSTIC-SHIELD | Mystic Shield — Diagnóstico IA de ciberseguridad | 3 | 80 | activo | [link](../active/SPEC-20260721-MYSTIC-SHIELD/LECCION.md) |
-| 2026-07-24 | 20260724-sdd-stabilization | ... | ... | ... | completed | ... |
+| 2026-07-04 | SPEC-20260704-ABE-001 | ABE Evolution — Fase 1 | 2 | — | completed | — |
+| 2026-07-08 | 20260708-evolution | Evolution Dashboard | 2 | — | completed | — |
+| 2026-07-08 | SPEC-20260708-HAS-FULL | HAS Architecture Complete — All 11 Phases | 3 | 50 | completed | [link](20260708-has-full/LECCION.md) |
+| 2026-07-10 | 20260710-content-pipeline | Content Pipeline — Ghost CMS | 2 | — | completed | — |
+| 2026-07-10 | 20260710-full-inventory | Full Inventory Scan | 2 | — | completed | — |
+| 2026-07-10 | 20260710-mystik-abe-complete | Mystik + ABE Complete | 2 | — | completed | — |
+| 2026-07-11 | 20260711-AE-FIXES | AE Fixes — Production Hotfixes | 1 | — | completed | — |
+| 2026-07-24 | 20260724-sdd-stabilization | SDD Stabilization — F3 Framework | 3 | — | completed | [link](20260724-sdd-stabilization/LECCION-20260724-001.md) |
+| 2026-07-26 | SPEC-20260725-MYSTIC-VOICE-SHIP | Mystic Voice Ship — Asistente Personal Completo | 2 | 80 | completado | [link](20260726-mystic-voice-ship/LECCION.md) |
