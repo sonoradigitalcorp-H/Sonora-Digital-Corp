@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AztroTech AI — Demo para César</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0a0e17;color:#e8edf5;overflow-x:hidden}
+.container{max-width:800px;margin:0 auto;padding:24px}
+
+/* Header */
+.header{text-align:center;padding:40px 0 20px}
+.logo{font-size:32px;font-weight:800;background:linear-gradient(135deg,#00d4ff,#0ea5e9,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px}
+.tagline{font-size:13px;color:rgba(255,255,255,0.3);margin-top:4px;letter-spacing:3px}
+.badge{display:inline-block;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);color:#00d4ff;padding:4px 12px;border-radius:20px;font-size:10px;letter-spacing:1px;margin-top:8px}
+
+/* Cards */
+.card{background:rgba(17,23,40,0.6);border:1px solid rgba(255,255,255,0.04);border-radius:16px;padding:24px;margin-bottom:16px;backdrop-filter:blur(10px)}
+.card h2{font-size:14px;font-weight:600;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:2px;margin-bottom:16px}
+.card h2 span{color:#00d4ff}
+.card h3{font-size:20px;font-weight:600;margin-bottom:8px}
+.card p{font-size:14px;line-height:1.6;color:rgba(255,255,255,0.65)}
+.card .price{font-size:48px;font-weight:200;color:#00d4ff}
+.card .price span{font-size:16px;color:rgba(255,255,255,0.3)}
+
+/* Grid */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+
+/* Metric */
+.metric{text-align:center;padding:16px;background:rgba(0,212,255,0.03);border-radius:12px;border:1px solid rgba(0,212,255,0.06)}
+.metric .num{font-size:28px;font-weight:700;color:#00d4ff}
+.metric .label{font-size:11px;color:rgba(255,255,255,0.3);margin-top:4px;text-transform:uppercase;letter-spacing:1px}
+
+/* Funnel */
+.funnel{position:relative;padding:8px 0}
+.funnel-step{display:flex;align-items:center;gap:16px;padding:12px 16px;margin-bottom:4px;border-radius:10px;background:rgba(255,255,255,0.02);border-left:3px solid}
+.funnel-step .step-num{font-size:11px;font-weight:700;color:rgba(255,255,255,0.2);width:20px}
+.funnel-step .step-text{flex:1;font-size:13px;color:rgba(255,255,255,0.6)}
+.funnel-step .step-pct{font-size:14px;font-weight:600}
+.funnel-step .step-cost{font-size:11px;color:rgba(255,255,255,0.3)}
+
+/* Progress bar */
+.bar{height:4px;background:rgba(255,255,255,0.04);border-radius:2px;margin:8px 0;overflow:hidden}
+.bar-fill{height:100%;border-radius:2px;background:linear-gradient(90deg,#00d4ff,#0ea5e9,#7c3aed);transition:width 1s}
+
+/* Section divider */
+.section-title{font-size:11px;font-weight:600;color:rgba(255,255,255,0.2);text-transform:uppercase;letter-spacing:3px;margin:32px 0 16px;text-align:center}
+
+/* Footer */
+.footer{text-align:center;padding:40px 0;font-size:11px;color:rgba(255,255,255,0.15)}
+.footer .powered{color:rgba(255,255,255,0.3)}
+.footer .powered span{color:#00d4ff}
+
+/* Responsive */
+@media(max-width:600px){.grid2,.grid3{grid-template-columns:1fr}.container{padding:12px}}
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="logo">✦ AZTROTECH AI</div>
+    <div class="tagline">INTELIGENCIA ARTIFICIAL PARA TU NEGOCIO</div>
+    <div class="badge">⚡ Powered by Sonora Digital Corp</div>
+  </div>
+
+  <!-- Métricas clave -->
+  <div class="grid3">
+    <div class="metric">
+      <div class="num">$0</div>
+      <div class="label">Costo activación</div>
+    </div>
+    <div class="metric">
+      <div class="num">$1.69</div>
+      <div class="label">Por cliente/mes</div>
+    </div>
+    <div class="metric">
+      <div class="num">94%</div>
+      <div class="label">Margen para ti</div>
+    </div>
+  </div>
+
+  <!-- El Producto -->
+  <div class="section-title">✦ Lo que compras</div>
+  <div class="grid2">
+    <div class="card">
+      <h2>🎙️ Voz</h2>
+      <h3>Habla como persona</h3>
+      <p>Reconoce voz, entiende contexto, responde con voz natural. Wake word "Hey AztroTech". Kokoro TTS en español.</p>
+      <div class="bar"><div class="bar-fill" style="width:100%"></div></div>
+      <p style="font-size:11px;color:rgba(255,255,255,0.3)">Costo operación: $0 (local)</p>
+    </div>
+    <div class="card">
+      <h2>🧠 Memoria</h2>
+      <h3>Recuerda todo</h3>
+      <p>Cada cliente tiene su propio historial. El sistema sabe quién es cada quien cuando habla.</p>
+      <div class="bar"><div class="bar-fill" style="width:100%;background:linear-gradient(90deg,#0ea5e9,#7c3aed)"></div></div>
+      <p style="font-size:11px;color:rgba(255,255,255,0.3)">Engram 7 capas · por tenant</p>
+    </div>
+    <div class="card">
+      <h2>🌐 Web</h2>
+      <h3>Navega por ti</h3>
+      <p>"Busca el precio del cobre" → Playwright abre Google, lee resultados, Kokoro te los cuenta.</p>
+      <div class="bar"><div class="bar-fill" style="width:30%;background:linear-gradient(90deg,#7c3aed,#c084fc)"></div></div>
+      <p style="font-size:11px;color:rgba(255,255,255,0.3)">$0.00026 por búsqueda</p>
+    </div>
+    <div class="card">
+      <h2>📊 CRM</h2>
+      <h3>Gestiona clientes</h3>
+      <p>Leads, contactos, seguimientos, citas. Todo desde una conversación.</p>
+      <div class="bar"><div class="bar-fill" style="width:70%;background:linear-gradient(90deg,#c084fc,#00d4ff)"></div></div>
+      <p style="font-size:11px;color:rgba(255,255,255,0.3)">Incluye calendario</p>
+    </div>
+  </div>
+
+  <!-- El Funnel de Onboarding -->
+  <div class="section-title">✦ Cómo se activa un cliente</div>
+  <div class="card">
+    <div class="funnel">
+      <div class="funnel-step" style="border-color:#00d4ff">
+        <span class="step-num">01</span>
+        <span class="step-text">César genera código → lo envía por WhatsApp</span>
+        <span class="step-pct" style="color:#00d4ff">$0</span>
+      </div>
+      <div class="funnel-step" style="border-color:#0ea5e9">
+        <span class="step-num">02</span>
+        <span class="step-text">Cliente recibe código y lo activa</span>
+        <span class="step-pct" style="color:#0ea5e9">$0</span>
+      </div>
+      <div class="funnel-step" style="border-color:#7c3aed">
+        <span class="step-num">03</span>
+        <span class="step-text">Sistema cobra (Stripe/MercadoPago)</span>
+        <span class="step-pct" style="color:#7c3aed">3%</span>
+      </div>
+      <div class="funnel-step" style="border-color:#c084fc">
+        <span class="step-num">04</span>
+        <span class="step-text">Kokoro genera audio de bienvenida personalizado</span>
+        <span class="step-pct" style="color:#c084fc">$0</span>
+      </div>
+      <div class="funnel-step" style="border-color:#00d4ff">
+        <span class="step-num">05</span>
+        <span class="step-text">WhatsApp envía audio + instrucciones al cliente</span>
+        <span class="step-pct" style="color:#00d4ff">$0</span>
+      </div>
+      <div class="funnel-step" style="border-color:#10b981;background:rgba(16,185,129,0.05)">
+        <span class="step-num">✅</span>
+        <span class="step-text" style="color:#10b981;font-weight:600">Cliente activado — ya habla con su agente</span>
+        <span class="step-pct" style="color:#10b981">⚡</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- El Funnel de Interacción -->
+  <div class="section-title">✦ Qué pasa cuando un cliente habla</div>
+  <div class="card">
+    <div style="padding:8px 0">
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 0;opacity:0.8">
+        <span style="font-size:20px">🔮</span>
+        <span style="flex:1;font-size:13px">Wake word "Hey AztroTech"</span>
+        <span style="font-size:11px;color:rgba(255,255,255,0.3)">openWakeWord</span>
+        <span style="font-size:13px;font-weight:600;color:#10b981">$0</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 0;opacity:0.8">
+        <span style="font-size:20px">🎤</span>
+        <span style="flex:1;font-size:13px">Transcripción de voz</span>
+        <span style="font-size:11px;color:rgba(255,255,255,0.3)">Whisper base</span>
+        <span style="font-size:13px;font-weight:600;color:#10b981">$0</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 0">
+        <span style="font-size:20px">🏷️</span>
+        <span style="flex:1;font-size:13px">Clasificar intención</span>
+        <span style="font-size:11px;color:rgba(255,255,255,0.3)">tinyllama:1.1b</span>
+        <span style="font-size:13px;font-weight:600;color:#10b981">$0</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-top:1px solid rgba(255,255,255,0.04)">
+        <span style="font-size:20px">🧠</span>
+        <span style="flex:1;font-size:13px;font-weight:500">Razonamiento complejo (deepseek)</span>
+        <span style="font-size:11px;color:rgba(255,255,255,0.3)">deepseek-v4-flash</span>
+        <span style="font-size:13px;font-weight:600;color:#f59e0b">$0.00026</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 0">
+        <span style="font-size:20px">🌐</span>
+        <span style="flex:1;font-size:13px;font-weight:500">Browser action (navegar web)</span>
+        <span style="font-size:11px;color:rgba(255,255,255,0.3)">deepseek + Playwright</span>
+        <span style="font-size:13px;font-weight:600;color:#f59e0b">$0.00052</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:12px;padding:8px 0;border-top:2px solid rgba(8,185,129,0.2)">
+        <span style="font-size:20px">🔊</span>
+        <span style="flex:1;font-size:13px;font-weight:600">Respuesta de voz</span>
+        <span style="font-size:11px;color:rgba(255,255,255,0.3)">Kokoro-82M</span>
+        <span style="font-size:16px;font-weight:700;color:#10b981">$0</span>
+      </div>
+      <div style="margin-top:12px;padding:12px;background:rgba(16,185,129,0.05);border-radius:8px;text-align:center">
+        <span style="font-size:13px;color:rgba(255,255,255,0.6)">80% de interacciones son completamente </span>
+        <span style="font-size:14px;font-weight:700;color:#10b981">GRATIS</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Costos -->
+  <div class="section-title">✦ Cuánto cuesta realmente</div>
+  <div class="grid2">
+    <div class="card">
+      <h2>📊 Estimación mensual</h2>
+      <div style="margin-top:12px">
+        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px">
+          <span style="color:rgba(255,255,255,0.5)">Infraestructura fija (VPS + dominio)</span>
+          <span style="font-weight:600">$16.00</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px">
+          <span style="color:rgba(255,255,255,0.5)">OpenRouter (deepseek, ~2,000 usos)</span>
+          <span style="font-weight:600">$0.88</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-top:1px solid rgba(255,255,255,0.06);font-weight:600">
+          <span>TOTAL</span>
+          <span style="color:#00d4ff">$16.88/mes</span>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <h2>💰 Tu ganancia</h2>
+      <div style="margin-top:12px">
+        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px">
+          <span style="color:rgba(255,255,255,0.5)">Vendes a $29/cliente</span>
+          <span style="font-weight:600">$290</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px">
+          <span style="color:rgba(255,255,255,0.5)">Costo SDC (10 clientes)</span>
+          <span style="font-weight:600;color:#ef4444">($33.78)</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding:6px 0;font-size:13px;border-top:1px solid rgba(255,255,255,0.06);font-weight:600">
+          <span>GANANCIA</span>
+          <span style="color:#10b981;font-size:18px">$256.22</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Precios para clientes -->
+  <div class="section-title">✦ Planes que vendes a tus clientes</div>
+  <div class="grid3">
+    <div class="card" style="border-color:rgba(0,212,255,0.15)">
+      <h2>⚡ Starter</h2>
+      <div class="price">$19<span>/mes</span></div>
+      <div style="margin-top:12px;font-size:13px;color:rgba(255,255,255,0.5);line-height:2">
+        · 1 agente (CRM o Voz)<br>
+        · Chat + voz + memoria<br>
+        · 1,000 interacciones/mes<br>
+        · Tu logo + colores
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(0,212,255,0.3);background:rgba(0,212,255,0.03)">
+      <h2 style="color:#00d4ff">🔥 Pro</h2>
+      <div class="price">$49<span>/mes</span></div>
+      <div style="margin-top:12px;font-size:13px;color:rgba(255,255,255,0.5);line-height:2">
+        · 3 agentes (CRM + Voz + Web)<br>
+        · Browser actions + RAG<br>
+        · 5,000 interacciones/mes<br>
+        · Onboarding automático
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(124,58,237,0.2)">
+      <h2>🏢 Enterprise</h2>
+      <div class="price">$99<span>/mes</span></div>
+      <div style="margin-top:12px;font-size:13px;color:rgba(255,255,255,0.5);line-height:2">
+        · Agentes ilimitados<br>
+        · Clientes de tus clientes<br>
+        · 25,000 interacciones/mes<br>
+        · API white-label + soporte
+      </div>
+    </div>
+  </div>
+
+  <!-- Cierre -->
+  <div class="card" style="text-align:center;border-color:rgba(0,212,255,0.15);background:rgba(0,212,255,0.02)">
+    <h2 style="font-size:16px;color:#edf0f7;text-transform:none;letter-spacing:1px">✦ Listo para escalar</h2>
+    <p style="font-size:15px;color:rgba(255,255,255,0.7);margin:12px 0 20px">
+    "César, esto funciona desde el día 1. Sin servidores, sin código, sin riesgos.<br>
+    Tus clientes reciben un asistente IA con TU marca, TU voz, TU personalidad.<br>
+    Y mientras duermes, el sistema trabaja, cobra y aprende."
+    </p>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <span style="background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);color:#00d4ff;padding:8px 16px;border-radius:20px;font-size:12px">✅ 0$ activación</span>
+      <span style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);color:#10b981;padding:8px 16px;border-radius:20px;font-size:12px">💰 94% margen</span>
+      <span style="background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);color:#a78bfa;padding:8px 16px;border-radius:20px;font-size:12px">⚡ Automático 24/7</span>
+    </div>
+  </div>
+
+  <div class="footer">
+    <div class="powered">✦ <span>Sonora Digital Corp</span> — White-Label AI Platform</div>
+    <div style="margin-top:4px">$0.00026 por razonamiento · $0 el resto · 94% margen para partners</div>
+  </div>
+
+</div>
+</body>
+</html>
