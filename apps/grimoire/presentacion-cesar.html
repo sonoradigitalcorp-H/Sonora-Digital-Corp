@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎯 Asociación SDC × AztroTech</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:#0a0e17;overflow:hidden;width:100vw;height:100vh}
+.slide{width:100vw;height:100vh;display:none;flex-direction:column;justify-content:center;align-items:center;padding:60px;position:relative;overflow:hidden}
+.slide.active{display:flex}
+.bg-particle{position:absolute;width:4px;height:4px;background:rgba(0,212,255,0.15);border-radius:50%;pointer-events:none}
+h1{font-size:clamp(32px,5vw,72px);font-weight:800;color:#fff;text-align:center;line-height:1.2;max-width:900px}
+h1 .hl{background:linear-gradient(135deg,#00d4ff,#7b2fff,#ff006e);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+h2{font-size:clamp(24px,3.5vw,52px);font-weight:700;color:#fff;text-align:center;line-height:1.3;max-width:800px}
+h3{font-size:clamp(18px,2.5vw,36px);font-weight:600;color:#00d4ff;text-align:center;margin-bottom:20px}
+p{font-size:clamp(16px,2vw,28px);color:rgba(255,255,255,0.75);text-align:center;line-height:1.6;max-width:800px}
+p.small{font-size:clamp(12px,1.2vw,18px);color:rgba(255,255,255,0.4)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:30px;max-width:900px;width:100%;margin-top:20px}
+.card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:30px;text-align:center}
+.card .num{font-size:clamp(36px,4vw,64px);font-weight:800;color:#00d4ff}
+.card .lbl{font-size:clamp(12px,1.2vw,18px);color:rgba(255,255,255,0.4);margin-top:8px;text-transform:uppercase;letter-spacing:2px}
+.card .sub{font-size:clamp(10px,1vw,14px);color:rgba(255,255,255,0.2);margin-top:4px}
+.highlight-box{background:rgba(0,212,255,0.05);border:1px solid rgba(0,212,255,0.15);border-radius:16px;padding:30px 40px;text-align:center;max-width:700px}
+.highlight-box .big{font-size:clamp(40px,5vw,80px);font-weight:800;background:linear-gradient(135deg,#00d4ff,#7b2fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.highlight-box .desc{font-size:clamp(14px,1.5vw,22px);color:rgba(255,255,255,0.6);margin-top:8px}
+.controls{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:100;display:flex;gap:12px;align-items:center}
+.controls button{width:48px;height:48px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);color:#fff;font-size:18px;cursor:pointer;transition:0.3s}
+.controls button:hover{background:rgba(0,212,255,0.1);border-color:rgba(0,212,255,0.3)}
+.controls .page{font-size:12px;color:rgba(255,255,255,0.3);letter-spacing:2px}
+.progress{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#00d4ff,#7b2fff);transition:width 0.5s;z-index:200}
+.tag{position:fixed;top:20px;right:24px;z-index:100;font-size:11px;color:rgba(255,255,255,0.15);letter-spacing:2px}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress" style="width:14.2%"></div>
+<div class="tag">✦ SDC × AZTROTECH</div>
+
+<!-- SLIDE 1: Portada -->
+<div class="slide active" data-idx="0">
+  <h1>🎯 <span class="hl">$1M MENSUAL</span><br>No es una app. Es una fábrica.</h1>
+  <p style="margin-top:24px">SDC × AztroTech — La asociación que multiplica</p>
+  <div style="margin-top:40px;display:flex;gap:16px">
+    <div style="padding:12px 24px;border:1px solid rgba(0,212,255,0.2);border-radius:30px;color:#00d4ff;font-size:14px">60/40 → 50/50</div>
+    <div style="padding:12px 24px;border:1px solid rgba(255,255,255,0.06);border-radius:30px;color:rgba(255,255,255,0.4);font-size:14px">Sin techo</div>
+  </div>
+</div>
+
+<!-- SLIDE 2: El Problema -->
+<div class="slide" data-idx="1">
+  <h3>🔥 EL PROBLEMA</h3>
+  <h2>Vendes apps de $50K. Una vez.</h2>
+  <p style="margin-top:20px">Tus clientes pagan una vez y se van. Tú buscas el siguiente.</p>
+  <p class="small" style="margin-top:30px">Eso no es un negocio. Es una carrera de hámster.</p>
+  <div class="grid" style="margin-top:30px">
+    <div class="card">
+      <div class="num">20</div>
+      <div class="lbl">Clientes nuevos CADA MES</div>
+      <div class="sub">Para facturar $1M sin recurrencia</div>
+    </div>
+    <div class="card">
+      <div class="num">$0</div>
+      <div class="lbl">Ingreso recurrente</div>
+      <div class="sub">Empiezas de cero cada mes</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 3: La Solución -->
+<div class="slide" data-idx="2">
+  <h3>💡 LA SOLUCIÓN</h3>
+  <h2>Agentes VIVOS que trabajan 24/7</h2>
+  <div class="grid" style="margin-top:30px">
+    <div class="card" style="border-color:rgba(0,212,255,0.15)">
+      <div style="font-size:40px;margin-bottom:8px">🎧</div>
+      <div class="lbl">Soporte Pro</div>
+      <div class="sub">Llamadas + tickets + 24/7</div>
+    </div>
+    <div class="card" style="border-color:rgba(124,58,237,0.15)">
+      <div style="font-size:40px;margin-bottom:8px">📢</div>
+      <div class="lbl">Content Engine</div>
+      <div class="sub">Crea + publica con tu marca</div>
+    </div>
+    <div class="card" style="border-color:rgba(255,107,53,0.15)">
+      <div style="font-size:40px;margin-bottom:8px">💰</div>
+      <div class="lbl">Sales Hunter</div>
+      <div class="sub">Prospecta + califica + cierra</div>
+    </div>
+    <div class="card" style="border-color:rgba(16,185,129,0.15)">
+      <div style="font-size:40px;margin-bottom:8px">🧘</div>
+      <div class="lbl">Superación Personal</div>
+      <div class="sub">Coaching + accountability</div>
+    </div>
+  </div>
+  <p style="margin-top:20px;font-size:clamp(14px,1.5vw,22px);color:#00d4ff">Cada cliente paga MENSUAL. No una vez.</p>
+</div>
+
+<!-- SLIDE 4: Los Números -->
+<div class="slide" data-idx="3">
+  <h3>💰 LOS NÚMEROS</h3>
+  <div class="grid" style="margin-top:20px">
+    <div class="card">
+      <div class="num">$600K</div>
+      <div class="lbl">Por cliente en 12 meses</div>
+      <div class="sub">$50K/mes × 12 meses</div>
+    </div>
+    <div class="card">
+      <div class="num">$1M</div>
+      <div class="lbl">Facturación mensual</div>
+      <div class="sub">Con 20 clientes</div>
+    </div>
+    <div class="card">
+      <div class="num">$12M</div>
+      <div class="lbl">Facturación anual</div>
+      <div class="sub">Sin techos, sin límites</div>
+    </div>
+    <div class="card">
+      <div class="num">87%</div>
+      <div class="lbl">Margen para ti</div>
+      <div class="sub">Sin costos de operación</div>
+    </div>
+  </div>
+</div>
+
+<!-- SLIDE 5: La Asociación -->
+<div class="slide" data-idx="4">
+  <h3>🤝 LA ASOCIACIÓN</h3>
+  <div class="grid" style="margin-top:20px">
+    <div class="card" style="border-color:rgba(0,212,255,0.2)">
+      <div style="font-size:32px;margin-bottom:12px">⚙️</div>
+      <div class="lbl" style="color:#00d4ff;font-size:16px">SDC pone</div>
+      <div class="sub" style="font-size:14px;color:rgba(255,255,255,0.5);margin-top:8px">
+        ✅ 36 agentes de IA<br>
+        ✅ Voz con Kokoro TTS<br>
+        ✅ Memoria + RAG<br>
+        ✅ Infraestructura enterprise<br>
+        ✅ Soporte 24/7
+      </div>
+    </div>
+    <div class="card" style="border-color:rgba(255,107,53,0.2)">
+      <div style="font-size:32px;margin-bottom:12px">🤝</div>
+      <div class="lbl" style="color:#ff6b35;font-size:16px">César pone</div>
+      <div class="sub" style="font-size:14px;color:rgba(255,255,255,0.5);margin-top:8px">
+        ✅ Clientes existentes<br>
+        ✅ Relaciones en Hermosillo<br>
+        ✅ Venta y gestión comercial<br>
+        ✅ Marca AztroTech<br>
+        ✅ Presencia local
+      </div>
+    </div>
+  </div>
+  <div class="highlight-box" style="margin-top:24px">
+    <div class="big">60/40</div>
+    <div class="desc">Hoy → 60% SDC · 40% César</div>
+    <div class="desc" style="font-size:clamp(12px,1.2vw,16px);color:rgba(255,255,255,0.3);margin-top:4px">50/50 cuando lleguemos a $2M/mes juntos</div>
+  </div>
+</div>
+
+<!-- SLIDE 6: Proyección -->
+<div class="slide" data-idx="5">
+  <h3>📈 PROYECCIÓN 12 MESES</h3>
+  <div style="display:flex;gap:20px;margin-top:30px;flex-wrap:wrap;justify-content:center">
+    <div style="background:rgba(0,212,255,0.03);border:1px solid rgba(0,212,255,0.1);border-radius:16px;padding:20px 30px;text-align:center;min-width:180px">
+      <div style="font-size:11px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:2px">Mes 1</div>
+      <div style="font-size:28px;font-weight:700;color:#00d4ff;margin:8px 0">$1M</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.3)">SDC: $600K · César: $400K</div>
+    </div>
+    <div style="background:rgba(124,58,237,0.03);border:1px solid rgba(124,58,237,0.1);border-radius:16px;padding:20px 30px;text-align:center;min-width:180px">
+      <div style="font-size:11px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:2px">Mes 6</div>
+      <div style="font-size:28px;font-weight:700;color:#7b2fff;margin:8px 0">$2M</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.3)">50/50 · $1M c/u</div>
+    </div>
+    <div style="background:rgba(255,107,53,0.03);border:1px solid rgba(255,107,53,0.1);border-radius:16px;padding:20px 30px;text-align:center;min-width:180px">
+      <div style="font-size:11px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:2px">Mes 12</div>
+      <div style="font-size:28px;font-weight:700;color:#ff6b35;margin:8px 0">$3M+</div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.3)">50/50 · $1.5M+ c/u</div>
+    </div>
+  </div>
+  <p style="margin-top:30px;font-size:clamp(14px,1.5vw,20px);color:rgba(255,255,255,0.4)">
+  Sin techo. Sin límite. Sin empleados. Solo una máquina que nunca para.
+  </p>
+</div>
+
+<!-- SLIDE 7: Cierre -->
+<div class="slide" data-idx="6">
+  <h1>¿<span class="hl">Empezamos</span> esta semana?</h1>
+  <div class="highlight-box" style="margin-top:30px">
+    <div class="big" style="font-size:clamp(28px,3.5vw,48px)">60/40 → 50/50</div>
+    <div class="desc">Tú vendes · Yo construyo · Los dos ganamos</div>
+  </div>
+  <div style="margin-top:40px;display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+    <div style="padding:10px 20px;background:rgba(0,212,255,0.1);border:1px solid rgba(0,212,255,0.2);border-radius:20px;color:#00d4ff;font-size:12px">✅ Setup en 1 semana</div>
+    <div style="padding:10px 20px;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:20px;color:#10b981;font-size:12px">💰 Sin inversión inicial</div>
+    <div style="padding:10px 20px;background:rgba(124,58,237,0.1);border:1px solid rgba(124,58,237,0.2);border-radius:20px;color:#a78bfa;font-size:12px">🚀 Clientes desde el día 1</div>
+  </div>
+  <p style="margin-top:40px;font-size:clamp(12px,1.2vw,16px);color:rgba(255,255,255,0.2)">
+  Sonora Digital Corp × AztroTech — Construyendo el futuro de los agentes IA
+  </p>
+</div>
+
+<div class="controls">
+  <button onclick="prevSlide()">◀</button>
+  <span class="page" id="pageCounter">1 / 7</span>
+  <button onclick="nextSlide()">▶</button>
+</div>
+
+<script>
+let current = 0;
+const slides = document.querySelectorAll('.slide');
+const total = slides.length;
+
+function showSlide(idx) {
+  slides.forEach(s => s.classList.remove('active'));
+  slides[idx].classList.add('active');
+  document.getElementById('pageCounter').textContent = `${idx+1} / ${total}`;
+  document.getElementById('progress').style.width = `${((idx+1)/total)*100}%`;
+}
+
+function nextSlide() { current = (current + 1) % total; showSlide(current); }
+function prevSlide() { current = (current - 1 + total) % total; showSlide(current); }
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === ' ') nextSlide();
+  if (e.key === 'ArrowLeft') prevSlide();
+});
+</script>
+</body>
+</html>
