@@ -1,0 +1,5 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "provider": "opencode",
+  "model": "deep-seek-v4-flash"
+}

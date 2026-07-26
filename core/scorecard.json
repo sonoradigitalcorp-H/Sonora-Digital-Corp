@@ -1,21 +1,21 @@
 {
-  "overall": 55,
+  "overall": 56,
   "metrics": {
     "agents": 9,
-    "capabilities": 9,
+    "capabilities": 10,
     "constitution_files": 30,
     "constitution_rules": 29,
     "tests_passed": 0,
     "tests_total": 0,
     "violations": 0,
-    "memory_count": 0,
+    "memory_count": 21,
     "events_count": 0,
     "git_ahead": 0,
-    "git_behind": 0,
-    "specs": 9,
+    "git_behind": 18,
+    "specs": 10,
     "gherkin_features": 28,
-    "step_definitions": 7,
-    "adrs": 10
+    "step_definitions": 8,
+    "adrs": 12
   },
-  "updated": "2026-07-21T21:51:08.073309Z"
+  "updated": "2026-07-26T15:39:00.838002Z"
 }

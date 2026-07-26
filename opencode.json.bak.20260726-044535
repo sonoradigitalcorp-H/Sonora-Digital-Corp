@@ -1,8 +1,11 @@
 {
   "$schema": "https://opencode.ai/config.json",
   "username": "Mystic — Sonora Digital Corp",
+  "provider": "opencode",
+  "model": "deep-seek-v4-flash",
   "default_agent": "mystic",
   "shell": "/bin/bash",
+  "fallbackProvider": "openrouter",
   "logLevel": "INFO",
   "instructions": [
     "constitution/OMEGA-PROMPT.md",

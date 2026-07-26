@@ -55,6 +55,29 @@ score:  ## Run observer and show scorecard
 constitution-gate:  ## Run constitution gate on active plan
 	python3 scripts/constitution-gate.py --plan process/active/PLAN.yaml
 
+# ─── Doctor / Preflight ───────────────────────────────────────────────────────
+
+doctor:  ## Run full preflight check (JSON, YAML, Docker, Git, env)
+	python3 scripts/preflight.py
+
+doctor-fix:  ## Run preflight and auto-fix what's possible
+	python3 scripts/preflight.py --fix
+
+doctor-quick:  ## Quick preflight (skip Docker + Git)
+	python3 scripts/preflight.py --skip-docker --skip-git
+
+doctor-json:  ## Preflight with JSON output
+	python3 scripts/preflight.py --json 2>/dev/null || python3 scripts/preflight.py
+
+alias:  ## Print shell aliases for daily use
+	@echo "# Add these to your ~/.bashrc or ~/.zshrc:"
+	@echo "alias doc='make doctor-quick'"
+	@echo "alias docf='make doctor-fix'"
+	@echo "alias occheck='python3 scripts/preflight.py --skip-docker --skip-git && opencode --version'"
+
+validate-configs:  ## Validate all JSON/YAML config files only
+	python3 scripts/preflight.py --skip-docker --skip-git
+
 # ─── Clean ───────────────────────────────────────────────────────────────────
 
 clean:  ## Clean cache and temp files

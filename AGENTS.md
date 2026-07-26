@@ -99,6 +99,30 @@ ops/playbooks/     — Recetas paso a paso para procedimientos estandarizados
 adrs/              — Architecture Decision Records
 ```
 
+## Preflight / Doctor
+
+```bash
+make doctor          # full validation (JSON, YAML, Docker, Git, env)
+make doctor-quick    # rápido (sin Docker/Git)
+make doctor-fix      # auto-corrige lo posible
+make validate-configs  # solo configs
+```
+
+El comando `scripts/preflight.py` valida toda la configuración del proyecto antes de desarrollar. Ejecútalo siempre que edites `opencode.json`, YAMLs de infraestructura, o config de tenants.
+
+Errores comunes que detecta:
+- JSON mal formado (el que tuviste con la `}` extra)
+- Claves `apiKey`/`fallbackProvider` incompatibles con OpenCode v1.18+
+- YAML con sintaxis inválida
+- Templates con variables Jinja2 no parseables
+- Permisos de scripts no ejecutables
+- Variables de entorno faltantes
+
+```bash
+# Alias recomendado para ~/.bashrc:
+alias occheck='make doctor-quick && opencode --version'
+```
+
 ## References
 
 - `CLAUDE.md` — session workflow (start/end/branch/PR)
