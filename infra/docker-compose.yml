@@ -50,7 +50,7 @@ services:
       retries: 3
 
   neo4j:
-    build: ./docker/neo4j
+    build: ./neo4j
     container_name: sdc-neo4j
     labels:
       - "sdc.domain=data"
@@ -83,7 +83,7 @@ services:
       start_period: 30s
 
   qdrant:
-    build: ./docker/qdrant
+    build: ./qdrant
     container_name: sdc-qdrant
     labels:
       - "sdc.domain=data"
@@ -108,7 +108,7 @@ services:
 
   # ── UX Domain: Communication channels ──
   mcp-server:
-    build: ./docker/mcp-server
+    build: ./mcp-server
     container_name: sdc-mcp-server
     labels:
       - "sdc.domain=ux"
@@ -179,7 +179,7 @@ services:
       start_period: 30s
 
   telegram-bot:
-    build: ./platforms/telegram
+    build: ./telegram
     container_name: sdc-telegram-bot
     labels:
       - "sdc.domain=ux"
@@ -196,7 +196,7 @@ services:
     mem_limit: 128m
     memswap_limit: 128m
     healthcheck:
-      test: ["CMD-SHELL", "timeout 3 bash -c '</dev/tcp/127.0.0.1/3003' 2>/dev/null || exit 1"]
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "-O", "/dev/null", "http://127.0.0.1:3003/health"]
       interval: 30s
       timeout: 10s
       retries: 3

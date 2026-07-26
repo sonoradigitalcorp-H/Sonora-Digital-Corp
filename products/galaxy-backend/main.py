@@ -242,6 +242,76 @@ async def health_check():
     )
 
 
+@app.get("/api/cost/daily")
+async def cost_daily():
+    """Daily LLM cost tracking per tenant."""
+    import sqlite3
+    from pathlib import Path
+    cost_db = Path("data/cost_tracker.db")
+    total = 0.0
+    by_tenant = {}
+    by_model = {}
+    if cost_db.exists():
+        try:
+            conn = sqlite3.connect(str(cost_db))
+            conn.row_factory = sqlite3.Row
+            cur = conn.execute("""SELECT tenant_id, model, SUM(cost) as total, COUNT(*) as calls
+                                   FROM operations WHERE date(created_at) = date("now")
+                                   GROUP BY tenant_id, model""")
+            for row in cur.fetchall():
+                t = row["tenant_id"]
+                m = row["model"]
+                c = row["total"]
+                calls = row["calls"]
+                total += c
+                by_tenant[t] = by_tenant.get(t, 0) + c
+                by_model[m] = by_model.get(m, 0) + c
+            conn.close()
+        except Exception as e:
+            pass
+    return {
+        "total": round(total, 6),
+        "currency": "USD",
+        "date": __import__("time").strftime("%Y-%m-%d"),
+        "budget": 0.50,
+        "by_tenant": {k: round(v, 6) for k, v in by_tenant.items()},
+        "by_model": {k: round(v, 6) for k, v in by_model.items()},
+        "provider": "openrouter",
+    }
+
+
+@app.get("/api/system/status")
+async def system_status():
+    """Full system status for the Grimoire."""
+    import subprocess, json
+    status = {
+        "status": "online",
+        "version": "3.0",
+        "agent": "Mystic",
+        "services": {},
+        "storage": {},
+        "uptime": time.time() - START_TIME,
+    }
+    try:
+        r = subprocess.run(["df", "-h", "/"], capture_output=True, text=True)
+        line = r.stdout.split(chr(10))[1].split()
+        status["storage"] = {"total": line[1], "used": line[2], "avail": line[3], "pct": line[4]}
+    except:
+        pass
+    try:
+        r = subprocess.run(["docker", "ps", "--format", "{{.Names}}|{{.Status}}"],
+                          capture_output=True, text=True, timeout=10)
+        containers = {}
+        for line in r.stdout.strip().split(chr(10)):
+            if "|" in line:
+                name, state = line.split("|", 1)
+                containers[name] = state.strip()
+        status["containers"] = containers
+    except:
+        pass
+    return status
+
+
 # ─── Galaxy Agents ─────────────────────────────────────────────
 
 

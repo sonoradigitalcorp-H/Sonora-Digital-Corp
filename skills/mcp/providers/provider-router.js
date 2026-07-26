@@ -27,13 +27,17 @@ const PROVIDERS = {
     base_url: 'https://openrouter.ai/api/v1',
     api_key: () => process.env.OPENROUTER_API_KEY || '',
     models: {
-      'opencode/deepseek-v4-flash-free': { context: 8192, cost_per_1k: 0.0, free: true },
+      'nvidia/nemotron-3-ultra-550b-a55b:free': { context: 128000, cost_per_1k: 0.0, free: true },
+      'nvidia/nemotron-3-super-120b-a12b:free': { context: 128000, cost_per_1k: 0.0, free: true },
+      'nvidia/nemotron-3-nano-30b-a3b:free': { context: 128000, cost_per_1k: 0.0, free: true },
+      'openai/gpt-4o-mini': { context: 128000, cost_per_1k: 0.00015, free: false },
       'openai/gpt-4o': { context: 128000, cost_per_1k: 0.0025, free: false },
-      'anthropic/claude-3.5-sonnet': { context: 200000, cost_per_1k: 0.003, free: false },
-      'google/gemini-2.5-flash': { context: 1000000, cost_per_1k: 0.00015, free: false },
-      'meta-llama/llama-3.3-70b': { context: 128000, cost_per_1k: 0.0005, free: false },
+      'deepseek/deepseek-v4-flash': { context: 32768, cost_per_1k: 0.00000014, free: false },
+      'deepseek/deepseek-v3.2': { context: 131072, cost_per_1k: 0.00000027, free: false },
+      'google/gemma-4-31b-it:free': { context: 8192, cost_per_1k: 0.0, free: true },
+      'openrouter/free': { context: 8192, cost_per_1k: 0.0, free: true },
     },
-    default_model: 'opencode/deepseek-v4-flash-free',
+    default_model: 'nvidia/nemotron-3-super-120b-a12b:free',
     weight: 1,
   },
   'huggingface': {
@@ -66,17 +70,17 @@ const PROVIDERS = {
 };
 
 const CAPABILITY_MODEL_MAP = {
-  'routing': { provider: 'ollama', model: 'qwen2.5:1.5b' },
-  'classification': { provider: 'ollama', model: 'qwen2.5:1.5b' },
-  'research': { provider: 'ollama', model: 'llama3.2:3b' },
-  'code': { provider: 'ollama', model: 'llama3.2:3b' },
-  'sales': { provider: 'ollama', model: 'llama3.2:3b' },
-  'content': { provider: 'ollama', model: 'llama3.2:3b' },
-  'analysis': { provider: 'ollama', model: 'llama3.2:3b' },
-  'deep_analysis': { provider: 'ollama', model: 'deepseek-r1:7b' },
+  'routing': { provider: 'openrouter', model: 'nvidia/nemotron-3-nano-30b-a3b:free' },
+  'classification': { provider: 'openrouter', model: 'nvidia/nemotron-3-nano-30b-a3b:free' },
+  'research': { provider: 'openrouter', model: 'nvidia/nemotron-3-ultra-550b-a55b:free' },
+  'code': { provider: 'openrouter', model: 'deepseek/deepseek-v4-flash' },
+  'sales': { provider: 'openrouter', model: 'nvidia/nemotron-3-super-120b-a12b:free' },
+  'content': { provider: 'openrouter', model: 'nvidia/nemotron-3-super-120b-a12b:free' },
+  'analysis': { provider: 'openrouter', model: 'nvidia/nemotron-3-ultra-550b-a55b:free' },
+  'deep_analysis': { provider: 'openrouter', model: 'nvidia/nemotron-3-ultra-550b-a55b:free' },
   'embedding': { provider: 'ollama', model: 'nomic-embed-text' },
-  'agent': { provider: 'opencode-go', model: 'deepseek-v4-flash' },
-  'default': { provider: 'ollama', model: 'qwen2.5:1.5b' },
+  'agent': { provider: 'openrouter', model: 'deepseek/deepseek-v4-flash' },
+  'default': { provider: 'openrouter', model: 'nvidia/nemotron-3-super-120b-a12b:free' },
 };
 
 function getProvider(providerName) {

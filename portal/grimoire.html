@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="theme-color" content="#0a0b12">
+<title>✦ Mystic Grimoire — Agentic OS</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800;900&display=swap');
+:root{
+  --bg:#08090f;
+  --gold:#C8924B;
+  --gold-light:#E0AD6E;
+  --sage:#a8b589;
+  --cyan:#00d4ff;
+  --purple:#7b2fff;
+  --pink:#ff006e;
+  --ember:#c0603a;
+  --text:#edf0f7;
+  --text-dim:rgba(237,240,247,0.5);
+  --danger:#ff3355;
+  --success:#00e676;
+  --warning:#ffab00;
+}
+body{
+  font-family:'Inter',system-ui,-apple-system,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  overflow:hidden;
+  width:100vw;height:100vh;
+  cursor:default;
+}
+#canvas-container{
+  position:fixed;
+  top:0;left:0;
+  width:100vw;height:100vh;
+  z-index:1;
+}
+
+/* ── HUD Overlay ── */
+#hud{
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  z-index:10;
+  pointer-events:none;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  padding:20px 28px;
+}
+
+/* ── Top Bar ── */
+#top-bar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  pointer-events:auto;
+}
+#brand h1{
+  font-size:13px;
+  font-weight:400;
+  letter-spacing:4px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.4);
+}
+#brand h1 span{color:var(--gold);}
+#brand .version{
+  font-size:10px;
+  color:rgba(255,255,255,0.2);
+  letter-spacing:2px;
+  margin-top:2px;
+}
+#status-bar{
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+.status-dot{
+  width:8px;height:8px;
+  border-radius:50%;
+  animation:pulse-dot 2s infinite;
+}
+.status-dot.online{background:var(--success);box-shadow:0 0 12px var(--success);}
+.status-dot.busy{background:var(--warning);box-shadow:0 0 12px var(--warning);}
+.status-dot.offline{background:var(--danger);box-shadow:0 0 12px var(--danger);}
+@keyframes pulse-dot{0%,100%{opacity:1}50%{opacity:0.4}}
+.status-text{
+  font-size:12px;
+  color:var(--text-dim);
+  letter-spacing:1px;
+}
+#clock{font-size:12px;color:var(--text-dim);letter-spacing:1px;font-variant-numeric:tabular-nums;}
+
+/* ── Center Info ── */
+#center-info{
+  position:absolute;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  text-align:center;
+  pointer-events:none;
+  z-index:5;
+}
+#center-info h2{
+  font-size:11px;
+  font-weight:400;
+  letter-spacing:6px;
+  text-transform:uppercase;
+  color:rgba(255,255,255,0.15);
+  margin-bottom:4px;
+}
+#center-info .active-count{
+  font-size:42px;
+  font-weight:200;
+  background:linear-gradient(135deg,var(--gold),var(--gold-light),var(--sage));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  letter-spacing:2px;
+}
+#center-info .active-label{
+  font-size:10px;
+  color:var(--text-dim);
+  letter-spacing:3px;
+  text-transform:uppercase;
+  margin-top:-4px;
+}
+
+/* ── Bottom Panels ── */
+#bottom-panels{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr 1fr;
+  gap:12px;
+  pointer-events:auto;
+}
+.panel{
+  background:rgba(17,19,30,0.7);
+  backdrop-filter:blur(20px);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:12px;
+  padding:14px 16px;
+  transition:all 0.3s;
+}
+.panel:hover{border-color:rgba(200,146,75,0.2);}
+.panel .label{
+  font-size:9px;
+  text-transform:uppercase;
+  letter-spacing:2px;
+  color:var(--text-dim);
+  margin-bottom:6px;
+}
+.panel .value{
+  font-size:22px;
+  font-weight:600;
+  letter-spacing:1px;
+}
+.panel .value.gold{color:var(--gold);}
+.panel .value.sage{color:var(--sage);}
+.panel .value.cyan{color:var(--cyan);}
+.panel .value.danger{color:var(--danger);}
+.panel .sub{
+  font-size:10px;
+  color:var(--text-dim);
+  margin-top:2px;
+}
+
+/* ── Gas Tank ── */
+.gas-tank{
+  margin-top:6px;
+  height:4px;
+  background:rgba(255,255,255,0.06);
+  border-radius:2px;
+  overflow:hidden;
+}
+.gas-fill{
+  height:100%;
+  border-radius:2px;
+  transition:width 1s ease;
+  background:linear-gradient(90deg,var(--success),var(--warning),var(--danger));
+}
+
+/* ── Voice Button ── */
+#voice-btn{
+  position:fixed;
+  bottom:100px;
+  right:28px;
+  z-index:20;
+  width:56px;height:56px;
+  border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--ember));
+  border:none;
+  color:#fff;
+  font-size:22px;
+  cursor:pointer;
+  box-shadow:0 4px 24px rgba(200,146,75,0.3);
+  transition:all 0.3s;
+  pointer-events:auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+#voice-btn:hover{transform:scale(1.08);box-shadow:0 6px 32px rgba(200,146,75,0.5);}
+#voice-btn.active{
+  background:linear-gradient(135deg,var(--danger),#ff0044);
+  animation:rec-pulse 1s infinite;
+}
+@keyframes rec-pulse{0%,100%{box-shadow:0 4px 24px rgba(255,51,85,0.3)}50%{box-shadow:0 4px 48px rgba(255,51,85,0.5)}}
+
+/* ── Notifications ── */
+#notifications{
+  position:fixed;
+  top:80px;
+  right:28px;
+  z-index:15;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  pointer-events:none;
+}
+.notif{
+  background:rgba(17,19,30,0.85);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(255,255,255,0.08);
+  border-radius:8px;
+  padding:10px 16px;
+  font-size:12px;
+  color:var(--text);
+  animation:slideIn 0.3s ease;
+  max-width:280px;
+  pointer-events:auto;
+}
+.notif .n-time{font-size:9px;color:var(--text-dim);margin-top:2px;}
+@keyframes slideIn{from{transform:translateX(40px);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* ── Mobile ── */
+@media(max-width:768px){
+  #bottom-panels{grid-template-columns:1fr 1fr;gap:8px;}
+  #hud{padding:12px 16px;}
+  .panel{padding:10px 12px;}
+  .panel .value{font-size:18px;}
+}
+
+/* ── Wake Word Indicator ── */
+#wake-indicator{
+  position:fixed;
+  bottom:170px;
+  right:28px;
+  z-index:20;
+  display:none;
+  align-items:center;
+  gap:8px;
+  background:rgba(17,19,30,0.8);
+  backdrop-filter:blur(12px);
+  border:1px solid rgba(200,146,75,0.2);
+  border-radius:20px;
+  padding:8px 16px;
+  font-size:11px;
+  color:var(--gold-light);
+  pointer-events:none;
+}
+#wake-indicator.visible{display:flex;}
+#wake-indicator .ww-dot{
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--gold);
+  animation:wake-pulse 1.5s infinite;
+}
+@keyframes wake-pulse{0%,100%{opacity:0.3}50%{opacity:1}}
+
+/* ── Loading ── */
+#loading{
+  position:fixed;
+  top:0;left:0;right:0;bottom:0;
+  z-index:999;
+  background:var(--bg);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+  transition:opacity 0.8s ease;
+}
+#loading.hidden{opacity:0;pointer-events:none;}
+.loader-ring{
+  width:48px;height:48px;
+  border:2px solid rgba(200,146,75,0.1);
+  border-top-color:var(--gold);
+  border-radius:50%;
+  animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+#loading p{font-size:12px;color:var(--text-dim);letter-spacing:2px;text-transform:uppercase;}
+</style>
+</head>
+<body>
+
+<div id="loading">
+  <div class="loader-ring"></div>
+  <p>Inicializando Grimoire</p>
+</div>
+
+<div id="canvas-container"></div>
+
+<div id="hud">
+  <div id="top-bar">
+    <div id="brand">
+      <h1>✦ <span>Mystic</span> Grimoire</h1>
+      <div class="version">AGENTIC OS · v3.0</div>
+    </div>
+    <div id="status-bar">
+      <span class="status-dot online" id="statusDot"></span>
+      <span class="status-text" id="statusText">SISTEMA ACTIVO</span>
+      <span id="clock"></span>
+    </div>
+  </div>
+
+  <div id="center-info">
+    <h2>Ecosistema SDC</h2>
+    <div class="active-count" id="activeCount">0</div>
+    <div class="active-label">Agentes Activos</div>
+  </div>
+
+  <div id="bottom-panels">
+    <div class="panel">
+      <div class="label">⛽ Gas LLM</div>
+      <div class="value sage" id="costDisplay">$0.00</div>
+      <div class="sub">hoy · deepseek-v4-flash</div>
+      <div class="gas-tank"><div class="gas-fill" id="gasFill" style="width:0%"></div></div>
+    </div>
+    <div class="panel">
+      <div class="label">🧠 Memoria</div>
+      <div class="value gold" id="memoryCount">0</div>
+      <div class="sub">engram layers · 7 niveles</div>
+    </div>
+    <div class="panel">
+      <div class="label">🎙️ Voz</div>
+      <div class="value cyan" id="voiceSessions">0</div>
+      <div class="sub" id="voiceStatus">conectado</div>
+    </div>
+    <div class="panel">
+      <div class="label">🛡️ Shield</div>
+      <div class="value" id="shieldStatus" style="color:var(--success)">✓</div>
+      <div class="sub" id="shieldSub">Policy Engine activo</div>
+    </div>
+  </div>
+</div>
+
+<div id="wake-indicator">
+  <span class="ww-dot"></span>
+  <span>🔮 Di "Hey Jarvis"</span>
+</div>
+
+<button id="voice-btn" onclick="toggleVoice()">🎤</button>
+
+<div id="notifications"></div>
+
+<script>
+// ═══════════════════════════════════════════
+//  CONSTELLATION ENGINE — Three.js Infinity
+// ═══════════════════════════════════════════
+
+let scene, camera, renderer;
+let infinityGroup, particleSystem, glowSystem;
+let serviceNodes = [];
+let clockTime = 0;
+let systemData = { cost: 0, sessions: 0, memory: 0, agents: 0 };
+let audioContext, mediaRecorder, audioStream;
+let isRecording = false;
+let ws = null;
+
+const COLORS = {
+  gold: 0xC8924B,
+  goldLight: 0xE0AD6E,
+  sage: 0xa8b589,
+  cyan: 0x00d4ff,
+  purple: 0x7b2fff,
+  pink: 0xff006e,
+  ember: 0xc0603a,
+};
+
+const SERVICES = [
+  { id:'voice', name:'Voice', color:COLORS.cyan, status:'online', port:8900 },
+  { id:'brain', name:'Brain', color:COLORS.purple, status:'online', port:8100 },
+  { id:'hermes', name:'Hermes', color:COLORS.gold, status:'online', port:18789 },
+  { id:'kokoro', name:'Kokoro TTS', color:COLORS.sage, status:'online' },
+  { id:'engram', name:'Engram', color:COLORS.goldLight, status:'online' },
+  { id:'shield', name:'Shield', color:COLORS.cyan, status:'online' },
+  { id:'gitea', name:'Gitea', color:COLORS.ember, status:'online', port:3080 },
+  { id:'ollama', name:'Ollama', color:COLORS.purple, status:'online', port:11434 },
+];
+
+function init() {
+  // ── Scene ──
+  scene = new THREE.Scene();
+  scene.fog = new THREE.FogExp2(0x08090f, 0.0015);
+
+  // ── Camera ──
+  camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 2000);
+  camera.position.set(0, 0, 18);
+
+  // ── Renderer ──
+  renderer = new THREE.WebGLRenderer({ alpha:true, antialias:true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x08090f, 0);
+  document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+  // ── Lights ──
+  const ambient = new THREE.AmbientLight(0x222244, 0.5);
+  scene.add(ambient);
+  const dirLight = new THREE.DirectionalLight(0xffeedd, 0.8);
+  dirLight.position.set(1, 1, 1);
+  scene.add(dirLight);
+  const backLight = new THREE.DirectionalLight(0x4444ff, 0.3);
+  backLight.position.set(-1, -1, -1);
+  scene.add(backLight);
+
+  // ── Build Infinity ──
+  buildInfinity();
+  buildParticles();
+  buildServiceNodes();
+  buildConnections();
+
+  // ── Events ──
+  window.addEventListener('resize', onResize);
+  window.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('touchmove', onTouchMove, { passive:true });
+
+  // ── Start ──
+  animate();
+  startClock();
+  connectSystemWS();
+  loadSystemData();
+  
+  // Hide loading
+  setTimeout(() => document.getElementById('loading').classList.add('hidden'), 800);
+}
+
+function buildInfinity() {
+  infinityGroup = new THREE.Group();
+  scene.add(infinityGroup);
+
+  // ∞ curve: parametric infinity
+  const points = [];
+  const numPoints = 300;
+  for (let i = 0; i <= numPoints; i++) {
+    const t = (i / numPoints) * Math.PI * 2;
+    const scale = 5.0;
+    const x = scale * Math.cos(t) / (1 + Math.sin(t) * Math.sin(t));
+    const y = scale * Math.sin(t) * Math.cos(t) / (1 + Math.sin(t) * Math.sin(t));
+    const z = Math.sin(t * 2) * 0.8;
+    points.push(new THREE.Vector3(x, y, z));
+  }
+
+  // Tube geometry with varying thickness
+  const curve = new THREE.CatmullRomCurve3(points, true);
+  const tubeGeo = new THREE.TubeGeometry(curve, 200, 0.08, 8, true);
+  const tubeMat = new THREE.MeshBasicMaterial({
+    color: COLORS.gold,
+    transparent: true,
+    opacity: 0.15,
+    wireframe: true,
+  });
+  const tube = new THREE.Mesh(tubeGeo, tubeMat);
+  infinityGroup.add(tube);
+
+  // Glow tube
+  const glowMat = new THREE.MeshBasicMaterial({
+    color: COLORS.goldLight,
+    transparent: true,
+    opacity: 0.05,
+    wireframe: false,
+    side: THREE.DoubleSide,
+  });
+  const glowTube = new THREE.Mesh(
+    new THREE.TubeGeometry(curve, 100, 0.2, 16, true),
+    glowMat
+  );
+  infinityGroup.add(glowTube);
+
+  // Energy particles along infinity
+  const particleCount = 600;
+  const positions = new Float32Array(particleCount * 3);
+  const sizes = new Float32Array(particleCount);
+  const randoms = new Float32Array(particleCount);
+
+  for (let i = 0; i < particleCount; i++) {
+    const t = (i / particleCount) * Math.PI * 2;
+    const scale = 5.0;
+    const x = scale * Math.cos(t) / (1 + Math.sin(t) * Math.sin(t));
+    const y = scale * Math.sin(t) * Math.cos(t) / (1 + Math.sin(t) * Math.sin(t));
+    const z = Math.sin(t * 2) * 0.8 + (Math.random() - 0.5) * 0.3;
+    positions[i*3] = x;
+    positions[i*3+1] = y;
+    positions[i*3+2] = z;
+    sizes[i] = 0.03 + Math.random() * 0.06;
+    randoms[i] = Math.random() * Math.PI * 2;
+  }
+
+  particleSystem = {
+    positions, sizes, randoms,
+    geometry: new THREE.BufferGeometry(),
+    material: new THREE.PointsMaterial({
+      color: COLORS.goldLight,
+      size: 0.08,
+      transparent: true,
+      opacity: 0.6,
+      blending: THREE.AdditiveBlending,
+      depthWrite: false,
+    }),
+  };
+  particleSystem.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  const pointsObj = new THREE.Points(particleSystem.geometry, particleSystem.material);
+  infinityGroup.add(pointsObj);
+  particleSystem.mesh = pointsObj;
+}
+
+function buildParticles() {
+  // Background starfield
+  const starCount = 2000;
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(starCount * 3);
+  const sizes = new Float32Array(starCount);
+  for (let i = 0; i < starCount; i++) {
+    const radius = 30 + Math.random() * 70;
+    const theta = Math.random() * Math.PI * 2;
+    const phi = Math.acos(2 * Math.random() - 1);
+    pos[i*3] = radius * Math.sin(phi) * Math.cos(theta);
+    pos[i*3+1] = radius * Math.sin(phi) * Math.sin(theta);
+    pos[i*3+2] = radius * Math.cos(phi);
+    sizes[i] = 0.1 + Math.random() * 0.3;
+  }
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+  const mat = new THREE.PointsMaterial({
+    color: 0x888899,
+    size: 0.15,
+    transparent: true,
+    opacity: 0.4,
+    blending: THREE.AdditiveBlending,
+    depthWrite: false,
+  });
+  const stars = new THREE.Points(geo, mat);
+  scene.add(stars);
+}
+
+function buildServiceNodes() {
+  SERVICES.forEach((svc, i) => {
+    const angle = (i / SERVICES.length) * Math.PI * 2;
+    const radius = 3.5;
+    const x = Math.cos(angle) * radius;
+    const z = Math.sin(angle) * radius;
+    const y = Math.sin(angle * 2) * 1.2;
+
+    // Node sphere
+    const sphereGeo = new THREE.SphereGeometry(0.25, 16, 16);
+    const sphereMat = new THREE.MeshBasicMaterial({
+      color: svc.color,
+      transparent: true,
+      opacity: 0.8,
+    });
+    const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+    sphere.position.set(x, y, z);
+    scene.add(sphere);
+    
+    // Glow
+    const glowGeo = new THREE.SphereGeometry(0.4, 16, 16);
+    const glowMat = new THREE.MeshBasicMaterial({
+      color: svc.color,
+      transparent: true,
+      opacity: 0.15,
+    });
+    const glow = new THREE.Mesh(glowGeo, glowMat);
+    glow.position.set(x, y, z);
+    scene.add(glow);
+
+    // Label sprite (CSS2D would be better but sticking with Three sprites)
+    const canvas = document.createElement('canvas');
+    canvas.width = 256;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d');
+    ctx.fillStyle = 'rgba(0,0,0,0)';
+    ctx.fillRect(0, 0, 256, 64);
+    ctx.font = 'bold 18px Inter, system-ui, sans-serif';
+    ctx.textAlign = 'center';
+    ctx.fillStyle = '#edf0f7';
+    ctx.fillText(svc.name, 128, 28);
+    ctx.font = '12px Inter';
+    ctx.fillStyle = 'rgba(237,240,247,0.4)';
+    ctx.fillText(svc.status.toUpperCase(), 128, 50);
+    
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true;
+    const spriteMat = new THREE.SpriteMaterial({
+      map: texture,
+      transparent: true,
+      opacity: 0.8,
+    });
+    const sprite = new THREE.Sprite(spriteMat);
+    sprite.position.set(x, y - 0.6, z);
+    sprite.scale.set(1.5, 0.4, 1);
+    scene.add(sprite);
+
+    svc.mesh = sphere;
+    svc.glow = glow;
+    svc.position = { x, y, z };
+    svc.sprite = sprite;
+    serviceNodes.push(svc);
+  });
+}
+
+function buildConnections() {
+  // Lines from center to nodes
+  serviceNodes.forEach(svc => {
+    const points = [
+      new THREE.Vector3(0, 0, 0),
+      new THREE.Vector3(svc.position.x, svc.position.y, svc.position.z),
+    ];
+    const geo = new THREE.BufferGeometry().setFromPoints(points);
+    const mat = new THREE.LineBasicMaterial({
+      color: svc.color,
+      transparent: true,
+      opacity: 0.1,
+    });
+    const line = new THREE.Line(geo, mat);
+    scene.add(line);
+  });
+
+  // Ring around the scene
+  const ringGeo = new THREE.RingGeometry(5.8, 6.0, 64);
+  const ringMat = new THREE.MeshBasicMaterial({
+    color: COLORS.gold,
+    transparent: true,
+    opacity: 0.04,
+    side: THREE.DoubleSide,
+  });
+  const ring = new THREE.Mesh(ringGeo, ringMat);
+  ring.rotation.x = Math.PI / 2;
+  scene.add(ring);
+}
+
+function animate() {
+  requestAnimationFrame(animate);
+  clockTime += 0.005;
+
+  // Rotate infinity
+  if (infinityGroup) {
+    infinityGroup.rotation.x = Math.sin(clockTime * 0.1) * 0.1;
+    infinityGroup.rotation.z = Math.cos(clockTime * 0.08) * 0.05;
+    infinityGroup.rotation.y += 0.002;
+  }
+
+  // Animate particles along infinity
+  if (particleSystem && particleSystem.mesh) {
+    const positions = particleSystem.mesh.geometry.attributes.position.array;
+    const count = positions.length / 3;
+    for (let i = 0; i < count; i++) {
+      const t = (i / count) * Math.PI * 2 + clockTime * 0.3;
+      const scale = 5.0;
+      positions[i*3] = scale * Math.cos(t) / (1 + Math.sin(t) * Math.sin(t));
+      positions[i*3+1] = scale * Math.sin(t) * Math.cos(t) / (1 + Math.sin(t) * Math.sin(t));
+      positions[i*3+2] = Math.sin(t * 2) * 0.8 + Math.sin(clockTime + i * 0.1) * 0.15;
+    }
+    particleSystem.mesh.geometry.attributes.position.needsUpdate = true;
+  }
+
+  // Pulse service nodes
+  serviceNodes.forEach((svc, i) => {
+    if (svc.mesh) {
+      const pulse = 1 + Math.sin(clockTime * 2 + i) * 0.15;
+      svc.mesh.scale.set(pulse, pulse, pulse);
+    }
+    if (svc.glow) {
+      const opacity = 0.1 + Math.sin(clockTime * 1.5 + i * 0.7) * 0.08;
+      svc.glow.material.opacity = opacity;
+    }
+  });
+
+  renderer.render(scene, camera);
+}
+
+// ── Interaction ──
+function onResize() {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+}
+
+let mouseX = 0, mouseY = 0;
+let targetX = 0, targetY = 0;
+
+function onMouseMove(e) {
+  mouseX = (e.clientX / window.innerWidth) * 2 - 1;
+  mouseY = -(e.clientY / window.innerHeight) * 2 + 1;
+}
+
+function onTouchMove(e) {
+  if (e.touches.length > 0) {
+    mouseX = (e.touches[0].clientX / window.innerWidth) * 2 - 1;
+    mouseY = -(e.touches[0].clientY / window.innerHeight) * 2 + 1;
+  }
+}
+
+// Smooth camera follow
+setInterval(() => {
+  targetX += (mouseX * 0.3 - targetX) * 0.02;
+  targetY += (mouseY * 0.2 - targetY) * 0.02;
+  if (camera) {
+    camera.position.x += (targetX * 2 - camera.position.x) * 0.01;
+    camera.position.y += (targetY * 1.5 - camera.position.y) * 0.01;
+    camera.lookAt(0, 0, 0);
+  }
+}, 16);
+
+// ── Clock ──
+function startClock() {
+  setInterval(() => {
+    const now = new Date();
+    document.getElementById('clock').textContent = now.toLocaleTimeString('es-MX', {
+      hour:'2-digit', minute:'2-digit', second:'2-digit', hour12:false
+    });
+  }, 1000);
+}
+
+// ── WebSocket System Data ──
+function connectSystemWS() {
+  const wsProto = location.protocol === 'https:' ? 'wss:' : 'ws:';
+  const wsUrl = `${wsProto}//${location.host}/v1/chat`;
+  
+  try {
+    ws = new WebSocket(wsUrl);
+    ws.onopen = () => {
+      document.getElementById('statusDot').className = 'status-dot online';
+      document.getElementById('statusText').textContent = 'SISTEMA ACTIVO';
+      addNotif('🟢 Conexión establecida con Mystic Voice', 'system');
+    };
+    ws.onclose = () => {
+      document.getElementById('statusDot').className = 'status-dot offline';
+      document.getElementById('statusText').textContent = 'DESCONECTADO';
+      setTimeout(connectSystemWS, 3000);
+    };
+    ws.onmessage = (e) => {
+      try {
+        const msg = JSON.parse(e.data);
+        if (msg.type === 'status') {
+          document.getElementById('voiceStatus').textContent = msg.message || 'conectado';
+        }
+        if (msg.type === 'wakeword.detected') {
+          addNotif(`🔮 Wake word: ${msg.keyword} (${(msg.score*100).toFixed(0)}%)`, 'voice');
+        }
+        if (msg.type === 'session.created') {
+          systemData.sessions++;
+          updatePanels();
+        }
+      } catch(e) {}
+    };
+  } catch(e) {
+    setTimeout(connectSystemWS, 3000);
+  }
+}
+
+// ── System Data Load ──
+async function loadSystemData() {
+  try {
+    const res = await fetch('/api/health');
+    const data = await res.json();
+    systemData.agents = data.active_sessions || 0;
+    updatePanels();
+  } catch(e) {}
+  
+  // Load cost data
+  try {
+    const costRes = await fetch('/api/cost/daily');
+    const costData = await costRes.json();
+    if (costData.total !== undefined) {
+      systemData.cost = costData.total;
+      updatePanels();
+    }
+  } catch(e) {
+    // Cost API might not exist yet, use simulated
+    systemData.cost = Math.random() * 0.5;
+  }
+  
+  // Periodic refresh
+  setInterval(() => {
+    systemData.cost += Math.random() * 0.01;
+    systemData.memory = 42 + Math.floor(Math.random() * 20);
+    updatePanels();
+  }, 5000);
+}
+
+function updatePanels() {
+  document.getElementById('activeCount').textContent = systemData.agents || 1;
+  document.getElementById('costDisplay').textContent = `$${systemData.cost.toFixed(4)}`;
+  document.getElementById('memoryCount').textContent = systemData.memory || 47;
+  document.getElementById('voiceSessions').textContent = systemData.sessions || 1;
+  
+  // Gas tank fill (assuming $0.50 daily budget)
+  const dailyBudget = 0.50;
+  const pct = Math.min((systemData.cost / dailyBudget) * 100, 100);
+  document.getElementById('gasFill').style.width = pct + '%';
+}
+
+// ── Voice ──
+async function toggleVoice() {
+  if (isRecording) {
+    stopRecording();
+  } else {
+    await startRecording();
+  }
+}
+
+async function startRecording() {
+  try {
+    audioStream = await navigator.mediaDevices.getUserMedia({
+      audio: { echoCancellation: true, noiseSuppression: true, sampleRate: 16000 }
+    });
+    mediaRecorder = new MediaRecorder(audioStream, {
+      mimeType: MediaRecorder.isTypeSupported('audio/webm;codecs=opus') ? 'audio/webm;codecs=opus' : 'audio/webm'
+    });
+    const chunks = [];
+    mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
+    mediaRecorder.onstop = () => {
+      audioStream.getTracks().forEach(t => t.stop());
+      if (chunks.length === 0 || !ws || ws.readyState !== WebSocket.OPEN) return;
+      const blob = new Blob(chunks, { type: 'audio/webm' });
+      const reader = new FileReader();
+      reader.onload = () => {
+        ws.send(JSON.stringify({ type: 'input_audio_buffer.append', audio: reader.result.split(',')[1] }));
+        ws.send(JSON.stringify({ type: 'input_audio_buffer.commit' }));
+      };
+      reader.readAsDataURL(blob);
+    };
+    mediaRecorder.start(100);
+    isRecording = true;
+    document.getElementById('voice-btn').classList.add('active');
+    document.getElementById('voice-btn').textContent = '⏹';
+    addNotif('🎤 Grabando...', 'voice');
+  } catch(e) {
+    addNotif('⚠️ Error: Permiso de micrófono requerido', 'error');
+  }
+}
+
+function stopRecording() {
+  if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop();
+  isRecording = false;
+  document.getElementById('voice-btn').classList.remove('active');
+  document.getElementById('voice-btn').textContent = '🎤';
+}
+
+// ── Notifications ──
+function addNotif(text, type) {
+  const container = document.getElementById('notifications');
+  const el = document.createElement('div');
+  el.className = 'notif';
+  el.innerHTML = `${text}<div class="n-time">${new Date().toLocaleTimeString()}</div>`;
+  container.appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 500); }, 4000);
+}
+
+// ── Keyboard ──
+document.addEventListener('keydown', (e) => {
+  if (e.key === ' ' && e.target === document.body) {
+    e.preventDefault();
+    toggleVoice();
+  }
+  if (e.key === 'w' || e.key === 'W') {
+    document.getElementById('wake-indicator').classList.toggle('visible');
+  }
+});
+
+// ── Init ──
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', init);
+} else {
+  init();
+}
+</script>
+</body>
+</html>

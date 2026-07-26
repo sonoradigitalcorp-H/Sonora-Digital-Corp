@@ -14,8 +14,8 @@
     "git_behind": 2,
     "specs": 9,
     "gherkin_features": 28,
-    "step_definitions": 7,
-    "adrs": 15
+    "step_definitions": 8,
+    "adrs": 16
   },
-  "updated": "2026-07-25T08:58:40.508924Z"
+  "updated": "2026-07-26T07:32:24.012863Z"
 }

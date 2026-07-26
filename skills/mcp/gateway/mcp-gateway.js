@@ -35,12 +35,9 @@ const https = require('https');
 
 // ─── CONFIG ───────────────────────────────────────────────────────
 const SERVICES = {
-  paperclip: { name: 'Paperclip', port: 3100, host: '127.0.0.1', desc: 'Gestión de agentes IA', icon: '🧠' },
   n8n:       { name: 'n8n', port: 5678, host: '127.0.0.1', desc: 'Automatización visual de workflows', icon: '⚡' },
   metabase:  { name: 'Metabase', port: 3002, host: '127.0.0.1', desc: 'Dashboards SQL y métricas', icon: '📊' },
   uptime:    { name: 'UptimeKuma', port: 3003, host: '127.0.0.1', desc: 'Monitor de estado', icon: '🔍' },
-  dashy:     { name: 'Dashy', port: 3004, host: '127.0.0.1', desc: 'Homepage de servicios', icon: '🚀' },
-  plausible: { name: 'Plausible', port: 3006, host: '127.0.0.1', desc: 'Analytics web', icon: '📈' },
 };
 
 const MCP_VERSION = '1.0.0';
@@ -129,7 +126,6 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
 
     // ── Paperclip ──
     {
-      name: 'paperclip_status',
       description: 'Obtiene el estado del dashboard Paperclip (gestión de agentes)',
       inputSchema: { type: 'object', properties: {} }
     },
@@ -190,14 +186,12 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
 
     // ── Dashy ──
     {
-      name: 'dashy_status',
       description: 'Verifica que Dashy homepage esté funcionando',
       inputSchema: { type: 'object', properties: {} }
     },
 
     // ── Plausible ──
     {
-      name: 'plausible_stats',
       description: 'Obtiene estadísticas de Plausible analytics',
       inputSchema: {
         type: 'object',
@@ -277,8 +271,6 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
 
     // ── Paperclip ──
-    case 'paperclip_status': {
-      const result = await httpRequest('paperclip', '/api/health');
       return { content: [{ type: 'text', text: JSON.stringify(result.data || result, null, 2) }] };
     }
 
@@ -322,13 +314,9 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
 
     // ── Dashy ──
-    case 'dashy_status': {
-      const alive = await healthCheck('dashy');
-      return { content: [{ type: 'text', text: JSON.stringify({ service: 'Dashy', status: alive ? 'online' : 'offline', url: 'https://dashy.sonoradigitalcorp.com' }) }] };
     }
 
     // ── Plausible ──
-    case 'plausible_stats': {
       return { content: [{ type: 'text', text: JSON.stringify({ note: 'Plausible requiere configuración inicial vía web UI en https://analytics.sonoradigitalcorp.com' }) }] };
     }
 
