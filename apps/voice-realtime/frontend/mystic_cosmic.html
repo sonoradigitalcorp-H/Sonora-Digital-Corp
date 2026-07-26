@@ -326,11 +326,20 @@ header p{font-size:8px;letter-spacing:0.3em}
         streamText = '';
       }
     }else if(msg.type==='status'){
-      if(msg.status==='thinking'||msg.status==='understanding') showToast('🧠 Pensando...');
-      else if(msg.status==='generating_voice') showToast('🔊 Generando voz...');
+      const waitMsgs = [
+        '🧠 Déjame pensar...', '✨ Buscando en mi memoria...', '🔍 Revisando la información...',
+        '⚡ Casi listo...', '🎯 Preparando tu respuesta...', '📡 Consultando fuentes...',
+        '💡 Analizando...', '🔄 Un momento...', '🌟 Procesando...',
+        '🤔 Mmm, déjame ver...', '📚 Revisando datos...', '🎨 Preparando todo...'
+      ];
+      if(msg.status==='thinking'||msg.status==='understanding'){
+        showToast(waitMsgs[Math.floor(Math.random()*waitMsgs.length)]);
+      }else if(msg.status==='generating_voice') showToast('🔊 Preparando audio...');
       else if(msg.status==='speaking') showToast('🔊 Hablando...');
       else if(msg.status==='wakeword') showToast('🔮 Di "Hey Jarvis"');
       else if(msg.status==='wakeword_detected') showToast('🎯 ¡Te escucho!');
+      else if(msg.status==='browsing') showToast('🌐 Navegando...');
+      else if(msg.status==='reading') showToast('📖 Leyendo resultados...');
     }else if(msg.type==='pong'){
       if(latencyDisplay) latencyDisplay.textContent = Math.floor((Date.now()-lastMsgTime)/2)+'ms';
     }
@@ -410,25 +419,67 @@ header p{font-size:8px;letter-spacing:0.3em}
     }catch(e){}
   }
 
-  // ─── Browser View ───
-  const browserView = document.createElement('div');
-  browserView.id = 'browserView';
-  browserView.style.cssText = 'position:fixed;bottom:80px;right:20px;width:clamp(200px,25vw,360px);height:clamp(150px,18vw,240px);border-radius:12px;overflow:hidden;border:1px solid rgba(200,146,75,0.2);background:rgba(10,11,18,0.9);backdrop-filter:blur(12px);z-index:50;display:none;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,0.5)';
-  browserView.innerHTML = '<div id="browserLabel" style="padding:4px 8px;font-size:9px;color:rgba(200,146,75,0.5);letter-spacing:0.05em;border-bottom:1px solid rgba(255,255,255,0.04)">🌐 Navegador</div><img id="browserImg" style="flex:1;width:100%;object-fit:contain;background:#fff" alt=""><div style="padding:3px 8px;font-size:8px;color:rgba(255,255,255,0.2);text-align:center">Playwright • en vivo</div>';
-  document.body.appendChild(browserView);
-  const browserImg = document.getElementById('browserImg');
-  const browserLabel = document.getElementById('browserLabel');
+  // ─── Browser View (movable, resizable, collapsible) ───
+  const bv = document.createElement('div');
+  bv.id = 'browserView';
+  bv.innerHTML = '<div id="bvHead" style="cursor:grab;padding:6px 10px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(255,255,255,0.06);user-select:none"><span id="bvLabel" style="font-size:9px;color:rgba(200,146,75,0.6);letter-spacing:0.08em">🌐 Playwright</span><div style="display:flex;gap:6px"><button id="bvCollapse" style="background:none;border:none;color:rgba(255,255,255,0.3);cursor:pointer;font-size:12px;padding:0;line-height:1">−</button><button id="bvClose" style="background:none;border:none;color:rgba(255,255,255,0.3);cursor:pointer;font-size:12px;padding:0;line-height:1">✕</button></div></div><div id="bvBody" style="flex:1;overflow:hidden;position:relative"><img id="bvImg" style="width:100%;height:100%;object-fit:contain;background:#0a0b12;display:block" alt=""><div id="bvResize" style="position:absolute;bottom:0;right:0;width:16px;height:16px;cursor:nwse-resize;background:linear-gradient(135deg,transparent 50%,rgba(200,146,75,0.3) 50%)"></div></div>';
+  bv.style.cssText = 'position:fixed;bottom:80px;right:20px;width:320px;height:220px;border-radius:12px;overflow:hidden;border:1px solid rgba(200,146,75,0.15);background:rgba(10,11,18,0.92);backdrop-filter:blur(16px);z-index:50;display:none;flex-direction:column;box-shadow:0 8px 32px rgba(0,0,0,0.6);resize:both;transition:opacity 0.4s';
+  document.body.appendChild(bv);
+  
+  const bvImg = document.getElementById('bvImg');
+  const bvLabel = document.getElementById('bvLabel');
+  
+  // Drag to move
+  let dragData = null;
+  document.getElementById('bvHead').addEventListener('mousedown',e=>{
+    if(e.target.tagName==='BUTTON') return;
+    dragData = {ox:e.clientX-bv.offsetLeft,oy:e.clientY-bv.offsetTop};
+    const move = (ev)=>{bv.style.left=(ev.clientX-dragData.ox)+'px';bv.style.right='auto';bv.style.top=(ev.clientY-dragData.oy)+'px';bv.style.bottom='auto'};
+    const up = ()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up);dragData=null};
+    document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
+  });
+  // Touch drag
+  document.getElementById('bvHead').addEventListener('touchstart',e=>{
+    if(e.target.tagName==='BUTTON') return;
+    const t = e.touches[0];
+    dragData = {ox:t.clientX-bv.offsetLeft,oy:t.clientY-bv.offsetTop};
+  },{passive:true});
+  document.addEventListener('touchmove',e=>{
+    if(!dragData) return;
+    const t = e.touches[0];
+    bv.style.left=(t.clientX-dragData.ox)+'px';bv.style.right='auto';bv.style.top=(t.clientY-dragData.oy)+'px';bv.style.bottom='auto';
+  },{passive:true});
+  document.addEventListener('touchend',()=>{dragData=null},{passive:true});
+  
+  // Resize
+  document.getElementById('bvResize').addEventListener('mousedown',e=>{
+    e.stopPropagation();
+    const start = {w:bv.offsetWidth,h:bv.offsetHeight,x:e.clientX,y:e.clientY};
+    const move = (ev)=>{bv.style.width=Math.max(160,start.w+ev.clientX-start.x)+'px';bv.style.height=Math.max(120,start.h+ev.clientY-start.y)+'px'};
+    const up = ()=>{document.removeEventListener('mousemove',move);document.removeEventListener('mouseup',up)};
+    document.addEventListener('mousemove',move);document.addEventListener('mouseup',up);
+  });
+  
+  // Collapse
+  let collapsed = false;
+  document.getElementById('bvCollapse').addEventListener('click',()=>{
+    collapsed = !collapsed;
+    document.getElementById('bvBody').style.display = collapsed?'none':'block';
+    bv.style.height = collapsed?'36px':'';
+    document.getElementById('bvCollapse').textContent = collapsed?'+':'−';
+  });
+  
+  // Close (hide)
+  document.getElementById('bvClose').addEventListener('click',()=>{bv.style.display='none'});
 
   function showBrowserView(url, label){
-    browserImg.src = url;
-    browserLabel.textContent = '🌐 ' + (label||'Navegador');
-    browserView.style.display = 'flex';
-    browserView.style.opacity = '1';
-    clearTimeout(browserView._hide);
-    browserView._hide = setTimeout(()=>{
-      browserView.style.opacity = '0';
-      setTimeout(()=>{browserView.style.display='none'},500);
-    },15000);
+    bvImg.src = url;
+    bvLabel.textContent = '🌐 ' + (label||'Navegador');
+    bv.style.display = 'flex';
+    bv.style.opacity = '1';
+    if(collapsed){collapsed=false;document.getElementById('bvBody').style.display='block';bv.style.height='';document.getElementById('bvCollapse').textContent='−'}
+    clearTimeout(bv._hide);
+    bv._hide = setTimeout(()=>{bv.style.opacity='0';setTimeout(()=>{bv.style.display='none'},500)},20000);
   }
 
   function initSpeech(){
