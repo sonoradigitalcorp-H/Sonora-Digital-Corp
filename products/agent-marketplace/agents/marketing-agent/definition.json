@@ -1,0 +1,30 @@
+{
+  "id": "marketing-agent",
+  "name": "Marketing Agent — Telegram Campaigns",
+  "version": "1.0.0",
+  "description": "Agente de marketing que genera contenido, campañas y mide ROI por agente en Telegram",
+  "capabilities": [
+    "daily_content_generation",
+    "campaign_management",
+    "audience_segmentation",
+    "roi_tracking_per_agent",
+    "a_b_testing_messages",
+    "automated_responses",
+    "audio_content_generation",
+    "scheduled_publishing",
+    "lead_capture_from_campaigns",
+    "performance_reporting"
+  ],
+  "models": {
+    "content_llm": "deepseek/deepseek-v4-flash",
+    "image_gen": "flux-dev",
+    "tts": "kokoro-82m"
+  },
+  "channels": ["telegram", "whatsapp"],
+  "roi_metrics": {
+    "cost_per_lead": 0.05,
+    "cost_per_acquisition": 0.50,
+    "engagement_rate_target": 0.15,
+    "conversion_rate_target": 0.05
+  }
+}

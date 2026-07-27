@@ -1,6 +1,6 @@
 # AGENTS.md — Sonora Digital Corp
 
-**Constitution**: `constitution/SOUL.md` + `constitution/OMEGA-PROMPT.md`
+**Constitution**: `kernel/SOUL.md` + `kernel/OMEGA-PROMPT.md`
 **Architecture**: `process/has/HAS-000-index.md` (HAS-000 through HAS-011)
 **Active spec**: `process/active/` — read before acting
 **Remote**: `git@github.com:sonoradigitalcorp-H/Sonora-Digital-Corp.git` (SSH key)
@@ -29,9 +29,9 @@ make score        # enterprise score
 ## Architecture — 6 Capas Concéntricas
 
 ```
-kernel/        ← Capa 0: identidad, reglas, constitution (kernel/ → constitution/)
+kernel/        ← Capa 0: identidad, reglas, constitución
 infra/         ← Capa 1: infraestructura SSOT (fleet.yml, docker, nginx)
-apps/ + mcp/   ← Capa 2: servicios core del sistema
+apps/          ← Capa 2: servicios core del sistema
 products/      ← Capa 3: lo que SDC vende (cada producto aislado)
 clients/       ← Capa 4: clientes externos (cada uno en su galaxia)
 portal/        ← Capa visual: Grimoire 3D con Three.js — la galaxia SDC
@@ -41,7 +41,7 @@ reference/     ← Capa transversal: specs cerradas, arqueología
 ```
 
 Regla de oro: **El core NO se mezcla con clientes**. Lo que está en kernel/, infra/,
-apps/, mcp/ pertenece a Sonora Digital Corp como empresa. Productos y clientes
+apps/ pertenece a Sonora Digital Corp como empresa. Productos y clientes
 importan del core, nunca al revés.
 
 ## Portal — Grimoire 3D
@@ -84,14 +84,17 @@ docker rm -f sdc-adk-runtime sdc-hermes-mcp
 ## Key paths
 
 ```
-config/            — tenants.json, registry.json, ambassadors.yaml, whatsapp-product.yaml
+config/            — tenants, registry, ambassadors, secrets
+config/tenants/    — Tenant configs per client
 skills/mcp/        — MCP tools (gateway, servers, SDK, CLI)
 skills/            — All skills + reusable tools unificados
-core/              — Motor único del sistema (engine, planner, executors, agents)
-infra/             — docker-compose files, systemd units, qdrant/neo4j Dockerfiles
+apps/core/         — Motor único del sistema (engine, planner, executors, agents)
+apps/evolution/    — Auto-evolución, scorecard, aprendizaje
+infra/             — docker-compose files, fleet.yml, systemd units, qdrant/neo4j Dockerfiles
 scripts/           — api_bridge.py (WebSocket chat), voice/, code/, 70+ scripts
 state/             — engram.db, engram/, events/, whatsapp/
-process/active/    — current specs, ADRs, scores
+state/events/      — Sistema de eventos del core
+process/           — Pipeline de SPECs activos/completados + specs
 clients/           — abe-music, azrec, el-joyero, nathy-conta
 products/          — mystic-shield, mystika, abe-music, clon-digital, nsfw-studio, omnivoice...
 portal/            — Grimoire 3D (Three.js galaxy — la interfaz visual del sistema)
@@ -127,7 +130,7 @@ alias occheck='make doctor-quick && opencode --version'
 
 - `CLAUDE.md` — session workflow (start/end/branch/PR)
 - `Makefile` — all dev commands
-- `constitution/kernel` — governance, rules, security, evolution
+- `kernel/` — governance, rules, security, evolution
 - `docs/` — maps, protocols, presentations
 - `portal/data/system.json` — SSOT del estado del sistema para el Grimoire
 - `adrs/ADR-20260722-ARQUITECTURA-CORE.md` — la ADR de esta arquitectura

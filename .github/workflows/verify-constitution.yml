@@ -3,10 +3,10 @@ name: Verify — Constitution integrity
 on:
   push:
     paths:
-      - 'constitution/**'
+      - 'kernel/**'
   pull_request:
     paths:
-      - 'constitution/**'
+      - 'kernel/**'
 
 jobs:
   verify:
@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Verificar checksums de la constitución
         run: |
-          cd constitution
+          cd kernel
           if [ -f CHECKSUMS.sha256 ]; then
             sha256sum -c CHECKSUMS.sha256 --quiet || echo "❌ Constitution modificada sin actualizar checksums"
             sha256sum -c CHECKSUMS.sha256 --quiet && echo "✅ Constitution intacta"

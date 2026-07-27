@@ -5,10 +5,10 @@
   "shell": "/bin/bash",
   "logLevel": "INFO",
   "instructions": [
-    "constitution/OMEGA-PROMPT.md",
-    "constitution/SOUL.md",
-    "constitution/TRUTH.md",
-    "constitution/10-RULES.md",
+    "kernel/OMEGA-PROMPT.md",
+    "kernel/SOUL.md",
+    "kernel/TRUTH.md",
+    "kernel/10-RULES.md",
     "AGENTS.md",
     "docs/MAPA-SDC.md"
   ],

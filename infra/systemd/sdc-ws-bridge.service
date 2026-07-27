@@ -1,0 +1,32 @@
+# SDC WebSocket Bridge — Chat + Audio en Tiempo Real
+# Instalar: sudo ln -s /home/ubuntu/sonora-digital-corp/infra/systemd/sdc-ws-bridge.service /etc/systemd/system/
+# Activar:  sudo systemctl enable --now sdc-ws-bridge
+
+[Unit]
+Description=SDC WebSocket Bridge — Mystic Chat + Audio Real-time
+Documentation=https://github.com/sonoradigitalcorp-H/Sonora-Digital-Corp
+After=network.target redis.service
+Wants=redis.service
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/env python3 -m apps.core.ws_bridge.main
+WorkingDirectory=/home/ubuntu/sonora-digital-corp
+Restart=on-failure
+RestartSec=5
+User=ubuntu
+
+Environment=WS_BRIDGE_PORT=8181
+Environment=TTS_ENABLED=true
+Environment=LLM_MODEL=deepseek/deepseek-v4-flash
+Environment=REDIS_HOST=127.0.0.1
+Environment=REDIS_PORT=6379
+
+# Security
+NoNewPrivileges=yes
+ProtectHome=read-only
+ProtectSystem=full
+PrivateTmp=yes
+
+[Install]
+WantedBy=default.target

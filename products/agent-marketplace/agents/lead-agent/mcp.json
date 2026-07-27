@@ -1,0 +1,47 @@
+{
+  "agent_id": "lead-agent",
+  "required_mcp_servers": [
+    {
+      "name": "llm-router",
+      "type": "openrouter",
+      "description": "Razonamiento para scoring y negociación",
+      "entry": "mcp/servers/openrouter_mcp.py",
+      "env_file": "mcp/env-templates/openrouter.env"
+    },
+    {
+      "name": "crm-sync",
+      "type": "crm",
+      "description": "Sincronización con CRM del cliente",
+      "entry": "mcp/servers/crm_mcp.py",
+      "env_file": "mcp/env-templates/crm.env"
+    },
+    {
+      "name": "analytics-tracker",
+      "type": "analytics",
+      "description": "Pipeline analytics y ROI por agente",
+      "entry": "mcp/servers/analytics_mcp.py",
+      "env_file": "mcp/env-templates/database.env"
+    },
+    {
+      "name": "memory-engram",
+      "type": "engram",
+      "description": "Memoria de cada lead y conversación",
+      "entry": "mcp/servers/engram_mcp.py",
+      "env_file": "mcp/env-templates/database.env"
+    },
+    {
+      "name": "telegram-bot",
+      "type": "telegram",
+      "description": "Captura de leads desde Telegram",
+      "entry": "mcp/servers/telegram_mcp.py",
+      "env_file": "mcp/env-templates/telegram.env"
+    },
+    {
+      "name": "voice-twilio",
+      "type": "twilio",
+      "description": "Llamadas de calificación y cierre",
+      "entry": "mcp/servers/twilio_mcp.py",
+      "env_file": "mcp/env-templates/twilio.env"
+    }
+  ]
+}

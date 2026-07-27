@@ -3,7 +3,7 @@ from typing import Optional, Callable
 from twilio.rest import Client as TwilioClient
 from twilio.twiml.voice_response import VoiceResponse, Gather
 
-from core.config import settings
+from apps.core.config import settings
 
 logger = logging.getLogger(__name__)
 

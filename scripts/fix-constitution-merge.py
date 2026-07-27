@@ -6,7 +6,7 @@ import yaml
 
 REPO = Path(__file__).resolve().parent.parent
 OLD = REPO / "truth.bak"
-NEW = REPO / "constitution"
+NEW = REPO / "kernel"
 
 # Mapping: old_file -> new_file
 MERGE_MAP = {

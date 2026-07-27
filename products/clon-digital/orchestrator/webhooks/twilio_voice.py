@@ -1,7 +1,7 @@
 import logging
 from fastapi import APIRouter, Form, Request
 
-from core.config import settings
+from apps.core.config import settings
 from agents.voice_agent import VoiceAgent
 
 logger = logging.getLogger(__name__)

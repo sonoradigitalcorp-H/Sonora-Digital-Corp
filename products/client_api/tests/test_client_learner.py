@@ -8,7 +8,7 @@ sys.path.insert(0, str(REPO))
 
 import pytest
 
-from evolution.client_learner import ClientLearner
+from apps.evolution.client_learner import ClientLearner
 from memory.client_store import ClientStore
 
 

@@ -13,10 +13,10 @@ test:  ## Run unit tests (known stable subset)
 	PYTHONPATH=. python3 -m pytest tests/unit/ -q --tb=short
 
 test-all:  ## Run all tests (unit + bdd + integration)
-	PYTHONPATH=. python3 -m pytest tests/unit/ tests/gherkin/ tests/integration/ core/tests/ -q --tb=short
+	PYTHONPATH=. python3 -m pytest tests/unit/ tests/gherkin/ tests/integration/ apps/core/tests/ -q --tb=short
 
 test-v:  ## Run all tests verbose
-	PYTHONPATH=. python3 -m pytest tests/unit/ tests/gherkin/ tests/integration/ core/tests/ -v --tb=short
+	PYTHONPATH=. python3 -m pytest tests/unit/ tests/gherkin/ tests/integration/ apps/core/tests/ -v --tb=short
 
 test-integration:  ## Run integration tests only (real services)
 	PYTHONPATH=. python3 -m pytest tests/integration/ -v --tb=short
@@ -37,13 +37,13 @@ sdd-init:  ## Initialize SDD framework structure
 eval: eval-structural eval-promptfoo  ## Run all evaluations
 
 eval-structural:  ## Run structural evals (agent/cap/sdd/skill/event)
-	PYTHONPATH=. python3 -m pytest evals/structural/ -v --tb=short
+	PYTHONPATH=. python3 -m pytest tests/evals/structural/ -v --tb=short
 
 eval-promptfoo:  ## Run SDD promptfoo LLM evals
-	cd evals/promptfoo && promptfoo eval && cd ../..
+	cd tests/evals/promptfoo && promptfoo eval && cd ../..
 
 eval-dashboard:  ## Generate eval dashboard HTML
-	PYTHONPATH=. python3 evals/generate-dashboard.py
+	PYTHONPATH=. python3 tests/evals/generate-dashboard.py
 
 # ─── Enterprise Score ────────────────────────────────────────────────────────
 

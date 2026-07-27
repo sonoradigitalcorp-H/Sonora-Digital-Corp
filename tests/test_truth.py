@@ -1,7 +1,6 @@
 """
-Deprecated: truth/ has been migrated to constitution/ (HAS-001).
+Deprecated: truth/ has been migrated to kernel/ (HAS-001).
 Run tests/test_constitution.py instead.
-The symlink truth/ → constitution/ exists for backward compat.
 """
 import warnings
 warnings.warn(

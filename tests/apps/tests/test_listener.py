@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from events.listener import EventListener
-from events.handlers import MemoryHandler, AlertHandler
+from state.events.listener import EventListener
+from state.events.handlers import MemoryHandler, AlertHandler
 
 
 @pytest.mark.asyncio

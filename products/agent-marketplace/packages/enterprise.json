@@ -1,0 +1,45 @@
+{
+  "id": "enterprise",
+  "name": "Enterprise",
+  "price": 1999,
+  "setup_fee": 2499,
+  "description": "Para CEOs que escalan con un ejército de agentes",
+  "agents": [
+    "lead-capture",
+    "lead-qualifier",
+    "lead-closer",
+    "call-agent-inbound",
+    "call-agent-outbound",
+    "call-agent-campaign",
+    "marketing-full",
+    "marketing-multichannel",
+    "analytics-dashboard",
+    "ceo-copilot",
+    "crm-sync"
+  ],
+  "limits": {
+    "calls_monthly": 10000,
+    "contacts": 100000,
+    "campaigns_monthly": -1,
+    "telegram_channels": 10,
+    "leads_monthly": 5000
+  },
+  "features": [
+    "Pipeline completo: captura → califica → cierra",
+    "Agente de cierre autónomo (negociación + objeciones)",
+    "Campañas de llamadas masivas con segmentación IA",
+    "Marketing multicanal (Telegram + WhatsApp + Email)",
+    "CEO Copilot — asistente ejecutivo 24/7",
+    "Sincronización con CRM existente",
+    "Dedicado VPS + SLA 99.9%",
+    "Onboarding personalizado",
+    "API personalizada para integraciones"
+  ],
+  "mcp_servers": [
+    "openrouter", "telegram", "database",
+    "twilio", "telnyx", "freeswitch",
+    "whisper", "kokoro-tts", "engram",
+    "crm-sync", "analytics", "ceo-copilot"
+  ],
+  "target": "CEO que quiere un negocio operado por IA 24/7"
+}

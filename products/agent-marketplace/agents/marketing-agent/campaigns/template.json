@@ -1,0 +1,26 @@
+{
+  "campaign_template": {
+    "name": "Campaña ejemplo",
+    "duration_days": 30,
+    "channels": ["telegram"],
+    "content_calendar": {
+      "monday": "post_educativo",
+      "tuesday": "audio_resumen",
+      "wednesday": "testimonial_cliente",
+      "thursday": "promocion_especial",
+      "friday": "contenido_detras_de_camaras",
+      "saturday": "post_interactivo_encuesta",
+      "sunday": "cierre_semanal_resumen"
+    },
+    "kpi_targets": {
+      "engagement_rate": 0.15,
+      "leads_per_week": 10,
+      "cost_per_lead": 0.10
+    },
+    "budget": {
+      "total_usd": 100,
+      "content_creation": 30,
+      "ad_spend": 70
+    }
+  }
+}

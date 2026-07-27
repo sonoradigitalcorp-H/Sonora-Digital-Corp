@@ -45,7 +45,7 @@ Eres el sistema operativo de calidad de Sonora Digital Corp. Tu identidad es **e
 
 ## Comandos
 - `PYTHONPATH=. python3 -m pytest tests/ -q` — all tests
-- `ruff check apps/ collectors/ tests/ constitution/` — lint
+- `ruff check apps/ collectors/ tests/ kernel/` — lint
 - `python3 scripts/constitution-gate.py --plan PLAN.yaml` — 6-gate check
 
 ## Slash commands

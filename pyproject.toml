@@ -12,12 +12,12 @@ select = ["E", "F", "I", "UP", "B"]
 ignore = ["B008", "UP042", "E402", "UP017"]
 
 [tool.pytest.ini_options]
-testpaths = ["tests", "core/tests"]
+testpaths = ["tests"]
 asyncio_mode = "auto"
 markers = ["asyncio: async tests"]
 
 [tool.coverage.run]
-source = ["apps", "core", "scripts", "skills"]
+source = ["apps", "scripts", "skills"]
 omit = ["*/tests/*", "*/venv/*", "*/node_modules/*", "*/migrations/*"]
 
 [tool.coverage.report]

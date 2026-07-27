@@ -2,11 +2,11 @@
 from pathlib import Path
 import yaml
 
-CONST = Path(__file__).resolve().parent.parent / "constitution"
+CONST = Path(__file__).resolve().parent.parent / "kernel"
 
 
 def test_all_constitution_files_exist():
-    """Verifica que existan 16 constitution files + old truth symlink"""
+    """Verifica que existan 16 kernel files"""
     files = list(CONST.glob("*.yaml"))
     assert len(files) == 16, f"Expected 16 constitution files, got {len(files)}"
     expected = [
@@ -113,7 +113,7 @@ def test_level_system_in_index():
 
 
 def test_truth_symlink_works():
-    """El symlink truth/ → constitution/ funciona para backward compat"""
+    """truth/ ya no existe, se migró a kernel/"""
     truth_dir = Path(__file__).resolve().parent.parent / "truth"
     assert truth_dir.is_symlink(), "truth/ is not a symlink"
     assert truth_dir.resolve() == CONST.resolve(), \

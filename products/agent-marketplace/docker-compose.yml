@@ -1,0 +1,43 @@
+version: '3.8'
+services:
+  marketplace-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sdc-marketplace
+    ports:
+      - "8701:8701"
+    environment:
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-change-me}
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/marketplace
+      - REDIS_URL=redis://redis:6379/0
+      - FRONTEND_URL=http://localhost:8701
+    volumes:
+      - ../../config/tenants:/app/config/tenants
+      - ../../state/data:/app/data
+      - ./provisioning:/app/provisioning
+    depends_on:
+      - postgres
+      - redis
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15-alpine
+    container_name: sdc-marketplace-db
+    environment:
+      POSTGRES_DB: marketplace
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    container_name: sdc-marketplace-redis
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

@@ -6,8 +6,8 @@ from pathlib import Path
 
 import pytest
 
-from tenants.manager import TenantManager
-from tenants.models import TenantConfig
+from apps.tenants.manager import TenantManager
+from apps.tenants.models import TenantConfig
 from memory.tenant import TenantAwareStore
 from memory.stores import WorkingMemory
 

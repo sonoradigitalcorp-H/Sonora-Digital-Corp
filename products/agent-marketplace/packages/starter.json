@@ -1,0 +1,24 @@
+{
+  "id": "starter",
+  "name": "Starter",
+  "price": 299,
+  "setup_fee": 499,
+  "description": "Para CEOs que inician su automatización",
+  "agents": ["lead-capture", "marketing-basic"],
+  "limits": {
+    "calls_monthly": 500,
+    "contacts": 1000,
+    "campaigns_monthly": 5,
+    "telegram_channels": 1,
+    "leads_monthly": 100
+  },
+  "features": [
+    "Agente captura de leads WhatsApp/Web",
+    "Campañas básicas Telegram",
+    "Dashboard CEO",
+    "Notificaciones en tiempo real",
+    "Soporte email"
+  ],
+  "mcp_servers": ["openrouter", "telegram", "database"],
+  "target": "CEO que quiere empezar a capturar leads sin esfuerzo"
+}

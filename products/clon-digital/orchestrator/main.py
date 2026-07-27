@@ -5,10 +5,10 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 import uvicorn
 
-from core.config import settings
-from core.database import db
-from core.orchestrator import orchestrator
-from core.models import OrderCreate, OrderResponse
+from apps.core.config import settings
+from apps.core.database import db
+from apps.core.orchestrator import orchestrator
+from apps.core.models import OrderCreate, OrderResponse
 from webhooks.twilio_whatsapp import router as whatsapp_router
 from webhooks.twilio_voice import router as voice_router
 from dashboard.routes import router as dashboard_router

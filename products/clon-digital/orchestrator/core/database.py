@@ -3,7 +3,7 @@ import logging
 from datetime import datetime
 from typing import Optional
 from redis import Redis
-from core.config import settings
+from apps.core.config import settings
 
 logger = logging.getLogger(__name__)
 

@@ -3,6 +3,7 @@
   import * as THREE from "three";
   import AvatarPage from "./lib/AvatarPage.svelte";
   import StickerSystem from "./lib/StickerSystem.svelte";
+  import PartnerDashboard from "./lib/PartnerDashboard.svelte";
 
   let canvasContainer;
   let scene, camera, renderer, raycaster, mouse;
@@ -35,6 +36,7 @@
   let currentTime = "";
   let loading = true;
   let showAvatar = false;
+  let showDashboard = false;
   let activeTenant = "sonora-digital";
   let tenantName = "Sonora Digital Corp";
   let audioLevel = 0;
@@ -698,11 +700,28 @@
     🧑
   </button>
 
+  <button class="dash-btn" on:click={() => showDashboard = !showDashboard} title="Dashboard Partner">
+    📊
+  </button>
+
   <div class="notifications">
     {#each notifications as notif}
       <div class="notif">{notif.text}</div>
     {/each}
   </div>
+
+  <!-- Dashboard Overlay -->
+  {#if showDashboard}
+  <div class="avatar-overlay">
+    <div class="avatar-header">
+      <h2>📊 Dashboard Partner</h2>
+      <button class="close-btn" on:click={() => showDashboard = false}>✕</button>
+    </div>
+    <div class="avatar-body">
+      <PartnerDashboard />
+    </div>
+  </div>
+  {/if}
 
   <!-- Avatar Overlay -->
   {#if showAvatar}

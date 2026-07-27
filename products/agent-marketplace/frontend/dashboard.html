@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CEO Dashboard — Mystic Marketplace</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #c9d1d9; }
+.header { background: #161616; border-bottom: 1px solid #2a2a2a; padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+.header h1 { font-size: 1.3rem; font-weight: 700; background: linear-gradient(135deg, #7c5cfc, #c8a87c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.header .tenant { color: #8b8b8b; font-size: 0.9rem; }
+.container { max-width: 1280px; margin: 0 auto; padding: 2rem; }
+.metrics-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.metric-card { background: #161616; border: 1px solid #2a2a2a; border-radius: 12px; padding: 1.5rem; transition: border 0.2s; }
+.metric-card:hover { border-color: #7c5cfc; }
+.metric-card .label { font-size: 0.8rem; color: #8b8b8b; text-transform: uppercase; letter-spacing: 0.5px; }
+.metric-card .value { font-size: 2rem; font-weight: 800; margin-top: 0.3rem; }
+.metric-card .sub { font-size: 0.8rem; color: #22c55e; margin-top: 0.2rem; }
+.metric-card.purple .value { color: #7c5cfc; }
+.metric-card.green .value { color: #22c55e; }
+.metric-card.gold .value { color: #c8a87c; }
+.metric-card.blue .value { color: #60a5fa; }
+.section-title { font-size: 1.1rem; font-weight: 600; margin-bottom: 1rem; color: #e5e5e5; }
+.agents-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+.agent-card { background: #161616; border: 1px solid #2a2a2a; border-radius: 12px; padding: 1.5rem; }
+.agent-card .name { font-weight: 600; font-size: 1rem; }
+.agent-card .status { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.75rem; margin-top: 0.5rem; }
+.agent-card .status.active { background: rgba(34,197,94,0.15); color: #22c55e; }
+.agent-card .metrics { margin-top: 1rem; display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem; }
+.agent-card .metric { font-size: 0.85rem; }
+.agent-card .metric .val { font-weight: 600; color: #e5e5e5; }
+.agent-card .metric .lbl { color: #8b8b8b; font-size: 0.75rem; }
+.pipeline { background: #161616; border: 1px solid #2a2a2a; border-radius: 12px; padding: 1.5rem; margin-bottom: 2rem; }
+.pipeline-stages { display: flex; gap: 0; margin-top: 1rem; }
+.stage { flex: 1; text-align: center; padding: 1rem 0.5rem; position: relative; }
+.stage:not(:last-child)::after { content: '→'; position: absolute; right: -0.5rem; top: 50%; transform: translateY(-50%); color: #555; }
+.stage .count { font-size: 1.5rem; font-weight: 800; color: #7c5cfc; }
+.stage .name { font-size: 0.75rem; color: #8b8b8b; margin-top: 0.2rem; }
+.roi-table { width: 100%; border-collapse: collapse; }
+.roi-table th { text-align: left; padding: 0.75rem 0.5rem; font-size: 0.8rem; color: #8b8b8b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #2a2a2a; }
+.roi-table td { padding: 0.75rem 0.5rem; font-size: 0.9rem; border-bottom: 1px solid #1a1a1a; }
+.roi-table tr:last-child td { border-bottom: none; }
+.roi-table .positive { color: #22c55e; }
+.alerts { background: #161616; border: 1px solid #2a2a2a; border-radius: 12px; padding: 1.5rem; }
+.alert { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0; font-size: 0.9rem; }
+.alert .icon { font-size: 1.2rem; }
+.alert.success .icon { color: #22c55e; }
+.alert.info .icon { color: #60a5fa; }
+@media (max-width: 768px) { .container { padding: 1rem; } .metrics-grid { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>✦ Mystic CEO Dashboard</h1>
+  <div class="tenant" id="tenantInfo">Cargando...</div>
+</div>
+
+<div class="container">
+  <div class="metrics-grid" id="metrics">
+    <div class="metric-card purple"><div class="label">Leads Hoy</div><div class="value" id="leadsToday">—</div><div class="sub">+12% vs ayer</div></div>
+    <div class="metric-card green"><div class="label">Llamadas Hoy</div><div class="value" id="callsToday">—</div><div class="sub">8 activas</div></div>
+    <div class="metric-card gold"><div class="label">Ingreso Hoy</div><div class="value" id="revenueToday">—</div><div class="sub">ROI 506x</div></div>
+    <div class="metric-card blue"><div class="label">Costo Total</div><div class="value" id="costsTotal">—</div><div class="sub">$0.02 por lead</div></div>
+  </div>
+
+  <h2 class="section-title">🤖 Mis Agentes</h2>
+  <div class="agents-grid" id="agents"></div>
+
+  <h2 class="section-title">📈 Pipeline de Ventas</h2>
+  <div class="pipeline">
+    <div class="pipeline-stages" id="pipeline"></div>
+  </div>
+
+  <h2 class="section-title">📊 ROI por Agente</h2>
+  <div style="background:#161616;border:1px solid #2a2a2a;border-radius:12px;padding:1.5rem;margin-bottom:2rem;">
+    <table class="roi-table">
+      <thead><tr><th>Agente</th><th>Acciones</th><th>Costo</th><th>ROI</th><th>Rendimiento</th></tr></thead>
+      <tbody id="roiTable"></tbody>
+    </table>
+  </div>
+
+  <h2 class="section-title">🔔 Alertas en Vivo</h2>
+  <div class="alerts" id="alerts"></div>
+</div>
+
+<script>
+async function loadDashboard() {
+  const token = localStorage.getItem('token');
+  const tenantId = localStorage.getItem('tenant_id');
+  
+  if (!token) { window.location.href = '/login.html'; return; }
+  document.getElementById('tenantInfo').textContent = `Tenant: ${tenantId || '—'}`;
+
+  try {
+    const resp = await fetch(`/api/dashboard/${tenantId}`, {
+      headers: { 'Authorization': `Bearer ${token}` }
+    });
+    const data = await resp.json();
+
+    document.getElementById('tenantInfo').textContent = `${data.tenant} • ${data.package}`;
+    document.getElementById('leadsToday').textContent = data.metrics.leads_today;
+    document.getElementById('callsToday').textContent = data.metrics.calls_today;
+    document.getElementById('revenueToday').textContent = data.metrics.revenue_generated;
+    document.getElementById('costsTotal').textContent = data.metrics.costs_total;
+
+    // Agents
+    const agentsHtml = data.agent_performance.map(a => `
+      <div class="agent-card">
+        <div class="name">${a.agent}</div>
+        <div class="status active">● Activo</div>
+        <div class="metrics">
+          <div class="metric"><div class="val">${a.leads || a.calls || a.reach}</div><div class="lbl">Acciones</div></div>
+          <div class="metric"><div class="val" style="color:#22c55e">${a.roi}x</div><div class="lbl">ROI</div></div>
+          <div class="metric"><div class="val">$${a.cost}</div><div class="lbl">Costo</div></div>
+        </div>
+      </div>
+    `).join('');
+    document.getElementById('agents').innerHTML = agentsHtml;
+
+    // Pipeline
+    const pipelineHtml = Object.entries(data.metrics.pipeline).map(([stage, count]) => `
+      <div class="stage">
+        <div class="count">${count}</div>
+        <div class="name">${stage.replace('_', ' ')}</div>
+      </div>
+    `).join('');
+    document.getElementById('pipeline').innerHTML = pipelineHtml;
+
+    // ROI Table
+    const roiHtml = data.agent_performance.map(a => `
+      <tr>
+        <td><strong>${a.agent}</strong></td>
+        <td>${a.leads || a.calls || a.reach}</td>
+        <td>$${a.cost}</td>
+        <td class="positive">${a.roi}x</td>
+        <td><span style="color:#22c55e">●</span> Óptimo</td>
+      </tr>
+    `).join('');
+    document.getElementById('roiTable').innerHTML = roiHtml;
+
+    // Alerts
+    const alertsHtml = data.alerts.map(a => `
+      <div class="alert ${a.type}">
+        <span class="icon">${a.type === 'success' ? '✅' : 'ℹ️'}</span>
+        ${a.message}
+      </div>
+    `).join('');
+    document.getElementById('alerts').innerHTML = alertsHtml;
+
+  } catch (err) {
+    console.error('Dashboard error:', err);
+    document.getElementById('alerts').innerHTML = `
+      <div class="alert info"><span class="icon">⚠️</span> Conectando con el servidor...</div>
+    `;
+  }
+}
+
+loadDashboard();
+setInterval(loadDashboard, 15000); // Auto-refresh cada 15s
+</script>
+</body>
+</html>

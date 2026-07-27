@@ -1,0 +1,11 @@
+{
+  "name": "mystic-agent-marketplace",
+  "version": "1.0.0",
+  "description": "Mystic Agent Marketplace — Autonomous Agents for CEOs",
+  "scripts": {
+    "start": "uvicorn api.main:app --host 0.0.0.0 --port 8701 --reload",
+    "provision": "bash provisioning/provision.sh",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
+  }
+}

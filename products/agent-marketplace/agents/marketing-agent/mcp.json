@@ -1,0 +1,47 @@
+{
+  "agent_id": "marketing-agent",
+  "required_mcp_servers": [
+    {
+      "name": "telegram-bot",
+      "type": "telegram",
+      "description": "Bot de Telegram para enviar mensajes, audios, imágenes",
+      "entry": "mcp/servers/telegram_mcp.py",
+      "env_file": "mcp/env-templates/telegram.env"
+    },
+    {
+      "name": "llm-router",
+      "type": "openrouter",
+      "description": "Generación de contenido",
+      "entry": "mcp/servers/openrouter_mcp.py",
+      "env_file": "mcp/env-templates/openrouter.env"
+    },
+    {
+      "name": "tts-kokoro",
+      "type": "kokoro",
+      "description": "Audio-resúmenes con voz Mystic",
+      "entry": "mcp/servers/kokoro_mcp.py",
+      "env_file": null
+    },
+    {
+      "name": "image-gen",
+      "type": "fal-ai",
+      "description": "Generación de imágenes para posts",
+      "entry": "mcp/servers/fal_ai_mcp.py",
+      "env_file": "mcp/env-templates/fal-ai.env"
+    },
+    {
+      "name": "analytics-tracker",
+      "type": "analytics",
+      "description": "Tracking de ROI por campaña y agente",
+      "entry": "mcp/servers/analytics_mcp.py",
+      "env_file": "mcp/env-templates/database.env"
+    },
+    {
+      "name": "memory-engram",
+      "type": "engram",
+      "description": "Memoria de audiencia y preferencias",
+      "entry": "mcp/servers/engram_mcp.py",
+      "env_file": "mcp/env-templates/database.env"
+    }
+  ]
+}

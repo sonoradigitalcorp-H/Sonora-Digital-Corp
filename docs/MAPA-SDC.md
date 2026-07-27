@@ -5,56 +5,59 @@
 ```
 ~/sdc/                                      ← ÚNICA FUENTE DE VERDAD
 │
-├── 📜 CONSTITUCIÓN
-│   ├── constitution/  ← OMEGA-PROMPT, 10-RULES, TRUTH, SOUL
+├── 📜 CONSTITUCIÓN (Capa 0)
+│   ├── kernel/            ← OMEGA-PROMPT, SOUL, TRUTH, 10-RULES
 │   ├── AGENTS.md                           ← Referencia rápida
 │   ├── CLAUDE.md                           ← Protocolo de operación
-│   └── opencode.json                        ← Config del agente (25 agents, 6 instrucciones)
+│   └── opencode.json                        ← Config del agente (25 agents)
 │
-├── 🧠 CORE (el motor de la empresa)
-│   ├── apps/jarvis/                        ← 18 agentes, orquestador, engram
-│   ├── apps/webui/                         ← FastAPI frontend (:5174)
-│   ├── apps/hermes/                        ← MCP bridge
-│   ├── apps/voice/                         ← STT/TTS
-│   ├── infra/                              ← Docker, nginx, monitoreo
-│   ├── scripts/                            ← DevOps, pipeline, alertas
-│   └── config/                             ← Configuraciones
+├── 🧠 CORE (Capa 1-2 — motor + servicios)
+│   ├── apps/              ← Servicios core del sistema
+│   │   ├── core/          ← Motor principal (engine, planner, agents)
+│   │   ├── evolution/     ← Auto-evolución, scorecard, aprendizaje
+│   │   ├── hermes/        ← Gateway multi-canal (Telegram, WhatsApp)
+│   │   ├── webui/         ← FastAPI frontend (:5174)
+│   │   ├── voice/         ← STT/TTS
+│   │   ├── frontends/     ← HTML/CSS/JS frontends y landings
+│   │   └── ...            ← (collectors, handlers, agents, etc.)
+│   ├── infra/             ← Docker, nginx, monitoreo, fleet.yml
+│   ├── scripts/           ← DevOps, pipeline, automatización
+│   ├── config/            ← Configuraciones, tenants, secrets
+│   └── state/             ← Estado vivo: eventos, calidad, engram
+│       └── events/        ← Sistema de eventos del core
 │
-├── 🤖 PLATAFORMAS (canales de comunicación)
-│   ├── platforms/telegram/                 ← Bot Telegram (98 skills)
-│   └── platforms/whatsapp/                 ← Bridge WhatsApp
+├── 📦 PRODUCTOS (Capa 3 — lo que SDC vende)
+│   ├── products/mystika/            ← Educación musical
+│   ├── products/clon-digital/       ← Clon digital
+│   ├── products/client_api/         ← API para clientes
+│   └── products/manager.py          ← Gestor de productos
 │
-├── 📦 PRODUCTOS (lo que SDC vende)
-│   ├── products/mystika/                   ← Plataforma educación musical + NSFW
-│   ├── products/yami/                      ← Yami (Mystic + Noel)
-│   ├── products/telegram-masterclass/      ← Curso Telegram
-│   ├── products/booking/                   ← Sistema de reservas
-│   ├── products/chatbot/                   ← Chatbot setup
-│   └── products/landing-artista/           ← Landing page genérica
+├── 👤 CLIENTES (Capa 4 — implementaciones)
+│   ├── clients/abe-music/           ← ABE Music (Abraham)
+│   └── clients/azrec/               ← Alejandro Zamora Recording
 │
-├── 👤 CLIENTES (implementaciones específicas)
-│   ├── clients/abe-music/                  ← ABE Music (Abraham)
-│   └── clients/azrec/                      ← Alejandro Zamora Recording
-│
-├── 🧪 TESTS
-│   └── tests/                              ← 442 tests
-│
-├── 📊 MEMORIA
-│   ├── state/                              ← Logs, eventos, engram DB
-│   ├── memory/                             ← Lecciones aprendidas
-│   └── process/                            ← Pipeline de SPECs (7 completados)
+├── 🧪 TESTS Y EVALS
+│   ├── tests/                       ← Tests unitarios, BDD, integración
+│   └── tests/evals/                 ← Evaluaciones estructurales y promptfoo
 │
 ├── 📚 DOCUMENTACIÓN
-│   ├── README.md                           ← Guía rápida
-│   ├── MAPA-SDC.md                         ← Este archivo
-│   ├── mission-control.html                ← Dashboard vivo
-│   └── presentations/                      ← Presentaciones HTML
+│   ├── docs/                        ← Documentación del sistema
+│   ├── reference/                   ← Especificaciones cerradas, arqueología
+│   └── adrs/                        ← Architecture Decision Records
+│
+├── 🛠️  OPERACIONES
+│   ├── ops/playbooks/               ← Procedimientos estandarizados
+│   ├── ops/runbooks/                ← Runbooks de recuperación
+│   ├── process/                     ← Pipeline de SPECs activos/completados
+│   ├── backups/                     ← Backups diarios
+│   └── portal/                      ← Grimoire 3D (Three.js galaxy)
 │
 └── ⚙️  RAÍZ (solo archivos esenciales)
     ├── opencode.json
     ├── AGENTS.md
     ├── CLAUDE.md
     ├── README.md
+    ├── Makefile
     ├── pyproject.toml
     └── requirements.txt
 ```
