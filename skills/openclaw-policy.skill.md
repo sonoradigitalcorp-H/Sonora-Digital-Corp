@@ -39,7 +39,7 @@ Events:
 ```
 Dependencies:
 - OpenClaw gateway: port 18789
-- Constitution: YAML policy files in constitution/
+- Constitution: YAML policy files in kernel/
 - Policy engine: rule evaluation runtime
 ```
 

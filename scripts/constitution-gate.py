@@ -13,7 +13,7 @@ from pathlib import Path
 import yaml
 
 REPO = Path(__file__).resolve().parent.parent
-CONSTITUTION_DIR = REPO / "constitution"
+CONSTITUTION_DIR = REPO / "kernel"
 PLAN_FILE = REPO / "process" / "active" / "PLAN.yaml"
 
 

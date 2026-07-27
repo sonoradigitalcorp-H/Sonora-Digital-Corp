@@ -2,8 +2,8 @@ import logging
 from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 
-from core.database import db
-from core.config import settings
+from apps.core.database import db
+from apps.core.config import settings
 
 logger = logging.getLogger(__name__)
 

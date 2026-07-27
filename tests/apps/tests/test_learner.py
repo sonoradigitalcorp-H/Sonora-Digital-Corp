@@ -9,7 +9,7 @@ import pytest
 REPO = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO))
 
-from evolution.learner import Learner, SessionStore
+from apps.evolution.learner import Learner, SessionStore
 
 
 @pytest.fixture

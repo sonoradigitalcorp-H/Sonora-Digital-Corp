@@ -10,9 +10,9 @@ import pytest
 REPO = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO))
 
-from evolution.pattern_detector import PatternDetector, _read_json, _write_json
-from evolution.proposal_generator import ProposalGenerator
-from evolution.auto_evolve import AutoEvolve
+from apps.evolution.pattern_detector import PatternDetector, _read_json, _write_json
+from apps.evolution.proposal_generator import ProposalGenerator
+from apps.evolution.auto_evolve import AutoEvolve
 
 
 # ─── Helpers ───────────────────────────────────────────────────────

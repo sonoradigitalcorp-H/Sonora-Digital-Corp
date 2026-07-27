@@ -31,11 +31,9 @@
   let showRealCosts = false; // ← ESTO NUNCA SE ACTIVA EN PRODUCCIÓN
 
   // WHAT THE PARTNER SEES (no real costs)
-  let partnerEarnings = $derived.by(() => {
-    let gross = recentTransactions.reduce((sum, t) => sum + t.price, 0);
-    let sdcCommission = gross * commissionRate;
-    return gross - sdcCommission;
-  });
+  $: grossTotal = recentTransactions.reduce((sum, t) => sum + t.price, 0);
+  $: sdcCommission = grossTotal * commissionRate;
+  $: partnerEarnings = grossTotal - sdcCommission;
 
   onMount(() => {
     // Fetch real data from API when available

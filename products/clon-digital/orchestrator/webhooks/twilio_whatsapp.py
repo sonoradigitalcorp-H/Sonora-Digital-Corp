@@ -2,8 +2,8 @@ import logging
 from fastapi import APIRouter, Form, Request
 from twilio.twiml.messaging_response import MessagingResponse
 
-from core.orchestrator import orchestrator
-from core.database import db
+from apps.core.orchestrator import orchestrator
+from apps.core.database import db
 from agents.messaging_agent import MessagingAgent
 
 logger = logging.getLogger(__name__)

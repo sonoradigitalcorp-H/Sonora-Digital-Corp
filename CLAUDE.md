@@ -35,7 +35,7 @@ Tu otra sesión dejó esto grabado en Engram. Lo leo automáticamente al iniciar
 
 ```
 ~/sdc/
-├── constitution/     Reglas, OMEGA-PROMPT, TRUTH
+├── kernel/           Reglas, OMEGA-PROMPT, TRUTH
 ├── apps/             Hermes, WebUI, Voz, Agentes
 ├── infra/            Docker, nginx
 ├── platforms/        Telegram, WhatsApp

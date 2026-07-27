@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es-MX">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Elige tu Pack — Mystic Marketplace</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #c9d1d9; min-height: 100vh; }
+.header { background: #161616; border-bottom: 1px solid #2a2a2a; padding: 1rem 2rem; text-align: center; }
+.header h1 { font-size: 1.5rem; font-weight: 800; background: linear-gradient(135deg, #7c5cfc, #c8a87c); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+.header p { color: #8b8b8b; font-size: 0.9rem; margin-top: 0.3rem; }
+.container { max-width: 1100px; margin: 0 auto; padding: 3rem 2rem; }
+.packages { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+.package { background: #161616; border: 1px solid #2a2a2a; border-radius: 16px; padding: 2rem; position: relative; transition: all 0.3s; display: flex; flex-direction: column; }
+.package:hover { border-color: #7c5cfc; transform: translateY(-2px); box-shadow: 0 12px 40px rgba(124,92,252,0.1); }
+.package.featured { border-color: #7c5cfc; background: linear-gradient(180deg, #1a1a2e, #161616); }
+.package .badge { position: absolute; top: -0.8rem; right: 1.5rem; background: #7c5cfc; color: #fff; padding: 0.3rem 1rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600; }
+.package .name { font-size: 1.2rem; font-weight: 700; }
+.package .price { font-size: 2.5rem; font-weight: 800; margin-top: 0.5rem; }
+.package .price span { font-size: 1rem; font-weight: 400; color: #8b8b8b; }
+.package .setup { font-size: 0.85rem; color: #8b8b8b; margin-top: 0.2rem; }
+.package .description { color: #8b8b8b; font-size: 0.9rem; margin-top: 1rem; line-height: 1.5; }
+.package .agents { margin-top: 1.5rem; }
+.package .agents .title { font-size: 0.8rem; color: #8b8b8b; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.5rem; }
+.package .agents .tag { display: inline-block; padding: 0.3rem 0.7rem; background: rgba(124,92,252,0.1); border: 1px solid rgba(124,92,252,0.2); border-radius: 8px; font-size: 0.8rem; margin: 0.2rem; }
+.package .features { margin-top: 1.5rem; flex: 1; }
+.package .feature { display: flex; align-items: center; gap: 0.5rem; padding: 0.4rem 0; font-size: 0.9rem; color: #c9d1d9; }
+.package .feature .icon { color: #22c55e; }
+.package .btn { margin-top: 1.5rem; padding: 1rem; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.2s; text-align: center; width: 100%; }
+.package .btn-primary { background: linear-gradient(135deg, #7c5cfc, #6a4fda); color: #fff; }
+.package .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(124,92,252,0.3); }
+.package .btn-outline { background: transparent; border: 1px solid #333; color: #c9d1d9; }
+.package .btn-outline:hover { border-color: #7c5cfc; color: #fff; }
+@media (max-width: 768px) { .container { padding: 1.5rem; } .packages { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>✦ Elige tu Pack de Agentes</h1>
+  <p>Corre en tu infraestructura. Tú tienes el control.</p>
+</div>
+
+<div class="container">
+  <div class="packages" id="packages">
+    <div class="package">
+      <div class="name">⚡ Starter</div>
+      <div class="price">$299 <span>/mes</span></div>
+      <div class="setup">+ $499 setup único</div>
+      <div class="description">Para CEOs que inician su automatización</div>
+      <div class="agents">
+        <div class="title">Agentes incluidos</div>
+        <span class="tag">Lead Capture</span>
+        <span class="tag">Marketing Básico</span>
+      </div>
+      <div class="features">
+        <div class="feature"><span class="icon">✓</span> Captura leads WhatsApp/Web</div>
+        <div class="feature"><span class="icon">✓</span> Campañas básicas Telegram</div>
+        <div class="feature"><span class="icon">✓</span> Dashboard CEO</div>
+        <div class="feature"><span class="icon">✓</span> 500 llamadas/mes</div>
+      </div>
+      <button class="btn btn-primary" onclick="selectPackage('starter')">Elegir Starter</button>
+    </div>
+
+    <div class="package featured">
+      <div class="badge">MÁS ELEGIDO</div>
+      <div class="name">🔥 Business</div>
+      <div class="price">$799 <span>/mes</span></div>
+      <div class="setup">+ $999 setup único</div>
+      <div class="description">Para CEOs que quieren leads cerrados</div>
+      <div class="agents">
+        <div class="title">Agentes incluidos</div>
+        <span class="tag">Lead Capture</span>
+        <span class="tag">Lead Qualifier</span>
+        <span class="tag">Call Inbound</span>
+        <span class="tag">Call Outbound</span>
+        <span class="tag">Marketing Full</span>
+        <span class="tag">Analytics</span>
+      </div>
+      <div class="features">
+        <div class="feature"><span class="icon">✓</span> Captura + califica + cierra leads</div>
+        <div class="feature"><span class="icon">✓</span> Llamadas entrantes 24/7 con IA</div>
+        <div class="feature"><span class="icon">✓</span> Llamadas salientes por campaña</div>
+        <div class="feature"><span class="icon">✓</span> ROI tracking por cada agente</div>
+        <div class="feature"><span class="icon">✓</span> 2,000 llamadas/mes</div>
+        <div class="feature"><span class="icon">✓</span> Dashboard CEO en vivo</div>
+      </div>
+      <button class="btn btn-primary" onclick="selectPackage('business')">Elegir Business</button>
+    </div>
+
+    <div class="package">
+      <div class="name">👑 Enterprise</div>
+      <div class="price">$1,999 <span>/mes</span></div>
+      <div class="setup">+ $2,499 setup único</div>
+      <div class="description">Para CEOs que escalan con un ejército de agentes</div>
+      <div class="agents">
+        <div class="title">Agentes incluidos</div>
+        <span class="tag">Todo Business</span>
+        <span class="tag">Lead Closer</span>
+        <span class="tag">Call Campaigns</span>
+        <span class="tag">Multi-channel</span>
+        <span class="tag">CEO Copilot</span>
+        <span class="tag">CRM Sync</span>
+      </div>
+      <div class="features">
+        <div class="feature"><span class="icon">✓</span> Pipeline completo: captura → cierra</div>
+        <div class="feature"><span class="icon">✓</span> Agente de cierre autónomo</div>
+        <div class="feature"><span class="icon">✓</span> Campañas masivas segmentadas IA</div>
+        <div class="feature"><span class="icon">✓</span> Marketing multicanal</div>
+        <div class="feature"><span class="icon">✓</span> CEO Copilot 24/7</div>
+        <div class="feature"><span class="icon">✓</span> VPS dedicado + SLA 99.9%</div>
+        <div class="feature"><span class="icon">✓</span> Llamadas ilimitadas</div>
+      </div>
+      <button class="btn btn-primary" onclick="selectPackage('enterprise')">Elegir Enterprise</button>
+    </div>
+  </div>
+</div>
+
+<script>
+async function selectPackage(pkg) {
+  const token = new URLSearchParams(window.location.search).get('token') || localStorage.getItem('token');
+  if (!token) { window.location.href = '/login.html'; return; }
+
+  if (!confirm(`¿Confirmas el paquete ${pkg}? Tus agentes se desplegarán en 5 minutos.`)) return;
+
+  try {
+    // Decode JWT to get email/phone
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    
+    const resp = await fetch('/api/provision/start', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({
+        email: payload.sub,
+        phone: payload.phone || '+52 662 000 0000',
+        package: pkg,
+        business_name: payload.name || ''
+      })
+    });
+    const data = await resp.json();
+    if (resp.ok) {
+      localStorage.setItem('tenant_id', data.tenant_id);
+      window.location.href = `/dashboard.html?token=${token}`;
+    } else {
+      alert('Error: ' + (data.detail || 'No se pudo completar'));
+    }
+  } catch (err) {
+    alert('Error de conexión: ' + err.message);
+  }
+}
+</script>
+</body>
+</html>

@@ -2,9 +2,9 @@ import asyncio
 import logging
 from datetime import datetime
 
-from core.config import settings
-from core.models import Order, Client, OrderCreate
-from core.database import db
+from apps.core.config import settings
+from apps.core.models import Order, Client, OrderCreate
+from apps.core.database import db
 from agents.video_agent import VideoAgent
 from agents.voice_agent import VoiceAgent
 from agents.messaging_agent import MessagingAgent

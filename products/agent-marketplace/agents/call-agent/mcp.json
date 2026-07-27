@@ -1,0 +1,48 @@
+{
+  "agent_id": "call-agent",
+  "required_mcp_servers": [
+    {
+      "name": "voice-twilio",
+      "type": "twilio",
+      "description": "Puente de llamadas PSTN",
+      "entry": "mcp/servers/twilio_mcp.py",
+      "env_file": "mcp/env-templates/twilio.env"
+    },
+    {
+      "name": "voice-telnyx",
+      "type": "telnyx",
+      "description": "SIP trunk alternativo (más barato)",
+      "entry": "mcp/servers/telnyx_mcp.py",
+      "env_file": "mcp/env-templates/telnyx.env",
+      "optional": true
+    },
+    {
+      "name": "stt-whisper",
+      "type": "whisper",
+      "description": "Speech-to-text local",
+      "entry": "mcp/servers/whisper_mcp.py",
+      "env_file": null
+    },
+    {
+      "name": "tts-kokoro",
+      "type": "kokoro",
+      "description": "Text-to-speech local",
+      "entry": "mcp/servers/kokoro_mcp.py",
+      "env_file": null
+    },
+    {
+      "name": "llm-router",
+      "type": "openrouter",
+      "description": "Ruteador de modelos LLM",
+      "entry": "mcp/servers/openrouter_mcp.py",
+      "env_file": "mcp/env-templates/openrouter.env"
+    },
+    {
+      "name": "memory-engram",
+      "type": "engram",
+      "description": "Memoria persistente del agente",
+      "entry": "mcp/servers/engram_mcp.py",
+      "env_file": "mcp/env-templates/database.env"
+    }
+  ]
+}

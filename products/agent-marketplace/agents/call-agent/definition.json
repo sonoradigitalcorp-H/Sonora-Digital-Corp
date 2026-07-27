@@ -1,0 +1,28 @@
+{
+  "id": "call-agent",
+  "name": "Call Agent — Inbound + Outbound",
+  "version": "1.0.0",
+  "description": "Agente telefónico que recibe llamadas 24/7 y realiza campañas salientes",
+  "capabilities": [
+    "inbound_call_handling",
+    "outbound_call_campaigns",
+    "lead_qualification_by_phone",
+    "appointment_scheduling",
+    "voicemail_detection",
+    "sentiment_analysis",
+    "real_time_transcription",
+    "human_handoff"
+  ],
+  "entry_flow": "inbound_handler.py",
+  "models": {
+    "stt": "whisper-base",
+    "llm": "deepseek/deepseek-v4-flash",
+    "tts": "kokoro-82m"
+  },
+  "voice": {
+    "provider": "twilio",
+    "fallback": "telnyx",
+    "number_mx": "+526621072254",
+    "region": "mx"
+  }
+}

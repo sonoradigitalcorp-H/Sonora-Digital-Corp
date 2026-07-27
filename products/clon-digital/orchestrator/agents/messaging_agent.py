@@ -2,7 +2,7 @@ import logging
 from typing import Optional
 from twilio.rest import Client as TwilioClient
 
-from core.config import settings
+from apps.core.config import settings
 
 logger = logging.getLogger(__name__)
 

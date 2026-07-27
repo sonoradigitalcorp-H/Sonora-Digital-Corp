@@ -6,7 +6,7 @@
 
 ## Verification Gates
 1. **Git Sync Gate** — correr `scripts/git-sync.sh --status` para verificar que el repo está sincronizado con origin/main (GIT-006)
-2. **Truth Gate** — validar contra `constitution/`
+2. **Truth Gate** — validar contra `kernel/`
 3. **Tests Gate** — ejecutar tests y verificar que pasan
 4. **Score Gate** — score final ≥ 60
 5. **Lint Gate** — `ruff check --quiet`

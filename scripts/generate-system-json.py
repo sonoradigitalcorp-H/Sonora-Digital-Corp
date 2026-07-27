@@ -18,7 +18,7 @@ def load_yaml(path):
         return {}
 
 def get_layers():
-    """Build layers from constitution/ and process/"""
+    """Build layers from kernel/ and process/"""
     layers = [
         {
             "id": "kernel", "name": "Kernel", "radius": 8, "element": "fire",
@@ -59,7 +59,7 @@ def get_layers():
     ]
 
     # Kernel: from constitution/
-    kernel_dir = SDC_HOME / 'constitution'
+    kernel_dir = SDC_HOME / 'kernel'
     if kernel_dir.exists():
         for f in sorted(kernel_dir.iterdir()):
             if f.suffix in ('.md', '.yaml') and f.stat().st_size < 50000:

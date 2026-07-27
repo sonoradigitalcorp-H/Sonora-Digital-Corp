@@ -1,0 +1,36 @@
+{
+  "id": "business",
+  "name": "Business",
+  "price": 799,
+  "setup_fee": 999,
+  "description": "Para CEOs que quieren cerrar más ventas",
+  "agents": [
+    "lead-capture",
+    "lead-qualifier",
+    "call-agent-inbound",
+    "call-agent-outbound",
+    "marketing-full",
+    "analytics-dashboard"
+  ],
+  "limits": {
+    "calls_monthly": 2000,
+    "contacts": 10000,
+    "campaigns_monthly": 20,
+    "telegram_channels": 3,
+    "leads_monthly": 500
+  },
+  "features": [
+    "Agente captura + calificación de leads",
+    "Llamadas entrantes 24/7 con IA",
+    "Llamadas salientes por campaña",
+    "Campañas Telegram con ROI tracking",
+    "Dashboard CEO con KPIs en vivo",
+    "Pipeline de cierre automatizado",
+    "Soporte prioritario"
+  ],
+  "mcp_servers": [
+    "openrouter", "telegram", "database",
+    "twilio", "whisper", "kokoro-tts"
+  ],
+  "target": "CEO que quiere leads cerrados sin tocar el teléfono"
+}

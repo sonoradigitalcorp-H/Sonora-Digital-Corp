@@ -7,7 +7,7 @@ import pytest
 REPO = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO))
 
-from evolution.session_store import SessionStore
+from apps.evolution.session_store import SessionStore
 
 
 @pytest.fixture

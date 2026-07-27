@@ -11,9 +11,10 @@
             ╱_________________________╱
 ```
 
-**Versión:** 3.0.0 · **Branch:** main (`ff4f25b`) · **Fecha:** 2026-07-19  
-**Fundación:** 31 apps core · 54 skills · 26 MCP servers · 74 agentes · 14 productos · 118 eventos  
-**VPS:** 29 containers Docker · 6 systemd services · 4/6 health online  
+**Versión:** 3.1.0 · **Branch:** main (`0548123`) · **Fecha:** 2026-07-26  
+**Fundación:** 18 directorios raíz · 7 archivos esenciales · 37 apps · 51 skills · 65 scripts · 13 ADRs  
+**VPS:** OVH 11GB RAM · 96GB SSD · Ubuntu 26.04 · Docker + systemd  
+**Reestructuración:** 2026-07-26 — De 71 entradas a 25 en raíz (arquitectura 6 Capas)  
 
 ---
 
@@ -43,221 +44,79 @@ Cada componente ahora **sabe qué es, dónde está y cómo hablar con los demás
 
 ---
 
-## 📐 El Árbol del Sistema
+## 📐 El Árbol del Sistema — Arquitectura 6 Capas
 
 ```
 sonora-digital-corp/
 │
-├── ⚛️ CORE — 31 apps (el núcleo cuántico)
-│   ├── apps/observe/          Nivel 1: Observar  — Eventos, collectors
-│   ├── apps/understand/       Nivel 2: Entender  — Conocimiento, memoria
-│   ├── apps/decide/           Nivel 3: Decidir   — Planificación, economics
-│   ├── apps/act/              Nivel 4: Actuar    — Agentes, capabilities
-│   ├── apps/measure/          Nivel 5: Medir     — Scoreboard, guardian
-│   ├── apps/learn/            Nivel 6: Aprender  — Evolución, heurísticas
-│   ├── apps/control/          Nivel 7: Control   — Dashboard unificado
-│   │
-│   ├── apps/sonora_engine/    Motor principal (FastAPI + WebSocket)
-│   ├── apps/voice/            Pipeline de voz (STT + TTS + clonación)
-│   ├── apps/whatsapp/         Webhook WhatsApp (NUEVO)
-│   ├── apps/abe-service/      ABE Music OS (PWA)
-│   ├── apps/brain/            Knowledge Graph + RAG
-│   ├── apps/guardian/         Truth Guardian API
-│   ├── apps/webui/            Web UI legacy
-│   ├── apps/pack_gateway/     Pack Gateway (chat vertical)
-│   ├── apps/agent_metrics/    Métricas de agentes
-│   ├── apps/economics/        Cost tracking
-│   ├── apps/dashboard/        Node.js dashboard
-│   ├── apps/cache/            Cache layer
-│   ├── apps/mcp/              MCP gateway
-│   ├── apps/data/             Data processing
-│   ├── apps/landing/          Landing page
-│   ├── apps/learning/         Learning
-│   ├── apps/logs/             Centralized logs
-│   ├── apps/collectors/       Artist Intelligence collectors
-│   ├── apps/agents/           Hermes client wrapper
-│   ├── apps/abe/              ABE bridge
-│   └── apps/SIGNAL/           React app
+├── 📜 CAPA 0: KERNEL — Identidad y constitución
+│   ├── kernel/              30 archivos: OMEGA-PROMPT, SOUL, TRUTH, 10-RULES
+│   ├── AGENTS.md            Referencia rápida del agente
+│   ├── CLAUDE.md            Protocolo de operación
+│   └── opencode.json        Config del agente (25 subagentes)
 │
-├── 🧠 SKILLS — 54 definiciones (la memoria del sistema)
-│   │   Cada skill = 14 campos exactos (como un vector en el espacio de Hilbert)
+├── 🧠 CAPA 1-2: CORE — Motor + Servicios
+│   ├── apps/                37 servicios core
+│   │   ├── core/            Motor principal (engine, planner, agents, executors)
+│   │   ├── evolution/       Auto-evolución, scorecard, aprendizaje
+│   │   ├── hermes/          Gateway multi-canal (Telegram, WhatsApp, Desktop)
+│   │   ├── webui/           FastAPI frontend (:5174)
+│   │   ├── voice/           STT/TTS
+│   │   ├── frontends/       HTML/CSS/JS frontends y landings
+│   │   ├── sonora_engine/   Motor principal alternativo
+│   │   ├── whatsapp/        Webhook WhatsApp
+│   │   ├── abe-service/     ABE Music OS
+│   │   └── ...              (collectors, handlers, agents, nathy-bot, etc.)
 │   │
-│   ├── skills/root/           (44 skills)
-│   │   ├── analytics          BI reports via Hasura
-│   │   ├── automation         Cron jobs, workflows
-│   │   ├── content            Video/reel/podcast factory
-│   │   ├── creator            Agent-native companies
-│   │   ├── deploy             nginx, SSL, Docker, systemd
-│   │   ├── design             UI components (shadcn, three.js)
-│   │   ├── monitor            Health + auto-repair
-│   │   ├── nsfw               Adult content with safety filters
-│   │   ├── payments           MercadoPago + Stripe
-│   │   ├── social             Trend research (Playwright/Firecrawl)
-│   │   ├── clone-service      Digital twin (LoRA + voice)
-│   │   ├── hermes-*           (12 skills — convertidas de Telegram JSON)
-│   │   ├── openclaw-*         (6 skills — plugins de OpenClaw)
-│   │   ├── adr-generate       (NUEVO) Crear ADRs
-│   │   ├── sdk-python         (NUEVO) Usar SDK Python
-│   │   ├── adk-manage         (NUEVO) Gestionar ADK agents
-│   │   ├── skill-create       (NUEVO) Meta-skill para crear skills
-│   │   ├── incident-response  (NUEVO) Runbook de incidentes
-│   │   ├── whatsapp-*         (2 skills) Onboarding + catálogo
-│   │   └── ... + audit-security, capture-knowledge, etc.
-│   │
-│   └── skills/process/        (10 skills — SDD pipeline)
-│       ├── sdd-spec, sdd-design, sdd-apply, sdd-verify, sdd-archive
-│       ├── sdd-orchestrator, auto-doc, gsd, presentar
-│       └── SKILL-TEMPLATE.md
+│   ├── infra/               Docker, nginx, monitoreo, fleet.yml, FreeSWITCH
+│   ├── scripts/             65 scripts Python/bash (DevOps, pipeline, automatización)
+│   ├── config/              Configuraciones, tenants, secrets
+│   │   └── tenants/         Configs por cliente (abe-music, azrec, el-joyero, etc.)
+│   └── state/               Estado vivo del sistema
+│       ├── events/          Sistema de eventos del core
+│       ├── media/           Archivos multimedia
+│       ├── quality/         Violaciones de calidad
+│       └── engram.db        Memoria persistente
 │
-├── 🔧 TOOLS / MCP — 26 servers (los brazos del sistema)
-│   │   Cada MCP server = un observable cuántico
-│   │
-│   ├── mcp/servers/
-│   │   ├── wacli_mcp.py       WhatsApp (9 tools: send, file, voice, QR, wa.me, etc.)
-│   │   ├── engram_mcp.py      Memoria persistente multi-sesión
-│   │   ├── ffmpeg_mcp.py      Video/audio processing
-│   │   ├── generate_mcp.py    Image generation (FAL.ai + LoRA)
-│   │   ├── omnivoice_mcp.py   Text-to-speech + voice cloning
-│   │   ├── llm_mcp.py         Chat completion (OpenRouter, Ollama)
-│   │   ├── qdrant_mcp.py      Vector search
-│   │   ├── neo4j_mcp.py       Graph queries
-│   │   ├── payments_mcp.py    Stripe + MercadoPago
-│   │   ├── credit_mcp.py      Token credits
-│   │   ├── pricing_mcp.py     Pricing engine
-│   │   ├── commissions_mcp.py Commissions tracking
-│   │   ├── cost_tracker_mcp.py Cost intelligence
-│   │   ├── firecrawl_mcp.py   Web scraping
-│   │   ├── playwright_mcp.py  Browser automation
-│   │   ├── hasura_mcp.py      Hasura GraphQL
-│   │   ├── upload_mcp.py      File uploads
-│   │   ├── lora_mcp.py        LoRA training
-│   │   ├── openlovable_mcp.py Lovable page generation
-│   │   ├── onboarding_mcp.py  Client onboarding
-│   │   ├── whisper_mcp.py     Speech-to-text
-│   │   ├── supabase_mcp.py    Supabase CRUD
-│   │   ├── rag_mcp.py         RAG retrieval
-│   │   ├── voice_clone_mcp.py Voice cloning
-│   │   ├── routing_mcp.py     Tenant routing
-│   │   ├── provision_mcp.py   Tenant provisioning
-│   │   └── mercadopago_mcp.py MP payments
-│   │
-│   └── mcp/sdk/               (2 SDKs)
-│       ├── sonora-client.js   Node.js SDK v2.0
-│       └── sonora_client.py   Python SDK v2.0 (NUEVO)
+├── 📦 CAPA 3: PRODUCTOS — Lo que SDC vende
+│   ├── products/mystika/    Educación musical + NSFW
+│   ├── products/clon-digital/ Clon digital (LoRA + voz)
+│   ├── products/notifier/   🔔 Notificaciones multicanal
+│   ├── products/affiliates/ 🤝 Portal de afiliados
+│   ├── products/command-center/ 📊 Dashboard unificado
+│   ├── products/sonora-client/ 🖥️ Portal cliente
+│   ├── products/cyber_diagnosis/ 🔐 Cyber Security
+│   └── ...                  (catalog, social, docs, presentations, etc.)
 │
-├── 🤖 AGENTS — 74 entidades (los observadores)
-│   │
-│   ├── agents/registry.yaml   (14 agentes registrados)
-│   │   ├── creator-agent      Construir empresas agénticas
-│   │   ├── quality-agent      Evaluar prompts y pipelines
-│   │   ├── monitor-agent      Auto-repair del sistema
-│   │   ├── clone-agent        Clon digital (LoRA + voz)
-│   │   ├── research-agent     Investigación y análisis
-│   │   ├── video-agent        Generación de video
-│   │   ├── finance-agent      Pagos y conciliación
-│   │   ├── sales-agent        Ventas (ABE)
-│   │   ├── support-agent      Soporte (ABE)
-│   │   ├── voice-agent        Voz (ABE)
-│   │   ├── content-agent      Contenido (ABE)
-│   │   ├── marketing-agent    Marketing (ABE)
-│   │   ├── ceo-agent          Business owner (ABE)
-│   │   └── evolution          Self-improvement (NUEVO)
-│   │
-│   ├── mcp/adk/agents/        (36 ADK agents)
-│   │   ├── onboarding-agent   Client onboarding
-│   │   ├── research-agent     Strategic intelligence
-│   │   ├── sales-agent        Sales pipeline
-│   │   ├── support-agent      Customer support
-│   │   ├── content-agent      Content factory
-│   │   ├── booking-agent      Appointments
-│   │   └── 30+ abe-* agents  ABE Music sub-agents
-│   │
-│   └── opencode.json          (24 subagents configurados)
-│       ├── mystic             (PRIMARY) Alma del sistema
-│       ├── hermes             Gateway multi-canal
-│       ├── openclaw           42 skills gateway
-│       ├── sdd-*              (6) SDD pipeline agents
-│       ├── sales, dev, support, agent-os, knowledge
-│       ├── finance, security, ops, quality, strategy
-│       ├── builder, reviewer, social, content, music
-│       └── ADK bridge         (via MCP :6401, NUEVO)
+├── 👤 CAPA 4: CLIENTES — Implementaciones
+│   ├── clients/Abe Music Group/
+│   ├── clients/Aztrotech/
+│   ├── clients/Cesar Delivery/
+│   ├── clients/Hermosillo Contability Corp./
+│   └── clients/Joyeria/
 │
-├── 📦 PRODUCTOS — 14 entidades facturables
-│   │
-│   ├── products/notifier      🔔 :6200  Notificaciones multicanal (NUEVO)
-│   │   ├── main.py            API REST
-│   │   ├── core.py            Worker de eventos
-│   │   ├── frontend/          Dashboard de reglas (NUEVO)
-│   │   └── tests/             15 tests
-│   │
-│   ├── products/order_tracker 📦 :6300  Rastreo de entregas (NUEVO)
-│   │   ├── main.py            API + WebSocket
-│   │   ├── frontend/          Status page (NUEVO)
-│   │   └── tests/             13 tests
-│   │
-│   ├── products/affiliates    🤝 :6400  Portal de afiliados (NUEVO)
-│   │   ├── main.py            API REST
-│   │   ├── frontend/          Dashboard (NUEVO)
-│   │   └── tests/             15 tests
-│   │
-│   ├── products/command-center 📊 :8081  Dashboard unificado (NUEVO)
-│   │   ├── index.html         Frontend auto-contenido
-│   │   └── events.py          WebSocket server (opcional)
-│   │
-│   ├── products/sonora-client  🖥️  Portal cliente (HTML+JS)
-│   ├── products/sonora-dashboard 📈 Dashboard ABE Music
-│   ├── products/abe-music     🎵 ABE Music OS
-│   ├── products/cyber_diagnosis 🔐 Cyber Security
-│   ├── products/social        📱 Social media engine
-│   ├── products/catalog       📋 Service catalog
-│   ├── products/mystika       🧿 Mystik AI
-│   ├── products/docs          📚 Documentation
-│   └── products/presentations 🎞️  Presentations
+├── 🧪 TESTS + EVALS
+│   ├── tests/               Unitarios, BDD, integración
+│   ├── tests/evals/         Evaluaciones estructurales y promptfoo
+│   └── tests/promptfoo/     Evaluaciones LLM
 │
-├── 📜 CONSTITUTION — 16 YAMLs (las leyes físicas)
-│   ├── OMEGA-PROMPT.md        Prompt supremo
-│   ├── SOUL.md                Alma del sistema
-│   ├── TRUTH.md               Fuente única de verdad
-│   ├── 10-RULES.md            10 reglas inquebrantables
-│   ├── 000-*.yaml → 010-*.yaml  Leyes por dominio
-│   └── agents/harnesses/      Plantillas de agentes
+├── 📚 DOCUMENTACIÓN + DECISIONES
+│   ├── docs/                Mapas, presentaciones, manuales
+│   ├── reference/           Especificaciones cerradas, arqueología
+│   ├── adrs/                13 Architecture Decision Records
+│   └── process/             Pipeline SDD (specs activos/completados)
+│       └── specs/           Especificaciones técnicas
 │
-├── 🧬 HAS ARCHITECTURE — 11 specs (el ADN)
-│   ├── HAS-000                Index + Glossary
-│   ├── HAS-001                Constitution Engine
-│   ├── HAS-002                Memory contracts
-│   ├── HAS-003                Event Mesh
-│   ├── HAS-004                Cognitive Kernel
-│   ├── HAS-005                Capability Bus
-│   ├── HAS-006                Agent Runtime
-│   ├── HAS-007                Pipeline Evolution
-│   ├── HAS-008                Evolution Engine
-│   ├── HAS-009                Experience Layer
-│   ├── HAS-010                Security & Governance
-│   └── HAS-011                Multi-tenancy
+├── 🛠️ OPERACIONES
+│   ├── ops/playbooks/       Procedimientos estandarizados
+│   ├── ops/runbooks/        Runbooks de recuperación
+│   ├── backups/             Backups diarios + archive histórico
+│   ├── portal/              Grimoire 3D (Three.js galaxy)
+│   └── mcp/                 MCP SDK + servers (legacy)
 │
-├── 📋 ADRs — 38 decisiones documentadas
-│   ├── process/active/        (9 activos — incluye 5 nuevos de esta sesión)
-│   └── process/completed/     (29 completados)
-│
-├── 🧪 EVALS + TESTS — 107 archivos de test
-│   ├── evals/test_evals.py           35 evals estructurales
-│   ├── evals/test_unification_evals.py 10 evals de unificación (NUEVO)
-│   ├── tests/                        62 archivos de test legacy
-│   └── tests/mcp/, tests/sdk/, tests/apps/ (NUEVOS)
-│
-├── ⚡ EVENTS — 118 eventos en 29 categorías
-│   ├── state/events/catalog.yaml     Catálogo v3
-│   ├── state/events/events.jsonl     Bus en vivo
-│   └── events/emitter.py, listener.py, run_listener.py
-│
-└── 🛠️ SCRIPTS — Herramientas de automantenimiento
-    ├── scripts/generate_catalog.py   (NUEVO) System Catalog
-    ├── scripts/generate_niche.py     (NUEVO) Niche Generator
-    ├── scripts/whatsapp-webhook-cron.sh
-    ├── scripts/secure-backup.sh      Backup sanitizado
-    ├── scripts/healthcheck.sh        Health checker
-    └── scripts/*.py                  (30+ scripts)
+└── ⚙️ RAÍZ (7 archivos esenciales)
+    ├── AGENTS.md, CLAUDE.md, Makefile, opencode.json
+    ├── pyproject.toml, README.md, requirements.txt
 ```
 
 ---
@@ -458,44 +317,45 @@ Estado deseado: |generate⟩ = proactive (sistema propone)
 ## 📈 Métricas Clave del Sistema
 
 ```
-Hoy: 2026-07-19 · Commit: ff4f25b · Branch: main
+Hoy: 2026-07-26 · Commit: 0548123 · Branch: main
 ═══════════════════════════════════════════
 
+📁 Estructura raíz
+  18 directorios + 7 archivos esenciales (↓46 desde reestructuración)
+  Capas: kernel(C0) → infra/apps(C1-2) → products(C3) → clients(C4)
+
+🧠 Apps core
+  37 servicios en apps/ — core engine, evolution, hermes, voice, webui, etc.
+
 🧠 Skills
-  54 total · 46 completas (14 campos) · 8 incompletas (process/)
-  Fuentes: 29 SDC + 12 Hermes + 6 OpenClaw + 7 opencode business
+  51 definiciones (md/yml) — skills canónicas + SDD pipeline + speckit
 
 🤖 Agentes
-  74 totales: 14 registry + 36 ADK + 24 opencode subagents
-
-🔧 Tools
-  26 MCP servers · 2 SDKs (Node.js + Python)
+  25 subagentes en opencode.json + registry en config/agents/
 
 📦 Productos
-  14 total: 3 con API+frontend (NUEVOS) · 2 con frontend existente
+  ~20 entidades: mystika, clon-digital, notifier, affiliates, command-center, etc.
+
+👤 Clientes
+  5 cuentas: ABE Music, Aztrotech, Cesar Delivery, Hermosillo CC, Joyería
 
 📋 ADRs
-  9 activos · 29 completados · 38 decisiones documentadas
+  13 registros documentados
 
-⚡ Eventos
-  118 eventos en 29 categorías · 7 nuevos de WhatsApp
+🛠️ Scripts
+  65 herramientas de automatización y DevOps
 
 🛠️ Systemd en VPS
-  6 servicios: webhook, notifier, tracker, affiliates, adk, engram-obsidian
+  pendiente inventario actualizado
 
 🐳 Docker en VPS
-  29 containers: qdrant, neo4j, n8n, postgres, hasura, supabase*, etc.
+  12 containers: postgres, redis, neo4j, qdrant, n8n, mcp-server, webui, etc.
 
 🧪 Tests
-  107 archivos · 35 evals estructurales ✅ · 10 evals unificación ✅
+  tests/unitarios, BDD, integración, evals, promptfoo
 
-📊 Enterprise Score
-  69/100 (threshold ≥60) ✅ · Pasó de 58 → 69 en esta sesión
-  ┣━ test_pass_rate:    1/10  (pendiente arreglar tests legacy)
-  ┣━ automation:        5/10  (mejoró de 4 con cron scripts)
-  ┣━ agents:           10/10  (mejoró de 1 con registry.yaml fix)
-  ┣━ capabilities:      8/10
-  ┗━ documentation:    10/10  (mejoró de 9 con ADRs nuevos)
+📊 make doctor-quick
+  916 checks ✅ · 5 warnings · 5 errores pre-existentes
 ```
 
 ---
@@ -505,22 +365,25 @@ Hoy: 2026-07-19 · Commit: ff4f25b · Branch: main
 ```
 Si quieres...                        Ve a...
 ────────────────────────────────────────────────────
-Entender la arquitectura             process/has/HAS-000-index.md
-Ver el catálogo del sistema          python3 scripts/generate_catalog.py
-Crear un nicho desde cero            python3 scripts/generate_niche.py --niche X
-Ver skills disponibles               skills/INDEX.md (pendiente) o system-catalog.yaml
-Ver servicios en VPS                 ssh ubuntu@149.56.46.173 'systemctl --user list-units'
-Ver health del sistema               products/command-center/index.html
-Ver eventos en tiempo real           state/events/events.jsonl
-Tomar una decisión técnica           process/templates/ADR.md
-Crear una skill nueva                skills/SKILL-TEMPLATE.md
-Correr evals                         python3 -m pytest evals/test_evals.py -v
-Ver enterprise score                 python3 metrics/enterprise_score.py
-Sincronizar VPS                      bash scripts/sync-to-vps.sh
-Leer decisiones pasadas              process/active/ y process/completed/
+Entender la arquitectura 6 Capas     AGENTS.md + docs/MAPA-SDC.md
+Ver el árbol del sistema             docs/BLUEPRINT.md
+Ver la constitución del sistema      kernel/ (30 archivos)
+Correr tests                         make test
+Correr evaluación completa           make eval
+Correr preflight check               make doctor-quick
+Ver skills disponibles               skills/
+Ver servicios en apps                apps/
+Ver productos activos                products/
+Ver clientes                         clients/
+Ver configuraciones                  config/
+Ver ADRs                             adrs/
+Correr enterprise score              make score
+Ver eventos en tiempo real           state/events/
+Correr lint                          make lint (local only)
 ```
 
 ---
 
-*Blueprint generado por Mystic (SDC Orchestrator) — 2026-07-19*  
+*Blueprint actualizado por Mystic (SDC Orchestrator) — 2026-07-26*  
+*Reestructuración: 43→18 directorios raíz · 28→7 archivos sueltos · 6 Capas implementadas*  
 *"El sistema que se conoce solo"*

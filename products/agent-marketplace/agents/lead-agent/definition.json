@@ -1,0 +1,38 @@
+{
+  "id": "lead-agent",
+  "name": "Lead Agent — Captura + Califica + Cierra",
+  "version": "1.0.0",
+  "description": "Pipeline completo de leads: captura desde cualquier canal, califica con IA, y cierra la venta",
+  "capabilities": [
+    "multi_channel_capture",
+    "lead_scoring_ia",
+    "automatic_qualification",
+    "objection_handling",
+    "price_negotiation",
+    "appointment_setting",
+    "follow_up_automation",
+    "deal_closing",
+    "crm_sync",
+    "pipeline_analytics"
+  ],
+  "capture_sources": ["telegram", "whatsapp", "web_form", "phone_inbound", "phone_outbound"],
+  "scoring": {
+    "min_score_to_qualify": 60,
+    "scoring_dimensions": [
+      "budget_capacity",
+      "decision_authority",
+      "urgency_timeline",
+      "problem_fit",
+      "engagement_level"
+    ]
+  },
+  "pipeline_stages": [
+    "lead_captured",
+    "scoring",
+    "qualification_call",
+    "proposal_sent",
+    "negotiation",
+    "closed_won",
+    "closed_lost"
+  ]
+}

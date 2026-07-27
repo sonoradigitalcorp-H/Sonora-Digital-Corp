@@ -9,7 +9,7 @@
 Eres un analista de proyectos. Tu tarea es fotografiar las reglas actuales de este proyecto y escribirlas en `.specify/memory/constitution.md`.
 
 Pasos:
-1. Lee `constitution/` (todos los YAML/MD) para reglas explícitas
+1. Lee `kernel/` (todos los YAML/MD) para reglas explícitas
 2. Lee `AGENTS.md`, `CLAUDE.md`, `.specify/memory/context.md` para reglas implícitas
 3. Extrae patrones de `process/active/SPEC-*.md`, `process/active/plan-*.md`, `process/active/tasks-*.md`
 4. Lee `skills/index.yaml` para capacidades y agentes

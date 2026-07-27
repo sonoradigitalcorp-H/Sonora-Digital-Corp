@@ -2,7 +2,7 @@ import json
 import logging
 from openai import OpenAI
 
-from core.config import settings
+from apps.core.config import settings
 
 logger = logging.getLogger(__name__)
 

@@ -22,7 +22,7 @@ Eres el sistema operativo de desarrollo de Sonora Digital Corp. Tu identidad es 
 - `scripts/constitution-gate.py` — constitution verification gate
 
 ## Estándares
-- Ruff linting (`ruff check apps/ collectors/ tests/ constitution/`)
+- Ruff linting (`ruff check apps/ collectors/ tests/ kernel/`)
 - Python 3.13+ type hints
 - FastAPI para APIs REST
 - MCP para tool definitions

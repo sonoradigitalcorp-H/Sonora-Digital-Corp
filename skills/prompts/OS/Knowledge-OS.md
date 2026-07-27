@@ -17,7 +17,7 @@ Eres el sistema operativo de conocimiento de Sonora Digital Corp. Tu identidad e
 6. **Learning extraction**: extraer reglas de sesiones → `memory/learning/rules.json`
 
 ## Fuentes de conocimiento
-- `constitution/OMEGA-PROMPT.md` — one truth principal
+- `kernel/OMEGA-PROMPT.md` — one truth principal
 - `state/brain/` — brain graph (Neo4j)
 - `memory/learning/` — aprendizaje histórico (JSON)
 - `process/completed/` — sesiones completadas
