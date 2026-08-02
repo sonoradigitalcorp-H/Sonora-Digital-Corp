@@ -71,11 +71,32 @@ class TelegramHandler:
         self.engine = engine  # ConversationEngine (RAG-first) opcional
         self.tts_voice = config.get("audio_first", {}).get("tts_voice", "es-MX-DaliaNeural")
         self.conversaciones = {}
+        self._redis = None
+        try:
+            import redis
+            self._redis = redis.Redis(host="localhost", port=6379, db=0, decode_responses=True)
+            self._redis.ping()
+            logger.info("Redis cache conectado para sesiones persistentes")
+        except Exception as e:
+            logger.warning(f"Redis no disponible, sesiones en memoria: {e}")
 
     def _ctx(self, user_id: int) -> dict:
+        key = f"bot:ctx:{user_id}"
+        if self._redis:
+            cached = self._redis.get(key)
+            if cached:
+                import json as _json
+                return _json.loads(cached)
         if user_id not in self.conversaciones:
             self.conversaciones[user_id] = {"voz": False, "datos": {}, "paso": "inicio", "historial": []}
         return self.conversaciones[user_id]
+
+    def _save_ctx(self, user_id: int, ctx: dict):
+        if self._redis:
+            import json as _json
+            self._redis.setex(f"bot:ctx:{user_id}", 86400, _json.dumps(ctx))
+        else:
+            self.conversaciones[user_id] = ctx
 
     async def handle_message(self, update: Update, context: CallbackContext):
         msg = update.message
@@ -106,11 +127,13 @@ class TelegramHandler:
 
         if any(p in texto for p in ["modo voz", "voz", "audio", "escuchar", "modo audio"]):
             ctx["voz"] = True
+            self._save_ctx(user.id, ctx)
             await msg.reply_text("Modo voz activado. Te responderé con audio.")
             return
 
         if any(p in texto for p in ["modo texto", "texto", "escribir", "teclear"]):
             ctx["voz"] = False
+            self._save_ctx(user.id, ctx)
             await msg.reply_text("Modo texto activado.")
             return
 
