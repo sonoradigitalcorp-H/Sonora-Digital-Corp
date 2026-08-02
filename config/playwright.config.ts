@@ -7,15 +7,16 @@ export default defineConfig({
   fullyParallel: false,
   retries: 1,
   use: {
-    baseURL: 'http://localhost:5174',
-    headless: false,
+    baseURL: process.env.BASE_URL || 'http://localhost:5174',
+    headless: process.env.CI === 'true' || process.env.HEADLESS === 'true',
     viewport: { width: 1350, height: 700 },
     launchOptions: {
       args: [
-        '--window-position=0,0',
-        '--window-size=1350,700',
         '--no-sandbox',
+        '--disable-dev-shm-usage',
         '--disable-gpu',
+        '--disable-extensions',
+        '--disable-background-networking',
       ],
     },
   },

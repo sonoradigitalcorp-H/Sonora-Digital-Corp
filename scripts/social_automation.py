@@ -187,18 +187,20 @@ class ContentQueue:
 # ── Memory Monitor ────────────────────────────────────────────
 
 class MemoryGuard:
-    """Monitor RAM and prevent OOM."""
+    """Monitor RAM per-process and prevent OOM."""
     
     def __init__(self, max_mb: int = MAX_RAM_MB):
         self.max_mb = max_mb
+        self._pid = os.getpid()
     
     def check(self) -> bool:
-        """Return True if OK, False if over limit."""
+        """Return True if OK, False if over limit. Checks PROCESS memory, not system."""
         try:
             import psutil
-            used = psutil.virtual_memory().used / 1024 / 1024
-            if used > self.max_mb:
-                logger.warning(f"Memory guard: {used:.0f}MB > {self.max_mb}MB limit")
+            process = psutil.Process(self._pid)
+            mem_mb = process.memory_info().rss / 1024 / 1024
+            if mem_mb > self.max_mb:
+                logger.warning(f"Memory guard: process {self._pid} using {mem_mb:.0f}MB > {self.max_mb}MB limit")
                 return False
             return True
         except ImportError:
@@ -207,14 +209,19 @@ class MemoryGuard:
     def get_usage(self) -> dict:
         try:
             import psutil
+            process = psutil.Process(self._pid)
+            mem_mb = process.memory_info().rss / 1024 / 1024
             vmem = psutil.virtual_memory()
             return {
-                "used_mb": vmem.used / 1024 / 1024,
-                "available_mb": vmem.available / 1024 / 1024,
-                "percent": vmem.percent,
+                "process_mb": round(mem_mb, 1),
+                "system_used_mb": round(vmem.used / 1024 / 1024, 1),
+                "system_available_mb": round(vmem.available / 1024 / 1024, 1),
+                "system_percent": vmem.percent,
+                "limit_mb": self.max_mb,
+                "under_limit": mem_mb < self.max_mb,
             }
         except ImportError:
-            return {"used_mb": 0, "available_mb": 999, "percent": 0}
+            return {"process_mb": 0, "system_available_mb": 999, "under_limit": True}
 
 
 # ── Anti-Loop Safeguard ───────────────────────────────────────
@@ -287,7 +294,7 @@ class PlatformBase:
         
         return True, ""
     
-    def _random_delay(self, min_s: float = 2, max_s: float = 5):
+    def _random_delay(self, min_s: float = 10, max_s: float = 30):
         """Human-like random delay."""
         delay = random.uniform(min_s, max_s)
         time.sleep(delay)
