@@ -13,6 +13,19 @@ from telegram.ext import CallbackContext
 
 logger = logging.getLogger(__name__)
 
+
+def _ffmpeg():
+    """Binario ffmpeg funcional: prioriza el estático de imageio (el del sistema
+    está roto por conflicto de libva en este equipo)."""
+    try:
+        import imageio_ffmpeg
+        exe = imageio_ffmpeg.get_ffmpeg_exe()
+        if os.path.exists(exe):
+            return exe
+    except Exception:
+        pass
+    return "ffmpeg"
+
 CESAR = {
     "nombre": "César Holguín",
     "empresa": "AstroTech",
@@ -146,19 +159,31 @@ class TelegramHandler:
             ogg_path = f.name
 
         wav_path = ogg_path.replace(".ogg", ".wav")
-        subprocess.run(["ffmpeg", "-y", "-i", ogg_path, "-ar", "16000", "-ac", "1", wav_path], capture_output=True)
+        subprocess.run(
+            [_ffmpeg(), "-y", "-i", ogg_path, "-ar", "16000", "-ac", "1", wav_path],
+            capture_output=True,
+        )
 
+        texto = ""
         try:
-            import speech_recognition as sr
-            r = sr.Recognizer()
-            with sr.AudioFile(wav_path) as src:
-                audio = r.record(src)
-            texto = r.recognize_google(audio, language="es-ES")
-        except:
-            texto = ""
+            import sys
+            sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+            from apps.voice.stt import transcribe as _stt_transcribe
+            texto = _stt_transcribe(wav_path, language="es")
+        except Exception as e:
+            logger.warning(f"STT falló: {e}")
+            try:
+                import speech_recognition as sr
+                r = sr.Recognizer()
+                with sr.AudioFile(wav_path) as src:
+                    audio = r.record(src)
+                texto = r.recognize_google(audio, language="es-ES")
+            except Exception:
+                texto = ""
 
         os.unlink(ogg_path)
-        os.unlink(wav_path)
+        if os.path.exists(wav_path):
+            os.unlink(wav_path)
 
         if not texto:
             await msg.reply_text("Gracias. Cuéntame en qué puedo ayudarte.")
@@ -166,15 +191,7 @@ class TelegramHandler:
 
         ctx["historial"].append(("user_audio", texto))
         ctx["voz"] = True
-
-        if any(p in texto.lower() for p in ["servicio", "servicios", "qué ofrecen", "ayuda"]):
-            await self._explicar_servicios(update)
-        elif any(p in texto.lower() for p in ["precio", "costo", "cuánto"]):
-            await self._objecion_precio(update)
-        elif any(p in texto.lower() for p in ["hola", "bueno", "saludos"]):
-            await self._bienvenida(update, update.effective_user)
-        else:
-            await msg.reply_text("¿Te gustaría conocer los servicios de AstroTech o prefieres hablar directamente con César?")
+        await self._respuesta_general(update, texto)
 
     async def handle_callback(self, update: Update, context: CallbackContext):
         query = update.callback_query
@@ -439,7 +456,7 @@ class TelegramHandler:
                     json={"text": texto[:500], "voice": "cesar", "output": wav},
                 )
                 if resp.status_code == 200 and os.path.exists(wav):
-                    subprocess.run(["ffmpeg", "-y", "-i", wav, "-c:a", "libopus", "-b:a", "16k", ogg],
+                    subprocess.run([_ffmpeg(), "-y", "-i", wav, "-c:a", "libopus", "-b:a", "16k", ogg],
                                    capture_output=True)
                     os.unlink(wav)
                     if os.path.exists(ogg):

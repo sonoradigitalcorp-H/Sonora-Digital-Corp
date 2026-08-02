@@ -1,0 +1,98 @@
+tenant_id: astrotech
+display_name: "AstroTech"
+company: "AstroTech"
+owner: "César Holguín"
+language: "es"
+timezone: "America/Hermosillo"
+default_model: "deepseek/deepseek-v4-flash"
+max_tokens: 4096
+
+models:
+  default: deepseek/deepseek-v4-flash
+  reasoning: z-ai/glm-5.2
+  premium: moonshotai/kimi-k2.7-code
+  embeddings:
+    provider: fastembed
+    model: sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+
+openrouter:
+  base_url: https://openrouter.ai/api/v1
+  max_retries: 3
+  timeout: 30
+
+channels:
+  telegram:
+    enabled: true
+    bot_token: "8825008004:AAFHdxypgGK8LZD0yEH9g0hsCdl2pJmDd8g"
+    owner_chat_id: "5738935134"
+  whatsapp:
+    enabled: false
+    provider: wacli
+    note: "Sandbox solo 6623538272 — receptor pendiente sesión dedicada (MAC mismatch)"
+  voice:
+    enabled: false
+    provider: local
+    note: "FreeSWITCH/SIP fuera de alcance MVP; voz = STT/TTS local"
+
+audio_first:
+  enabled: true
+  tts_provider: local-edge
+  tts_voice: es-MX-DaliaNeural
+  auto_voice_response: true
+  fallback_to_text: true
+  max_audio_seconds: 60
+
+voice:
+  stt:
+    provider: faster-whisper
+    model: small
+    language: es
+    port: 8766
+    device: cpu
+    compute_type: int8
+  tts:
+    provider: edge-tts
+    voice: es-MX-DaliaNeural
+    port: 8765
+    endpoint: http://localhost:8765/tts
+  ffmpeg:
+    static: true
+    note: "ffmpeg del sistema roto (libva) — usar imageio_ffmpeg"
+
+rate_limiting:
+  enabled: true
+  packages:
+    despertar:
+      calls_per_month: 100
+      calls_per_day: 5
+      channels: 1
+      agents: 1
+      concurrent_calls: 1
+      outbound: false
+    elevar:
+      calls_per_month: 500
+      calls_per_day: 20
+      channels: 3
+      agents: 3
+      concurrent_calls: 5
+      outbound: true
+    soberano:
+      calls_per_month: -1
+      calls_per_day: -1
+      channels: -1
+      agents: -1
+      concurrent_calls: 20
+      outbound: true
+    oraculo:
+      calls_per_month: -1
+      calls_per_day: -1
+      channels: -1
+      agents: -1
+      concurrent_calls: 100
+      outbound: true
+
+rag:
+  chunk_size: 512
+  chunk_overlap: 64
+  top_k: 5
+  min_score: 0.65
