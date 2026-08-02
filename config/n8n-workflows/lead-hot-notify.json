@@ -1,0 +1,31 @@
+{
+  "name": "Lead Hot → Notificar César",
+  "description": "Cuando un lead hot es detectado, notifica a César por Telegram y crea tarea en CRM",
+  "nodes": [
+    {
+      "type": "webhook",
+      "name": "webhook_lead_hot",
+      "parameters": {
+        "path": "lead_hot",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "type": "telegram",
+      "name": "notify_cesar",
+      "parameters": {
+        "chatId": "5738935134",
+        "text": "🔥 NUEVO LEAD HOT\n\n👤 {{ $json.name }}\n📱 {{ $json.phone }}\n📊 Score: {{ $json.score }}/100\n💬 {{ $json.message }}"
+      }
+    },
+    {
+      "type": "httpRequest",
+      "name": "log_to_crm",
+      "parameters": {
+        "url": "http://localhost:8767/webhook/lead_hot",
+        "method": "POST",
+        "body": "={{ $json }}"
+      }
+    }
+  ]
+}
