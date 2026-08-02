@@ -1,0 +1,129 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --cosmic-bg: #0a0a0f;
+    --cosmic-card: #161b22;
+    --cosmic-border: #30363d;
+  }
+
+  * {
+    @apply border-cosmic-border;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-cosmic-bg text-white min-h-screen;
+    background-image: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0f 70%, #050508 100%);
+  }
+
+  ::selection {
+    @apply bg-cosmic-primary/30 text-white;
+  }
+
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-cosmic-bg;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-cosmic-border rounded-full;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-cosmic-primary/50;
+  }
+}
+
+@layer components {
+  .cosmic-card {
+    @apply bg-cosmic-card border border-cosmic-border rounded-2xl backdrop-blur-xl;
+  }
+
+  .cosmic-card-hover {
+    @apply cosmic-card transition-all duration-300 hover:border-cosmic-primaryHover hover:shadow-[0_0_30px_-5px_rgb(124_92_252_/_0.3)];
+  }
+
+  .cosmic-button {
+    @apply px-6 py-3 rounded-xl font-semibold text-sm transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-cosmic-primary/50 focus:ring-offset-2 focus:ring-offset-cosmic-bg;
+  }
+
+  .cosmic-button-primary {
+    @apply cosmic-button bg-cosmic-primary text-white hover:bg-cosmic-primaryGlow
+           active:scale-[0.98] shadow-[0_0_20px_-5px_rgb(124_92_252_/_0.5)];
+  }
+
+  .cosmic-button-secondary {
+    @apply cosmic-button bg-cosmic-card text-white border border-cosmic-border
+           hover:border-cosmic-primaryHover hover:bg-cosmic-bgSecondary;
+  }
+
+  .cosmic-button-ghost {
+    @apply cosmic-button text-white/70 hover:text-white hover:bg-cosmic-card;
+  }
+
+  .cosmic-input {
+    @apply w-full px-4 py-3 rounded-xl bg-cosmic-bg border border-cosmic-border
+           text-white placeholder-white/30
+           focus:outline-none focus:border-cosmic-primary focus:ring-1 focus:ring-cosmic-primary
+           transition-all duration-200;
+  }
+
+  .hologram {
+    @apply relative overflow-hidden bg-gradient-to-br from-cosmic-primary/10 to-cosmic-gold/10
+           border border-cosmic-primary/20;
+  }
+
+  .hologram::before {
+    content: '';
+    @apply absolute inset-0 bg-gradient-to-t from-transparent via-white/5 to-transparent
+           animate-[shimmer_3s_infinite];
+  }
+
+  @keyframes shimmer {
+    0% { transform: translateY(100%); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translateY(-100%); opacity: 0; }
+  }
+
+  .neural-glow {
+    @apply relative;
+  }
+
+  .neural-glow::after {
+    content: '';
+    @apply absolute inset-0 bg-cosmic-primary/20 blur-3xl -z-10 animate-neural-pulse;
+  }
+
+  .glass {
+    @apply bg-white/5 backdrop-blur-xl border border-white/10;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-white via-cosmic-primary to-cosmic-gold bg-clip-text text-transparent;
+  }
+
+  .text-gradient-cosmic {
+    @apply bg-gradient-to-r from-cosmic-primary to-cosmic-gold bg-clip-text text-transparent;
+  }
+}
+
+@layer utilities {
+  .perspective-1000 {
+    perspective: 1000px;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+}

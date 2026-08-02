@@ -1,0 +1,272 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "opencode-go/deepseek-v4-flash",
+  "commands": {
+    "sdd:spec": {
+      "description": "Create SDD specification for new feature",
+      "script": "bash scripts/sdd/create-spec.sh"
+    },
+    "sdd:impl": {
+      "description": "Implement from SDD specification",
+      "script": "bash scripts/sdd/implement.sh"
+    },
+    "sdd:verify": {
+      "description": "Verify implementation against spec",
+      "script": "bash scripts/sdd/verify.sh"
+    },
+    "test:e2e": {
+      "description": "Run all E2E tests",
+      "script": "cd sonora-digital-corp && python -m pytest tests/e2e -v"
+    },
+    "test:e2e:watch": {
+      "description": "Run E2E tests in watch mode",
+      "script": "cd sonora-digital-corp && python -m pytest tests/e2e -v --watch"
+    },
+    "test:e2e:client": {
+      "description": "Run E2E tests for specific client",
+      "script": "bash scripts/test/e2e-client.sh"
+    },
+    "test:unit": {
+      "description": "Run all unit tests",
+      "script": "cd sonora-digital-corp && python -m pytest tests/unit -v"
+    },
+    "test:unit:watch": {
+      "description": "Run unit tests in watch mode",
+      "script": "cd sonora-digital-corp && python -m pytest tests/unit -v --watch"
+    },
+    "test:integration": {
+      "description": "Run integration tests",
+      "script": "cd sonora-digital-corp && python -m pytest tests/integration -v"
+    },
+    "test:unity": {
+      "description": "Run Unity integrity checks",
+      "script": "bash scripts/test/unity-integrity.sh"
+    },
+    "test:all": {
+      "description": "Run all tests (unit, integration, e2e)",
+      "script": "cd sonora-digital-corp && python -m pytest tests/ -v"
+    },
+    "client:campaign": {
+      "description": "Create marketing campaign for client",
+      "script": "bash scripts/client/create-campaign.sh"
+    },
+    "client:onboard": {
+      "description": "Onboard new client with full setup",
+      "script": "bash scripts/client/onboard.sh"
+    },
+    "client:provision": {
+      "description": "Provision tenant infrastructure for client",
+      "script": "bash scripts/client/provision.sh"
+    },
+    "client:analyze": {
+      "description": "Analyze client requirements and generate plan",
+      "script": "python scripts/client_analyzer.py"
+    },
+    "web:create": {
+      "description": "Create new web application",
+      "script": "bash scripts/web/create-app.sh"
+    },
+    "web:landing": {
+      "description": "Create landing page from template",
+      "script": "bash scripts/web/create-landing.sh"
+    },
+    "web:deploy": {
+      "description": "Deploy web application",
+      "script": "bash scripts/web/deploy.sh"
+    },
+    "web:dev": {
+      "description": "Start web development server",
+      "script": "bash scripts/web/dev.sh"
+    },
+    "mobile:create": {
+      "description": "Create mobile app (React Native/Flutter)",
+      "script": "bash scripts/mobile/create-app.sh"
+    },
+    "mobile:build": {
+      "description": "Build mobile app for iOS/Android",
+      "script": "bash scripts/mobile/build.sh"
+    },
+    "mobile:test": {
+      "description": "Run mobile app tests",
+      "script": "bash scripts/mobile/test.sh"
+    },
+    "frontend:create": {
+      "description": "Create frontend component/page",
+      "script": "bash scripts/frontend/create.sh"
+    },
+    "frontend:component": {
+      "description": "Generate React/Vue/Svelte component",
+      "script": "bash scripts/frontend/component.sh"
+    },
+    "frontend:page": {
+      "description": "Generate full page with routing",
+      "script": "bash scripts/frontend/page.sh"
+    },
+    "backend:create": {
+      "description": "Create backend service/API",
+      "script": "bash scripts/backend/create.sh"
+    },
+    "backend:api": {
+      "description": "Generate REST/GraphQL API",
+      "script": "bash scripts/backend/api.sh"
+    },
+    "backend:db": {
+      "description": "Generate database schema/migrations",
+      "script": "bash scripts/backend/db.sh"
+    },
+    "mcp:list": {
+      "description": "List available MCP servers",
+      "script": "bash scripts/mcp/list.sh"
+    },
+    "mcp:connect": {
+      "description": "Connect MCP server to client tenant",
+      "script": "bash scripts/mcp/connect.sh"
+    },
+    "mcp:create": {
+      "description": "Create new MCP server for client",
+      "script": "bash scripts/mcp/create.sh"
+    },
+    "mcp:deploy": {
+      "description": "Deploy MCP server to infrastructure",
+      "script": "bash scripts/mcp/deploy.sh"
+    },
+    "tenant:create": {
+      "description": "Create new tenant for client",
+      "script": "bash scripts/tenant/create.sh"
+    },
+    "tenant:configure": {
+      "description": "Configure tenant with MCPs and services",
+      "script": "bash scripts/tenant/configure.sh"
+    },
+    "tenant:deploy": {
+      "description": "Deploy full tenant stack",
+      "script": "bash scripts/tenant/deploy.sh"
+    },
+    "product:create": {
+      "description": "Create new product from template",
+      "script": "bash scripts/product/create.sh"
+    },
+    "product:clone": {
+      "description": "Clone existing product for new client",
+      "script": "bash scripts/product/clone.sh"
+    },
+    "infra:up": {
+      "description": "Start all infrastructure services",
+      "script": "bash scripts/infra/up.sh"
+    },
+    "infra:down": {
+      "description": "Stop all infrastructure services",
+      "script": "bash scripts/infra/down.sh"
+    },
+    "infra:logs": {
+      "description": "View infrastructure logs",
+      "script": "bash scripts/infra/logs.sh"
+    },
+    "quality:gate": {
+      "description": "Run quality gate checks",
+      "script": "bash scripts/quality-gate.sh"
+    },
+    "quality:lint": {
+      "description": "Run linting on all code",
+      "script": "bash scripts/quality/lint.sh"
+    },
+    "quality:typecheck": {
+      "description": "Run type checking",
+      "script": "bash scripts/quality/typecheck.sh"
+    },
+    "sync:brain": {
+      "description": "Sync brain vault knowledge",
+      "script": "bash scripts/sync-brain-vault.sh"
+    },
+    "session:start": {
+      "description": "Start new development session",
+      "script": "bash scripts/start-session.sh"
+    },
+    "session:end": {
+      "description": "End current session and save state",
+      "script": "bash scripts/end-session.sh"
+    },
+    "agentic:dev": {
+      "description": "Start Agentic OS dev server",
+      "script": "cd sonora-digital-corp/apps/frontends/agentic-os && npm run dev"
+    },
+    "agentic:build": {
+      "description": "Build Agentic OS for production",
+      "script": "cd sonora-digital-corp/apps/frontends/agentic-os && npm run build"
+    },
+    "agentic:typecheck": {
+      "description": "Type check Agentic OS",
+      "script": "cd sonora-digital-corp/apps/frontends/agentic-os && npm run typecheck"
+    },
+    "agentic:lint": {
+      "description": "Lint Agentic OS",
+      "script": "cd sonora-digital-corp/apps/frontends/agentic-os && npm run lint"
+    },
+    "agentic:install": {
+      "description": "Install Agentic OS dependencies",
+      "script": "cd sonora-digital-corp/apps/frontends/agentic-os && npm install"
+    },
+    "galaxy:neura": {
+      "description": "Open NEURA Galaxy (Knowledge/Brain)",
+      "script": "echo 'Navigate to NEURA galaxy in Agentic OS'"
+    },
+    "galaxy:clientara": {
+      "description": "Open CLIENTARA Galaxy (Clients/Tenants)",
+      "script": "echo 'Navigate to CLIENTARA galaxy in Agentic OS'"
+    },
+    "galaxy:agentara": {
+      "description": "Open AGENTARA Galaxy (Agent Swarms)",
+      "script": "echo 'Navigate to AGENTARA galaxy in Agentic OS'"
+    },
+    "jarvis:connect": {
+      "description": "Connect JARVIS to tenant WebSocket",
+      "script": "echo 'JARVIS WebSocket connection triggered in Agentic OS'"
+    },
+    "jarvis:test": {
+      "description": "Test JARVIS autonomous loop",
+      "script": "echo 'JARVIS test would run here'"
+    }
+  },
+  "agents": {
+    "sdd-engineer": {
+      "description": "SDD specification and implementation expert",
+      "model": "opencode-go/deepseek-v4-flash",
+      "prompt": "You are an SDD (Specification-Driven Development) expert. Create detailed specifications, implement from specs, and verify implementations match specifications exactly."
+    },
+    "test-engineer": {
+      "description": "E2E, unit, and integration testing expert",
+      "model": "opencode-go/deepseek-v4-flash",
+      "prompt": "You are a test engineering expert. Write comprehensive E2E tests with Playwright, unit tests with pytest, and integration tests. Focus on Unity integrity checks."
+    },
+    "client-strategist": {
+      "description": "Client campaign and onboarding strategist",
+      "model": "opencode-go/deepseek-v4-flash",
+      "prompt": "You are a client strategist. Analyze client needs, create marketing campaigns, onboard clients with full tenant provisioning, and configure MCP connections."
+    },
+    "frontend-architect": {
+      "description": "Frontend architecture and component expert",
+      "model": "opencode-go/deepseek-v4-flash",
+      "prompt": "You are a frontend architect. Create web apps, landing pages, mobile apps, and reusable components. Expert in React, Vue, Svelte, React Native, Flutter."
+    },
+    "backend-architect": {
+      "description": "Backend architecture and API expert",
+      "model": "opencode-go/deepseek-v4-flash",
+      "prompt": "You are a backend architect. Create APIs, databases, microservices, and backend infrastructure. Expert in Python, Node.js, Go, GraphQL, REST."
+    },
+    "mcp-engineer": {
+      "description": "MCP server creation and deployment expert",
+      "model": "opencode-go/deepseek-v4-flash",
+      "prompt": "You are an MCP (Model Context Protocol) engineer. Create, configure, and deploy MCP servers for clients. Connect MCPs to tenant infrastructure."
+    },
+    "devops-engineer": {
+      "description": "Infrastructure and deployment expert",
+      "model": "opencode-go/deepseek-v4-flash",
+      "prompt": "You are a DevOps engineer. Manage infrastructure, deployments, CI/CD, monitoring, and tenant provisioning."
+    },
+    "agentic-os-architect": {
+      "description": "Agentic OS 3D dashboard & JARVIS architect",
+      "model": "opencode-go/deepseek-v4-flash",
+      "prompt": "You are the Agentic OS architect. Build the 3D galaxy navigator with Three.js/React Three Fiber, implement autonomous JARVIS with voice/text/proactive actions, create NEURA/CLIENTARA/AGENTARA/DEVOPSARA/CONTENTARA/ECONARA galaxies. Expert in R3F, Drei, Framer Motion, GSAP, WebSocket real-time, and cosmic motion design."
+    }
+  }
+}
