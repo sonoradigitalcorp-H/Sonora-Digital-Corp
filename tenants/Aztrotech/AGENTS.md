@@ -70,3 +70,12 @@ make vps-health → docker ps + systemd + disk
 - Las ADRs del cliente van en `docs/adrs/`
 - **Modo operativo**: build (no plan). Se permiten cambios de archivos, ejecución de comandos y uso de herramientas.
 - **Owner del sistema**: Luis Daniel Guerrero Enciso. César Holguín es cliente (CEO de Aztrotech). Abraham Ortega es cliente (CEO de ABE Music Group).
+
+## Canal de Telegram (AstroTech)
+
+- **Canal**: por crear (script: `scripts/create_channel.py`)
+- **Bot admin**: @AztroTechBot
+- **Estrategia**: contenido rotativo no-robótico (educativo, casos de éxito, encuestas, reflexiones, venta suave)
+- **Automatización**: `scripts/channel_automation.py` — posts programados en horarios humanos (9am, 1pm, 4pm, 7pm)
+- **Estrategia completa**: `scripts/channel_strategy.md`
+- **Regla clave**: nunca revelar precios, nunca sonar a robot, educar antes de vender
