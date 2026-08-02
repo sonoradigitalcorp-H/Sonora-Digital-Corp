@@ -225,6 +225,34 @@
     "jarvis:test": {
       "description": "Test JARVIS autonomous loop",
       "script": "echo 'JARVIS test would run here'"
+    },
+    "rdd:run": {
+      "description": "RDD full workflow: freeze, review, fix, validate, receipt, commit",
+      "script": "bash sonora-digital-corp/scripts/rdd/run.sh"
+    },
+    "rdd:freeze": {
+      "description": "RDD Step 1: Freeze candidate with fingerprint",
+      "script": "bash sonora-digital-corp/scripts/rdd/freeze.sh"
+    },
+    "rdd:review": {
+      "description": "RDD Step 2: Review with 4 parallel lenses",
+      "script": "bash sonora-digital-corp/scripts/rdd/review.sh"
+    },
+    "rdd:fix": {
+      "description": "RDD Step 3: Bounded fix (max 120 lines, single pass)",
+      "script": "bash sonora-digital-corp/scripts/rdd/fix.sh"
+    },
+    "rdd:validate": {
+      "description": "RDD Step 4: Validate fix (read-only check)",
+      "script": "bash sonora-digital-corp/scripts/rdd/validate.sh"
+    },
+    "rdd:receipt": {
+      "description": "RDD Step 5: Generate receipt (commit authorization)",
+      "script": "bash sonora-digital-corp/scripts/rdd/receipt.sh"
+    },
+    "rdd:commit": {
+      "description": "RDD Step 6: Commit with receipt validation",
+      "script": "bash sonora-digital-corp/scripts/rdd/commit.sh"
     }
   },
   "agents": {
