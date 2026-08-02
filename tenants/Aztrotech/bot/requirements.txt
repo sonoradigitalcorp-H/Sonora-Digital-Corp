@@ -1,0 +1,5 @@
+python-telegram-bot>=20.0
+httpx>=0.25
+pyyaml>=6.0
+numpy>=1.24
+speechrecognition>=3.10

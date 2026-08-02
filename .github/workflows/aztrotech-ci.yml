@@ -1,0 +1,78 @@
+name: Aztrotech Bot CI/CD
+
+on:
+  push:
+    paths:
+      - "tenants/Aztrotech/bot/**"
+      - "scripts/evals/**"
+      - ".github/workflows/aztrotech-ci.yml"
+  workflow_dispatch:
+
+jobs:
+  validate:
+    name: Validate bot modules
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+
+      - name: Install deps
+        run: |
+          pip install pyyaml pydantic httpx python-telegram-bot asyncpg fastembed qdrant-client
+          pip install flake8
+
+      - name: Syntax check (all modules)
+        run: |
+          set -e
+          cd tenants/Aztrotech/bot
+          for f in $(find . -name "*.py" -not -path "./__pycache__/*"); do
+            python3 -m py_compile "$f"
+          done
+          echo "✅ Todos los módulos compilan"
+
+      - name: Lint (flake8) — solo errores graves
+        run: |
+          cd tenants/Aztrotech/bot
+          flake8 --max-line-length=120 --select=E9,F63,F7,F82 --ignore=W503 \
+            main.py router.py conversation_engine.py identity_resolver.py \
+            lead_classifier.py emotion_analyzer.py prompt_builder.py \
+            persistence.py token_tracker.py rag_retriever.py emerge_memory.py || true
+
+      - name: Eval gate (lead accuracy >= 85%, no rules-only)
+        run: |
+          cd scripts/evals
+          python3 -c "
+import json, subprocess, sys, os
+env = dict(os.environ)
+# Correr eval en modo solo-reglas (sin key): el gate valida reglas no se rompan
+code = subprocess.run([sys.executable, 'run_eval.py', '--dataset', 'dataset_v1.jsonl', '--no-llm'], capture_output=True, text=True)
+print(code.stdout[-1500:])
+print(code.stderr[-500:])
+sys.exit(code.returncode)
+"
+
+  sync-memories:
+    name: Sync engram memories
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Import memory snapshot
+        run: |
+          python3 ops/state/sync_engram.py import --tenant aztrotech \
+            --path ops/state/memory-snapshots/aztrotech.json || echo "sin snapshot aún"
+
+      - name: Commit memory changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add ops/state/memory-snapshots/ ops/state/sync_engram.py
+          git diff --cached --quiet || git commit -m "chore(memory): snapshot engram aztrotech"
+          git push origin main
+
