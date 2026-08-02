@@ -4,4 +4,4 @@ description: "FAL.ai image generation backend (flux-2-klein, flux-2-pro, nano-ba
 author: NousResearch
 kind: backend
 requires_env:
-  - FAL_KEY
+  - FAL_API_KEY

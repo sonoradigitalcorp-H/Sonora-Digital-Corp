@@ -1,0 +1,90 @@
+# MCP PROPIO: Evolution-MCP
+# Funcion: Cerebro del Evolution Engine (auto-mejora de prompts)
+# Integracion con: OpenClaw + ab-test-runner skill
+
+mcp:
+  name: "evolution-mcp"
+  version: "1.0.0"
+  descripcion: "Motor de evolucion automatica de prompts basado en metricas de llamadas"
+  protocolo: "MCP"
+
+  herramientas:
+    - nombre: "propose_prompt_change"
+      descripcion: "Analiza transcripciones fallidas y propone mejora de prompt"
+      parametros:
+        - nombre: "agent_id"
+          tipo: "string"
+          requerido: true
+        - nombre: "tenant_id"
+          tipo: "string"
+          requerido: true
+        - nombre: "failure_pattern"
+          tipo: "string"
+          requerido: false
+          descripcion: "Si se especifica, analiza solo este patron. Si no, detecta automaticamente."
+      proceso:
+        - "1. Obtener transcripciones con score < 0.7 de las ultimas 24h"
+        - "2. Analizar patrones de fallo con LLM"
+        - "3. Generar propuesta de mejora de prompt"
+        - "4. Enviar propuesta a Mystic via Telegram para aprobacion"
+      retorna:
+        - "propuesta_id: string"
+        - "patron_detectado: string"
+        - "prompt_actual: string (truncado)"
+        - "prompt_propuesto: string"
+        - "razonamiento: string"
+      seguridad:
+        - "Las propuestas se almacenan pero NO se aplican automaticamente"
+        - "Requieren aprobacion explicita de Mystic"
+      tiempo_max: "120s (analiza hasta 100 transcripciones)"
+
+    - nombre: "trigger_ab_test"
+      descripcion: "Iniciar un test A/B entre el prompt actual y uno propuesto"
+      parametros:
+        - nombre: "propuesta_id"
+          tipo: "string"
+          requerido: true
+        - nombre: "traffic_pct_variant"
+          tipo: "int"
+          default: 20
+          validacion: "entre 5 y 50"
+          descripcion: "Porcentaje de trafico que recibe el prompt variante"
+        - nombre: "duration_hours"
+          tipo: "int"
+          default: 24
+          validacion: "entre 4 y 168"
+      proceso:
+        - "1. Crear dos versiones del agente: control (actual) y variant (propuesto)"
+        - "2. Router distribuye trafico segun traffic_pct"
+        - "3. Colecta metricas para ambas versiones"
+        - "4. Al finalizar, analiza resultados"
+      retorna:
+        - "test_id: string"
+        - "control_metrics: dict"
+        - "variant_metrics: dict"
+        - "winner: enum (control, variant, inconclusive)"
+        - "confidence: float (0-1)"
+      tiempo_max: "Ejecucion inmediata, resultados en duration_hours"
+
+    - nombre: "analyze_call_sentiment"
+      descripcion: "Analizar sentimiento y emocion de transcripciones de llamadas"
+      parametros:
+        - nombre: "call_ids"
+          tipo: "list[string]"
+          requerido: true
+        - nombre: "tenant_id"
+          tipo: "string"
+          requerido: true
+      retorna:
+        - "results: list[{call_id, sentiment, emotion, intensity, keywords}]"
+      tiempo_max: "5s por llamada analizada"
+
+    - nombre: "get_evolution_history"
+      descripcion: "Historial de evoluciones de un agente"
+      parametros:
+        - nombre: "agent_id"
+          tipo: "string"
+          requerido: true
+      retorna:
+        - "evolutions: list[{date, change_type, before_score, after_score, prompt_diff}]"
+      tiempo_max: "3s"

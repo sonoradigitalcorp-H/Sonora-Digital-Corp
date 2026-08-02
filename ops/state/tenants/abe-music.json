@@ -1,0 +1,14 @@
+{
+  "id": "abe-music",
+  "name": "ABE Music OS",
+  "isolation": "column",
+  "capabilities": [
+    "*"
+  ],
+  "constitution_overrides": {},
+  "budget": 500.0,
+  "settings": {
+    "region": "us-east",
+    "timezone": "America/Mexico_City"
+  }
+}

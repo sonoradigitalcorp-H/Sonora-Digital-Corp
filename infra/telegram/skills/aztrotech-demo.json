@@ -1,0 +1,13 @@
+{
+  "name": "aztrotech-demo",
+  "description": "Solicitud de demo personalizada de AztroTech",
+  "version": "1.0.0",
+  "priority": 80,
+  "triggers": ["demo", "prueba", "probar", "quiero contratar", "me interesa", "comprar", "suscribirme", "empezar", "comenzar", "registrarme"],
+  "method": "STATIC",
+  "response_text": "🎯 *Demo Personalizada — AztroTech*\n\nMe encantaría mostrarte cómo podemos ayudarte.\n\nPara agendar tu demostración sin costo:\n\n1. *Cuéntame tu negocio* — ¿A qué te dedicas?\n2. *Dime tu reto* — ¿Qué problema quieres resolver con IA?\n3. *Te conecto con César* — Te agendo una llamada personalizada\n\nMientras tanto, aquí tienes el contacto directo:\n📞 (662) 326 9692\n✉️ ventasaztrotech@outlook.com\n\nO escríbeme tu consulta y te ayudo ahora mismo.",
+  "actions": [
+    { "text": "🤖 Conocer agentes", "action": "aztro_agentes" },
+    { "text": "📞 Contactar", "action": "aztro_contacto" }
+  ]
+}

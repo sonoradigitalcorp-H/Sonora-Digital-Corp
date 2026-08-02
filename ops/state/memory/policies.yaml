@@ -1,0 +1,29 @@
+# Memory Policies — TTL por nivel de memoria
+version: 1
+updated: 2026-07-03T16:50:00Z
+
+layers:
+  working:
+    db: "00-working.db"
+    description: "Contexto de sesión activa — conversación, contexto temporal"
+    ttl_seconds: 3600          # 1 hora
+    max_rows: 100
+    cleanup_strategy: "delete_expired + oldest_first"
+
+  project:
+    db: "01-project.db"
+    description: "Proyectos activos — specs en progreso, tasks activas, decisiones recientes"
+    ttl_seconds: 604800        # 7 días
+    max_rows: 1000
+    cleanup_strategy: "delete_expired + archive_to_organization"
+
+  organization:
+    db: "02-organization.db"
+    description: "Memoria permanente — lecciones, ADRs, heurísticas, decisiones históricas"
+    ttl_seconds: -1            # permanente
+    max_rows: 10000
+    cleanup_strategy: "never_delete"
+
+migration:
+  source_db: "../../engram.db"
+  status: "pending"

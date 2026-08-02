@@ -41,7 +41,7 @@ class TestExplicitAllowlist:
         "HONCHO_API_KEY",
         "FIRECRAWL_API_KEY",
         "BROWSERBASE_API_KEY",
-        "FAL_KEY",
+        "FAL_API_KEY",
         "SUDO_PASSWORD",
         "GITHUB_TOKEN",
         "TELEGRAM_BOT_TOKEN",

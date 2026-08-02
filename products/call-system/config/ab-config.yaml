@@ -1,0 +1,75 @@
+auto_optimize: true
+improvement_threshold: 5
+min_samples_for_decision: 10
+variants:
+  A:
+    avg_score: 52.0
+    count: 53
+    description: 'Control: prompt original'
+    results:
+    - 85
+    - 85
+    - 35
+    - 35
+    - 35
+    - 40
+    - 40
+    - 40
+    - 85
+    - 35
+    - 35
+    - 35
+    - 35
+    - 35
+    - 35
+    - 35
+    - 35
+    - 35
+    - 35
+    - 35
+    - 35
+    - 35
+    - 40
+    - 40
+    - 85
+    - 85
+    - 85
+    - 85
+    - 35
+    - 35
+    - 85
+    - 85
+    - 85
+    - 35
+    - 40
+    - 40
+    - 85
+    - 35
+    - 40
+    - 40
+    - 85
+    - 40
+    - 55
+    - 85
+    - 50
+    - 50
+    - 85
+    - 35
+    - 40
+    - 40
+    - 55
+    - 55
+    - 85
+    weight: 34
+  B:
+    avg_score: 0
+    count: 0
+    description: 'Test: enfoque consultivo'
+    results: []
+    weight: 33
+  C:
+    avg_score: 0
+    count: 0
+    description: 'Test: enfoque directo'
+    results: []
+    weight: 33

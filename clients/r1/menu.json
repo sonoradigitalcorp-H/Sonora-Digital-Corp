@@ -1,0 +1,34 @@
+{
+  "business": {
+    "name": "Ce-Son",
+    "tagline": "Pastillas efervescentes artesanales 🫧"
+  },
+  "categories": [
+    {
+      "name": "Sabores Clásicos",
+      "emoji": "🍇",
+      "items": [
+        {"id": "uva", "name": "Uva", "emoji": "🍇", "prices": {"unidad": 250, "triple": 650, "pack6": 1200}},
+        {"id": "fresa", "name": "Fresa", "emoji": "🍓", "prices": {"unidad": 250, "triple": 650, "pack6": 1200}},
+        {"id": "natural", "name": "Natural", "emoji": "🌿", "prices": {"unidad": 250, "triple": 650, "pack6": 1200}},
+        {"id": "platano", "name": "Plátano", "emoji": "🍌", "prices": {"unidad": 250, "triple": 650, "pack6": 1200}}
+      ]
+    },
+    {
+      "name": "Sabores Especiales",
+      "emoji": "🧪",
+      "items": [
+        {"id": "boobaloo", "name": "Boobaloo", "emoji": "🧪", "prices": {"unidad": 350, "triple": 900, "pack6": 1700}},
+        {"id": "coco", "name": "Coco", "emoji": "🥥", "prices": {"unidad": 350, "triple": 900, "pack6": 1700}},
+        {"id": "nuez", "name": "Nuez", "emoji": "🥜", "prices": {"unidad": 550, "triple": 1400, "pack6": 2700}}
+      ]
+    }
+  ],
+  "payment_methods": [
+    {"id": "efectivo", "name": "Efectivo", "emoji": "💵"},
+    {"id": "tarjeta", "name": "Tarjeta (terminal)", "emoji": "💳"},
+    {"id": "spei", "name": "SPEI / Transferencia", "emoji": "🏦"},
+    {"id": "mercadopago", "name": "Mercado Pago (link)", "emoji": "🟡"},
+    {"id": "bitcoin", "name": "Bitcoin", "emoji": "₿"}
+  ]
+}

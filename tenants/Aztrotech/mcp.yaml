@@ -1,0 +1,26 @@
+mcp_servers:
+  - name: openclaw
+    type: remote
+    url: "http://localhost:18789"
+    config:
+      tenant_id: astrotech
+
+  - name: sonora-gateway
+    type: remote
+    url: "http://localhost:18989"
+
+  - name: hermes
+    type: remote
+    url: "http://localhost:8000/sse"
+    transport: sse
+
+  - name: calendar
+    type: local
+    config:
+      provider: google
+      credentials_ref: astrotech_gcal_creds
+
+  - name: crm
+    type: local
+    config:
+      provider: astrotech_crm

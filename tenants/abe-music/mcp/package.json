@@ -1,0 +1,19 @@
+{
+  "name": "abe-music-hub-mcp",
+  "version": "1.0.0",
+  "description": "MCP server for Abe Music Hub — exposes HERMES OS API as Claude tools",
+  "type": "module",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "node --watch dist/index.js",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.12.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "typescript": "^5"
+  }
+}

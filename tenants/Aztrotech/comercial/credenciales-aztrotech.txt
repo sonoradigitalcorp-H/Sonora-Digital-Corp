@@ -1,0 +1,35 @@
+========================================
+AZTROTECH — CREDENCIALES DE PRUEBA
+Generado: dom 26 jul 2026 21:43:36 MST
+========================================
+
+PORTAL WEB:
+  URL: http://localhost:8080/chat.html
+  Servir con: python3 -m http.server 8080 --directory portal/
+
+API CHAT:
+  Endpoint: POST /api/chat
+  Body: { "messages": [{"role":"user","content":"..."}], "model": "deepseek/deepseek-chat" }
+  Content-Type: application/json
+
+API KEY (admin):
+  7e969bf8bb53d8eb70a12dd3713985bc3d3ccfa09c671fc4
+
+TELEGRAM:
+  Bot: @AztroTechBot
+  Token: (configurado en infra/.env como AZTROTECH_BOT_TOKEN)
+
+WHATSAPP:
+  Número: +5216621072254 (César)
+  Estado: Configurado como contacto
+
+EMAIL PENDIENTE:
+  El cliente (César) debe proporcionar su email para activación completa.
+  Después de recibirlo, ejecutar: bash setup.sh --email cesar@ejemplo.com
+
+========================================
+PARA PROBAR:
+  1. python3 -m http.server 8080 --directory portal/
+  2. Abrir http://localhost:8080/chat.html
+  3. Escribir un mensaje
+========================================

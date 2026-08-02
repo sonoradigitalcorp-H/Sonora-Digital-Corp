@@ -1,0 +1,57 @@
+# PLAYWART VISUAL TASKS
+# Capturas automaticas para reportes y verificacion
+
+tareas:
+
+  screenshot_diario_dashboard:
+    id: "pw-screenshot-daily"
+    frecuencia: "cada dia a las 6:00 AM CST"
+    accion: "Navegar al dashboard del tenant, tomar screenshot completo"
+    formato: "PNG 1920x1080"
+    almacenamiento: "WebP comprimido < 500KB"
+    retencion: "30 dias"
+    cpu_max_pct: 30
+    memoria_max_mb: 512
+
+  screenshot_semanal_mundo_3d:
+    id: "pw-screenshot-3d"
+    frecuencia: "cada lunes a las 7:00 AM CST"
+    accion: "Renderizar mundo 3D del tenant, tomar captura"
+    formato: "PNG 1280x720"
+    almacenamiento: "WebP comprimido < 700KB"
+    retencion: "90 dias"
+    solo_paquetes: ["soberano", "oraculo"]
+
+  scraping_visual_prospecto:
+    id: "pw-scrape-visual"
+    frecuencia: "bajo demanda (antes de cada outbound)"
+    accion: "Captura full page de la web del prospecto"
+    formato: "PNG full page, max 3000px alto"
+    almacenamiento: "WebP comprimido < 800KB"
+    retencion: "90 dias"
+    usos:
+      - "Inteligencia del prospecto (analisis visual)"
+      - "Reporte de oportunidad para el cliente"
+      - "Before/after si el cliente mejora su web"
+
+  verificacion_onboarding:
+    id: "pw-verify-onboarding"
+    frecuencia: "tras cada onboarding completado"
+    accion: "Navegar al dashboard del nuevo cliente y verificar que todo funciona"
+    checks:
+      - "Dashboard carga sin errores"
+      - "Agente muestra estado correcto"
+      - "Numero virtual esta asignado"
+      - "KB esta configurada"
+      - "Canal esta conectado"
+    formato: "PNG 1920x1080 + reporte texto"
+
+  monitor_cambio_web_prospecto:
+    id: "pw-monitor-change"
+    frecuencia: "semanal para prospectos activos"
+    accion: "Comparar screenshot actual con el anterior para detectar cambios"
+    umbral_cambio: "5% de pixeles diferentes"
+    accion_si_cambio:
+      - "Notificar al cliente: 'Tu prospecto actualizo su web'"
+      - "Regenerar inteligencia del prospecto"
+      - "Actualizar puntaje de oportunidad"

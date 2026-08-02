@@ -1,0 +1,129 @@
+# ESCENARIOS 3D POR ROL DE NEGOCIO
+# Cada rol tiene su propio "hogar del agente" con paleta y objetos unicos
+
+escenarios:
+
+  ceo_ejecutivo:
+    id: "escenario-ceo"
+    nombre: "Oficina Ejecutiva"
+    paleta: {primario: "#0f172a", acento: "#c9a227", secundario: "#f8fafc"}
+    objetos:
+      - "escritorio_madera_oscura"
+      - "2_monitores"
+      - "silla_ejecutiva_cuero"
+      - "estanteria_libros"
+      - "planta_verde"
+      - "reloj_analogico"
+      - "ventanas_ciudad_nocturna"
+    poligonos: 4500
+    peso_glb_kb: 200
+
+  contador:
+    id: "escenario-contador"
+    nombre: "Despacho Contable"
+    paleta: {primario: "#1e3a5f", acento: "#ffffff", secundario: "#f1f5f9"}
+    objetos:
+      - "escritorio_ordenado"
+      - "calculadora"
+      - "archiveros"
+      - "libros_contables"
+      - "planta_verde"
+      - "certificados_enmarcados"
+    poligonos: 3200
+    peso_glb_kb: 150
+
+  restaurante:
+    id: "escenario-restaurante"
+    nombre: "Seccion de Restaurante"
+    paleta: {primario: "#f97316", acento: "#fef3c7", secundario: "#92400e"}
+    objetos:
+      - "barra_botellas"
+      - "mesa_cubiertos"
+      - "vela"
+      - "espejos"
+      - "menus_soportes"
+      - "planta_colgante"
+    poligonos: 3800
+    peso_glb_kb: 180
+
+  barberia:
+    id: "escenario-barberia"
+    nombre: "Barberia Vintage"
+    paleta: {primario: "#111827", acento: "#d4a017", secundario: "#f9fafb"}
+    objetos:
+      - "sillon_barbero_cuero"
+      - "espejos_neon"
+      - "estanteria_productos"
+      - "piso_ajedrez"
+      - "planta_maceta"
+      - "detalles_madera_oscura"
+    poligonos: 3000
+    peso_glb_kb: 140
+
+  clinica_dental:
+    id: "escenario-clinica"
+    nombre: "Recepcion Clinica Moderna"
+    paleta: {primario: "#0ea5e9", acento: "#ffffff", secundario: "#d1fae5"}
+    objetos:
+      - "escritorio_recepcion"
+      - "sillas_espera"
+      - "pizarra_info"
+      - "pantalla_citas"
+      - "planta_decorativa"
+    poligonos: 2800
+    peso_glb_kb: 130
+
+  creador_nsfw:
+    id: "escenario-estudio-creativo"
+    nombre: "Estudio Creativo Privado"
+    paleta: {primario: "#be185d", acento: "#7c3aed", secundario: "#1f1f1f"}
+    objetos:
+      - "camara_tripod"
+      - "anillo_luz"
+      - "pantallas_edicion"
+      - "estanteria_accesorios"
+      - "cortinas_privacidad"
+      - "moodboard"
+    poligonos: 3500
+    peso_glb_kb: 170
+    requiere_kyc_nsfw: true
+
+  agencia_marketing:
+    id: "escenario-agencia"
+    nombre: "Oficina Creativa"
+    paleta: {primario: "#8b5cf6", acento: "#facc15", secundario: "#fafafa"}
+    objetos:
+      - "paredes_postits"
+      - "multiples_monitores"
+      - "cafetera"
+      - "plantas_colgantes"
+      - "libros_diseno"
+      - "cojines_suelo"
+    poligonos: 4000
+    peso_glb_kb: 190
+
+  abogado:
+    id: "escenario-abogado"
+    nombre: "Bufete Juridico"
+    paleta: {primario: "#1e293b", acento: "#c9a227", secundario: "#f8fafc"}
+    objetos:
+      - "escritorio_grande"
+      - "libros_derecho"
+      - "sillas_reunion"
+      - "balanza_justicia_decorativa"
+      - "certificados_pared"
+    poligonos: 3600
+    peso_glb_kb: 170
+
+  inmobiliaria:
+    id: "escenario-inmobiliaria"
+    nombre: "Galeria Inmobiliaria"
+    paleta: {primario: "#065f46", acento: "#d4a017", secundario: "#f0fdf4"}
+    objetos:
+      - "maqueta_edificio"
+      - "escritorio_vente"
+      - "mapa_ubicaciones"
+      - "pantalla_tours_virtuales"
+      - "plantas_decorativas"
+    poligonos: 3800
+    peso_glb_kb: 180

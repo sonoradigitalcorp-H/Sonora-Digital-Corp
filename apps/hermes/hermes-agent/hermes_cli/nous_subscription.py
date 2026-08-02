@@ -406,7 +406,7 @@ def get_nous_subscription_features(
     direct_tavily = bool(get_env_value("TAVILY_API_KEY"))
     direct_searxng = bool(get_env_value("SEARXNG_URL"))
     direct_fal = fal_key_is_configured()
-    direct_fal_video = direct_fal  # same FAL_KEY; separate var so use_gateway is independent
+    direct_fal_video = direct_fal  # same FAL_API_KEY; separate var so use_gateway is independent
     direct_openai_tts = bool(resolve_openai_audio_api_key())
     direct_elevenlabs = bool(get_env_value("ELEVENLABS_API_KEY"))
     direct_camofox = bool(get_env_value("CAMOFOX_URL"))

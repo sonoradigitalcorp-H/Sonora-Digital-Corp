@@ -1,0 +1,18 @@
+id: calendar
+name: Calendar & Booking
+version: 1.0.0
+status: active
+domain: scheduling
+description: "Agendamiento de citas y reuniones con clientes"
+entry:
+  agent: main-agent
+  trigger: calendar.booking.requested
+policies:
+  max_cost: 0.01
+  timeout_seconds: 10
+events:
+  emits:
+    - calendar.booking.created
+  consumes:
+    - calendar.booking.requested
+    - calendar.availability.requested

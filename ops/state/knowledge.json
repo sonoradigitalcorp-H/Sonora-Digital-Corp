@@ -1,0 +1,68 @@
+[
+  {
+    "type": "text",
+    "category": "streams",
+    "source": "voice",
+    "text": "Hector Rubio tuvo 50000 streams nuevos en Spotify esta semana",
+    "context": "Hector Rubio tuvo 50000 streams nuevos en Spotify esta semana",
+    "summary": "Hector Rubio tuvo 50000 streams nuevos en Spotify esta semana",
+    "ingested_at": "2026-07-01T09:34:26.974Z"
+  },
+  {
+    "type": "email",
+    "category": "revenue",
+    "from": "abraham@abe.com",
+    "subject": "Nuevo revenue Jesus Urquijo",
+    "body_preview": "Jesus Urquijo genero ,500 este mes",
+    "attachments": 0,
+    "context": "Nuevo revenue Jesus Urquijo",
+    "ingested_at": "2026-07-01T09:34:26.997Z"
+  },
+  {
+    "type": "text",
+    "category": "general",
+    "source": "manual",
+    "text": "test intake",
+    "context": "test intake",
+    "summary": "test intake",
+    "ingested_at": "2026-07-01T10:02:54.581Z"
+  },
+  {
+    "type": "text",
+    "category": "artist",
+    "source": "voice",
+    "text": "Hector Rubio acaba de lanzar nuevo sencillo \"Corazón de Oro\" en todas las plataformas",
+    "context": "Hector Rubio acaba de lanzar nuevo sencillo \"Corazón de Oro\" en todas las plataformas",
+    "summary": "Hector Rubio acaba de lanzar nuevo sencillo \"Corazón de Oro\" en todas las plataformas",
+    "ingested_at": "2026-07-01T10:13:18.602Z"
+  },
+  {
+    "type": "email",
+    "category": "streams",
+    "from": "distributor@distrokid.com",
+    "subject": "Nuevas streams - Jesus Urquijo",
+    "body_preview": "Jesus Urquijo tuvo 15,000 streams esta semana en Spotify. Revenue generado: $750.",
+    "attachments": 0,
+    "context": "Nuevas streams - Jesus Urquijo",
+    "ingested_at": "2026-07-01T10:13:18.618Z"
+  },
+  {
+    "type": "text",
+    "category": "artist",
+    "source": "voice",
+    "text": "Hector Rubio acaba de lanzar nuevo sencillo \"Corazón de Oro\" en todas las plataformas",
+    "context": "Hector Rubio acaba de lanzar nuevo sencillo \"Corazón de Oro\" en todas las plataformas",
+    "summary": "Hector Rubio acaba de lanzar nuevo sencillo \"Corazón de Oro\" en todas las plataformas",
+    "ingested_at": "2026-07-01T10:16:10.718Z"
+  },
+  {
+    "type": "email",
+    "category": "streams",
+    "from": "distributor@distrokid.com",
+    "subject": "Nuevas streams - Jesus Urquijo",
+    "body_preview": "Jesus Urquijo tuvo 15,000 streams esta semana en Spotify. Revenue generado: $750.",
+    "attachments": 0,
+    "context": "Nuevas streams - Jesus Urquijo",
+    "ingested_at": "2026-07-01T10:16:10.740Z"
+  }
+]

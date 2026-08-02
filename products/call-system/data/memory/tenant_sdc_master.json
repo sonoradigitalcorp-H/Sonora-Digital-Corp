@@ -1,0 +1,16 @@
+{
+  "call_summaries": [
+    {
+      "date": "2026-07-30T20:43:32.384811",
+      "duration_sec": 8,
+      "summary": "Llamada de 8s con Luis Daniel Guerrero Enciso. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    }
+  ]
+}

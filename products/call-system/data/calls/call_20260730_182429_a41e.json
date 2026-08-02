@@ -1,0 +1,13 @@
+{
+  "id": "call_20260730_182429_a41e",
+  "tenant_id": "unknown",
+  "direction": "inbound",
+  "started_at": "2026-07-30T18:24:29.212333",
+  "duration_sec": 5,
+  "transcript": "",
+  "summary": "Llamada de 5s con Desconocido. Revisar transcripción para detalles.",
+  "sentiment": "neutral",
+  "topics": [
+    "general"
+  ]
+}

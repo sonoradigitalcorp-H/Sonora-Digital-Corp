@@ -78,7 +78,7 @@ _CREDENTIAL_NAMES = frozenset({
     "AWS_SECRET_ACCESS_KEY",
     "AWS_SESSION_TOKEN",
     "ANTHROPIC_TOKEN",
-    "FAL_KEY",
+    "FAL_API_KEY",
     "GH_TOKEN",
     "GITHUB_TOKEN",
     "OPENAI_API_KEY",

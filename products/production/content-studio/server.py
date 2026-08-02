@@ -14,7 +14,7 @@ mcp = FastMCP("sdc-content-server", port=8765)
 
 DB_DSN = os.getenv("CONTENT_DB_DSN", "postgresql://sdc:sdc@localhost:5432/sdc_content")
 CORE_DB_DSN = os.getenv("CORE_DB_DSN", "postgresql://sdc:sdc@localhost:5432/sdc")
-FAL_KEY = os.getenv("FAL_KEY", "")
+FAL_API_KEY = os.getenv("FAL_API_KEY", "")
 AGNES_API_KEY = os.getenv("AGNES_API_KEY", "")
 AGNES_API_URL = "https://api.agnes.ai/v1"
 FAL_API_BASE = "https://fal.run"
@@ -105,9 +105,9 @@ async def generate_image(
     aid = artist_id or "unknown"
     if AGNES_API_KEY:
         return await _generate_agnes(prompt, negative_prompt, width, height, aid)
-    if FAL_KEY:
+    if FAL_API_KEY:
         return await _generate_fal(prompt, negative_prompt, aid, use_lora)
-    return {"error": "No API key configured (set AGNES_API_KEY or FAL_KEY)"}
+    return {"error": "No API key configured (set AGNES_API_KEY or FAL_API_KEY)"}
 
 
 async def _generate_agnes(prompt: str, neg: str, w: int, h: int, artist_id: str = "") -> dict:
@@ -146,7 +146,7 @@ async def _generate_fal(prompt: str, neg: str, artist_id: str = "", use_lora: bo
     async with httpx.AsyncClient(timeout=120) as cl:
         r = await cl.post(
             endpoint,
-            headers={"Authorization": f"Key {FAL_KEY}"},
+            headers={"Authorization": f"Key {FAL_API_KEY}"},
             json=payload,
         )
         data = r.json()
@@ -201,7 +201,7 @@ async def edit_image(
     artist_id: str | None = None,
 ) -> dict:
     aid = artist_id or "unknown"
-    if not FAL_KEY:
+    if not FAL_API_KEY:
         return {"error": "FAL key not configured"}
     payload: dict = {"prompt": prompt, "image_url": image_url, "num_images": 1}
     if mask_url:
@@ -209,7 +209,7 @@ async def edit_image(
     async with httpx.AsyncClient(timeout=120) as cl:
         r = await cl.post(
             f"{FAL_API_BASE}/fal-ai/flux-pro/v1/fill",
-            headers={"Authorization": f"Key {FAL_KEY}"},
+            headers={"Authorization": f"Key {FAL_API_KEY}"},
             json=payload,
         )
         data = r.json()
@@ -235,12 +235,12 @@ async def generate_talking_head(
 
 
 async def _talking_head_fal(image_url: str, audio_url: str, artist_id: str = "") -> dict:
-    if not FAL_KEY:
+    if not FAL_API_KEY:
         return {"error": "FAL key not configured"}
     async with httpx.AsyncClient(timeout=300) as cl:
         r = await cl.post(
             f"{FAL_API_BASE}/fal-ai/sadtalker",
-            headers={"Authorization": f"Key {FAL_KEY}"},
+            headers={"Authorization": f"Key {FAL_API_KEY}"},
             json={"source_image_url": image_url, "driven_audio_url": audio_url},
         )
         data = r.json()

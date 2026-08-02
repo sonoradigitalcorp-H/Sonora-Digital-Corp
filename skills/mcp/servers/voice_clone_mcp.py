@@ -9,7 +9,7 @@ import os
 
 import httpx
 
-FAL_KEY = os.getenv("FAL_KEY", "")
+FAL_API_KEY = os.getenv("FAL_API_KEY", "")
 OMNIVOICE_URL = os.getenv("OMNIVOICE_URL", "http://localhost:3900")
 
 MIN_AUDIO_SECONDS = 10

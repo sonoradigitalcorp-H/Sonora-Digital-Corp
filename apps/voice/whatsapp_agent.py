@@ -20,6 +20,9 @@ log = logging.getLogger("voice.whatsapp_agent")
 # Rate limit simple: max 30 msg/min por contacto
 _rate_cache: dict[str, list[float]] = {}
 
+# Kill switch: only send to allowed numbers (same as responder.py)
+ALLOWED_NUMBERS = ["5216623538272"]
+
 
 def _rate_limit(jid: str, max_per_min: int = 30) -> bool:
     now = time.time()
@@ -88,6 +91,13 @@ def send_text(jid: str, message: str) -> bool:
     """
     try:
         jid = _sanitize_jid(jid)
+        
+        # Kill switch: only send to allowed numbers
+        phone = jid.split("@")[0]
+        if not any(num in phone for num in ALLOWED_NUMBERS):
+            log.warning(f"BLOCKED send to {jid} — not in ALLOWED_NUMBERS")
+            return False
+        
         message = _sanitize_text(message)
         
         if not _rate_limit(jid):
@@ -480,6 +490,13 @@ def handle_incoming(msg):
     jid = msg.get("chatJid", "") or msg.get("ChatJID", "") or ""
     if jid.endswith("@g.us"):
         return
+    
+    # Kill switch: check BEFORE expensive LLM call
+    phone = jid.split("@")[0]
+    if not any(num in phone for num in ALLOWED_NUMBERS):
+        log.warning(f"BLOCKED incoming from {jid} — not in ALLOWED_NUMBERS")
+        return
+    
     mtype = msg.get("type", "") or msg.get("MediaType", "")
     text = msg.get("text", "") or msg.get("body", "") or msg.get("Text", "") or ""
     if not text.strip():

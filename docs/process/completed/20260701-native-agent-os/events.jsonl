@@ -1,0 +1,423 @@
+{"type": "skill_execution", "payload": {"spec_id": "test-skill-001", "tag": "test", "summary": "This is a test knowledge entry", "context": "Created during smoke test", "timestamp": "2026-06-17T12:00:00+0000"}}
+{"event":"skill_execution","producer":"qualify-lead","timestamp":"2026-06-18T02:47:12Z","payload":{"skill":"qualify-lead","version":"1.0.0","parent_os":"Sales","status":"pass","details":"0 qualified, 0 disqualified"}}
+{"event":"deployment_completed","producer":"deploy-code","timestamp":"2026-06-18T02:47:12Z","payload":{"commits":0,"hash":"2234d149d5b7ee8a49c8594cc36d770fa28e4de9"}}
+{"event":"skill_execution","producer":"deploy-code","timestamp":"2026-06-18T02:47:12Z","payload":{"skill":"deploy-code","version":"1.0.0","parent_os":"Dev","status":"pass","details":"simulated deployment: 0 new commit(s) since last check"}}
+{"event":"skill_execution","producer":"resolve-ticket","timestamp":"2026-06-18T02:47:12Z","payload":{"skill":"resolve-ticket","version":"1.0.0","parent_os":"Support","status":"pass","details":"0 ticket(s) resolved"}}
+{"event":"agent_health_report","producer":"spawn-agent","timestamp":"2026-06-18T02:47:12Z","payload":{"agent_count":25}}
+{"event":"skill_execution","producer":"spawn-agent","timestamp":"2026-06-18T02:47:12Z","payload":{"skill":"spawn-agent","version":"1.0.0","parent_os":"Agent","status":"pass","details":"25 agent(s) configured in opencode.json"}}
+{"event":"financial_summary","producer":"track-finance","timestamp":"2026-06-18T02:47:12Z","payload":{"status":"pass"}}
+{"event":"skill_execution","producer":"track-finance","timestamp":"2026-06-18T02:47:12Z","payload":{"skill":"track-finance","version":"1.0.0","parent_os":"Finance","status":"pass","details":"finops snapshot completed"}}
+{"event":"security_scan_completed","producer":"audit-security","timestamp":"2026-06-18T02:47:13Z","payload":{"findings":2,"permissive_files":0,"env_files":2}}
+{"event":"skill_execution","producer":"audit-security","timestamp":"2026-06-18T02:47:13Z","payload":{"skill":"audit-security","version":"1.0.0","parent_os":"Security","status":"fail","details":"0 permissive files (777), 2 .env files found"}}
+{"event":"quality_pass","producer":"validate-quality","timestamp":"2026-06-18T02:47:13Z","payload":{"total":40,"failures":0}}
+{"event":"skill_execution","producer":"validate-quality","timestamp":"2026-06-18T02:47:13Z","payload":{"skill":"validate-quality","version":"1.0.0","parent_os":"Quality","status":"pass","details":"40 script(s) passed syntax check"}}
+{"event":"health_review_completed","producer":"plan-strategy","timestamp":"2026-06-18T02:47:14Z","payload":{"status":"pass"}}
+{"event":"skill_execution","producer":"plan-strategy","timestamp":"2026-06-18T02:47:14Z","payload":{"skill":"plan-strategy","version":"1.0.0","parent_os":"Strategy","status":"pass","details":"enterprise score calculated"}}
+{"type": "knowledge_stored", "asset_id": 5, "spec_id": "test-skill-001", "tag": "test", "timestamp": "2026-06-17T19:47:24-0700"}
+{"type": "skill_execution", "payload": {"spec_id": "test-skill-002", "tag": "verify", "summary": "Verification test entry", "context": "Testing after edits", "timestamp": "2026-06-17T13:00:00+0000"}}
+{"type": "knowledge_stored", "asset_id": 6, "spec_id": "test-skill-001", "tag": "test", "timestamp": "2026-06-17T19:49:01-0700"}
+{"type": "knowledge_stored", "asset_id": 7, "spec_id": "test-skill-002", "tag": "verify", "timestamp": "2026-06-17T19:49:11-0700"}
+{"type": "skill_execution", "payload": {"spec_id": "test-final-003", "tag": "final", "summary": "Final verification entry", "context": "Testing clean log output", "timestamp": "2026-06-17T14:00:00+0000"}}
+{"type": "knowledge_stored", "asset_id": 8, "spec_id": "test-skill-001", "tag": "test", "timestamp": "2026-06-17T19:49:45-0700"}
+{"type": "knowledge_stored", "asset_id": 9, "spec_id": "test-skill-002", "tag": "verify", "timestamp": "2026-06-17T19:49:53-0700"}
+{"type": "knowledge_stored", "asset_id": 10, "spec_id": "test-final-003", "tag": "final", "timestamp": "2026-06-17T19:49:59-0700"}
+{"type": "skill_execution", "payload": {"spec_id": "test-clean-004", "tag": "clean", "summary": "Clean log verification", "context": "No tracebacks expected in log", "timestamp": "2026-06-17T15:00:00+0000"}}
+{"type": "knowledge_stored", "asset_id": 11, "spec_id": "test-skill-001", "tag": "test", "timestamp": "2026-06-17T19:52:02-0700"}
+{"type": "knowledge_stored", "asset_id": 12, "spec_id": "test-skill-002", "tag": "verify", "timestamp": "2026-06-17T19:52:13-0700"}
+{"type": "knowledge_stored", "asset_id": 14, "spec_id": "test-skill-001", "tag": "test", "timestamp": "2026-06-17T19:52:54-0700"}
+{"type": "knowledge_stored", "asset_id": 15, "spec_id": "test-skill-002", "tag": "verify", "timestamp": "2026-06-17T19:53:04-0700"}
+{"type": "knowledge_stored", "asset_id": 16, "spec_id": "test-final-003", "tag": "final", "timestamp": "2026-06-17T19:53:10-0700"}
+{"type": "knowledge_stored", "asset_id": 17, "spec_id": "test-clean-004", "tag": "clean", "timestamp": "2026-06-17T19:53:18-0700"}
+{"event":"skill_execution","producer":"qualify-lead","timestamp":"2026-06-18T03:11:06Z","payload":{"skill":"qualify-lead","version":"1.0.0","parent_os":"Sales","status":"pass","details":"0 qualified, 0 disqualified"}}
+{"event":"skill_execution","producer":"deploy-code","timestamp":"2026-06-18T03:11:06Z","payload":{"skill":"deploy-code","version":"1.0.0","parent_os":"Dev","status":"pass","details":"no new commits"}}
+{"event":"skill_execution","producer":"resolve-ticket","timestamp":"2026-06-18T03:11:06Z","payload":{"skill":"resolve-ticket","version":"1.0.0","parent_os":"Support","status":"pass","details":"0 ticket(s) resolved"}}
+{"event":"agent_health_report","producer":"spawn-agent","timestamp":"2026-06-18T03:11:06Z","payload":{"agent_count":25}}
+{"event":"skill_execution","producer":"spawn-agent","timestamp":"2026-06-18T03:11:06Z","payload":{"skill":"spawn-agent","version":"1.0.0","parent_os":"Agent","status":"pass","details":"25 agent(s) configured in opencode.json"}}
+{"event":"financial_summary","producer":"track-finance","timestamp":"2026-06-18T03:11:07Z","payload":{"status":"pass"}}
+{"event":"skill_execution","producer":"track-finance","timestamp":"2026-06-18T03:11:07Z","payload":{"skill":"track-finance","version":"1.0.0","parent_os":"Finance","status":"pass","details":"finops snapshot completed"}}
+{"event":"security_scan_completed","producer":"audit-security","timestamp":"2026-06-18T03:11:07Z","payload":{"findings":2,"permissive_files":0,"env_files":2}}
+{"event":"skill_execution","producer":"audit-security","timestamp":"2026-06-18T03:11:07Z","payload":{"skill":"audit-security","version":"1.0.0","parent_os":"Security","status":"fail","details":"0 permissive files (777), 2 .env files found"}}
+{"event":"quality_pass","producer":"validate-quality","timestamp":"2026-06-18T03:11:07Z","payload":{"total":40,"failures":0}}
+{"event":"skill_execution","producer":"validate-quality","timestamp":"2026-06-18T03:11:07Z","payload":{"skill":"validate-quality","version":"1.0.0","parent_os":"Quality","status":"pass","details":"40 script(s) passed syntax check"}}
+{"event":"health_review_completed","producer":"plan-strategy","timestamp":"2026-06-18T03:11:07Z","payload":{"status":"pass"}}
+{"event":"skill_execution","producer":"plan-strategy","timestamp":"2026-06-18T03:11:07Z","payload":{"skill":"plan-strategy","version":"1.0.0","parent_os":"Strategy","status":"pass","details":"enterprise score calculated"}}
+{"type": "knowledge_stored", "asset_id": 18, "spec_id": "test-skill-001", "tag": "test", "timestamp": "2026-06-17T20:11:15-0700"}
+{"type": "knowledge_stored", "asset_id": 19, "spec_id": "test-skill-002", "tag": "verify", "timestamp": "2026-06-17T20:11:20-0700"}
+{"type": "knowledge_stored", "asset_id": 20, "spec_id": "test-final-003", "tag": "final", "timestamp": "2026-06-17T20:11:24-0700"}
+{"type": "knowledge_stored", "asset_id": 21, "spec_id": "test-clean-004", "tag": "clean", "timestamp": "2026-06-17T20:11:29-0700"}
+{"event":"pipeline_operational","timestamp":"2026-06-30T20:18:08Z","payload":{"status":"all_templates_created","hooks_installed":2,"ci_workflows":2}}
+{"event":"commit","timestamp":"2026-06-30T20:19:30Z","payload":{"message":"feat: pipeline system — process templates, git hooks, CI gates, Engram upgrade, agent registry"}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T20:42:15.088524+00:00", "payload": {"spec_id": "SPEC-20260630-002", "type": "spec_completion", "tags": ["sales", "pipeline", "revenue", "neo4j", "events", "gamification"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T20:42:15.107059+00:00", "payload": {"spec_id": "pipeline-setup", "type": "spec_completion", "tags": ["pipeline", "spec", "leccion"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T20:42:15.128355+00:00", "payload": {"spec_id": "revenue-pipeline", "type": "spec_completion", "tags": ["pipeline", "spec", "leccion"]}}
+{"event":"commit","timestamp":"2026-06-30T20:42:30Z","payload":{"message":"feat: revenue pipeline — sales agent automation, Engram bridge, score dashboard"}}
+{"event":"commit","timestamp":"2026-06-30T21:28:34Z","payload":{"message":"docs: update TRUTH.md with pipeline system, sales pipeline, Engram upgrade, enterprise score"}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:33:17.555868+00:00", "payload": {"spec_id": "SPEC-TEST-001", "type": "spec_completion", "tags": ["test", "spec"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:33:17.583883+00:00", "payload": {"spec_id": "SPEC-TEST-002", "type": "spec_completion", "tags": []}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:33:17.620976+00:00", "payload": {"spec_id": "SPEC-TEST-QUERY", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:33:17.670277+00:00", "payload": {"spec_id": "SPEC-CONTEXT-1", "type": "spec_completion", "tags": ["neo4j", "debug"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:33:17.722193+00:00", "payload": {"spec_id": "SPEC-LIMIT-0", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:33:17.746054+00:00", "payload": {"spec_id": "SPEC-LIMIT-1", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:33:17.780710+00:00", "payload": {"spec_id": "SPEC-LIMIT-2", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:33:17.808497+00:00", "payload": {"spec_id": "SPEC-LIMIT-3", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:33:17.837615+00:00", "payload": {"spec_id": "SPEC-LIMIT-4", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:33:17.862330+00:00", "payload": {"spec_id": "SPEC-LIMIT-5", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:33:17.882310+00:00", "payload": {"spec_id": "SPEC-LIMIT-6", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:33:17.908445+00:00", "payload": {"spec_id": "SPEC-LIMIT-7", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:33:17.934126+00:00", "payload": {"spec_id": "SPEC-LIMIT-8", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:33:17.963469+00:00", "payload": {"spec_id": "SPEC-LIMIT-9", "type": "spec_completion", "tags": ["test"]}}
+{"event":"test_event","timestamp":"2026-06-30T21:33:18Z","payload":{"test": true}}
+{"event": "lead_received", "timestamp": "2026-06-30T21:33:19.183345+00:00", "payload": {"lead_id": "lead_592a156cd2f7", "source": "web_form", "niche": "general"}}
+{"event": "lead_received", "timestamp": "2026-06-30T21:33:19.189938+00:00", "payload": {"lead_id": "lead_916e8a53eacc", "source": "telegram", "niche": "general"}}
+{"event": "test_event", "timestamp": "2026-06-30T21:33:19.211787+00:00", "payload": {"key": "value"}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:34:40.900648+00:00", "payload": {"spec_id": "SPEC-TEST-001", "type": "spec_completion", "tags": ["test", "spec"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:34:40.938682+00:00", "payload": {"spec_id": "SPEC-TEST-002", "type": "spec_completion", "tags": []}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:34:41.006312+00:00", "payload": {"spec_id": "SPEC-TEST-QUERY", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:34:41.073235+00:00", "payload": {"spec_id": "SPEC-CONTEXT-1", "type": "spec_completion", "tags": ["neo4j", "debug"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:34:41.208813+00:00", "payload": {"spec_id": "SPEC-LIMIT-0", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:34:41.230685+00:00", "payload": {"spec_id": "SPEC-LIMIT-1", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:34:41.249843+00:00", "payload": {"spec_id": "SPEC-LIMIT-2", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:34:41.273138+00:00", "payload": {"spec_id": "SPEC-LIMIT-3", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:34:41.306378+00:00", "payload": {"spec_id": "SPEC-LIMIT-4", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:34:41.336606+00:00", "payload": {"spec_id": "SPEC-LIMIT-5", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:34:41.375909+00:00", "payload": {"spec_id": "SPEC-LIMIT-6", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:34:41.417952+00:00", "payload": {"spec_id": "SPEC-LIMIT-7", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:34:41.452260+00:00", "payload": {"spec_id": "SPEC-LIMIT-8", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:34:41.481841+00:00", "payload": {"spec_id": "SPEC-LIMIT-9", "type": "spec_completion", "tags": ["test"]}}
+{"event":"test_event","timestamp":"2026-06-30T21:34:42Z","payload":{"test": true}}
+{"event": "lead_received", "timestamp": "2026-06-30T21:34:42.649760+00:00", "payload": {"lead_id": "lead_1e2c5e9567c3", "source": "web_form", "niche": "general"}}
+{"event": "lead_received", "timestamp": "2026-06-30T21:34:42.656747+00:00", "payload": {"lead_id": "lead_22cc5cc8cf44", "source": "telegram", "niche": "general"}}
+{"event": "test_event", "timestamp": "2026-06-30T21:34:42.723581+00:00", "payload": {"key": "value"}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:35:23.402916+00:00", "payload": {"spec_id": "SPEC-TEST-001", "type": "spec_completion", "tags": ["test", "spec"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:35:23.436759+00:00", "payload": {"spec_id": "SPEC-TEST-002", "type": "spec_completion", "tags": []}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:35:23.485946+00:00", "payload": {"spec_id": "SPEC-TEST-QUERY", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:35:23.567467+00:00", "payload": {"spec_id": "SPEC-CONTEXT-1", "type": "spec_completion", "tags": ["neo4j", "debug"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:35:23.635979+00:00", "payload": {"spec_id": "SPEC-LIMIT-0", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:35:23.656858+00:00", "payload": {"spec_id": "SPEC-LIMIT-1", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:35:23.677921+00:00", "payload": {"spec_id": "SPEC-LIMIT-2", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:35:23.697784+00:00", "payload": {"spec_id": "SPEC-LIMIT-3", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:35:23.713235+00:00", "payload": {"spec_id": "SPEC-LIMIT-4", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:35:23.731408+00:00", "payload": {"spec_id": "SPEC-LIMIT-5", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:35:23.750512+00:00", "payload": {"spec_id": "SPEC-LIMIT-6", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:35:23.768842+00:00", "payload": {"spec_id": "SPEC-LIMIT-7", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:35:23.791797+00:00", "payload": {"spec_id": "SPEC-LIMIT-8", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:35:23.808221+00:00", "payload": {"spec_id": "SPEC-LIMIT-9", "type": "spec_completion", "tags": ["test"]}}
+{"event":"test_event","timestamp":"2026-06-30T21:35:24Z","payload":{"test": true}}
+{"event": "lead_received", "timestamp": "2026-06-30T21:35:24.611554+00:00", "payload": {"lead_id": "lead_dd1d7022bd15", "source": "web_form", "niche": "general"}}
+{"event": "lead_received", "timestamp": "2026-06-30T21:35:24.618032+00:00", "payload": {"lead_id": "lead_127d4d0ef24e", "source": "telegram", "niche": "general"}}
+{"event": "test_event", "timestamp": "2026-06-30T21:35:24.680864+00:00", "payload": {"key": "value"}}
+{"event":"commit","timestamp":"2026-06-30T21:35:42Z","payload":{"message":"feat: TDD enforcement + 92 new tests (417 total, 0 failures)"}}
+{"event":"commit","timestamp":"2026-06-30T21:36:00Z","payload":{"message":"docs: update TRUTH.md test results — 417 pass, 0 fail"}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:37:46.066587+00:00", "payload": {"spec_id": "SPEC-TEST-001", "type": "spec_completion", "tags": ["test", "spec"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:37:46.086455+00:00", "payload": {"spec_id": "SPEC-TEST-002", "type": "spec_completion", "tags": []}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:37:46.107583+00:00", "payload": {"spec_id": "SPEC-TEST-QUERY", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:37:46.148262+00:00", "payload": {"spec_id": "SPEC-CONTEXT-1", "type": "spec_completion", "tags": ["neo4j", "debug"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:37:46.188780+00:00", "payload": {"spec_id": "SPEC-LIMIT-0", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:37:46.205865+00:00", "payload": {"spec_id": "SPEC-LIMIT-1", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:37:46.219230+00:00", "payload": {"spec_id": "SPEC-LIMIT-2", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:37:46.237034+00:00", "payload": {"spec_id": "SPEC-LIMIT-3", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:37:46.255500+00:00", "payload": {"spec_id": "SPEC-LIMIT-4", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:37:46.270458+00:00", "payload": {"spec_id": "SPEC-LIMIT-5", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:37:46.286581+00:00", "payload": {"spec_id": "SPEC-LIMIT-6", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:37:46.304782+00:00", "payload": {"spec_id": "SPEC-LIMIT-7", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:37:46.319563+00:00", "payload": {"spec_id": "SPEC-LIMIT-8", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:37:46.338279+00:00", "payload": {"spec_id": "SPEC-LIMIT-9", "type": "spec_completion", "tags": ["test"]}}
+{"event":"test_event","timestamp":"2026-06-30T21:37:46Z","payload":{"test": true}}
+{"event": "lead_received", "timestamp": "2026-06-30T21:37:46.865922+00:00", "payload": {"lead_id": "lead_9efb64ec7634", "source": "web_form", "niche": "general"}}
+{"event": "lead_received", "timestamp": "2026-06-30T21:37:46.878996+00:00", "payload": {"lead_id": "lead_417896515b79", "source": "telegram", "niche": "general"}}
+{"event": "test_event", "timestamp": "2026-06-30T21:37:46.907089+00:00", "payload": {"key": "value"}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:43:20.421799+00:00", "payload": {"spec_id": "SPEC-TEST-001", "type": "spec_completion", "tags": ["test", "spec"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:43:20.442389+00:00", "payload": {"spec_id": "SPEC-TEST-002", "type": "spec_completion", "tags": []}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:43:20.465340+00:00", "payload": {"spec_id": "SPEC-TEST-QUERY", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:43:20.504906+00:00", "payload": {"spec_id": "SPEC-CONTEXT-1", "type": "spec_completion", "tags": ["neo4j", "debug"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:43:20.545576+00:00", "payload": {"spec_id": "SPEC-LIMIT-0", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:43:20.561138+00:00", "payload": {"spec_id": "SPEC-LIMIT-1", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:43:20.579468+00:00", "payload": {"spec_id": "SPEC-LIMIT-2", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:43:20.597557+00:00", "payload": {"spec_id": "SPEC-LIMIT-3", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:43:20.612476+00:00", "payload": {"spec_id": "SPEC-LIMIT-4", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:43:20.629078+00:00", "payload": {"spec_id": "SPEC-LIMIT-5", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:43:20.642067+00:00", "payload": {"spec_id": "SPEC-LIMIT-6", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:43:20.657433+00:00", "payload": {"spec_id": "SPEC-LIMIT-7", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:43:20.674662+00:00", "payload": {"spec_id": "SPEC-LIMIT-8", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:43:20.696027+00:00", "payload": {"spec_id": "SPEC-LIMIT-9", "type": "spec_completion", "tags": ["test"]}}
+{"event":"test_event","timestamp":"2026-06-30T21:43:20Z","payload":{"test": true}}
+{"event": "lead_received", "timestamp": "2026-06-30T21:43:21.040364+00:00", "payload": {"lead_id": "lead_d999e7e844cc", "source": "web_form", "niche": "general"}}
+{"event": "lead_received", "timestamp": "2026-06-30T21:43:21.044704+00:00", "payload": {"lead_id": "lead_38b050b0b116", "source": "telegram", "niche": "general"}}
+{"event": "test_event", "timestamp": "2026-06-30T21:43:21.063165+00:00", "payload": {"key": "value"}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:45:26.568552+00:00", "payload": {"spec_id": "SPEC-TEST-001", "type": "spec_completion", "tags": ["test", "spec"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:45:26.597280+00:00", "payload": {"spec_id": "SPEC-TEST-002", "type": "spec_completion", "tags": []}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:45:26.636111+00:00", "payload": {"spec_id": "SPEC-TEST-QUERY", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:45:26.696650+00:00", "payload": {"spec_id": "SPEC-CONTEXT-1", "type": "spec_completion", "tags": ["neo4j", "debug"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:45:26.744390+00:00", "payload": {"spec_id": "SPEC-LIMIT-0", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:45:26.763068+00:00", "payload": {"spec_id": "SPEC-LIMIT-1", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:45:26.781981+00:00", "payload": {"spec_id": "SPEC-LIMIT-2", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:45:26.803459+00:00", "payload": {"spec_id": "SPEC-LIMIT-3", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:45:26.822573+00:00", "payload": {"spec_id": "SPEC-LIMIT-4", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:45:26.842021+00:00", "payload": {"spec_id": "SPEC-LIMIT-5", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:45:26.865404+00:00", "payload": {"spec_id": "SPEC-LIMIT-6", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:45:26.886740+00:00", "payload": {"spec_id": "SPEC-LIMIT-7", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:45:26.907387+00:00", "payload": {"spec_id": "SPEC-LIMIT-8", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:45:26.928030+00:00", "payload": {"spec_id": "SPEC-LIMIT-9", "type": "spec_completion", "tags": ["test"]}}
+{"event":"test_event","timestamp":"2026-06-30T21:45:27Z","payload":{"test": true}}
+{"event": "lead_received", "timestamp": "2026-06-30T21:45:27.381614+00:00", "payload": {"lead_id": "lead_c43565408133", "source": "web_form", "niche": "general"}}
+{"event": "lead_received", "timestamp": "2026-06-30T21:45:27.386001+00:00", "payload": {"lead_id": "lead_1e8e6c0fc911", "source": "telegram", "niche": "general"}}
+{"event": "test_event", "timestamp": "2026-06-30T21:45:27.401109+00:00", "payload": {"key": "value"}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:46:20.269737+00:00", "payload": {"spec_id": "SPEC-TEST-001", "type": "spec_completion", "tags": ["test", "spec"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:46:20.298637+00:00", "payload": {"spec_id": "SPEC-TEST-002", "type": "spec_completion", "tags": []}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:46:20.327416+00:00", "payload": {"spec_id": "SPEC-TEST-QUERY", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:46:20.372863+00:00", "payload": {"spec_id": "SPEC-CONTEXT-1", "type": "spec_completion", "tags": ["neo4j", "debug"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:46:20.439195+00:00", "payload": {"spec_id": "SPEC-LIMIT-0", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:46:20.462930+00:00", "payload": {"spec_id": "SPEC-LIMIT-1", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:46:20.479327+00:00", "payload": {"spec_id": "SPEC-LIMIT-2", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:46:20.495825+00:00", "payload": {"spec_id": "SPEC-LIMIT-3", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:46:20.516700+00:00", "payload": {"spec_id": "SPEC-LIMIT-4", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:46:20.538787+00:00", "payload": {"spec_id": "SPEC-LIMIT-5", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:46:20.554862+00:00", "payload": {"spec_id": "SPEC-LIMIT-6", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:46:20.573720+00:00", "payload": {"spec_id": "SPEC-LIMIT-7", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:46:20.603414+00:00", "payload": {"spec_id": "SPEC-LIMIT-8", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:46:20.623676+00:00", "payload": {"spec_id": "SPEC-LIMIT-9", "type": "spec_completion", "tags": ["test"]}}
+{"event":"test_event","timestamp":"2026-06-30T21:46:21Z","payload":{"test": true}}
+{"event": "lead_received", "timestamp": "2026-06-30T21:46:21.307894+00:00", "payload": {"lead_id": "lead_012e41bb1ae9", "source": "web_form", "niche": "general"}}
+{"event": "lead_received", "timestamp": "2026-06-30T21:46:21.314519+00:00", "payload": {"lead_id": "lead_34f99042e4f4", "source": "telegram", "niche": "general"}}
+{"event": "test_event", "timestamp": "2026-06-30T21:46:21.346562+00:00", "payload": {"key": "value"}}
+{"event":"commit","timestamp":"2026-06-30T21:46:39Z","payload":{"message":"fix: audit corrections — ruff lint (719 fixes), 3.10 compat, .env perms, README, orchestrator tests"}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:53:12.573334+00:00", "payload": {"spec_id": "SPEC-TEST-001", "type": "spec_completion", "tags": ["test", "spec"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:53:12.610802+00:00", "payload": {"spec_id": "SPEC-TEST-002", "type": "spec_completion", "tags": []}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:53:12.637513+00:00", "payload": {"spec_id": "SPEC-TEST-QUERY", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:53:12.686681+00:00", "payload": {"spec_id": "SPEC-CONTEXT-1", "type": "spec_completion", "tags": ["neo4j", "debug"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:53:12.733943+00:00", "payload": {"spec_id": "SPEC-LIMIT-0", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:53:12.756449+00:00", "payload": {"spec_id": "SPEC-LIMIT-1", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:53:12.776727+00:00", "payload": {"spec_id": "SPEC-LIMIT-2", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:53:12.793913+00:00", "payload": {"spec_id": "SPEC-LIMIT-3", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:53:12.807671+00:00", "payload": {"spec_id": "SPEC-LIMIT-4", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:53:12.821397+00:00", "payload": {"spec_id": "SPEC-LIMIT-5", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:53:12.837703+00:00", "payload": {"spec_id": "SPEC-LIMIT-6", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:53:12.854623+00:00", "payload": {"spec_id": "SPEC-LIMIT-7", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:53:12.867122+00:00", "payload": {"spec_id": "SPEC-LIMIT-8", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T21:53:12.889283+00:00", "payload": {"spec_id": "SPEC-LIMIT-9", "type": "spec_completion", "tags": ["test"]}}
+{"event":"test_event","timestamp":"2026-06-30T21:53:13Z","payload":{"test": true}}
+{"event": "lead_received", "timestamp": "2026-06-30T21:53:13.291678+00:00", "payload": {"lead_id": "lead_7ddcdf7523fa", "source": "web_form", "niche": "general"}}
+{"event": "lead_received", "timestamp": "2026-06-30T21:53:13.296649+00:00", "payload": {"lead_id": "lead_4a0cda4d7340", "source": "telegram", "niche": "general"}}
+{"event": "test_event", "timestamp": "2026-06-30T21:53:13.318076+00:00", "payload": {"key": "value"}}
+{"event":"commit","timestamp":"2026-06-30T21:53:28Z","payload":{"message":"fix: resolve remaining lint errors (911→88), fix StrEnum/UTC for py3.10, all tests 432/432"}}
+{"event":"commit","timestamp":"2026-06-30T21:53:35Z","payload":{"message":"chore: clean test artifacts from process/active"}}
+{"event":"commit","timestamp":"2026-06-30T23:23:54Z","payload":{"message":"feat: FASE 1 — Dockerización de Jarvis + WebUI (SPEC-20260630-003)"}}
+{"event":"commit","timestamp":"2026-06-30T23:26:46Z","payload":{"message":"feat: FASE 1 completa — Dockerización, CATALOG actualizado, systemd→Docker"}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:30:50.022831+00:00", "payload": {"spec_id": "SPEC-TEST-001", "type": "spec_completion", "tags": ["test", "spec"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:30:50.040435+00:00", "payload": {"spec_id": "SPEC-TEST-002", "type": "spec_completion", "tags": []}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:30:50.064642+00:00", "payload": {"spec_id": "SPEC-TEST-QUERY", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:30:50.095425+00:00", "payload": {"spec_id": "SPEC-CONTEXT-1", "type": "spec_completion", "tags": ["neo4j", "debug"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:30:50.140085+00:00", "payload": {"spec_id": "SPEC-LIMIT-0", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:30:50.155227+00:00", "payload": {"spec_id": "SPEC-LIMIT-1", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:30:50.171232+00:00", "payload": {"spec_id": "SPEC-LIMIT-2", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:30:50.185119+00:00", "payload": {"spec_id": "SPEC-LIMIT-3", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:30:50.199233+00:00", "payload": {"spec_id": "SPEC-LIMIT-4", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:30:50.213588+00:00", "payload": {"spec_id": "SPEC-LIMIT-5", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:30:50.227093+00:00", "payload": {"spec_id": "SPEC-LIMIT-6", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:30:50.244006+00:00", "payload": {"spec_id": "SPEC-LIMIT-7", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:30:50.261616+00:00", "payload": {"spec_id": "SPEC-LIMIT-8", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:30:50.278240+00:00", "payload": {"spec_id": "SPEC-LIMIT-9", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:30:50.337954+00:00", "payload": {"spec_id": "dockerizacion", "type": "spec_completion", "tags": ["pipeline", "spec", "leccion"]}}
+{"event":"test_event","timestamp":"2026-06-30T23:30:50Z","payload":{"test": true}}
+{"event": "test_redis_event", "timestamp": "2026-06-30T23:30:50.742435+00:00", "payload": {"source": "test"}}
+{"event": "lead_received", "timestamp": "2026-06-30T23:30:50.798827+00:00", "payload": {"lead_id": "lead_e236f8bd7298", "source": "web_form", "niche": "general"}}
+{"event": "lead_received", "timestamp": "2026-06-30T23:30:50.807618+00:00", "payload": {"lead_id": "lead_1515eb8ba989", "source": "telegram", "niche": "general"}}
+{"event": "test_event", "timestamp": "2026-06-30T23:30:50.825897+00:00", "payload": {"key": "value"}}
+{"event":"commit","timestamp":"2026-06-30T23:34:01Z","payload":{"message":"feat: FASE 2 — Redis Streams como sistema nervioso (SPEC-20260630-004)"}}
+{"event":"commit","timestamp":"2026-06-30T23:34:47Z","payload":{"message":"chore: clean test artifacts from process/active"}}
+{"event":"commit","timestamp":"2026-06-30T23:35:46Z","payload":{"message":"fix: add REDIS_PASSWORD to docker-compose and .env for Redis Streams auth"}}
+{"event":"commit","timestamp":"2026-06-30T23:41:07Z","payload":{"message":"feat: FASE 3 — Governance as Code (SPEC-20260630-005)"}}
+{"event":"commit","timestamp":"2026-06-30T23:42:58Z","payload":{"message":"fix: tests.yml runs inside Docker (Python 3.12) instead of bare runner"}}
+{"event":"commit","timestamp":"2026-06-30T23:46:58Z","payload":{"message":"fix: CI now builds Docker with .env stub for GitHub Actions"}}
+{"event":"commit","timestamp":"2026-06-30T23:49:56Z","payload":{"message":"fix: CI Docker build — create state/ stub, .env from .env.ci"}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:58:49.177384+00:00", "payload": {"spec_id": "SPEC-TEST-001", "type": "spec_completion", "tags": ["test", "spec"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:58:49.197792+00:00", "payload": {"spec_id": "SPEC-TEST-002", "type": "spec_completion", "tags": []}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:58:49.231330+00:00", "payload": {"spec_id": "SPEC-TEST-QUERY", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:58:49.292487+00:00", "payload": {"spec_id": "SPEC-CONTEXT-1", "type": "spec_completion", "tags": ["neo4j", "debug"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:58:49.347654+00:00", "payload": {"spec_id": "SPEC-LIMIT-0", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:58:49.368775+00:00", "payload": {"spec_id": "SPEC-LIMIT-1", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:58:49.398772+00:00", "payload": {"spec_id": "SPEC-LIMIT-2", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:58:49.418062+00:00", "payload": {"spec_id": "SPEC-LIMIT-3", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:58:49.439421+00:00", "payload": {"spec_id": "SPEC-LIMIT-4", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:58:49.463400+00:00", "payload": {"spec_id": "SPEC-LIMIT-5", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:58:49.490199+00:00", "payload": {"spec_id": "SPEC-LIMIT-6", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:58:49.509048+00:00", "payload": {"spec_id": "SPEC-LIMIT-7", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:58:49.527257+00:00", "payload": {"spec_id": "SPEC-LIMIT-8", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:58:49.557537+00:00", "payload": {"spec_id": "SPEC-LIMIT-9", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-06-30T23:58:49.664828+00:00", "payload": {"spec_id": "redis-streams", "type": "spec_completion", "tags": ["pipeline", "spec", "leccion"]}}
+{"event":"test_event","timestamp":"2026-06-30T23:58:50Z","payload":{"test": true}}
+{"event": "test_redis_event", "timestamp": "2026-06-30T23:58:50.247721+00:00", "payload": {"source": "test"}}
+{"event": "lead_received", "timestamp": "2026-06-30T23:58:50.368490+00:00", "payload": {"lead_id": "lead_614d123a805f", "source": "web_form", "niche": "general"}}
+{"event": "lead_received", "timestamp": "2026-06-30T23:58:50.384378+00:00", "payload": {"lead_id": "lead_40aa1dcc660a", "source": "telegram", "niche": "general"}}
+{"event": "test_event", "timestamp": "2026-06-30T23:58:50.442228+00:00", "payload": {"key": "value"}}
+{"event":"commit","timestamp":"2026-06-30T23:59:07Z","payload":{"message":"fix: restore Python 3.10 compat (ruff --fix reverted UTC), slim CI to 26 lint errors"}}
+{"event":"commit","timestamp":"2026-07-01T00:01:38Z","payload":{"message":"fix: pyproject.toml at root for ruff config"}}
+{"event":"commit","timestamp":"2026-07-01T00:05:47Z","payload":{"message":"fix: ignore UP017 (datetime.UTC vs timezone.utc compat), ruff lint to 26 errors"}}
+{"event":"commit","timestamp":"2026-07-01T00:08:50Z","payload":{"message":"fix: CI lint allows E501 (cosmetic), fails on hard errors"}}
+{"event":"commit","timestamp":"2026-07-01T00:11:46Z","payload":{"message":"fix: TDD check handles shallow clone (HEAD~1 missing)"}}
+{"event":"commit","timestamp":"2026-07-01T00:16:28Z","payload":{"message":"feat: FASE 3 completa — Governance as Code (SPEC-20260630-005)"}}
+{"event":"commit","timestamp":"2026-07-01T00:19:32Z","payload":{"message":"fix: skip CLI spec test in CI (temp dir incompat)"}}
+{"event":"commit","timestamp":"2026-07-01T00:22:04Z","payload":{"message":"fix: skip test_spec_new_creates_file (creates artifacts)"}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T00:34:59.872656+00:00", "payload": {"spec_id": "SPEC-TEST-001", "type": "spec_completion", "tags": ["test", "spec"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T00:34:59.894471+00:00", "payload": {"spec_id": "SPEC-TEST-002", "type": "spec_completion", "tags": []}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T00:34:59.913972+00:00", "payload": {"spec_id": "SPEC-TEST-QUERY", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T00:34:59.958488+00:00", "payload": {"spec_id": "SPEC-CONTEXT-1", "type": "spec_completion", "tags": ["neo4j", "debug"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T00:35:00.035809+00:00", "payload": {"spec_id": "SPEC-LIMIT-0", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T00:35:00.058696+00:00", "payload": {"spec_id": "SPEC-LIMIT-1", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T00:35:00.079141+00:00", "payload": {"spec_id": "SPEC-LIMIT-2", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T00:35:00.120404+00:00", "payload": {"spec_id": "SPEC-LIMIT-3", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T00:35:00.137976+00:00", "payload": {"spec_id": "SPEC-LIMIT-4", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T00:35:00.156900+00:00", "payload": {"spec_id": "SPEC-LIMIT-5", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T00:35:00.178143+00:00", "payload": {"spec_id": "SPEC-LIMIT-6", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T00:35:00.193080+00:00", "payload": {"spec_id": "SPEC-LIMIT-7", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T00:35:00.213200+00:00", "payload": {"spec_id": "SPEC-LIMIT-8", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T00:35:00.231964+00:00", "payload": {"spec_id": "SPEC-LIMIT-9", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T00:35:00.295245+00:00", "payload": {"spec_id": "governance-code", "type": "spec_completion", "tags": ["pipeline", "spec", "leccion"]}}
+{"event":"test_event","timestamp":"2026-07-01T00:35:00Z","payload":{"test": true}}
+{"event": "test_redis_event", "timestamp": "2026-07-01T00:35:00.582454+00:00", "payload": {"source": "test"}}
+{"event": "lead_received", "timestamp": "2026-07-01T00:35:00.628706+00:00", "payload": {"lead_id": "lead_12d0a93cdc75", "source": "web_form", "niche": "general"}}
+{"event": "lead_received", "timestamp": "2026-07-01T00:35:00.633075+00:00", "payload": {"lead_id": "lead_c40a99e257ff", "source": "telegram", "niche": "general"}}
+{"event": "test_event", "timestamp": "2026-07-01T00:35:00.650459+00:00", "payload": {"key": "value"}}
+{"event":"commit","timestamp":"2026-07-01T00:35:29Z","payload":{"message":"feat: FASE 4 — Extracción por Dominios (SPEC-20260630-006)"}}
+{"event":"commit","timestamp":"2026-07-01T00:43:07Z","payload":{"message":"chore: session summary + next SPEC (Engram pipeline loop)"}}
+{"event":"commit","timestamp":"2026-07-01T00:49:46Z","payload":{"message":"docs: presentation of today's work (6 SPECs, 4 phases)"}}
+{"event":"commit","timestamp":"2026-07-01T01:00:12Z","payload":{"message":"feat: security hardening + mission control + docs"}}
+{"event":"commit","timestamp":"2026-07-01T01:03:12Z","payload":{"message":"fix: webui healthcheck uses GET instead of HEAD (was 405)"}}
+{"event":"commit","timestamp":"2026-07-01T02:07:10Z","payload":{"message":"fix: MCP healthcheck, update deps, security hardening"}}
+{"event":"commit","timestamp":"2026-07-01T02:07:24Z","payload":{"message":"fix: MCP healthcheck, update deps, security hardening"}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T02:09:18.652735+00:00", "payload": {"spec_id": "SPEC-TEST-001", "type": "spec_completion", "tags": ["test", "spec"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T02:09:18.686081+00:00", "payload": {"spec_id": "SPEC-TEST-002", "type": "spec_completion", "tags": []}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T02:09:18.733297+00:00", "payload": {"spec_id": "SPEC-TEST-QUERY", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T02:09:18.792540+00:00", "payload": {"spec_id": "SPEC-CONTEXT-1", "type": "spec_completion", "tags": ["neo4j", "debug"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T02:09:18.863216+00:00", "payload": {"spec_id": "SPEC-LIMIT-0", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T02:09:18.892765+00:00", "payload": {"spec_id": "SPEC-LIMIT-1", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T02:09:18.933738+00:00", "payload": {"spec_id": "SPEC-LIMIT-2", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T02:09:18.968131+00:00", "payload": {"spec_id": "SPEC-LIMIT-3", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T02:09:19.004140+00:00", "payload": {"spec_id": "SPEC-LIMIT-4", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T02:09:19.176029+00:00", "payload": {"spec_id": "SPEC-LIMIT-5", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T02:09:19.199990+00:00", "payload": {"spec_id": "SPEC-LIMIT-6", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T02:09:19.227991+00:00", "payload": {"spec_id": "SPEC-LIMIT-7", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T02:09:19.248318+00:00", "payload": {"spec_id": "SPEC-LIMIT-8", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T02:09:19.270987+00:00", "payload": {"spec_id": "SPEC-LIMIT-9", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T02:09:19.370143+00:00", "payload": {"spec_id": "domain-architecture", "type": "spec_completion", "tags": ["pipeline", "spec", "leccion"]}}
+{"event":"test_event","timestamp":"2026-07-01T02:09:20Z","payload":{"test": true}}
+{"event": "test_redis_event", "timestamp": "2026-07-01T02:09:20.483828+00:00", "payload": {"source": "test"}}
+{"event": "lead_received", "timestamp": "2026-07-01T02:09:20.588935+00:00", "payload": {"lead_id": "lead_2465f17075c7", "source": "web_form", "niche": "general"}}
+{"event": "lead_received", "timestamp": "2026-07-01T02:09:20.599064+00:00", "payload": {"lead_id": "lead_858355946a4a", "source": "telegram", "niche": "general"}}
+{"event": "test_event", "timestamp": "2026-07-01T02:09:20.644492+00:00", "payload": {"key": "value"}}
+{"event":"commit","timestamp":"2026-07-01T02:10:31Z","payload":{"message":"feat: SPEC-007 Engram pipeline loop + MCP fix"}}
+{"event":"commit","timestamp":"2026-07-01T02:17:27Z","payload":{"message":"feat: SPEC-007 completed — Engram pipeline loop"}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T02:44:03.420368+00:00", "payload": {"spec_id": "SESSION-20260630-closing", "type": "spec_completion", "tags": ["session", "summary", "2026-06-30"]}}
+{"event":"commit","timestamp":"2026-07-01T05:06:35Z","payload":{"message":"fix: global config lock + CLAUDE.md protocol"}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T05:12:22.565822+00:00", "payload": {"spec_id": "SPEC-TEST-001", "type": "spec_completion", "tags": ["test", "spec"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T05:12:22.589257+00:00", "payload": {"spec_id": "SPEC-TEST-002", "type": "spec_completion", "tags": []}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T05:12:22.611602+00:00", "payload": {"spec_id": "SPEC-TEST-QUERY", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T05:12:22.655900+00:00", "payload": {"spec_id": "SPEC-CONTEXT-1", "type": "spec_completion", "tags": ["neo4j", "debug"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T05:12:22.710914+00:00", "payload": {"spec_id": "SPEC-LIMIT-0", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T05:12:22.731048+00:00", "payload": {"spec_id": "SPEC-LIMIT-1", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T05:12:22.752536+00:00", "payload": {"spec_id": "SPEC-LIMIT-2", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T05:12:22.775588+00:00", "payload": {"spec_id": "SPEC-LIMIT-3", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T05:12:22.798900+00:00", "payload": {"spec_id": "SPEC-LIMIT-4", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T05:12:22.824876+00:00", "payload": {"spec_id": "SPEC-LIMIT-5", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T05:12:22.846129+00:00", "payload": {"spec_id": "SPEC-LIMIT-6", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T05:12:22.866977+00:00", "payload": {"spec_id": "SPEC-LIMIT-7", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T05:12:22.889402+00:00", "payload": {"spec_id": "SPEC-LIMIT-8", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T05:12:22.912908+00:00", "payload": {"spec_id": "SPEC-LIMIT-9", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T05:12:22.962783+00:00", "payload": {"spec_id": "engram-pipeline-loop", "type": "spec_completion", "tags": ["pipeline", "spec", "leccion"]}}
+{"event":"test_event","timestamp":"2026-07-01T05:12:23Z","payload":{"test": true}}
+{"event": "test_redis_event", "timestamp": "2026-07-01T05:12:23.373845+00:00", "payload": {"source": "test"}}
+{"event": "lead_received", "timestamp": "2026-07-01T05:12:23.436566+00:00", "payload": {"lead_id": "lead_a3a83f1e61fb", "source": "web_form", "niche": "general"}}
+{"event": "lead_received", "timestamp": "2026-07-01T05:12:23.441186+00:00", "payload": {"lead_id": "lead_795ddfe46a28", "source": "telegram", "niche": "general"}}
+{"event": "test_event", "timestamp": "2026-07-01T05:12:23.479366+00:00", "payload": {"key": "value"}}
+{"event":"commit","timestamp":"2026-07-01T05:15:26Z","payload":{"message":"chore: unified ~/sdc path across local, VPS, GitHub"}}
+{"event":"commit","timestamp":"2026-07-01T05:23:43Z","payload":{"message":"docs: MAPA-SDC — inventario completo + propuesta de orden"}}
+{"event":"commit","timestamp":"2026-07-01T05:26:29Z","payload":{"message":"refactor: UNIFICACIÓN COMPLETA de ~/sdc/"}}
+{"event":"commit","timestamp":"2026-07-01T05:30:58Z","payload":{"message":"docs: session summary — 7 SPECs, unificación ~/sdc/"}}
+{"event":"commit","timestamp":"2026-07-01T05:31:59Z","payload":{"message":"fix: CLAUDE.md — auto-query Engram al iniciar sesión"}}
+{"event":"commit","timestamp":"2026-07-01T05:32:16Z","payload":{"message":"fix: CLAUDE.md — auto-query Engram al iniciar sesión"}}
+{"event":"commit","timestamp":"2026-07-01T05:33:18Z","payload":{"message":"fix: CLAUDE.md — auto-query Engram + estructura clara"}}
+{"event":"commit","timestamp":"2026-07-01T05:42:07Z","payload":{"message":"feat: auto session start + merged CLAUDE.md + sdc-rules.md (#24)"}}
+{"event":"commit","timestamp":"2026-07-01T05:47:59Z","payload":{"message":"spec: auto session start — SPEC + Gherkin + Score 60/100"}}
+{"event":"commit","timestamp":"2026-07-01T05:48:44Z","payload":{"message":"fix: SCORE.md path + format for CI gate"}}
+{"event":"commit","timestamp":"2026-07-01T05:52:27Z","payload":{"message":"fix: ruff import sorting in orchestrator.py"}}
+{"event":"commit","timestamp":"2026-07-01T06:04:06Z","payload":{"message":"unification: GSD — fusion completa + SPEC-000 done"}}
+{"event":"commit","timestamp":"2026-07-01T06:30:44Z","payload":{"message":"feat: errors/ backlog + arquitectura final + roadmap productos"}}
+{"event":"commit","timestamp":"2026-07-01T06:32:10Z","payload":{"message":"fix: root package.json for CI test"}}
+{"event":"commit","timestamp":"2026-07-01T06:37:29Z","payload":{"message":"feat: auto session start + merged CLAUDE.md + sdc-rules.md (#24)"}}
+{"event":"commit","timestamp":"2026-07-01T06:37:29Z","payload":{"message":"spec: auto session start — SPEC + Gherkin + Score 60/100"}}
+{"event":"commit","timestamp":"2026-07-01T06:37:29Z","payload":{"message":"fix: SCORE.md path + format for CI gate"}}
+{"event":"commit","timestamp":"2026-07-01T06:37:29Z","payload":{"message":"fix: ruff import sorting in orchestrator.py"}}
+{"event":"commit","timestamp":"2026-07-01T06:37:30Z","payload":{"message":"fix: root package.json for CI"}}
+{"event":"commit","timestamp":"2026-07-01T06:42:01Z","payload":{"message":"fix: ci validate — allow pip install failure (PyAudio)"}}
+{"event":"commit","timestamp":"2026-07-01T06:45:12Z","payload":{"message":"spec: auto session start — SPEC + Gherkin + Score 60/100"}}
+{"event":"commit","timestamp":"2026-07-01T06:45:12Z","payload":{"message":"fix: SCORE.md path + format for CI gate"}}
+{"event":"commit","timestamp":"2026-07-01T06:45:12Z","payload":{"message":"fix: root package.json for CI"}}
+{"event":"commit","timestamp":"2026-07-01T06:45:12Z","payload":{"message":"fix: ci validate — allow pip install failure (PyAudio)"}}
+{"event":"commit","timestamp":"2026-07-01T06:47:18Z","payload":{"message":"fix: add build script to root package.json"}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:30:36.852618+00:00", "payload": {"spec_id": "SPEC-TEST-001", "type": "spec_completion", "tags": ["test", "spec"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:30:36.881363+00:00", "payload": {"spec_id": "SPEC-TEST-002", "type": "spec_completion", "tags": []}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:30:36.908878+00:00", "payload": {"spec_id": "SPEC-TEST-QUERY", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:30:36.979542+00:00", "payload": {"spec_id": "SPEC-CONTEXT-1", "type": "spec_completion", "tags": ["neo4j", "debug"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:30:37.091805+00:00", "payload": {"spec_id": "SPEC-LIMIT-0", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:30:37.120450+00:00", "payload": {"spec_id": "SPEC-LIMIT-1", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:30:37.142234+00:00", "payload": {"spec_id": "SPEC-LIMIT-2", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:30:37.222696+00:00", "payload": {"spec_id": "SPEC-LIMIT-3", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:30:37.305658+00:00", "payload": {"spec_id": "SPEC-LIMIT-4", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:30:37.325623+00:00", "payload": {"spec_id": "SPEC-LIMIT-5", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:30:37.349186+00:00", "payload": {"spec_id": "SPEC-LIMIT-6", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:30:37.366815+00:00", "payload": {"spec_id": "SPEC-LIMIT-7", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:30:37.405136+00:00", "payload": {"spec_id": "SPEC-LIMIT-8", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:30:37.472955+00:00", "payload": {"spec_id": "SPEC-LIMIT-9", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:30:37.577506+00:00", "payload": {"spec_id": "auto-session-start", "type": "spec_completion", "tags": ["pipeline", "spec", "leccion"]}}
+{"event":"test_event","timestamp":"2026-07-01T07:30:38Z","payload":{"test": true}}
+{"event": "test_redis_event", "timestamp": "2026-07-01T07:30:38.260932+00:00", "payload": {"source": "test"}}
+{"event": "lead_received", "timestamp": "2026-07-01T07:30:38.363217+00:00", "payload": {"lead_id": "lead_31ec39eae267", "source": "web_form", "niche": "general"}}
+{"event": "lead_received", "timestamp": "2026-07-01T07:30:38.368118+00:00", "payload": {"lead_id": "lead_38953e515cc9", "source": "telegram", "niche": "general"}}
+{"event": "test_event", "timestamp": "2026-07-01T07:30:38.388689+00:00", "payload": {"key": "value"}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:02.209603+00:00", "payload": {"spec_id": "SPEC-TEST-001", "type": "spec_completion", "tags": ["test", "spec"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:02.248516+00:00", "payload": {"spec_id": "SPEC-TEST-002", "type": "spec_completion", "tags": []}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:02.279448+00:00", "payload": {"spec_id": "SPEC-TEST-QUERY", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:02.325987+00:00", "payload": {"spec_id": "SPEC-CONTEXT-1", "type": "spec_completion", "tags": ["neo4j", "debug"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:02.408653+00:00", "payload": {"spec_id": "SPEC-LIMIT-0", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:02.426601+00:00", "payload": {"spec_id": "SPEC-LIMIT-1", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:02.453415+00:00", "payload": {"spec_id": "SPEC-LIMIT-2", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:02.473137+00:00", "payload": {"spec_id": "SPEC-LIMIT-3", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:02.494100+00:00", "payload": {"spec_id": "SPEC-LIMIT-4", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:02.515128+00:00", "payload": {"spec_id": "SPEC-LIMIT-5", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:02.538769+00:00", "payload": {"spec_id": "SPEC-LIMIT-6", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:02.565309+00:00", "payload": {"spec_id": "SPEC-LIMIT-7", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:02.590796+00:00", "payload": {"spec_id": "SPEC-LIMIT-8", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:02.616906+00:00", "payload": {"spec_id": "SPEC-LIMIT-9", "type": "spec_completion", "tags": ["test"]}}
+{"event":"test_event","timestamp":"2026-07-01T07:31:02Z","payload":{"test": true}}
+{"event": "test_redis_event", "timestamp": "2026-07-01T07:31:02.992734+00:00", "payload": {"source": "test"}}
+{"event": "lead_received", "timestamp": "2026-07-01T07:31:03.049952+00:00", "payload": {"lead_id": "lead_e2d37c4b71de", "source": "web_form", "niche": "general"}}
+{"event": "lead_received", "timestamp": "2026-07-01T07:31:03.064971+00:00", "payload": {"lead_id": "lead_a0c55b8fb6c8", "source": "telegram", "niche": "general"}}
+{"event": "test_event", "timestamp": "2026-07-01T07:31:03.100846+00:00", "payload": {"key": "value"}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:29.401625+00:00", "payload": {"spec_id": "SPEC-TEST-001", "type": "spec_completion", "tags": ["test", "spec"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:29.423263+00:00", "payload": {"spec_id": "SPEC-TEST-002", "type": "spec_completion", "tags": []}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:29.455775+00:00", "payload": {"spec_id": "SPEC-TEST-QUERY", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:29.487426+00:00", "payload": {"spec_id": "SPEC-CONTEXT-1", "type": "spec_completion", "tags": ["neo4j", "debug"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:29.537204+00:00", "payload": {"spec_id": "SPEC-LIMIT-0", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:29.550987+00:00", "payload": {"spec_id": "SPEC-LIMIT-1", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:29.569079+00:00", "payload": {"spec_id": "SPEC-LIMIT-2", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:29.585410+00:00", "payload": {"spec_id": "SPEC-LIMIT-3", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:29.603574+00:00", "payload": {"spec_id": "SPEC-LIMIT-4", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:29.622644+00:00", "payload": {"spec_id": "SPEC-LIMIT-5", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:29.640230+00:00", "payload": {"spec_id": "SPEC-LIMIT-6", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:29.658025+00:00", "payload": {"spec_id": "SPEC-LIMIT-7", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:29.677124+00:00", "payload": {"spec_id": "SPEC-LIMIT-8", "type": "spec_completion", "tags": ["test"]}}
+{"event": "knowledge_stored", "timestamp": "2026-07-01T07:31:29.695107+00:00", "payload": {"spec_id": "SPEC-LIMIT-9", "type": "spec_completion", "tags": ["test"]}}
+{"event":"test_event","timestamp":"2026-07-01T07:31:29Z","payload":{"test": true}}
+{"event": "test_redis_event", "timestamp": "2026-07-01T07:31:30.020176+00:00", "payload": {"source": "test"}}
+{"event": "lead_received", "timestamp": "2026-07-01T07:31:30.088190+00:00", "payload": {"lead_id": "lead_220ba3232a77", "source": "web_form", "niche": "general"}}
+{"event": "lead_received", "timestamp": "2026-07-01T07:31:30.093975+00:00", "payload": {"lead_id": "lead_41562055c4fb", "source": "telegram", "niche": "general"}}
+{"event": "test_event", "timestamp": "2026-07-01T07:31:30.124772+00:00", "payload": {"key": "value"}}
+{"event":"spec_created","producer":"process-pipeline","timestamp":"2026-07-01T07:31:59Z","payload":{"spec":"SPEC-20260630-007","detail":"SPEC-20260630-007 Native Agent OS — MCP Gateway Unificado"}}
+{"event":"adr_created","producer":"process-pipeline","timestamp":"2026-07-01T07:31:59Z","payload":{"spec":"SPEC-20260630-007","detail":"ADR-20260630-012 MCP Gateway como Entry Point Único"}}
+{"event":"gherkin_created","producer":"process-pipeline","timestamp":"2026-07-01T07:31:59Z","payload":{"spec":"SPEC-20260630-007","detail":"10 scenarios en process/active/gherkin/"}}
+{"event":"score_calculated","producer":"process-pipeline","timestamp":"2026-07-01T07:31:59Z","payload":{"spec":"SPEC-20260630-007","detail":"74/100 — PASA (corte ≥60)"}}
+{"event":"tests_passed","producer":"process-pipeline","timestamp":"2026-07-01T07:31:59Z","payload":{"spec":"SPEC-20260630-007","detail":"442 pytest + 14 MCP integration — 0 failures"}}
+{"event":"capability_registered","producer":"process-pipeline","timestamp":"2026-07-01T07:31:59Z","payload":{"spec":"SPEC-20260630-007","detail":"16 capabilities en runtime"}}
+{"event":"skill_marketplace","producer":"process-pipeline","timestamp":"2026-07-01T07:31:59Z","payload":{"spec":"SPEC-20260630-007","detail":"128 skills unificados de 4 fuentes"}}
+{"event":"deployment_completed","producer":"process-pipeline","timestamp":"2026-07-01T07:31:59Z","payload":{"spec":"SPEC-20260630-007","detail":"MCP Gateway v2.0 con auth + ADK + providers"}}
+{"event":"knowledge_updated","producer":"process-pipeline","timestamp":"2026-07-01T07:31:59Z","payload":{"spec":"SPEC-20260630-007","detail":"Lección guardada en process/completed/"}}

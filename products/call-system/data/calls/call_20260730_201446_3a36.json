@@ -1,0 +1,13 @@
+{
+  "id": "call_20260730_201446_3a36",
+  "tenant_id": "tenant_711b15f0",
+  "direction": "inbound",
+  "started_at": "2026-07-30T20:14:46.034300",
+  "duration_sec": 5,
+  "transcript": "Hola, quiero agendar una cita",
+  "summary": "Llamada de 5s con Visitante. Revisar transcripción para detalles.",
+  "sentiment": "neutral",
+  "topics": [
+    "general"
+  ]
+}

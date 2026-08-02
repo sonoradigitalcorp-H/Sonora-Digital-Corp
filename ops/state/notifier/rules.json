@@ -1,0 +1,75 @@
+[
+  {
+    "id": "rule-001",
+    "tenant": "default",
+    "event_type": "whatsapp:message:received",
+    "channel": "telegram",
+    "template": "📩 WhatsApp: {{from}}: {{text}}",
+    "recipients": [
+      "admin"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "rule-002",
+    "tenant": "default",
+    "event_type": "delivery:completed",
+    "channel": "whatsapp",
+    "template": "✅ ¡Tu pedido está listo! {{delivery_url}}",
+    "recipients": [],
+    "enabled": true
+  },
+  {
+    "id": "rule-003",
+    "tenant": "default",
+    "event_type": "onboarding:completed",
+    "channel": "whatsapp",
+    "template": "🎉 ¡Bienvenido {{client_name}}! Tienes {{tokens_bonus}} tokens de regalo.",
+    "recipients": [],
+    "enabled": true
+  },
+  {
+    "id": "rule-0004",
+    "tenant": "default",
+    "event_type": "test:event",
+    "channel": "email",
+    "template": "Test {{x}}",
+    "recipients": [
+      "admin@test.com"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "rule-0005",
+    "tenant": "default",
+    "event_type": "test:event",
+    "channel": "email",
+    "template": "Test {{x}}",
+    "recipients": [
+      "admin@test.com"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "rule-0006",
+    "tenant": "default",
+    "event_type": "test:event",
+    "channel": "email",
+    "template": "Test {{x}}",
+    "recipients": [
+      "admin@test.com"
+    ],
+    "enabled": true
+  },
+  {
+    "id": "rule-0007",
+    "tenant": "default",
+    "event_type": "test:event",
+    "channel": "email",
+    "template": "Test {{x}}",
+    "recipients": [
+      "admin@test.com"
+    ],
+    "enabled": true
+  }
+]

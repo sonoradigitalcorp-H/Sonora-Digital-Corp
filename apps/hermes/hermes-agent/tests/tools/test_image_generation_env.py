@@ -1,10 +1,10 @@
-"""FAL_KEY env var normalization (whitespace-only treated as unset)."""
+"""FAL_API_KEY env var normalization (whitespace-only treated as unset)."""
 
 
 def test_fal_key_whitespace_is_unset(monkeypatch):
-    # Whitespace-only FAL_KEY must NOT register as configured, and the managed
+    # Whitespace-only FAL_API_KEY must NOT register as configured, and the managed
     # gateway fallback must be disabled for this assertion to be meaningful.
-    monkeypatch.setenv("FAL_KEY", "   ")
+    monkeypatch.setenv("FAL_API_KEY", "   ")
 
     from tools import image_generation_tool
 
@@ -16,7 +16,7 @@ def test_fal_key_whitespace_is_unset(monkeypatch):
 
 
 def test_fal_key_valid(monkeypatch):
-    monkeypatch.setenv("FAL_KEY", "sk-test")
+    monkeypatch.setenv("FAL_API_KEY", "sk-test")
 
     from tools import image_generation_tool
 
@@ -28,7 +28,7 @@ def test_fal_key_valid(monkeypatch):
 
 
 def test_fal_key_empty_is_unset(monkeypatch):
-    monkeypatch.setenv("FAL_KEY", "")
+    monkeypatch.setenv("FAL_API_KEY", "")
 
     from tools import image_generation_tool
 
@@ -54,7 +54,7 @@ def test_no_backend_message_mentions_fal_signup_and_plugins(monkeypatch):
 
     msg = image_generation_tool._build_no_backend_setup_message()
 
-    assert "FAL_KEY" in msg
+    assert "FAL_API_KEY" in msg
     assert "https://fal.ai" in msg
     # Plugin pointer so users on a stale image_gen.provider know where to look.
     assert "hermes tools" in msg or "hermes plugins" in msg
@@ -95,4 +95,4 @@ def test_image_generate_tool_returns_actionable_error_when_no_backend(monkeypatc
 
     assert result["success"] is False
     assert "https://fal.ai" in result["error"]
-    assert "FAL_KEY" in result["error"]
+    assert "FAL_API_KEY" in result["error"]

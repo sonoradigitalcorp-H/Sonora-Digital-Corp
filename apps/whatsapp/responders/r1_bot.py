@@ -23,7 +23,10 @@ SEEN_FILE = REPO / "state" / "whatsapp" / "clients" / "r1" / "responded.json"
 OPENROUTER_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 LLM_MODEL = "opencode-go/deepseek-v4-flash"
 
-# Session store: number → {"step": str, "cart": list, "data": dict}
+SESSIONS_FILE = REPO / "state" / "whatsapp" / "clients" / "r1" / "sessions.json"
+SESSION_TIMEOUT = 1800  # 30 minutes
+
+# Session store: number → {"step": str, "cart": list, "data": dict, "updated": str}
 _sessions: dict[str, dict] = {}
 
 
@@ -170,7 +173,13 @@ def detect_general_intent(text: str) -> str:
         return "payment_method"
     if any(k in t for k in ["dirección", "direccion", "domicilio", "envia", "mandar", "ubicación", "ubicacion"]):
         return "address"
-    if any(k in t for k in ["confirmo", "confirmar", "si", "dale", "adelante", "ok", "sale", "arre"]):
+    # Confirm: use exact phrases or word boundaries to avoid false positives
+    # "si" alone, "sí", "confirmo", "confirmar", "dale", "adelante", "ok", "sale", "arre"
+    # But NOT "siempre", "tok", "poko", etc.
+    confirm_patterns = ["confirmo", "confirmar", " confirmo", " confirmar",
+                        "^sí$", "^si$", "^ok$", "^sale$", "^arre$", "^dale$", "^adelante$",
+                        " sí ", " si ", " ok ", " sale ", " arre ", " dale ", " adelante "]
+    if any(re.search(p, t) for p in confirm_patterns):
         return "confirm"
     if any(k in t for k in ["cancelar", "cancel", "no gracias", "despues", "después"]):
         return "cancel"
@@ -181,14 +190,51 @@ def detect_general_intent(text: str) -> str:
 
 # ─── Session Management ──────────────────────────────────────
 
+def _load_sessions() -> None:
+    """Load sessions from disk."""
+    global _sessions
+    if SESSIONS_FILE.exists():
+        try:
+            with open(SESSIONS_FILE) as f:
+                _sessions = json.load(f)
+        except Exception:
+            _sessions = {}
+
+
+def _save_sessions() -> None:
+    """Persist sessions to disk."""
+    SESSIONS_FILE.parent.mkdir(parents=True, exist_ok=True)
+    with open(SESSIONS_FILE, "w") as f:
+        json.dump(_sessions, f, ensure_ascii=False, indent=2)
+
+
+def _session_expired(session: dict) -> bool:
+    """Check if session has timed out."""
+    updated = session.get("updated", "")
+    if not updated:
+        return False
+    try:
+        last = datetime.fromisoformat(updated)
+        now = datetime.now(timezone.utc)
+        return (now - last).total_seconds() > SESSION_TIMEOUT
+    except Exception:
+        return False
+
+
 def get_session(phone: str) -> dict:
     if phone not in _sessions:
-        _sessions[phone] = {"step": "new", "cart": [], "data": {}}
-    return _sessions[phone]
+        _sessions[phone] = {"step": "new", "cart": [], "data": {}, "updated": datetime.now(timezone.utc).isoformat()}
+    session = _sessions[phone]
+    if _session_expired(session):
+        _sessions[phone] = {"step": "new", "cart": [], "data": {}, "updated": datetime.now(timezone.utc).isoformat()}
+        return _sessions[phone]
+    session["updated"] = datetime.now(timezone.utc).isoformat()
+    return session
 
 
 def reset_session(phone: str) -> dict:
-    _sessions[phone] = {"step": "new", "cart": [], "data": {}}
+    _sessions[phone] = {"step": "new", "cart": [], "data": {}, "updated": datetime.now(timezone.utc).isoformat()}
+    _save_sessions()
     return _sessions[phone]
 
 
@@ -202,6 +248,7 @@ def handle_message(sender: str, text: str) -> Optional[str]:
     # Saludo inicial / nuevo cliente
     if step == "new" or intent == "menu":
         session["step"] = "ordering"
+        _save_sessions()
         return format_menu()
 
     # Cancelar
@@ -226,15 +273,19 @@ def handle_message(sender: str, text: str) -> Optional[str]:
                 flavor_id = it["flavor"].lower()
                 if flavor_id in flavor_map:
                     fi = flavor_map[flavor_id]
+                    # Validate price against menu (use menu price if LLM hallucinated)
+                    menu_prices = list(fi["prices"].values())
+                    valid_price = it["price"] if it["price"] in menu_prices else menu_prices[0]
                     cart.append({
                         "name": fi["name"],
                         "emoji": fi["emoji"],
                         "flavor": flavor_id,
-                        "price": it["price"],
+                        "price": valid_price,
                         "qty": it["qty"],
                     })
             if cart:
                 session["step"] = "address"
+                _save_sessions()
                 return format_cart(session) + "\n\n📍 ¿Cuál es tu dirección para la entrega?"
             else:
                 return "No entendí bien tu pedido. Intenta con: '2 uva 250 y 1 fresa 350'"
@@ -250,6 +301,7 @@ def handle_message(sender: str, text: str) -> Optional[str]:
     if step == "address" or intent == "address":
         session["data"]["address"] = text
         session["step"] = "payment"
+        _save_sessions()
         return format_cart(session) + "\n\n" + format_payment_methods()
 
     # Método de pago
@@ -271,6 +323,7 @@ def handle_message(sender: str, text: str) -> Optional[str]:
             return "Método no válido. Elige: 1 Efectivo, 2 Tarjeta, 3 SPEI, 4 Mercado Pago, 5 Bitcoin"
         session["data"]["payment_method"] = method
         session["step"] = "confirm"
+        _save_sessions()
         emoji_map = {"efectivo": "💵", "tarjeta": "💳", "spei": "🏦", "mercadopago": "🟡", "bitcoin": "₿"}
         lines = [
             "📋 *CONFIRMA TU PEDIDO*",
@@ -286,8 +339,17 @@ def handle_message(sender: str, text: str) -> Optional[str]:
     # Confirmación final
     if step == "confirm" and intent == "confirm":
         cart = session.get("cart", [])
+        if not cart:
+            reset_session(sender)
+            return "Tu carrito está vacío. Responde 'Menú' para ver nuestros productos."
         total = session.get("_total", 0)
+        if total <= 0:
+            reset_session(sender)
+            return "Hubo un error con el total. Por favor, inicia tu pedido de nuevo con 'Menú'."
         data = session["data"]
+        if not data.get("address", "").strip():
+            session["step"] = "address"
+            return "Necesito tu dirección para la entrega. ¿A dónde te lo mando?"
         # Aquí se crea la orden en DB y se dispara dispatch
         from apps.whatsapp.dispatch import dispatch_order
         from apps.whatsapp.order_store import get_db, create_order
@@ -348,6 +410,7 @@ def _log_event(event: str, payload: dict) -> None:
 
 def run_responder(once: bool = False):
     print(f"[r1-bot] Starting Ce-Son WhatsApp Bot...", file=sys.stderr)
+    _load_sessions()
     responded = _load_responded()
 
     while True:
@@ -386,6 +449,10 @@ def run_responder(once: bool = False):
             except Exception as e:
                 print(f"[r1-bot] Error handling {sender}: {e}", file=sys.stderr)
                 _log_event("r1:error", {"sender": sender, "error": str(e)})
+                try:
+                    send_text(sender, "Hubo un error procesando tu mensaje. Por favor, intenta de nuevo.")
+                except Exception:
+                    pass
 
         _save_responded(responded)
 

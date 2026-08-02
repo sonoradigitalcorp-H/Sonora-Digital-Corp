@@ -1,0 +1,8 @@
+[
+  {
+    "type": "LOW_SCORE_TREND",
+    "detail": "Promedio de últimos 5 scores: 37.0. Posible degradación.",
+    "confidence": 0.5,
+    "action": "Revisar prompts y pipelines"
+  }
+]

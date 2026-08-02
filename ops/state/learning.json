@@ -1,0 +1,130 @@
+{
+  "calls": [
+    {
+      "tool": "test_tool",
+      "capability": "test-capability",
+      "success": true,
+      "duration": 100,
+      "timestamp": 1782895364914
+    },
+    {
+      "tool": "test_tool",
+      "capability": "test-capability",
+      "success": true,
+      "duration": 100,
+      "timestamp": 1782895527017
+    },
+    {
+      "tool": "test_tool",
+      "capability": "test-capability",
+      "success": true,
+      "duration": 100,
+      "timestamp": 1782896019596
+    },
+    {
+      "tool": "test_tool",
+      "capability": "test-capability",
+      "success": true,
+      "duration": 100,
+      "timestamp": 1782896480704
+    },
+    {
+      "tool": "test_tool",
+      "capability": "test-capability",
+      "success": true,
+      "duration": 100,
+      "timestamp": 1782896668147
+    },
+    {
+      "tool": "test_tool",
+      "capability": "test-capability",
+      "success": true,
+      "duration": 100,
+      "timestamp": 1782896876401
+    },
+    {
+      "tool": "test_tool",
+      "capability": "test-capability",
+      "success": true,
+      "duration": 100,
+      "timestamp": 1782897852595
+    },
+    {
+      "tool": "test_tool",
+      "capability": "test-capability",
+      "success": true,
+      "duration": 100,
+      "timestamp": 1782898104399
+    },
+    {
+      "tool": "test_tool",
+      "capability": "test-capability",
+      "success": true,
+      "duration": 100,
+      "timestamp": 1782898308372
+    },
+    {
+      "tool": "test_tool",
+      "capability": "test-capability",
+      "success": true,
+      "duration": 100,
+      "timestamp": 1782898513867
+    },
+    {
+      "tool": "test_tool",
+      "capability": "test-capability",
+      "success": true,
+      "duration": 100,
+      "timestamp": 1782898735529
+    },
+    {
+      "tool": "test_tool",
+      "capability": "test-capability",
+      "success": true,
+      "duration": 100,
+      "timestamp": 1782900184251
+    },
+    {
+      "tool": "test_tool",
+      "capability": "test-capability",
+      "success": true,
+      "duration": 100,
+      "timestamp": 1782900816996
+    },
+    {
+      "tool": "test_tool",
+      "capability": "test-capability",
+      "success": true,
+      "duration": 100,
+      "timestamp": 1782900996659
+    },
+    {
+      "tool": "test_tool",
+      "capability": "test-capability",
+      "success": true,
+      "duration": 100,
+      "timestamp": 1782901220803
+    },
+    {
+      "tool": "test_tool",
+      "capability": "test-capability",
+      "success": true,
+      "duration": 100,
+      "timestamp": 1782901932526
+    },
+    {
+      "tool": "test_tool",
+      "capability": "test-capability",
+      "success": true,
+      "duration": 100,
+      "timestamp": 1782902867688
+    }
+  ],
+  "capability_scores": {
+    "test-capability": {
+      "attempts": 17,
+      "successes": 17,
+      "total_duration": 1700
+    }
+  }
+}

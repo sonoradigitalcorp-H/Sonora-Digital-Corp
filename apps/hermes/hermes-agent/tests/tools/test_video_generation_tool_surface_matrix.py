@@ -34,7 +34,7 @@ def _reset_registry():
 def matrix_env(tmp_path, monkeypatch):
     """Set up HERMES_HOME, stub fal_client + httpx, force plugin discovery."""
     monkeypatch.setenv("HERMES_HOME", str(tmp_path))
-    monkeypatch.setenv("FAL_KEY", "test-key")
+    monkeypatch.setenv("FAL_API_KEY", "test-key")
     monkeypatch.setenv("XAI_API_KEY", "test-key")
 
     fal_calls: List[Dict[str, Any]] = []

@@ -87,7 +87,7 @@ def test_fal_unavailable_without_key(monkeypatch):
     from plugins.video_gen.fal import FALVideoGenProvider
     from plugins.video_gen import fal as fal_plugin
 
-    monkeypatch.delenv("FAL_KEY", raising=False)
+    monkeypatch.delenv("FAL_API_KEY", raising=False)
     # Also ensure managed gateway is unavailable
     monkeypatch.setattr(fal_plugin, "_resolve_managed_fal_video_gateway", lambda: None)
     assert FALVideoGenProvider().is_available() is False
@@ -97,7 +97,7 @@ def test_fal_generate_requires_fal_key(monkeypatch):
     from plugins.video_gen.fal import FALVideoGenProvider
     from plugins.video_gen import fal as fal_plugin
 
-    monkeypatch.delenv("FAL_KEY", raising=False)
+    monkeypatch.delenv("FAL_API_KEY", raising=False)
     # Also ensure managed gateway is unavailable
     monkeypatch.setattr(fal_plugin, "_resolve_managed_fal_video_gateway", lambda: None)
     result = FALVideoGenProvider().generate("a happy dog")
@@ -109,7 +109,7 @@ def test_fal_available_via_gateway(monkeypatch):
     from plugins.video_gen.fal import FALVideoGenProvider
     from plugins.video_gen import fal as fal_plugin
 
-    monkeypatch.delenv("FAL_KEY", raising=False)
+    monkeypatch.delenv("FAL_API_KEY", raising=False)
     monkeypatch.setattr(
         fal_plugin,
         "_resolve_managed_fal_video_gateway",
@@ -148,7 +148,7 @@ class TestFamilyRouting:
         fal_plugin._managed_fal_video_client = None
         fal_plugin._managed_fal_video_client_config = None
 
-        monkeypatch.setenv("FAL_KEY", "test")
+        monkeypatch.setenv("FAL_API_KEY", "test")
         # Force direct mode — no managed gateway
         monkeypatch.setattr(fal_plugin, "_resolve_managed_fal_video_gateway", lambda: None)
         return captured

@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0",
+  "niche": "musico",
+  "name": "Mystik Music",
+  "slug": "mystik-music",
+  "currency": "MXN",
+  "updated_at": "2026-07-19",
+  "pricing_tiers": [
+    {
+      "service": "Clon de voz",
+      "tokens": 25,
+      "price_mxn": 799,
+      "currency": "MXN"
+    },
+    {
+      "service": "Fotos profesionales",
+      "tokens": 10,
+      "price_mxn": 299,
+      "currency": "MXN"
+    },
+    {
+      "service": "Talking head",
+      "tokens": 25,
+      "price_mxn": 599,
+      "currency": "MXN"
+    }
+  ]
+}

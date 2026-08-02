@@ -1,0 +1,190 @@
+# SONORA DIGITAL CORP - Paquete ORACULO
+# "Para los visionarios que no solo usan el templo, lo expanden"
+# Tipo: Elite / Partnership / Reseller / Solo por Invitacion
+
+paquete:
+  id: "sonora-oraculo-v1"
+  nombre: "Oraculo"
+  tagline: "No solo tienes un reino digital. Eres guardian del templo."
+  tipo: "elite"
+  precio: "Cotizacion personalizada"
+  modelo_pago: ["anual", "revenue_share"]
+  invitacion_solo: true
+  aprobacion_mystic: true
+  
+criterios_admision:
+  - "Vision estrategica comprobada (no solo quiere un chatbot)"
+  - "Capacidad tecnica o equipo tecnico"
+  - "Red de contactos en su industria (minimo 50 potenciales clientes)"
+  - "Compromiso de exclusividad en su nicho por 12 meses"
+  - "Aprobacion directa de Mystic despues de entrevista"
+  - "Inversion inicial minima: $150,000 MXN o equivalente"
+
+limites:
+  agentes_voz: -1  # ilimitados
+  agentes_tipo: ["todos", "custom"]
+  llamadas_mes: -1
+  canales: -1
+  numeros_virtuales: -1
+  embudos: -1
+  outbound_masivo: true
+  outbound_simultaneas: 200
+  swarm_agents: true
+  white_label: true  # 100% invisible Sonora
+  api_acceso: true
+  api_publica: true  # puede crear API para sus propios clientes
+  reseller: true  # puede revender todos los paquetes
+  dashboard_3d: true
+  inteligencia_prospecto: true
+  content_factory: true
+  clon_voz: true
+  clon_imagen: true
+  clon_3d: true
+  llamadas_simultaneas: 100
+  almacenamiento_gb: 500
+  retencion_audio_dias: -1  # permanente
+  training_custom: true
+  sla_personalizado: true
+  multi_tenant_propio: true  # tiene su propio multi-tenant
+  prompt_vault_acceso: true  # acceso al vault de prompts medidos
+
+features:
+  - id: "todo-soberano"
+    nombre: "Todo de Soberano"
+    descripcion: "Todas las funcionalidades del paquete Soberano incluidas"
+    incluye: true
+  - id: "reseller-completo"
+    nombre: "Reseller Completo"
+    descripcion: "Puede revender Despertar, Elevar, Soberano con sus propios precios. Sonora es invisible."
+    incluye: true
+  - id: "multi-tenant-propio"
+    nombre: "Plataforma Multi-Tenant Propia"
+    descripcion: "Gestiona sus propios clientes como un mini-Sonora. Panel de admin completo."
+    incluye: true
+  - id: "api-publica"
+    nombre: "API Publica para Developers"
+    descripcion: "Endpoints publicos documentados. Sus clientes pueden integrar via API."
+    incluye: true
+  - id: "revenue-share"
+    nombre: "Revenue Share"
+    descripcion: "Gana porcentaje de cada suscripcion que vende. Escala con volumen."
+    incluye: true
+  - id: "prompt-vault"
+    nombre: "Acceso al Prompt Vault"
+    descripcion: "Acceso a la biblioteca de prompts medidos y probados de Sonora"
+    incluye: true
+  - id: "partnership-estrategico"
+    nombre: "Partnership Estrategico"
+    descripcion: "Co-desarrollo de features, acceso anticipado, influencia en roadmap"
+    incluye: true
+  - id: "co-branding-sonora"
+    nombre: "Co-Branding Sonora"
+    descripcion: "Aparece como "Partner Oficial de Sonora Digital Corp" en materiales"
+    incluye: true
+  - id: "jarvis-desktop"
+    nombre: "JARVIS Desktop"
+    descripcion: "Aplicacion de escritorio (Electron) con el agente como asistente personal 24/7"
+    incluye: true
+  - id: "mundo-virtual-immersivo"
+    nombre: "Mundo Virtual Inmersivo"
+    descripcion: "Escenario 3D completo con interaccion por voz, avatar animado, notificaciones ambientales"
+    incluye: true
+  - id: "soporte-elite"
+    nombre: "Soporte Elite"
+    descripcion: "Linea directa a Mystic. Tiempo de respuesta 15 min. Sin importar la hora."
+    incluye: true
+
+modelo_revenue_share:
+  nivel_1:  # 1-10 clientes vendidos
+    comision_pct: 30
+    soporte: "compartido"
+  nivel_2:  # 11-50 clientes
+    comision_pct: 40
+    soporte: "dedicado_sonora"
+  nivel_3:  # 51-200 clientes
+    comision_pct: 50
+    soporte: "equipo_dedicado"
+  nivel_4:  # 200+ clientes
+    comision_pct: 60
+    soporte: "equipo_propio_financiado"
+    beneficios: ["Oficina en HQ Sonora", "Co-desarrollo roadmap", "Equipo tecnico financiado"]
+
+onboarding:
+  duracion_horas: 80
+  tipo: "programa_de_induccion"
+  fases:
+    - nombre: "Descubrimiento Estrategico"
+      duracion_dias: 3
+      actividades:
+        - "Entrevista con Mystic (2 horas)"
+        - "Analisis de mercado y nicho del partner"
+        - "Definicion de go-to-market"
+        - "Acuerdo de exclusividad y revenue share"
+    - nombre: "Certificacion Tecnica"
+      duracion_dias: 5
+      actividades:
+        - "Formacion completa de la plataforma"
+        - "Certificacion en gestion de agentes"
+        - "Certificacion en configuracion de embudos"
+        - "Certificacion en white-label setup"
+        - "Entrenamiento en Playwright visuals"
+    - nombre: "Setup de Infraestructura Partner"
+      duracion_dias: 5
+      actividades:
+        - "Configuracion multi-tenant propio"
+        - "Setup de dominio y branding"
+        - "Configuracion de pasarelas de pago"
+        - "Integracion de facturacion automatizada"
+        - "Deploy de dashboard white-label"
+    - nombre: "Lanzamiento Piloto"
+      duracion_dias: 14
+      actividades:
+        - "Onboard de primeros 3 clientes del partner"
+        - "Monitoreo intensivo"
+        - "Ajustes de configuracion"
+        - "Revision de metricas y optimizacion"
+
+soporte:
+  canal: "linea_directa_mystic"
+  tiempo_respuesta: "15 minutos"
+  disponible: "24/7/365"
+  idiomas: ["es", "en", "pt"]
+  beneficios:
+    - "Acceso a canal privado Telegram con Mystic"
+    - "Reunion mensual de estrategia"
+    - "Acceso anticipado a nuevas features (beta)"
+    - "Influencia directa en el roadmap"
+
+medicion:
+  uptime_target: 99.95
+  latencia_voz_max_seg: 2.0
+  tiempo_respuesta_voz_max_seg: 1.5
+  abandono_target_pct: 2
+  empatia_target_pct: 90
+  bant_target_pct: 95
+  conversion_lead_cita_target_pct: 50
+  costo_por_llamada_max_usd: 0.02
+  roi_target: 10
+  satisfaccion_target_pct: 95
+  churn_target_pct: 2
+
+vista_especifica:
+  # Lo que ve un Oraculo que los demas no ven:
+  - "Panel de todos sus sub-clientes con metricas agregadas"
+  - "Revenue tracker en tiempo real (comisiones generadas)"
+  - "Pipeline de prospectos propios"
+  - "Acceso al Evolution Engine de todos sus tenants"
+  - "Panel de certificacion de su equipo"
+  - "Co-branding assets y materiales de venta"
+  - "API key management para sus developers"
+  - "Facturacion automatizada de sus sub-clientes"
+
+contrato_aplicable:
+  - "contrato_servicio_template.md"
+  - "kyc_estandar.md"
+  - "privacidad_datos.md"
+  - "uso_indebido.md"
+  - "tiempos_sla.md"
+  - "reserva_uso.md"
+  - "terminos_uso.md"
+  - "contrato_partnership.md"  # contrato adicional exclusivo

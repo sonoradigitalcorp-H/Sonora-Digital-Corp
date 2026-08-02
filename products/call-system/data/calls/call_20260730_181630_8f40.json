@@ -1,0 +1,13 @@
+{
+  "id": "call_20260730_181630_8f40",
+  "tenant_id": "unknown",
+  "direction": "inbound",
+  "started_at": "2026-07-30T18:16:30.849221",
+  "duration_sec": 116,
+  "transcript": "",
+  "summary": "Llamada de 116s con Desconocido. Revisar transcripción para detalles.",
+  "sentiment": "neutral",
+  "topics": [
+    "general"
+  ]
+}

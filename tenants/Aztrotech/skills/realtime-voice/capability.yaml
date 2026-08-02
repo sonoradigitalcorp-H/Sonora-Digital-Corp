@@ -1,0 +1,17 @@
+id: realtime-voice
+name: Real-Time Voice
+version: 1.0.0
+status: active
+domain: voice
+description: "Pipeline de voz en tiempo real: STT → LLM → TTS"
+entry:
+  agent: main-agent
+  trigger: voice.realtime.requested
+policies:
+  max_cost: 0.05
+  timeout_seconds: 120
+events:
+  emits:
+    - voice.processing.completed
+  consumes:
+    - voice.realtime.requested

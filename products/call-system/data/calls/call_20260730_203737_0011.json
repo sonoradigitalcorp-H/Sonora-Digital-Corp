@@ -1,0 +1,13 @@
+{
+  "id": "call_20260730_203737_0011",
+  "tenant_id": "tenant_711b15f0",
+  "direction": "inbound",
+  "started_at": "2026-07-30T20:37:37.631381",
+  "duration_sec": 33,
+  "transcript": "Hola, quiero info del servicio\n¿Cuánto cuesta?\nAgendemos una demo",
+  "summary": "Llamada de 33s con Visitante. Revisar transcripción para detalles.",
+  "sentiment": "neutral",
+  "topics": [
+    "general"
+  ]
+}

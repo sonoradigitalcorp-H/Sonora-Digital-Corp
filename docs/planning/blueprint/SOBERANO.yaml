@@ -1,0 +1,173 @@
+# SONORA DIGITAL CORP - Paquete SOBERANO
+# "Para la empresa que quiere su propio reino digital completo"
+# Tipo: Premium / Ancla
+
+paquete:
+  id: "sonora-soberano-v1"
+  nombre: "Soberano"
+  tagline: "Tu reino digital completo. Tus reglas, tu marca, tu imperio."
+  tipo: "premium"
+  precio_mxn: 50000  # minimo, cotizacion custom
+  precio_usd: 2940
+  margen_pct: 55
+  costo_real_usd: 100
+  setup_fee_mxn: 10000
+  setup_fee_usd: 588
+  prueba_dias: 21
+  modelo_pago: ["mensual", "trimestral", "anual"]
+  descuento_anual_pct: 15
+
+limites:
+  agentes_voz: -1  # ilimitados
+  agentes_tipo: ["todos"]
+  llamadas_mes: -1  # ilimitadas
+  canales: -1  # ilimitados
+  numeros_virtuales: 10
+  embudos: -1  # ilimitados
+  outbound_masivo: true
+  outbound_simultaneas: 50
+  swarm_agents: true
+  white_label: true  # marca del cliente, no Sonora
+  api_acceso: true  # API dedicada
+  reseller: false  # no puede revender, eso es Oraculo
+  dashboard_3d: true  # JARVIS completo
+  inteligencia_prospecto: true  # profunda, toda la presencia digital
+  content_factory: true  # ilimitada
+  clon_voz: true
+  clon_imagen: true
+  clon_3d: true
+  llamadas_simultaneas: 20
+  almacenamiento_gb: 100
+  retencion_audio_dias: 365
+  training_custom: true
+  sla_personalizado: true
+
+features:
+  - id: "agentes-ilimitados"
+    nombre: "Agentes Ilimitados"
+    descripcion: "Todos los roles disponibles: recepcionista, vendedor, soporte, lead-gen, prospector, custom"
+    incluye: true
+  - id: "dashboard-3d-jarvis"
+    nombre: "Dashboard 3D tipo JARVIS"
+    descripcion: "Hogar virtual del agente con voz + visuales + movimiento. Escenario 3D segun rol del negocio"
+    incluye: true
+  - id: "swarm-agents"
+    nombre: "Swarm Agents"
+    descripcion: "Coordinacion multi-agente para tareas complejas. El prospecto escucha una voz pero detras hay un equipo"
+    incluye: true
+  - id: "white-label"
+    nombre: "White-Label Completo"
+    descripcion: "Tu marca, tu logo, tu dominio. Sonora no aparece en ningun lado visible al cliente final"
+    incluye: true
+  - id: "api-dedicada"
+    nombre: "API Dedicada"
+    descripcion: "Endpoints REST con rate limits elevados, documentacion OpenAPI, SDK Python y Node.js"
+    incluye: true
+  - id: "inteligencia-profunda"
+    nombre: "Inteligencia Profunda del Prospecto"
+    descripcion: "Analisis completo: Google Business, web, redes sociales, competencia, reviews, horarios, SEO"
+    incluye: true
+  - id: "clon-voz-imagen-3d"
+    nombre: "Clonacion Voz + Imagen + 3D"
+    descripcion: "Avatar 3D del agente con la cara del dueño del negocio o un avatar generado"
+    incluye: true
+  - id: "embudos-custom"
+    nombre: "Embudos Personalizados Ilimitados"
+    descripcion: "Crear y modificar embudos con A/B testing avanzado por nicho y segmento"
+    incluye: true
+  - id: "content-factory-pro"
+    nombre: "Fabrica de Contenido Profesional"
+    descripcion: "Piezas ilimitadas con identidad de marca completa, programacion automatica, metricas de engagement"
+    incluye: true
+  - id: "training-custom"
+    nombre: "Training Custom"
+    descripcion: "Entrenamiento especializado de agentes con datos historicos del cliente y prompts personalizados"
+    incluye: true
+  - id: "account-manager"
+    nombre: "Account Manager Dedicado"
+    descripcion: "Un humano de Sonora asignado permanentemente al cliente"
+    incluye: true
+  - id: "evolution-engine-accelerado"
+    nombre: "Evolution Engine Acelerado"
+    descripcion: "Auto-mejora de prompts cada 24h en lugar de cada semana"
+    incluye: true
+  - id: "playwright-visuals"
+    nombre: "Playwright Visual Tasks"
+    descripcion: "Capturas visuales automaticas de tareas del agente para reportes"
+    incluye: true
+
+onboarding:
+  duracion_horas: 40
+  pasos:
+    - "Reunion de descubrimiento (1-2 horas con equipo del cliente)"
+    - "Analisis completo de su operacion actual"
+    - "KYC completo + verificacion de negocio"
+    - "Diseno de arquitectura de agentes custom"
+    - "Creacion de knowledge base profunda (nicho + cliente)"
+    - "Configuracion white-label (dominio, logo, colores, tipografia)"
+    - "Clonacion avanzada de voz (multiples tonos)"
+    - "Generacion de avatar 3D del agente"
+    - "Configuracion de dashboard 3D con escenario del rol"
+    - "Setup de swarm agents si aplica"
+    - "Configuracion de embudos custom"
+    - "Integracion API si requiere"
+    - "Sesiones de calibracion (3 sesiones de 1 hora)"
+    - "Pruebas de stress y QA completo"
+    - "Lanzamiento con monitoreo intensivo (primera semana)"
+  automatizado_pct: 30  # mas humano involucrado
+
+soporte:
+  canal: "dedicado"
+  tiempo_respuesta: "1 hora"
+  cuenta_manager: true
+  idiomas: ["es", "en", "pt"]
+  escalacion:
+    - nivel: 1
+      medio: "WhatsApp directo"
+      tiempo: "30 min"
+    - nivel: 2
+      medio: "Llamada con account manager"
+      tiempo: "15 min"
+    - nivel: 3
+      medio: "Llamada con Mystic directamente"
+      tiempo: "Inmediato"
+
+medicion:
+  uptime_target: 99.9
+  latencia_voz_max_seg: 2.5
+  tiempo_respuesta_voz_max_seg: 2.0
+  abandono_target_pct: 3
+  empatia_target_pct: 85
+  bant_target_pct: 90
+  conversion_lead_cita_target_pct: 40
+  costo_por_llamada_max_usd: 0.03
+  roi_target: 8
+  satisfaccion_target_pct: 90
+
+reseller_limitado:
+  puede_vender: true
+  comision_sonora_pct: 30
+  max_sub_clientes: 5
+  sub_clientes_paquete_max: "elevar"  # solo puede vender Elevar como maximo
+  branding: "co-branded"  # Sonora + cliente
+  soporte_sub_clientes: "compartido con Sonora"
+  facturacion: "Sonora cobra, cliente recibe comision"
+
+upgrade_path:
+  siguiente: "oraculo"
+  trigger_recomendado:
+    - "Quiere vender paquetes superiores a Elevar"
+    - "Quiere facturacion independiente"
+    - "Quiere API publica para terceros"
+    - "Mas de 5 sub-clientes"
+    - "Quiere ser partner estrategico"
+
+contrato_aplicable:
+  - "contrato_servicio_template.md"
+  - "kyc_estandar.md"
+  - "privacidad_datos.md"
+  - "uso_indebido.md"
+  - "tiempos_sla.md"
+  - "reserva_uso.md"
+  - "contrato_servicio_template.md"
+  - "terminos_uso.md"

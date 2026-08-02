@@ -1,0 +1,24 @@
+[
+  {
+    "session_id": "ses-389da73b01e1",
+    "timestamp": "2026-07-19T17:29:15.128499Z",
+    "user": "alice",
+    "type": "comando",
+    "command": "/generar-nicho",
+    "success": true,
+    "duration_ms": 4200,
+    "tokens_used": 1500,
+    "date": "2026-07-19"
+  },
+  {
+    "session_id": "ses-5c05d9dddc70",
+    "timestamp": "2026-07-19T17:29:19.283704Z",
+    "user": "system",
+    "type": "error",
+    "command": "deploy",
+    "success": false,
+    "duration_ms": 0,
+    "tokens_used": 0,
+    "date": "2026-07-19"
+  }
+]

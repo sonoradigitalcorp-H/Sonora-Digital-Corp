@@ -1,0 +1,96 @@
+{
+  "type": "session_summary",
+  "date": "2026-07-01",
+  "session": "SPEC-20260701-004 a 008 (sesion completa)",
+  "title": "Evolucion completa: Registry → Production → Agentes Reales",
+  "ci_status": "8 verdes consecutivos (#217-#224) — primeros en la historia del repo",
+  "specs_completed": [
+    {"id": "SPEC-20260701-003", "title": "Live Data Pipeline", "score": 84},
+    {"id": "SPEC-20260701-004", "title": "Capability Registry + Decision Engine", "score": 77},
+    {"id": "SPEC-20260701-005", "title": "Production Hardening", "score": 76},
+    {"id": "SPEC-20260701-007", "title": "Self-Healing Loop + Notificaciones", "score": 77},
+    {"id": "SPEC-20260701-008", "title": "Primer Agente Real con Modelo Local", "score": 78}
+  ],
+  "spec_active": {
+    "id": "SPEC-20260701-006",
+    "title": "CI Completo + Mock Tests",
+    "target_tests": 90
+  },
+
+  "architecture_state": {
+    "data_stores": [
+      {"name": "Neo4j Graph DB", "port": 7687, "status": "ok", "nodes": 19, "relationships": 19},
+      {"name": "Qdrant Vector DB", "port": 6333, "status": "ok", "collections": 2, "points": 10},
+      {"name": "PostgreSQL", "port": 5432, "status": "ok"},
+      {"name": "Redis Cache/Streams", "port": 6379, "status": "ok"},
+      {"name": "Engram SQLite", "status": "ok"},
+      {"name": "JSON Files config", "status": "ok"},
+      {"name": "Memory/Learning events", "status": "ok"}
+    ],
+    "services": 12,
+    "containers_healthy": "12/12",
+    "providers_healthy": "7/7"
+  },
+
+  "local_models": [
+    "deepseek-r1:7b-64k — razonamiento (ahora conectado a JARVIS agents)",
+    "qwen3:4b-64k — decisiones de agente healer",
+    "llama3.2:3b-64k — alternativa",
+    "qwen3:1.7b-32k — tiny",
+    "qwen2.5:1.5b-32k — tiny alt",
+    "nomic-embed-text — embeddings"
+  ],
+
+  "key_achievements": [
+    "planner/: 7 modulos, 70 tests — Capability Registry + Decision Engine",
+    "SDK executor bridge conecta engine con collectors reales",
+    "Neo4j resucitado (Bolt 0.0.0.0, auth off, grafo del sistema)",
+    "Health dashboard: 7/7 providers healthy (antes 0/7)",
+    "Monitor de containers via systemd timer cada 2min",
+    "Self-healing loop: container caido → reinicio automatico <60s",
+    "Telegram notifications via @ABEfenix_bot para eventos criticos",
+    "Agentes JARVIS ahora usan Ollama local (ask_local())",
+    "AgenteMonitor: publica container_down a Redis Stream",
+    "AgenteHealer: consulta Neo4j + Ollama + decide RESTART/ESCALATE/WAIT",
+    "AgenteNotifier: escucha Redis, envia Telegram en critical",
+    "Redis Stream agent:messages como bus de comunicacion entre agentes",
+    "3 servicios systemd para agentes (monitor, healer, notifier)",
+    "CI: 8 verdes consecutivos (primeros en 224 intentos)",
+    "War Room + AGENTIC OS Dashboard en :8080",
+    "docs/ARQUITECTURA.md, PROTOCOLO.md, BLUEPRINT.md"
+  ],
+
+  "revenue_intelligence": {
+    "conclusion": "100% Spotify a $0.004/stream. Oplaai paga solo Spotify.",
+    "artists": [
+      {"name": "Hector Rubio", "streams": 115093009, "revenue": 460372},
+      {"name": "Jesus Urquijo", "streams": 4635222, "revenue": 18540},
+      {"name": "Javier Arvayo", "streams": 50000, "revenue": 200}
+    ]
+  },
+
+  "broken": [
+    {"item": "Instagram login wall", "severity": "critical"},
+    {"item": "Wikipedia 403 datacenter", "severity": "high"},
+    {"item": "TikTok handles incorrectos", "severity": "high"},
+    {"item": "SPEC-006 incompleta (faltan mocks)", "severity": "medium"},
+    {"item": "Monitor sin notificaciones externas", "severity": "medium"}
+  ],
+
+  "next_priorities": [
+    "Completar SPEC-006: mocks para Apple, YouTube, TikTok, Spotify, Wikipedia",
+    "Conectar los 17 agentes JARVIS existentes al flujo Redis + Ollama",
+    "Dashboard en vivo de decisiones de agentes (no solo eventos crudos)",
+    "Proxy residencial para Wikipedia o API alternativa",
+    "Instagram: cookies de sesion o remover del sync"
+  ],
+
+  "key_urls": {
+    "war_room": "http://149.56.46.173:8080/",
+    "agentic_os": "http://149.56.46.173:8080/agentic-os.html",
+    "health": "http://149.56.46.173:8080/dashboard-salud.html",
+    "abe_pwa": "http://149.56.46.173:5180/pwa/",
+    "neo4j": "http://149.56.46.173:7474/",
+    "ci": "https://github.com/sonoradigitalcorp-H/Sonora-Digital-Corp/actions"
+  }
+}

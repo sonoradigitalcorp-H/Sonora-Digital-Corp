@@ -9,7 +9,7 @@ class Settings:
     secret_key: str = os.getenv("SECRET_KEY", "change-me")
 
     # fal.ai
-    fal_key: str = os.getenv("FAL_KEY", "")
+    fal_key: str = os.getenv("FAL_API_KEY", "")
 
     # OpenAI
     openai_api_key: str = os.getenv("OPENAI_API_KEY", "")

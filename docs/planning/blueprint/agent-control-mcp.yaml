@@ -1,0 +1,104 @@
+# MCP PROPIO: Agent-Control-MCP
+# Funcion: Gestionar el ciclo de vida de los agentes
+# Integracion con: OpenClaw + Mystic Core
+
+mcp:
+  name: "agent-control-mcp"
+  version: "1.0.0"
+  descripcion: "Control centralizado del ciclo de vida de todos los agentes Sonora"
+  protocolo: "MCP (Model Context Protocol)"
+
+  herramientas:
+    - nombre: "restart_agent"
+      descripcion: "Reiniciar un agente especifico sin afectar otros"
+      parametros:
+        - nombre: "agent_id"
+          tipo: "string"
+          requerido: true
+        - nombre: "tenant_id"
+          tipo: "string"
+          requerido: true
+        - nombre: "graceful"
+          tipo: "boolean"
+          default: true
+          descripcion: "Si true, termina llamadas activas antes de reiniciar"
+      seguridad:
+        - "Verificar que el caller tiene permisos sobre ese tenant"
+        - "Registrar la accion en audit log"
+      tiempo_max: "30s (graceful), 5s (force)"
+
+    - nombre: "update_knowledge_base"
+      descripcion: "Actualizar la knowledge base de un agente con nueva informacion"
+      parametros:
+        - nombre: "agent_id"
+          tipo: "string"
+          requerido: true
+        - nombre: "tenant_id"
+          tipo: "string"
+          requerido: true
+        - nombre: "content"
+          tipo: "string"
+          requerido: true
+        - nombre: "source"
+          tipo: "string"
+          requerido: true
+          descripcion: "Origen: 'manual', 'evolution_engine', 'client_upload'"
+      seguridad:
+        - "Validar que el content no contenga instrucciones de jailbreak"
+        - "Sanitizar HTML/JS si viene de client_upload"
+      tiempo_max: "10s"
+
+    - nombre: "pause_outbound_campaign"
+      descripcion: "Pausar o reanudar una campana outbound"
+      parametros:
+        - nombre: "campaign_id"
+          tipo: "string"
+          requerido: true
+        - nombre: "tenant_id"
+          tipo: "string"
+          requerido: true
+        - nombre: "action"
+          tipo: "enum"
+          valores: ["pause", "resume"]
+          requerido: true
+        - nombre: "reason"
+          tipo: "string"
+          requerido: false
+      seguridad:
+        - "Solo callable por tenant owner o Mystic"
+      tiempo_max: "5s"
+
+    - nombre: "get_agent_status"
+      descripcion: "Obtener estado completo de un agente (para dashboard 3D)"
+      parametros:
+        - nombre: "agent_id"
+          tipo: "string"
+          requerido: true
+        - nombre: "tenant_id"
+          tipo: "string"
+          requerido: true
+      retorna:
+        - "estado_actual: enum (dormido, despierto, en_llamada, procesando, en_reunion, alerta, offline)"
+        - "llamadas_activas: int"
+        - "ultima_actividad: timestamp"
+        - "metricas_ultima_hora: dict"
+        - "latencia_promedio_ms: float"
+      tiempo_max: "2s"
+
+    - nombre: "scale_agent"
+      descripcion: "Escalar instancias de un agente (concurrent calls)"
+      parametros:
+        - nombre: "agent_id"
+          tipo: "string"
+          requerido: true
+        - nombre: "tenant_id"
+          tipo: "string"
+          requerido: true
+        - nombre: "target_instances"
+          tipo: "int"
+          requerido: true
+          validacion: "debe ser <= limite del paquete del tenant"
+      seguridad:
+        - "Verificar que no exceda el limite del paquete"
+        - "Verificar que el VPS tiene recursos suficientes"
+      tiempo_max: "60s (si requiere spin up de contenedores)"

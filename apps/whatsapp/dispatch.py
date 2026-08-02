@@ -4,6 +4,7 @@ espera asignación, maneja timers y alertas.
 """
 import json
 import os
+import re
 import sys
 import threading
 import time
@@ -219,7 +220,6 @@ def check_group_responses() -> None:
         # Extract assignee name
         name = sender
         # Try to extract name after "Yo"
-        import re
         m = re.search(r'yo\s+(.+)$', text)
         if m:
             name = m.group(1).strip().title()

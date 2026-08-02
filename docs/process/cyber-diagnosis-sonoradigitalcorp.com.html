@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diagnóstico de Ciberseguridad — sonoradigitalcorp.com</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+*{font-family:'Inter',sans-serif}
+body{background:#0a0a0a;color:#c9d1d9}
+.grade-D {color:#ef4444}
+.fomo-timer{background:linear-gradient(135deg,rgba(239,68,68,0.1),rgba(239,68,68,0.02));border:1px solid rgba(239,68,68,0.3);border-radius:16px;padding:24px;text-align:center;animation:pulse-border 2s ease-in-out infinite}
+@keyframes pulse-border{0%,100%{border-color:rgba(239,68,68,0.3)}50%{border-color:rgba(239,68,68,0.6)}}
+@keyframes fadeIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeIn 0.5s ease forwards;opacity:0}
+.check-ok{border-left:3px solid #22c55e}
+.check-warning{border-left:3px solid #f59e0b}
+.check-error{border-left:3px solid #ef4444}
+</style>
+</head>
+<body class="antialiased">
+<div class="max-w-4xl mx-auto px-6 py-12">
+
+  <!-- FOMO Banner -->
+  <div class="fomo-timer fade-in mb-8">
+    <div class="text-2xl mb-2">⏳ <span id="countdown" class="font-bold text-[#ef4444]"></span></div>
+    <p class="text-sm text-white/60">Esta evaluación gratuita expira pronto. Solo 3 cupos disponibles esta semana.</p>
+  </div>
+
+  <!-- Header -->
+  <div class="text-center mb-8 fade-in">
+    <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-[#7c5cfc]/20 bg-[#7c5cfc]/5 text-[#7c5cfc] text-xs font-medium tracking-wider mb-4">
+      🛡️ Diagnóstico Express
+    </div>
+    <h1 class="text-4xl md:text-5xl font-black tracking-tight mb-2">
+      <span class="bg-gradient-to-r from-white via-[#7c5cfc] to-[#c8a87c] bg-clip-text text-transparent">Ciberseguridad</span>
+    </h1>
+    <p class="text-lg text-white/40 mb-1">sonoradigitalcorp.com</p>
+    <p class="text-sm text-white/20">Escaneado: 19/07/2026 06:02 · Validez: 21/07/2026 06:02</p>
+  </div>
+
+  <!-- Score -->
+  <div class="text-center mb-8 fade-in" style="animation-delay:0.1s">
+    <div class="inline-flex items-center justify-center w-36 h-36 rounded-full border-4 border-[#30363d] mb-3" style="border-top-color:#ef4444">
+      <div>
+        <div class="text-4xl font-black grade-D">D</div>
+        <div class="text-xs text-white/30">50/100</div>
+      </div>
+    </div>
+    <div class="flex justify-center gap-6 text-sm">
+      <div><span class="text-[#22c55e] font-bold">3</span> <span class="text-white/30">seguras</span></div>
+      <div><span class="text-[#f59e0b] font-bold">3</span> <span class="text-white/30">advertencias</span></div>
+      <div><span class="text-[#ef4444] font-bold">2</span> <span class="text-white/30">críticas</span></div>
+    </div>
+  </div>
+
+  <!-- Risk Level -->
+  <div class="text-center mb-8 fade-in" style="animation-delay:0.15s">
+    <div class="inline-block px-6 py-3 rounded-2xl bg-[#f59e0b]/10 border border-[#f59e0b]/20">
+      <span class="text-sm font-semibold">⚠️ Riesgo Alto</span>
+      <p class="text-xs text-white/50 mt-1">Vulnerabilidades importantes detectadas. Se recomienda acción inmediata.</p>
+    </div>
+  </div>
+
+  <!-- Checks -->
+  <div class="space-y-2 mb-8">
+    
+        <div class="check-warning p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] fade-in" style="animation-delay:0.2s">
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-sm font-semibold">⚠️ DNSSEC</span>
+                <span class="text-xs text-white/20">🟠 alta</span>
+              </div>
+              <p class="text-xs text-white/40 mt-1">Sin DNSSEC — vulnerable a spoofing</p>
+            </div>
+            <span class="text-xs font-semibold uppercase" style="color:#f59e0b">warning</span>
+          </div>
+        </div>
+        <div class="check-ok p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] fade-in" style="animation-delay:0.24000000000000002s">
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-sm font-semibold">✅ SPF Record</span>
+                <span class="text-xs text-white/20">🟡 media</span>
+              </div>
+              <p class="text-xs text-white/40 mt-1">SPF presente: "v=spf1 include:_spf.google.com ~all"...</p>
+            </div>
+            <span class="text-xs font-semibold uppercase" style="color:#22c55e">ok</span>
+          </div>
+        </div>
+        <div class="check-warning p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] fade-in" style="animation-delay:0.28s">
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-sm font-semibold">⚠️ DMARC Record</span>
+                <span class="text-xs text-white/20">🟠 alta</span>
+              </div>
+              <p class="text-xs text-white/40 mt-1">DMARC presente — política: p=none (monitoreo, sin protección)</p>
+            </div>
+            <span class="text-xs font-semibold uppercase" style="color:#f59e0b">warning</span>
+          </div>
+        </div>
+        <div class="check-error p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] fade-in" style="animation-delay:0.32s">
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-sm font-semibold">❌ SSL Certificate</span>
+                <span class="text-xs text-white/20">🔴 critica</span>
+              </div>
+              <p class="text-xs text-white/40 mt-1">No se pudo verificar SSL: dictionary update sequence element #0 has length 1; 2 is required</p>
+            </div>
+            <span class="text-xs font-semibold uppercase" style="color:#ef4444">error</span>
+          </div>
+        </div>
+        <div class="check-ok p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] fade-in" style="animation-delay:0.36s">
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-sm font-semibold">✅ HTTPS Redirect</span>
+                <span class="text-xs text-white/20">🟡 media</span>
+              </div>
+              <p class="text-xs text-white/40 mt-1">Redirige a HTTPS: https://sonoradigitalcorp.com/</p>
+            </div>
+            <span class="text-xs font-semibold uppercase" style="color:#22c55e">ok</span>
+          </div>
+        </div>
+        <div class="check-warning p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] fade-in" style="animation-delay:0.4s">
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-sm font-semibold">⚠️ Security Headers</span>
+                <span class="text-xs text-white/20">🟡 media</span>
+              </div>
+              <p class="text-xs text-white/40 mt-1">Score: 60% — ✅ HSTS ✅ X-Frame-Options ✅ X-Content-Type-Options ❌ CSP ❌ Referrer-Policy</p>
+            </div>
+            <span class="text-xs font-semibold uppercase" style="color:#f59e0b">warning</span>
+          </div>
+        </div>
+        <div class="check-ok p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] fade-in" style="animation-delay:0.44s">
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-sm font-semibold">✅ Email Security</span>
+                <span class="text-xs text-white/20">🟠 alta</span>
+              </div>
+              <p class="text-xs text-white/40 mt-1">MX records: 1 servidores de correo</p>
+            </div>
+            <span class="text-xs font-semibold uppercase" style="color:#22c55e">ok</span>
+          </div>
+        </div>
+        <div class="check-error p-4 rounded-xl bg-white/[0.02] border border-white/[0.06] fade-in" style="animation-delay:0.48000000000000004s">
+          <div class="flex items-start justify-between gap-3">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2 mb-0.5">
+                <span class="text-sm font-semibold">❌ Open Ports</span>
+                <span class="text-xs text-white/20">🟡 media</span>
+              </div>
+              <p class="text-xs text-white/40 mt-1">Puertos abiertos: [22, 80, 443] — ¡Riesgo: [22] expuestos!</p>
+            </div>
+            <span class="text-xs font-semibold uppercase" style="color:#ef4444">error</span>
+          </div>
+        </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="text-center fade-in" style="animation-delay:0.5s">
+    <div class="inline-block p-8 rounded-2xl bg-white/[0.02] border border-white/[0.06] max-w-lg">
+      <h3 class="text-lg font-bold mb-2">¿Quieres proteger tu empresa?</h3>
+      <p class="text-sm text-white/40 mb-4">Solicita un plan de remediación personalizado con nuestro equipo de ciberseguridad.</p>
+      <a href="https://wa.me/5216625383272?text=Quiero%20el%20plan%20de%20seguridad%20para%20sonoradigitalcorp.com" 
+         class="inline-block px-8 py-3.5 rounded-xl bg-[#22c55e] hover:bg-[#16a34a] transition-all font-semibold text-sm">
+        💬 Contactar por WhatsApp
+      </a>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="mt-12 text-center text-xs text-white/20 border-t border-white/[0.06] pt-6">
+    <p>Generado por <strong>Sonora Digital Corp</strong> — Sistema de Diagnóstico Automatizado Mystic</p>
+    <p class="mt-1">ID: SDC-CYBER-20260719060250 · 19/07/2026 06:02</p>
+  </div>
+</div>
+
+<script>
+(function(){
+  var target = new Date("2026-07-21T06:02:50.772146").getTime();
+  function update() {
+    var now = new Date().getTime();
+    var diff = target - now;
+    if (diff <= 0) { document.getElementById('countdown').innerHTML = '🕐 ¡Expirado!'; return; }
+    var h = Math.floor(diff / (1000*60*60));
+    var m = Math.floor((diff % (1000*60*60)) / (1000*60));
+    var s = Math.floor((diff % (1000*60)) / 1000);
+    document.getElementById('countdown').innerHTML = h + 'h ' + m + 'm ' + s + 's';
+  }
+  setInterval(update, 1000); update();
+})();
+</script>
+</body>
+</html>

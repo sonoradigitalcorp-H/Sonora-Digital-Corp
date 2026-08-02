@@ -1,0 +1,73 @@
+# ABE Studio — Standalone test stack
+# No requiere la red sdc-network ni el stack completo de SDC
+# docker compose -f products/abe-music/studio/docker-compose.test.yml up -d
+
+services:
+  studio-mock:
+    build: ./mock
+    container_name: sdc-studio-mock
+    ports:
+      - "3099:3099"
+    environment:
+      - MOCK_DELAY_MS=3000
+      - MOCK_PORT=3099
+    networks:
+      - test-net
+    restart: unless-stopped
+
+  studio-api:
+    build: ./api
+    container_name: sdc-studio-api
+    ports:
+      - "3020:3020"
+    environment:
+      - STUDIO_SEEDANCE_API_KEY=sk_test_mock
+      - STUDIO_SEEDANCE_BASE_URL=http://studio-mock:3099
+      - STUDIO_REDIS_URL=redis://redis:6379
+      - STUDIO_STORAGE_PATH=/data/videos
+      - STUDIO_WEBHOOK_BASE_URL=http://studio-webhook:3021
+      - STUDIO_MOCK_MODE=true
+      - STUDIO_DB_PATH=/data/studio.db
+    volumes:
+      - studio_data:/data
+    depends_on:
+      studio-mock:
+        condition: service_started
+    networks:
+      - test-net
+    restart: unless-stopped
+
+  studio-worker:
+    build: ./worker
+    container_name: sdc-studio-worker
+    environment:
+      - STUDIO_SEEDANCE_API_KEY=sk_test_mock
+      - STUDIO_SEEDANCE_BASE_URL=http://studio-mock:3099
+      - STUDIO_STUDIO_API_URL=http://studio-api:3020
+      - STUDIO_POLL_INTERVAL=10
+    depends_on:
+      - studio-api
+      - studio-mock
+    networks:
+      - test-net
+    restart: unless-stopped
+
+  studio-webhook:
+    build: ./webhook
+    container_name: sdc-studio-webhook
+    ports:
+      - "3021:3021"
+    environment:
+      - STUDIO_API_URL=http://studio-api:3020
+    depends_on:
+      - studio-api
+    networks:
+      - test-net
+    restart: unless-stopped
+
+networks:
+  test-net:
+    driver: bridge
+
+volumes:
+  studio_data:

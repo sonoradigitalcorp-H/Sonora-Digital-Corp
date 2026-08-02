@@ -200,7 +200,10 @@ def update_order_status(conn: sqlite3.Connection, order_id: str,
 
 def add_dispatch_event(conn: sqlite3.Connection, order_id: str) -> None:
     conn.execute("UPDATE orders SET dispatch_count=dispatch_count+1 WHERE id=?", (order_id,))
-    _add_event(conn, order_id, "order:dispatched", "sistema", {"count": get_order(conn, order_id).get("dispatch_count", 0) + 1})
+    # Read the count AFTER increment to get correct value for event metadata
+    row = conn.execute("SELECT dispatch_count FROM orders WHERE id=?", (order_id,)).fetchone()
+    count = row["dispatch_count"] if row else 0
+    _add_event(conn, order_id, "order:dispatched", "sistema", {"count": count})
     conn.commit()
 
 
@@ -211,6 +214,19 @@ def assign_order(conn: sqlite3.Connection, order_id: str, seller_name: str) -> O
         (seller_name, now, "asignado", now, order_id)
     )
     _add_event(conn, order_id, "order:assigned", seller_name, {})
+    conn.commit()
+    return get_order(conn, order_id)
+
+
+def update_payment_status(conn: sqlite3.Connection, order_id: str,
+                          payment_status: str, actor: str = "sistema") -> Optional[dict]:
+    """Update payment status (pendiente, pagado, rechazado, reembolsado)."""
+    now = datetime.now(timezone.utc).isoformat()
+    conn.execute(
+        "UPDATE orders SET payment_status=?, updated_at=? WHERE id=?",
+        (payment_status, now, order_id)
+    )
+    _add_event(conn, order_id, f"order:payment:{payment_status}", actor, {"payment_status": payment_status})
     conn.commit()
     return get_order(conn, order_id)
 

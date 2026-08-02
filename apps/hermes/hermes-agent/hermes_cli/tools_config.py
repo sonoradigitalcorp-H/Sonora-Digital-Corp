@@ -378,7 +378,7 @@ TOOL_CATEGORIES = {
                 "env_vars": [],
                 "requires_nous_auth": True,
                 "managed_nous_feature": "image_gen",
-                "override_env_vars": ["FAL_KEY"],
+                "override_env_vars": ["FAL_API_KEY"],
                 "imagegen_backend": "fal",
             },
         ],
@@ -398,7 +398,7 @@ TOOL_CATEGORIES = {
                 "env_vars": [],
                 "requires_nous_auth": True,
                 "managed_nous_feature": "video_gen",
-                "override_env_vars": ["FAL_KEY"],
+                "override_env_vars": ["FAL_API_KEY"],
                 # The underlying plugin backend — when the user picks
                 # "Nous Subscription" we set video_gen.provider = "fal"
                 # and video_gen.use_gateway = True so the FAL plugin

@@ -1,0 +1,40 @@
+{
+  "call_summaries": [
+    {
+      "date": "2026-07-30T20:14:46.034300",
+      "duration_sec": 5,
+      "summary": "Llamada de 5s con Visitante. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T20:37:37.631381",
+      "duration_sec": 33,
+      "summary": "Llamada de 33s con Visitante. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T20:42:22.790799",
+      "duration_sec": 5,
+      "summary": "Llamada de 5s con Visitante. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    }
+  ]
+}

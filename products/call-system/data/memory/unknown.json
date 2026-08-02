@@ -1,0 +1,244 @@
+{
+  "call_summaries": [
+    {
+      "date": "2026-07-30T18:12:47.218853",
+      "duration_sec": 9,
+      "summary": "Llamada de 9s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T18:16:30.958666",
+      "duration_sec": 116,
+      "summary": "Llamada de 116s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T18:19:48.827868",
+      "duration_sec": 11,
+      "summary": "Llamada de 11s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T18:20:15.310677",
+      "duration_sec": 12,
+      "summary": "Llamada de 12s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T18:20:15.665421",
+      "duration_sec": 12,
+      "summary": "Llamada de 12s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T18:22:21.110277",
+      "duration_sec": 0,
+      "summary": "Llamada de 0s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T18:22:26.632496",
+      "duration_sec": 5,
+      "summary": "Llamada de 5s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T18:24:29.212333",
+      "duration_sec": 5,
+      "summary": "Llamada de 5s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T18:24:30.003055",
+      "duration_sec": 5,
+      "summary": "Llamada de 5s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T18:27:07.175210",
+      "duration_sec": 5,
+      "summary": "Llamada de 5s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T18:28:13.494989",
+      "duration_sec": 71,
+      "summary": "Llamada de 71s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T19:54:11.798429",
+      "duration_sec": 5,
+      "summary": "Llamada de 5s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T20:05:06.330824",
+      "duration_sec": 0,
+      "summary": "Llamada de 0s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T20:05:23.865893",
+      "duration_sec": 18,
+      "summary": "Llamada de 18s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T20:08:24.329809",
+      "duration_sec": 5,
+      "summary": "Llamada de 5s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T20:08:39.086502",
+      "duration_sec": 19,
+      "summary": "Llamada de 19s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T20:08:39.719695",
+      "duration_sec": 19,
+      "summary": "Llamada de 19s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T20:14:15.067242",
+      "duration_sec": 29,
+      "summary": "Llamada de 29s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T20:31:43.071292",
+      "duration_sec": 514,
+      "summary": "Llamada de 514s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-07-30T20:42:09.646444",
+      "duration_sec": 115,
+      "summary": "Llamada de 115s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    }
+  ]
+}

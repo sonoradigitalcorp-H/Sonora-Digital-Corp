@@ -789,7 +789,7 @@ def test_first_install_nous_auto_configures_managed_defaults(monkeypatch):
         "BROWSERBASE_API_KEY",
         "BROWSERBASE_PROJECT_ID",
         "BROWSER_USE_API_KEY",
-        "FAL_KEY",
+        "FAL_API_KEY",
     ):
         monkeypatch.delenv(env_var, raising=False)
 
@@ -853,7 +853,7 @@ def test_first_install_nous_auto_configures_video_gen(monkeypatch):
         "BROWSERBASE_API_KEY",
         "BROWSERBASE_PROJECT_ID",
         "BROWSER_USE_API_KEY",
-        "FAL_KEY",
+        "FAL_API_KEY",
     ):
         monkeypatch.delenv(env_var, raising=False)
 

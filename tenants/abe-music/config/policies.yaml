@@ -1,0 +1,21 @@
+prompt_injection:
+  enabled: true
+  model: mystic-shield
+
+rate_limits:
+  telegram: 60/minute
+  api_calls: 500/hour
+
+data_masking:
+  pii_detection: true
+  auto_redact:
+    - credit_card
+    - password
+
+tool_sandbox:
+  enabled: true
+  allowed_domains:
+    - "api.abe-music.com"
+  blocked_commands:
+    - rm
+    - sudo

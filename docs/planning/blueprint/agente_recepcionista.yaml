@@ -1,0 +1,82 @@
+# SPEC KIT: Agente Recepcionista (La Guardiana)
+
+agente:
+  id: "agent-receptionist-v1"
+  nombre: "La Guardiana"
+  rol: "Primer contacto, calificacion de leads, derivacion inteligente"
+
+  contrato_entrada:
+    - nombre: "llamada_entrante"
+      tipo: "evento_telefonico"
+      contiene:
+        - "caller_id: string (numero de telefono)"
+        - "audio_stream: binary (flujo de audio del prospecto)"
+        - "tenant_id: string (identificador del cliente)"
+        - "did_number: string (numero marcado)"
+    - nombre: "mensaje_whatsapp"
+      tipo: "evento_mensaje"
+      contiene:
+        - "from_number: string"
+        - "text: string"
+        - "tenant_id: string"
+
+  contrato_salida:
+    - nombre: "respuesta_voz"
+      tipo: "audio_stream"
+      contiene:
+        - "audio: binary (voz del agente clonada)"
+        - "texto: string (transcripcion de lo dicho)"
+    - nombre: "derivacion"
+      tipo: "evento_interno"
+      contiene:
+        - "agente_destino: enum (vendedor, soporte, none)"
+        - "motivo: string"
+        - "lead_data: dict (datos BANT si aplica)"
+    - nombre: "registro"
+      tipo: "bd_write"
+      contiene:
+        - "interaccion: {tenant_id, caller_id, transcripcion, sentimiento, duracion}"
+
+  estados:
+    - idle:
+        descripcion: "Esperando interaccion"
+        transiciones: ["atendiendo", "procesando"]
+    atendiendo:
+        descripcion: "En llamada o chat activo"
+        transiciones: ["calificando", "derivando", "procesando", "idle"]
+    calificando:
+        descripcion: "Ejecutando calificacion BANT"
+        transiciones: ["derivando", "atendiendo"]
+    derivando:
+        descripcion: "Transfiriendo a otro agente"
+        transiciones: ["idle"]
+    procesando:
+        descripcion: "Esperando respuesta del LLM"
+        transiciones: ["atendiendo"]
+
+  errores_y_recuperacion:
+    - error: "whisper_timeout"
+      recuperacion: "Reintentar 1 vez. Si falla: pedir al prospecto que repita."
+    - error: "llm_timeout"
+      recuperacion: "Fallback a respuestas pre-definidas de la KB (top 3 mas relevantes)."
+    - error: "kokoro_failure"
+      recuperacion: "Enviar respuesta por texto (WhatsApp) en lugar de voz."
+    - error: "freeswitch_down"
+      recuperacion: "Notificar a Mystic (CRITICO). Redirigir llamadas a buzón de voz."
+    - error: "context_retrieval_empty"
+      recuperacion: "Responder con saludo generico y pedir al prospecto que especifique su consulta."
+
+  limites:
+    max_concurrent: 50
+    max_call_duration_seg: 600
+    max_idle_before_sleep_min: 15
+    rate_limit_per_caller: "3 intentos sin respuesta en 24h"
+    queue_overflow: "encolar con prioridad"
+
+  modelos:
+    primario: "anthropic/claude-sonnet-4"
+    fallback_1: "deepseek/deepseek-chat"
+    fallback_2: "google/gemini-2.5-pro"
+    stt: "whisper-large-v3"
+    tts: "kokoro"
+    sentimiento: "silero-vad + wav2vec2-emotion"

@@ -1,0 +1,1210 @@
+[
+  {
+    "name": "_schema",
+    "category": "general",
+    "description": "",
+    "has_tokens": false,
+    "has_html": false,
+    "tokens_preview": ""
+  },
+  {
+    "name": "agentic",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/agentic/tokens.css\n * Structured token bindings for Agentic.\n * agent workflow interface with dark command surfaces, blue automation signals, and traceable task cards.\n */\n\n:root {\n  --bg: #0b1020;\n  --surface: #131b2f;\n  --surface-warm: #182343;\n  --fg: #f8fafc;\n  --fg-2: #cbd5e1;\n  --muted: #8ea0b8;\n  --meta: #60a5fa;\n  --border: #293653;\n  --border-soft: #1e2a43;\n  --accent: #60a5fa;\n  --accent-on: #06111f;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --"
+  },
+  {
+    "name": "airbnb",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/airbnb/tokens.css\n *\n * Structured token bindings for the Airbnb design system — pristine\n * Canvas White surfaces, a single Rausch coral-pink accent (#ff385c),\n * generous soft-circle radii, and Airbnb Cereal VF as the lone type\n * family. The system reads like a travel magazine that happens to be\n * an app: the interface disappears so the listings can breathe.\n *\n * This file pre-compiles the values "
+  },
+  {
+    "name": "airtable",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/airtable/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Airtable\" —\n * the spreadsheet-database hybrid that talks to enterprise without\n * shouting. A white canvas with deep-navy text, Airtable Blue as the\n * single chromatic accent, Haas Swiss-precision typography, and a\n * signature blue-tinted multi-layer shadow that makes cards feel\n * built into the page rather than drop"
+  },
+  {
+    "name": "ant",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/ant/tokens.css\n * Structured token bindings for Ant.\n * enterprise fintech clarity, white work surfaces, sharp red intent, and compact data controls.\n */\n\n:root {\n  --bg: #ffffff;\n  --surface: #f7f8fa;\n  --surface-warm: #fff1f0;\n  --fg: #1f1f1f;\n  --fg-2: #4b5563;\n  --muted: #697386;\n  --meta: #d32029;\n  --border: #d9dce3;\n  --border-soft: #eef0f4;\n  --accent: #d32029;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: col"
+  },
+  {
+    "name": "apple",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/apple/tokens.css\n *\n * Structured token bindings for the Apple-inspired design system —\n * a precision editorial language built around white-space discipline,\n * SF Pro typography, and a single restrained blue accent. This file\n * is the *machine-readable* form of the values described in\n * `DESIGN.md`. Agents are expected to paste the `:root { … }` block\n * verbatim into the first `<style>` of every a"
+  },
+  {
+    "name": "application",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/application/tokens.css\n * Structured token bindings for Application.\n * neutral app chrome, practical hierarchy, restrained blue action, and predictable product layout.\n */\n\n:root {\n  --bg: #f6f7f9;\n  --surface: #ffffff;\n  --surface-warm: #eef4ff;\n  --fg: #172033;\n  --fg-2: #3b4658;\n  --muted: #6b7689;\n  --meta: #2563eb;\n  --border: #d8dee8;\n  --border-soft: #edf1f6;\n  --accent: #2563eb;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  -"
+  },
+  {
+    "name": "arc",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/arc/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Arc Browser\".\n * Frosted glass over a peach-coral gradient: editorial warmth, squircle-\n * soft geometry, sidebar-first calm. The browser that browses for you.\n *\n * Key brand decisions encoded here:\n *   - Warm peach-cream canvas (#fdf3ec) — never pure white, always tinted\n *   - Bright frosted-pane white (#ffffff) as the op"
+  },
+  {
+    "name": "artistic",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/artistic/tokens.css\n * Structured token bindings for Artistic.\n * artistic gallery language with warm paper, rich accent, and expressive composition.\n */\n\n:root {\n  --bg: #fbf6ee;\n  --surface: #fffdf8;\n  --surface-warm: #f1e3cf;\n  --fg: #201914;\n  --fg-2: #4c4037;\n  --muted: #7a6d63;\n  --meta: #9b5b32;\n  --border: #ded2c3;\n  --border-soft: #eee4d7;\n  --accent: #9b5b32;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: col"
+  },
+  {
+    "name": "atelier-zero",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/atelier-zero/tokens.css\n * Structured token bindings for Atelier Zero.\n * independent studio identity with off-white canvas, sharp black type, and gallery restraint.\n */\n\n:root {\n  --bg: #ffffff;\n  --surface: #f7f7f7;\n  --surface-warm: #eeeeee;\n  --fg: #111111;\n  --fg-2: #3a3a3a;\n  --muted: #707070;\n  --meta: #111111;\n  --border: #d9d9d9;\n  --border-soft: #eeeeee;\n  --accent: #111111;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --ac"
+  },
+  {
+    "name": "bento",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/bento/tokens.css\n * Structured token bindings for Bento.\n * modular bento interface with friendly tiles, soft borders, and balanced product density.\n */\n\n:root {\n  --bg: #f5f8ff;\n  --surface: #ffffff;\n  --surface-warm: #eaf1ff;\n  --fg: #101828;\n  --fg-2: #344054;\n  --muted: #667085;\n  --meta: #2563eb;\n  --border: #d7e0ef;\n  --border-soft: #edf2f8;\n  --accent: #2563eb;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: colo"
+  },
+  {
+    "name": "binance",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/binance/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Binance.US\"\n * — the polished urgency of a crypto trading floor: white surfaces and\n * deep near-black `#222126` panels alternating in rhythm, Binance Yellow\n * `#F0B90B` cutting through the monochrome as the single brand signal,\n * BinancePlex headlines that carry proprietary gravitas, pill-shaped CTAs\n * (50px+ radius) "
+  },
+  {
+    "name": "bmw",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/bmw/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by BMW\".\n * German automotive precision: white-and-dark cinematic rhythm,\n * BMW Blue as singular interactive accent, zero border-radius,\n * BMWTypeNextLatin Light at 60px uppercase as the signature gesture.\n *\n * Key brand decisions encoded here:\n *   - Pure White (#ffffff) canvas + cinematic dark hero sections\n *   - BMW Blue "
+  },
+  {
+    "name": "bmw-m",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/bmw-m/tokens.css\n *\n * Structured token bindings for BMW M.\n * precise motorsport interface with white engineering calm and sharp M color signals.\n */\n\n:root {\n  --bg: #f7f8fa;\n  --surface: #ffffff;\n  --surface-warm: #eef3f8;\n  --fg: #111827;\n  --fg-2: #334155;\n  --muted: #64748b;\n  --meta: #0066b1;\n  --border: #d7dee8;\n  --border-soft: #edf1f6;\n  --accent: #0066b1;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: color-"
+  },
+  {
+    "name": "bold",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/bold/tokens.css\n * Structured token bindings for Bold.\n * bold campaign language with hard contrast, oversized type, and assertive actions.\n */\n\n:root {\n  --bg: #ffffff;\n  --surface: #f7f7f7;\n  --surface-warm: #eeeeee;\n  --fg: #111111;\n  --fg-2: #3a3a3a;\n  --muted: #707070;\n  --meta: #111111;\n  --border: #d9d9d9;\n  --border-soft: #eeeeee;\n  --accent: #111111;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: color-mix(in "
+  },
+  {
+    "name": "brutalism",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/brutalism/tokens.css\n * Structured token bindings for Brutalism.\n * brutalist UI with hard black lines, loud yellow action, and intentionally raw layout structure.\n */\n\n:root {\n  --bg: #f5f1e8;\n  --surface: #ffffff;\n  --surface-warm: #ffef5a;\n  --fg: #000000;\n  --fg-2: #222222;\n  --muted: #555555;\n  --meta: #000000;\n  --border: #000000;\n  --border-soft: #000000;\n  --accent: #ffef5a;\n  --accent-on: #000000;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --acce"
+  },
+  {
+    "name": "bugatti",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/bugatti/tokens.css\n *\n * Structured token bindings for Bugatti.\n * hyper-luxury automotive calm with deep blue, chrome edges, and gallery spacing.\n */\n\n:root {\n  --bg: #07111f;\n  --surface: #101d2f;\n  --surface-warm: #16283f;\n  --fg: #f7fbff;\n  --fg-2: #d6e0ee;\n  --muted: #8fa1b7;\n  --meta: #b7c7d9;\n  --border: #2c405c;\n  --border-soft: #1c2d44;\n  --accent: #1b4d8f;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: color-"
+  },
+  {
+    "name": "cafe",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/cafe/tokens.css\n * Structured token bindings for Cafe.\n * cafe hospitality system with warm cream, espresso text, and inviting menu surfaces.\n */\n\n:root {\n  --bg: #fbf6ee;\n  --surface: #fffdf8;\n  --surface-warm: #f1e3cf;\n  --fg: #201914;\n  --fg-2: #4c4037;\n  --muted: #7a6d63;\n  --meta: #9b5b32;\n  --border: #ded2c3;\n  --border-soft: #eee4d7;\n  --accent: #9b5b32;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: color-mix(i"
+  },
+  {
+    "name": "cal",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/cal/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Cal.com\" —\n * open-source scheduling infrastructure rendered as a grayscale photograph.\n * Pure-white canvas, near-black charcoal text, one reserved link-blue, and\n * a multi-layer shadow stack that replaces CSS borders with ring-shadows.\n *\n * This file pre-compiles the values described in `DESIGN.md` into the\n * shared sche"
+  },
+  {
+    "name": "canva",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/canva/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Canva\".\n * Consumer-friendly design platform: white canvas, vivid purple→cyan\n * gradient, generously rounded geometry, weight-driven hierarchy.\n *\n * Key brand decisions encoded here:\n *   - Pure white canvas (#ffffff) — Canva looks inviting, never tinted\n *   - Canva Purple (#7d2ae8) as the single accent — gradient origin"
+  },
+  {
+    "name": "cisco",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/cisco/tokens.css\n *\n * Structured token bindings for Cisco.\n * navy-charcoal infrastructure surfaces with one electric Cisco Blue signal.\n */\n\n:root {\n  --bg: #0f1720;\n  --surface: #1b2530;\n  --surface-warm: #243447;\n  --fg: #ffffff;\n  --fg-2: #e8ebf1;\n  --muted: #9e9ea2;\n  --meta: #64bbe3;\n  --border: #58585b;\n  --border-soft: rgba(232, 235, 241, 0.14);\n  --accent: #049fd9;\n  --accent-on: #001923;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-activ"
+  },
+  {
+    "name": "claude",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/claude/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Claude (Anthropic)\".\n * Literary salon aesthetic: warm parchment canvas, terracotta accent,\n * exclusive warm-toned neutrals, Anthropic Serif for all headlines.\n *\n * Key brand decisions encoded here:\n *   - Parchment (#f5f4ed) as page canvas — never pure white\n *   - Ivory (#faf9f5) for elevated card surfaces\n *   - Terra"
+  },
+  {
+    "name": "clay",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/clay/tokens.css\n * Structured token bindings for Clay.\n * soft clay interface with molded surfaces, warm shadows, and approachable controls.\n */\n\n:root {\n  --bg: #f7eee6;\n  --surface: #fff8f1;\n  --surface-warm: #ead6c7;\n  --fg: #2b211c;\n  --fg-2: #5a4b43;\n  --muted: #8a7a70;\n  --meta: #b46a46;\n  --border: #dac8b9;\n  --border-soft: #eaded4;\n  --accent: #b46a46;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: color-mix(in"
+  },
+  {
+    "name": "claymorphism",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/claymorphism/tokens.css\n * Structured token bindings for Claymorphism.\n * claymorphism visual language with rounded molded panels and soft relief.\n */\n\n:root {\n  --bg: #f7eee6;\n  --surface: #fff8f1;\n  --surface-warm: #ead6c7;\n  --fg: #2b211c;\n  --fg-2: #5a4b43;\n  --muted: #8a7a70;\n  --meta: #b46a46;\n  --border: #dac8b9;\n  --border-soft: #eaded4;\n  --accent: #b46a46;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: color-"
+  },
+  {
+    "name": "clean",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/clean/tokens.css\n * Structured token bindings for Clean.\n * clean product system with white surfaces, subtle borders, and focused hierarchy.\n */\n\n:root {\n  --bg: #ffffff;\n  --surface: #f7f7f7;\n  --surface-warm: #eeeeee;\n  --fg: #111111;\n  --fg-2: #3a3a3a;\n  --muted: #707070;\n  --meta: #111111;\n  --border: #d9d9d9;\n  --border-soft: #eeeeee;\n  --accent: #111111;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: color-mix(in"
+  },
+  {
+    "name": "clickhouse",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/clickhouse/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by ClickHouse\".\n * High-performance cockpit in acid yellow-green on obsidian black —\n * pure black canvas, neon volt accents, extra-heavy Inter (900) display,\n * charcoal-bordered cards, terminal-grade aesthetic.\n *\n * Key brand decisions encoded here:\n *   - Pure Black (#000000) page bg — never dark gray as page bg\n *   "
+  },
+  {
+    "name": "cohere",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/cohere/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Cohere\".\n * Enterprise command deck: confident, clean, 22px signature roundness.\n *\n * Key brand decisions encoded here:\n *   - Pure white canvas with cool gray containment borders\n *   - 22px border-radius is THE Cohere visual signature — use on all cards\n *   - Interaction Blue (#1863dc) only on hover/focus — never ambie"
+  },
+  {
+    "name": "coinbase",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/coinbase/tokens.css\n *\n * Structured token bindings for \"Inspired by Coinbase\" — the consumer\n * crypto exchange dressed in singular Coinbase Blue, near-black product\n * surfaces, and the 56px pill CTAs that make the brand instantly\n * recognisable. Mainstream-friendly fintech polish: white canvas,\n * one functional accent, restrained type, generous radii.\n *\n * Agents generating a Coinbase-flavored ar"
+  },
+  {
+    "name": "colorful",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/colorful/tokens.css\n * Structured token bindings for Colorful.\n * colorful product language with warm bright canvas and saturated action color.\n */\n\n:root {\n  --bg: #fff8d7;\n  --surface: #ffffff;\n  --surface-warm: #ffef9f;\n  --fg: #1d1836;\n  --fg-2: #4c426c;\n  --muted: #796f91;\n  --meta: #ff6b00;\n  --border: #eadfba;\n  --border-soft: #f5eccd;\n  --accent: #ff6b00;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: color-mix"
+  },
+  {
+    "name": "composio",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/composio/tokens.css\n *\n * Structured token bindings for Composio.\n * dark agent-integration workspace with violet-blue signals and dense connector cards.\n */\n\n:root {\n  --bg: #090b14;\n  --surface: #121626;\n  --surface-warm: #1b2140;\n  --fg: #f8fafc;\n  --fg-2: #cbd5e1;\n  --muted: #94a3b8;\n  --meta: #8b5cf6;\n  --border: #27324a;\n  --border-soft: #1d2638;\n  --accent: #6d5dfc;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active:"
+  },
+  {
+    "name": "contemporary",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/contemporary/tokens.css\n * Structured token bindings for Contemporary.\n * contemporary product system with polished neutrals, soft panels, and measured accent color.\n */\n\n:root {\n  --bg: #f5f8ff;\n  --surface: #ffffff;\n  --surface-warm: #eaf1ff;\n  --fg: #101828;\n  --fg-2: #344054;\n  --muted: #667085;\n  --meta: #2563eb;\n  --border: #d7e0ef;\n  --border-soft: #edf2f8;\n  --accent: #2563eb;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --ac"
+  },
+  {
+    "name": "corporate",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/corporate/tokens.css\n * Structured token bindings for Corporate.\n * corporate communication language with conservative blue, white panels, and trust-first hierarchy.\n */\n\n:root {\n  --bg: #f5f8ff;\n  --surface: #ffffff;\n  --surface-warm: #eaf1ff;\n  --fg: #101828;\n  --fg-2: #344054;\n  --muted: #667085;\n  --meta: #2563eb;\n  --border: #d7e0ef;\n  --border-soft: #edf2f8;\n  --accent: #2563eb;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --ac"
+  },
+  {
+    "name": "cosmic",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/cosmic/tokens.css\n * Structured token bindings for Cosmic.\n * cosmic dark interface with star-field depth, luminous violet-blue accents, and spacious modules.\n */\n\n:root {\n  --bg: #070711;\n  --surface: #111126;\n  --surface-warm: #1e1540;\n  --fg: #f8f7ff;\n  --fg-2: #d6ccff;\n  --muted: #9d8ad4;\n  --meta: #c084fc;\n  --border: #34265e;\n  --border-soft: #241c42;\n  --accent: #c084fc;\n  --accent-on: #13051f;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-ac"
+  },
+  {
+    "name": "creative",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/creative/tokens.css\n * Structured token bindings for Creative.\n * creative workspace language with warm bright panels, rounded controls, and energetic accent states.\n */\n\n:root {\n  --bg: #fff8d7;\n  --surface: #ffffff;\n  --surface-warm: #ffef9f;\n  --fg: #1d1836;\n  --fg-2: #4c426c;\n  --muted: #796f91;\n  --meta: #ff6b00;\n  --border: #eadfba;\n  --border-soft: #f5eccd;\n  --accent: #ff6b00;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --ac"
+  },
+  {
+    "name": "cursor",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/cursor/tokens.css\n *\n * Structured token bindings for the \"Cursor\" brand — the AI-first code\n * editor's marketing voice translated into the shared schema. Like\n * `default/tokens.css` and `kami/tokens.css`, agents are expected to\n * paste the `:root { … }` block verbatim into the first `<style>` of\n * every artifact, then reference values via `var(--name)`.\n *\n * Why this file exists:\n *   DESIGN.md d"
+  },
+  {
+    "name": "dashboard",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/dashboard/tokens.css\n * Structured token bindings for Dashboard.\n * analytics dashboard with compact cards, cool surfaces, and status-first information design.\n */\n\n:root {\n  --bg: #f4f7fb;\n  --surface: #ffffff;\n  --surface-warm: #eef6ff;\n  --fg: #111827;\n  --fg-2: #334155;\n  --muted: #64748b;\n  --meta: #0ea5e9;\n  --border: #d8e2ee;\n  --border-soft: #edf3f8;\n  --accent: #0ea5e9;\n  --accent-on: #04131d;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-a"
+  },
+  {
+    "name": "default",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/default/tokens.css\n *\n * Structured token bindings for \"Neutral Modern\" — the canonical\n * starter design system. This file is the *machine-readable* form of\n * the values described in `DESIGN.md`. Agents are expected to paste\n * the `:root { … }` block verbatim into the first `<style>` of every\n * artifact they generate against this design system, then reference\n * tokens via `var(--name)` from then o"
+  },
+  {
+    "name": "discord",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/discord/tokens.css\n *\n * Structured token bindings for the \"Discord\" brand — deep blurple,\n * dark-first surfaces, voice-and-chat for gaming and community.\n *\n * Brand identity in three sentences:\n *   1. Dark-first: three-step depth ladder (#1e1f22 deepest → #2b2d31\n *      sidebar → #313338 chat surface), pixel-snapped 1px dividers at\n *      low alpha, rounded-square server avatars that morph to cir"
+  },
+  {
+    "name": "dithered",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/dithered/tokens.css\n * Structured token bindings for Dithered.\n * dithered retro interface with hard edges, bitmap texture, and compact monochrome controls.\n */\n\n:root {\n  --bg: #fff4cf;\n  --surface: #fffaf0;\n  --surface-warm: #ffdca8;\n  --fg: #2a1810;\n  --fg-2: #593625;\n  --muted: #8a6652;\n  --meta: #d24b1f;\n  --border: #d9aa7a;\n  --border-soft: #efd0ab;\n  --accent: #d24b1f;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-acti"
+  },
+  {
+    "name": "doodle",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/doodle/tokens.css\n * Structured token bindings for Doodle.\n * doodle visual language with sketchbook warmth, soft cards, and informal orange accents.\n */\n\n:root {\n  --bg: #fff8d7;\n  --surface: #ffffff;\n  --surface-warm: #ffef9f;\n  --fg: #1d1836;\n  --fg-2: #4c426c;\n  --muted: #796f91;\n  --meta: #ff6b00;\n  --border: #eadfba;\n  --border-soft: #f5eccd;\n  --accent: #ff6b00;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: col"
+  },
+  {
+    "name": "dramatic",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/dramatic/tokens.css\n * Structured token bindings for Dramatic.\n * dramatic cinematic interface with dark surfaces, strong contrast, and spotlight accent states.\n */\n\n:root {\n  --bg: #090b12;\n  --surface: #121722;\n  --surface-warm: #1b2233;\n  --fg: #f8fafc;\n  --fg-2: #cbd5e1;\n  --muted: #94a3b8;\n  --meta: #60a5fa;\n  --border: #2a3447;\n  --border-soft: #1d2636;\n  --accent: #60a5fa;\n  --accent-on: #06101d;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-"
+  },
+  {
+    "name": "duolingo",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/duolingo/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Duolingo\".\n * Bright owl-green gamified universe: chunky 4px bottom-shadows, big\n * confident type, friendly pill geometry, mascot-driven warmth.\n *\n * Key brand decisions encoded here:\n *   - Owl Green (#58cc02) — dominant brand color, primary CTA + correct answer\n *   - Snow white canvas (#ffffff) — never tinted; optic"
+  },
+  {
+    "name": "editorial",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/editorial/tokens.css\n * Structured token bindings for Editorial.\n * editorial publishing language with warm paper surfaces, serif display type, and composed story cards.\n */\n\n:root {\n  --bg: #fbf7f0;\n  --surface: #fffdf8;\n  --surface-warm: #f1e6d6;\n  --fg: #1f1a16;\n  --fg-2: #4b4038;\n  --muted: #7d7168;\n  --meta: #9a5a2f;\n  --border: #ded3c5;\n  --border-soft: #eee5da;\n  --accent: #9a5a2f;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  "
+  },
+  {
+    "name": "elegant",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/elegant/tokens.css\n * Structured token bindings for Elegant.\n * elegant interface language with warm neutrals, serif display type, and quiet premium controls.\n */\n\n:root {\n  --bg: #fbf6ee;\n  --surface: #fffdf8;\n  --surface-warm: #f1e3cf;\n  --fg: #201914;\n  --fg-2: #4c4037;\n  --muted: #7a6d63;\n  --meta: #9b5b32;\n  --border: #ded2c3;\n  --border-soft: #eee4d7;\n  --accent: #9b5b32;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-ac"
+  },
+  {
+    "name": "elevenlabs",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/elevenlabs/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by ElevenLabs\".\n * Premium audio product brochure: achromatic, whisper-thin headings,\n * multi-layered sub-0.1 shadows, warm stone accent surfaces.\n *\n * Key brand decisions encoded here:\n *   - Intentionally achromatic — no brand colors; warmth from shadows/surfaces\n *   - Waldenburg weight 300 for display — lightness IS"
+  },
+  {
+    "name": "energetic",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/energetic/tokens.css\n * Structured token bindings for Energetic.\n * energetic product system with saturated action, tight motion, and lively card structure.\n */\n\n:root {\n  --bg: #fff8d7;\n  --surface: #ffffff;\n  --surface-warm: #ffef9f;\n  --fg: #1d1836;\n  --fg-2: #4c426c;\n  --muted: #796f91;\n  --meta: #ff6b00;\n  --border: #eadfba;\n  --border-soft: #f5eccd;\n  --accent: #ff6b00;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-acti"
+  },
+  {
+    "name": "enterprise",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/enterprise/tokens.css\n * Structured token bindings for Enterprise.\n * enterprise governance surface with deep navy text, restrained blue, and durable admin patterns.\n */\n\n:root {\n  --bg: #f8fafc;\n  --surface: #ffffff;\n  --surface-warm: #eef2f7;\n  --fg: #0f172a;\n  --fg-2: #334155;\n  --muted: #64748b;\n  --meta: #1d4ed8;\n  --border: #d8dee8;\n  --border-soft: #edf1f6;\n  --accent: #1d4ed8;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --ac"
+  },
+  {
+    "name": "expo",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/expo/tokens.css\n *\n * Structured token bindings for Expo.\n * developer-console minimalism with black-and-white precision and native app launch energy.\n */\n\n:root {\n  --bg: #ffffff;\n  --surface: #f6f7f9;\n  --surface-warm: #eef2ff;\n  --fg: #0b0d12;\n  --fg-2: #353945;\n  --muted: #6b7280;\n  --meta: #4630eb;\n  --border: #dfe3ea;\n  --border-soft: #edf0f5;\n  --accent: #000020;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: co"
+  },
+  {
+    "name": "expressive",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/expressive/tokens.css\n * Structured token bindings for Expressive.\n * expressive design language with vibrant accents, roomy sections, and characterful cards.\n */\n\n:root {\n  --bg: #fbf8ff;\n  --surface: #ffffff;\n  --surface-warm: #efe8ff;\n  --fg: #1f1730;\n  --fg-2: #4d425f;\n  --muted: #776b88;\n  --meta: #7c3aed;\n  --border: #ded4ee;\n  --border-soft: #efe8f7;\n  --accent: #7c3aed;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-ac"
+  },
+  {
+    "name": "fantasy",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/fantasy/tokens.css\n * Structured token bindings for Fantasy.\n * fantasy interface with deep mystical surfaces, luminous accents, and ornate card rhythm.\n */\n\n:root {\n  --bg: #070711;\n  --surface: #111126;\n  --surface-warm: #1e1540;\n  --fg: #f8f7ff;\n  --fg-2: #d6ccff;\n  --muted: #9d8ad4;\n  --meta: #c084fc;\n  --border: #34265e;\n  --border-soft: #241c42;\n  --accent: #c084fc;\n  --accent-on: #13051f;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: "
+  },
+  {
+    "name": "ferrari",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/ferrari/tokens.css\n *\n * Structured token bindings for Ferrari.\n * Italian performance luxury with racing red, carbon black, and premium editorial spacing.\n */\n\n:root {\n  --bg: #0b0b0b;\n  --surface: #171717;\n  --surface-warm: #23130f;\n  --fg: #fffaf0;\n  --fg-2: #e8dcc8;\n  --muted: #a89f91;\n  --meta: #ffd200;\n  --border: #342a24;\n  --border-soft: #241f1b;\n  --accent: #dc0000;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-activ"
+  },
+  {
+    "name": "figma",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/figma/tokens.css\n *\n * Structured token bindings for the \"Figma\" brand — vibrant product\n * content inside a strictly black-and-white interface shell.\n *\n * Brand identity in three sentences:\n *   1. Monochrome interface absolutely — pure black (#000000) for all\n *      text, borders, and solid buttons; pure white (#ffffff) for all\n *      backgrounds; no mid-tones in the chrome layer whatsoever.\n *   "
+  },
+  {
+    "name": "flat",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/flat/tokens.css\n * Structured token bindings for Flat.\n * flat interface system with crisp colors, no depth effects, and direct component hierarchy.\n */\n\n:root {\n  --bg: #f5f8ff;\n  --surface: #ffffff;\n  --surface-warm: #eaf1ff;\n  --fg: #101828;\n  --fg-2: #344054;\n  --muted: #667085;\n  --meta: #2563eb;\n  --border: #d7e0ef;\n  --border-soft: #edf2f8;\n  --accent: #2563eb;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: colo"
+  },
+  {
+    "name": "framer",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/framer/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Framer\".\n * Pure black void canvas, Framer Blue accent, GT Walsheim display with\n * extreme negative letter-spacing, Inter body with OpenType features,\n * and a blue-tinted ring-shadow elevation system.\n *\n * Brand-specific schema decisions (each one bends a schema convention\n * to match Framer's voice rather than the cros"
+  },
+  {
+    "name": "friendly",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/friendly/tokens.css\n * Structured token bindings for Friendly.\n * friendly product surface with warm colors, rounded controls, and low-pressure hierarchy.\n */\n\n:root {\n  --bg: #fff8d7;\n  --surface: #ffffff;\n  --surface-warm: #ffef9f;\n  --fg: #1d1836;\n  --fg-2: #4c426c;\n  --muted: #796f91;\n  --meta: #ff6b00;\n  --border: #eadfba;\n  --border-soft: #f5eccd;\n  --accent: #ff6b00;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active"
+  },
+  {
+    "name": "futuristic",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/futuristic/tokens.css\n * Structured token bindings for Futuristic.\n * futuristic interface with dark panels, cyan accent, compact data, and advanced product cues.\n */\n\n:root {\n  --bg: #090b12;\n  --surface: #121722;\n  --surface-warm: #1b2233;\n  --fg: #f8fafc;\n  --fg-2: #cbd5e1;\n  --muted: #94a3b8;\n  --meta: #60a5fa;\n  --border: #2a3447;\n  --border-soft: #1d2636;\n  --accent: #60a5fa;\n  --accent-on: #06101d;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accen"
+  },
+  {
+    "name": "github",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/github/tokens.css\n *\n * Structured token bindings for the \"GitHub\" brand — Primer foundations,\n * functional density, blue-on-white precision.\n *\n * Brand identity in three sentences:\n *   1. True white canvas (#ffffff) with a clean canvas-subtle (#f6f8fa)\n *      secondary surface; hairline borders (#d0d7de) define every pane\n *      — density over decoration, information over aesthetics.\n *   2. Syst"
+  },
+  {
+    "name": "glassmorphism",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/glassmorphism/tokens.css\n * Structured token bindings for Glassmorphism.\n * glass interface language with translucent panels, airy borders, and luminous cyan-violet action.\n */\n\n:root {\n  --bg: #eef6ff;\n  --surface: rgba(255, 255, 255, 0.74);\n  --surface-warm: rgba(238, 246, 255, 0.72);\n  --fg: #102033;\n  --fg-2: #34465f;\n  --muted: #60708a;\n  --meta: #4f8cff;\n  --border: rgba(255, 255, 255, 0.64);\n  --border-soft: rgba(255, 255, 255, 0.38);\n  --accent: #4f8cff;\n  --accent-on: "
+  },
+  {
+    "name": "gradient",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/gradient/tokens.css\n * Structured token bindings for Gradient.\n * gradient-first visual system with saturated color fields, dark text contrast, and radiant CTA states.\n */\n\n:root {\n  --bg: #f7f3ff;\n  --surface: #ffffff;\n  --surface-warm: #efe7ff;\n  --fg: #191225;\n  --fg-2: #443856;\n  --muted: #746985;\n  --meta: #7c3aed;\n  --border: #ddd2f2;\n  --border-soft: #eee6fb;\n  --accent: #7c3aed;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --"
+  },
+  {
+    "name": "hashicorp",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/hashicorp/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by HashiCorp\" —\n * enterprise infrastructure-as-code made tangible: a dramatic near-black\n * canvas, engineering-grade typography, whisper-level shadows, and one\n * functional blue accent reserved for actionable signals.\n *\n * Brand identity in three sentences:\n *   1. Dark-mode-native canvas (#15181e Dark Charcoal → #0d0e"
+  },
+  {
+    "name": "hud",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/hud/tokens.css\n * Structured token bindings for HUD.\n * HUD interface language with dark transparent panels, cyan telemetry, and compact status readouts.\n */\n\n:root {\n  --bg: #090b12;\n  --surface: #121722;\n  --surface-warm: #1b2233;\n  --fg: #f8fafc;\n  --fg-2: #cbd5e1;\n  --muted: #94a3b8;\n  --meta: #60a5fa;\n  --border: #2a3447;\n  --border-soft: #1d2636;\n  --accent: #60a5fa;\n  --accent-on: #06101d;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active:"
+  },
+  {
+    "name": "huggingface",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/huggingface/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Hugging Face\".\n * ML community hub: sunshine yellow badge accent, monospace identity,\n * crisp 1px borders, brutalist-adjacent low radius, dense power-user layout.\n *\n * Key brand decisions encoded here:\n *   - HF Yellow (#ffd21e) as the lone saturated accent — badge/badge/header strip\n *   - Ink on off-white: deep sl"
+  },
+  {
+    "name": "ibm",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/ibm/tokens.css\n *\n * Structured token bindings for IBM.\n * white Carbon surfaces, square geometry, IBM Plex typography, and a single engineered blue signal.\n */\n\n:root {\n  --bg: #ffffff;\n  --surface: #f4f4f4;\n  --surface-warm: #edf5ff;\n  --fg: #161616;\n  --fg-2: #525252;\n  --muted: #6f6f6f;\n  --meta: #8d8d8d;\n  --border: #c6c6c6;\n  --border-soft: #e0e0e0;\n  --accent: #0f62fe;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-acti"
+  },
+  {
+    "name": "intercom",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/intercom/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Intercom\".\n * Editorial customer-service warmth: warm cream canvas, off-black text,\n * a single Fin Orange signal, and aggressively sharp 4px geometry.\n *\n * Key brand decisions encoded here:\n *   - Warm Cream (#faf9f6) canvas — never pure white, but white pops above it\n *   - Fin Orange (#ff5600) — the SINGULAR accent, "
+  },
+  {
+    "name": "kami",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/kami/tokens.css\n *\n * Structured token bindings for \"kami / 紙 / 纸\" — a print-first\n * editorial system: warm parchment canvas, single ink-blue accent,\n * serif at one weight (500), no italic, no cool grays.\n *\n * This file pre-compiles the values described in `DESIGN.md` into\n * the schema shared with all OD design systems. Two paste paths:\n *\n *   1. Agents generating an artifact for kami should paste"
+  },
+  {
+    "name": "kraken",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/kraken/tokens.css\n *\n * Structured token bindings for Kraken.\n * dark crypto exchange interface with violet signal, chart density, and confident controls.\n */\n\n:root {\n  --bg: #0b1020;\n  --surface: #121a33;\n  --surface-warm: #1b2450;\n  --fg: #f8fafc;\n  --fg-2: #cbd5e1;\n  --muted: #8b95aa;\n  --meta: #7d5cff;\n  --border: #26314f;\n  --border-soft: #1b2740;\n  --accent: #7132f5;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active"
+  },
+  {
+    "name": "lamborghini",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/lamborghini/tokens.css\n *\n * Structured token bindings for Lamborghini.\n * sharp black-gold performance interface with angular premium energy.\n */\n\n:root {\n  --bg: #050505;\n  --surface: #141414;\n  --surface-warm: #211b0b;\n  --fg: #f8f4e6;\n  --fg-2: #d8ceb0;\n  --muted: #9b927d;\n  --meta: #d4af37;\n  --border: #3a321d;\n  --border-soft: #282315;\n  --accent: #d4af37;\n  --accent-on: #050505;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: color-mix("
+  },
+  {
+    "name": "levels",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/levels/tokens.css\n * Structured token bindings for Levels.\n * health data product with calm cream surfaces, green metabolic signal, and nutrition card rhythm.\n */\n\n:root {\n  --bg: #fbf7ef;\n  --surface: #ffffff;\n  --surface-warm: #eef7ed;\n  --fg: #1f2a24;\n  --fg-2: #435147;\n  --muted: #788276;\n  --meta: #2f8f46;\n  --border: #dbe3d7;\n  --border-soft: #edf1ea;\n  --accent: #2f8f46;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-ac"
+  },
+  {
+    "name": "linear-app",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/linear-app/tokens.css\n *\n * Structured token bindings for the \"Linear\" brand — the dark-mode-native\n * project management tool's precision engineering voice.\n *\n * Brand identity in three sentences:\n *   1. Darkness as the native medium — near-black canvas (#08090a) where\n *      information density is managed through luminance steps rather than\n *      color variation; semi-transparent white borders t"
+  },
+  {
+    "name": "lingo",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/lingo/tokens.css\n * Structured token bindings for Lingo.\n * global localization product language, soft violet action, warm white surfaces, and readable content rows.\n */\n\n:root {\n  --bg: #fbf9ff;\n  --surface: #ffffff;\n  --surface-warm: #f1ecff;\n  --fg: #1d1b2a;\n  --fg-2: #4f4863;\n  --muted: #786f8f;\n  --meta: #6d4aff;\n  --border: #ded7f0;\n  --border-soft: #eee9f8;\n  --accent: #6d4aff;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --ac"
+  },
+  {
+    "name": "loom",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/loom/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Loom\".\n * Async video for work: bright neutral canvas, signature purple (#625df5),\n * soft-rounded geometry, Inter typography, video-thumbnail-centric layouts.\n *\n * Key brand decisions encoded here:\n *   - Pure white (#ffffff) canvas with cool-neutral Snow (#f7f7f8) surfaces\n *   - Loom Purple (#625df5) — signals creativity"
+  },
+  {
+    "name": "lovable",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/lovable/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Lovable\".\n * Warm parchment canvas, opacity-driven gray ramp, humanist Camera Plain\n * Variable display type, borders-not-shadows for cards, inset-shadow\n * tactility on dark CTAs.\n *\n * This file pre-compiles the values described in `DESIGN.md` into the\n * shared schema. Agents generating an artifact for Lovable should p"
+  },
+  {
+    "name": "luxury",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/luxury/tokens.css\n * Structured token bindings for Luxury.\n * luxury commerce with black lacquer, champagne gold, and spacious premium rhythm.\n */\n\n:root {\n  --bg: #080706;\n  --surface: #151310;\n  --surface-warm: #241e14;\n  --fg: #fff8ea;\n  --fg-2: #d8cdb7;\n  --muted: #9f927c;\n  --meta: #c6a15b;\n  --border: #3a3020;\n  --border-soft: #282217;\n  --accent: #c6a15b;\n  --accent-on: #080706;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: color-mix("
+  },
+  {
+    "name": "mastercard",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/mastercard/tokens.css\n *\n * Structured token bindings for Mastercard.\n * putty-cream editorial canvas, orbital geometry, and warm payment-network restraint.\n */\n\n:root {\n  --bg: #f3f0ee;\n  --surface: #fcfbfa;\n  --surface-warm: #f7e8de;\n  --fg: #141413;\n  --fg-2: #262627;\n  --muted: #696969;\n  --meta: #9a3a0a;\n  --border: #d1cdc7;\n  --border-soft: #e7e1dc;\n  --accent: #cf4500;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-acti"
+  },
+  {
+    "name": "material",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/material/tokens.css\n * Structured token bindings for Material.\n * material design surface logic with soft elevation, rounded controls, and accessible blue interaction.\n */\n\n:root {\n  --bg: #f8fafd;\n  --surface: #ffffff;\n  --surface-warm: #e8f0fe;\n  --fg: #202124;\n  --fg-2: #3c4043;\n  --muted: #5f6368;\n  --meta: #1a73e8;\n  --border: #dadce0;\n  --border-soft: #edf0f2;\n  --accent: #1a73e8;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --"
+  },
+  {
+    "name": "meta",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/meta/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Meta (Store)\".\n * Photography-first retail: pure white canvas, Optimistic VF typography,\n * Meta Blue (#0064E0) reserved for action, generous gallery whitespace,\n * pill-shaped CTAs, dual-shadow elevation.\n *\n * Brand-specific schema decisions (each one bends a schema convention to\n * match Meta's voice rather than the cross"
+  },
+  {
+    "name": "minimal",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/minimal/tokens.css\n * Structured token bindings for Minimal.\n * minimal product language with white space, black text, hairline borders, and quiet interaction.\n */\n\n:root {\n  --bg: #ffffff;\n  --surface: #fafafa;\n  --surface-warm: #f5f5f5;\n  --fg: #111111;\n  --fg-2: #3a3a3a;\n  --muted: #777777;\n  --meta: #111111;\n  --border: #e2e2e2;\n  --border-soft: #eeeeee;\n  --accent: #111111;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-a"
+  },
+  {
+    "name": "minimax",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/minimax/tokens.css\n *\n * Structured token bindings for the \"MiniMax\" brand — the Shanghai-based\n * AI lab behind Hailuo (海螺) video and Conch text. The visual language\n * is a white-dominant product gallery: pure white canvas, vivid product\n * cards, pill navigation, multi-font hierarchy, and a purple-tinted brand\n * glow on featured surfaces. The font stacks include CJK fallbacks\n * (PingFang SC, Hirag"
+  },
+  {
+    "name": "mintlify",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/mintlify/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Mintlify\".\n * Documentation-as-product clarity: white-on-white canvas, near-black\n * text, signature mint-green accent used sparingly, ultra-subtle 5%-\n * opacity borders carrying the entire separation system, and a full-\n * pill (9999px) radius reserved for buttons / inputs / badges as the\n * brand's signature shape.\n *"
+  },
+  {
+    "name": "miro",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/miro/tokens.css\n *\n * Structured token bindings for Miro.\n * whiteboard canvas with sunny yellow, ink-black controls, and collaborative board energy.\n */\n\n:root {\n  --bg: #fff7c2;\n  --surface: #ffffff;\n  --surface-warm: #fff3a3;\n  --fg: #050038;\n  --fg-2: #322b6b;\n  --muted: #605a8a;\n  --meta: #f7c600;\n  --border: #ded9ff;\n  --border-soft: #eeeaff;\n  --accent: #ffd02f;\n  --accent-on: #050038;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: col"
+  },
+  {
+    "name": "mission-control",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/mission-control/tokens.css\n * Structured token bindings for Mission Control.\n * mission control interface with dark command panels, status color, and dense operational modules.\n */\n\n:root {\n  --bg: #090b12;\n  --surface: #121722;\n  --surface-warm: #1b2233;\n  --fg: #f8fafc;\n  --fg-2: #cbd5e1;\n  --muted: #94a3b8;\n  --meta: #60a5fa;\n  --border: #2a3447;\n  --border-soft: #1d2636;\n  --accent: #60a5fa;\n  --accent-on: #06101d;\n  --accent-hover: color-mix(in oklab, var(--accent), black "
+  },
+  {
+    "name": "mistral-ai",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/mistral-ai/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Mistral AI\".\n * Sun-drenched French engineering: golden amber universe, billboard typography,\n * sharp architectural geometry, warm golden shadows.\n *\n * Key brand decisions encoded here:\n *   - Warm Ivory (#fffaeb) as the lightest canvas — never pure white\n *   - Mistral Orange (#fa520f) — vivid brand signal, declarat"
+  },
+  {
+    "name": "modern",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/modern/tokens.css\n * Structured token bindings for Modern.\n * modern SaaS system with cool neutrals, blue-violet accent, and polished product cards.\n */\n\n:root {\n  --bg: #f7f8fc;\n  --surface: #ffffff;\n  --surface-warm: #eef1ff;\n  --fg: #111827;\n  --fg-2: #374151;\n  --muted: #6b7280;\n  --meta: #4f46e5;\n  --border: #dfe3ed;\n  --border-soft: #eef1f7;\n  --accent: #4f46e5;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: colo"
+  },
+  {
+    "name": "mongodb",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/mongodb/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by MongoDB\".\n * Forest-dark database aesthetic: a near-black teal canvas (#001e2b) lit\n * by a single bioluminescent neon green (#00ed64), serif authority at\n * hero scale, and shadows that carry the brand color into elevation.\n *\n * Key brand decisions encoded here:\n *   - Forest Black (#001e2b) as the primary canvas — neve"
+  },
+  {
+    "name": "mono",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/mono/tokens.css\n * Structured token bindings for Mono.\n * monochrome interface with black ink, white surfaces, and severe component discipline.\n */\n\n:root {\n  --bg: #ffffff;\n  --surface: #f7f7f7;\n  --surface-warm: #eeeeee;\n  --fg: #111111;\n  --fg-2: #3a3a3a;\n  --muted: #707070;\n  --meta: #111111;\n  --border: #d9d9d9;\n  --border-soft: #eeeeee;\n  --accent: #111111;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: color-mix"
+  },
+  {
+    "name": "neobrutalism",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/neobrutalism/tokens.css\n * Structured token bindings for Neobrutalism.\n * neo-brutalist design language with hard borders, offset shadows, and loud yellow emphasis.\n */\n\n:root {\n  --bg: #fff4cf;\n  --surface: #fffaf0;\n  --surface-warm: #ffdca8;\n  --fg: #2a1810;\n  --fg-2: #593625;\n  --muted: #8a6652;\n  --meta: #d24b1f;\n  --border: #d9aa7a;\n  --border-soft: #efd0ab;\n  --accent: #d24b1f;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --acc"
+  },
+  {
+    "name": "neon",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/neon/tokens.css\n * Structured token bindings for Neon.\n * neon visual language with dark backgrounds, glowing accents, and high-energy controls.\n */\n\n:root {\n  --bg: #070711;\n  --surface: #111126;\n  --surface-warm: #1e1540;\n  --fg: #f8f7ff;\n  --fg-2: #d6ccff;\n  --muted: #9d8ad4;\n  --meta: #c084fc;\n  --border: #34265e;\n  --border-soft: #241c42;\n  --accent: #c084fc;\n  --accent-on: #13051f;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: color-mi"
+  },
+  {
+    "name": "neumorphism",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/neumorphism/tokens.css\n * Structured token bindings for Neumorphism.\n * neumorphic interface with tonal surfaces, soft raised controls, and quiet embossed depth.\n */\n\n:root {\n  --bg: #f7eee6;\n  --surface: #fff8f1;\n  --surface-warm: #ead6c7;\n  --fg: #2b211c;\n  --fg-2: #5a4b43;\n  --muted: #8a7a70;\n  --meta: #b46a46;\n  --border: #dac8b9;\n  --border-soft: #eaded4;\n  --accent: #b46a46;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent"
+  },
+  {
+    "name": "nike",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/nike/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Nike\" —\n * the kinetic retail cathedral. A monochromatic UI (black/white/grey\n * only) so that athletic photography and product color carry the\n * emotional weight, with massive uppercase Nike Futura ND display\n * typography that punches through hero imagery like a typographic\n * shockwave. This file is the *machine-readable"
+  },
+  {
+    "name": "notion",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/notion/tokens.css\n *\n * Structured token bindings for the \"Notion\" brand — the all-in-one\n * workspace's warm minimalism translated into the shared schema.\n *\n * Brand identity in three sentences:\n *   1. Warm neutrals throughout — grays carry yellow-brown undertones\n *      (#f6f5f4, #31302e, #615d59, #a39e98); pure white canvas with\n *      near-black text (rgba(0,0,0,0.95)) that softens imperceptibl"
+  },
+  {
+    "name": "nvidia",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/nvidia/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by NVIDIA\".\n * GPU computing power aesthetic: black canvas, NVIDIA Green (#76b900) as\n * pure signal accent, industrial NVIDIA-EMEA font, minimal 2px radius.\n *\n * Key brand decisions encoded here:\n *   - True black (#000000) primary canvas — maximum energy contrast\n *   - NVIDIA Green (#76b900) as SIGNAL ONLY: borders, under"
+  },
+  {
+    "name": "ollama",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/ollama/tokens.css\n *\n * Structured token bindings for \"Ollama\" — radical minimalism for the\n * local-LLM runtime. The brand strips every form of decoration away\n * until only the essential tool remains: pure-white canvas, zero\n * chromatic color anywhere on screen, no shadows ever, and a binary\n * radius system that separates \"container\" (12px) from \"interactive\"\n * (pill / 9999px). DESIGN.md is emphat"
+  },
+  {
+    "name": "openai",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/openai/tokens.css\n *\n * Structured token bindings for the \"OpenAI\" brand — calm, near-monochrome\n * system anchored in deep teal-black with editorial serif display.\n *\n * Brand identity in three sentences:\n *   1. True white canvas (#ffffff) against deep teal-black ink (#0d0d0d)\n *      with a subtle cool undertone; chromatic neutrality that puts model\n *      output front and center rather than the ch"
+  },
+  {
+    "name": "opencode-ai",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/opencode-ai/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by OpenCode\".\n * Terminal-native dark theme: warm near-black canvas, Berkeley Mono as\n * the sole typeface, flat depth (no shadows), Apple HIG semantic colors.\n *\n * Key brand decisions encoded here:\n *   - Dark-on-dark: #201d1d (warm near-black) as page bg, #302c2c for surface\n *   - #fdfcfc (barely-warm off-white) as p"
+  },
+  {
+    "name": "pacman",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/pacman/tokens.css\n *\n * Structured token bindings for Pac-Man.\n * classic arcade maze language with black board, yellow signal, and rounded score capsules.\n */\n\n:root {\n  --bg: #050505;\n  --surface: #101014;\n  --surface-warm: #1f1b08;\n  --fg: #fff7d6;\n  --fg-2: #f6e79c;\n  --muted: #b9a85d;\n  --meta: #ffcc00;\n  --border: #2338ff;\n  --border-soft: #17218a;\n  --accent: #ffcc00;\n  --accent-on: #050505;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-activ"
+  },
+  {
+    "name": "paper",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/paper/tokens.css\n * Structured token bindings for Paper.\n * paper design language with warm document surfaces, soft texture, and readable hierarchy.\n */\n\n:root {\n  --bg: #faf3df;\n  --surface: #fffaf0;\n  --surface-warm: #efe0bd;\n  --fg: #211b12;\n  --fg-2: #504737;\n  --muted: #7c7160;\n  --meta: #8f5d24;\n  --border: #ddd0b4;\n  --border-soft: #eee3cd;\n  --accent: #8f5d24;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: colo"
+  },
+  {
+    "name": "perplexity",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/perplexity/tokens.css\n *\n * Structured token bindings for the \"Perplexity\" brand — the research-\n * terminal voice of a conversational AI search engine.\n *\n * Brand identity in three sentences:\n *   1. Dark canvas as the native medium — a flat near-black (#0f0f10)\n *      that recedes so citations, sources, and the answer column lead;\n *      depth is three luminance steps (base → surface → elevated), "
+  },
+  {
+    "name": "perspective",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/perspective/tokens.css\n * Structured token bindings for Perspective.\n * perspective visual system with layered depth, cool surfaces, and dimensional product cards.\n */\n\n:root {\n  --bg: #f5f8ff;\n  --surface: #ffffff;\n  --surface-warm: #eaf1ff;\n  --fg: #101828;\n  --fg-2: #344054;\n  --muted: #667085;\n  --meta: #2563eb;\n  --border: #d7e0ef;\n  --border-soft: #edf2f8;\n  --accent: #2563eb;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --acce"
+  },
+  {
+    "name": "pinterest",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/pinterest/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Pinterest\".\n * Warm visual-discovery canvas: olive/sand neutrals, signature Pinterest\n * Red (#e60023) as the singular bold accent, Pin Sans across the entire\n * type hierarchy, generous 12–28px radii, and minimal shadow because\n * the photography is the elevation.\n *\n * This file pre-compiles the values described in `D"
+  },
+  {
+    "name": "playstation",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/playstation/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by PlayStation\".\n * Console-grade retail: a three-surface channel (black hero → white content\n * → cobalt footer), SST weight 300 at display sizes, and a signature\n * 1.2× scale-on-hover that fires across the page like a power-on chime.\n *\n * Key brand decisions encoded here:\n *   - Console Black (#000000) is the dominan"
+  },
+  {
+    "name": "posthog",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/posthog/tokens.css\n *\n * Structured token bindings for the PostHog design system — the\n * open-source product analytics brand whose marketing surface reads\n * like a startup's internal wiki that escaped into the wild. Warm\n * sage-cream surfaces, olive-tinted text, IBM Plex Sans at bold\n * weights for headings, and a single PostHog Orange (#F54E00) that\n * lives almost entirely on hover — a hidden bran"
+  },
+  {
+    "name": "premium",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/premium/tokens.css\n * Structured token bindings for Premium.\n * premium marketing system with warm white canvas, graphite type, and muted bronze signal.\n */\n\n:root {\n  --bg: #faf8f4;\n  --surface: #ffffff;\n  --surface-warm: #f0e7d8;\n  --fg: #1c1b19;\n  --fg-2: #4b4740;\n  --muted: #746d63;\n  --meta: #a06a3b;\n  --border: #ded6c9;\n  --border-soft: #eee7dc;\n  --accent: #a06a3b;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: "
+  },
+  {
+    "name": "professional",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/professional/tokens.css\n * Structured token bindings for Professional.\n * professional services interface with restrained blue, crisp cards, and business-first structure.\n */\n\n:root {\n  --bg: #f5f8ff;\n  --surface: #ffffff;\n  --surface-warm: #eaf1ff;\n  --fg: #101828;\n  --fg-2: #344054;\n  --muted: #667085;\n  --meta: #2563eb;\n  --border: #d7e0ef;\n  --border-soft: #edf2f8;\n  --accent: #2563eb;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n "
+  },
+  {
+    "name": "publication",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/publication/tokens.css\n * Structured token bindings for Publication.\n * news publication system with white pages, black editorial type, and crisp red section signals.\n */\n\n:root {\n  --bg: #ffffff;\n  --surface: #f6f6f6;\n  --surface-warm: #fff2f0;\n  --fg: #0b0b0b;\n  --fg-2: #333333;\n  --muted: #666666;\n  --meta: #c1121f;\n  --border: #d6d6d6;\n  --border-soft: #ececec;\n  --accent: #c1121f;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --a"
+  },
+  {
+    "name": "raycast",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/raycast/tokens.css\n *\n * Structured token bindings for the \"Raycast\" brand — the macOS-native\n * command palette / launcher's precision desktop-instrument voice.\n *\n * Brand identity in three sentences:\n *   1. Near-black blue-tinted canvas (#07080a) — not pure black — with\n *      semi-transparent white borders (0.06 opacity) and multi-layer\n *      inset shadows that simulate physical glass-key depth"
+  },
+  {
+    "name": "refined",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/refined/tokens.css\n * Structured token bindings for Refined.\n * refined interface language with warm neutrals, restrained accent, and composed spacing.\n */\n\n:root {\n  --bg: #fbf6ee;\n  --surface: #fffdf8;\n  --surface-warm: #f1e3cf;\n  --fg: #201914;\n  --fg-2: #4c4037;\n  --muted: #7a6d63;\n  --meta: #9b5b32;\n  --border: #ded2c3;\n  --border-soft: #eee4d7;\n  --accent: #9b5b32;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: c"
+  },
+  {
+    "name": "renault",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/renault/tokens.css\n * Structured token bindings for Renault.\n * electric automotive showroom, warm yellow accents, black engineering text, and modern gallery surfaces.\n */\n\n:root {\n  --bg: #f7f4ef;\n  --surface: #ffffff;\n  --surface-warm: #fff4bf;\n  --fg: #111111;\n  --fg-2: #3f3f3f;\n  --muted: #6f6b63;\n  --meta: #ffcc33;\n  --border: #dfd8ca;\n  --border-soft: #ece6db;\n  --accent: #ffcc33;\n  --accent-on: #111111;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --"
+  },
+  {
+    "name": "replicate",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/replicate/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Replicate\".\n * Developer playground: explosive gradient energy, pill-shaped geometry,\n * massive display typography, high-contrast black/white + red brand.\n *\n * Key brand decisions encoded here:\n *   - Pure white body canvas with Replicate Dark (#202020) for text/borders\n *   - Replicate Red (#ea2804) — brand accent fo"
+  },
+  {
+    "name": "resend",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/resend/tokens.css\n *\n * Structured token bindings for \"Resend\" — the developer-first email\n * API whose marketing surface treats a pure-black canvas like a\n * gallery wall and lights every container with a single, icy blue-\n * tinted hairline.\n *\n * Brand identity in three sentences:\n *   1. Void-black (#000000) canvas with near-white (#f0f0f0) ink —\n *      theatrical darkness; the page is the stage a"
+  },
+  {
+    "name": "retro",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/retro/tokens.css\n * Structured token bindings for Retro.\n * retro interface with warm colors, chunky controls, and nostalgic product cards.\n */\n\n:root {\n  --bg: #fff4cf;\n  --surface: #fffaf0;\n  --surface-warm: #ffdca8;\n  --fg: #2a1810;\n  --fg-2: #593625;\n  --muted: #8a6652;\n  --meta: #d24b1f;\n  --border: #d9aa7a;\n  --border-soft: #efd0ab;\n  --accent: #d24b1f;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: color-mix(in "
+  },
+  {
+    "name": "revolut",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/revolut/tokens.css\n *\n * Structured token bindings for Revolut.\n * premium consumer-finance surfaces with bright blue action and polished dashboard cards.\n */\n\n:root {\n  --bg: #f7f8fb;\n  --surface: #ffffff;\n  --surface-warm: #eef4ff;\n  --fg: #111827;\n  --fg-2: #334155;\n  --muted: #64748b;\n  --meta: #0666eb;\n  --border: #dbe3ef;\n  --border-soft: #edf2f7;\n  --accent: #0666eb;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active"
+  },
+  {
+    "name": "runwayml",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/runwayml/tokens.css\n *\n * Structured token bindings for the \"Runway\" brand — a cinematic,\n * editorial-cinema dark canvas where photography (and AI-generated\n * video) is the design and the chrome is intentionally invisible.\n *\n * Brand identity in three sentences:\n *   1. Pure-black canvas (#000000) under bright pure-white type\n *      (#ffffff), with cool blue-gray neutrals (#767d88 / #7d848e)\n *    "
+  },
+  {
+    "name": "sanity",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/sanity/tokens.css\n *\n * Structured token bindings for Sanity.\n * clean content studio with near-white surfaces, red intent, and schema-first hierarchy.\n */\n\n:root {\n  --bg: #f8f8f7;\n  --surface: #ffffff;\n  --surface-warm: #fff1ef;\n  --fg: #171717;\n  --fg-2: #3f3f46;\n  --muted: #71717a;\n  --meta: #f03e2f;\n  --border: #e4e4e7;\n  --border-soft: #f1f1f2;\n  --accent: #f03e2f;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: c"
+  },
+  {
+    "name": "sentry",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/sentry/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Sentry\".\n * Dark-mode-first developer tool aesthetic: deep purple-black canvas\n * (#1f1633, #150f23) lit by warm purples (#6a5fc1, #79628c, #422082)\n * and punctuated by a signature lime-green pop (#c2ef4e).\n *\n * This file pre-compiles the values described in `DESIGN.md` into the\n * shared schema. Agents generating an art"
+  },
+  {
+    "name": "shadcn",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/shadcn/tokens.css\n *\n * Structured token bindings for \"shadcn\" — the open-source copy-paste\n * React component library whose \"brand\" is the calm, neutral baseline\n * that thousands of teams extend. shadcn is intentionally NOT a loud\n * identity: zinc/slate neutrals, near-black primary, 8px default\n * radius, restrained spacing, Inter/Geist body text, and accessibility\n * non-negotiables (visible focus,"
+  },
+  {
+    "name": "shopify",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/shopify/tokens.css\n *\n * Structured token bindings for the \"Shopify\" brand — dark-first cinematic,\n * ethereal ultra-light display type, neon green accent.\n *\n * Brand identity in three sentences:\n *   1. Darkness as theatre — deep forest-teal surfaces (not pure black:\n *      #000000 root, #02090A cards, #061A1C sections, #102620 elevated)\n *      create a nocturnal keynote atmosphere, staged like a p"
+  },
+  {
+    "name": "simple",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/simple/tokens.css\n * Structured token bindings for Simple.\n * simple application system with neutral surfaces, clear action color, and dependable layout primitives.\n */\n\n:root {\n  --bg: #f5f8ff;\n  --surface: #ffffff;\n  --surface-warm: #eaf1ff;\n  --fg: #101828;\n  --fg-2: #344054;\n  --muted: #667085;\n  --meta: #2563eb;\n  --border: #d7e0ef;\n  --border-soft: #edf2f8;\n  --accent: #2563eb;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --acc"
+  },
+  {
+    "name": "skeumorphism",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/skeumorphism/tokens.css\n * Structured token bindings for Skeuomorphism.\n * skeuomorphic interface with tactile surfaces, beveled cards, and warm analog depth.\n */\n\n:root {\n  --bg: #f7eee6;\n  --surface: #fff8f1;\n  --surface-warm: #ead6c7;\n  --fg: #2b211c;\n  --fg-2: #5a4b43;\n  --muted: #8a7a70;\n  --meta: #b46a46;\n  --border: #dac8b9;\n  --border-soft: #eaded4;\n  --accent: #b46a46;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-ac"
+  },
+  {
+    "name": "slack",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/slack/tokens.css\n *\n * Structured token bindings for the \"Slack\" brand — aubergine sidebar,\n * light content surfaces, warm and human workplace communication.\n *\n * Brand identity in three sentences:\n *   1. Light-first content surfaces (white #FFFFFF / near-white #F8F8F8)\n *      anchored by the iconic deep aubergine (#4A154B) sidebar — the most\n *      recognizable UI element in workplace software.\n "
+  },
+  {
+    "name": "sleek",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/sleek/tokens.css\n * Structured token bindings for Sleek.\n * sleek product language with polished panels, sharp typography, and confident blue accent.\n */\n\n:root {\n  --bg: #090b12;\n  --surface: #121722;\n  --surface-warm: #1b2233;\n  --fg: #f8fafc;\n  --fg-2: #cbd5e1;\n  --muted: #94a3b8;\n  --meta: #60a5fa;\n  --border: #2a3447;\n  --border-soft: #1d2636;\n  --accent: #60a5fa;\n  --accent-on: #06101d;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: col"
+  },
+  {
+    "name": "spacex",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/spacex/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by SpaceX\".\n * Cinematic aerospace minimalism: pure black canvas, full-viewport\n * photography, D-DIN industrial type, universal uppercase + positive\n * tracking, zero shadows / cards / decoration. The interface disappears\n * behind the imagery — only type, photography, and a single ghost button.\n *\n * Key brand decisions enc"
+  },
+  {
+    "name": "spacious",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/spacious/tokens.css\n * Structured token bindings for Spacious.\n * spacious interface with airy sections, soft surfaces, and generous layout rhythm.\n */\n\n:root {\n  --bg: #faf3df;\n  --surface: #fffaf0;\n  --surface-warm: #efe0bd;\n  --fg: #211b12;\n  --fg-2: #504737;\n  --muted: #7c7160;\n  --meta: #8f5d24;\n  --border: #ddd0b4;\n  --border-soft: #eee3cd;\n  --accent: #8f5d24;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: color"
+  },
+  {
+    "name": "spotify",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/spotify/tokens.css\n *\n * Structured token bindings for the \"Spotify\" brand — near-black immersive\n * dark theme, vibrant green accent, bold type, album-art-driven.\n *\n * Brand identity in three sentences:\n *   1. Content-first darkness — three-step charcoal ladder (#121212 deepest\n *      → #181818 cards → #1f1f1f buttons) where the UI recedes so album\n *      art and playlists can glow; achromatic chr"
+  },
+  {
+    "name": "starbucks",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/starbucks/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Starbucks\".\n * Warm cream canvas, four-tier green system, full-pill buttons, whisper-\n * soft layered shadows, and SoDoSans with universal -0.01em tracking.\n *\n * Key brand decisions encoded here:\n *   - Neutral Warm cream (#f2f0eb) as the page canvas — never pure white\n *   - Green Accent (#00754A) reserved for the pri"
+  },
+  {
+    "name": "storytelling",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/storytelling/tokens.css\n * Structured token bindings for Storytelling.\n * storytelling design language with warm paper, narrative modules, and editorial pacing.\n */\n\n:root {\n  --bg: #fbf6ee;\n  --surface: #fffdf8;\n  --surface-warm: #f1e3cf;\n  --fg: #201914;\n  --fg-2: #4c4037;\n  --muted: #7a6d63;\n  --meta: #9b5b32;\n  --border: #ded2c3;\n  --border-soft: #eee4d7;\n  --accent: #9b5b32;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-"
+  },
+  {
+    "name": "stripe",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/stripe/tokens.css\n *\n * Structured token bindings for \"Inspired by Stripe\" — fintech\n * infrastructure dressed in deep navy, signature violet, and the\n * blue-tinted multi-layer shadow that makes elevation feel branded.\n *\n * This file pre-compiles the values described in `DESIGN.md` into\n * the schema shared with every OD design system. Agents generating a\n * Stripe-flavored artifact should paste the "
+  },
+  {
+    "name": "supabase",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/supabase/tokens.css\n *\n * Structured token bindings for \"Supabase\" — the open-source Firebase\n * alternative whose marketing surface reads like a dark-mode editor that\n * grew up: near-black canvas (#171717), Postgres-emerald (#3ecf8e) reserved\n * for the chromatic moments, Circular geometric sans for prose, Source\n * Code Pro uppercase for the developer-console voice, and depth carried\n * by a tight b"
+  },
+  {
+    "name": "superhuman",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/superhuman/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Superhuman\".\n * Premium keyboard-first email client. Predominantly white canvas with a\n * single dramatic gesture of color (deep purple hero), warm cream CTAs,\n * lavender as the sole accent, and charcoal ink (warmer than #000) for text.\n *\n * Brand identity in three sentences:\n *   1. Maximum confidence through minimu"
+  },
+  {
+    "name": "tesla",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/tesla/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Tesla\" —\n * radical subtraction, full-viewport photography, near-zero UI. This\n * file is the *machine-readable* form of the values described in\n * `DESIGN.md`. Agents are expected to paste the `:root { … }` block\n * verbatim into the first `<style>` of every artifact they generate\n * against this design system, then refere"
+  },
+  {
+    "name": "tetris",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/tetris/tokens.css\n *\n * Structured token bindings for Tetris.\n * arcade grid system with black board surfaces and bright geometric block colors.\n */\n\n:root {\n  --bg: #050816;\n  --surface: #10162a;\n  --surface-warm: #17203a;\n  --fg: #f8fafc;\n  --fg-2: #cbd5e1;\n  --muted: #94a3b8;\n  --meta: #00f0f0;\n  --border: #26324f;\n  --border-soft: #1c2740;\n  --accent: #00f0f0;\n  --accent-on: #061018;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: color-mi"
+  },
+  {
+    "name": "theverge",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/theverge/tokens.css\n *\n * Structured token bindings for The Verge.\n * high-energy technology magazine with black surfaces, magenta signal, and dense editorial cards.\n */\n\n:root {\n  --bg: #050505;\n  --surface: #111111;\n  --surface-warm: #211022;\n  --fg: #ffffff;\n  --fg-2: #e5e7eb;\n  --muted: #9ca3af;\n  --meta: #ff00a8;\n  --border: #2b2b2b;\n  --border-soft: #1d1d1d;\n  --accent: #ff00a8;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --ac"
+  },
+  {
+    "name": "together-ai",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/together-ai/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Together AI\".\n * Pastel-gradient dreamscape for enterprise AI infrastructure: airy\n * optimism meets technical precision, dual light/dark world approach.\n *\n * Key brand decisions encoded here:\n *   - Pure white light sections; Deep midnight blue (#010120) for dark sections\n *   - \"The Future\" font with aggressive neg"
+  },
+  {
+    "name": "totality-festival",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/totality-festival/tokens.css\n * Structured token bindings for Totality Festival.\n * festival identity with cosmic dark surfaces, warm highlights, and event-program cards.\n */\n\n:root {\n  --bg: #070711;\n  --surface: #111126;\n  --surface-warm: #1e1540;\n  --fg: #f8f7ff;\n  --fg-2: #d6ccff;\n  --muted: #9d8ad4;\n  --meta: #c084fc;\n  --border: #34265e;\n  --border-soft: #241c42;\n  --accent: #c084fc;\n  --accent-on: #13051f;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n "
+  },
+  {
+    "name": "trading-terminal",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/trading-terminal/tokens.css\n * Structured token bindings for Trading Terminal.\n * professional trading terminal with dark market panels, green-red status, and compact data density.\n */\n\n:root {\n  --bg: #070b12;\n  --surface: #101826;\n  --surface-warm: #162238;\n  --fg: #f8fafc;\n  --fg-2: #cbd5e1;\n  --muted: #8492a6;\n  --meta: #38bdf8;\n  --border: #263246;\n  --border-soft: #1c2638;\n  --accent: #38bdf8;\n  --accent-on: #03111a;\n  --accent-hover: color-mix(in oklab, var(--accent), bl"
+  },
+  {
+    "name": "uber",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/uber/tokens.css\n *\n * Structured token bindings for the \"Uber\" brand — bold black-and-white,\n * pill-shaped everything, tight urban energy.\n *\n * Brand identity in three sentences:\n *   1. Pure black (#000000) and pure white (#ffffff) — not near-black or\n *      off-white; the stark duality IS Uber; no warmth, no tint, no mid-tone\n *      grays in the UI chrome (only #4b4b4b secondary and #afafaf terti"
+  },
+  {
+    "name": "urdu",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/urdu/tokens.css\n * Structured token bindings for Urdu.\n * Urdu editorial language with green cultural accent, warm paper, and composed reading surfaces.\n */\n\n:root {\n  --bg: #f3faf4;\n  --surface: #ffffff;\n  --surface-warm: #e5f5e7;\n  --fg: #15261a;\n  --fg-2: #38513e;\n  --muted: #6b7d70;\n  --meta: #1f8f46;\n  --border: #d4e3d7;\n  --border-soft: #edf3ee;\n  --accent: #1f8f46;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: "
+  },
+  {
+    "name": "vercel",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/vercel/tokens.css\n *\n * Structured token bindings for \"Vercel\" — the engineering-as-design\n * thesis of frontend deployment: a near-white canvas, near-black text,\n * one saturated blue accent, and a shadow-as-border philosophy that\n * replaces the box-model edge with a layered box-shadow stack.\n *\n * This file pre-compiles the values described in `DESIGN.md` into the\n * shared schema. Agents generating"
+  },
+  {
+    "name": "vibrant",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/vibrant/tokens.css\n * Structured token bindings for Vibrant.\n * vibrant visual system with saturated accents, warm surfaces, and optimistic product energy.\n */\n\n:root {\n  --bg: #fff8d7;\n  --surface: #ffffff;\n  --surface-warm: #ffef9f;\n  --fg: #1d1836;\n  --fg-2: #4c426c;\n  --muted: #796f91;\n  --meta: #ff6b00;\n  --border: #eadfba;\n  --border-soft: #f5eccd;\n  --accent: #ff6b00;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-activ"
+  },
+  {
+    "name": "vintage",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/vintage/tokens.css\n * Structured token bindings for Vintage.\n * vintage interface with aged paper, muted ink, and heritage-inspired controls.\n */\n\n:root {\n  --bg: #faf3df;\n  --surface: #fffaf0;\n  --surface-warm: #efe0bd;\n  --fg: #211b12;\n  --fg-2: #504737;\n  --muted: #7c7160;\n  --meta: #8f5d24;\n  --border: #ddd0b4;\n  --border-soft: #eee3cd;\n  --accent: #8f5d24;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: color-mix(i"
+  },
+  {
+    "name": "vodafone",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/vodafone/tokens.css\n *\n * Structured token bindings for Vodafone.\n * bright red telecom clarity balanced by white service surfaces and practical controls.\n */\n\n:root {\n  --bg: #ffffff;\n  --surface: #f4f4f4;\n  --surface-warm: #fff1f1;\n  --fg: #1f1f1f;\n  --fg-2: #4a4d4e;\n  --muted: #6f7375;\n  --meta: #a61218;\n  --border: #d8d8d8;\n  --border-soft: #eeeeee;\n  --accent: #e60000;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active"
+  },
+  {
+    "name": "voltagent",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/voltagent/tokens.css\n * Structured token bindings for VoltAgent.\n * dark agent runtime surfaces, neon green command signals, and technical orchestration cards.\n */\n\n:root {\n  --bg: #07110c;\n  --surface: #101c16;\n  --surface-warm: #14281e;\n  --fg: #f4fff8;\n  --fg-2: #c8dfd0;\n  --muted: #8ba493;\n  --meta: #7cff6b;\n  --border: #254132;\n  --border-soft: #1a3024;\n  --accent: #7cff6b;\n  --accent-on: #07110c;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-a"
+  },
+  {
+    "name": "warm-editorial",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/warm-editorial/tokens.css\n * Structured token bindings for Warm Editorial.\n * warm editorial system with cream canvas, serif display, and calm publication rhythm.\n */\n\n:root {\n  --bg: #fbf6ee;\n  --surface: #fffdf8;\n  --surface-warm: #f1e3cf;\n  --fg: #201914;\n  --fg-2: #4c4037;\n  --muted: #7a6d63;\n  --meta: #9b5b32;\n  --border: #ded2c3;\n  --border-soft: #eee4d7;\n  --accent: #9b5b32;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accen"
+  },
+  {
+    "name": "warp",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/warp/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Warp\".\n * Warm dark canvas, near-black like charred wood. Almost monochromatic\n * warm grays. Matter Regular (weight 400) carries every tier — even\n * the 80px hero. Restraint through warmth.\n *\n * Key brand decisions encoded here:\n *   - Warm near-black canvas (#161412) — never cold/blue dark\n *   - Warm Parchment (#faf9f6)"
+  },
+  {
+    "name": "webex",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/webex/tokens.css\n *\n * Structured token bindings for Webex.\n * cool collaboration surfaces with teal and violet meeting signals.\n */\n\n:root {\n  --bg: #f6f8fb;\n  --surface: #ffffff;\n  --surface-warm: #eef8f6;\n  --fg: #0f172a;\n  --fg-2: #334155;\n  --muted: #64748b;\n  --meta: #12a594;\n  --border: #dbe4ee;\n  --border-soft: #edf2f7;\n  --accent: #00a3a6;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: color-mix(in oklab, var("
+  },
+  {
+    "name": "webflow",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/webflow/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Webflow\".\n * The visual web builder: a white marketing-grade canvas, near-black\n * ink, the signature Webflow Blue (#146ef5), conservative 4px corners,\n * and a five-layer cascading shadow that gives every card a built-not-\n * floating quality.\n *\n * Key brand decisions encoded here:\n *   - White canvas with near-black (#"
+  },
+  {
+    "name": "wechat",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/wechat/tokens.css\n *\n * Structured token bindings for \"WeChat\" (微信) — Tencent's all-in-one\n * social, payment, and mini-program super-app. The visual language is\n * a quiet, light-friendly consumer canvas built around one decisive\n * signal: WeChat Green (#07C160). Everything else recedes so green\n * carries the brand — CTAs, success states, active tab, focus ring.\n * Bilingual CJK-aware typography (Pi"
+  },
+  {
+    "name": "wired",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/wired/tokens.css\n *\n * Structured token bindings for WIRED.\n * authoritative technology journalism with monochrome discipline and sharp red alerts.\n */\n\n:root {\n  --bg: #ffffff;\n  --surface: #f2f2f2;\n  --surface-warm: #fff0f0;\n  --fg: #000000;\n  --fg-2: #333333;\n  --muted: #666666;\n  --meta: #e10600;\n  --border: #d0d0d0;\n  --border-soft: #e8e8e8;\n  --accent: #e10600;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-active: color"
+  },
+  {
+    "name": "wise",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/wise/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Wise\".\n * Money without borders: bright spring-green CTAs on warm-neutral canvas,\n * billboard Wise Sans at weight 900 with 0.85 line-height, pill buttons,\n * ring-only shadows, and \"calt\" everywhere.\n *\n * Key brand decisions encoded here:\n *   - Wise Green (#9fe870) as the only accent; Dark Green (#163300) as\n *     --acce"
+  },
+  {
+    "name": "x-ai",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/x-ai/tokens.css\n *\n * Structured token bindings for \"x-ai\" — the dark-first, monospace-driven\n * brutalist minimalism of Elon Musk's AI lab. A design system that\n * communicates through absence: pure white on warm near-black, GeistMono\n * as the display voice, zero shadows, zero gradients, zero accent color.\n * Restraint as sophistication.\n *\n * Brand identity in three sentences:\n *   1. Dark-first can"
+  },
+  {
+    "name": "xiaohongshu",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* ─────────────────────────────────────────────────────────────────────────\n * design-systems/xiaohongshu/tokens.css\n *\n * Structured token bindings for \"Design System Inspired by Xiaohongshu\"\n * (小红书 / RED) — the Chinese lifestyle UGC discovery platform.\n *\n * The visual baseline is *daily-ness*: a near-white masonry canvas that\n * functions as a transparent picture frame for user-uploaded breakfasts,\n * lipstick swatches, and hotel sofas. Brand red (`#FF2442`) is the\n * single saturated voice"
+  },
+  {
+    "name": "zapier",
+    "category": "general",
+    "description": "",
+    "has_tokens": true,
+    "has_html": false,
+    "tokens_preview": "/* design-systems/zapier/tokens.css\n *\n * Structured token bindings for Zapier.\n * warm automation workspace with off-white canvas, orange connectors, and approachable cards.\n */\n\n:root {\n  --bg: #fff7ed;\n  --surface: #ffffff;\n  --surface-warm: #ffedd5;\n  --fg: #2d2a26;\n  --fg-2: #574f45;\n  --muted: #7c6f64;\n  --meta: #ff4f00;\n  --border: #eadfd3;\n  --border-soft: #f4eadf;\n  --accent: #ff4f00;\n  --accent-on: #ffffff;\n  --accent-hover: color-mix(in oklab, var(--accent), black 8%);\n  --accent-acti"
+  }
+]

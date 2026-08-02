@@ -1,0 +1,19 @@
+id: crm
+name: CRM
+version: 1.0.0
+status: active
+domain: sales
+description: "Gestión de leads, clientes y pipeline de ventas con scoring"
+entry:
+  agent: sales-agent
+  trigger: crm.action.requested
+policies:
+  max_cost: 0.02
+  timeout_seconds: 10
+events:
+  emits:
+    - crm.lead.created
+    - crm.lead.qualified
+    - crm.client.converted
+  consumes:
+    - crm.action.requested

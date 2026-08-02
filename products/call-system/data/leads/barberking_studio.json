@@ -1,0 +1,9 @@
+{
+  "name": "BarberKing Studio",
+  "address": "Blvd. Kino, Hermosillo",
+  "source": "mock_barberias",
+  "niche": "barberias",
+  "phone": "",
+  "company": "BarberKing Studio",
+  "status": "pending"
+}

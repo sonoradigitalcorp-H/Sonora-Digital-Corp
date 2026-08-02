@@ -1,0 +1,13 @@
+{
+  "name": "aztrotech-agentes",
+  "description": "Información sobre los tipos de agentes IA que ofrece AztroTech",
+  "version": "1.0.0",
+  "priority": 90,
+  "triggers": ["agentes", "agente", "servicios", "qué hacen", "que hacen", "soporte pro", "content engine", "sales hunter", "superación personal", "superacion personal", "tipos de agente", "cómo funciona", "como funciona", "qué ofrece", "que ofrece"],
+  "method": "STATIC",
+  "response_text": "🤖 *Agentes IA de AztroTech*\n\nDiseñamos 4 tipos de agentes inteligentes para tu negocio:\n\n🎧 *1. Soporte Pro*\n• Atiende llamadas 24/7 con voz natural (Kokoro TTS)\n• Resuelve dudas, agenda citas, califica leads\n• Memoria persistente por cliente\n• Escala a humano si no puede resolver\n\n📢 *2. Content Engine*\n• Genera contenido para redes (Instagram, LinkedIn, TikTok)\n• Crea imágenes con IA\n• Programa publicaciones automáticamente\n• Mantiene tono y branding de tu marca\n\n💰 *3. Sales Hunter*\n• Prospecta leads de múltiples fuentes\n• Califica por scoring automático\n• Envía propuestas personalizadas\n• Da seguimiento hasta el cierre\n\n🧘 *4. Superación Personal*\n• Coaching diario personalizado\n• Seguimiento de hábitos y metas\n• Meditaciones guiadas con voz\n• Bitácora personal con memoria a largo plazo\n\n👉 Escribe */menu* para ver más opciones o dime cuál te interesa.",
+  "actions": [
+    { "text": "📊 Planes y precios", "action": "aztro_planes" },
+    { "text": "🎯 Solicitar demo", "action": "aztro_demo" }
+  ]
+}

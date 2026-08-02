@@ -26,7 +26,7 @@ Selection precedence for the active family:
     4. ``video_gen.model`` in ``config.yaml`` (when it's one of our family IDs)
     5. ``DEFAULT_MODEL``
 
-Authentication via ``FAL_KEY`` or the managed Nous gateway. Output is an
+Authentication via ``FAL_API_KEY`` or the managed Nous gateway. Output is an
 HTTPS URL from FAL's CDN; the gateway downloads and delivers it.
 """
 
@@ -385,7 +385,7 @@ def _submit_fal_video_request(endpoint: str, arguments: Dict[str, Any]):
                 f"Nous Subscription gateway rejected endpoint '{endpoint}' "
                 f"(HTTP {status}). This model may not yet be enabled on "
                 f"the Nous Portal's FAL proxy. Either:\n"
-                f"  • Set FAL_KEY in your environment to use FAL.ai directly, or\n"
+                f"  • Set FAL_API_KEY in your environment to use FAL.ai directly, or\n"
                 f"  • Pick a different model via `hermes tools` → Video Generation."
             ) from exc
         raise
@@ -455,7 +455,7 @@ class FALVideoGenProvider(VideoGenProvider):
             "tag": "LTX, Pixverse, Veo 3.1, Seedance 2.0, Kling 4K, Happy Horse — text-to-video & image-to-video",
             "env_vars": [
                 {
-                    "key": "FAL_KEY",
+                    "key": "FAL_API_KEY",
                     "prompt": "FAL.ai API key",
                     "url": "https://fal.ai/dashboard/keys",
                 },
@@ -492,7 +492,7 @@ class FALVideoGenProvider(VideoGenProvider):
         if not _check_fal_video_available():
             return error_response(
                 error=(
-                    "No FAL backend available. Either set FAL_KEY "
+                    "No FAL backend available. Either set FAL_API_KEY "
                     "(run `hermes tools` → Video Generation → FAL to configure) "
                     "or sign in to Nous (`hermes setup`) for managed gateway access."
                 ),

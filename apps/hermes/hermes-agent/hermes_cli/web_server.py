@@ -3327,7 +3327,7 @@ def _apply_model_assignment_sync(
         # auto-route any *unconfigured* tools through the Nous Tool Gateway.
         # This is purely additive — apply_nous_managed_defaults skips every
         # tool where the user already has a direct key (FIRECRAWL_API_KEY,
-        # FAL_KEY, etc.) or an explicit backend/provider in config, so it
+        # FAL_API_KEY, etc.) or an explicit backend/provider in config, so it
         # never overwrites a user's own setup. GUI users thus land on the
         # gateway the same way CLI users do, without a separate prompt.
         gateway_tools: list[str] = []

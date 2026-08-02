@@ -86,10 +86,17 @@ def log(msg):
 
 
 def save_lead(platform, username, message, source):
-    """Save lead and trigger freemium gate."""
+    """Save lead and trigger freemium gate. Deduplicates by platform+username."""
     leads = []
     if LEADS_FILE.exists():
         leads = json.loads(LEADS_FILE.read_text())
+
+    # Dedup: check if lead already exists for this platform+username
+    for existing in leads:
+        if existing.get("platform") == platform and existing.get("username") == username:
+            log(f"   ℹ️ Lead already exists: {username} via {platform}")
+            return existing
+
     lead = {
         "id": f"lead-{datetime.now().strftime('%Y%m%d%H%M%S')}",
         "platform": platform,
@@ -117,7 +124,7 @@ def detect_intent(message: str) -> dict:
     if any(w in msg for w in ["cyber", "seguridad", "hack", "virus", "ssl", "dmarc"]):
         intent = "cyber"
         topics.append("security")
-    if any(w in msg for w in ["ia", "inteligencia", "agente", "automat", "bot"]):
+    if any(w in msg for w in ["ia", "inteligencia artificial", "agente", "automat", "bot"]):
         topics.append("ai")
         if intent == "general":
             intent = "ia"
@@ -144,6 +151,15 @@ def generate_response(intent: str, platform: str, username: str = "") -> str:
 
     responses = GENERIC_RESPONSES.get(intent, GENERIC_RESPONSES["cyber"])
     body = random.choice(responses)
+
+    # Apply platform style
+    style = ctx.get("style", "")
+    hashtags = ctx.get("hashtags", "")
+    if style:
+        body = f"{body}\n\n{style}"
+    if hashtags:
+        body = f"{body}\n{hashtags}"
+
     return f"{greeting}{body}"
 
 
@@ -196,7 +212,7 @@ async def check_instagram_dms(page):
 
 
 async def check_facebook_comments(page):
-    """Check Facebook notifications and comments."""
+    """Check Facebook notifications and respond."""
     log("📘 Checking Facebook...")
     try:
         await page.goto("https://www.facebook.com/notifications", timeout=30000)
@@ -213,6 +229,10 @@ async def check_facebook_comments(page):
                 intent = detect_intent(text)
                 if intent["has_sonora"]:
                     log(f"   💬 Sonora mention detected")
+                    response = generate_response("sonora_trigger", "facebook", "usuario")
+                    # Note: Facebook comment response requires different DOM selectors
+                    # For now, log the response that would be sent
+                    log(f"   📝 Response ready: {response[:80]}...")
                     save_lead("facebook", "unknown", text[:200], "comment_sonora")
             except Exception as e:
                 log(f"   ⚠️ Error: {e}")

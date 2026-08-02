@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mystica AI — Tu agente inteligente</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--c1:#AC6D3E;--c2:#CD8D5D;--cg:rgba(172,109,62,0.3);--bg:#06080f;--card:rgba(10,14,23,0.92);--b1:rgba(172,109,62,0.12);--tx:#e8edf5;--tm:rgba(232,237,245,0.35);--font:'Inter',sans-serif}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--tx);overflow-x:hidden}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:10px 24px;background:linear-gradient(180deg,rgba(6,8,15,0.98),transparent)}
+.nav-l{display:flex;align-items:center;gap:8px}
+.nav-l .lg{width:28px;height:28px;border-radius:7px;background:linear-gradient(135deg,var(--c1),var(--c2));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#000}
+.nav-l span{font-size:13px;font-weight:600}
+.nav-l small{font-weight:300;color:var(--c2)}
+.nav-r{display:flex;gap:16px;align-items:center}
+.nav-r a{color:var(--tm);text-decoration:none;font-size:11px;transition:.2s}
+.nav-r a:hover{color:var(--c2)}
+.nav-r .btn-cta{padding:6px 16px;border-radius:99px;background:var(--c1);color:#000;font-weight:600;font-size:11px;border:none;cursor:pointer;transition:.2s}
+.nav-r .btn-cta:hover{background:var(--c2);transform:scale(1.05)}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:80px 20px 40px;position:relative}
+#avatarCanvas{position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.hero-content{position:relative;z-index:1}
+.hero .sigilo{font-size:48px;opacity:.15;margin-bottom:12px}
+.hero h1{font-size:clamp(2rem,4.5vw,4rem);font-weight:200;letter-spacing:-.03em;max-width:800px;line-height:1.15}
+.hero h1 span{color:var(--c2);font-weight:400}
+.hero p{color:var(--tm);font-size:clamp(.9rem,1.3vw,1.1rem);margin-top:16px;max-width:520px;line-height:1.6}
+.hero-btns{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap;justify-content:center}
+.btn{padding:12px 28px;border-radius:99px;font-size:13px;font-weight:600;cursor:pointer;transition:.3s;text-decoration:none;display:inline-block}
+.btn-primary{background:var(--c1);color:#000;border:none}
+.btn-primary:hover{background:var(--c2);transform:scale(1.05);box-shadow:0 8px 40px var(--cg)}
+.btn-outline{border:1px solid var(--b1);color:var(--tx);background:transparent}
+.btn-outline:hover{border-color:var(--c1);color:var(--c2)}
+
+/* QUIZ */
+.quiz-section{padding:60px 20px;max-width:700px;margin:0 auto}
+.quiz-section h2{font-size:clamp(1.5rem,2.5vw,2rem);font-weight:200;text-align:center;margin-bottom:8px}
+.quiz-section h2 span{color:var(--c2)}
+.quiz-section .sub{text-align:center;color:var(--tm);font-size:13px;margin-bottom:32px}
+.quiz-card{padding:24px;border-radius:12px;border:1px solid var(--b1);background:var(--card);margin-bottom:16px}
+.quiz-card label{display:block;font-size:14px;font-weight:500;margin-bottom:8px}
+.quiz-card small{color:var(--tm);font-size:11px;display:block;margin-bottom:12px}
+.quiz-card input,.quiz-card select{width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--b1);background:rgba(255,255,255,0.03);color:var(--tx);font-size:13px;outline:none;transition:.2s;font-family:var(--font)}
+.quiz-card input:focus,.quiz-card select:focus{border-color:var(--c1)}
+.quiz-card input::placeholder{color:var(--tm)}
+.options{display:flex;flex-wrap:wrap;gap:8px}
+.option-btn{padding:8px 16px;border-radius:8px;border:1px solid var(--b1);background:transparent;color:var(--tx);font-size:12px;cursor:pointer;transition:.2s;font-family:var(--font)}
+.option-btn:hover,.option-btn.active{border-color:var(--c1);background:rgba(172,109,62,0.1);color:var(--c2)}
+.file-upload{position:relative;border:2px dashed var(--b1);border-radius:8px;padding:24px;text-align:center;cursor:pointer;transition:.2s}
+.file-upload:hover{border-color:var(--c1);background:rgba(172,109,62,0.05)}
+.file-upload input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.file-upload span{color:var(--tm);font-size:12px}
+
+/* PRICING */
+.pricing{padding:60px 20px;max-width:1200px;margin:0 auto}
+.pricing h2{font-size:clamp(1.5rem,2.5vw,2rem);font-weight:200;text-align:center;margin-bottom:8px}
+.pricing h2 span{color:var(--c2)}
+.pricing .sub{text-align:center;color:var(--tm);font-size:13px;margin-bottom:32px;max-width:600px;margin-left:auto;margin-right:auto}
+.plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px}
+.plan{padding:24px;border-radius:12px;border:1px solid var(--b1);background:var(--card);position:relative;transition:.3s;display:flex;flex-direction:column}
+.plan:hover{border-color:var(--c1);transform:translateY(-4px);box-shadow:0 8px 40px rgba(0,0,0,0.3)}
+.plan.featured{border-color:var(--c1);box-shadow:0 0 40px var(--cg)}
+.plan.featured::before{content:'★ MÁS ELEGIDO';position:absolute;top:-8px;left:50%;transform:translateX(-50%);background:var(--c1);color:#000;font-size:9px;font-weight:700;padding:2px 12px;border-radius:99px}
+.plan .name{font-size:16px;font-weight:600;margin-bottom:2px}
+.plan .subname{font-size:11px;color:var(--tm);margin-bottom:12px}
+.plan .price{font-size:32px;font-weight:200}
+.plan .price small{font-size:12px;color:var(--tm);font-weight:400}
+.plan .period{font-size:11px;color:var(--tm);margin-bottom:16px}
+.plan .benefits{list-style:none;margin-bottom:16px;flex:1}
+.plan .benefits li{padding:4px 0;font-size:12px;color:var(--tx);display:flex;gap:6px}
+.plan .benefits li::before{content:'✦';color:var(--c2)}
+.plan .btn{width:100%;text-align:center;margin-top:auto}
+.partner-badge{background:linear-gradient(135deg,#a855f7,#7c3aed);color:#fff;font-size:8px;padding:1px 6px;border-radius:3px;margin-left:6px}
+.rate-limit{font-size:10px;color:var(--tm);margin-bottom:12px;padding:6px;border-radius:6px;background:rgba(255,255,255,0.02)}
+
+/* PLAY-WORK-LEARN */
+.pwl-section{padding:60px 20px;max-width:1000px;margin:0 auto;text-align:center}
+.pwl-section h2{font-size:clamp(1.5rem,2.5vw,2rem);font-weight:200;margin-bottom:8px}
+.pwl-section h2 span{color:var(--c2)}
+.pwl-section .sub{color:var(--tm);font-size:13px;margin-bottom:32px}
+.pwl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.pwl-card{padding:24px;border-radius:12px;border:1px solid var(--b1);background:var(--card)}
+.pwl-card .icon{font-size:36px;margin-bottom:12px}
+.pwl-card h3{font-size:16px;font-weight:600;margin-bottom:6px}
+.pwl-card p{font-size:12px;color:var(--tm);line-height:1.5}
+.pwl-earn{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:24px}
+.earn-item{padding:16px;border-radius:8px;border:1px solid var(--b1);background:rgba(255,255,255,0.02)}
+.earn-item .num{font-size:24px;font-weight:200;color:var(--c2)}
+.earn-item .label{font-size:11px;color:var(--tm)}
+
+/* FREEDOM */
+.freedom{padding:60px 20px;max-width:800px;margin:0 auto;text-align:center}
+.freedom h2{font-size:clamp(1.5rem,2.5vw,2rem);font-weight:200;margin-bottom:8px}
+.freedom h2 span{color:var(--c2)}
+.freedom p{color:var(--tm);font-size:14px;line-height:1.8;max-width:600px;margin:0 auto}
+.freedom .quote{margin-top:24px;padding:24px;border-radius:12px;border-left:3px solid var(--c1);background:var(--card);text-align:left;font-size:13px;font-style:italic;line-height:1.6}
+.freedom .quote cite{display:block;margin-top:8px;font-size:11px;color:var(--c2);font-style:normal}
+
+/* FOOTER */
+footer{border-top:1px solid var(--b1);padding:24px 20px;text-align:center}
+footer .links{display:flex;justify-content:center;gap:16px;margin-bottom:8px;flex-wrap:wrap}
+footer a{color:var(--tm);text-decoration:none;font-size:11px;transition:.2s}
+footer a:hover{color:var(--c2)}
+footer small{color:var(--tm);font-size:10px;opacity:.5}
+
+/* PARTICLES BG */
+#bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none}
+
+/* Section spacing */
+section{padding:60px 20px;max-width:1200px;margin:0 auto}
+section h2{font-size:clamp(1.5rem,2.5vw,2rem);font-weight:200;text-align:center;margin-bottom:8px}
+section h2 span{color:var(--c2)}
+section .sub{text-align:center;color:var(--tm);font-size:13px;margin-bottom:32px;max-width:600px;margin-left:auto;margin-right:auto}
+
+@media(max-width:768px){
+  .pwl-grid{grid-template-columns:1fr}
+  .nav-r a:not(.btn-cta){display:none}
+  .hero h1{font-size:1.8rem}
+}
+</style>
+</head>
+<body>
+<canvas id="bgCanvas"></canvas>
+
+<nav>
+  <div class="nav-l"><div class="lg">✦</div><span>Mystica <small>AI</small></span></div>
+  <div class="nav-r">
+    <a href="#como-funciona">Cómo funciona</a>
+    <a href="#paquetes">Paquetes</a>
+    <a href="#quiz">Comenzar</a>
+    <button class="btn-cta" onclick="document.getElementById('quiz').scrollIntoView({behavior:'smooth'})">Crear mi agente</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <canvas id="avatarCanvas"></canvas>
+  <div class="hero-content">
+    <div class="sigilo">𓂀</div>
+    <h1>Crea tu <span>agente AI</span> que<br>atiende, vende y<br>fideliza por ti</h1>
+    <p>Mystica escucha, entiende y responde como un humano. Sin apps. Sin esperas. Solo habla y ella hace el resto.</p>
+    <div class="hero-btns">
+      <a href="#quiz" class="btn btn-primary">✦ Crear mi agente gratis</a>
+      <a href="#paquetes" class="btn btn-outline">Ver paquetes</a>
+    </div>
+  </div>
+</section>
+
+<!-- CÓMO FUNCIONA -->
+<section id="como-funciona">
+  <h2>Así de <span>simple</span></h2>
+  <p class="sub">Tres pasos y tienes un agente AI atendiendo a tus clientes 24/7</p>
+  <div class="pwl-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="pwl-card"><div class="icon">🎙️</div><h3>1. Configura</h3><p>Elige el tipo de agente, sube tu voz o elige una natural, danos tus datos.</p></div>
+    <div class="pwl-card"><div class="icon">🤖</div><h3>2. Activa</h3><p>Mystica atiende llamadas y mensajes. Entiende, responde, agenda y vende.</p></div>
+    <div class="pwl-card"><div class="icon">📈</div><h3>3. Crece</h3><p>Recibe reportes, leads calificados y el sistema mejora solo con cada interacción.</p></div>
+  </div>
+</section>
+
+<!-- QUIZ INTERACTIVO -->
+<section id="quiz" class="quiz-section">
+  <h2>¿Cómo quieres que sea <span>tu agente</span>?</h2>
+  <p class="sub">Cuéntanos — Mystica se adapta a tu negocio</p>
+
+  <div class="quiz-card">
+    <label>🎯 ¿Para qué lo quieres?</label>
+    <small>Elige una o varias opciones</small>
+    <div class="options" id="quizPurpose">
+      <button class="option-btn" data-v="ventas">💰 Ventas</button>
+      <button class="option-btn" data-v="soporte">🛠️ Soporte</button>
+      <button class="option-btn" data-v="reservas">📅 Reservas</button>
+      <button class="option-btn" data-v="atencion">💬 Atención al cliente</button>
+      <button class="option-btn" data-v="cobranza">📋 Cobranza</button>
+    </div>
+  </div>
+
+  <div class="quiz-card">
+    <label>🗣️ Voz del agente</label>
+    <div class="options" id="quizVoice">
+      <button class="option-btn active" data-v="natural">🎤 Voz natural (Dalia)</button>
+      <button class="option-btn" data-v="clon">🧬 Clonar mi voz (Premium)</button>
+      <button class="option-btn" data-v="partner">✨ Voz white label (Partner)</button>
+    </div>
+  </div>
+
+  <div class="quiz-card">
+    <label>📸 Sube fotos de tu empresa o tuyas</label>
+    <small>Para que Mystica te conozca (opcional)</small>
+    <div class="file-upload">
+      <input type="file" multiple accept="image/*" id="photoUpload">
+      <span>📁 Arrastra fotos o haz clic para subir (2 máximo)</span>
+    </div>
+    <div id="photoPreview" style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap"></div>
+  </div>
+
+  <div class="quiz-card">
+    <label>📞 Tu número</label>
+    <input type="tel" id="quizPhone" placeholder="+52 662 123 4567">
+  </div>
+
+  <div class="quiz-card">
+    <label>✉️ Tu correo</label>
+    <input type="email" id="quizEmail" placeholder="tucorreo@ejemplo.com">
+  </div>
+
+  <div class="quiz-card">
+    <label>🏢 Nombre de tu empresa</label>
+    <input type="text" id="quizCompany" placeholder="Barbería El Rey">
+  </div>
+
+  <button class="btn btn-primary" style="width:100%" onclick="submitQuiz()">✦ Crear mi agente — es gratis</button>
+  <p style="text-align:center;color:var(--tm);font-size:11px;margin-top:8px">Sin tarjeta. Sin compromiso. Actívalo en 2 minutos.</p>
+</section>
+
+<!-- PAQUETES -->
+<section id="paquetes" class="pricing">
+  <h2>Elige tu <span>poder</span></h2>
+  <p class="sub">No vendemos software. Vendemos horas de vida que recuperas, clientes que no pierdes y libertad para enfocarte en lo que importa.</p>
+  <div class="plans">
+    <div class="plan">
+      <div class="name">✦ Freemium</div>
+      <div class="subname">Para probar</div>
+      <div class="price">$0 <small>/mes</small></div>
+      <div class="period">Siempre gratis</div>
+      <div class="rate-limit">⏱ 10 interacciones/día · 1 agente</div>
+      <ul class="benefits">
+        <li>Agente AI básico</li>
+        <li>Chat en web</li>
+        <li>Voz natural (Dalia)</li>
+        <li>1 número de prueba</li>
+        <li>Dashboard básico</li>
+        <li>Comunidad Telegram</li>
+        <li>Actualizaciones semanales</li>
+        <li>50 créditos/mes</li>
+        <li>Respuestas por texto</li>
+        <li>Soporte en comunidad</li>
+      </ul>
+      <button class="btn btn-outline" onclick="document.getElementById('quiz').scrollIntoView({behavior:'smooth'})">Comenzar gratis</button>
+    </div>
+
+    <div class="plan featured">
+      <div class="name">✦ Standard</div>
+      <div class="subname">Para crecer</div>
+      <div class="price">$29 <small>/mes</small></div>
+      <div class="period">$499/año (ahorra 30%)</div>
+      <div class="rate-limit">⏱ 500 interacciones/día · 3 agentes</div>
+      <ul class="benefits">
+        <li>Todo Freemium +</li>
+        <li>WhatsApp + Telegram integrados</li>
+        <li>Llamadas por voz WebRTC</li>
+        <li>Booking con Google Calendar</li>
+        <li>Detección de intenciones</li>
+        <li>Manejo de objeciones</li>
+        <li>Analytics + reportes semanales</li>
+        <li>CRM básico</li>
+        <li>Soporte prioritario 12/7</li>
+        <li>1 hora de consultoría/mes</li>
+      </ul>
+      <button class="btn btn-primary" onclick="document.getElementById('quiz').scrollIntoView({behavior:'smooth'})">Elegir Standard</button>
+    </div>
+
+    <div class="plan">
+      <div class="name">✦ Premium</div>
+      <div class="subname">Para empresas</div>
+      <div class="price">$99 <small>/mes</small></div>
+      <div class="period">$999/año (ahorra 16%)</div>
+      <div class="rate-limit">⏱ Ilimitado · 10 agentes</div>
+      <ul class="benefits">
+        <li>Todo Standard +</li>
+        <li>Clonación de voz (tu voz)</li>
+        <li>Widget web embedible</li>
+        <li>Campañas outbound automáticas</li>
+        <li>A/B testing + evolution engine</li>
+        <li>Multi-tenant (varias empresas)</li>
+        <li>API pública</li>
+        <li>Reportes ejecutivos diarios</li>
+        <li>Soporte 24/7 dedicado</li>
+        <li>5 horas de consultoría/mes</li>
+      </ul>
+      <button class="btn btn-outline" onclick="document.getElementById('quiz').scrollIntoView({behavior:'smooth'})">Elegir Premium</button>
+    </div>
+
+    <div class="plan featured">
+      <div class="name">✦ Partner <span class="partner-badge">WHITE LABEL</span></div>
+      <div class="subname">Para agencias y revendedores</div>
+      <div class="price">$299 <small>/mes</small></div>
+      <div class="period">Marca propia · Sin límites</div>
+      <div class="rate-limit">⏱ Ilimitado · Agentes infinitos</div>
+      <ul class="benefits">
+        <li>Todo Premium +</li>
+        <li>White label (tu marca, tu dominio)</li>
+        <li>Widget personalizado con tus colores</li>
+        <li>Voz clonada + voces personalizadas</li>
+        <li>API completa + SDK</li>
+        <li>Infraestructura dedicada</li>
+        <li>Play-Work-Learn to Earn para tus clientes</li>
+        <li>Revenue share (80/20 a tu favor)</li>
+        <li>Onboarding de hasta 50 clientes/mes</li>
+        <li>Soporte 24/7 VIP + canal directo con fundador</li>
+      </ul>
+      <button class="btn btn-primary" onclick="document.getElementById('quiz').scrollIntoView({behavior:'smooth'})">Ser Partner</button>
+    </div>
+  </div>
+</section>
+
+<!-- PLAY-WORK-LEARN -->
+<section class="pwl-section">
+  <h2>Juega · Trabaja · Aprende · <span>Gana</span></h2>
+  <p class="sub">Con Mystica, cada interacción es un paso hacia más beneficios. No solo ahorras tiempo — generas valor que se multiplica.</p>
+  <div class="pwl-grid">
+    <div class="pwl-card"><div class="icon">🎮</div><h3>Juega</h3><p>Cada lead calificado, cada cita agendada, cada objeción superada te da puntos. Compite con otros negocios en tu industria.</p></div>
+    <div class="pwl-card"><div class="icon">⚡</div><h3>Trabaja</h3><p>Mientras Mystica trabaja 24/7, tú te enfocas en lo que realmente importa: crecer, crear y disfrutar.</p></div>
+    <div class="pwl-card"><div class="icon">📚</div><h3>Aprende</h3><p>El sistema mejora con cada llamada. Detecta patrones, optimiza prompts y evoluciona sin que hagas nada.</p></div>
+  </div>
+  <div class="pwl-earn">
+    <div class="earn-item"><div class="num">10</div><div class="label">Puntos por lead calificado</div></div>
+    <div class="earn-item"><div class="num">25</div><div class="label">Puntos por cita agendada</div></div>
+    <div class="earn-item"><div class="num">50</div><div class="label">Puntos por venta cerrada</div></div>
+    <div class="earn-item"><div class="num">100</div><div class="label">Puntos por cliente referido</div></div>
+  </div>
+  <p class="sub" style="margin-top:20px;font-size:12px">Los puntos se canjean por créditos, consultoría, meses gratis y más.</p>
+</section>
+
+<!-- VENDER DESDE LIBERTAD -->
+<section class="freedom">
+  <h2>No vendemos <span>software</span></h2>
+  <p>Vendemos <strong>horas de tu vida</strong> que recuperas. Vendemos <strong>clientes que no pierdes</strong> porque alguien contestó a las 3am. Vendemos <strong>la libertad</strong> de tomar vacaciones sin que tu negocio se detenga. Vendemos <strong>resultados</strong>, no suscripciones.</p>
+  <div class="quote">
+    "No necesitas más horas en el día. Necesitas un agente que trabaje mientras tú vives. Mystica no es una herramienta — es tu socio silencioso que nunca duerme, nunca se cansa y nunca deja de aprender."
+    <cite>— Luis Daniel · Fundador, Sonora Digital Corp</cite>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section style="text-align:center;padding:60px 20px">
+  <h2 style="font-size:2rem;font-weight:200;margin-bottom:12px">¿Listo para <span style="color:var(--c2)">liberarte</span>?</h2>
+  <p style="color:var(--tm);margin-bottom:24px">Crear tu agente toma 2 minutos. No necesitas tarjeta.</p>
+  <button class="btn btn-primary" style="font-size:16px;padding:16px 40px" onclick="document.getElementById('quiz').scrollIntoView({behavior:'smooth'})">✦ Crear mi agente gratis</button>
+</section>
+
+<footer>
+  <div class="links">
+    <a href="https://sonoradigitalcorp.com">✦ Sonora Digital Corp</a>
+    <a href="https://wa.me/5216623538272">WhatsApp</a>
+    <a href="https://t.me/sonorabot">Telegram</a>
+    <a href="mailto:sonoradigitalcorp@gmail.com">Email</a>
+  </div>
+  <small>© 2026 Sonora Digital Corp — Todos los derechos reservados</small>
+</footer>
+
+<script>
+// ===== THREE.JS BACKGROUND =====
+const bgCanvas = document.getElementById('bgCanvas');
+const bgScene = new THREE.Scene();
+const bgCamera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 1000);
+const bgRenderer = new THREE.WebGLRenderer({ canvas: bgCanvas, alpha: true, antialias: true });
+bgRenderer.setSize(window.innerWidth, window.innerHeight);
+bgRenderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const bgGeo = new THREE.BufferGeometry();
+const bgPos = new Float32Array(1500 * 3);
+for (let i = 0; i < 1500; i++) { bgPos[i*3] = (Math.random() - .5) * 60; bgPos[i*3+1] = (Math.random() - .5) * 40; bgPos[i*3+2] = (Math.random() - .5) * 40 }
+bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
+const bgMat = new THREE.PointsMaterial({ size: .03, color: 0xAC6D3E, transparent: true, opacity: .2, sizeAttenuation: true });
+const bgPts = new THREE.Points(bgGeo, bgMat); bgScene.add(bgPts); bgCamera.position.z = 25;
+function bgAnimate() { requestAnimationFrame(bgAnimate); bgPts.rotation.y += .0002; bgRenderer.render(bgScene, bgCamera) }
+bgAnimate();
+window.addEventListener('resize', () => { bgCamera.aspect = window.innerWidth / window.innerHeight; bgCamera.updateProjectionMatrix(); bgRenderer.setSize(window.innerWidth, window.innerHeight) });
+
+// ===== AVATAR 3D =====
+const avatarCanvas = document.getElementById('avatarCanvas');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(45, window.innerWidth/window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ canvas: avatarCanvas, alpha: true, antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+// Orbe principal con animate
+const sphereGeo = new THREE.SphereGeometry(1.6, 64, 64);
+const sphereMat = new THREE.MeshPhongMaterial({
+  color: 0xAC6D3E, emissive: 0xCD8D5D, emissiveIntensity: 0.1,
+  wireframe: false, transparent: true, opacity: 0.85,
+});
+const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+scene.add(sphere);
+
+// Wireframe exterior
+const wireGeo = new THREE.SphereGeometry(1.8, 24, 24);
+const wireMat = new THREE.MeshBasicMaterial({ color: 0xCD8D5D, wireframe: true, transparent: true, opacity: 0.15 });
+const wireframe = new THREE.Mesh(wireGeo, wireMat);
+scene.add(wireframe);
+
+// Partículas orbitantes
+const orbCount = 300;
+const orbGeo = new THREE.BufferGeometry();
+const orbPos = new Float32Array(orbCount * 3);
+for (let i = 0; i < orbCount; i++) {
+  const theta = Math.random() * Math.PI * 2;
+  const phi = Math.acos(2 * Math.random() - 1);
+  const r = 2.2 + Math.random() * 0.8;
+  orbPos[i*3] = r * Math.sin(phi) * Math.cos(theta);
+  orbPos[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+  orbPos[i*3+2] = r * Math.cos(phi);
+}
+orbGeo.setAttribute('position', new THREE.BufferAttribute(orbPos, 3));
+const orbMat = new THREE.PointsMaterial({ size: 0.03, color: 0xCD8D5D, transparent: true, opacity: 0.3 });
+const orbPts = new THREE.Points(orbGeo, orbMat);
+scene.add(orbPts);
+
+// Sigilo flotante delante
+const sigiloGroup = new THREE.Group();
+const sigGeos = [];
+for (let i = 0; i < 8; i++) {
+  const sg = new THREE.TorusKnotGeometry(0.08, 0.03, 16, 8);
+  const sm = new THREE.MeshBasicMaterial({ color: 0xCD8D5D, transparent: true, opacity: 0.2 });
+  const mesh = new THREE.Mesh(sg, sm);
+  const angle = (i / 8) * Math.PI * 2;
+  mesh.position.set(Math.cos(angle) * 2.4, Math.sin(angle) * 2.4, 0.5);
+  mesh.scale.set(2, 2, 2);
+  sigiloGroup.add(mesh);
+  sigGeos.push(mesh);
+}
+scene.add(sigiloGroup);
+
+// Iluminación
+const light = new THREE.DirectionalLight(0xCD8D5D, 1);
+light.position.set(5, 5, 5);
+scene.add(light);
+const ambient = new THREE.AmbientLight(0xAC6D3E, 0.3);
+scene.add(ambient);
+const backlight = new THREE.DirectionalLight(0xAC6D3E, 0.5);
+backlight.position.set(-3, -2, -5);
+scene.add(backlight);
+
+camera.position.z = 4.5;
+
+// Audio context para lip-sync
+let audioCtx = null;
+let analyser = null;
+let audioData = null;
+
+function initAudio() {
+  if (audioCtx) return;
+  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  analyser = audioCtx.createAnalyser();
+  analyser.fftSize = 64;
+  audioData = new Uint8Array(analyser.frequencyBinCount);
+  // Crear un oscilador suave para simular latido
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  gain.gain.value = 0.003;
+  osc.connect(gain);
+  gain.connect(analyser);
+  gain.connect(audioCtx.destination);
+  osc.start();
+}
+
+let lipSyncTime = 0;
+
+function animate() {
+  requestAnimationFrame(animate);
+
+  const t = Date.now() * 0.001;
+  sphere.rotation.x += 0.003;
+  sphere.rotation.y += 0.005;
+  wireframe.rotation.x = sphere.rotation.x;
+  wireframe.rotation.y = sphere.rotation.y;
+  orbPts.rotation.x += 0.001;
+  orbPts.rotation.y += 0.002;
+  sigiloGroup.rotation.z += 0.003;
+
+  // Lip-sync: pulsación del orbe
+  let pulse = 1;
+  if (analyser && audioData) {
+    analyser.getByteFrequencyData(audioData);
+    const avg = audioData.reduce((a, b) => a + b, 0) / audioData.length;
+    pulse = 1 + (avg / 256) * 0.06;
+  } else {
+    // Pulso suave natural
+    pulse = 1 + Math.sin(t * 2) * 0.015;
+  }
+  sphere.scale.set(pulse, pulse, pulse);
+
+  // El wireframe pulsa inverso
+  wireframe.scale.set(1 + (1 - pulse) * 0.5, 1 + (1 - pulse) * 0.5, 1 + (1 - pulse) * 0.5);
+
+  // Partículas orbitantes se mueven
+  const pos = orbPts.geometry.attributes.position.array;
+  for (let i = 0; i < orbCount; i++) {
+    const theta = Math.atan2(pos[i*3+1], pos[i*3]) + 0.002;
+    const phi = Math.acos(pos[i*3+2] / Math.sqrt(pos[i*3]**2 + pos[i*3+1]**2 + pos[i*3+2]**2)) + 0.001;
+    const r = 2.2 + Math.sin(t + i) * 0.2;
+    pos[i*3] = r * Math.sin(phi) * Math.cos(theta);
+    pos[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+    pos[i*3+2] = r * Math.cos(phi);
+  }
+  orbPts.geometry.attributes.position.needsUpdate = true;
+
+  renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// Iniciar audio al primer click
+document.addEventListener('click', initAudio, { once: true });
+
+// ===== QUIZ =====
+document.querySelectorAll('.options').forEach(group => {
+  group.querySelectorAll('.option-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      group.querySelectorAll('.option-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+});
+
+// Photo upload preview
+document.getElementById('photoUpload').addEventListener('change', function(e) {
+  const preview = document.getElementById('photoPreview');
+  preview.innerHTML = '';
+  Array.from(e.target.files).slice(0, 2).forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const img = document.createElement('img');
+      img.src = ev.target.result;
+      img.style.cssText = 'width:80px;height:80px;border-radius:8px;object-fit:cover;border:1px solid var(--b1)';
+      preview.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+});
+
+function submitQuiz() {
+  const purpose = [...document.querySelectorAll('#quizPurpose .active')].map(b => b.dataset.v);
+  const voice = document.querySelector('#quizVoice .active')?.dataset.v || 'natural';
+  const phone = document.getElementById('quizPhone').value;
+  const email = document.getElementById('quizEmail').value;
+  const company = document.getElementById('quizCompany').value;
+  const photos = document.getElementById('photoUpload').files.length;
+
+  if (!phone && !email) { alert('Por favor proporciona al menos teléfono o correo'); return; }
+  if (!company) { alert('¿Cuál es el nombre de tu empresa?'); return; }
+
+  const msg = `🎉 ¡Gracias ${company}!\n\n` +
+    `Propósito: ${purpose.join(', ') || 'General'}\n` +
+    `Voz: ${voice}\n` +
+    `📸 ${photos} foto(s) subida(s)\n` +
+    `📞 ${phone || '—'}\n` +
+    `✉️ ${email || '—'}\n\n` +
+    `Te contactaremos en las próximas 2 horas para activar tu agente.`;
+
+  alert(msg);
+
+  // Redirect to WhatsApp with data
+  const text = encodeURIComponent(
+    `¡Hola! Quiero crear mi agente Mystica 🎉\n\nEmpresa: ${company}\nPropósito: ${purpose.join(', ')}\nVoz: ${voice}\nTel: ${phone}\nEmail: ${email}`
+  );
+  window.open(`https://wa.me/5216623538272?text=${text}`, '_blank');
+}
+</script>
+</body>
+</html>

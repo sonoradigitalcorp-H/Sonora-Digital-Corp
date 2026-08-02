@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Capitán Sonora — Jugar</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; touch-action: none; }
+  body { background: #0a0a1e; font-family: Arial, sans-serif; overflow: hidden; height: 100vh; display: flex; flex-direction: column; }
+
+  /* HUD */
+  #hud {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 10px 15px; background: rgba(0,0,0,0.6);
+    border-bottom: 2px solid rgba(255,215,0,0.3); flex-shrink: 0; z-index: 10;
+  }
+  .hud-block { text-align: center; }
+  .hud-label { font-size: 0.65rem; color: #888; text-transform: uppercase; letter-spacing: 1px; }
+  .hud-value { font-size: 1.3rem; font-weight: bold; color: #FFD700; }
+  #hero-face { font-size: 2rem; }
+  #lives span { font-size: 1.4rem; }
+  #level-bar-wrap { position: relative; width: 80px; background: rgba(255,255,255,0.1); border-radius: 10px; height: 8px; margin-top: 4px; }
+  #level-bar { height: 100%; background: linear-gradient(90deg, #FFD700, #ff6b00); border-radius: 10px; transition: width 0.3s; }
+  #level-name { font-size: 0.7rem; color: #FFD700; margin-top: 2px; }
+
+  /* CANVAS */
+  #game-canvas { flex: 1; display: block; width: 100%; }
+
+  /* OVERLAY */
+  .overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.85);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    z-index: 100; text-align: center; padding: 20px;
+  }
+  .overlay.hidden { display: none; }
+  .overlay h1 { font-size: clamp(1.8rem,6vw,3rem); color: #FFD700; margin-bottom: 15px; }
+  .overlay p { color: #c0d0ff; font-size: clamp(0.9rem,2.5vw,1.1rem); margin-bottom: 10px; line-height: 1.6; max-width: 400px; }
+  .overlay .hero-big { font-size: clamp(60px,15vw,100px); margin-bottom: 15px; animation: float 2s ease infinite; }
+  .btn {
+    display: inline-block; background: linear-gradient(135deg,#FFD700,#ff9500);
+    color: #1a1a2e; font-size: 1.2rem; font-weight: 900;
+    padding: 15px 45px; border-radius: 50px; border: none;
+    cursor: pointer; margin: 8px; transition: transform 0.1s;
+  }
+  .btn:active { transform: scale(0.95); }
+  .btn.secondary { background: rgba(255,255,255,0.15); color: white; }
+
+  /* FEEDBACK */
+  #feedback { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 2rem; font-weight: 900; pointer-events: none; z-index: 50; opacity: 0; transition: opacity 0.1s; }
+
+  /* NIVEL UP */
+  #levelup-msg {
+    position: fixed; top: 30%; left: 50%; transform: translateX(-50%);
+    background: linear-gradient(135deg,#FFD700,#ff9500); color: #1a1a2e;
+    padding: 12px 30px; border-radius: 50px; font-size: 1.4rem; font-weight: 900;
+    z-index: 60; opacity: 0; pointer-events: none; white-space: nowrap;
+  }
+
+  @keyframes float { 0%,100%{transform:translateY(0)}50%{transform:translateY(-15px)} }
+  @keyframes feedbackAnim { 0%{opacity:1;transform:translate(-50%,-50%) scale(0.8)} 50%{opacity:1;transform:translate(-50%,-80%) scale(1.2)} 100%{opacity:0;transform:translate(-50%,-110%) scale(1)} }
+  @keyframes levelUpAnim { 0%{opacity:0;transform:translateX(-50%) scale(0.5)} 30%{opacity:1;transform:translateX(-50%) scale(1.1)} 70%{opacity:1;transform:translateX(-50%) scale(1)} 100%{opacity:0;transform:translateX(-50%) scale(0.8)} }
+</style>
+</head>
+<body>
+
+<!-- HUD -->
+<div id="hud">
+  <div class="hud-block">
+    <div class="hud-label">Puntos</div>
+    <div class="hud-value" id="score-display">0</div>
+  </div>
+  <div class="hud-block">
+    <div id="hero-face">🦸</div>
+    <div id="level-name">Aprendiz</div>
+  </div>
+  <div class="hud-block">
+    <div class="hud-label">Nivel</div>
+    <div class="hud-value" id="level-display">1</div>
+    <div id="level-bar-wrap"><div id="level-bar" style="width:0%"></div></div>
+  </div>
+  <div class="hud-block">
+    <div class="hud-label">Vidas</div>
+    <div id="lives"><span>❤️</span><span>❤️</span><span>❤️</span></div>
+  </div>
+</div>
+
+<!-- CANVAS -->
+<canvas id="game-canvas"></canvas>
+
+<!-- FEEDBACK VISUAL -->
+<div id="feedback"></div>
+<div id="levelup-msg"></div>
+
+<!-- PANTALLA: INICIO -->
+<div class="overlay" id="screen-start">
+  <div class="hero-big">🦸</div>
+  <h1>⚡ Capitán Sonora ⚡</h1>
+  <p>¡Toca las notas cuando lleguen al círculo de abajo!<br>
+     <strong style="color:#FFD700">PERFECTO</strong> = 3pts &nbsp;|&nbsp;
+     <strong style="color:#90ff90">BIEN</strong> = 1pt &nbsp;|&nbsp;
+     <strong style="color:#ff6060">FALLASTE</strong> = -❤️</p>
+  <p style="font-size:0.85rem;color:#888;">Protege Hermosillo con tu ritmo 🌵</p>
+  <button class="btn" onclick="startGame()">🎮 ¡COMENZAR!</button>
+  <a href="index.html" style="display:block;margin-top:10px;color:#888;font-size:0.85rem;">← Volver al inicio</a>
+</div>
+
+<!-- PANTALLA: GAME OVER -->
+<div class="overlay hidden" id="screen-over">
+  <div class="hero-big" id="over-face">😵</div>
+  <h1 id="over-title">¡Fin del juego!</h1>
+  <p id="over-msg">Los Villanos del Ruido ganaron esta vez...</p>
+  <p>Puntuación final: <strong style="color:#FFD700;font-size:1.5rem;" id="over-score">0</strong></p>
+  <button class="btn" onclick="startGame()">🔄 ¡Intentar de nuevo!</button>
+  <a href="index.html"><button class="btn secondary">🏠 Inicio</button></a>
+</div>
+
+<!-- PANTALLA: VICTORIA -->
+<div class="overlay hidden" id="screen-win">
+  <div class="hero-big">🏆</div>
+  <h1>¡Leyenda Sonora!</h1>
+  <p>¡Salvaste Hermosillo! Eres el maestro del ritmo.<br>Capitán Sonora está orgulloso de ti. 🌵⚡</p>
+  <p>Puntuación: <strong style="color:#FFD700;font-size:1.5rem;" id="win-score">0</strong></p>
+  <button class="btn" onclick="startGame()">🎮 Jugar de nuevo</button>
+  <a href="index.html"><button class="btn secondary">🏠 Inicio</button></a>
+</div>
+
+<script>
+const canvas = document.getElementById('game-canvas');
+const ctx = canvas.getContext('2d');
+
+// ─── AUDIO ──────────────────────────────────────────────
+const AudioCtx = window.AudioContext || window.webkitAudioContext;
+let audioCtx;
+
+function initAudio() {
+  if (!audioCtx) audioCtx = new AudioCtx();
+}
+
+function playNote(freq, duration = 0.15, type = 'sine') {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain); gain.connect(audioCtx.destination);
+  osc.type = type;
+  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+  gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+  osc.start(); osc.stop(audioCtx.currentTime + duration);
+}
+
+function playHit(perfect) {
+  if (perfect) {
+    playNote(523, 0.1);
+    setTimeout(() => playNote(659, 0.1), 60);
+    setTimeout(() => playNote(784, 0.15), 120);
+  } else {
+    playNote(392, 0.1);
+  }
+}
+
+function playMiss() { playNote(150, 0.3, 'sawtooth'); }
+function playLevelUp() {
+  [523,659,784,1047].forEach((f,i) => setTimeout(() => playNote(f, 0.2), i*80));
+}
+
+// ─── ESTADO ─────────────────────────────────────────────
+const LEVELS = [
+  { name:'Aprendiz',    speed:2.5, spawnRate:90,  target:150, color:'#2ecc71', face:'🦸' },
+  { name:'Héroe',       speed:3.8, spawnRate:65,  target:250, color:'#3498db', face:'🦸‍♂️' },
+  { name:'Ultra Sonic', speed:5.5, spawnRate:45,  target:450, color:'#9b59b6', face:'⚡' },
+  { name:'Leyenda',     speed:7.5, spawnRate:30,  target:700, color:'#e67e22', face:'👑' },
+];
+
+const COLS = 4;
+const COL_COLORS = ['#e74c3c','#3498db','#2ecc71','#f39c12'];
+const NOTE_SYMBOLS = ['🎵','🎶','🎸','🎺'];
+const HIT_ZONE = 0.88; // 88% de la altura del canvas
+const HIT_TOLERANCE = 0.07; // tolerancia para "hit"
+
+let state = {};
+
+function initState() {
+  state = {
+    notes: [],
+    score: 0,
+    lives: 3,
+    level: 0,
+    levelProgress: 0,
+    frame: 0,
+    running: false,
+    particles: [],
+    combo: 0,
+    maxCombo: 0,
+  };
+}
+
+// ─── RESIZE ─────────────────────────────────────────────
+function resize() {
+  const hud = document.getElementById('hud');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight - hud.offsetHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// ─── COLUMNAS ───────────────────────────────────────────
+function colX(col) {
+  const w = canvas.width / COLS;
+  return w * col + w / 2;
+}
+
+function colW() { return canvas.width / COLS * 0.7; }
+function noteR() { return Math.min(colW() / 2, 30); }
+function hitY() { return canvas.height * HIT_ZONE; }
+
+// ─── SPAWN ──────────────────────────────────────────────
+function spawnNote() {
+  const col = Math.floor(Math.random() * COLS);
+  state.notes.push({ col, y: -noteR(), speed: LEVELS[state.level].speed });
+}
+
+// ─── PARTÍCULAS ─────────────────────────────────────────
+function addParticles(x, y, color) {
+  for (let i = 0; i < 10; i++) {
+    state.particles.push({
+      x, y,
+      vx: (Math.random() - 0.5) * 6,
+      vy: (Math.random() - 0.5) * 6 - 2,
+      life: 1,
+      color,
+      size: Math.random() * 8 + 4,
+    });
+  }
+}
+
+// ─── DIBUJO ─────────────────────────────────────────────
+function draw() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Fondo
+  const grad = ctx.createLinearGradient(0, 0, 0, canvas.height);
+  grad.addColorStop(0, '#05051a');
+  grad.addColorStop(1, '#0f0f30');
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Líneas de columnas
+  for (let c = 0; c < COLS; c++) {
+    const x = colX(c);
+    const w = canvas.width / COLS;
+    if (c > 0) {
+      ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(c * w, 0); ctx.lineTo(c * w, canvas.height); ctx.stroke();
+    }
+
+    // Zona de hit (círculo)
+    const r = noteR() + 8;
+    ctx.beginPath(); ctx.arc(x, hitY(), r, 0, Math.PI * 2);
+    ctx.strokeStyle = COL_COLORS[c] + '80';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.fillStyle = COL_COLORS[c] + '20';
+    ctx.fill();
+  }
+
+  // Notas
+  state.notes.forEach(note => {
+    const x = colX(note.col);
+    const r = noteR();
+    // Sombra brillante
+    ctx.shadowColor = COL_COLORS[note.col];
+    ctx.shadowBlur = 15;
+    ctx.beginPath(); ctx.arc(x, note.y, r, 0, Math.PI * 2);
+    ctx.fillStyle = COL_COLORS[note.col];
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    // Símbolo
+    ctx.font = `${r * 1.1}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(NOTE_SYMBOLS[note.col], x, note.y);
+  });
+
+  // Partículas
+  state.particles.forEach(p => {
+    ctx.globalAlpha = p.life;
+    ctx.fillStyle = p.color;
+    ctx.beginPath(); ctx.arc(p.x, p.y, p.size * p.life, 0, Math.PI * 2); ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+
+  // Combo display
+  if (state.combo >= 3) {
+    ctx.font = `bold ${Math.min(28, 18 + state.combo)}px Arial`;
+    ctx.fillStyle = '#FFD700';
+    ctx.textAlign = 'center';
+    ctx.fillText(`🔥 COMBO x${state.combo}!`, canvas.width / 2, 30);
+  }
+}
+
+// ─── UPDATE ─────────────────────────────────────────────
+function update() {
+  state.frame++;
+  const lvl = LEVELS[state.level];
+
+  // Spawn
+  if (state.frame % lvl.spawnRate === 0) spawnNote();
+
+  // Mover notas
+  state.notes.forEach(n => n.y += n.speed);
+
+  // Notas que se escaparon
+  const escaped = state.notes.filter(n => n.y > canvas.height + noteR() * 2);
+  escaped.forEach(n => {
+    state.lives--;
+    state.combo = 0;
+    playMiss();
+    updateLives();
+    if (state.lives <= 0) gameOver();
+  });
+  state.notes = state.notes.filter(n => n.y <= canvas.height + noteR() * 2);
+
+  // Partículas
+  state.particles.forEach(p => {
+    p.x += p.vx; p.y += p.vy; p.vy += 0.2; p.life -= 0.05;
+  });
+  state.particles = state.particles.filter(p => p.life > 0);
+}
+
+// ─── INPUT ──────────────────────────────────────────────
+function handleInput(clientX) {
+  if (!state.running) return;
+  initAudio();
+
+  const rect = canvas.getBoundingClientRect();
+  const x = clientX - rect.left;
+  const col = Math.floor(x / (canvas.width / COLS));
+  const hy = hitY();
+  const tol = canvas.height * HIT_TOLERANCE;
+
+  // Buscar nota más cercana en esa columna
+  let best = null, bestDist = Infinity;
+  state.notes.forEach(n => {
+    if (n.col === col) {
+      const dist = Math.abs(n.y - hy);
+      if (dist < bestDist) { bestDist = dist; best = n; }
+    }
+  });
+
+  if (best && bestDist < tol * 2) {
+    const perfect = bestDist < tol * 0.6;
+    state.notes = state.notes.filter(n => n !== best);
+    state.combo++;
+    if (state.combo > state.maxCombo) state.maxCombo = state.combo;
+
+    const bonus = state.combo >= 5 ? 1 : 0;
+    const pts = (perfect ? 3 : 1) + bonus;
+    state.score += pts;
+    state.levelProgress += pts;
+
+    playHit(perfect);
+    addParticles(colX(col), hy, COL_COLORS[col]);
+    showFeedback(perfect ? '⭐ PERFECTO!' : '✅ ¡BIEN!', perfect ? '#FFD700' : '#90ff90');
+    updateHUD();
+    checkLevelUp();
+  } else {
+    // Toque vacío — pequeña penalización
+    state.combo = 0;
+    showFeedback('❌ Vacío', '#ff6060');
+  }
+}
+
+canvas.addEventListener('touchstart', e => {
+  e.preventDefault();
+  Array.from(e.changedTouches).forEach(t => handleInput(t.clientX));
+}, { passive: false });
+
+canvas.addEventListener('mousedown', e => handleInput(e.clientX));
+
+// ─── FEEDBACK VISUAL ───────────────────────────────────
+function showFeedback(text, color) {
+  const el = document.getElementById('feedback');
+  el.textContent = text;
+  el.style.color = color;
+  el.style.animation = 'none';
+  void el.offsetWidth;
+  el.style.animation = 'feedbackAnim 0.7s ease forwards';
+}
+
+// ─── HUD ────────────────────────────────────────────────
+function updateHUD() {
+  document.getElementById('score-display').textContent = state.score;
+  document.getElementById('level-display').textContent = state.level + 1;
+  const lvl = LEVELS[state.level];
+  const pct = Math.min(100, (state.levelProgress / lvl.target) * 100);
+  document.getElementById('level-bar').style.width = pct + '%';
+  document.getElementById('level-name').textContent = lvl.name;
+  document.getElementById('hud').querySelector('#hero-face').textContent = lvl.face;
+}
+
+function updateLives() {
+  const hearts = ['❤️','❤️','❤️','🖤','🖤','🖤'];
+  const el = document.getElementById('lives');
+  el.innerHTML = '';
+  for (let i = 0; i < 3; i++) {
+    const s = document.createElement('span');
+    s.textContent = i < state.lives ? '❤️' : '🖤';
+    el.appendChild(s);
+  }
+}
+
+// ─── NIVEL ──────────────────────────────────────────────
+function checkLevelUp() {
+  const lvl = LEVELS[state.level];
+  if (state.levelProgress >= lvl.target) {
+    state.levelProgress = 0;
+    if (state.level < LEVELS.length - 1) {
+      state.level++;
+      playLevelUp();
+      showLevelUp(LEVELS[state.level].name);
+    } else {
+      // ¡Victoria!
+      setTimeout(winGame, 500);
+    }
+  }
+}
+
+function showLevelUp(name) {
+  const el = document.getElementById('levelup-msg');
+  el.textContent = `🚀 ¡NIVEL ${state.level + 1}! ${name}`;
+  el.style.animation = 'none';
+  void el.offsetWidth;
+  el.style.animation = 'levelUpAnim 2s ease forwards';
+}
+
+// ─── PANTALLAS ──────────────────────────────────────────
+function hide(id) { document.getElementById(id).classList.add('hidden'); }
+function show(id) { document.getElementById(id).classList.remove('hidden'); }
+
+function startGame() {
+  initAudio();
+  initState();
+  hide('screen-start');
+  hide('screen-over');
+  hide('screen-win');
+  updateHUD();
+  updateLives();
+  state.running = true;
+  loop();
+}
+
+function gameOver() {
+  state.running = false;
+  document.getElementById('over-score').textContent = state.score;
+  const msgs = [
+    'Los Villanos del Ruido ganaron esta vez...',
+    `¡Llegaste al Nivel ${state.level + 1}!`,
+    `Combo máximo: ${state.maxCombo}`,
+  ];
+  document.getElementById('over-msg').textContent = msgs[Math.floor(Math.random() * msgs.length)];
+  document.getElementById('over-face').textContent = state.score > 50 ? '😤' : '😵';
+  document.getElementById('over-title').textContent = state.score > 100 ? '¡Casi lo logras!' : '¡Fin del juego!';
+  show('screen-over');
+}
+
+function winGame() {
+  state.running = false;
+  document.getElementById('win-score').textContent = state.score;
+  show('screen-win');
+}
+
+// ─── LOOP PRINCIPAL ─────────────────────────────────────
+function loop() {
+  if (!state.running) return;
+  update();
+  draw();
+  requestAnimationFrame(loop);
+}
+
+// Iniciar
+resize();
+</script>
+</body>
+</html>

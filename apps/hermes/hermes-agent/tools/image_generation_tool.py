@@ -466,7 +466,7 @@ def _submit_fal_request(model: str, arguments: Dict[str, Any]):
                 f"Nous Subscription gateway rejected model '{model}' "
                 f"(HTTP {status}). This model may not yet be enabled on "
                 f"the Nous Portal's FAL proxy. Either:\n"
-                f"  • Set FAL_KEY in your environment to use FAL.ai directly, or\n"
+                f"  • Set FAL_API_KEY in your environment to use FAL.ai directly, or\n"
                 f"  • Pick a different model via `hermes tools` → Image Generation."
                 f"{gateway_message}"
             ) from exc
@@ -880,7 +880,7 @@ def _build_no_backend_setup_message() -> str:
     """Build an actionable error string when no FAL backend is reachable.
 
     Used by the in-tree FAL path. Mentions:
-      - FAL_KEY signup link
+      - FAL_API_KEY signup link
       - managed-gateway status (if Nous tools are enabled)
       - plugin alternative pointer (so users on a stale ``image_gen.provider``
         know the registry exists and how to inspect it)
@@ -889,10 +889,10 @@ def _build_no_backend_setup_message() -> str:
     lines.append("Missing requirements:")
     if managed_nous_tools_enabled():
         lines.append(
-            "  - FAL_KEY is not set and the managed FAL gateway is unreachable"
+            "  - FAL_API_KEY is not set and the managed FAL gateway is unreachable"
         )
     else:
-        lines.append("  - FAL_KEY environment variable is not set")
+        lines.append("  - FAL_API_KEY environment variable is not set")
         gateway_message = nous_tool_gateway_unavailable_message(
             "managed FAL image generation",
         )
@@ -902,7 +902,7 @@ def _build_no_backend_setup_message() -> str:
     lines.append("To enable image generation, do one of:")
     lines.append(
         "  1. Get a free API key at https://fal.ai and set "
-        "FAL_KEY=<your-key> (then restart the session)"
+        "FAL_API_KEY=<your-key> (then restart the session)"
     )
     if managed_nous_tools_enabled():
         lines.append(
@@ -922,7 +922,7 @@ def check_image_generation_requirements() -> bool:
 
     Providers are considered in this order:
 
-    1. The in-tree FAL backend (FAL_KEY or managed gateway).
+    1. The in-tree FAL backend (FAL_API_KEY or managed gateway).
     2. Any plugin-registered provider whose ``is_available()`` returns True.
 
     Plugins win only when the in-tree FAL path is NOT ready, which matches
@@ -967,8 +967,8 @@ if __name__ == "__main__":
     print("=" * 60)
 
     if not check_fal_api_key():
-        print("❌ FAL_KEY environment variable not set")
-        print("   Set it via: export FAL_KEY='your-key-here'")
+        print("❌ FAL_API_KEY environment variable not set")
+        print("   Set it via: export FAL_API_KEY='your-key-here'")
         print("   Get a key: https://fal.ai/")
         raise SystemExit(1)
     print("✅ FAL.ai API key found")

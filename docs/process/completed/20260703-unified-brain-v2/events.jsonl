@@ -1,0 +1,7 @@
+{"name":"brain.service.created","spec":"SPEC-20260703-002","timestamp":"2026-07-03T06:00:00Z","source":"opencode","payload":{"desc":"BrainService creado con conexiones a Neo4j+Qdrant+Engram","neo4j_nodes_before":36}}
+{"name":"brain.sync.sprint1","spec":"SPEC-20260703-002","timestamp":"2026-07-03T07:00:00Z","source":"opencode","payload":{"desc":"SPRINT 1: Foundation — dirs+config+models+service created","sprint":"1"}}
+{"name":"brain.sync.sprint2","spec":"SPEC-20260703-002","timestamp":"2026-07-03T08:00:00Z","source":"opencode","payload":{"desc":"SPRINT 2: 6 ingestors created (engram, neo4j, events, hermes, lecciones, truth)","sprint":"2"}}
+{"name":"brain.sync.sprint3","spec":"SPEC-20260703-002","timestamp":"2026-07-03T09:00:00Z","source":"opencode","payload":{"desc":"SPRINT 3: Sync + Cron — brain-sync.sh + crontab + healthcheck","sprint":"3"}}
+{"name":"brain.tool.created","spec":"SPEC-20260703-002","timestamp":"2026-07-03T10:00:00Z","source":"opencode","payload":{"desc":"SPRINT 4: MCP tool unified_brain_query + Hermes config registration","sprint":"4"}}
+{"name":"brain.web.created","spec":"SPEC-20260703-002","timestamp":"2026-07-03T11:00:00Z","source":"opencode","payload":{"desc":"SPRINT 5: Web router + dashboard + 5 integration tests pass","sprint":"5"}}
+{"name":"brain.sync.completed","spec":"SPEC-20260703-002","timestamp":"2026-07-03T12:00:00Z","source":"opencode","payload":{"desc":"Full sync produjo 366 nodos Knowledge en Neo4j","neo4j_nodes_after":366}}

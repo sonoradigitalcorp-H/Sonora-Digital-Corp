@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-07-19T17:45:01.509500+00:00",
+  "sessions_scored": 0,
+  "total_sessions": 0,
+  "overall_success_rate": 0.0,
+  "patterns_found": 0,
+  "proposals_generated": 0,
+  "proposals_applied": 0,
+  "patterns": [],
+  "proposals": [],
+  "applied": [],
+  "enterprise_score": {
+    "enterprise_score": 75,
+    "threshold_met": true
+  }
+}

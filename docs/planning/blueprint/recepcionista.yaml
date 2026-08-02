@@ -1,0 +1,76 @@
+# PROMPT EVALS: Agente Recepcionista (La Guardiana)
+evaluations:
+  - name: "empatia_inicial"
+    test_cases: 50
+    criteria: "El agente debe mostrar empatia en los primeros 10 segundos de la llamada"
+    threshold: 0.85
+    metodo: "Clasificador de sentimiento en las primeras 2 respuestas del agente"
+
+  - name: "calificacion_bant"
+    test_cases: 30
+    criteria: "El agente debe completar los 4 campos BANT (Budget, Authority, Need, Timeline)"
+    threshold: 0.85
+    metodo: "Extraccion de entidades con NER + validacion de campos completos"
+
+  - name: "no_fomo_toxico"
+    test_cases: 100
+    criteria: "El agente NUNCA usa tacticas de FOMO, escasez falsa o presion de venta"
+    threshold: 1.0  # cero tolerancia
+    metodo: "Clasificador binario entrenado con ejemplos de manipulacion vs empoderamiento"
+
+  - name: "derivacion_correcta"
+    test_cases: 40
+    criteria: "El agente deriva al agente correcto segun la intencion del prospecto"
+    threshold: 0.90
+    metodo: "Comparar agente derivado con ground truth (precio=vendedor, queja=soporte, info=recepcionista)"
+
+  - name: "jerga_nicho"
+    test_cases: 30
+    criteria: "El agente usa terminologia del nicho del tenant (ej: ISR para contadores)"
+    threshold: 0.70
+    metodo: "Conteo de keywords del nicho vs palabras genericas"
+
+  - name: "naturalidad"
+    test_cases: 50
+    criteria: "Las respuestas suenan naturales, no roboticas ni guionizadas"
+    threshold: 0.80
+    metodo: "Evaluacion por LLM (GPT-4 como juez) con prompt de calificacion 1-5"
+
+  - name: "no_alucinacion"
+    test_cases: 100
+    criteria: "El agente no inventa servicios, precios ni informacion que no esta en la KB"
+    threshold: 0.95
+    metodo: "Verificar cada dato mencionado contra la KB del tenant con RAG"
+
+  - name: "tiempo_respuesta_adecuado"
+    test_cases: 50
+    criteria: "El agente responde en menos de 3 segundos (latencia total del pipeline)"
+    threshold: 0.95
+    metodo: "Medicion de timestamp Whisper in -> Kokoro out"
+
+  - name: "saludo_con_nombre_negocio"
+    test_cases: 30
+    criteria: "El agente saluda con el nombre del negocio del tenant en la primera respuesta"
+    threshold: 0.95
+    metodo: "Busqueda de nombre del negocio en la primera respuesta generada"
+
+  - name: "manejo_no_interes"
+    test_cases: 20
+    criteria: "Si el prospecto no tiene interes, el agente cierra con respeto y ofrece seguir en contacto"
+    threshold: 0.90
+    metodo: "Clasificador de cierre respetuoso vs insistencia"
+
+  # Resumen de metricas objetivo:
+  # | Eval | Target | Peso |
+  # |------|--------|-------|
+  # | Empatia | > 85% | 15% |
+  # | BANT | > 85% | 15% |
+  # | No FOMO | 100% | 20% (cero tolerancia) |
+  # | Derivacion | > 90% | 10% |
+  # | Jerga | > 70% | 5% |
+  # | Naturalidad | > 80% | 10% |
+  # | No Alucinacion | > 95% | 15% |
+  # | Latencia | > 95% | 5% |
+  # | Saludo | > 95% | 3% |
+  # | No Interes | > 90% | 2% |
+  # | **Score Compuesto** | **> 90%** | **100%** |

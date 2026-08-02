@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Capitán Sonora — Juego de Música</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Arial Rounded MT Bold', Arial, sans-serif;
+    background: linear-gradient(180deg, #0a0a2e 0%, #1a1a5e 50%, #ff6b00 100%);
+    min-height: 100vh;
+    color: white;
+    overflow-x: hidden;
+  }
+
+  /* Estrellas animadas */
+  .stars { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; }
+  .star {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    animation: twinkle 2s infinite alternate;
+  }
+
+  @keyframes twinkle { from { opacity: 0.3; } to { opacity: 1; } }
+  @keyframes float { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-20px); } }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+  @keyframes slideIn { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes glow { 0%,100% { text-shadow: 0 0 20px #ff6b00, 0 0 40px #ff6b00; } 50% { text-shadow: 0 0 40px #ffaa00, 0 0 80px #ffaa00; } }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  .container { position: relative; z-index: 1; max-width: 800px; margin: 0 auto; padding: 20px; text-align: center; }
+
+  /* HERO */
+  .hero-section { padding: 40px 20px 20px; animation: slideIn 0.8s ease; }
+  .game-title { font-size: clamp(2rem, 6vw, 4rem); font-weight: 900; color: #FFD700; animation: glow 2s infinite; letter-spacing: 2px; }
+  .subtitle { font-size: clamp(0.9rem, 3vw, 1.3rem); color: #90d5ff; margin: 8px 0 30px; }
+
+  /* SUPERHÉROE */
+  .hero-wrapper { position: relative; display: inline-block; animation: float 3s ease-in-out infinite; }
+  .hero-emoji { font-size: clamp(80px, 20vw, 140px); display: block; filter: drop-shadow(0 0 30px #FFD700); }
+  .cape { position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); font-size: 40px; animation: float 2s ease-in-out infinite reverse; }
+  .music-notes span {
+    position: absolute;
+    font-size: 24px;
+    animation: float 1.5s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px #ff6b00);
+  }
+  .music-notes span:nth-child(1) { top: -20px; left: -40px; animation-delay: 0s; }
+  .music-notes span:nth-child(2) { top: 20px; right: -40px; animation-delay: 0.5s; }
+  .music-notes span:nth-child(3) { bottom: 0; left: -50px; animation-delay: 1s; }
+
+  /* HISTORIA */
+  .story-card {
+    background: rgba(255,255,255,0.08);
+    border: 2px solid rgba(255,215,0,0.3);
+    border-radius: 20px;
+    padding: 25px;
+    margin: 30px 0;
+    animation: slideIn 1s ease 0.2s both;
+    backdrop-filter: blur(10px);
+  }
+  .story-card h2 { color: #FFD700; font-size: 1.5rem; margin-bottom: 12px; }
+  .story-card p { line-height: 1.7; font-size: clamp(0.9rem, 2.5vw, 1.1rem); color: #e0e0ff; }
+  .city-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #ff6b00, #ff9500);
+    padding: 4px 14px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin: 8px 0;
+  }
+
+  /* CÓMO JUGAR */
+  .how-to { animation: slideIn 1s ease 0.4s both; }
+  .how-to h2 { color: #FFD700; font-size: 1.8rem; margin-bottom: 20px; }
+  .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; }
+  .step {
+    background: rgba(255,255,255,0.07);
+    border-radius: 16px;
+    padding: 20px 15px;
+    border: 1px solid rgba(255,107,0,0.3);
+    transition: transform 0.2s;
+  }
+  .step:hover { transform: scale(1.03); }
+  .step-icon { font-size: 2.5rem; margin-bottom: 10px; }
+  .step h3 { color: #FFD700; font-size: 1rem; margin-bottom: 8px; }
+  .step p { font-size: 0.88rem; color: #c0d8ff; line-height: 1.5; }
+
+  /* NIVELES */
+  .levels { margin: 30px 0; animation: slideIn 1s ease 0.6s both; }
+  .levels h2 { color: #FFD700; font-size: 1.8rem; margin-bottom: 20px; }
+  .level-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; }
+  .level-card {
+    border-radius: 16px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+  .level-card.rookie { background: linear-gradient(135deg, #2ecc71, #27ae60); }
+  .level-card.hero { background: linear-gradient(135deg, #3498db, #2980b9); }
+  .level-card.ultra { background: linear-gradient(135deg, #9b59b6, #8e44ad); }
+  .level-card.legend { background: linear-gradient(135deg, #e67e22, #d35400); }
+  .level-num { font-size: 2.5rem; font-weight: 900; opacity: 0.3; position: absolute; top: 10px; right: 15px; }
+  .level-icon { font-size: 2rem; margin-bottom: 8px; }
+  .level-card h3 { font-size: 1.1rem; font-weight: bold; }
+  .level-card p { font-size: 0.8rem; opacity: 0.9; margin-top: 5px; }
+
+  /* BOTÓN JUGAR */
+  .play-section { margin: 40px 0; animation: slideIn 1s ease 0.8s both; }
+  .btn-play {
+    display: inline-block;
+    background: linear-gradient(135deg, #FFD700, #ff9500);
+    color: #1a1a2e;
+    font-size: clamp(1.3rem, 4vw, 1.8rem);
+    font-weight: 900;
+    padding: 20px 60px;
+    border-radius: 60px;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    animation: pulse 1.5s ease infinite;
+    box-shadow: 0 0 40px rgba(255,215,0,0.5);
+    letter-spacing: 1px;
+    transition: transform 0.1s;
+  }
+  .btn-play:active { transform: scale(0.95); }
+  .play-hint { color: #90d5ff; font-size: 0.9rem; margin-top: 12px; }
+
+  /* FOOTER */
+  footer { padding: 30px; color: rgba(255,255,255,0.4); font-size: 0.8rem; }
+</style>
+</head>
+<body>
+
+<div class="stars" id="stars"></div>
+
+<div class="container">
+
+  <!-- HÉROE -->
+  <div class="hero-section">
+    <div class="hero-wrapper">
+      <div class="music-notes">
+        <span>🎵</span>
+        <span>🎶</span>
+        <span>🎸</span>
+      </div>
+      <span class="hero-emoji">🦸</span>
+    </div>
+    <h1 class="game-title">⚡ CAPITÁN SONORA ⚡</h1>
+    <p class="subtitle">El superhéroe del ritmo que protege Hermosillo con su música</p>
+  </div>
+
+  <!-- HISTORIA -->
+  <div class="story-card">
+    <h2>📖 ¿Quién es Capitán Sonora?</h2>
+    <p>
+      En la ciudad de <span class="city-badge">🌵 Hermosillo, Sonora</span> vive un héroe especial.
+      Su nombre es <strong>Capitán Sonora</strong> — un estudiante común que un día
+      encontró una guitarra mágica en el Cerro de la Campana. 🎸✨
+      <br><br>
+      Desde entonces, usa el poder de la <strong>música</strong> para derrotar a los
+      Villanos del Ruido que quieren silenciar la ciudad. ¡Solo tú puedes ayudarle
+      a mantener el ritmo y salvar Hermosillo!
+    </p>
+  </div>
+
+  <!-- CÓMO JUGAR -->
+  <div class="how-to">
+    <h2>🎮 ¿Cómo se juega?</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-icon">👆</div>
+        <h3>Paso 1 — Mira</h3>
+        <p>Notas musicales caen desde arriba por 4 columnas de colores</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">🎯</div>
+        <h3>Paso 2 — Toca</h3>
+        <p>¡Toca la pantalla cuando la nota llegue al círculo de abajo!</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">⭐</div>
+        <h3>Paso 3 — Gana puntos</h3>
+        <p><strong>PERFECTO</strong> = 3 pts · <strong>BIEN</strong> = 1 pt · <strong>FALLASTE</strong> = -1 ❤️</p>
+      </div>
+      <div class="step">
+        <div class="step-icon">🚀</div>
+        <h3>Paso 4 — Sube de nivel</h3>
+        <p>¡Más puntos = más velocidad = más héroe! Desbloquea 4 niveles</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- NIVELES -->
+  <div class="levels">
+    <h2>🏆 Los 4 Niveles</h2>
+    <div class="level-cards">
+      <div class="level-card rookie">
+        <div class="level-num">1</div>
+        <div class="level-icon">🌱</div>
+        <h3>Aprendiz</h3>
+        <p>Notas lentas, aprende el ritmo</p>
+      </div>
+      <div class="level-card hero">
+        <div class="level-num">2</div>
+        <div class="level-icon">⚡</div>
+        <h3>Héroe</h3>
+        <p>¡Se pone más rápido!</p>
+      </div>
+      <div class="level-card ultra">
+        <div class="level-num">3</div>
+        <div class="level-icon">🔥</div>
+        <h3>Ultra Sonic</h3>
+        <p>Velocidad máxima, combos</p>
+      </div>
+      <div class="level-card legend">
+        <div class="level-num">4</div>
+        <div class="level-icon">👑</div>
+        <h3>Leyenda Sonora</h3>
+        <p>¡El maestro del ritmo!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- BOTÓN JUGAR -->
+  <div class="play-section">
+    <a href="game.html" class="btn-play">🎮 ¡JUGAR AHORA!</a>
+    <p class="play-hint">Funciona en tablet, celular y computadora · Sin internet</p>
+  </div>
+
+</div>
+
+<footer>
+  <p>Creado para Jose Luis 🌵 · Hermosillo, Sonora 2026</p>
+</footer>
+
+<script>
+  // Generar estrellas
+  const starsDiv = document.getElementById('stars');
+  for (let i = 0; i < 60; i++) {
+    const star = document.createElement('div');
+    star.className = 'star';
+    const size = Math.random() * 3 + 1;
+    star.style.cssText = `
+      width: ${size}px; height: ${size}px;
+      top: ${Math.random() * 70}%;
+      left: ${Math.random() * 100}%;
+      animation-delay: ${Math.random() * 3}s;
+      animation-duration: ${1.5 + Math.random() * 2}s;
+    `;
+    starsDiv.appendChild(star);
+  }
+</script>
+</body>
+</html>

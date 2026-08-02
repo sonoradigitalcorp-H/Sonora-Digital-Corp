@@ -61,7 +61,7 @@ class TestFalImageGenProviderSurface:
         assert schema["name"] == "FAL.ai"
         assert schema["badge"] == "paid"
         env_keys = {entry["key"] for entry in schema.get("env_vars", [])}
-        assert "FAL_KEY" in env_keys
+        assert "FAL_API_KEY" in env_keys
 
 
 class TestFalImageGenProviderAvailability:

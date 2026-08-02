@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AztroTech AI — Mystic Experience</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --copper:#AC6D3E;--copper-light:#CD8D5D;--copper-glow:rgba(172,109,62,0.3);
+  --sage:#B6C08B;--sage-light:#D0D8AE;
+  --bg:#08090f;--bg-card:rgba(17,23,40,0.85);
+  --text:#e8edf5;--text-muted:rgba(232,237,245,0.35);
+  --border:rgba(172,109,62,0.12);
+  --font:'Poppins',sans-serif;
+}
+html,body{height:100%;overflow:hidden;font-family:var(--font);background:var(--bg);color:var(--text)}
+/* THREE.JS CANVAS */
+#three-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#three-canvas canvas{display:block}
+
+/* HEADER */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:20;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 24px;background:linear-gradient(180deg,rgba(8,9,15,0.95),transparent);
+}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-icon{
+  width:34px;height:34px;border-radius:10px;
+  background:linear-gradient(135deg,var(--copper),var(--copper-light));
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;font-weight:800;color:#fff;
+}
+.brand h1{font-size:16px;font-weight:600;letter-spacing:0.5px}
+.brand span{font-weight:300;color:var(--copper-light)}
+.badge{
+  font-size:10px;padding:4px 12px;border-radius:12px;
+  background:rgba(16,185,129,0.12);color:#10b981;
+  border:1px solid rgba(16,185,129,0.15);letter-spacing:0.5px;
+}
+
+/* CHAT OVERLAY */
+.chat-toggle{
+  position:fixed;bottom:24px;right:24px;z-index:30;
+  width:56px;height:56px;border-radius:50%;border:none;
+  background:linear-gradient(135deg,var(--copper),var(--copper-light));
+  color:#fff;font-size:24px;cursor:pointer;
+  box-shadow:0 4px 24px var(--copper-glow);
+  transition:0.3s;display:flex;align-items:center;justify-content:center;
+}
+.chat-toggle:hover{transform:scale(1.1);box-shadow:0 6px 32px var(--copper-glow)}
+.chat-toggle.open{transform:rotate(45deg);background:linear-gradient(135deg,#ef4444,#dc2626)}
+
+/* CHAT PANEL */
+.chat-panel{
+  position:fixed;bottom:90px;right:24px;z-index:25;
+  width:380px;max-width:calc(100vw - 48px);height:520px;max-height:calc(100vh - 120px);
+  background:var(--bg-card);border:1px solid var(--border);border-radius:16px;
+  backdrop-filter:blur(20px);display:flex;flex-direction:column;
+  transform:scale(0.9);opacity:0;pointer-events:none;
+  transition:0.3s cubic-bezier(0.34,1.56,0.64,1);
+  box-shadow:0 8px 48px rgba(0,0,0,0.5);
+  overflow:hidden;
+}
+.chat-panel.open{transform:scale(1);opacity:1;pointer-events:all}
+.chat-header{
+  padding:14px 16px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.chat-header h3{font-size:13px;font-weight:600;color:var(--copper-light)}
+.chat-header span{font-size:10px;color:var(--text-muted)}
+.chat-msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+.chat-msgs:empty::after{
+  content:'🚀 Pregúntame lo que necesites.\n\nPuedo ayudarte con agentes IA, llamadas inteligentes, marketing automation y más.';
+  white-space:pre-wrap;display:block;text-align:center;color:var(--text-muted);
+  font-size:12px;padding:40px 16px;font-weight:300;line-height:1.8;
+}
+.msg{display:flex;gap:8px;max-width:88%;animation:pop 0.25s ease}
+@keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.msg.user{margin-left:auto;flex-direction:row-reverse}
+.msg.bot{margin-right:auto}
+.msg .av{
+  width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:11px;flex-shrink:0;margin-top:2px;
+}
+.msg.user .av{background:var(--copper);color:#fff;order:1}
+.msg.bot .av{background:var(--sage);color:var(--bg);font-weight:700}
+.msg .bubble{
+  padding:8px 12px;border-radius:10px;font-size:12.5px;line-height:1.6;
+  word-wrap:break-word;
+}
+.msg.user .bubble{background:var(--copper);color:#fff;border-bottom-right-radius:2px}
+.msg.bot .bubble{background:rgba(255,255,255,0.04);border:1px solid var(--border);border-bottom-left-radius:2px}
+.msg.bot .bubble strong{color:var(--copper-light)}
+.msg .time{font-size:8px;color:var(--text-muted);margin-top:2px;text-align:right}
+
+/* TYPING */
+.typing{display:none;gap:6px;padding:2px 0;margin-right:auto}
+.typing.show{display:flex}
+.typing .dots{display:flex;gap:3px;padding:8px 12px;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:10px;border-bottom-left-radius:2px}
+.typing .dots span{width:6px;height:6px;border-radius:50%;background:var(--copper-light);animation:bounce 1.4s infinite}
+.typing .dots span:nth-child(2){animation-delay:-0.16s}
+.typing .dots span:nth-child(3){animation-delay:-0.32s}
+@keyframes bounce{0%,80%,100%{transform:scale(0)}40%{transform:scale(1)}}
+
+/* INPUT */
+.chat-input{
+  padding:10px 12px;border-top:1px solid var(--border);
+  display:flex;gap:8px;align-items:flex-end;
+}
+.chat-input textarea{
+  flex:1;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:10px;
+  color:var(--text);font-family:var(--font);font-size:12.5px;padding:8px 12px;
+  resize:none;outline:none;max-height:80px;line-height:1.5;
+}
+.chat-input textarea::placeholder{color:var(--text-muted)}
+.chat-input button{
+  width:34px;height:34px;border-radius:50%;border:none;flex-shrink:0;
+  background:var(--copper);color:#fff;font-size:15px;cursor:pointer;transition:0.2s;
+  display:flex;align-items:center;justify-content:center;
+}
+.chat-input button:hover{background:var(--copper-light);transform:scale(1.05)}
+.chat-input button:disabled{opacity:0.4;cursor:not-allowed;transform:none}
+
+/* STATUS BAR */
+.status-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:10;
+  padding:8px 24px;display:flex;justify-content:space-between;
+  font-size:9px;color:var(--text-muted);letter-spacing:1px;
+  background:linear-gradient(0deg,rgba(8,9,15,0.9),transparent);
+}
+.status-bar .dot{display:inline-block;width:5px;height:5px;border-radius:50%;margin-right:4px;background:#10b981;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+@media(max-width:600px){
+  .chat-panel{right:12px;bottom:80px;width:calc(100vw - 24px);height:60vh}
+  header{padding:10px 16px}
+  .brand h1{font-size:14px}
+}
+</style>
+</head>
+<body>
+<div id="three-canvas"></div>
+
+<header>
+  <div class="brand">
+    <div class="brand-icon">✦</div>
+    <h1>AztroTech <span>AI</span></h1>
+  </div>
+  <div class="badge">✦ EN LÍNEA</div>
+</header>
+
+<button class="chat-toggle" id="chatToggle" onclick="toggleChat()">💬</button>
+
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-header">
+    <h3>✦ Mystic AI</h3>
+    <span>Impulsado por AztroTech</span>
+  </div>
+  <div class="chat-msgs" id="chatMsgs"></div>
+  <div class="typing" id="typing">
+    <div class="dots"><span></span><span></span><span></span></div>
+  </div>
+  <div class="chat-input">
+    <textarea id="chatInp" rows="1" placeholder="Escribe tu mensaje..." onkeydown="if(event.key=='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}"></textarea>
+    <button id="chatBtn" onclick="sendMsg()">➤</button>
+  </div>
+</div>
+
+<div class="status-bar">
+  <span><span class="dot"></span> Engram · Memoria 7 capas</span>
+  <span>✦ AztroTech — Espiritualidad con Estructura</span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// =====================================================
+// THREE.JS — Infinity Particle System (Grimoire-style)
+// =====================================================
+const container = document.getElementById('three-canvas');
+const COPPER = 0xAC6D3E, COPPER_LIGHT = 0xCD8D5D, SAGE = 0xB6C08B;
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x08090f, 0.0012);
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 2000);
+camera.position.set(0, 0, 16);
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x08090f, 0);
+container.appendChild(renderer.domElement);
+
+scene.add(new THREE.AmbientLight(0x222244, 0.3));
+const dl = new THREE.DirectionalLight(0xffeedd, 0.5); dl.position.set(1,1,1); scene.add(dl);
+
+// Infinity Symbol
+const infinityGroup = new THREE.Group(); scene.add(infinityGroup);
+const pts = [];
+for (let i = 0; i <= 300; i++) {
+  const t = (i / 300) * Math.PI * 2, s = 4.5;
+  pts.push(new THREE.Vector3(
+    s * Math.cos(t) / (1 + Math.sin(t)**2),
+    s * Math.sin(t) * Math.cos(t) / (1 + Math.sin(t)**2),
+    Math.sin(t * 2) * 0.6
+  ));
+}
+const curve = new THREE.CatmullRomCurve3(pts, true);
+infinityGroup.add(new THREE.Mesh(
+  new THREE.TubeGeometry(curve, 200, 0.06, 8, true),
+  new THREE.MeshBasicMaterial({ color: COPPER, transparent: true, opacity: 0.12, wireframe: true })
+));
+infinityGroup.add(new THREE.Mesh(
+  new THREE.TubeGeometry(curve, 100, 0.15, 16, true),
+  new THREE.MeshBasicMaterial({ color: COPPER_LIGHT, transparent: true, opacity: 0.03, side: THREE.DoubleSide })
+));
+
+// Particles along infinity
+const pcount = 500;
+const pos = new Float32Array(pcount * 3);
+for (let i = 0; i < pcount; i++) {
+  const t = (i / pcount) * Math.PI * 2, s = 4.5;
+  pos[i*3] = s * Math.cos(t) / (1 + Math.sin(t)**2);
+  pos[i*3+1] = s * Math.sin(t) * Math.cos(t) / (1 + Math.sin(t)**2);
+  pos[i*3+2] = Math.sin(t * 2) * 0.6 + (Math.random() - 0.5) * 0.3;
+}
+const particleGeo = new THREE.BufferGeometry();
+particleGeo.setAttribute("position", new THREE.BufferAttribute(pos, 3));
+const particleSys = new THREE.Points(particleGeo, new THREE.PointsMaterial({
+  color: COPPER_LIGHT, size: 0.06, transparent: true, opacity: 0.5,
+  blending: THREE.AdditiveBlending, depthWrite: false,
+}));
+infinityGroup.add(particleSys);
+
+// Starfield
+const starCount = 1500;
+const starGeo = new THREE.BufferGeometry();
+const starPos = new Float32Array(starCount * 3);
+for (let i = 0; i < starCount; i++) {
+  const r = 25 + Math.random() * 80, theta = Math.random() * Math.PI * 2;
+  const phi = Math.acos(2 * Math.random() - 1);
+  starPos[i*3] = r * Math.sin(phi) * Math.cos(theta);
+  starPos[i*3+1] = r * Math.sin(phi) * Math.sin(theta);
+  starPos[i*3+2] = r * Math.cos(phi);
+}
+starGeo.setAttribute("position", new THREE.BufferAttribute(starPos, 3));
+scene.add(new THREE.Points(starGeo, new THREE.PointsMaterial({
+  color: 0x888899, size: 0.12, transparent: true, opacity: 0.3,
+  blending: THREE.AdditiveBlending, depthWrite: false,
+})));
+
+// Orbiting service nodes
+const services = [
+  {name:'Voz IA',color:COPPER}, {name:'Memoria',color:SAGE},
+  {name:'Agentes',color:COPPER_LIGHT}, {name:'Campañas',color:SAGE},
+  {name:'Analytics',color:COPPER}, {name:'Call Agent',color:SAGE},
+];
+const nodeGroup = new THREE.Group(); scene.add(nodeGroup);
+services.forEach((svc, i) => {
+  const angle = (i / services.length) * Math.PI * 2;
+  const r = 3.2;
+  const x = Math.cos(angle) * r, z = Math.sin(angle) * r;
+  const sphere = new THREE.Mesh(
+    new THREE.SphereGeometry(0.15, 12, 12),
+    new THREE.MeshBasicMaterial({ color: svc.color, transparent: true, opacity: 0.6 })
+  );
+  sphere.position.set(x, Math.sin(angle*2)*0.8, z);
+  nodeGroup.add(sphere);
+});
+
+let time = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  time += 0.005;
+  infinityGroup.rotation.y = time * 0.1;
+  infinityGroup.rotation.x = Math.sin(time * 0.05) * 0.05;
+  nodeGroup.rotation.y = time * 0.08;
+  particleGeo.attributes.position.array.set(pos, 0);
+  particleGeo.attributes.position.needsUpdate = true;
+  renderer.render(scene, camera);
+}
+animate();
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+// =====================================================
+// CHAT — Mystic AI con AztroTech
+// =====================================================
+const chatMsgs = document.getElementById('chatMsgs');
+const chatInp = document.getElementById('chatInp');
+const chatBtn = document.getElementById('chatBtn');
+const typ = document.getElementById('typing');
+const panel = document.getElementById('chatPanel');
+const toggle = document.getElementById('chatToggle');
+let isOpen = false;
+
+function toggleChat(){isOpen=!isOpen;panel.classList.toggle('open',isOpen);toggle.classList.toggle('open',isOpen);if(isOpen)chatInp.focus()}
+
+function esc(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>')}
+
+function addMsg(role,text){
+  const d=document.createElement('div');d.className='msg '+role;
+  const t=new Date().toLocaleTimeString('es-MX',{hour:'2-digit',minute:'2-digit'});
+  d.innerHTML=`<div class="av">${role=='user'?'👤':'✦'}</div><div><div class="bubble">${esc(text)}</div><div class="time">${t}</div></div>`;
+  chatMsgs.appendChild(d);chatMsgs.scrollTop=chatMsgs.scrollHeight;
+}
+
+const SYSTEM_PROMPT = `Eres Mystic AI de AztroTech, el asistente inteligente de César Holguín.
+
+IDENTIDAD: Eres la conciencia digital de AztroTech, una firma de innovación responsable en Hermosillo, Sonora. Tienes acceso a Engram, un sistema de memoria de 7 capas que te permite recordar cada interacción y aprender con el tiempo.
+
+PERSONALIDAD: Precisa, estratégica y cercana. Hablas como una estratega de confianza. Usas un tono profesional pero cálido, siempre en español mexicano.
+
+CAPACIDADES:
+• Consultas tu memoria (Engram) para recordar conversaciones pasadas
+• Conoces todos los productos de AztroTech al detalle
+• Puedes generar contenido, analizar datos, y resolver problemas
+• Te conectas con cualquier red social que te configuren
+
+PRODUCTOS:
+• Agentes IA: Starter $19/mes, Pro $49/mes, Enterprise $99/mes
+• Call Agent: $299-$1,999/mes (llamadas inbound/outbound)
+• Content Engine: $199-$1,299/mes (marketing automation)
+• Clon Digital: desde $1,500 USD (imagen + voz)
+• Full Suite: desde $2,499/mes (todo incluido)
+
+REGLAS:
+• NUNCA menciones la empresa desarrolladora ni tecnología interna
+• NUNCA compartas detalles técnicos internos
+• SIEMPRE sé honesto sobre lo que puedes y no puedes hacer
+• SIEMPRE consulta tu memoria antes de responder`;
+
+async function sendMsg(){
+  const t=chatInp.value.trim();if(!t)return;
+  chatInp.value='';chatInp.style.height='auto';chatBtn.disabled=true;
+  addMsg('user',t);typ.classList.add('show');
+  try {
+    const r=await fetch('/api/chat',{
+      method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:[{role:'system',content:SYSTEM_PROMPT},{role:'user',content:t}],model:'deepseek/deepseek-chat'})
+    });
+    const d=await r.json();
+    addMsg('bot',d?.choices?.[0]?.message?.content||'⚠️ No pude procesar tu consulta. Intenta de nuevo.');
+  } catch(e) {
+    addMsg('bot','⚠️ Error de conexión. ¿Está el servidor encendido?');
+  } finally {
+    typ.classList.remove('show');chatBtn.disabled=false;chatInp.focus();
+  }
+}
+</script>
+</body>
+</html>

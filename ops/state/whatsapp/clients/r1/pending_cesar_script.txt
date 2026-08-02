@@ -1,0 +1,27 @@
+🎙️ AUDIO PENDIENTE PARA CÉSAR (6623446953)
+   Archivo: state/whatsapp/clients/r1/pending_cesar_audio.ogg
+   Script: scripts/send-cesar-audio.sh
+
+📝 Transcripción del audio:
+
+"Hola César, soy Mystic, de Sonora Digital Corp.
+
+Antes que nada… gracias por la confianza. De verdad.
+
+Estamos creando algo bien especial para ti. Una red ultra privada, con lo más top en inteligencia artificial, diseñada exclusivamente para que tu negocio vuele sin límites.
+
+Vamos a automatizar absolutamente todo: desde que un cliente te escribe por WhatsApp hasta que el pedido llega a su mano. Trazabilidad en tiempo real, tus vendedores conectados, cero pérdidas, cero estrés.
+
+Esto no es solo tecnología, César. Es tu red de confianza, potenciada con la inteligencia artificial más avanzada.
+
+Te voy compartiendo los avances… pero esto que viene es otro nivel. Te va a encantar.
+
+Bienvenido a Ce-Son. ✨"
+
+🎤 Voz: es-MX-DaliaNeural (rate=+10%, pitch=+10Hz)
+⏱️ Duración: ~48 segundos
+
+⚠️ NOTA: No se pudo enviar automáticamente porque la sesión wacli del fundador necesita re-link (QR expirado).
+   Para enviar manualmente:
+   1. wacli --store ~/.config/ai.opencode.desktop/wacli link   (escanear QR)
+   2. bash scripts/send-cesar-audio.sh

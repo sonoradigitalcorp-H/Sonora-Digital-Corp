@@ -1,0 +1,145 @@
+{
+  "cookies": [
+    {
+      "name": "__cf_bm",
+      "value": "",
+      "domain": ".twitter.com",
+      "path": "/",
+      "expires": 1785669720.949224,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "guest_id",
+      "value": "",
+      "domain": ".twitter.com",
+      "path": "/",
+      "expires": 1817024048.363414,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "guest_id_ads",
+      "value": "",
+      "domain": ".twitter.com",
+      "path": "/",
+      "expires": 1817024048.363367,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "guest_id_marketing",
+      "value": "",
+      "domain": ".twitter.com",
+      "path": "/",
+      "expires": 1817024048.363151,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "personalization_id",
+      "value": "",
+      "domain": ".twitter.com",
+      "path": "/",
+      "expires": 1816823981.627592,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "NetflixId",
+      "value": "",
+      "domain": ".netflix.com",
+      "path": "/",
+      "expires": 1817095757.491384,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "OptanonAlertBoxClosed",
+      "value": "",
+      "domain": ".netflix.com",
+      "path": "/",
+      "expires": 1813784934,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "OptanonConsent",
+      "value": "",
+      "domain": ".netflix.com",
+      "path": "/",
+      "expires": 1816997748,
+      "httpOnly": false,
+      "secure": false,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "SecureNetflixId",
+      "value": "",
+      "domain": ".netflix.com",
+      "path": "/",
+      "expires": 1817095757.491275,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Strict"
+    },
+    {
+      "name": "guest_id",
+      "value": "",
+      "domain": ".x.com",
+      "path": "/",
+      "expires": 1818520215.801611,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "guest_id_ads",
+      "value": "",
+      "domain": ".x.com",
+      "path": "/",
+      "expires": 1818520238.819156,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "guest_id_marketing",
+      "value": "",
+      "domain": ".x.com",
+      "path": "/",
+      "expires": 1818520238.818775,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "nap",
+      "value": "",
+      "domain": ".netflix.com",
+      "path": "/",
+      "expires": 1820119757.491068,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "personalization_id",
+      "value": "",
+      "domain": ".x.com",
+      "path": "/",
+      "expires": 1818520238.819698,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    }
+  ],
+  "origins": []
+}

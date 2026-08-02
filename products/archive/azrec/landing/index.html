@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AzREC — Sello Musical · Hermosillo</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Inter',sans-serif; background:#0a0a0a; color:#e5e5e5; line-height:1.6; }
+.back-link { position:fixed; top:1.5rem; left:1.5rem; z-index:100; color:#999; text-decoration:none; font-size:0.85rem; display:flex; align-items:center; gap:0.5rem; background:rgba(10,10,10,0.8); padding:0.5rem 1rem; border-radius:8px; backdrop-filter:blur(10px); border:1px solid rgba(255,255,255,0.05); transition:all 0.3s; }
+.back-link:hover { color:#E05A2A; border-color:rgba(224,90,42,0.3); }
+
+.hero { min-height:100vh; display:flex; align-items:center; padding:0 5%; position:relative; overflow:hidden; }
+.hero::before { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 60% 50%, rgba(224,90,42,0.08), transparent 60%), radial-gradient(ellipse at 30% 80%, rgba(244,162,97,0.03), transparent 50%); pointer-events:none; }
+.hero-content { display:grid; grid-template-columns:1fr 1fr; gap:4rem; align-items:center; position:relative; z-index:1; max-width:1200px; margin:0 auto; width:100%; }
+.hero-img-placeholder { width:100%; max-width:400px; aspect-ratio:1; border-radius:20px; background:linear-gradient(135deg, #1A1A2E, #2B1D3B); display:flex; align-items:center; justify-content:center; font-size:6rem; box-shadow:0 30px 80px rgba(0,0,0,0.5); overflow:hidden; position:relative; }
+.hero-img-placeholder::after { content:''; position:absolute; inset:0; border-radius:20px; border:1px solid rgba(244,162,97,0.1); }
+.hero-img-placeholder svg { width:80%; height:80%; }
+.hero h1 { font-family:'Playfair Display',serif; font-size:4.5rem; font-weight:700; letter-spacing:-0.03em; line-height:1.05; margin-bottom:0.5rem; }
+.hero h1 .az { color:#E05A2A; }
+.hero h1 .rec { color:#F4A261; }
+.hero .genre-tag { font-size:0.8rem; letter-spacing:0.15em; text-transform:uppercase; color:#F4A261; font-weight:600; margin-bottom:1rem; }
+.hero .origin { color:#666; font-size:0.9rem; margin-bottom:1.5rem; }
+.hero p { color:#999; font-size:1.05rem; line-height:1.8; max-width:500px; margin-bottom:1.5rem; }
+.hero-stats { display:flex; gap:2rem; margin-bottom:2rem; }
+.hero-stats .stat { text-align:left; }
+.hero-stats .num { font-size:1.8rem; font-weight:700; color:#F4A261; font-family:'Playfair Display',serif; }
+.hero-stats .label { font-size:0.75rem; color:#666; text-transform:uppercase; letter-spacing:0.05em; }
+.social-links { display:flex; gap:0.8rem; }
+.social-links a { width:40px; height:40px; border-radius:50%; border:1px solid rgba(255,255,255,0.1); display:flex; align-items:center; justify-content:center; color:#999; text-decoration:none; font-size:1.1rem; transition:all 0.3s; }
+.social-links a:hover { border-color:#F4A261; color:#F4A261; }
+
+.section { padding:5rem 5%; max-width:1100px; margin:0 auto; }
+.section-dark { background:#0d0d0d; }
+.section-dark-alt { background:linear-gradient(180deg, #0d0d0d, #1A1A2E); }
+.section-title { font-family:'Playfair Display',serif; font-size:2.2rem; font-weight:700; color:#fff; margin-bottom:0.5rem; }
+.section-title .az { color:#E05A2A; }
+.section-title .rec { color:#F4A261; }
+.section-subtitle { color:#888; font-size:1rem; margin-bottom:2.5rem; max-width:600px; }
+.text-center { text-align:center; }
+.mx-auto { margin-left:auto; margin-right:auto; }
+
+.bio-text { max-width:700px; margin:0 auto; color:#999; font-size:1.05rem; line-height:1.9; }
+.bio-text p { margin-bottom:1.2rem; }
+.bio-text strong { color:#E05A2A; font-weight:500; }
+
+.product-grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:1.5rem; }
+.product-card { background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:1.5rem; transition:all 0.3s; text-align:center; }
+.product-card:hover { border-color:rgba(244,162,97,0.3); transform:translateY(-4px); }
+.product-card .product-img { width:100%; aspect-ratio:1; border-radius:8px; background:linear-gradient(135deg, #1A1A2E, #2B1D3B); margin-bottom:1rem; display:flex; align-items:center; justify-content:center; font-size:3rem; }
+.product-card h4 { color:#fff; font-size:1rem; font-weight:600; margin-bottom:0.3rem; }
+.product-card p { color:#777; font-size:0.85rem; }
+.product-card .price { color:#F4A261; font-weight:700; font-size:1.1rem; margin-top:0.5rem; }
+.product-card .btn-small { display:inline-block; margin-top:0.8rem; padding:0.5rem 1.2rem; background:#E05A2A; color:#fff; border-radius:6px; text-decoration:none; font-size:0.8rem; font-weight:600; transition:all 0.3s; }
+.product-card .btn-small:hover { background:#F4A261; color:#1A1A2E; }
+
+.highlights { display:grid; grid-template-columns:repeat(auto-fill, minmax(250px, 1fr)); gap:1.5rem; }
+.highlight-card { background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:12px; padding:1.5rem; transition:all 0.3s; }
+.highlight-card:hover { border-color:rgba(224,90,42,0.2); }
+.highlight-card .icon { font-size:1.5rem; margin-bottom:0.8rem; }
+.highlight-card h4 { color:#fff; font-size:1rem; font-weight:600; margin-bottom:0.3rem; }
+.highlight-card p { color:#777; font-size:0.88rem; line-height:1.6; }
+
+.track-list { display:grid; gap:1rem; max-width:700px; margin:0 auto; }
+.track-item { display:flex; align-items:center; gap:1rem; padding:1rem 1.2rem; background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.06); border-radius:10px; transition:all 0.3s; }
+.track-item:hover { border-color:rgba(244,162,97,0.2); }
+.track-num { width:24px; color:#555; font-weight:600; font-size:0.9rem; }
+.track-info { flex:1; }
+.track-info h4 { color:#e5e5e5; font-size:1rem; font-weight:500; }
+.track-info p { color:#666; font-size:0.8rem; margin-top:0.1rem; }
+
+.cta-section { text-align:center; padding:5rem 2rem; background:linear-gradient(135deg, #1A1A2E, #2B1D3B); }
+.cta-section h2 { font-family:'Playfair Display',serif; font-size:2.5rem; color:#fff; margin-bottom:1rem; }
+.cta-section h2 .az { color:#E05A2A; }
+.cta-section h2 .rec { color:#F4A261; }
+.cta-section p { color:#999; margin-bottom:2rem; max-width:500px; margin-left:auto; margin-right:auto; }
+.btn { display:inline-flex; align-items:center; gap:0.5rem; padding:0.9rem 2rem; border-radius:8px; font-weight:600; text-decoration:none; transition:all 0.3s; cursor:pointer; border:none; font-size:0.9rem; }
+.btn-primary { background:#E05A2A; color:#fff; }
+.btn-primary:hover { background:#F4A261; color:#1A1A2E; transform:translateY(-2px); }
+.btn-outline { background:transparent; color:#F4A261; border:1px solid rgba(244,162,97,0.3); }
+.btn-outline:hover { border-color:#F4A261; background:rgba(244,162,97,0.08); transform:translateY(-2px); }
+.btn-light { background:#F5E6D3; color:#1A1A2E; }
+.btn-light:hover { background:#fff; transform:translateY(-2px); }
+
+footer { padding:2rem 5%; text-align:center; border-top:1px solid rgba(255,255,255,0.05); }
+footer p { color:#555; font-size:0.82rem; }
+footer a { color:#E05A2A; text-decoration:none; }
+
+@media(max-width:800px) {
+  .hero-content { grid-template-columns:1fr; gap:2rem; }
+  .hero { min-height:auto; padding-top:6rem; padding-bottom:3rem; }
+  .hero h1 { font-size:2.8rem; }
+  .hero-stats { gap:1.2rem; flex-wrap:wrap; }
+  .hero-img-placeholder { max-width:250px; margin:0 auto; }
+  .back-link { top:0.5rem; left:0.5rem; font-size:0.75rem; }
+}
+</style>
+</head>
+<body>
+
+<a href="https://sonoradigitalcorp.com/productos/azrec/landing/" class="back-link">← Sonora Digital Corp</a>
+
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-img-placeholder">
+      <svg viewBox="0 0 200 200" width="160" height="160">
+        <defs>
+          <radialGradient id="bgGrad" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" style="stop-color:#E05A2A"/>
+            <stop offset="100%" style="stop-color:#2B1D3B"/>
+          </radialGradient>
+        </defs>
+        <circle cx="100" cy="100" r="100" fill="url(#bgGrad)"/>
+        <text x="100" y="115" font-family="Montserrat, Arial, sans-serif" font-weight="900" font-size="64" fill="#F4A261" text-anchor="middle" letter-spacing="3">AZ</text>
+        <text x="100" y="145" font-family="Montserrat, Arial, sans-serif" font-weight="900" font-size="28" fill="#F5E6D3" text-anchor="middle" letter-spacing="5">REC</text>
+      </svg>
+    </div>
+    <div>
+      <div class="genre-tag">Sello Musical · Moda · Cultura</div>
+      <h1><span class="az">AZ</span><span class="rec">REC</span></h1>
+      <p class="origin">🇲🇽 Hermosillo, Sonora — Fundado 2026</p>
+      <p>De la A a la Z, del desierto al mundo. Sello musical, gorras, merch y cultura urbana desde Hermosillo, Sonora.</p>
+      <div class="hero-stats">
+        <div class="stat"><div class="num">AZ</div><div class="label">A-Z · Todos los generos</div></div>
+        <div class="stat"><div class="num">REC</div><div class="label">Records · Recording</div></div>
+        <div class="stat"><div class="num">⚡</div><div class="label">Sonora · MX</div></div>
+      </div>
+      <div class="social-links">
+        <a href="https://instagram.com/azrec" target="_blank" title="Instagram">📷</a>
+        <a href="https://tiktok.com/@azrec" target="_blank" title="TikTok">🎵</a>
+        <a href="https://t.me/AzREC" target="_blank" title="Telegram">✈️</a>
+        <a href="https://sonoradigitalcorp.com/azrec/catalogo" target="_blank" title="Tienda">🛍️</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="text-center">
+    <div class="section-title">Nuestra <span class="az">His</span><span class="rec">toria</span></div>
+  </div>
+  <div class="bio-text">
+    <p><strong>AzREC</strong> nace en Hermosillo, Sonora, de la vision de <strong>Alejandro Zamora</strong> — un joven emprendedor que decidio convertir su pasion por la musica y la moda en un movimiento cultural.</p>
+    <p>Somos un <strong>sello musical independiente</strong> que abarca todos los generos — de la A a la Z. Pero somos mas que musica: somos gorras, somos merch, somos el orgullo de ser sonorense.</p>
+    <p>Nuestra casa-estudio en Hermosillo es el corazon de <strong>AzREC</strong>: un espacio donde se crea musica, se disena ropa, se ensayan bandas y se construye comunidad. Con cuartos de ensayo, estudio de grabacion y showroom de productos.</p>
+    <p>De la A a la Z, del desierto al mundo. <strong>Bienvenido a AzREC.</strong></p>
+  </div>
+</section>
+
+<section class="section section-dark-alt">
+  <div class="text-center">
+    <div class="section-title">Nuestra <span class="az">Co</span><span class="rec">leccion</span></div>
+    <p class="section-subtitle mx-auto">Gorras y merch con identidad sonorense</p>
+  </div>
+  <div class="product-grid">
+    <div class="product-card">
+      <div class="product-img">🧢</div>
+      <h4>Gorra AzREC Classic</h4>
+      <p>Negra con logo bordado. Ajustable, curva plana.</p>
+      <div class="price">$399 MXN</div>
+      <a href="https://sonoradigitalcorp.com/azrec/gorra-classic" class="btn-small">Comprar</a>
+    </div>
+    <div class="product-card">
+      <div class="product-img">🧢</div>
+      <h4>Gorra Sonora Sunset</h4>
+      <p>Naranja quemado con bordado "Sonora" en dorado.</p>
+      <div class="price">$449 MXN</div>
+      <a href="https://sonoradigitalcorp.com/azrec/gorra-sunset" class="btn-small">Comprar</a>
+    </div>
+    <div class="product-card">
+      <div class="product-img">👕</div>
+      <h4>Playera AzREC</h4>
+      <p>Algodon premium. Estampado frontal y trasero.</p>
+      <div class="price">$349 MXN</div>
+      <a href="https://sonoradigitalcorp.com/azrec/playera-classic" class="btn-small">Comprar</a>
+    </div>
+    <div class="product-card">
+      <div class="product-img">🎒</div>
+      <h4>Tote Bag "Desierto"</h4>
+      <p>Lona resistente. Diseno exclusivo AzREC.</p>
+      <div class="price">$249 MXN</div>
+      <a href="https://sonoradigitalcorp.com/azrec/tote-bag" class="btn-small">Comprar</a>
+    </div>
+  </div>
+  <div class="text-center" style="margin-top:2rem;">
+    <a href="https://sonoradigitalcorp.com/azrec/catalogo" class="btn btn-primary">Ver tienda completa 🛍️</a>
+  </div>
+</section>
+
+<section class="section section-dark">
+  <div class="text-center">
+    <div class="section-title">Lo <span class="az">Que</span> <span class="rec">Hacemos</span></div>
+    <p class="section-subtitle mx-auto">Musica, moda y cultura desde Hermosillo</p>
+  </div>
+  <div class="highlights">
+    <div class="highlight-card">
+      <div class="icon">🎵</div>
+      <h4>Sello Musical</h4>
+      <p>Producimos, distribuimos y promovemos artistas de todos los generos. De la A a la Z.</p>
+    </div>
+    <div class="highlight-card">
+      <div class="icon">🧢</div>
+      <h4>Gorras y Merch</h4>
+      <p>Disenos exclusivos con identidad sonorense. Calle, desierto y orgullo local.</p>
+    </div>
+    <div class="highlight-card">
+      <div class="icon">🏠</div>
+      <h4>Casa-Estudio</h4>
+      <p>Cuartos de ensayo, estudio de grabacion y showroom. El corazon fisico de AzREC.</p>
+    </div>
+    <div class="highlight-card">
+      <div class="icon">🤖</div>
+      <h4>Bot Telegram</h4>
+      <p>Asistente de ventas inteligente. Catalogo, ordenes y atencion automatizada 24/7.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="text-center">
+    <div class="section-title">Pro<span class="az">xi</span><span class="rec">mamente</span></div>
+    <p class="section-subtitle mx-auto">Proximos lanzamientos y eventos</p>
+  </div>
+  <div class="track-list">
+    <div class="track-item">
+      <span class="track-num">🎧</span>
+      <div class="track-info">
+        <h4>Primer Sencillo AzREC</h4>
+        <p>Lanzamiento inaugural del sello — artista por anunciar</p>
+      </div>
+    </div>
+    <div class="track-item">
+      <span class="track-num">🧢</span>
+      <div class="track-info">
+        <h4>Coleccion Temporada 1</h4>
+        <p>5 disenos de gorras + 3 playeras + accesorios</p>
+      </div>
+    </div>
+    <div class="track-item">
+      <span class="track-num">🎤</span>
+      <div class="track-info">
+        <h4>Evento de Lanzamiento</h4>
+        <p>Hermosillo, Sonora — fecha por confirmar</p>
+      </div>
+    </div>
+    <div class="track-item">
+      <span class="track-num">🤖</span>
+      <div class="track-info">
+        <h4>Grupo Telegram Exclusivo</h4>
+        <p>Para seguidores de AzREC: contenido, promos y comunidad</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2>Se parte de <span class="az">Az</span><span class="rec">REC</span></h2>
+  <p>Unete al movimiento. De la A a la Z, del desierto al mundo.</p>
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+    <a href="https://t.me/AzREC" class="btn btn-primary">Grupo Telegram</a>
+    <a href="https://sonoradigitalcorp.com/azrec/catalogo" class="btn btn-light">Tienda</a>
+    <a href="#" class="btn btn-outline">Contacto</a>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 AzREC. Todos los derechos reservados. Hermosillo, Sonora, Mexico.</p>
+  <p style="margin-top:0.5rem;">Powered by <a href="https://sonoradigitalcorp.com">Sonora Digital Corp</a></p>
+</footer>
+
+</body>
+</html>

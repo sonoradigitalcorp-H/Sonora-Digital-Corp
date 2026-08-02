@@ -127,7 +127,7 @@ http://149.56.46.173:8768/ocr/<artist_id>/<uuid>.txt
 docker compose -f docker-compose.yml up -d
 
 # Variables de entorno requeridas
-export FAL_KEY="<key>"
+export FAL_API_KEY="<key>"
 export MUAPI_KEY="<key>"
 export OMNIVOICE_URL="http://omnivoice:3900"
 ```

@@ -177,7 +177,7 @@ def test_managed_fal_submit_uses_gateway_origin_and_nous_token(monkeypatch):
     captured = {}
     _install_fake_tools_package()
     _install_fake_fal_client(captured)
-    monkeypatch.delenv("FAL_KEY", raising=False)
+    monkeypatch.delenv("FAL_API_KEY", raising=False)
     monkeypatch.setenv("FAL_QUEUE_GATEWAY_URL", "http://127.0.0.1:3009")
     monkeypatch.setenv("TOOL_GATEWAY_USER_TOKEN", "nous-token")
 
@@ -205,7 +205,7 @@ def test_managed_fal_submit_reuses_cached_sync_client(monkeypatch):
     captured = {}
     _install_fake_tools_package()
     _install_fake_fal_client(captured)
-    monkeypatch.delenv("FAL_KEY", raising=False)
+    monkeypatch.delenv("FAL_API_KEY", raising=False)
     monkeypatch.setenv("FAL_QUEUE_GATEWAY_URL", "http://127.0.0.1:3009")
     monkeypatch.setenv("TOOL_GATEWAY_USER_TOKEN", "nous-token")
 
@@ -336,10 +336,10 @@ def _load_video_gen_plugin(monkeypatch):
 
 
 def test_video_gen_managed_fal_submit_uses_gateway(monkeypatch):
-    """Video gen routes through the managed gateway when FAL_KEY is absent."""
+    """Video gen routes through the managed gateway when FAL_API_KEY is absent."""
     captured = {}
     fake_fal = _install_fake_fal_client(captured)
-    monkeypatch.delenv("FAL_KEY", raising=False)
+    monkeypatch.delenv("FAL_API_KEY", raising=False)
     monkeypatch.setenv("FAL_QUEUE_GATEWAY_URL", "http://127.0.0.1:3009")
     monkeypatch.setenv("TOOL_GATEWAY_USER_TOKEN", "nous-video-token")
 
@@ -366,7 +366,7 @@ def test_video_gen_managed_client_reused_across_calls(monkeypatch):
     """The managed video client is cached and reused across requests."""
     captured = {}
     _install_fake_fal_client(captured)
-    monkeypatch.delenv("FAL_KEY", raising=False)
+    monkeypatch.delenv("FAL_API_KEY", raising=False)
     monkeypatch.setenv("FAL_QUEUE_GATEWAY_URL", "http://127.0.0.1:3009")
     monkeypatch.setenv("TOOL_GATEWAY_USER_TOKEN", "nous-video-token")
 
@@ -381,10 +381,10 @@ def test_video_gen_managed_client_reused_across_calls(monkeypatch):
 
 
 def test_video_gen_direct_mode_when_fal_key_set(monkeypatch):
-    """When FAL_KEY is set and gateway not preferred, uses direct fal_client.submit."""
+    """When FAL_API_KEY is set and gateway not preferred, uses direct fal_client.submit."""
     captured = {}
     _install_fake_fal_client(captured)
-    monkeypatch.setenv("FAL_KEY", "direct-fal-key-123")
+    monkeypatch.setenv("FAL_API_KEY", "direct-fal-key-123")
     monkeypatch.delenv("FAL_QUEUE_GATEWAY_URL", raising=False)
     monkeypatch.delenv("TOOL_GATEWAY_USER_TOKEN", raising=False)
 
@@ -427,7 +427,7 @@ def test_video_gen_gateway_4xx_raises_actionable_valueerror(monkeypatch):
     """A 4xx from the managed gateway surfaces a clear ValueError with remediation hints."""
     captured = {}
     _install_fake_fal_client(captured)
-    monkeypatch.delenv("FAL_KEY", raising=False)
+    monkeypatch.delenv("FAL_API_KEY", raising=False)
     monkeypatch.setenv("FAL_QUEUE_GATEWAY_URL", "http://127.0.0.1:3009")
     monkeypatch.setenv("TOOL_GATEWAY_USER_TOKEN", "nous-video-token")
 
@@ -457,9 +457,9 @@ def test_video_gen_gateway_4xx_raises_actionable_valueerror(monkeypatch):
 
 
 def test_video_gen_is_available_true_via_gateway(monkeypatch):
-    """is_available() returns True when FAL_KEY is absent but managed gateway is configured."""
+    """is_available() returns True when FAL_API_KEY is absent but managed gateway is configured."""
     _install_fake_fal_client({})
-    monkeypatch.delenv("FAL_KEY", raising=False)
+    monkeypatch.delenv("FAL_API_KEY", raising=False)
     monkeypatch.setenv("FAL_QUEUE_GATEWAY_URL", "http://127.0.0.1:3009")
     monkeypatch.setenv("TOOL_GATEWAY_USER_TOKEN", "nous-video-token")
 
@@ -469,10 +469,10 @@ def test_video_gen_is_available_true_via_gateway(monkeypatch):
 
 
 def test_video_gen_prefers_gateway_overrides_direct_key(monkeypatch):
-    """When FAL_KEY is set but prefers_gateway('video_gen') is True, routes through gateway."""
+    """When FAL_API_KEY is set but prefers_gateway('video_gen') is True, routes through gateway."""
     captured = {}
     _install_fake_fal_client(captured)
-    monkeypatch.setenv("FAL_KEY", "direct-key-present")
+    monkeypatch.setenv("FAL_API_KEY", "direct-key-present")
     monkeypatch.setenv("FAL_QUEUE_GATEWAY_URL", "http://127.0.0.1:3009")
     monkeypatch.setenv("TOOL_GATEWAY_USER_TOKEN", "nous-video-token")
 
