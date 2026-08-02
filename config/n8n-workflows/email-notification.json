@@ -1,0 +1,24 @@
+{
+  "name": "Email Notificación",
+  "description": "Envía email cuando un lead caliente es detectado",
+  "nodes": [
+    {
+      "type": "webhook",
+      "name": "webhook_email",
+      "parameters": {
+        "path": "email_notify",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "type": "emailSend",
+      "name": "send_email",
+      "parameters": {
+        "fromEmail": "bot@astrotech.mx",
+        "toEmail": "cesar@astrotech.mx",
+        "subject": "🔥 Lead Hot: {{ $json.name }}",
+        "text": "Nuevo lead detectado:\n\nNombre: {{ $json.name }}\nTeléfono: {{ $json.phone }}\nScore: {{ $json.score }}/100\nMensaje: {{ $json.message }}"
+      }
+    }
+  ]
+}

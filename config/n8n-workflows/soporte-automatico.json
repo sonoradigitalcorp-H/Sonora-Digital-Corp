@@ -1,0 +1,45 @@
+{
+  "name": "Soporte Automático",
+  "description": "Clasifica mensajes de soporte y responde o escala",
+  "nodes": [
+    {
+      "type": "webhook",
+      "name": "webhook_support",
+      "parameters": {
+        "path": "support_ticket",
+        "httpMethod": "POST"
+      }
+    },
+    {
+      "type": "openai",
+      "name": "classify_issue",
+      "parameters": {
+        "model": "deepseek/deepseek-v4-flash",
+        "prompt": "Clasifica este mensaje de soporte: {{ $json.message }}. Responde con: urgente, normal, o bajo."
+      }
+    },
+    {
+      "type": "if",
+      "name": "check_urgency",
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value": "={{ $json.response }}",
+              "operation": "contains",
+              "value2": "urgente"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "type": "telegram",
+      "name": "notify_urgent",
+      "parameters": {
+        "chatId": "5738935134",
+        "text": "🚨 SOPORTE URGENTE\n\nDe: {{ $json.from }}\nMensaje: {{ $json.message }}"
+      }
+    }
+  ]
+}
