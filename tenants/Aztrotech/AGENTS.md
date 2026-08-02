@@ -109,6 +109,13 @@ sdc-n8n-bridge.service         → Webhook bridge bot ↔ n8n (:8767)
 - Canal Telegram: requiere api_id/api_hash de César (my.telegram.org)
 - WhatsApp re-auth: requiere QR interactivo (sandbox 6623538272)
 
+### 🚫 BLOCKER — NO AVANZAR A MVP SIN VERIFICAR
+**Tag: v0.9.0-jarvis** — Sesión 2026-08-02
+- JARVIS Proactive Engine necesita verificación end-to-end
+- Mic continuo + wake word + acciones + screenshots + Hermes MCP
+- NO crear nuevos tenants ni features hasta que JARVIS esté probado
+- Specs 023-029 completos pero NO verificados en producción
+
 ### Bot Dual Activo
 - **Bot conversación**: @AztroTechBot (token: ${AZTROTECH_BOT_TOKEN}) → Chat ID César: 5738935134
 - **Bot notificaciones**: @MysticUnity_bot (token: ${NOTIF_BOT_TOKEN}) → Leads, alertas, resúmenes diarios
