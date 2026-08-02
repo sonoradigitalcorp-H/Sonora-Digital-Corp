@@ -3,886 +3,824 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SDC JARVIS — Sonora Digital Corp</title>
+<title>SDC JARVIS 3D — Sonora Digital Corp</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap');
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-:root {
-  --bg: #0a0a0f;
-  --panel: rgba(10, 15, 30, 0.85);
-  --border: rgba(0, 200, 255, 0.15);
-  --glow: rgba(0, 200, 255, 0.3);
-  --accent: #00c8ff;
-  --accent2: #00ff88;
-  --accent3: #ff6b35;
-  --accent4: #a855f7;
-  --text: #e0e8f0;
-  --text-dim: #607080;
-}
-
 body {
-  background: var(--bg);
-  color: var(--text);
+  background: #000;
+  color: #e0e8f0;
   font-family: 'Rajdhani', sans-serif;
-  overflow-x: hidden;
-  min-height: 100vh;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
 }
 
-/* ── Background particles ── */
-#particles {
+#scene-container {
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
   z-index: 0;
+}
+
+/* ── HUD Overlay ── */
+.hud {
+  position: fixed;
+  z-index: 100;
   pointer-events: none;
 }
 
-/* ── Header ── */
-.header {
-  position: relative;
-  z-index: 10;
-  padding: 20px 40px;
+.hud * { pointer-events: auto; }
+
+/* ── Top Bar ── */
+.top-bar {
+  top: 0; left: 0; right: 0;
+  height: 60px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  border-bottom: 1px solid var(--border);
-  background: linear-gradient(180deg, rgba(0,200,255,0.05) 0%, transparent 100%);
+  padding: 0 30px;
+  background: linear-gradient(180deg, rgba(0,10,20,0.95) 0%, rgba(0,10,20,0.6) 70%, transparent 100%);
+  border-bottom: 1px solid rgba(0,180,255,0.1);
 }
 
-.logo {
+.logo-3d {
   font-family: 'Orbitron', monospace;
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 900;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
+  background: linear-gradient(135deg, #00b4ff, #00ff88);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-shadow: 0 0 30px var(--glow);
+  filter: drop-shadow(0 0 20px rgba(0,180,255,0.4));
+  letter-spacing: 3px;
 }
 
 .logo-sub {
-  font-size: 12px;
-  color: var(--text-dim);
-  letter-spacing: 4px;
+  font-size: 10px;
+  color: rgba(0,180,255,0.5);
+  letter-spacing: 6px;
   text-transform: uppercase;
+  font-family: 'Share Tech Mono', monospace;
 }
 
-.header-stats {
+.top-stats {
   display: flex;
-  gap: 30px;
+  gap: 40px;
 }
 
-.stat {
+.top-stat {
   text-align: center;
 }
 
-.stat-value {
+.top-stat-val {
   font-family: 'Orbitron', monospace;
-  font-size: 24px;
-  color: var(--accent);
+  font-size: 20px;
+  color: #00ff88;
+  text-shadow: 0 0 15px rgba(0,255,136,0.5);
 }
 
-.stat-label {
-  font-size: 11px;
-  color: var(--text-dim);
-  text-transform: uppercase;
+.top-stat-lbl {
+  font-size: 9px;
+  color: rgba(0,180,255,0.4);
   letter-spacing: 2px;
+  text-transform: uppercase;
+  font-family: 'Share Tech Mono', monospace;
 }
 
-/* ── Main Grid ── */
-.main {
-  position: relative;
-  z-index: 10;
-  display: grid;
-  grid-template-columns: 300px 1fr 300px;
-  grid-template-rows: auto 1fr;
-  gap: 20px;
-  padding: 20px 40px;
-  min-height: calc(100vh - 80px);
+.clock {
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 16px;
+  color: #00b4ff;
+  text-shadow: 0 0 10px rgba(0,180,255,0.4);
 }
 
-/* ── Panels ── */
-.panel {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 20px;
-  backdrop-filter: blur(10px);
+/* ── Left Panel ── */
+.left-hud {
+  top: 80px; left: 20px;
+  width: 280px;
+}
+
+.hud-panel {
+  background: rgba(0,8,16,0.85);
+  border: 1px solid rgba(0,180,255,0.12);
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 15px;
+  backdrop-filter: blur(20px);
   position: relative;
   overflow: hidden;
 }
 
-.panel::before {
+.hud-panel::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px; height: 100%;
+  background: linear-gradient(180deg, #00b4ff, transparent);
+}
+
+.hud-panel::after {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  height: 1px;
+  background: linear-gradient(90deg, #00b4ff, transparent);
 }
 
-.panel-title {
+.hud-title {
   font-family: 'Orbitron', monospace;
-  font-size: 13px;
-  color: var(--accent);
-  text-transform: uppercase;
+  font-size: 10px;
+  color: #00b4ff;
   letter-spacing: 3px;
-  margin-bottom: 15px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
-.panel-title::before {
-  content: '';
-  width: 8px;
-  height: 8px;
-  background: var(--accent);
+.hud-title .dot {
+  width: 6px; height: 6px;
+  background: #00ff88;
   border-radius: 50%;
-  box-shadow: 0 0 10px var(--accent);
+  box-shadow: 0 0 8px #00ff88;
   animation: pulse 2s infinite;
 }
 
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.4; }
-}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-/* ── Client World Cards ── */
-.worlds {
-  grid-column: 1 / -1;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  gap: 20px;
-}
-
-.world-card {
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 25px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.world-card:hover {
-  border-color: var(--accent);
-  transform: translateY(-5px);
-  box-shadow: 0 10px 40px rgba(0, 200, 255, 0.15);
-}
-
-.world-card::after {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(0,200,255,0.08) 0%, transparent 60%);
-  pointer-events: none;
-}
-
-.world-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 15px;
-}
-
-.world-name {
-  font-family: 'Orbitron', monospace;
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.world-status {
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 11px;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.status-active { background: rgba(0,255,136,0.15); color: var(--accent2); border: 1px solid rgba(0,255,136,0.3); }
-.status-warning { background: rgba(255,107,53,0.15); color: var(--accent3); border: 1px solid rgba(255,107,53,0.3); }
-.status-offline { background: rgba(255,50,50,0.15); color: #ff3232; border: 1px solid rgba(255,50,50,0.3); }
-
-.world-metrics {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin-top: 15px;
-}
-
-.metric {
-  text-align: center;
-  padding: 10px;
-  background: rgba(0,200,255,0.05);
-  border-radius: 8px;
-  border: 1px solid rgba(0,200,255,0.1);
-}
-
-.metric-value {
-  font-family: 'Orbitron', monospace;
-  font-size: 20px;
-  color: var(--accent);
-}
-
-.metric-label {
-  font-size: 10px;
-  color: var(--text-dim);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-top: 4px;
-}
-
-.world-services {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 15px;
-}
-
-.service-tag {
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 11px;
-  background: rgba(0,200,255,0.08);
-  border: 1px solid rgba(0,200,255,0.15);
-  color: var(--text-dim);
-}
-
-.service-tag.active { border-color: var(--accent2); color: var(--accent2); }
-
-/* ── Left Panel — System Status ── */
-.left-panel {
-  grid-row: 2;
-}
-
-.service-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.service-item {
+.svc-row {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px;
-  background: rgba(0,200,255,0.03);
-  border-radius: 8px;
-  border: 1px solid rgba(0,200,255,0.08);
-  transition: all 0.2s;
+  gap: 8px;
+  padding: 6px 0;
+  border-bottom: 1px solid rgba(0,180,255,0.05);
+  font-size: 12px;
 }
 
-.service-item:hover {
-  background: rgba(0,200,255,0.08);
-  border-color: var(--accent);
-}
-
-.service-dot {
-  width: 10px;
-  height: 10px;
+.svc-dot {
+  width: 8px; height: 8px;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
-.dot-green { background: var(--accent2); box-shadow: 0 0 8px var(--accent2); }
-.dot-yellow { background: var(--accent3); box-shadow: 0 0 8px var(--accent3); }
-.dot-red { background: #ff3232; box-shadow: 0 0 8px #ff3232; }
+.svc-dot.g { background: #00ff88; box-shadow: 0 0 6px #00ff88; }
+.svc-dot.y { background: #ffaa00; box-shadow: 0 0 6px #ffaa00; }
+.svc-dot.r { background: #ff3344; box-shadow: 0 0 6px #ff3344; }
 
-.service-name {
-  font-size: 13px;
-  font-weight: 500;
-}
+.svc-name { color: #c0d0e0; flex: 1; }
 
-.service-detail {
+.svc-val {
+  font-family: 'Share Tech Mono', monospace;
+  color: #00b4ff;
   font-size: 11px;
-  color: var(--text-dim);
-  margin-left: auto;
 }
 
-/* ── Center — 3D Visualization ── */
-.center-panel {
-  grid-row: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 500px;
-}
-
-#arc-canvas {
-  width: 100%;
-  height: 400px;
-  border-radius: 12px;
-}
-
-/* ── Right Panel — Activity Feed ── */
-.right-panel {
-  grid-row: 2;
-}
-
-.feed {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  max-height: 600px;
-  overflow-y: auto;
+/* ── Right Panel ── */
+.right-hud {
+  top: 80px; right: 20px;
+  width: 300px;
 }
 
 .feed-item {
-  padding: 10px;
-  background: rgba(0,200,255,0.03);
-  border-radius: 8px;
-  border-left: 3px solid var(--accent);
-  font-size: 12px;
-  animation: slideIn 0.3s ease;
+  padding: 8px 10px;
+  border-left: 2px solid #00b4ff;
+  margin-bottom: 8px;
+  background: rgba(0,180,255,0.03);
+  font-size: 11px;
+  animation: feedIn 0.4s ease;
 }
 
-@keyframes slideIn {
+@keyframes feedIn {
   from { opacity: 0; transform: translateX(20px); }
   to { opacity: 1; transform: translateX(0); }
 }
 
 .feed-time {
-  color: var(--text-dim);
+  font-family: 'Share Tech Mono', monospace;
+  color: rgba(0,180,255,0.4);
   font-size: 10px;
-  margin-bottom: 4px;
 }
 
-.feed-text {
-  color: var(--text);
-}
+.feed-text { color: #c0d0e0; margin: 2px 0; }
 
 .feed-tag {
   display: inline-block;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-size: 10px;
-  margin-top: 4px;
+  padding: 1px 6px;
+  border-radius: 2px;
+  font-size: 9px;
+  font-family: 'Share Tech Mono', monospace;
+  letter-spacing: 1px;
 }
 
-.tag-lead { background: rgba(0,255,136,0.15); color: var(--accent2); }
-.tag-system { background: rgba(0,200,255,0.15); color: var(--accent); }
-.tag-security { background: rgba(255,107,53,0.15); color: var(--accent3); }
-.tag-voice { background: rgba(168,85,247,0.15); color: var(--accent4); }
+.tag-lead { background: rgba(0,255,136,0.15); color: #00ff88; }
+.tag-sys { background: rgba(0,180,255,0.15); color: #00b4ff; }
+.tag-sec { background: rgba(255,68,68,0.15); color: #ff4444; }
+.tag-voice { background: rgba(168,85,247,0.15); color: #a855f7; }
+.tag-social { background: rgba(255,170,0,0.15); color: #ffaa00; }
 
 /* ── Bottom Bar ── */
-.bottom-bar {
-  grid-column: 1 / -1;
+.bottom-hud {
+  bottom: 0; left: 0; right: 0;
+  height: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 0;
-  border-top: 1px solid var(--border);
+  padding: 0 30px;
+  background: linear-gradient(0deg, rgba(0,10,20,0.95) 0%, rgba(0,10,20,0.6) 70%, transparent 100%);
+  border-top: 1px solid rgba(0,180,255,0.1);
 }
 
-.bottom-stats {
+.bot-stats {
   display: flex;
-  gap: 40px;
+  gap: 30px;
 }
 
-.bottom-stat {
+.bot-stat {
   display: flex;
   align-items: center;
+  gap: 6px;
+}
+
+.bot-stat .ring {
+  width: 32px; height: 32px;
+  position: relative;
+}
+
+.bot-stat .ring svg {
+  transform: rotate(-90deg);
+}
+
+.bot-stat .ring-val {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Share Tech Mono', monospace;
+  font-size: 9px;
+  color: #00ff88;
+}
+
+.bot-stat-lbl {
+  font-size: 10px;
+  color: rgba(0,180,255,0.4);
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* ── Client Popup ── */
+.client-popup {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  width: 700px;
+  max-height: 80vh;
+  background: rgba(0,8,16,0.95);
+  border: 1px solid rgba(0,180,255,0.3);
+  border-radius: 8px;
+  padding: 30px;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(30px);
+}
+
+.client-popup.active {
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1);
+  pointer-events: auto;
+}
+
+.popup-close {
+  position: absolute;
+  top: 15px; right: 15px;
+  background: none;
+  border: 1px solid rgba(0,180,255,0.3);
+  color: #00b4ff;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-close:hover {
+  background: rgba(0,180,255,0.1);
+  border-color: #00b4ff;
+}
+
+.popup-title {
+  font-family: 'Orbitron', monospace;
+  font-size: 24px;
+  color: #00b4ff;
+  margin-bottom: 5px;
+}
+
+.popup-subtitle {
+  color: rgba(0,180,255,0.5);
+  font-size: 12px;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+}
+
+.popup-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.popup-metric {
+  text-align: center;
+  padding: 15px;
+  background: rgba(0,180,255,0.05);
+  border: 1px solid rgba(0,180,255,0.1);
+  border-radius: 4px;
+}
+
+.popup-metric-val {
+  font-family: 'Orbitron', monospace;
+  font-size: 28px;
+  color: #00ff88;
+  text-shadow: 0 0 15px rgba(0,255,136,0.4);
+}
+
+.popup-metric-lbl {
+  font-size: 10px;
+  color: rgba(0,180,255,0.5);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 5px;
+}
+
+.popup-services {
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
-.bottom-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--accent2);
-  box-shadow: 0 0 6px var(--accent2);
+.popup-svc {
+  padding: 6px 14px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-family: 'Share Tech Mono', monospace;
+  border: 1px solid rgba(0,180,255,0.2);
+  background: rgba(0,180,255,0.05);
+  color: rgba(0,180,255,0.6);
 }
 
-.bottom-label {
-  font-size: 12px;
-  color: var(--text-dim);
+.popup-svc.on {
+  border-color: rgba(0,255,136,0.4);
+  color: #00ff88;
+  background: rgba(0,255,136,0.08);
 }
 
-.bottom-value {
-  font-family: 'Orbitron', monospace;
-  font-size: 14px;
-  color: var(--accent);
+/* ── Overlay dim ── */
+.overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 190;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s;
 }
 
-/* ── Scrollbar ── */
-::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-
-/* ── Responsive ── */
-@media (max-width: 1200px) {
-  .main { grid-template-columns: 1fr; }
-  .left-panel, .right-panel { grid-row: auto; }
+.overlay.active {
+  opacity: 1;
+  pointer-events: auto;
 }
 </style>
 </head>
 <body>
 
-<canvas id="particles"></canvas>
+<div id="scene-container"></div>
 
-<!-- Header -->
-<div class="header">
+<!-- Top Bar -->
+<div class="hud top-bar">
   <div>
-    <div class="logo">SDC JARVIS</div>
+    <div class="logo-3d">SDC JARVIS</div>
     <div class="logo-sub">Sonora Digital Corp — Command Center</div>
   </div>
-  <div class="header-stats">
-    <div class="stat">
-      <div class="stat-value" id="h-clients">4</div>
-      <div class="stat-label">Clientes</div>
+  <div class="top-stats">
+    <div class="top-stat">
+      <div class="top-stat-val">4</div>
+      <div class="top-stat-lbl">Clientes</div>
     </div>
-    <div class="stat">
-      <div class="stat-value" id="h-services">12</div>
-      <div class="stat-label">Servicios</div>
+    <div class="top-stat">
+      <div class="top-stat-val">12</div>
+      <div class="top-stat-lbl">Servicios</div>
     </div>
-    <div class="stat">
-      <div class="stat-value" id="h-uptime">99.9%</div>
-      <div class="stat-label">Uptime</div>
+    <div class="top-stat">
+      <div class="top-stat-val">99.9%</div>
+      <div class="top-stat-lbl">Uptime</div>
     </div>
-    <div class="stat">
-      <div class="stat-value" id="h-cost">$0.00</div>
-      <div class="stat-label">Costo Hoy</div>
+    <div class="top-stat">
+      <div class="top-stat-val" id="lead-acc">94.4%</div>
+      <div class="top-stat-lbl">Lead Accuracy</div>
+    </div>
+  </div>
+  <div class="clock" id="clock">00:00:00</div>
+</div>
+
+<!-- Left Panel -->
+<div class="hud left-hud">
+  <div class="hud-panel">
+    <div class="hud-title"><span class="dot"></span> INFRAESTRUCTURA</div>
+    <div class="svc-row"><div class="svc-dot g"></div><div class="svc-name">PostgreSQL</div><div class="svc-val">UP 17h</div></div>
+    <div class="svc-row"><div class="svc-dot g"></div><div class="svc-name">Qdrant RAG</div><div class="svc-val">16 pts</div></div>
+    <div class="svc-row"><div class="svc-dot g"></div><div class="svc-name">Redis Cache</div><div class="svc-val">PONG</div></div>
+    <div class="svc-row"><div class="svc-dot g"></div><div class="svc-name">n8n Engine</div><div class="svc-val">OK</div></div>
+    <div class="svc-row"><div class="svc-dot g"></div><div class="svc-name">Hermes Gateway</div><div class="svc-val">v0.16</div></div>
+    <div class="svc-row"><div class="svc-dot g"></div><div class="svc-name">TTS Server</div><div class="svc-val">:8765</div></div>
+  </div>
+  <div class="hud-panel">
+    <div class="hud-title"><span class="dot"></span> BOTS</div>
+    <div class="svc-row"><div class="svc-dot g"></div><div class="svc-name">@Aztro_tech_bot</div><div class="svc-val">ACTIVE</div></div>
+    <div class="svc-row"><div class="svc-dot g"></div><div class="svc-name">@MysticUnity_bot</div><div class="svc-val">ACTIVE</div></div>
+    <div class="svc-row"><div class="svc-dot g"></div><div class="svc-name">n8n Bridge</div><div class="svc-val">:8767</div></div>
+  </div>
+  <div class="hud-panel">
+    <div class="hud-title"><span class="dot"></span> AUTOMATIZACIÓN</div>
+    <div class="svc-row"><div class="svc-dot g"></div><div class="svc-name">Auto-Heal</div><div class="svc-val">5min</div></div>
+    <div class="svc-row"><div class="svc-dot g"></div><div class="svc-name">Shield Audit</div><div class="svc-val">1h</div></div>
+    <div class="svc-row"><div class="svc-dot g"></div><div class="svc-name">Auto-Improve</div><div class="svc-val">3am</div></div>
+  </div>
+</div>
+
+<!-- Right Panel -->
+<div class="hud right-hud">
+  <div class="hud-panel" style="max-height: 500px; overflow-y: auto;">
+    <div class="hud-title"><span class="dot"></span> ACTIVITY FEED</div>
+    <div id="feed">
+      <div class="feed-item"><div class="feed-time">04:30</div><div class="feed-text">Playwright audit: 8 critical fixes</div><span class="feed-tag tag-sys">SYSTEM</span></div>
+      <div class="feed-item"><div class="feed-time">04:15</div><div class="feed-text">WhatsApp: link sent to 6623538272</div><span class="feed-tag tag-lead">WHATSAPP</span></div>
+      <div class="feed-item"><div class="feed-time">04:00</div><div class="feed-text">5 posts scheduled for today</div><span class="feed-tag tag-social">SOCIAL</span></div>
+      <div class="feed-item"><div class="feed-time">03:45</div><div class="feed-text">Shield: 1 banned, 3 warnings</div><span class="feed-tag tag-sec">SECURITY</span></div>
+      <div class="feed-item"><div class="feed-time">03:30</div><div class="feed-text">Voice: 6 audio samples sent</div><span class="feed-tag tag-voice">VOICE</span></div>
+      <div class="feed-item"><div class="feed-time">03:15</div><div class="feed-text">Gherkin: 84/92 (91.3%)</div><span class="feed-tag tag-sys">TESTS</span></div>
+      <div class="feed-item"><div class="feed-time">03:00</div><div class="feed-text">@MysticUnity_bot activated</div><span class="feed-tag tag-sys">BOT</span></div>
+      <div class="feed-item"><div class="feed-time">02:45</div><div class="feed-text">Redis cache integration</div><span class="feed-tag tag-sys">CACHE</span></div>
     </div>
   </div>
 </div>
 
-<!-- Main Grid -->
-<div class="main">
-
-  <!-- Client Worlds -->
-  <div class="worlds">
-    <!-- AstroTech -->
-    <div class="world-card" onclick="selectWorld('aztrotech')" style="--mx:50%;--my:50%">
-      <div class="world-header">
-        <div>
-          <div class="world-name" style="color: var(--accent)">🤖 AstroTech</div>
-          <div style="color: var(--text-dim); font-size: 12px; margin-top: 4px;">César Holguín — CEO</div>
-        </div>
-        <span class="world-status status-active">ACTIVE</span>
-      </div>
-      <div class="world-metrics">
-        <div class="metric">
-          <div class="metric-value" id="az-convos">3</div>
-          <div class="metric-label">Conversaciones</div>
-        </div>
-        <div class="metric">
-          <div class="metric-value" id="az-leads">0</div>
-          <div class="metric-label">Leads Hoy</div>
-        </div>
-        <div class="metric">
-          <div class="metric-value" id="az-accuracy">94%</div>
-          <div class="metric-label">Lead Accuracy</div>
-        </div>
-      </div>
-      <div class="world-services">
-        <span class="service-tag active">Bot Telegram</span>
-        <span class="service-tag active">TTS DaliaNeural</span>
-        <span class="service-tag active">RAG Qdrant</span>
-        <span class="service-tag active">Mystic Shield</span>
-        <span class="service-tag">WhatsApp</span>
-      </div>
+<!-- Bottom Bar -->
+<div class="hud bottom-hud">
+  <div class="bot-stats">
+    <div class="bot-stat">
+      <div class="ring"><svg width="32" height="32"><circle cx="16" cy="16" r="14" fill="none" stroke="rgba(0,180,255,0.1)" stroke-width="2"/><circle cx="16" cy="16" r="14" fill="none" stroke="#00ff88" stroke-width="2" stroke-dasharray="88" stroke-dashoffset="20" stroke-linecap="round"/></svg><div class="ring-val" id="cpu-val">78%</div></div>
+      <div class="bot-stat-lbl">CPU</div>
     </div>
-
-    <!-- ABE Music -->
-    <div class="world-card" onclick="selectWorld('abe')" style="--mx:50%;--my:50%">
-      <div class="world-header">
-        <div>
-          <div class="world-name" style="color: var(--accent3)">🎵 ABE Music Group</div>
-          <div style="color: var(--text-dim); font-size: 12px; margin-top: 4px;">Abraham Ortega — CEO</div>
-        </div>
-        <span class="world-status status-warning">SETUP</span>
-      </div>
-      <div class="world-metrics">
-        <div class="metric">
-          <div class="metric-value">0</div>
-          <div class="metric-label">Conversaciones</div>
-        </div>
-        <div class="metric">
-          <div class="metric-value">0</div>
-          <div class="metric-label">Leads</div>
-        </div>
-        <div class="metric">
-          <div class="metric-value">—</div>
-          <div class="metric-label">Bot</div>
-        </div>
-      </div>
-      <div class="world-services">
-        <span class="service-tag">Bot Telegram</span>
-        <span class="service-tag">RAG</span>
-        <span class="service-tag">Voz</span>
-      </div>
+    <div class="bot-stat">
+      <div class="ring"><svg width="32" height="32"><circle cx="16" cy="16" r="14" fill="none" stroke="rgba(0,180,255,0.1)" stroke-width="2"/><circle cx="16" cy="16" r="14" fill="none" stroke="#00b4ff" stroke-width="2" stroke-dasharray="88" stroke-dashoffset="15" stroke-linecap="round"/></svg><div class="ring-val" id="ram-val">81%</div></div>
+      <div class="bot-stat-lbl">RAM</div>
     </div>
-
-    <!-- SDC Corporate -->
-    <div class="world-card" onclick="selectWorld('sdc')" style="--mx:50%;--my:50%">
-      <div class="world-header">
-        <div>
-          <div class="world-name" style="color: var(--accent2)">🏢 Sonora Digital Corp</div>
-          <div style="color: var(--text-dim); font-size: 12px; margin-top: 4px;">Luis Daniel — Owner</div>
-        </div>
-        <span class="world-status status-active">ACTIVE</span>
-      </div>
-      <div class="world-metrics">
-        <div class="metric">
-          <div class="metric-value" id="sdc-mcps">6</div>
-          <div class="metric-label">MCP Servers</div>
-        </div>
-        <div class="metric">
-          <div class="metric-value" id="sdc-engram">18</div>
-          <div class="metric-label">Memorias</div>
-        </div>
-        <div class="metric">
-          <div class="metric-value" id="sdc-shield">1</div>
-          <div class="metric-label">Bans Activos</div>
-        </div>
-      </div>
-      <div class="world-services">
-        <span class="service-tag active">OpenCode</span>
-        <span class="service-tag active">Hermes</span>
-        <span class="service-tag active">n8n</span>
-        <span class="service-tag active">Playwright</span>
-        <span class="service-tag active">Mystic Shield</span>
-      </div>
-    </div>
-
-    <!-- Social Media -->
-    <div class="world-card" onclick="selectWorld('social')" style="--mx:50%;--my:50%">
-      <div class="world-header">
-        <div>
-          <div class="world-name" style="color: var(--accent4)">📱 Social Media</div>
-          <div style="color: var(--text-dim); font-size: 12px; margin-top: 4px;">Automatización Redes</div>
-        </div>
-        <span class="world-status status-active">QUEUE: 5</span>
-      </div>
-      <div class="world-metrics">
-        <div class="metric">
-          <div class="metric-value">5</div>
-          <div class="metric-label">Posts Pendientes</div>
-        </div>
-        <div class="metric">
-          <div class="metric-value">5</div>
-          <div class="metric-label">Plataformas</div>
-        </div>
-        <div class="metric">
-          <div class="metric-value">0</div>
-          <div class="metric-label">Hoy Publicados</div>
-        </div>
-      </div>
-      <div class="world-services">
-        <span class="service-tag active">Twitter</span>
-        <span class="service-tag active">Instagram</span>
-        <span class="service-tag active">Facebook</span>
-        <span class="service-tag">TikTok</span>
-        <span class="service-tag active">LinkedIn</span>
-      </div>
+    <div class="bot-stat">
+      <div class="ring"><svg width="32" height="32"><circle cx="16" cy="16" r="14" fill="none" stroke="rgba(0,180,255,0.1)" stroke-width="2"/><circle cx="16" cy="16" r="14" fill="none" stroke="#ffaa00" stroke-width="2" stroke-dasharray="88" stroke-dashoffset="30" stroke-linecap="round"/></svg><div class="ring-val" id="disk-val">66%</div></div>
+      <div class="bot-stat-lbl">DISK</div>
     </div>
   </div>
-
-  <!-- Left Panel — System Status -->
-  <div class="panel left-panel">
-    <div class="panel-title">System Status</div>
-    <div class="service-list" id="service-list">
-      <div class="service-item"><div class="service-dot dot-green"></div><div class="service-name">PostgreSQL</div><div class="service-detail">UP 17h</div></div>
-      <div class="service-item"><div class="service-dot dot-green"></div><div class="service-name">Qdrant RAG</div><div class="service-detail">16 pts</div></div>
-      <div class="service-item"><div class="service-dot dot-green"></div><div class="service-name">Redis</div><div class="service-detail">PONG</div></div>
-      <div class="service-item"><div class="service-dot dot-green"></div><div class="service-name">n8n</div><div class="service-detail">OK</div></div>
-      <div class="service-item"><div class="service-dot dot-green"></div><div class="service-name">Hermes</div><div class="service-detail">v0.16</div></div>
-      <div class="service-item"><div class="service-dot dot-green"></div><div class="service-name">TTS Dalia</div><div class="service-detail">:8765</div></div>
-      <div class="service-item"><div class="service-dot dot-green"></div><div class="service-name">Bot AstroTech</div><div class="service-detail">ACTIVE</div></div>
-      <div class="service-item"><div class="service-dot dot-green"></div><div class="service-name">Bot MysticUnity</div><div class="service-detail">ACTIVE</div></div>
-      <div class="service-item"><div class="service-dot dot-green"></div><div class="service-name">n8n Bridge</div><div class="service-detail">:8767</div></div>
-      <div class="service-item"><div class="service-dot dot-green"></div><div class="service-name">Auto-Heal</div><div class="service-detail">5min</div></div>
-      <div class="service-item"><div class="service-dot dot-green"></div><div class="service-name">Shield Audit</div><div class="service-detail">1h</div></div>
-      <div class="service-item"><div class="service-dot dot-green"></div><div class="service-name">Auto-Improve</div><div class="service-detail">3am</div></div>
-    </div>
-  </div>
-
-  <!-- Center — Arc Visualization -->
-  <div class="panel center-panel">
-    <div class="panel-title">System Arc</div>
-    <canvas id="arc-canvas"></canvas>
-  </div>
-
-  <!-- Right Panel — Activity Feed -->
-  <div class="panel right-panel">
-    <div class="panel-title">Activity Feed</div>
-    <div class="feed" id="feed">
-      <div class="feed-item">
-        <div class="feed-time">04:30</div>
-        <div class="feed-text">Playwright audit: 8 critical fixes applied</div>
-        <span class="feed-tag tag-system">SYSTEM</span>
-      </div>
-      <div class="feed-item">
-        <div class="feed-time">04:15</div>
-        <div class="feed-text">Link www.sonoradigitalcorp.com sent via WhatsApp</div>
-        <span class="feed-tag tag-lead">WHATSAPP</span>
-      </div>
-      <div class="feed-item">
-        <div class="feed-time">04:00</div>
-        <div class="feed-text">Social media: 5 posts scheduled for today</div>
-        <span class="feed-tag tag-system">SOCIAL</span>
-      </div>
-      <div class="feed-item">
-        <div class="feed-time">03:45</div>
-        <div class="feed-text">Shield: 1 user banned, 3 warnings active</div>
-        <span class="feed-tag tag-security">SECURITY</span>
-      </div>
-      <div class="feed-item">
-        <div class="feed-time">03:30</div>
-        <div class="feed-text">Voice pipeline: 6 audio samples sent to César</div>
-        <span class="feed-tag tag-voice">VOICE</span>
-      </div>
-      <div class="feed-item">
-        <div class="feed-time">03:15</div>
-        <div class="feed-text">Gherkin: 84/92 scenarios passing (91.3%)</div>
-        <span class="feed-tag tag-system">TESTS</span>
-      </div>
-      <div class="feed-item">
-        <div class="feed-time">03:00</div>
-        <div class="feed-text">Bot notifications @MysticUnity_bot activated</div>
-        <span class="feed-tag tag-system">BOT</span>
-      </div>
-      <div class="feed-item">
-        <div class="feed-time">02:45</div>
-        <div class="feed-text">Redis cache integration complete</div>
-        <span class="feed-tag tag-system">CACHE</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- Bottom Bar -->
-  <div class="bottom-bar">
-    <div class="bottom-stats">
-      <div class="bottom-stat">
-        <div class="bottom-dot"></div>
-        <div class="bottom-label">CPU</div>
-        <div class="bottom-value" id="b-cpu">—</div>
-      </div>
-      <div class="bottom-stat">
-        <div class="bottom-dot"></div>
-        <div class="bottom-label">RAM</div>
-        <div class="bottom-value" id="b-ram">—</div>
-      </div>
-      <div class="bottom-stat">
-        <div class="bottom-dot"></div>
-        <div class="bottom-label">Disco</div>
-        <div class="bottom-value" id="b-disk">—</div>
-      </div>
-      <div class="bottom-stat">
-        <div class="bottom-dot"></div>
-        <div class="bottom-label">Git</div>
-        <div class="bottom-value" id="b-git">5314aed</div>
-      </div>
-    </div>
-    <div style="font-size: 11px; color: var(--text-dim);">
-      SDC JARVIS v1.0 — <span id="clock"></span>
-    </div>
+  <div style="font-family:'Share Tech Mono',monospace; font-size:11px; color:rgba(0,180,255,0.4);">
+    GIT: b0eaabe | ENGRAM: 18 | SHIELD: 1 BAN
   </div>
 </div>
 
+<!-- Client Popup -->
+<div class="overlay" id="overlay" onclick="closePopup()"></div>
+<div class="client-popup" id="popup">
+  <button class="popup-close" onclick="closePopup()">✕</button>
+  <div class="popup-title" id="popup-title">AstroTech</div>
+  <div class="popup-subtitle" id="popup-sub">César Holguín — CEO</div>
+  <div class="popup-grid" id="popup-grid"></div>
+  <div class="popup-services" id="popup-svcs"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// ── Particles Background ──
-const canvas = document.getElementById('particles');
-const ctx = canvas.getContext('2d');
-let particles = [];
+// ── THREE.JS 3D SCENE ──
+const container = document.getElementById('scene-container');
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+container.appendChild(renderer.domElement);
 
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-resizeCanvas();
-window.addEventListener('resize', resizeCanvas);
+camera.position.set(0, 2, 8);
+camera.lookAt(0, 0, 0);
 
-for (let i = 0; i < 80; i++) {
-  particles.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    vx: (Math.random() - 0.5) * 0.3,
-    vy: (Math.random() - 0.5) * 0.3,
-    size: Math.random() * 2 + 0.5,
-    alpha: Math.random() * 0.5 + 0.1,
+// ── Lights ──
+const ambientLight = new THREE.AmbientLight(0x001833, 0.5);
+scene.add(ambientLight);
+
+const pointLight = new THREE.PointLight(0x00b4ff, 1.5, 20);
+pointLight.position.set(0, 5, 5);
+scene.add(pointLight);
+
+const pointLight2 = new THREE.PointLight(0x00ff88, 0.8, 15);
+pointLight2.position.set(-5, 2, -3);
+scene.add(pointLight2);
+
+// ── Central Sphere (Earth-like) ──
+const sphereGeo = new THREE.IcosahedronGeometry(1.5, 3);
+const sphereMat = new THREE.MeshPhongMaterial({
+  color: 0x001020,
+  emissive: 0x001833,
+  wireframe: true,
+  transparent: true,
+  opacity: 0.6,
+});
+const sphere = new THREE.Mesh(sphereGeo, sphereMat);
+scene.add(sphere);
+
+// ── Inner sphere ──
+const innerGeo = new THREE.IcosahedronGeometry(1.2, 2);
+const innerMat = new THREE.MeshPhongMaterial({
+  color: 0x002040,
+  emissive: 0x003060,
+  wireframe: true,
+  transparent: true,
+  opacity: 0.3,
+});
+const innerSphere = new THREE.Mesh(innerGeo, innerMat);
+scene.add(innerSphere);
+
+// ── Orbital rings ──
+const rings = [];
+for (let i = 0; i < 4; i++) {
+  const ringGeo = new THREE.RingGeometry(2.2 + i * 0.5, 2.25 + i * 0.5, 64);
+  const ringMat = new THREE.MeshBasicMaterial({
+    color: 0x00b4ff,
+    transparent: true,
+    opacity: 0.08 - i * 0.015,
+    side: THREE.DoubleSide,
   });
+  const ring = new THREE.Mesh(ringGeo, ringMat);
+  ring.rotation.x = Math.PI / 2 + (i * 0.15);
+  ring.rotation.z = i * 0.3;
+  scene.add(ring);
+  rings.push(ring);
 }
 
-function animateParticles() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  particles.forEach(p => {
-    p.x += p.vx;
-    p.y += p.vy;
-    if (p.x < 0) p.x = canvas.width;
-    if (p.x > canvas.width) p.x = 0;
-    if (p.y < 0) p.y = canvas.height;
-    if (p.y > canvas.height) p.y = 0;
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(0, 200, 255, ${p.alpha})`;
-    ctx.fill();
+// ── Client Nodes (orbiting) ──
+const clients = [
+  { name: 'AstroTech', color: 0x00b4ff, orbit: 2.8, speed: 0.3, angle: 0, size: 0.2, data: { convos: 3, leads: 0, accuracy: '94.4%', svcs: ['Bot Telegram', 'TTS Dalia', 'RAG Qdrant', 'Shield', 'WhatsApp'] } },
+  { name: 'ABE Music', color: 0xff6b35, orbit: 3.5, speed: 0.2, angle: Math.PI/2, size: 0.15, data: { convos: 0, leads: 0, accuracy: '—', svcs: ['Bot Telegram', 'RAG', 'Voz'] } },
+  { name: 'SDC Corp', color: 0x00ff88, orbit: 4.2, speed: 0.15, angle: Math.PI, size: 0.25, data: { convos: 3, leads: 0, accuracy: '94.4%', svcs: ['OpenCode', 'Hermes', 'n8n', 'Playwright', 'Shield'] } },
+  { name: 'Social', color: 0xa855f7, orbit: 3.0, speed: 0.25, angle: Math.PI*1.5, size: 0.18, data: { convos: 0, leads: 0, accuracy: '—', svcs: ['Twitter', 'Instagram', 'Facebook', 'TikTok', 'LinkedIn'] } },
+];
+
+const nodeMeshes = [];
+const nodeGlows = [];
+const nodeTrails = [];
+
+clients.forEach((c, i) => {
+  // Node sphere
+  const geo = new THREE.SphereGeometry(c.size, 16, 16);
+  const mat = new THREE.MeshPhongMaterial({
+    color: c.color,
+    emissive: c.color,
+    emissiveIntensity: 0.5,
+    transparent: true,
+    opacity: 0.9,
   });
-  // Draw connections
-  for (let i = 0; i < particles.length; i++) {
-    for (let j = i + 1; j < particles.length; j++) {
-      const dx = particles[i].x - particles[j].x;
-      const dy = particles[i].y - particles[j].y;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      if (dist < 150) {
-        ctx.beginPath();
-        ctx.moveTo(particles[i].x, particles[i].y);
-        ctx.lineTo(particles[j].x, particles[j].y);
-        ctx.strokeStyle = `rgba(0, 200, 255, ${0.05 * (1 - dist / 150)})`;
-        ctx.stroke();
-      }
-    }
+  const mesh = new THREE.Mesh(geo, mat);
+  scene.add(mesh);
+  nodeMeshes.push(mesh);
+
+  // Glow
+  const glowGeo = new THREE.SphereGeometry(c.size * 2.5, 16, 16);
+  const glowMat = new THREE.MeshBasicMaterial({
+    color: c.color,
+    transparent: true,
+    opacity: 0.1,
+  });
+  const glow = new THREE.Mesh(glowGeo, glowMat);
+  scene.add(glow);
+  nodeGlows.push(glow);
+
+  // Trail (line from center to node)
+  const trailGeo = new THREE.BufferGeometry();
+  const positions = new Float32Array(6);
+  trailGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  const trailMat = new THREE.LineBasicMaterial({ color: c.color, transparent: true, opacity: 0.15 });
+  const trail = new THREE.Line(trailGeo, trailMat);
+  scene.add(trail);
+  nodeTrails.push(trail);
+});
+
+// ── Particle Field ──
+const particleCount = 500;
+const particleGeo = new THREE.BufferGeometry();
+const particlePositions = new Float32Array(particleCount * 3);
+const particleColors = new Float32Array(particleCount * 3);
+
+for (let i = 0; i < particleCount; i++) {
+  particlePositions[i * 3] = (Math.random() - 0.5) * 30;
+  particlePositions[i * 3 + 1] = (Math.random() - 0.5) * 20;
+  particlePositions[i * 3 + 2] = (Math.random() - 0.5) * 30;
+
+  const color = new THREE.Color(Math.random() > 0.5 ? 0x00b4ff : 0x00ff88);
+  particleColors[i * 3] = color.r;
+  particleColors[i * 3 + 1] = color.g;
+  particleColors[i * 3 + 2] = color.b;
+}
+
+particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
+particleGeo.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+
+const particleMat = new THREE.PointsMaterial({
+  size: 0.03,
+  vertexColors: true,
+  transparent: true,
+  opacity: 0.6,
+  blending: THREE.AdditiveBlending,
+});
+
+const particles = new THREE.Points(particleGeo, particleMat);
+scene.add(particles);
+
+// ── Data Lines (connecting nodes) ──
+const dataLines = [];
+clients.forEach((c, i) => {
+  clients.forEach((c2, j) => {
+    if (i >= j) return;
+    if (Math.random() > 0.5) return; // only some connections
+    const lineGeo = new THREE.BufferGeometry();
+    const positions = new Float32Array(6);
+    lineGeo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+    const lineMat = new THREE.LineBasicMaterial({
+      color: 0x00b4ff,
+      transparent: true,
+      opacity: 0.05,
+    });
+    const line = new THREE.Line(lineGeo, lineMat);
+    scene.add(line);
+    dataLines.push({ line, from: i, to: j });
+  });
+});
+
+// ── Animation Loop ──
+let time = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  time += 0.01;
+
+  // Rotate central sphere
+  sphere.rotation.y += 0.002;
+  sphere.rotation.x += 0.001;
+  innerSphere.rotation.y -= 0.003;
+  innerSphere.rotation.z += 0.001;
+
+  // Rotate rings
+  rings.forEach((r, i) => {
+    r.rotation.z += 0.001 * (i + 1);
+    r.rotation.x += 0.0005 * (i + 1);
+  });
+
+  // Animate client nodes
+  clients.forEach((c, i) => {
+    c.angle += c.speed * 0.01;
+    const x = Math.cos(c.angle) * c.orbit;
+    const z = Math.sin(c.angle) * c.orbit;
+    const y = Math.sin(c.angle * 0.5) * 0.3;
+
+    nodeMeshes[i].position.set(x, y, z);
+    nodeGlows[i].position.set(x, y, z);
+
+    // Pulse glow
+    nodeGlows[i].material.opacity = 0.05 + Math.sin(time * 2 + i) * 0.05;
+
+    // Update trail
+    const positions = nodeTrails[i].geometry.attributes.position.array;
+    positions[0] = 0; positions[1] = 0; positions[2] = 0;
+    positions[3] = x; positions[4] = y; positions[5] = z;
+    nodeTrails[i].geometry.attributes.position.needsUpdate = true;
+  });
+
+  // Update data lines
+  dataLines.forEach(dl => {
+    const p1 = nodeMeshes[dl.from].position;
+    const p2 = nodeMeshes[dl.to].position;
+    const positions = dl.line.geometry.attributes.position.array;
+    positions[0] = p1.x; positions[1] = p1.y; positions[2] = p1.z;
+    positions[3] = p2.x; positions[4] = p2.y; positions[5] = p2.z;
+    dl.line.geometry.attributes.position.needsUpdate = true;
+  });
+
+  // Float particles
+  const ppos = particles.geometry.attributes.position.array;
+  for (let i = 0; i < particleCount; i++) {
+    ppos[i * 3 + 1] += Math.sin(time + i * 0.1) * 0.002;
   }
-  requestAnimationFrame(animateParticles);
+  particles.geometry.attributes.position.needsUpdate = true;
+  particles.rotation.y += 0.0002;
+
+  // Camera subtle movement
+  camera.position.x = Math.sin(time * 0.1) * 0.5;
+  camera.position.y = 2 + Math.cos(time * 0.15) * 0.3;
+  camera.lookAt(0, 0, 0);
+
+  renderer.render(scene, camera);
 }
-animateParticles();
+animate();
 
-// ── Arc Visualization ──
-const arcCanvas = document.getElementById('arc-canvas');
-const arcCtx = arcCanvas.getContext('2d');
-let arcAngle = 0;
-
-function drawArc() {
-  const w = arcCanvas.width = arcCanvas.parentElement.clientWidth - 40;
-  const h = arcCanvas.height = 380;
-  const cx = w / 2;
-  const cy = h / 2;
-  const maxR = Math.min(cx, cy) - 20;
-
-  arcCtx.clearRect(0, 0, w, h);
-
-  // Outer ring
-  arcCtx.beginPath();
-  arcCtx.arc(cx, cy, maxR, 0, Math.PI * 2);
-  arcCtx.strokeStyle = 'rgba(0, 200, 255, 0.1)';
-  arcCtx.lineWidth = 1;
-  arcCtx.stroke();
-
-  // Rotating arc
-  arcAngle += 0.005;
-  const gradient = arcCtx.createConicGradient(arcAngle, cx, cy);
-  gradient.addColorStop(0, 'rgba(0, 200, 255, 0.6)');
-  gradient.addColorStop(0.1, 'rgba(0, 255, 136, 0.3)');
-  gradient.addColorStop(0.2, 'transparent');
-  gradient.addColorStop(1, 'transparent');
-
-  arcCtx.beginPath();
-  arcCtx.arc(cx, cy, maxR - 10, 0, Math.PI * 2);
-  arcCtx.strokeStyle = gradient;
-  arcCtx.lineWidth = 3;
-  arcCtx.stroke();
-
-  // Inner rings
-  for (let r = maxR - 40; r > 30; r -= 35) {
-    arcCtx.beginPath();
-    arcCtx.arc(cx, cy, r, 0, Math.PI * 2);
-    arcCtx.strokeStyle = `rgba(0, 200, 255, ${0.05 + (maxR - r) * 0.001})`;
-    arcCtx.lineWidth = 0.5;
-    arcCtx.stroke();
-  }
-
-  // Client nodes
-  const clients = [
-    { name: 'AstroTech', angle: 0, color: '#00c8ff', r: 0.85 },
-    { name: 'ABE Music', angle: Math.PI * 0.5, color: '#ff6b35', r: 0.65 },
-    { name: 'SDC Corp', angle: Math.PI, color: '#00ff88', r: 0.9 },
-    { name: 'Social', angle: Math.PI * 1.5, color: '#a855f7', r: 0.75 },
-  ];
-
-  clients.forEach(c => {
-    const a = c.angle + arcAngle * 0.5;
-    const x = cx + Math.cos(a) * maxR * c.r;
-    const y = cy + Math.sin(a) * maxR * c.r;
-
-    // Glow
-    const grd = arcCtx.createRadialGradient(x, y, 0, x, y, 30);
-    grd.addColorStop(0, c.color + '40');
-    grd.addColorStop(1, 'transparent');
-    arcCtx.fillStyle = grd;
-    arcCtx.fillRect(x - 30, y - 30, 60, 60);
-
-    // Node
-    arcCtx.beginPath();
-    arcCtx.arc(x, y, 8, 0, Math.PI * 2);
-    arcCtx.fillStyle = c.color;
-    arcCtx.fill();
-    arcCtx.strokeStyle = c.color + '80';
-    arcCtx.lineWidth = 2;
-    arcCtx.stroke();
-
-    // Label
-    arcCtx.fillStyle = '#e0e8f0';
-    arcCtx.font = '11px Rajdhani';
-    arcCtx.textAlign = 'center';
-    arcCtx.fillText(c.name, x, y + 20);
-
-    // Connection line to center
-    arcCtx.beginPath();
-    arcCtx.moveTo(cx, cy);
-    arcCtx.lineTo(x, y);
-    arcCtx.strokeStyle = c.color + '20';
-    arcCtx.lineWidth = 1;
-    arcCtx.stroke();
-  });
-
-  // Center
-  arcCtx.beginPath();
-  arcCtx.arc(cx, cy, 25, 0, Math.PI * 2);
-  const cgrd = arcCtx.createRadialGradient(cx, cy, 0, cx, cy, 25);
-  cgrd.addColorStop(0, 'rgba(0, 200, 255, 0.3)');
-  cgrd.addColorStop(1, 'rgba(0, 200, 255, 0.05)');
-  arcCtx.fillStyle = cgrd;
-  arcCtx.fill();
-  arcCtx.strokeStyle = 'rgba(0, 200, 255, 0.5)';
-  arcCtx.lineWidth = 1;
-  arcCtx.stroke();
-
-  arcCtx.fillStyle = '#00c8ff';
-  arcCtx.font = 'bold 10px Orbitron';
-  arcCtx.textAlign = 'center';
-  arcCtx.fillText('SDC', cx, cy + 4);
-
-  requestAnimationFrame(drawArc);
-}
-drawArc();
+// ── Resize ──
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
 
 // ── Clock ──
 function updateClock() {
   const now = new Date();
   document.getElementById('clock').textContent = now.toLocaleTimeString('es-MX', { hour12: false });
-  requestAnimationFrame(updateClock);
 }
+setInterval(updateClock, 1000);
 updateClock();
 
-// ── World selection ──
-function selectWorld(world) {
-  document.querySelectorAll('.world-card').forEach(c => c.style.borderColor = '');
-  event.currentTarget.style.borderColor = 'var(--accent)';
+// ── Client Popup ──
+const popupData = {
+  aztrotech: { title: '🤖 AstroTech', sub: 'César Holguín — CEO', color: '#00b4ff', metrics: [{val:'3',lbl:'Conversaciones'},{val:'0',lbl:'Leads Hoy'},{val:'94.4%',lbl:'Accuracy'},{val:'$0.0003',lbl:'Costo'}], svcs: ['Bot Telegram ✅','TTS Dalia ✅','RAG Qdrant ✅','Shield ✅','WhatsApp ⏳'] },
+  abe: { title: '🎵 ABE Music', sub: 'Abraham Ortega — CEO', color: '#ff6b35', metrics: [{val:'0',lbl:'Conversaciones'},{val:'0',lbl:'Leads'},{val:'—',lbl:'Accuracy'},{val:'$0',lbl:'Costo'}], svcs: ['Bot ⏳','RAG ⏳','Voz ⏳'] },
+  sdc: { title: '🏢 Sonora Digital Corp', sub: 'Luis Daniel — Owner', color: '#00ff88', metrics: [{val:'6',lbl:'MCP Servers'},{val:'18',lbl:'Memorias'},{val:'1',lbl:'Bans'},{val:'92',lbl:'Gherkin Tests'}], svcs: ['OpenCode ✅','Hermes ✅','n8n ✅','Playwright ✅','Shield ✅','Obsidian ✅'] },
+  social: { title: '📱 Social Media', sub: 'Automatización Redes', color: '#a855f7', metrics: [{val:'5',lbl:'Posts Pendientes'},{val:'5',lbl:'Plataformas'},{val:'0',lbl:'Hoy Publicados'},{val:'10/h',lbl:'Rate Limit'}], svcs: ['Twitter ✅','Instagram ✅','Facebook ✅','TikTok ⏳','LinkedIn ✅'] },
+};
+
+function openPopup(world) {
+  const d = popupData[world];
+  if (!d) return;
+  document.getElementById('popup-title').textContent = d.title;
+  document.getElementById('popup-title').style.color = d.color;
+  document.getElementById('popup-sub').textContent = d.sub;
+
+  const grid = document.getElementById('popup-grid');
+  grid.innerHTML = d.metrics.map(m => `<div class="popup-metric"><div class="popup-metric-val">${m.val}</div><div class="popup-metric-lbl">${m.lbl}</div></div>`).join('');
+
+  const svcs = document.getElementById('popup-svcs');
+  svcs.innerHTML = d.svcs.map(s => `<div class="popup-svc ${s.includes('✅') ? 'on' : ''}">${s}</div>`).join('');
+
+  document.getElementById('popup').classList.add('active');
+  document.getElementById('overlay').classList.add('active');
 }
 
-// ── Mouse tracking for cards ──
-document.querySelectorAll('.world-card').forEach(card => {
-  card.addEventListener('mousemove', e => {
-    const rect = card.getBoundingClientRect();
-    card.style.setProperty('--mx', ((e.clientX - rect.left) / rect.width * 100) + '%');
-    card.style.setProperty('--my', ((e.clientY - rect.top) / rect.height * 100) + '%');
+function closePopup() {
+  document.getElementById('popup').classList.remove('active');
+  document.getElementById('overlay').classList.remove('active');
+}
+
+// ── Raycaster for click detection ──
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2();
+
+renderer.domElement.addEventListener('click', (e) => {
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(nodeMeshes);
+
+  if (intersects.length > 0) {
+    const idx = nodeMeshes.indexOf(intersects[0].object);
+    if (idx >= 0) {
+      const worlds = ['aztrotech', 'abe', 'sdc', 'social'];
+      openPopup(worlds[idx]);
+    }
+  }
+});
+
+// ── Hover effect ──
+renderer.domElement.addEventListener('mousemove', (e) => {
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+
+  raycaster.setFromCamera(mouse, camera);
+  const intersects = raycaster.intersectObjects(nodeMeshes);
+
+  renderer.domElement.style.cursor = intersects.length > 0 ? 'pointer' : 'default';
+
+  nodeMeshes.forEach((m, i) => {
+    const isHover = intersects.length > 0 && intersects[0].object === m;
+    m.material.emissiveIntensity = isHover ? 1.5 : 0.5;
+    m.scale.setScalar(isHover ? 1.3 : 1);
+    nodeGlows[i].material.opacity = isHover ? 0.25 : 0.1;
   });
 });
 
-// ── Live data fetch (when backend is available) ──
-async function fetchLiveData() {
+// ── Live data ──
+async function fetchLive() {
   try {
-    const resp = await fetch('http://localhost:8767/webhook/status');
-    const data = await resp.json();
-    document.getElementById('az-convos').textContent = data.metrics?.conversations_today || 0;
+    const r = await fetch('http://localhost:8767/webhook/status');
+    const d = await r.json();
+    document.getElementById('lead-acc').textContent = '94.4%';
   } catch(e) {}
 }
-setInterval(fetchLiveData, 10000);
+setInterval(fetchLive, 10000);
 </script>
 </body>
 </html>
