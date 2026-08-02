@@ -23,6 +23,7 @@ def _ffmpeg():
     return "ffmpeg"
 
 TTS_PORT = int(os.getenv("TTS_PORT", "8765"))
+EDGE_TTS = os.getenv("EDGE_TTS_BIN", "/home/mystic/.local/bin/edge-tts")
 VOICES = {
     "cesar": "es-MX-DaliaNeural",        # Voz confirmada por César (100% local)
     "cesar_profesional": "es-MX-DaliaNeural",
@@ -59,7 +60,7 @@ class TTSHandler(BaseHTTPRequestHandler):
 
         mp3_path = out_path.replace(".wav", ".mp3")
         result = subprocess.run(
-            ["edge-tts", "--voice", edge_voice, "--text", text[:1000], "--write-media", mp3_path],
+            [EDGE_TTS, "--voice", edge_voice, "--text", text[:1000], "--write-media", mp3_path],
             capture_output=True, timeout=60,
         )
 
