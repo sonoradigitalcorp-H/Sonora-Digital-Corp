@@ -8,6 +8,9 @@ ENV NEO4JLAB_PLUGINS='["apoc"]'
 ENV NEO4J_server_memory_heap_max__size=256M
 ENV NEO4J_server_memory_pagecache_size=128M
 
+# Auth — usar NEO4J_AUTH desde environment o docker-compose
+ENV NEO4J_AUTH=neo4j/CHANGE_ME
+
 # Habilitar APOC procedures
 ENV NEO4J_apoc_export_file_enabled=true
 ENV NEO4J_apoc_import_file_enabled=true
@@ -16,7 +19,7 @@ ENV NEO4J_apoc_import_file_use__neo4j__config=true
 # Configuracion de red — escuchar en 0.0.0.0 para Docker port mapping
 RUN echo "server.bolt.listen_address=0.0.0.0:7687" >> /var/lib/neo4j/conf/neo4j.conf && \
     echo "server.http.listen_address=0.0.0.0:7474" >> /var/lib/neo4j/conf/neo4j.conf && \
-    echo "dbms.security.auth_enabled=false" >> /var/lib/neo4j/conf/neo4j.conf
+    echo "dbms.security.auth_enabled=true" >> /var/lib/neo4j/conf/neo4j.conf
 
 # Copiar scripts de inicialización
 COPY init.cypher /init.cypher

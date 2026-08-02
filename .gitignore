@@ -2,6 +2,7 @@
 *.env
 .env.*
 !.env.example
+infra/.env.backup
 
 # ── Tokens ──
 *.token
@@ -13,23 +14,32 @@
 *.db
 *.sqlite
 *.sqlite3
+state/**/*.db
+ops/state/**/*.db
 
 # ── Logs ──
 *.log
 logs/
+**/*.log
 
 # ── Python ──
 __pycache__/
+**/__pycache__/
 *.pyc
+**/*.pyc
 *.pyo
 *.egg-info/
 dist/
 build/
 .eggs/
+.pytest_cache/
+**/.pytest_cache/
 
 # ── Node ──
 node_modules/
+**/node_modules/
 package-lock.json
+**/package-lock.json
 
 # ── OS ──
 .DS_Store
@@ -40,6 +50,7 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+.opencode/
 
 # ── Temp ──
 tmp/
@@ -59,3 +70,15 @@ skills/mcp/servers/content_mcp.py
 skills/mcp/servers/generate_mcp.py
 skills/mcp/servers/lora_mcp.py
 skills/mcp/servers/voice_mcp.py
+
+# ── Build artifacts ──
+*.min.js
+*.min.css
+dist/
+build/
+.cache/
+.parcel-cache/
+
+# ── Runtime state ──
+ops/state/shield.json
+portal/data/system.json

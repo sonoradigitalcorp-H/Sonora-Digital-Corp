@@ -11,8 +11,7 @@ After=network.target
 Type=simple
 User=mystic
 WorkingDirectory=__REPO__/apps/telegram_scheduler
-Environment=TELEGRAM_TOKEN=8665900402:AAG0PW36xvlXybG7Heyu-TK9CUFeiVhAa0U
-Environment=OWNER_TELEGRAM_ID=13238192000
+EnvironmentFile=__REPO__/.env
 ExecStart=/usr/bin/python3 bot.py
 Restart=always
 RestartSec=10

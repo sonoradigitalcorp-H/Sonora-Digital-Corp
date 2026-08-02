@@ -13,7 +13,7 @@ services:
     image: postgres:15-alpine
     environment:
       POSTGRES_USER: sdc
-      POSTGRES_PASSWORD: sdc_local_dev
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
       POSTGRES_DB: sdc
     ports: ["5432:5432"]
     volumes: [pg_data_v2:/var/lib/postgresql/data]
