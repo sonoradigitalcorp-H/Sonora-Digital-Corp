@@ -1,0 +1,13 @@
+{
+  "id": "call_20260730_203143_3579",
+  "tenant_id": "unknown",
+  "direction": "inbound",
+  "started_at": "2026-07-30T20:31:43.071292",
+  "duration_sec": 514,
+  "transcript": "",
+  "summary": "Llamada de 514s con Desconocido. Revisar transcripción para detalles.",
+  "sentiment": "neutral",
+  "topics": [
+    "general"
+  ]
+}

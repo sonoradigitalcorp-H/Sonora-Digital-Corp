@@ -472,10 +472,10 @@ class TestSanitizeEnvLines:
 
     def test_three_concatenated_keys(self):
         """Three known keys on one line all get separated."""
-        lines = ["FAL_KEY=111FIRECRAWL_API_KEY=222GITHUB_TOKEN=333\n"]
+        lines = ["FAL_API_KEY=111FIRECRAWL_API_KEY=222GITHUB_TOKEN=333\n"]
         result = _sanitize_env_lines(lines)
         assert result == [
-            "FAL_KEY=111\n",
+            "FAL_API_KEY=111\n",
             "FIRECRAWL_API_KEY=222\n",
             "GITHUB_TOKEN=333\n",
         ]
@@ -523,7 +523,7 @@ class TestSanitizeEnvLines:
         env_file = tmp_path / ".env"
         env_file.write_text(
             "ANTHROPIC_API_KEY=sk-antOPENAI_BASE_URL=https://api.openai.com/v1\n"
-            "FAL_KEY=existing\n"
+            "FAL_API_KEY=existing\n"
         )
         with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):
             save_env_value("MESSAGING_CWD", "/tmp")
@@ -540,7 +540,7 @@ class TestSanitizeEnvLines:
         """sanitize_env_file reports how many entries were fixed."""
         env_file = tmp_path / ".env"
         env_file.write_text(
-            "FAL_KEY=good\n"
+            "FAL_API_KEY=good\n"
             "OPENROUTER_API_KEY=valFIRECRAWL_API_KEY=val2\n"
         )
         with patch.dict(os.environ, {"HERMES_HOME": str(tmp_path)}):

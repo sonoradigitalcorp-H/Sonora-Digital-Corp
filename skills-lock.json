@@ -1,0 +1,335 @@
+{
+  "version": 1,
+  "skills": {
+    "agent-configuration": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/agent-configuration/SKILL.md",
+      "computedHash": "75e94ddd22a4b7e0328b2558b1ae36f502f31e935a35152fae5b33475589804d"
+    },
+    "alembic": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/alembic/SKILL.md",
+      "computedHash": "413aff08680e88f9f725b05b30fb23e92c18a502e11b52c4eb96ae2ba33f3bc7"
+    },
+    "alpinejs": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/alpinejs/SKILL.md",
+      "computedHash": "c55a1842fd651a6f1e8c78d8e2c22718557510079396ee70d2aafc7598b9e7cb"
+    },
+    "bash-shell": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/bash-shell/SKILL.md",
+      "computedHash": "a6b2880f2a35b55bde97984f7ccf92784e2ee8cd36022cd17d4e67cca7bf3908"
+    },
+    "capacitor": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/capacitor/SKILL.md",
+      "computedHash": "370b29a38cc6e0196b9db1fe118d752ea962639498a97e9f66324551804b674f"
+    },
+    "claude-agent-sdk": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/claude-agent-sdk/SKILL.md",
+      "computedHash": "57bf43b107256d0455be1f2fe28bf041f2a3025dbf2e752bdb796e3f1b54ef74"
+    },
+    "command-creation": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/command-creation/SKILL.md",
+      "computedHash": "8f67e6f8410269987cb31232f5b5e848b96cbc0832114050bcc71a1337a594c6"
+    },
+    "conventional-git-commit": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/conventional-git-commit/SKILL.md",
+      "computedHash": "ea2f23390059c98cef70a2796da4aaab9984f6d326b8ec5de1a5fb57d3e4a637"
+    },
+    "copilot-sdk": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/copilot-sdk/SKILL.md",
+      "computedHash": "0ef007d8e3787ea981380247e1e8a9cc6911f6475773591c87fbb532c1fe951e"
+    },
+    "css": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/css/SKILL.md",
+      "computedHash": "ea4e9d81eacf31a82adec50f6f5e005b287fe2d004f75a091121d036f649b995"
+    },
+    "eslint": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/eslint/SKILL.md",
+      "computedHash": "af293282b459fe4727a6a403ed04a20b4d56eb6947b46bb66f3b86717e2ef96b"
+    },
+    "git-hooks": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/git-hooks/SKILL.md",
+      "computedHash": "facb58fbf3a7fb104d38328dd564256995c06b5c3ad2e9099474b697e3051c7d"
+    },
+    "github-actions": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/github-actions/SKILL.md",
+      "computedHash": "6145f1cff8730695053e612471fd8ed030d4c03001858cc7efc45fb7587cc24c"
+    },
+    "go": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/go/SKILL.md",
+      "computedHash": "621af91129cd5b0dd6101ee702fe5c2e4dada996773550f13ac945514d3ca3c4"
+    },
+    "go-testing": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/go-testing/SKILL.md",
+      "computedHash": "a938efbb8fbe73d31ff2d64b6ae18181bdca8d6fc9b8cdfee3278f1dd4beafc6"
+    },
+    "golangci-lint": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/golangci-lint/SKILL.md",
+      "computedHash": "14ea1291b7eef629fad348da21d5e851f69ac39f7b0fc09cebd3f0ee484d430f"
+    },
+    "google-adk": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/google-adk/SKILL.md",
+      "computedHash": "f4493f13f332fc731e35d6066df2fcc8dcad7869689e4f9e3871d70b82e479d4"
+    },
+    "html": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/html/SKILL.md",
+      "computedHash": "e7a9c1ff19930e87d25d1a8952119af93aa7dd36a47e92fb3404299f60dfc761"
+    },
+    "htmx": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/htmx/SKILL.md",
+      "computedHash": "37733a528758937777b39084663fdd9da11c4e8aff6c8d0cfa0d87935f2cf2a0"
+    },
+    "interactive-questions": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/interactive-questions/SKILL.md",
+      "computedHash": "442a1898fb5a1e7247c9d6fb909e55ea5f16879d4b902a112e419bc2f6743dde"
+    },
+    "javascript": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/javascript/SKILL.md",
+      "computedHash": "4c46d34c189f7735ee9ea87ea2f1fc24426bb83bcc71913ef77a4f279c26bd83"
+    },
+    "json-style": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/json-style/SKILL.md",
+      "computedHash": "f6c635b336b642a460950570537fe3d0dcbe2017f60d99e9bdacb03002f08011"
+    },
+    "markdown": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/markdown/SKILL.md",
+      "computedHash": "bf0734971788ea56bc0e78a136d77520cb350757ff15bf82c6fc6c8504a9e9db"
+    },
+    "nextjs-react": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/nextjs-react/SKILL.md",
+      "computedHash": "dbe423c501c42f34386900c6f6c1b019ef6adbf68baec863f661135799b2549e"
+    },
+    "numpy": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/numpy/SKILL.md",
+      "computedHash": "a3f57df9c430ec9ff27102fdb24295132aca2fc81c8e1cb0411e6e547f2f9e36"
+    },
+    "nuxt": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/nuxt/SKILL.md",
+      "computedHash": "4402bfbc1c34b31a879eb544bb43e66d6d2fb87849369033f9de9cecb9b977ab"
+    },
+    "pandas": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/pandas/SKILL.md",
+      "computedHash": "28a1b220f340388cf75637f6845e1ed9d74abdfc0d46083bebd2480292bd9b27"
+    },
+    "pandera": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/pandera/SKILL.md",
+      "computedHash": "01a03a4b94c9b71b0c5060514442d908d1ed792061e61a2059c39d19ac156e3a"
+    },
+    "perfectcode-zen-evaluation": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/perfectcode-zen-evaluation/SKILL.md",
+      "computedHash": "e07ae963b4e2d0a7c4080239d7e10363ca78486c5a4db1721176278b7f386fd2"
+    },
+    "perfectcode-zen-ideation": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/perfectcode-zen-ideation/SKILL.md",
+      "computedHash": "27c30a0df58e94894a7d31f17d2aeb91eb5db86c6c1d3c4f31d62e5edc070ef3"
+    },
+    "perfectcode-zen-implement": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/perfectcode-zen-implement/SKILL.md",
+      "computedHash": "f6f63023bcda63c4d934b9b4801be9efe1b678ff66b1a9387fdea515c6b06b82"
+    },
+    "perfectcode-zen-plan": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/perfectcode-zen-plan/SKILL.md",
+      "computedHash": "69a5930a271d80f9c7a6a0c7e51374d8b4e748dd0b4afe86ed9940c2d559099a"
+    },
+    "playwright-cli": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/playwright-cli/SKILL.md",
+      "computedHash": "a1243fa79a233960647c4cc4b7f3b743cb4893b63fb2d5b04f118c368d9e432b"
+    },
+    "pydantic": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/pydantic/SKILL.md",
+      "computedHash": "dd4ce0aa9b13acb2ace173711325d18ab737d0f5312f094003fcb21548402e70"
+    },
+    "pytest": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/pytest/SKILL.md",
+      "computedHash": "0d1ccce8f42bf3101b468e13759f6ef5e13c1ad9e6982ee32faea2cf251b36c4"
+    },
+    "python": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/python/SKILL.md",
+      "computedHash": "0fd6f57a6de7f7664fc5c5c5b32692a200e4ac9718d00edbcce28305c80b5cd3"
+    },
+    "python-aiomysql": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/python-aiomysql/SKILL.md",
+      "computedHash": "066d40ba2dcb86a8634527946d765cacdb758c6f4e32b90a4c46f323ea93a2de"
+    },
+    "python-bandit": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/python-bandit/SKILL.md",
+      "computedHash": "44a339d5210d61f6a09d39607d2e1b166696d3de76bc61b6e7584aa873bc255e"
+    },
+    "python-bigquery-sdk": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/python-bigquery-sdk/SKILL.md",
+      "computedHash": "76b7c6b129a0aa2a5ecad9516550b6e50cc288a24faeb3fba64d73283b4e9df9"
+    },
+    "python-dependency-injection": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/python-dependency-injection/SKILL.md",
+      "computedHash": "0e7f0673755b0eced7d8276e31a9db5fd2d1208bc49a60ef91dc26df4cc7e92a"
+    },
+    "python-flet": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/python-flet/SKILL.md",
+      "computedHash": "5fc8201122694baaf801bb39bef9b8956678a03a8becc558a489def74f316a5c"
+    },
+    "python-mcp": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/python-mcp/SKILL.md",
+      "computedHash": "1e5b0cced713334e8fcf776c5a373e23a856944705a2d5128b6cae3f7993d216"
+    },
+    "python-mypy": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/python-mypy/SKILL.md",
+      "computedHash": "9f3b809b4a2fa18a65eb5c4213757a56274982075c887fc7658c855e744063df"
+    },
+    "python-pip-audit": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/python-pip-audit/SKILL.md",
+      "computedHash": "69892d02c88075cc5c74786c248f565bdc5dd6456dc9f70296e510ee67be6fc5"
+    },
+    "python-pymysql": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/python-pymysql/SKILL.md",
+      "computedHash": "74e6aa44d21110ea6350e881552dea2a2ad8fc8cee3c6228d33580b9014bde97"
+    },
+    "python-ruff": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/python-ruff/SKILL.md",
+      "computedHash": "fa2150881978ea117f86d48156c3bd519e470f8c4c8a7de819afe453b964dd56"
+    },
+    "python-uv": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/python-uv/SKILL.md",
+      "computedHash": "32e1672d0cbc40f1d73bbe144c5abf2b09922f71bc5b244f2b1d2602f9d0ca4b"
+    },
+    "rules-creation": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/rules-creation/SKILL.md",
+      "computedHash": "6cd0e0063c48bf566f4fd40f410aaed21923f9a606d7036f3187ec4437133d64"
+    },
+    "seo-best-practices": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/seo-best-practices/SKILL.md",
+      "computedHash": "8325951be1039b231897926da1efcf59f6a550aa616b47873ca6b15ac4ca94ef"
+    },
+    "skill-creation": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/skill-creation/SKILL.md",
+      "computedHash": "bbf1cfce10579894d3a1f6b3786de96d9d4031e7c162eee0db98f330ffbe9965"
+    },
+    "sqlmodel": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/sqlmodel/SKILL.md",
+      "computedHash": "ef1feb4fe8c659f2682213bc0f3fc20fa8dc04869b12a1f3e0577c46a31a3951"
+    },
+    "tailwind-css": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/tailwind-css/SKILL.md",
+      "computedHash": "497927dba32a5396a2bf2c1c5713c8cba80bb0bc80f48391c2c0b8b2b7f5ee20"
+    },
+    "turso-libsql": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/turso-libsql/SKILL.md",
+      "computedHash": "8f688cc3163895bdb6578a2a9b646fe9fe5eda6b26eb4e7726615aecf0b76169"
+    },
+    "typescript-style": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/typescript-style/SKILL.md",
+      "computedHash": "60f254a22334a932a5776740d92c1a303306d97d8be227da37323864fcbd19da"
+    },
+    "unit-testing": {
+      "source": "the-perfect-developer/the-perfect-opencode",
+      "sourceType": "github",
+      "skillPath": ".opencode/skills/unit-testing/SKILL.md",
+      "computedHash": "3b5cdf3b18bd8fc820de09e93e2e915888983250062fcaab13a10852fe926ab7"
+    }
+  }
+}

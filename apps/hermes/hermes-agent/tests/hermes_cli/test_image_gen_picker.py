@@ -157,7 +157,7 @@ class TestConfigPrompt:
         from hermes_cli import tools_config
 
         monkeypatch.setenv("HERMES_HOME", str(tmp_path))
-        monkeypatch.delenv("FAL_KEY", raising=False)
+        monkeypatch.delenv("FAL_API_KEY", raising=False)
 
         image_gen_registry.register_provider(_FakeProvider("avail-img", available=True))
 
@@ -167,7 +167,7 @@ class TestConfigPrompt:
         from hermes_cli import tools_config
 
         monkeypatch.setenv("HERMES_HOME", str(tmp_path))
-        monkeypatch.delenv("FAL_KEY", raising=False)
+        monkeypatch.delenv("FAL_API_KEY", raising=False)
 
         image_gen_registry.register_provider(_FakeProvider("unavail-img", available=False))
 
@@ -263,13 +263,13 @@ class TestConfigWriting:
         monkeypatch.setattr(
             tools_config,
             "get_env_value",
-            lambda key: "fal-key" if key == "FAL_KEY" else "",
+            lambda key: "fal-key" if key == "FAL_API_KEY" else "",
         )
 
         config = {"image_gen": {"provider": "openai", "use_gateway": False}}
         provider_row = {
             "name": "FAL.ai",
-            "env_vars": [{"key": "FAL_KEY", "prompt": "FAL API key"}],
+            "env_vars": [{"key": "FAL_API_KEY", "prompt": "FAL API key"}],
             "imagegen_backend": "fal",
         }
 

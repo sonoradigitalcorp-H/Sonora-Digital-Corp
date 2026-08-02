@@ -1,0 +1,16 @@
+{
+  "timestamp": "2026-08-02T03:25:56.528048",
+  "conversations": 3,
+  "lead_accuracy": 94.4,
+  "lead_stats": {
+    "total_leads": 0,
+    "hot_leads": 0,
+    "warm_leads": 0,
+    "cold_leads": 0,
+    "avg_score": null
+  },
+  "insights": [
+    "Lead accuracy 94.4% \u2014 por encima del objetivo 85%",
+    "Avg tokens/mensaje: 440 \u2014 costo ~$0.000088"
+  ]
+}

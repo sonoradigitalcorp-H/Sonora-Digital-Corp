@@ -1,0 +1,13 @@
+{
+  "name": "aztrotech-contacto",
+  "description": "Información de contacto directo con César Holguín y AztroTech",
+  "version": "1.0.0",
+  "priority": 85,
+  "triggers": ["contacto", "contactar", "hablar con césar", "hablar con cesar", "teléfono", "telefono", "whatsapp", "correo", "email", "dirección", "direccion", "ubicación", "ubicacion", "662", "ventas", "cotizar", "presupuesto"],
+  "method": "STATIC",
+  "response_text": "📞 *Contacto AztroTech*\n\n👤 *César Holguín* — Fundador\n   Hermosillo, Sonora, México\n\n📱 WhatsApp: https://wa.me/526623538272?text=Hola%20César%20vengo%20de%20AztroTech%20AI\n📞 Teléfono: (662) 326 9692\n✉️ Email: ventasaztrotech@outlook.com\n\n🕐 *Horario de atención:* Lun-Vie 9:00 AM - 6:00 PM\n\n¿Quieres que agende una llamada para ti?",
+  "actions": [
+    { "text": "🤖 Ver servicios", "action": "aztro_agentes" },
+    { "text": "🎯 Agendar demo", "action": "aztro_demo" }
+  ]
+}

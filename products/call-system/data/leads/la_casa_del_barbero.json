@@ -1,0 +1,9 @@
+{
+  "name": "La Casa del Barbero",
+  "address": "Col. San Benito",
+  "source": "mock_barberias",
+  "niche": "barberias",
+  "phone": "",
+  "company": "La Casa del Barbero",
+  "status": "pending"
+}

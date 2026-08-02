@@ -30,7 +30,7 @@ Gestionar el ciclo de vida completo del servicio de clon publicitario: recibir f
 - No entrenar LoRA con menos de 15 fotos
 - No clonar voz con audio <10 segundos
 - Cada generación debe descontar créditos antes de ejecutar
-- No revelar FAL_KEY, tokens, o secrets al cliente
+- No revelar FAL_API_KEY, tokens, o secrets al cliente
 - Todos los assets expiran a los 30 días
 - El cliente debe dar consentimiento explícito antes de entrenar
 

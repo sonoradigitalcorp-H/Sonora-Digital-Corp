@@ -1,0 +1,896 @@
+{
+  "timestamp": "2026-08-02 03:50:32",
+  "total_scenarios": 92,
+  "passed_scenarios": 84,
+  "total_steps": 453,
+  "passed_steps": 445,
+  "accuracy": 91.30434782608695,
+  "step_accuracy": 98.23399558498896,
+  "duration_ms": 11968.088903988246,
+  "scenarios": [
+    {
+      "name": "First contact greeting",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 7,
+      "passed_steps": 7,
+      "duration_ms": 0.34423600300215185,
+      "failures": []
+    },
+    {
+      "name": "Greeting in English",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.22195499332156032,
+      "failures": []
+    },
+    {
+      "name": "Greeting with time of day",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.05596000119112432,
+      "failures": []
+    },
+    {
+      "name": "Ask about services",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 7,
+      "passed_steps": 7,
+      "duration_ms": 2.6279409939888865,
+      "failures": []
+    },
+    {
+      "name": "Ask about Empleado Digital",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 7,
+      "passed_steps": 7,
+      "duration_ms": 0.07204200665000826,
+      "failures": []
+    },
+    {
+      "name": "Ask about pricing",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 0.05601000157184899,
+      "failures": []
+    },
+    {
+      "name": "Ask about company",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 0.06209200364537537,
+      "failures": []
+    },
+    {
+      "name": "Price objection",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 7,
+      "passed_steps": 7,
+      "duration_ms": 0.09295200288761407,
+      "failures": []
+    },
+    {
+      "name": "Time objection",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 0.05584899918176234,
+      "failures": []
+    },
+    {
+      "name": "Existing solution objection",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 0.05892600165680051,
+      "failures": []
+    },
+    {
+      "name": "Trust objection",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 0.056801000027917325,
+      "failures": []
+    },
+    {
+      "name": "Think about it objection",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 0.05372500163502991,
+      "failures": []
+    },
+    {
+      "name": "Hot lead - ready to buy",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 0.05897600203752518,
+      "failures": []
+    },
+    {
+      "name": "Warm lead - needs nurturing",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 0.06062899774406105,
+      "failures": []
+    },
+    {
+      "name": "Cold lead - education needed",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 0.05810400762129575,
+      "failures": []
+    },
+    {
+      "name": "Capture business type",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 0.05797400081064552,
+      "failures": []
+    },
+    {
+      "name": "Capture contact info",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 3.1341059948317707,
+      "failures": []
+    },
+    {
+      "name": "Capture social media",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.08809300197754055,
+      "failures": []
+    },
+    {
+      "name": "Complete sales conversation",
+      "feature": "conversation_flow.feature",
+      "passed": false,
+      "steps": 9,
+      "passed_steps": 8,
+      "duration_ms": 21.017790990299545,
+      "failures": [
+        {
+          "step": "Then the lead type should be \"hot\"",
+          "error": "",
+          "expected": "hot",
+          "actual": "cold"
+        }
+      ]
+    },
+    {
+      "name": "Objection then conversion",
+      "feature": "conversation_flow.feature",
+      "passed": false,
+      "steps": 7,
+      "passed_steps": 6,
+      "duration_ms": 0.26223500026389956,
+      "failures": [
+        {
+          "step": "Then the lead type should be \"hot\"",
+          "error": "",
+          "expected": "hot",
+          "actual": "cold"
+        }
+      ]
+    },
+    {
+      "name": "Long nurturing conversation",
+      "feature": "conversation_flow.feature",
+      "passed": false,
+      "steps": 8,
+      "passed_steps": 7,
+      "duration_ms": 0.19017299928236753,
+      "failures": [
+        {
+          "step": "Then the lead type should be \"warm\"",
+          "error": "",
+          "expected": "warm",
+          "actual": "cold"
+        }
+      ]
+    },
+    {
+      "name": "Never reveal SDC",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 0.08767200051806867,
+      "failures": []
+    },
+    {
+      "name": "Never give prices",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.04643099964596331,
+      "failures": []
+    },
+    {
+      "name": "Handle abuse",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 0.05545899330172688,
+      "failures": []
+    },
+    {
+      "name": "Handle off-topic",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.07628000457771122,
+      "failures": []
+    },
+    {
+      "name": "English conversation",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 2.8085859958082438,
+      "failures": []
+    },
+    {
+      "name": "Spanish conversation",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 0.08082900603767484,
+      "failures": []
+    },
+    {
+      "name": "Language detection switch",
+      "feature": "conversation_flow.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.06807400495745242,
+      "failures": []
+    },
+    {
+      "name": "Casual greeting - cold",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 4,
+      "passed_steps": 4,
+      "duration_ms": 0.5645990022458136,
+      "failures": []
+    },
+    {
+      "name": "Asking about services - cold",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 4,
+      "passed_steps": 4,
+      "duration_ms": 3.5299930023029447,
+      "failures": []
+    },
+    {
+      "name": "Just browsing - cold",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 0.1904740056488663,
+      "failures": []
+    },
+    {
+      "name": "Price objection - cold",
+      "feature": "lead_classification.feature",
+      "passed": false,
+      "steps": 4,
+      "passed_steps": 3,
+      "duration_ms": 0.3728829906322062,
+      "failures": [
+        {
+          "step": "Then the confidence should be at least 0.80",
+          "error": "",
+          "expected": ">=0.80",
+          "actual": "0.7"
+        }
+      ]
+    },
+    {
+      "name": "Rejection - cold",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 0.18026400357484818,
+      "failures": []
+    },
+    {
+      "name": "Not sure - cold",
+      "feature": "lead_classification.feature",
+      "passed": false,
+      "steps": 3,
+      "passed_steps": 2,
+      "duration_ms": 0.2504119911463931,
+      "failures": [
+        {
+          "step": "Then the lead type should be \"cold\"",
+          "error": "",
+          "expected": "cold",
+          "actual": "warm"
+        }
+      ]
+    },
+    {
+      "name": "No business yet - cold",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 2.1911929943598807,
+      "failures": []
+    },
+    {
+      "name": "Interested in service - warm",
+      "feature": "lead_classification.feature",
+      "passed": false,
+      "steps": 4,
+      "passed_steps": 3,
+      "duration_ms": 0.43573600123636425,
+      "failures": [
+        {
+          "step": "Then the confidence should be at least 0.70",
+          "error": "",
+          "expected": ">=0.70",
+          "actual": "0.5"
+        }
+      ]
+    },
+    {
+      "name": "Asking price - warm",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 0.20748800307046622,
+      "failures": []
+    },
+    {
+      "name": "Has a business - warm",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 0.22333899687509984,
+      "failures": []
+    },
+    {
+      "name": "Comparing options - warm",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 0.2431780012557283,
+      "failures": []
+    },
+    {
+      "name": "Problem description - warm",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 0.27345700073055923,
+      "failures": []
+    },
+    {
+      "name": "Asking how it works - warm",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 1.5926380001474172,
+      "failures": []
+    },
+    {
+      "name": "Clinic owner interested - warm",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 0.30140200396999717,
+      "failures": []
+    },
+    {
+      "name": "Restaurant owner - warm",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 0.30232399876695126,
+      "failures": []
+    },
+    {
+      "name": "Wants to buy now - hot",
+      "feature": "lead_classification.feature",
+      "passed": false,
+      "steps": 4,
+      "passed_steps": 3,
+      "duration_ms": 0.308115006191656,
+      "failures": [
+        {
+          "step": "Then the confidence should be at least 0.80",
+          "error": "",
+          "expected": ">=0.80",
+          "actual": "0.7"
+        }
+      ]
+    },
+    {
+      "name": "Has budget ready - hot",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 2.5967399997171015,
+      "failures": []
+    },
+    {
+      "name": "Wants to start immediately - hot",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 0.2028779999818653,
+      "failures": []
+    },
+    {
+      "name": "Needs it now - hot",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 0.17000400112010539,
+      "failures": []
+    },
+    {
+      "name": "Full hot signal - hot",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.527185999089852,
+      "failures": []
+    },
+    {
+      "name": "Ready to sign - hot",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 0.19888000679202378,
+      "failures": []
+    },
+    {
+      "name": "Cold to warm evolution",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 4,
+      "passed_steps": 4,
+      "duration_ms": 0.21862999710720032,
+      "failures": []
+    },
+    {
+      "name": "Warm to hot escalation",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 4,
+      "passed_steps": 4,
+      "duration_ms": 0.25182499666698277,
+      "failures": []
+    },
+    {
+      "name": "Cold stays cold after rejection",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 4,
+      "passed_steps": 4,
+      "duration_ms": 0.1477799960412085,
+      "failures": []
+    },
+    {
+      "name": "English cold inquiry",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 0.17158700211439282,
+      "failures": []
+    },
+    {
+      "name": "English warm lead",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 0.5209829978412017,
+      "failures": []
+    },
+    {
+      "name": "English hot lead",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 0.21728700085077435,
+      "failures": []
+    },
+    {
+      "name": "Portuguese warm lead",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 0.2186089986935258,
+      "failures": []
+    },
+    {
+      "name": "Empty message",
+      "feature": "lead_classification.feature",
+      "passed": false,
+      "steps": 4,
+      "passed_steps": 3,
+      "duration_ms": 0.07605001155752689,
+      "failures": [
+        {
+          "step": "When the user says \"\"",
+          "error": "No message found",
+          "expected": "",
+          "actual": ""
+        }
+      ]
+    },
+    {
+      "name": "Single emoji",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 0.10929499694611877,
+      "failures": []
+    },
+    {
+      "name": "Very long message with hot signals",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 0.9927589999279007,
+      "failures": []
+    },
+    {
+      "name": "Mixed signals - price + interest",
+      "feature": "lead_classification.feature",
+      "passed": true,
+      "steps": 3,
+      "passed_steps": 3,
+      "duration_ms": 0.19175700435880572,
+      "failures": []
+    },
+    {
+      "name": "Hot lead notification",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 8,
+      "passed_steps": 8,
+      "duration_ms": 0.4094339965377003,
+      "failures": []
+    },
+    {
+      "name": "Warm lead notification",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.06574000872205943,
+      "failures": []
+    },
+    {
+      "name": "Cold lead no notification",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 4,
+      "passed_steps": 4,
+      "duration_ms": 0.05052899359725416,
+      "failures": []
+    },
+    {
+      "name": "Multiple hot leads",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.05882600089535117,
+      "failures": []
+    },
+    {
+      "name": "Daily summary at 9am",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 9,
+      "passed_steps": 9,
+      "duration_ms": 0.23872900055721402,
+      "failures": []
+    },
+    {
+      "name": "Daily summary with no activity",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 0.06044900510460138,
+      "failures": []
+    },
+    {
+      "name": "TTS server down alert",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.06574900180567056,
+      "failures": []
+    },
+    {
+      "name": "Qdrant down alert",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.05477698869071901,
+      "failures": []
+    },
+    {
+      "name": "Bot restart alert",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.05667199729941785,
+      "failures": []
+    },
+    {
+      "name": "n8n bridge health check",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 7,
+      "passed_steps": 7,
+      "duration_ms": 343.68158399593085,
+      "failures": []
+    },
+    {
+      "name": "n8n lead webhook",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.06645999383181334,
+      "failures": []
+    },
+    {
+      "name": "n8n followup trigger",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.0560000044060871,
+      "failures": []
+    },
+    {
+      "name": "Auto-heal detects bot down",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 0.05982699804008007,
+      "failures": []
+    },
+    {
+      "name": "Auto-heal detects TTS down",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.04517899651546031,
+      "failures": []
+    },
+    {
+      "name": "Auto-heal detects Postgres down",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.05435700586531311,
+      "failures": []
+    },
+    {
+      "name": "Auto-heal detects Redis down",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.04749400250148028,
+      "failures": []
+    },
+    {
+      "name": "/leads command",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 0.10086801194120198,
+      "failures": []
+    },
+    {
+      "name": "/hot command",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.06314399070106447,
+      "failures": []
+    },
+    {
+      "name": "/summary command",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.05653100379277021,
+      "failures": []
+    },
+    {
+      "name": "/health command",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 0.06966700311750174,
+      "failures": []
+    },
+    {
+      "name": "/start command",
+      "feature": "notification_system.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 0.05398599023465067,
+      "failures": []
+    },
+    {
+      "name": "TTS generates audio from text",
+      "feature": "voice_pipeline.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 2650.7802169944625,
+      "failures": []
+    },
+    {
+      "name": "TTS converts to OGG opus",
+      "feature": "voice_pipeline.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 600.2913849952165,
+      "failures": []
+    },
+    {
+      "name": "Voice mode activation",
+      "feature": "voice_pipeline.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 177.9476850060746,
+      "failures": []
+    },
+    {
+      "name": "Voice mode deactivation",
+      "feature": "voice_pipeline.feature",
+      "passed": true,
+      "steps": 6,
+      "passed_steps": 6,
+      "duration_ms": 115.61301999608986,
+      "failures": []
+    },
+    {
+      "name": "TTS with different voices",
+      "feature": "voice_pipeline.feature",
+      "passed": true,
+      "steps": 4,
+      "passed_steps": 4,
+      "duration_ms": 2462.367828004062,
+      "failures": []
+    },
+    {
+      "name": "TTS handles long text",
+      "feature": "voice_pipeline.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 163.6330189940054,
+      "failures": []
+    },
+    {
+      "name": "TTS handles special characters",
+      "feature": "voice_pipeline.feature",
+      "passed": true,
+      "steps": 4,
+      "passed_steps": 4,
+      "duration_ms": 2612.629224997363,
+      "failures": []
+    },
+    {
+      "name": "TTS handles emoji in text",
+      "feature": "voice_pipeline.feature",
+      "passed": true,
+      "steps": 4,
+      "passed_steps": 4,
+      "duration_ms": 1909.9157469900092,
+      "failures": []
+    },
+    {
+      "name": "Voice pipeline end-to-end",
+      "feature": "voice_pipeline.feature",
+      "passed": true,
+      "steps": 7,
+      "passed_steps": 7,
+      "duration_ms": 207.97482300258707,
+      "failures": []
+    },
+    {
+      "name": "TTS server health check",
+      "feature": "voice_pipeline.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 375.5722619971493,
+      "failures": []
+    },
+    {
+      "name": "TTS server voices endpoint",
+      "feature": "voice_pipeline.feature",
+      "passed": true,
+      "steps": 5,
+      "passed_steps": 5,
+      "duration_ms": 296.0580450017005,
+      "failures": []
+    }
+  ]
+}

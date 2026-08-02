@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0",
+  "niche": "restaurante",
+  "name": "Tacos El Fogon",
+  "slug": "tacos-el-fogon",
+  "currency": "MXN",
+  "updated_at": "2026-07-19",
+  "pricing_tiers": [
+    {
+      "service": "Menú digital",
+      "tokens": 3,
+      "price_mxn": 99,
+      "currency": "MXN"
+    },
+    {
+      "service": "Promociones",
+      "tokens": 5,
+      "price_mxn": 149,
+      "currency": "MXN"
+    },
+    {
+      "service": "Reservaciones",
+      "tokens": 5,
+      "price_mxn": 199,
+      "currency": "MXN"
+    }
+  ]
+}

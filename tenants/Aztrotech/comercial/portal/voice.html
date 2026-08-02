@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>AztroTech AI — Voz en Vivo</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --copper:#AC6D3E;--copper-light:#CD8D5D;--copper-glow:rgba(172,109,62,0.4);
+  --sage:#B6C08B;--bg:#08090f;--bg-card:rgba(17,23,40,0.8);
+  --text:#e8edf5;--text-muted:rgba(232,237,245,0.3);
+  --border:rgba(172,109,62,0.12);
+  --font:'Poppins',sans-serif;
+}
+html,body{height:100%;overflow:hidden;font-family:var(--font);background:var(--bg);color:var(--text);-webkit-user-select:none;user-select:none}
+/* 3D Background */
+#three-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+/* Header */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:20;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:12px 20px;background:linear-gradient(180deg,rgba(8,9,15,0.95),transparent);
+}
+.brand{display:flex;align-items:center;gap:10px}
+.brand-icon{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--copper),var(--copper-light));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff}
+.brand h1{font-size:15px;font-weight:600}
+.brand span{font-weight:300;color:var(--copper-light)}
+
+/* Status bar */
+.status-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:10;
+  padding:6px 20px;display:flex;justify-content:space-between;
+  font-size:8px;color:var(--text-muted);letter-spacing:1px;
+  background:linear-gradient(0deg,rgba(8,9,15,0.9),transparent);
+}
+.status-bar .dot{display:inline-block;width:4px;height:4px;border-radius:50%;margin-right:4px;background:#10b981;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* ============ MAIN INTERFACE ============ */
+.main{
+  position:absolute;top:0;left:0;right:0;bottom:0;z-index:5;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:80px 20px 40px;
+}
+
+/* Status message */
+#statusText{
+  font-size:13px;color:var(--text-muted);font-weight:300;
+  text-align:center;margin-bottom:20px;transition:0.3s;min-height:20px;
+  letter-spacing:0.5px;
+}
+#statusText.active{color:var(--copper-light)}
+#statusText.listening{color:#10b981}
+#statusText.speaking{color:var(--sage)}
+
+/* Transcript bubbles */
+#transcript{
+  max-width:600px;width:100%;text-align:center;
+  font-size:22px;font-weight:300;line-height:1.5;
+  min-height:60px;margin-bottom:30px;
+  color:var(--text);transition:0.3s;
+}
+#transcript .you{color:var(--copper-light);font-weight:400}
+#transcript .ai{color:var(--sage)}
+#transcript .thinking{color:var(--text-muted);font-style:italic;font-size:16px;animation:blink 1s infinite}
+@keyframes blink{0%,100%{opacity:0.3}50%{opacity:1}}
+
+/* ============ MIC BUTTON ============ */
+.mic-container{
+  position:relative;width:120px;height:120px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;-webkit-tap-highlight-color:transparent;
+  margin-bottom:24px;
+}
+.mic-ring{
+  position:absolute;width:100%;height:100%;border-radius:50%;
+  border:2px solid var(--border);transition:0.4s;
+}
+.mic-ring.inner{width:80%;height:80%;border-color:transparent}
+.mic-ring.pulse{
+  animation:micPulse 2s ease-in-out infinite;
+  border-color:var(--copper);box-shadow:0 0 30px var(--copper-glow);
+}
+@keyframes micPulse{
+  0%,100%{transform:scale(1);opacity:0.3}
+  50%{transform:scale(1.15);opacity:0.6}
+}
+.mic-ring.listening{
+  border-color:#10b981;box-shadow:0 0 40px rgba(16,185,129,0.4);
+  animation:micListen 1.5s ease-in-out infinite;
+}
+@keyframes micListen{
+  0%,100%{transform:scale(1);opacity:0.5}
+  50%{transform:scale(1.2);opacity:0.8}
+}
+.mic-ring.speaking{
+  border-color:var(--sage);box-shadow:0 0 40px rgba(182,192,139,0.4);
+  animation:micSpeak 0.8s ease-in-out infinite;
+}
+@keyframes micSpeak{
+  0%,100%{transform:scale(1)}
+  25%{transform:scale(1.1)}
+  75%{transform:scale(0.95)}
+}
+.mic-btn{
+  width:80px;height:80px;border-radius:50%;border:none;z-index:2;
+  background:linear-gradient(135deg,var(--copper),var(--copper-light));
+  color:#fff;font-size:36px;cursor:pointer;position:relative;
+  transition:0.3s;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 4px 20px var(--copper-glow);
+}
+.mic-btn:hover{transform:scale(1.05)}
+.mic-btn:active{transform:scale(0.95)}
+.mic-btn.listening{background:linear-gradient(135deg,#10b981,#059669);box-shadow:0 4px 30px rgba(16,185,129,0.5)}
+.mic-btn.speaking{background:linear-gradient(135deg,var(--sage),var(--copper-light));box-shadow:0 4px 30px rgba(182,192,139,0.4)}
+.mic-btn .label{
+  position:absolute;bottom:-28px;left:50%;transform:translateX(-50%);
+  font-size:10px;white-space:nowrap;color:var(--text-muted);letter-spacing:1px;
+}
+
+/* Volume visualization bars */
+.volume-bars{
+  display:flex;gap:3px;align-items:center;height:24px;
+  margin-top:10px;opacity:0;transition:0.3s;
+}
+.volume-bars.active{opacity:1}
+.volume-bars span{
+  width:3px;border-radius:2px;background:var(--copper);
+  transition:height 0.1s;height:4px;
+}
+.volume-bars.listening span{background:#10b981}
+.volume-bars.speaking span{background:var(--sage)}
+
+/* Response text */
+#responseText{
+  max-width:500px;text-align:center;
+  font-size:14px;color:var(--text-muted);line-height:1.6;
+  margin-top:12px;min-height:40px;
+  padding:0 20px;
+}
+
+/* ============ CHAT HISTORY (toggle) ============ */
+.history-toggle{
+  position:fixed;bottom:40px;right:20px;z-index:15;
+  width:40px;height:40px;border-radius:50%;border:1px solid var(--border);
+  background:var(--bg-card);color:var(--text-muted);font-size:16px;
+  cursor:pointer;backdrop-filter:blur(10px);transition:0.2s;
+  display:flex;align-items:center;justify-content:center;
+}
+.history-toggle:hover{border-color:var(--copper);color:var(--copper-light)}
+
+/* ============ RESPONSIVE ============ */
+@media(max-width:600px){
+  .mic-container{width:100px;height:100px}
+  .mic-btn{width:68px;height:68px;font-size:30px}
+  #transcript{font-size:18px}
+  header{padding:10px 16px}
+}
+</style>
+</head>
+<body>
+<div id="three-canvas"></div>
+
+<header>
+  <div class="brand">
+    <div class="brand-icon">✦</div>
+    <h1>AztroTech <span>AI</span> · Voz</h1>
+  </div>
+  <span style="font-size:10px;color:var(--text-muted)" id="timer">00:00</span>
+</header>
+
+<div class="main">
+  <div id="statusText">Toca el micrófono y habla</div>
+  
+  <div id="transcript"></div>
+  
+  <div class="mic-container" id="micContainer" onclick="toggleMic()">
+    <div class="mic-ring" id="ring1"></div>
+    <div class="mic-ring inner" id="ring2"></div>
+    <button class="mic-btn" id="micBtn">🎤</button>
+  </div>
+  
+  <div class="volume-bars" id="volBars" id="volBars">
+    <span></span><span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+  
+  <div id="responseText"></div>
+</div>
+
+<div class="status-bar">
+  <span><span class="dot"></span> Kokoro STT/TTS · Engram</span>
+  <span>✦ AztroTech — Voz en Vivo</span>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ============================================================
+// THREE.JS - Infinity Particle System (Grimoire-style)
+// ============================================================
+const container = document.getElementById('three-canvas');
+const COPPER = 0xAC6D3E, COPPER_LIGHT = 0xCD8D5D;
+
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x08090f, 0.0012);
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 2000);
+camera.position.set(0, 0, 16);
+const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setClearColor(0x08090f, 0);
+container.appendChild(renderer.domElement);
+scene.add(new THREE.AmbientLight(0x222244, 0.3));
+const dl = new THREE.DirectionalLight(0xffeedd, 0.5); dl.position.set(1,1,1); scene.add(dl);
+
+// Infinity symbol
+const grp = new THREE.Group(); scene.add(grp);
+const pts = [];
+for (let i = 0; i <= 300; i++) {
+  const t = (i/300)*Math.PI*2, s = 4.5;
+  pts.push(new THREE.Vector3(s*Math.cos(t)/(1+Math.sin(t)**2), s*Math.sin(t)*Math.cos(t)/(1+Math.sin(t)**2), Math.sin(t*2)*0.6));
+}
+const curve = new THREE.CatmullRomCurve3(pts, true);
+grp.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 200, 0.06, 8, true), new THREE.MeshBasicMaterial({color:COPPER,transparent:true,opacity:0.12,wireframe:true})));
+grp.add(new THREE.Mesh(new THREE.TubeGeometry(curve, 100, 0.15, 16, true), new THREE.MeshBasicMaterial({color:COPPER_LIGHT,transparent:true,opacity:0.03,side:THREE.DoubleSide})));
+
+// Particles
+const pcount = 500;
+const pos = new Float32Array(pcount*3);
+for (let i = 0; i < pcount; i++) {
+  const t = (i/pcount)*Math.PI*2, s = 4.5;
+  pos[i*3]=s*Math.cos(t)/(1+Math.sin(t)**2);pos[i*3+1]=s*Math.sin(t)*Math.cos(t)/(1+Math.sin(t)**2);pos[i*3+2]=Math.sin(t*2)*0.6+(Math.random()-0.5)*0.3;
+}
+const pg = new THREE.BufferGeometry(); pg.setAttribute('position', new THREE.BufferAttribute(pos, 3));
+const ps = new THREE.Points(pg, new THREE.PointsMaterial({color:COPPER_LIGHT,size:0.06,transparent:true,opacity:0.5,blending:THREE.AdditiveBlending,depthWrite:false}));
+grp.add(ps);
+
+// Stars
+const sc = 1500; const sg = new THREE.BufferGeometry(); const sp = new Float32Array(sc*3);
+for (let i = 0; i < sc; i++) { const r=25+Math.random()*80, th=Math.random()*Math.PI*2, ph=Math.acos(2*Math.random()-1); sp[i*3]=r*Math.sin(ph)*Math.cos(th);sp[i*3+1]=r*Math.sin(ph)*Math.sin(th);sp[i*3+2]=r*Math.cos(ph); }
+sg.setAttribute('position', new THREE.BufferAttribute(sp, 3));
+scene.add(new THREE.Points(sg, new THREE.PointsMaterial({color:0x888899,size:0.12,transparent:true,opacity:0.3,blending:THREE.AdditiveBlending,depthWrite:false})));
+
+let animTime = 0;
+function animate() { requestAnimationFrame(animate); animTime += 0.005; grp.rotation.y = animTime*0.1; grp.rotation.x = Math.sin(animTime*0.05)*0.05; renderer.render(scene, camera); }
+animate();
+window.addEventListener('resize', () => { camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
+
+// ============================================================
+// VOICE INTERFACE - STT (SpeechRecognition) + TTS (SpeechSynthesis)
+// ============================================================
+const API_KEY = ''; // Se usa el proxy del servidor
+const transcript = document.getElementById('transcript');
+const statusText = document.getElementById('statusText');
+const micBtn = document.getElementById('micBtn');
+const ring1 = document.getElementById('ring1');
+const ring2 = document.getElementById('ring2');
+const volBars = document.getElementById('volBars');
+const responseText = document.getElementById('responseText');
+const timer = document.getElementById('timer');
+
+let isListening = false;
+let isSpeaking = false;
+let recognition = null;
+let synth = window.speechSynthesis;
+let conversation = [];
+let sessionTimer = 0;
+let timerInterval = null;
+
+// Voices for TTS
+let ttsVoice = null;
+function loadVoices() {
+  const voices = synth.getVoices();
+  ttsVoice = voices.find(v => v.lang.startsWith('es') && v.name.includes('Mexican')) 
+          || voices.find(v => v.lang.startsWith('es') && v.name.includes('Latin'))
+          || voices.find(v => v.lang.startsWith('es'))
+          || voices[0];
+}
+loadVoices();
+if (speechSynthesis.onvoiceschanged !== undefined) {
+  speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+// Session timer
+setInterval(() => { sessionTimer++; const m=String(Math.floor(sessionTimer/60)).padStart(2,'0'); const s=String(sessionTimer%60).padStart(2,'0'); timer.textContent=m+':'+s; }, 1000);
+
+// Volume visualization
+function animateVolume(active, cls) {
+  const bars = volBars.querySelectorAll('span');
+  volBars.classList.toggle('active', active);
+  volBars.className = 'volume-bars' + (cls ? ' '+cls : '');
+  if (active) {
+    const interval = setInterval(() => {
+      if (!isListening && !isSpeaking) { clearInterval(interval); bars.forEach(b => b.style.height='4px'); return; }
+      bars.forEach(b => b.style.height = (4 + Math.random()*20) + 'px');
+    }, 100);
+  } else {
+    bars.forEach(b => b.style.height='4px');
+  }
+}
+
+// Set state UI
+function setState(state) {
+  ring1.className = 'mic-ring';
+  ring2.className = 'mic-ring inner';
+  micBtn.className = 'mic-btn';
+  volBars.className = 'volume-bars';
+  statusText.className = '';
+  
+  if (state === 'idle') {
+    statusText.textContent = 'Toca el micrófono y habla';
+    statusText.className = '';
+    micBtn.innerHTML = '🎤';
+    animateVolume(false);
+  } else if (state === 'listening') {
+    ring1.classList.add('listening');
+    ring2.classList.add('listening');
+    micBtn.classList.add('listening');
+    statusText.textContent = '🎙️ Escuchando...';
+    statusText.className = 'listening';
+    micBtn.innerHTML = '🔴';
+    animateVolume(true, 'listening');
+  } else if (state === 'thinking') {
+    ring1.classList.add('pulse');
+    micBtn.innerHTML = '⏳';
+    statusText.textContent = '🧠 Pensando...';
+    statusText.className = 'active';
+    animateVolume(false);
+  } else if (state === 'speaking') {
+    ring1.classList.add('speaking');
+    ring2.classList.add('speaking');
+    micBtn.classList.add('speaking');
+    statusText.textContent = '🔊 Hablando...';
+    statusText.className = 'speaking';
+    micBtn.innerHTML = '🔊';
+    animateVolume(true, 'speaking');
+  }
+}
+
+// STT - Speech to Text
+function initRecognition() {
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SpeechRecognition) {
+    statusText.textContent = '❌ Tu navegador no soporta voz. Usa Chrome o Edge.';
+    return false;
+  }
+  recognition = new SpeechRecognition();
+  recognition.continuous = true;
+  recognition.interimResults = true;
+  recognition.lang = 'es-MX';
+  
+  recognition.onresult = (e) => {
+    let finalText = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      if (e.results[i].isFinal) finalText += e.results[i][0].transcript;
+    }
+    if (finalText) {
+      transcript.innerHTML = `<span class="you">Tú:</span> ${finalText}`;
+      // Stop listening and process
+      recognition.stop();
+      isListening = false;
+      processQuery(finalText);
+    } else {
+      // Show interim
+      const interim = e.results[e.results.length-1][0].transcript;
+      transcript.innerHTML = `<span class="you">Tú:</span> ${interim}`;
+    }
+  };
+  
+  recognition.onerror = (e) => {
+    console.log('STT error:', e.error);
+    if (e.error === 'no-speech') { setState('idle'); isListening = false; return; }
+    statusText.textContent = '❌ Error: ' + e.error;
+    setState('idle');
+    isListening = false;
+  };
+  
+  recognition.onend = () => {
+    if (isListening && !isSpeaking) {
+      // Auto-restart if still in listening mode
+      try { recognition.start(); } catch(e) {}
+    }
+  };
+  return true;
+}
+
+// TTS - Text to Speech
+function speakText(text) {
+  return new Promise((resolve) => {
+    if (!synth) { resolve(); return; }
+    synth.cancel();
+    const utterance = new SpeechSynthesisUtterance(text.replace(/\*{1,2}/g, '').replace(/#{1,6}/g, ''));
+    utterance.lang = 'es-MX';
+    utterance.rate = 1.1;
+    utterance.pitch = 1.0;
+    utterance.voice = ttsVoice;
+    utterance.onstart = () => { isSpeaking = true; setState('speaking'); };
+    utterance.onend = () => { isSpeaking = false; resolve(); };
+    utterance.onerror = () => { isSpeaking = false; resolve(); };
+    synth.speak(utterance);
+    // Safety timeout
+    setTimeout(resolve, text.length * 80 + 2000);
+  });
+}
+
+// LLM Query
+async function processQuery(text) {
+  setState('thinking');
+  transcript.innerHTML = `<span class="you">Tú:</span> ${text}`;
+  responseText.textContent = 'Consultando a Mystic...';
+  
+  conversation.push({role:'user', content: text});
+  
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({
+        messages: [
+          {role:'system', content:'Eres Mystic AI de AztroTech, voz oficial de César Holguín. Hablas español mexicano, tono cálido y estratégico. Respuestas CONCISAS, máx 3 oraciones. Hablas como una persona, no como un bot. Usa lenguaje natural, sin markdown ni formato.'},
+          ...conversation.slice(-6)
+        ],
+        model:'deepseek/deepseek-chat'
+      })
+    });
+    const data = await res.json();
+    let reply = data?.choices?.[0]?.message?.content || 'No pude procesar eso.';
+    conversation.push({role:'assistant', content: reply});
+    
+    transcript.innerHTML = `<span class="you">Tú:</span> ${text}<br><span class="ai">Mystic:</span> ${reply}`;
+    responseText.textContent = '';
+    
+    // Speak the response
+    await speakText(reply);
+    
+    setState('idle');
+    transcript.innerHTML = `<span class="you">Tú:</span> ${text}<br><span class="ai">Mystic:</span> ${reply}`;
+    
+  } catch(e) {
+    responseText.textContent = '⚠️ Error de conexión';
+    setState('idle');
+  }
+}
+
+// Toggle microphone
+function toggleMic() {
+  if (isSpeaking) {
+    synth.cancel();
+    isSpeaking = false;
+    setState('idle');
+    return;
+  }
+  
+  if (!recognition) {
+    if (!initRecognition()) return;
+  }
+  
+  if (isListening) {
+    recognition.stop();
+    isListening = false;
+    setState('idle');
+    return;
+  }
+  
+  // Start listening
+  try {
+    isListening = true;
+    setState('listening');
+    transcript.innerHTML = '🎙️ Habla ahora...';
+    recognition.start();
+  } catch(e) {
+    // Re-init and try again
+    recognition = null;
+    if (initRecognition()) {
+      isListening = true;
+      setState('listening');
+      try { recognition.start(); } catch(e2) {}
+    }
+  }
+}
+
+// Keyboard shortcut - Space to toggle mic
+document.addEventListener('keydown', (e) => {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+  if (e.code === 'Space') { e.preventDefault(); toggleMic(); }
+});
+
+// Init
+initRecognition();
+setState('idle');
+</script>
+</body>
+</html>

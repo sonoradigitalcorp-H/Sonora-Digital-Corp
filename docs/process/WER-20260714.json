@@ -1,0 +1,133 @@
+{
+  "report_id": "WER-20260714",
+  "generated": "2026-07-14T00:00:00Z",
+  "period": "daily",
+  "type": "executive",
+  "reports": {
+    "infrastructure": {
+      "title": "Infrastructure Status",
+      "status": "operational",
+      "docker_containers": {
+        "total": 15,
+        "running": 14,
+        "healthy": 12,
+        "unhealthy": ["sdc-grafana"],
+        "services": {
+          "sonora-hasura": "healthy (:8082)",
+          "ae-engine": "running (:8008, :8090)",
+          "sdc-postgres": "healthy (:5432)",
+          "sdc-abe-service": "running",
+          "sdc-redis": "healthy (:6379)",
+          "sdc-grafana": "unhealthy (:3031)",
+          "sdc-prometheus": "running (:9090)",
+          "sdc-content-server": "running (:8765-8766)",
+          "sdc-n8n": "healthy (:5678, 33 workflows)",
+          "sdc-omnivoice": "running (:3900)",
+          "sdc-neo4j": "healthy (:7474, :7687)",
+          "sdc-qdrant": "healthy (:6333-6334)"
+        }
+      },
+      "systemd_services": {
+        "evolucion-dashboard": "active (:8080)",
+        "abe-service": "active (:5180)"
+      },
+      "gateways": {
+        "openclaw": "live (:18789)",
+        "sonora-mcp": "responding (:8180)",
+        "hermes": "active"
+      }
+    },
+    "knowledge_base": {
+      "title": "Knowledge Base Status",
+      "qdrant_collections": {
+        "abe-business": {"vectors": 5, "status": "active"},
+        "abe-artists": {"vectors": 5, "status": "active"},
+        "brain-knowledge": {"vectors": 2619, "status": "active"},
+        "kb_abe_music": {"vectors": 9, "status": "active"}
+      },
+      "engram_memories": 1,
+      "neo4j": "running (:7687)"
+    },
+    "revenue": {
+      "title": "Revenue Intelligence",
+      "period": "last_known",
+      "source": "WER-20260710 + AGENTS.md",
+      "total_revenue_usd": 479112,
+      "artists": [
+        {"name": "Hector Rubio", "streams": 115093009, "revenue": 460372, "spotify_monthly_listeners": 1028288},
+        {"name": "Jesus Urquijo", "streams": 4635222, "revenue": 18540, "spotify_monthly_listeners": 24278},
+        {"name": "Javier Arvayo", "streams": 50000, "revenue": 200, "spotify_monthly_listeners": 73680}
+      ],
+      "revenue_split_70_20_10": {
+        "artist_share_70pct": 335378,
+        "label_share_20pct": 95822,
+        "distributor_share_10pct": 47911
+      },
+      "note": "100% Spotify. Oplaai no paga multi-plataforma."
+    },
+    "agents": {
+      "title": "Agent Ecosystem",
+      "opencode_agents": {
+        "primary": ["mystic"],
+        "subagents": ["builder", "explore"]
+      },
+      "registry_agents": {
+        "sdc_core": ["creator-agent", "quality-agent", "monitor-agent"],
+        "abe_music": ["ceo-agent", "marketing-agent", "content-agent", "sales-agent", "support-agent", "voice-agent"]
+      },
+      "adk_agents": 36,
+      "total_agents": 39
+    },
+    "capabilities": {
+      "title": "Capability Overview",
+      "total": 8,
+      "active": 4,
+      "experimental": 4,
+      "active_capabilities": [
+        "sync-artist-data", "analyze-artist", "search-knowledge", "score-artist"
+      ],
+      "experimental_capabilities": [
+        "generate-video", "manage-crm", "publish-track", "process-payment"
+      ]
+    },
+    "git": {
+      "title": "Repository Status",
+      "last_commit": "9bfa969 — v1.0.0 MVP SDC Agent OS completo",
+      "recent_commits": 10,
+      "uncommitted_changes": true,
+      "enterprise_score": 88
+    },
+    "risk": {
+      "title": "Risk Assessment",
+      "overall": "medium",
+      "risks": [
+        {"name": "Single VPS (no HA)", "severity": "high", "mitigation": "Backup cron diario + recovery manual"},
+        {"name": "Grafana unhealthy", "severity": "low", "mitigation": "Revisar config Prometheus datasource"},
+        {"name": "Hasura sin tablas configuradas", "severity": "medium", "mitigation": "Configurar schema de revenue/artistas"},
+        {"name": "SSH single-point", "severity": "medium", "mitigation": "HTTPS token backup"},
+        {"name": "Telegram Bot requires new token", "severity": "medium", "mitigation": "Token renewal via @BotFather"}
+      ]
+    },
+    "automation": {
+      "title": "Automation Score",
+      "scripts_total": 104,
+      "cron_jobs": 4,
+      "slash_commands": 25,
+      "n8n_workflows": 33,
+      "founder_dependency_index": 18,
+      "autonomy_score": 82,
+      "autonomy_rate_pct": 98.3
+    }
+  },
+  "health_score": 88,
+  "next_steps": [
+    "Configurar tablas Hasura para revenue/artistas",
+    "Renovar token Telegram en @BotFather",
+    "Completar setup Twenty CRM",
+    "Importar workflows faltantes a n8n",
+    "Construir Fan CRM con memoria",
+    "Dashboard artista con métricas en vivo",
+    "Monitoreo por voz",
+    "Recuperar sdc-grafana (unhealthy)"
+  ]
+}

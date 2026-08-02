@@ -1,0 +1,17 @@
+id: voice
+name: Voice Clone
+version: 1.0.0
+status: active
+domain: voice
+description: "Síntesis de voz con clon de voz de César usando Qwen3-TTS"
+entry:
+  agent: main-agent
+  trigger: voice.synthesize.requested
+policies:
+  max_cost: 0.02
+  timeout_seconds: 120
+events:
+  emits:
+    - voice.synthesized
+  consumes:
+    - voice.synthesize.requested

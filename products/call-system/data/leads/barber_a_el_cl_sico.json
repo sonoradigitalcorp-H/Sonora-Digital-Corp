@@ -1,0 +1,9 @@
+{
+  "name": "Barbería El Clásico",
+  "address": "Hermosillo Centro",
+  "source": "mock_barberias",
+  "niche": "barberias",
+  "phone": "",
+  "company": "Barbería El Clásico",
+  "status": "pending"
+}

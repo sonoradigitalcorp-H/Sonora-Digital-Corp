@@ -201,7 +201,7 @@ created: 2026-07-18
 
 **Contexto**: No hay GPU en el VPS. Se necesita entrenamiento LoRA + generación de imágenes/video.
 
-**Decisión**: Usar FAL.ai para todo el procesamiento GPU. FAL_KEY ya configurado.
+**Decisión**: Usar FAL.ai para todo el procesamiento GPU. FAL_API_KEY ya configurado.
 
 **Alternativas**: GPU propia (RunPod ~$30/mes), FaceFusion local (requiere GPU).
 

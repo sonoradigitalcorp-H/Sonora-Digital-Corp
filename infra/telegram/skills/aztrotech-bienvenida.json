@@ -1,0 +1,14 @@
+{
+  "name": "aztrotech-bienvenida",
+  "description": "Saludo y presentación de AztroTech para nuevos visitantes",
+  "version": "1.0.0",
+  "priority": 95,
+  "triggers": ["hola", "buen día", "buenas tardes", "buenas noches", "qué es aztrotech", "que es aztrotech", "quién es césar", "quien es cesar", "presentate", "preséntate", "quien eres", "quién eres"],
+  "method": "STATIC",
+  "response_text": "✦ *AztroTech* — Espiritualidad con Estructura\n\nSomos una firma de innovación responsable fundada por *César Holguín* en Hermosillo, Sonora.\n\n🚀 *Misión:* Impulsar la evolución de empresas mediante IA, automatización y agentes inteligentes.\n\n🤖 *Lo que hacemos:*\n• Agentes IA personalizados (Soporte, Ventas, Marketing, Coaching)\n• Automatización de procesos empresariales\n• Clon digital (imagen + voz)\n• Infraestructura white-label para partners\n\n💡 *Valores:* Innovación responsable · Medición · Resultados verificables\n\n¿En qué puedo ayudarte hoy?",
+  "actions": [
+    { "text": "🤖 Ver agentes", "action": "aztro_agentes" },
+    { "text": "📊 Planes", "action": "aztro_planes" },
+    { "text": "🎯 Demo", "action": "aztro_demo" }
+  ]
+}

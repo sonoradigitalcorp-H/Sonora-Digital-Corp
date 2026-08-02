@@ -113,7 +113,7 @@ description: "Hermes 内置工具权威参考，按工具集分组"
 
 | 工具 | 描述 | 所需环境 |
 |------|------|----------|
-| `image_generate` | 使用 FAL.ai 从文本 prompt（提示词）生成高质量图片。底层模型由用户配置（默认：FLUX 2 Klein 9B，生成时间低于 1 秒），agent 不可选择。返回单个图片 URL。使用… 显示。 | FAL_KEY |
+| `image_generate` | 使用 FAL.ai 从文本 prompt（提示词）生成高质量图片。底层模型由用户配置（默认：FLUX 2 Klein 9B，生成时间低于 1 秒），agent 不可选择。返回单个图片 URL。使用… 显示。 | FAL_API_KEY |
 
 ## `kanban` 工具集
 
@@ -197,13 +197,13 @@ description: "Hermes 内置工具权威参考，按工具集分组"
 后端以插件形式存放于 `plugins/video_gen/<name>/`：
 
 - **xAI Grok-Imagine** —— 文本生成视频和图片生成视频（SuperGrok OAuth 或 `XAI_API_KEY`）。
-- **FAL.ai** —— Veo 3.1、Pixverse v6、Kling O3（需要 `FAL_KEY`）。
+- **FAL.ai** —— Veo 3.1、Pixverse v6、Kling O3（需要 `FAL_API_KEY`）。
 
 单个 `video_generate` 工具涵盖两种模态——传入 `image_url` 可为静态图片制作动画，省略则从文本生成。活跃后端自动路由到正确的端点。工具描述在会话启动时重建，以反映活跃后端的实际能力（模态、宽高比、分辨率、时长范围、最大参考图片数、音频支持）。后端开发见 [视频生成提供者插件](/developer-guide/video-gen-provider-plugin)。
 
 | 工具 | 描述 | 所需环境 |
 |------|------|----------|
-| `video_generate` | 使用用户配置的视频生成后端，从文本 prompt 生成视频（文本生成视频）或为静态图片制作动画（图片生成视频）。传入 `image_url` 可为该图片制作动画；省略则从文本生成。后端自动路由到正确端点。在 `video` 字段中返回 HTTP URL 或绝对文件路径。 | 活跃的 `video_gen` 插件 + 其凭据（如 `XAI_API_KEY`、`FAL_KEY`） |
+| `video_generate` | 使用用户配置的视频生成后端，从文本 prompt 生成视频（文本生成视频）或为静态图片制作动画（图片生成视频）。传入 `image_url` 可为该图片制作动画；省略则从文本生成。后端自动路由到正确端点。在 `video` 字段中返回 HTTP URL 或绝对文件路径。 | 活跃的 `video_gen` 插件 + 其凭据（如 `XAI_API_KEY`、`FAL_API_KEY`） |
 
 ## `web` 工具集
 

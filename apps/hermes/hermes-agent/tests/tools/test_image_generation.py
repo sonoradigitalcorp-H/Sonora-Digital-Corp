@@ -418,7 +418,7 @@ class TestManagedGatewayErrorTranslation:
     """4xx from the Nous managed gateway should be translated to a user-actionable message."""
 
     def test_4xx_translates_to_value_error_with_remediation(self, image_tool, monkeypatch):
-        """403 from managed gateway → ValueError mentioning FAL_KEY + hermes tools."""
+        """403 from managed gateway → ValueError mentioning FAL_API_KEY + hermes tools."""
         from unittest.mock import MagicMock
 
         # Simulate: managed mode active, managed submit raises 4xx.
@@ -440,7 +440,7 @@ class TestManagedGatewayErrorTranslation:
         msg = str(exc_info.value)
         assert "fal-ai/nano-banana-pro" in msg
         assert "403" in msg
-        assert "FAL_KEY" in msg
+        assert "FAL_API_KEY" in msg
         assert "hermes tools" in msg
         # Original exception chained for debugging
         assert exc_info.value.__cause__ is bad_request
@@ -463,7 +463,7 @@ class TestManagedGatewayErrorTranslation:
             image_tool._submit_fal_request("fal-ai/flux-2-pro", {"prompt": "x"})
 
     def test_direct_fal_errors_are_not_translated(self, image_tool, monkeypatch):
-        """When user has direct FAL_KEY (managed gateway returns None), raw
+        """When user has direct FAL_API_KEY (managed gateway returns None), raw
         errors from fal_client bubble up unchanged — fal_client already
         provides reasonable error messages for direct usage."""
         from unittest.mock import MagicMock

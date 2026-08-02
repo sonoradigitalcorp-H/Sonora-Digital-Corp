@@ -1,0 +1,19 @@
+id: rag
+name: RAG Knowledge Base
+version: 1.0.0
+status: active
+domain: knowledge
+description: "Búsqueda semántica en la base de conocimiento usando Ollama embeddings"
+entry:
+  agent: main-agent
+  trigger: knowledge.query.requested
+policies:
+  max_cost: 0.01
+  timeout_seconds: 10
+  allowed_models: ["ollama/nomic-embed-text"]
+events:
+  emits:
+    - knowledge.retrieved
+  consumes:
+    - knowledge.query.requested
+    - knowledge.index.requested

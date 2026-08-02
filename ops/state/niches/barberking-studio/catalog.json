@@ -1,0 +1,37 @@
+{
+  "version": "1.0.0",
+  "niche": "barbero",
+  "name": "BarberKing Studio",
+  "slug": "barberking-studio",
+  "currency": "MXN",
+  "updated_at": "2026-07-19",
+  "items": [
+    {
+      "id": "barbero-corte-de-cabello",
+      "name": "Corte de cabello",
+      "description": "Servicio profesional de corte de cabello para BarberKing Studio",
+      "tokens": 5,
+      "price_mxn": 149,
+      "delivery": "24-48 hrs",
+      "revisions": 2
+    },
+    {
+      "id": "barbero-fotos-de-perfil",
+      "name": "Fotos de perfil",
+      "description": "Servicio profesional de fotos de perfil para BarberKing Studio",
+      "tokens": 10,
+      "price_mxn": 299,
+      "delivery": "24-48 hrs",
+      "revisions": 2
+    },
+    {
+      "id": "barbero-video-promocional",
+      "name": "Video promocional",
+      "description": "Servicio profesional de video promocional para BarberKing Studio",
+      "tokens": 25,
+      "price_mxn": 599,
+      "delivery": "24-48 hrs",
+      "revisions": 2
+    }
+  ]
+}

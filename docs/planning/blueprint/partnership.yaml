@@ -1,0 +1,103 @@
+# SONORA DIGITAL CORP - Programa Partnership Oraculo
+
+# "Solo los visionarios pueden expandir el templo."
+
+partnership:
+  id: "sonora-partnership-v1"
+  nombre: "Programa Partnership Oraculo"
+  tipo: "elite_invitacion"
+
+  # Quien puede ser partner
+  # No es un programa abierto. Se invita o se postula y se evalua.
+
+  criterios_admision:
+    visionario:
+      descripcion: "Tiene una vision estrategica clara, no solo quiere un chatbot"
+      como_evaluar:
+        - "Presenta un plan de negocio de como venderia agentes IA en su nicho"
+        - "Describe 3 escenarios donde los agentes transformarian negocios reales"
+        - "Explica por que Sonora y no otra solucion"
+      peso: 30
+
+    capacidad_tecnica:
+      descripcion: "Tiene equipo tecnico o capacidad de gestionar tecnologia"
+      como_evaluar:
+        - "Tiene al menos 1 persona en su equipo que entiende APIs"
+        - "Ha integrado herramientas de terceros antes"
+        - "Puede gestionar un dashboard de administracion"
+      peso: 20
+
+    red_contactos:
+      descripcion: "Red de contactos comprobable en su industria"
+      como_evaluar:
+        - "Minimo 50 contactos calificados que podrian ser clientes"
+        - "Tiene presencia activa en su comunidad/industria"
+        - "Puede demostrar pipeline de prospectos"
+      peso: 25
+
+    compromiso:
+      descripcion: "Compromiso de exclusividad por 12 meses en su nicho"
+      como_evaluar:
+        - "Firma acuerdo de exclusividad"
+        - "Inversion inicial segun nivel"
+        - "Asigna al menos 1 persona dedicada a gestionar la plataforma"
+      peso: 25
+
+  niveles_partnership:
+    visionario:
+      inversion_mxn: 150000
+      comision_base_pct: 30
+      max_clientes: 50
+      soporte: "compartido_con_sonora"
+      co_desarrollo: false
+      beneficios_especiales: []
+
+    arquitecto:
+      inversion_mxn: 500000
+      comision_base_pct: 40
+      max_clientes: 200
+      soporte: "equipo_dedicado_sonora"
+      co_desarrollo: true
+      beneficios_especiales:
+        - "Co-desarrollo de features para su nicho"
+        - "Acceso a codigo fuente (open core)"
+        - "Reunion trimestral con Mystic"
+
+    guardian_del_templo:
+      inversion_mxn: 1500000
+      comision_base_pct: 50
+      max_clientes: -1  # ilimitados
+      soporte: "equipo_dedicado_propio"
+      co_desarrollo: true
+      beneficios_especiales:
+        - "Todo de Arquitecto mas"
+        - "Oficina o espacio en HQ Sonora"
+        - "Equipo tecnico financiado parcialmente por Sonora"
+        - "Influencia directa en roadmap"
+        - "Participacion en decisiones de producto"
+        - "Mencion en comunicaciones oficiales de Sonora"
+
+  inversion_en:
+    - "Setup de infraestructura multi-tenant propia"
+    - "Formacion y certificacion de su equipo"
+    - "Marketing co-branded"
+    - "Reserva de capacidad en servidores Sonora"
+    - "Acceso a Propiedad Intelectual (prompts, KB, mediciones)"
+
+  proteccion_anti_abuso:
+    - "No puede vender fuera de su nicho acordado sin aprobacion"
+    - "No puede compartir credenciales de la plataforma con terceros"
+    - "No puede modificar precios por debajo de los minimos de Sonora"
+    - "No puede hacer promesas de features que no existen"
+    - "Auditoria trimestral de uso y calidad de servicio"
+
+  terminacion:
+    - "Incumplimiento de exclusividad = terminacion inmediata"
+    - "Calidad de servicio a sus clientes por debajo de SLA por 3 meses consecutivos"
+    - "Uso de la marca Sonora para fines no autorizados"
+    - "30 dias de notice para terminacion sin causa"
+    - "Transicion de sus clientes a otro partner o a Sonora directa"
+
+  # Solo los visionarios. No cualquiera.
+  # Mystic aprueba personalmente cada partnership.
+  aprobacion_final: "mystic"

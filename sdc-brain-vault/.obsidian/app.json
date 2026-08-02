@@ -1,0 +1,14 @@
+{
+  "promptDelete": false,
+  "alwaysUpdateLinks": true,
+  "newFileLocation": "current",
+  "attachmentFolderPath": "Canvas",
+  "showUnsupportedFiles": true,
+  "readableLineLength": true,
+  "rightToLeft": false,
+  "strictLineBreaks": false,
+  "showFrontmatter": true,
+  "showLineNumber": false,
+  "spellcheck": true,
+  "tabSize": 2
+}

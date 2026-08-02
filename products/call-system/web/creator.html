@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mystica — Creador</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--c1:#AC6D3E;--c2:#CD8D5D;--cg:rgba(172,109,62,0.3);--bg:#06080f;--card:rgba(10,14,23,0.92);--b1:rgba(172,109,62,0.1);--tx:#e0e5f0;--tm:rgba(224,229,240,0.3);--gr:rgba(16,185,129,0.15);--rd:rgba(248,113,113,0.15)}
+html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);user-select:none}
+#bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
+
+.hdr{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 16px;background:linear-gradient(180deg,rgba(6,8,15,0.98),transparent);
+  height:44px;
+}
+.hl{display:flex;align-items:center;gap:8px}
+.hl .lg{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--c1),var(--c2));display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff}
+.hl h1{font-size:13px;font-weight:600}
+.hl span{font-weight:300;color:var(--c2)}
+.hr{display:flex;align-items:center;gap:12px;font-size:10px;color:var(--tm)}
+.hr .stat{display:flex;align-items:center;gap:4px}
+.hr .dot{width:5px;height:5px;border-radius:50%;display:inline-block}
+.dot.g{background:#10b981;animation:p2 2s infinite}
+@keyframes p2{0%,100%{opacity:1}50%{opacity:.3}}
+
+.p{
+  position:fixed;z-index:100;
+  background:var(--card);border:1px solid var(--b1);
+  border-radius:10px;backdrop-filter:blur(20px);
+  box-shadow:0 4px 32px rgba(0,0,0,0.5);
+  display:flex;flex-direction:column;
+  cursor:grab;transition:box-shadow .2s,opacity .2s;
+  overflow:hidden;
+}
+.p:active{cursor:grabbing}
+.p:hover{box-shadow:0 4px 40px var(--cg);z-index:200}
+.p-h{
+  padding:5px 10px;border-bottom:1px solid var(--b1);
+  font-size:9px;font-weight:600;color:var(--c2);
+  display:flex;justify-content:space-between;align-items:center;
+  cursor:grab;user-select:none;min-height:26px;
+}
+.p-b{padding:6px 10px;flex:1;overflow:auto;cursor:auto;font-size:10px;line-height:1.5}
+.p-b::-webkit-scrollbar{width:3px}
+.p-b::-webkit-scrollbar-thumb{background:var(--b1);border-radius:2px}
+
+/* MAIN GRID — 4 QUADRANTS */
+#grid{position:fixed;top:44px;bottom:0;left:0;right:0;z-index:1}
+
+/* TOP ROW */
+#metricsP{width:48%;height:84px;top:48px;left:12px}
+.mg{display:flex;gap:0;height:100%;align-items:center}
+.mi{flex:1;text-align:center;border-right:1px solid var(--b1);padding:4px}
+.mi:last-child{border-right:none}
+.mn{font-size:20px;font-weight:200;color:var(--c2)}
+.ml{font-size:7px;color:var(--tm);text-transform:uppercase;letter-spacing:.05em}
+
+#evolP{width:48%;height:84px;top:48px;right:12px;left:auto}
+.eg{display:flex;gap:4px;height:100%;align-items:center;justify-content:center}
+.ei{text-align:center;padding:2px 8px}
+.en{font-size:14px;font-weight:600}
+.el{font-size:7px;color:var(--tm)}
+.ei.good .en{color:#10b981}
+.ei.warn .en{color:#fbbf24}
+.ei.bad .en{color:#f87171}
+
+/* MIDDLE ROW */
+#tenantListP{width:32%;height:240px;top:136px;left:12px}
+.tl{font-size:9px}
+.tr{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.03);align-items:center}
+.tn{font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100px}
+.tb{font-size:7px;padding:1px 5px;border-radius:99px}
+.tb-hot{background:rgba(248,113,113,0.15);color:#f87171}
+.tb-warm{background:rgba(251,191,36,0.15);color:#fbbf24}
+.tb-cold{background:rgba(96,165,250,0.15);color:#60a5fa}
+.tb-ent{background:rgba(172,109,62,0.15);color:var(--c2)}
+.tcall{color:var(--tm);font-size:8px}
+
+#campaignP{width:32%;height:240px;top:136px;left:50%;transform:translateX(-50%)}
+.cg{display:grid;grid-template-columns:1fr 1fr;gap:3px}
+.ci{text-align:center;padding:6px;border:1px solid var(--b1);border-radius:6px}
+.cv{font-size:14px;font-weight:600;color:var(--c2)}
+.cl{font-size:7px;color:var(--tm)}
+
+#callsP{width:32%;height:240px;top:136px;right:12px;left:auto}
+.cll{font-size:9px}
+.clr{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.03)}
+.clt{color:var(--tm);font-size:7px}
+.cld{font-size:8px;color:var(--c2)}
+
+/* BOTTOM ROW */
+#abP{width:48%;height:100px;bottom:12px;left:12px;top:auto}
+.abg{display:flex;gap:8px;height:100%;align-items:center;justify-content:center}
+.abi{text-align:center;padding:4px 12px}
+.abn{font-size:18px;font-weight:600}
+.abl{font-size:7px;color:var(--tm)}
+.abi.win .abn{color:#10b981}
+.abi.lose .abn{color:#f87171}
+
+#evalsP{width:48%;height:100px;bottom:12px;right:12px;left:auto;top:auto}
+.evalg{display:flex;gap:6px;height:100%;align-items:center;justify-content:center;flex-wrap:wrap}
+.eval-item{text-align:center;padding:3px 8px}
+.eval-num{font-size:14px;font-weight:600}
+.eval-num.pass{color:#10b981}
+.eval-num.fail{color:#f87171}
+.eval-label{font-size:7px;color:var(--tm)}
+
+@media(max-width:1000px){
+  #metricsP,#evolP{width:45%}
+  #tenantListP,#campaignP,#callsP{width:31%}
+}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="hdr">
+  <div class="hl">
+    <div class="lg">✦</div>
+    <h1><span>Mystica</span> · Creador</h1>
+  </div>
+  <div class="hr">
+    <span class="stat"><span class="dot g"></span>Live</span>
+    <span id="uptime">00:00:00</span>
+    <span>v1.0</span>
+  </div>
+</div>
+
+<div id="grid">
+  <!-- METRICS -->
+  <div class="p" id="metricsP">
+    <div class="p-h"><span>◆ Métricas</span></div>
+    <div class="p-b" style="padding:0">
+      <div class="mg">
+        <div class="mi"><div class="mn" id="mCalls">0</div><div class="ml">Llamadas</div></div>
+        <div class="mi"><div class="mn" id="mTenants">0</div><div class="ml">Tenants</div></div>
+        <div class="mi"><div class="mn" id="mLeads">0</div><div class="ml">Leads</div></div>
+        <div class="mi"><div class="mn" id="mDuration">0m</div><div class="ml">Tiempo</div></div>
+        <div class="mi"><div class="mn" id="mScore">—</div><div class="ml">Score</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- EVOLUTION -->
+  <div class="p" id="evolP">
+    <div class="p-h"><span>⚡ Evolución</span></div>
+    <div class="p-b" style="padding:0">
+      <div class="eg">
+        <div class="ei good"><div class="en" id="ePatterns">0</div><div class="el">Patrones</div></div>
+        <div class="ei warn"><div class="en" id="eProposals">0</div><div class="el">Propuestas</div></div>
+        <div class="ei good"><div class="en" id="eApplied">0</div><div class="el">Aplicadas</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TENANTS -->
+  <div class="p" id="tenantListP">
+    <div class="p-h"><span>■ Tenants</span><span style="font-weight:400;font-size:8px;color:var(--tm)" id="tenantCount">0</span></div>
+    <div class="p-b"><div class="tl" id="tenantList"></div></div>
+  </div>
+
+  <!-- CAMPAIGNS -->
+  <div class="p" id="campaignP">
+    <div class="p-h"><span>◆ Campañas</span></div>
+    <div class="p-b"><div class="cg" id="campaignGrid"></div></div>
+  </div>
+
+  <!-- CALLS -->
+  <div class="p" id="callsP">
+    <div class="p-h"><span>✦ Últimas llamadas</span></div>
+    <div class="p-b"><div class="cll" id="callsList"></div></div>
+  </div>
+
+  <!-- A/B -->
+  <div class="p" id="abP">
+    <div class="p-h"><span>⊞ A/B Testing</span></div>
+    <div class="p-b" style="padding:0">
+      <div class="abg" id="abGrid"></div>
+    </div>
+  </div>
+
+  <!-- EVALS -->
+  <div class="p" id="evalsP">
+    <div class="p-h"><span>✓ Evals</span></div>
+    <div class="p-b" style="padding:0">
+      <div class="evalg" id="evalsGrid">
+        <div class="eval-item"><div class="eval-num pass" id="eTests">0</div><div class="eval-label">Tests</div></div>
+        <div class="eval-item"><div class="eval-num pass" id="ePass">0</div><div class="eval-label">Pasaron</div></div>
+        <div class="eval-item"><div class="eval-num fail" id="eFail">0</div><div class="eval-label">Fallaron</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ===== THREE.JS =====
+const c=document.getElementById('bg'),sc=new THREE.Scene(),ca=new THREE.PerspectiveCamera(60,window.innerWidth/window.innerHeight,0.1,1000);
+const re=new THREE.WebGLRenderer({canvas:c,alpha:true,antialias:true});
+re.setSize(window.innerWidth,window.innerHeight);re.setPixelRatio(Math.min(window.devicePixelRatio,2));
+const cnt=1500,g=new THREE.BufferGeometry(),p=new Float32Array(cnt*3);
+for(let i=0;i<cnt;i++){p[i*3]=(Math.random()-.5)*50;p[i*3+1]=(Math.random()-.5)*50;p[i*3+2]=(Math.random()-.5)*50}
+g.setAttribute('position',new THREE.BufferAttribute(p,3));
+const m=new THREE.PointsMaterial({size:.04,color:0xac6d3e,transparent:true,opacity:.3,sizeAttenuation:true});
+const pt=new THREE.Points(g,m);sc.add(pt);ca.position.z=18;
+function an(){requestAnimationFrame(an);pt.rotation.y+=.0003;re.render(sc,ca)}
+an();
+window.addEventListener('resize',()=>{ca.aspect=window.innerWidth/window.innerHeight;ca.updateProjectionMatrix();re.setSize(window.innerWidth,window.innerHeight)});
+
+// ===== DRAGGABLE PANELS =====
+document.querySelectorAll('.p').forEach(el=>{
+  const h=el.querySelector('.p-h');if(!h)return;
+  let dx=0,dy=0,x=0,y=0;
+  h.onmousedown=e=>{
+    e.preventDefault();el.style.zIndex=500;
+    const r=el.getBoundingClientRect();x=r.left;y=r.top;dx=e.clientX-r.left;dy=e.clientY-r.top;
+    document.onmousemove=ev=>{el.style.left=(ev.clientX-dx)+'px';el.style.top=(ev.clientY-dy)+'px';el.style.width=el.offsetWidth+'px';el.style.right='auto'};
+    document.onmouseup=()=>{document.onmousemove=null;document.onmouseup=null};
+  };
+});
+
+// ===== DATA LOADING =====
+async function load(){
+  try{
+    const r=await fetch('/api/dashboard');
+    const d=await r.json();
+
+    document.getElementById('mCalls').textContent=d.total_calls||0;
+    document.getElementById('mTenants').textContent=d.total_tenants||0;
+    document.getElementById('mLeads').textContent=d.total_leads||0;
+    document.getElementById('mDuration').textContent=(d.total_duration||0)+'m';
+
+    // Tenants list
+    const tl=document.getElementById('tenantList');
+    document.getElementById('tenantCount').textContent=(d.recent_tenants||[]).length;
+    tl.innerHTML=(d.recent_tenants||[]).map(t=>
+      `<div class="tr"><span class="tn">${t.name||'?'}</span><span class="tb tb-${t.lead_type||'cold'}">${t.lead_type||'lead'}</span><span class="tcall">${t.total_calls||0}</span></div>`
+    ).join('')||'<div style="color:var(--tm);padding:10px;text-align:center">Sin tenants</div>';
+
+    // Campaigns
+    const cg=document.getElementById('campaignGrid');
+    if(d.campaigns&&Object.keys(d.campaigns).length){
+      cg.innerHTML=Object.entries(d.campaigns).map(([k,v])=>
+        `<div class="ci"><div class="cv">${v.total||0}</div><div class="cl">${k}</div><div style="font-size:7px;color:var(--tm)">${v.contacted||0} contactados</div></div>`
+      ).join('');
+    }else{cg.innerHTML='<div style="color:var(--tm);text-align:center;grid-column:1/-1;padding:10px">Sin campañas</div>'}
+
+    // Calls
+    const cl=document.getElementById('callsList');
+    cl.innerHTML=(d.recent_calls||[]).slice(0,8).map(c=>
+      `<div class="clr"><span>${(c.summary||'?').slice(0,50)}</span><span class="cld">${c.duration_sec||0}s</span></div>`
+    ).join('')||'<div style="color:var(--tm);padding:10px;text-align:center">Sin llamadas</div>';
+
+    // A/B
+    const ab=document.getElementById('abGrid');
+    if(d.ab_stats){
+      const entries=Object.entries(d.ab_stats).filter(([_,v])=>v.count>0);
+      if(entries.length){
+        const max=Math.max(...entries.map(([_,v])=>v.avg||0),1);
+        ab.innerHTML=entries.map(([k,v])=>{
+          const w=(v.avg||0)/max*100;
+          const cls=v.avg===max&&v.count>5?'win':v.count>5?'lose':'';
+          return `<div class="abi ${cls}"><div class="abn">${k}</div><div class="abl">${v.avg||0} avg · ${v.count||0} calls</div></div>`;
+        }).join('');
+      }else{ab.innerHTML='<div style="color:var(--tm);font-size:9px">Esperando datos...</div>'}
+    }
+  }catch(e){}
+}
+
+load();
+setInterval(load,10000);
+
+// Uptime
+const start=Date.now();
+setInterval(()=>{
+  const e=Math.floor((Date.now()-start)/1000);
+  document.getElementById('uptime').textContent=
+    String(Math.floor(e/3600)).padStart(2,'0')+':'+
+    String(Math.floor(e%3600/60)).padStart(2,'0')+':'+
+    String(e%60).padStart(2,'0');
+},1000);
+</script>
+</body>
+</html>

@@ -8,7 +8,7 @@ import sys
 
 sys.path.insert(0, str(REPO))
 
-FAL_KEY = "test-fal-key"
+FAL_API_KEY = "test-fal-key"
 
 
 async def mock_train_lora(photos: list[str], trigger_word: str) -> dict:

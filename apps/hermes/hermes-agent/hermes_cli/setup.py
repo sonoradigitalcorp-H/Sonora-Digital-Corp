@@ -430,7 +430,7 @@ def _print_setup_summary(config: dict, hermes_home):
         tool_status.append(("Image Generation", True, None))
     else:
         # Fall back to probing plugin-registered providers so OpenAI-only
-        # setups don't show as "missing FAL_KEY".
+        # setups don't show as "missing FAL_API_KEY".
         _img_backend = None
         try:
             from agent.image_gen_registry import list_providers
@@ -451,7 +451,7 @@ def _print_setup_summary(config: dict, hermes_home):
         if _img_backend:
             tool_status.append((f"Image Generation ({_img_backend})", True, None))
         else:
-            tool_status.append(("Image Generation", False, "FAL_KEY or OPENAI_API_KEY"))
+            tool_status.append(("Image Generation", False, "FAL_API_KEY or OPENAI_API_KEY"))
 
     # Video generation — opt-in via `hermes tools` → Video Generation.
     # Only show the row when a plugin reports available so we don't badger

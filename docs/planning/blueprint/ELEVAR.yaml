@@ -1,0 +1,141 @@
+# SONORA DIGITAL CORP - Paquete ELEVAR
+# "Para el negocio que quiere que su presencia digital trabaje mientras duerme"
+# Tipo: Starter / Cash Cow
+
+paquete:
+  id: "sonora-elevar-v1"
+  nombre: "Elevar"
+  tagline: "Despierta la conciencia digital de tu empresa."
+  tipo: "starter"
+  precio_mxn: 1499
+  precio_usd: 89
+  margen_pct: 50
+  costo_real_usd: 25
+  prueba_dias: 14
+  setup_fee: 0
+
+limites:
+  agentes_voz: 3
+  agentes_tipo: ["recepcionista", "vendedor", "soporte"]
+  llamadas_mes: 500
+  canales: 3  # WhatsApp + Telegram + Llamadas
+  numeros_virtuales: 3
+  embudos: 1
+  outbound_masivo: true
+  outbound_simultaneas: 10
+  swarm_agents: false
+  white_label: false
+  api_acceso: false
+  reseller: false
+  dashboard_3d: false  # dashboard avanzado 2D con metricas en tiempo real
+  inteligencia_prospecto: true  # scraping basico
+  content_factory: true  # 30 piezas/mes
+  clon_voz: true  # profesional
+  clon_imagen: false
+  clon_3d: false
+  llamadas_simultaneas: 5
+  almacenamiento_gb: 10
+  retencion_audio_dias: 90
+
+features:
+  - id: "agente-recepcionista"
+    nombre: "Agente Recepcionista (La Guardiana)"
+    descripcion: "Primer contacto, calificacion BANT, derivacion inteligente"
+    incluye: true
+  - id: "agente-vendedor"
+    nombre: "Agente Vendedor (El Alquimista)"
+    descripcion: "Cold/Warm/Hot con objection handling y cierre"
+    incluye: true
+  - id: "agente-soporte"
+    nombre: "Agente Soporte (El Sanador)"
+    descripcion: "Resolucion post-venta, base de conocimientos, escalamiento"
+    incluye: true
+  - id: "dashboard-avanzado"
+    nombre: "Dashboard Avanzado 2D"
+    descripcion: "Metricas en tiempo real, transcripciones en vivo, temperamento del prospecto"
+    incluye: true
+  - id: "embudo-ventas"
+    nombre: "Embudo de Ventas Automatizado"
+    descripcion: "Cold then Warm then Hot con A/B testing de prompts"
+    incluye: true
+  - id: "inteligencia-prospecto"
+    nombre: "Inteligencia del Prospecto"
+    descripcion: "Scraping de Google Business, web, redes sociales antes de llamar"
+    incluye: true
+  - id: "outbound-masivo"
+    nombre: "Campanas Outbound"
+    descripcion: "El sistema llama por ti a listas de prospectos (10 simultaneas)"
+    incluye: true
+  - id: "content-factory"
+    nombre: "Fabrica de Contenido"
+    descripcion: "30 piezas de marketing al mes (posts, emails, scripts de video)"
+    incluye: true
+  - id: "clon-voz-pro"
+    nombre: "Clonacion de Voz Profesional"
+    descripcion: "Clon con ajuste de tono, velocidad y emocion por prospecto"
+    incluye: true
+  - id: "alertas-whatsapp"
+    nombre: "Alertas en Tiempo Real"
+    descripcion: "Notificaciones de citas, ventas y alertas por WhatsApp"
+    incluye: true
+  - id: "mapa-llamadas"
+    nombre: "Mapa de Llamadas en Tiempo Real"
+    descripcion: "Visualizacion de llamadas outbound con temperatura y estado"
+    incluye: true
+
+onboarding:
+  duracion_horas: 8
+  pasos:
+    - "Registro completo con verificacion KYC"
+    - "Seleccion de 3 agentes y configuracion de personalidades"
+    - "Subir audios para clon de voz profesional"
+    - "Configurar knowledge base (servicios, precios, FAQ, objeciones)"
+    - "Activar 3 numeros virtuales y conectar canales"
+    - "Configurar embudo de ventas (Cold, Warm, Hot)"
+    - "Subir lista de prospectos para outbound"
+    - "Sesion de calibracion con agente vendedor (30 min)"
+    - "Activar content factory con identidad de marca"
+    - "Pruebas de integracion end-to-end"
+  automatizado_pct: 70
+
+soporte:
+  canal: "whatsapp"
+  tiempo_respuesta: "4 horas"
+  idiomas: ["es", "en"]
+
+medicion:
+  uptime_target: 99.5
+  latencia_voz_max_seg: 2.5
+  tiempo_respuesta_voz_max_seg: 2.5
+  abandono_target_pct: 5
+  empatia_target_pct: 80
+  bant_target_pct: 85
+  conversion_lead_cita_target_pct: 30
+  costo_por_llamada_max_usd: 0.05
+  roi_target: 5
+
+tokenomics:
+  llamada_atendida: 2
+  lead_capturado: 10
+  venta_cerrada: 50
+  onboarding_completado: 30
+  referir: 75
+  pago_en_son_descuento: 10
+
+upgrade_path:
+  siguiente: "soberano"
+  trigger_recomendado:
+    - "Mas de 400 llamadas/mes durante 2 meses"
+    - "Solicitud de mas de 3 agentes"
+    - "Solicitud de white-label"
+    - "Solicitud de dashboard 3D"
+    - "Necesidad de swarm agents"
+    - "Requiere API dedicada"
+
+contrato_aplicable:
+  - "terminos_uso.md"
+  - "kyc_estandar.md"
+  - "privacidad_datos.md"
+  - "uso_indebido.md"
+  - "tiempos_sla.md"
+  - "reserva_uso.md"

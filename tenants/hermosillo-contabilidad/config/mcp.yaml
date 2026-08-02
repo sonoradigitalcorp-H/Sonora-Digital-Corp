@@ -1,0 +1,22 @@
+mcp_servers:
+  - name: whatsapp
+    type: local
+    config:
+      credentials_ref: nathy_conta_wacli_creds
+
+  - name: telegram
+    type: local
+    config:
+      credentials_ref: nathy_conta_telegram_bot_token
+
+  - name: contpaq
+    type: http
+    url: "https://api.nathyconta.mcp/contpaq"
+    auth: bearer_token_ref
+    credentials_ref: nathy_conta_contpaq_token
+
+  - name: sat
+    type: http
+    url: "https://api.nathyconta.mcp/sat"
+    auth: bearer_token_ref
+    credentials_ref: nathy_conta_sat_creds

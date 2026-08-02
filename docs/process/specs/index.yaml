@@ -1,0 +1,83 @@
+# specs/index.yaml
+# Canonical index of all business capabilities and their specs
+schema_version: 1.0.0
+capabilities:
+  - id: clone-person
+    name: Clone Person
+    path: specs/capabilities/clone-person/
+    spec_version: 1.0.0
+    status: active
+    owner: clone-agent
+    business_domain: marketing
+
+  - id: sync-artist-data
+    name: Sync Artist Data
+    path: specs/capabilities/sync-artist-data/
+    spec_version: 1.0.0
+    status: active
+    owner: collector
+    business_domain: music
+
+  - id: generate-video
+    name: Generate Video
+    path: specs/capabilities/generate-video/
+    spec_version: 1.0.0
+    status: experimental
+    owner: video-agent
+    business_domain: music
+
+  - id: search-knowledge
+    name: Search Knowledge
+    path: specs/capabilities/search-knowledge/
+    spec_version: 1.0.0
+    status: active
+    owner: null
+    business_domain: system
+
+  - id: score-artist
+    name: Score Artist
+    path: specs/capabilities/score-artist/
+    spec_version: 1.0.0
+    status: active
+    owner: research-agent
+    business_domain: music
+
+  - id: manage-crm
+    name: Manage CRM
+    path: specs/capabilities/manage-crm/
+    spec_version: 1.0.0
+    status: experimental
+    owner: sales-agent
+    business_domain: music
+
+  - id: publish-track
+    name: Publish Track
+    path: specs/capabilities/publish-track/
+    spec_version: 1.0.0
+    status: experimental
+    owner: marketing-agent
+    business_domain: music
+
+  - id: process-payment
+    name: Process Payment
+    path: specs/capabilities/process-payment/
+    spec_version: 1.0.0
+    status: experimental
+    owner: finance-agent
+    business_domain: finance
+
+  - id: analyze-artist
+    name: Analyze Artist
+    path: specs/capabilities/analyze-artist/
+    spec_version: 1.0.0
+    status: active
+    owner: research-agent
+    business_domain: music
+
+  - id: multi-tenant-platform
+    name: Multi-Tenant Platform Architecture
+    path: specs/capabilities/multi-tenant-platform/
+    spec_version: 1.0.0
+    status: draft
+    owner: mystic
+    business_domain: system

@@ -8,7 +8,7 @@ BASE = Path(__file__).resolve().parent.parent
 SERVER_PATH = BASE / "products" / "content-studio" / "server.py"
 SRC = SERVER_PATH.read_text()
 
-os.environ["FAL_KEY"] = "test-fal-key"
+os.environ["FAL_API_KEY"] = "test-fal-key"
 os.environ["CONTENT_DB_DSN"] = "postgresql://test:test@localhost:5432/test"
 os.environ["STORAGE_BASE"] = "/tmp/test-content-storage"
 

@@ -1,0 +1,59 @@
+{
+  "id": "wf-1782900970613-3t9m",
+  "name": "research-report",
+  "steps": [
+    {
+      "id": "research",
+      "agent": "capability_resolve",
+      "input": "\"Investiga a fondo: {{topic}}\""
+    },
+    {
+      "id": "score",
+      "agent": "enterprise_score",
+      "input": "\"Calcula enterprise score actual\"",
+      "on_failure": "continue"
+    },
+    {
+      "id": "summarize",
+      "agent": "capability_resolve",
+      "input": "\"Genera resumen ejecutivo de {{research.output}}\"",
+      "depends_on": "research"
+    }
+  ],
+  "start": 1782900970613,
+  "status": "completed",
+  "outputs": {
+    "research": {
+      "step": "research",
+      "agent": "capability_resolve",
+      "start": 1782900970615,
+      "status": "success",
+      "output": {
+        "error": "Se requiere token Bearer"
+      },
+      "duration": 10
+    },
+    "score": {
+      "step": "score",
+      "agent": "enterprise_score",
+      "start": 1782900970625,
+      "status": "success",
+      "output": {
+        "error": "Se requiere token Bearer"
+      },
+      "duration": 4
+    },
+    "summarize": {
+      "step": "summarize",
+      "agent": "capability_resolve",
+      "start": 1782900970629,
+      "status": "success",
+      "output": {
+        "error": "Se requiere token Bearer"
+      },
+      "duration": 5
+    }
+  },
+  "error": null,
+  "duration": 21
+}

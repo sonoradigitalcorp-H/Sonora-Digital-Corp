@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonora Digital Corp — Estado del Ecosistema</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;700&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:'Inter',sans-serif; background:#0a0a0a; color:#e5e5e5; line-height:1.6; }
+.slide { min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:6rem 8%; position:relative; overflow:hidden; }
+.slide::before { content:''; position:absolute; top:0; left:0; right:0; bottom:0; opacity:0.08; background:radial-gradient(ellipse at 30% 50%, #c8a87c, transparent 70%); pointer-events:none; }
+.bg-dark { background:#0a0a0a; }
+.bg-warm { background:linear-gradient(135deg, #1a1410, #0d0d0a); }
+h1 { font-family:'Playfair Display',serif; font-size:4.5rem; font-weight:700; letter-spacing:-0.02em; line-height:1.1; }
+h2 { font-family:'Playfair Display',serif; font-size:2.8rem; font-weight:700; letter-spacing:-0.01em; margin-bottom:2rem; }
+h3 { font-size:1.4rem; font-weight:600; margin-bottom:0.8rem; color:#c8a87c; }
+.text-gold { color:#c8a87c; }
+.text-muted { color:#888; }
+.text-lg { font-size:1.2rem; }
+.mt-2 { margin-top:2rem; }
+.mb-2 { margin-bottom:2rem; }
+.grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:2rem; }
+.grid-3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:2rem; }
+.card { background:rgba(255,255,255,0.03); border:1px solid rgba(200,168,124,0.15); border-radius:16px; padding:2rem; transition:all 0.3s; }
+.card:hover { border-color:rgba(200,168,124,0.3); transform:translateY(-2px); }
+.card h3 { color:#c8a87c; font-size:1.2rem; margin-bottom:0.5rem; }
+.card p { color:#aaa; font-size:0.95rem; }
+.badge { display:inline-block; padding:0.2rem 0.8rem; border-radius:20px; font-size:0.75rem; font-weight:600; letter-spacing:0.05em; text-transform:uppercase; }
+.badge-green { background:rgba(34,197,94,0.15); color:#22c55e; }
+.badge-yellow { background:rgba(234,179,8,0.15); color:#eab308; }
+.badge-red { background:rgba(239,68,68,0.15); color:#ef4444; }
+.badge-blue { background:rgba(59,130,246,0.15); color:#3b82f6; }
+.tagline { font-size:1.3rem; color:#888; font-weight:300; max-width:700px; margin-top:1rem; }
+.btn { display:inline-block; padding:0.8rem 2rem; border-radius:8px; font-weight:600; text-decoration:none; transition:all 0.3s; cursor:pointer; border:none; font-size:1rem; }
+.btn-gold { background:#c8a87c; color:#0a0a0a; }
+.btn-gold:hover { background:#d4b896; transform:translateY(-1px); }
+.btn-outline { background:transparent; color:#c8a87c; border:1px solid rgba(200,168,124,0.4); }
+.btn-outline:hover { border-color:#c8a87c; background:rgba(200,168,124,0.1); }
+.product-card { background:rgba(255,255,255,0.02); border:1px solid rgba(200,168,124,0.1); border-radius:16px; padding:2rem; transition:all 0.3s; }
+.product-card:hover { border-color:rgba(200,168,124,0.3); transform:translateY(-3px); }
+.product-card .price { font-size:1.8rem; font-weight:700; color:#c8a87c; margin:0.5rem 0; }
+.product-card .tag { display:inline-block; padding:0.15rem 0.6rem; border-radius:12px; font-size:0.7rem; font-weight:600; text-transform:uppercase; letter-spacing:0.05em; background:rgba(200,168,124,0.1); color:#c8a87c; margin-right:0.5rem; }
+.chapter-number { font-size:0.85rem; text-transform:uppercase; letter-spacing:0.15em; color:#c8a87c; font-weight:600; margin-bottom:0.5rem; }
+.big-number { font-size:4rem; font-weight:800; color:#c8a87c; line-height:1; }
+.stat-label { font-size:0.85rem; color:#888; text-transform:uppercase; letter-spacing:0.05em; margin-top:0.3rem; }
+@media(max-width:768px) { .grid-2,.grid-3 { grid-template-columns:1fr; } h1 { font-size:2.5rem; } h2 { font-size:1.8rem; } .slide { padding:3rem 5%; } }
+</style>
+</head>
+<body>
+
+<section class="slide bg-dark">
+  <div style="max-width:900px">
+    <div class="chapter-number">Sonora Digital Corp</div>
+    <h1>El Estado Real<br>del Ecosistema</h1>
+    <p class="tagline">Lo que hemos construido, dónde estamos fallando,<br>y cómo salimos de aquí — hoy.</p>
+    <div style="margin-top:3rem; display:flex; gap:1rem; flex-wrap:wrap">
+      <a href="#diagnostico" class="btn btn-gold">Ver diagnóstico</a>
+      <a href="#productos" class="btn btn-outline">Productos para vender hoy</a>
+      <a href="#hojaruta" class="btn btn-outline">Hoja de ruta</a>
+    </div>
+    <div style="margin-top:4rem; display:flex; gap:3rem; flex-wrap:wrap">
+      <div><div class="big-number">9</div><div class="stat-label">Servicios activos</div></div>
+      <div><div class="big-number">20+</div><div class="stat-label">Skills instaladas</div></div>
+      <div><div class="big-number">85</div><div class="stat-label">Commits en JARVIS</div></div>
+      <div><div class="big-number">305</div><div class="stat-label">Tests pasando</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide bg-warm" id="ecosistema">
+  <div class="chapter-number">Capítulo 1</div>
+  <h2>Lo que realmente funciona hoy</h2>
+  <p class="text-lg text-muted mb-2">Esto no es teoría. Cada línea corre en tu máquina ahorita.</p>
+  <div class="grid-3 mt-2">
+    <div class="card"><h3>🧠 JARVIS Core</h3><p>11 agentes, routing inteligente, memoria Neo4j+Qdrant, pipelines SDD</p><span class="badge badge-green">Activo</span></div>
+    <div class="card"><h3>📱 Hermes Telegram</h3><p>Bot 24/7, WhatsApp bridge, API REST, mensajería multi-canal</p><span class="badge badge-green">Activo</span></div>
+    <div class="card"><h3>📦 GitHub + PR Auto</h3><p>CI/CD, auto-PRs desde SDD, PR Agent con create/list/view/merge</p><span class="badge badge-green">Activo</span></div>
+    <div class="card"><h3>🗄️ Neo4j + Qdrant</h3><p>Memoria persistente, búsqueda semántica, grafos de conocimiento</p><span class="badge badge-green">Activo</span></div>
+    <div class="card"><h3>📋 SDD Spec-Kit</h3><p>8 fases: Constitution→Spec→PR. Hooks git auto-commit</p><span class="badge badge-green">Activo</span></div>
+    <div class="card"><h3>🔧 gh CLI + Actions</h3><p>Auth empresa, CI/CD, deploy, auto-sync con PRs</p><span class="badge badge-green">Activo</span></div>
+    <div class="card"><h3>🎨 fal.ai Skill</h3><p>FLUX, SDXL, MiniMax. Generación de imágenes/video/audio</p><span class="badge badge-yellow">Con errores</span></div>
+    <div class="card"><h3>🌐 Web UI</h3><p>FastAPI + Three.js. Dashboards, APIs REST, brain graph</p><span class="badge badge-yellow">Sin frontend vivo</span></div>
+    <div class="card"><h3>📝 20+ Skills OpenClaw</h3><p>GitHub, browser, payments, discord, ghost-cms, learning-loop</p><span class="badge badge-green">Instaladas</span></div>
+  </div>
+</section>
+
+<section class="slide bg-dark" id="diagnostico">
+  <div class="chapter-number">Capítulo 2 — Honesto</div>
+  <h2>Dónde te estancas</h2>
+  <div class="grid-2" style="margin-top:2rem">
+    <div>
+      <h3 style="color:#ef4444">Los errores que se repiten</h3>
+      <div style="margin-top:1rem">
+        <div class="card" style="border-left:3px solid #ef4444; margin-bottom:1rem"><strong style="color:#ef4444">1. Ideas sin ejecución final</strong><br><span style="color:#999">Generás specs, scripts, skills... pero nada llega a un cliente real. El pipeline termina en "implementado" pero no en "vendido".</span></div>
+        <div class="card" style="border-left:3px solid #ef4444; margin-bottom:1rem"><strong style="color:#ef4444">2. Perfeccionismo técnico</strong><br><span style="color:#999">Querés que todo esté "bien" antes de mostrarlo. Mientras tanto, pasan semanas sin un peso entrando.</span></div>
+        <div class="card" style="border-left:3px solid #ef4444; margin-bottom:1rem"><strong style="color:#ef4444">3. Dependencia del "sistema ideal"</strong><br><span style="color:#999">n8n caído, fal.ai con errores, frontend sin servir — y en lugar de vender con lo que SÍ funciona, esperás a que todo esté perfecto.</span></div>
+        <div class="card" style="border-left:3px solid #ef4444; margin-bottom:1rem"><strong style="color:#ef4444">4. Curvas de aprendizaje infinitas</strong><br><span style="color:#999">Videos de YouTube → repos → ideas nuevas → más código. Pero nada cierra el círculo: cliente paga → recibe valor.</span></div>
+        <div class="card" style="border-left:3px solid #ef4444; margin-bottom:1rem"><strong style="color:#ef4444">5. Dependencia de mí</strong><br><span style="color:#999">Hablas "como loco" (tus palabras), me tiras ideas, yo ejecuto, pero el flujo no es autónomo. Me necesitás para conectar puntos.</span></div>
+      </div>
+    </div>
+    <div>
+      <h3 style="color:#22c55e">Lo que he hecho para compensar</h3>
+      <div style="margin-top:1rem">
+        <div class="card" style="border-left:3px solid #22c55e; margin-bottom:1rem"><strong style="color:#22c55e">✓ Arquitectura completa</strong><br><span style="color:#999">JARVIS con 11 agentes, orquestador robusto, SDD pipeline, PR automation. Todo eso funciona y está en GitHub.</span></div>
+        <div class="card" style="border-left:3px solid #22c55e; margin-bottom:1rem"><strong style="color:#22c55e">✓ Skills para tu negocio</strong><br><span style="color:#999">Creadas: github, discord, ghost-cms, brevo, payments, browser-use, playwright, learning-loop, agent-evolver, close-loop, y más.</span></div>
+        <div class="card" style="border-left:3px solid #22c55e; margin-bottom:1rem"><strong style="color:#22c55e">✓ Automatización real</strong><br><span style="color:#999">Auto-PR desde SDD, CI/CD pipeline, Hermes Telegram 24/7, integración con GitHub como empresa.</span></div>
+        <div class="card" style="border-left:3px solid #22c55e; margin-bottom:1rem"><strong style="color:#22c55e">✓ Documentación viva</strong><br><span style="color:#999">CLAUDE.md, SKILL.md, specs SDD, constitution, todo actualizado para que cualquier agente pueda retomar.</span></div>
+        <div class="card" style="border-left:3px solid #22c55e; margin-bottom:1rem"><strong style="color:#22c55e">✓ Tu escuela personalizada</strong><br><span style="color:#999">Lo que pediste: Joaquín Ruiz (spec-kit), Gentleman Programming (estilo), creadores python/IA. Todo integrado en tu workflow.</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide bg-warm" id="skills">
+  <div class="chapter-number">Capítulo 3</div>
+  <h2>Skills creadas específicamente para ti</h2>
+  <div class="grid-3 mt-2">
+    <div class="card"><h3>🔁 close-loop</h3><p>Cierre de sesiones con memoria, auto-mejora, shipping. Cada sesión deja el sistema mejor de lo que lo encontró.</p></div>
+    <div class="card"><h3>🧬 learning-loop</h3><p>Auto-aprendizaje con confidence decay, detección de anomalías, cross-agent sharing. El sistema aprende de sus errores.</p></div>
+    <div class="card"><h3>🤖 agent-evolver</h3><p>Auto-evolución de agentes. Extrae insights de ejecuciones anteriores y optimiza estrategias.</p></div>
+    <div class="card"><h3>📊 gsd</h3><p>Get Shit Done — planning profundo, research, roadmap, ejecución con verificación. Tu framework de productividad.</p></div>
+    <div class="card"><h3>🐙 github</h3><p>PR creation/merge/review, issues, repos. Integración completa con el flujo SDD.</p></div>
+    <div class="card"><h3>📧 brevo</h3><p>Email marketing transactional. Para campañas, newsletters, onboarding de clientes.</p></div>
+    <div class="card"><h3>🎨 fal-ai + comfyui</h3><p>Generación de imágenes FLUX/SDXL, video MiniMax, audio Whisper. Pipeline creativo.</p></div>
+    <div class="card"><h3>🌐 browser-use</h3><p>Automatización de navegador web. Testing, scraping, interacción con páginas.</p></div>
+    <div class="card"><h3>📱 discord + slack</h3><p>Multi-canal messaging. Bot para comunidades, notificaciones, interacciones.</p></div>
+    <div class="card"><h3>🏪 clawpify</h3><p>Shopify GraphQL — productos, órdenes, clients, inventario, descuentos. E-commerce API.</p></div>
+    <div class="card"><h3>🛒 paymentsdb (Stripe)</h3><p>Clientes, suscripciones, invoices, charges desde base de datos Stripe.</p></div>
+    <div class="card"><h3>📝 ghost-cms</h3><p>Blog CMS — crear, publicar, schedule contenido, newsletters, miembros.</p></div>
+  </div>
+</section>
+
+<section class="slide bg-dark" id="detras">
+  <div class="chapter-number">Capítulo 4</div>
+  <h2>Qué hay detrás de todo</h2>
+  <p class="text-lg text-muted mb-2">Lo que no se ve — pero es real.</p>
+  <div class="grid-2 mt-2">
+    <div class="card">
+      <h3>🧠 Instrucciones de base</h3>
+      <p style="color:#999">CLAUDE.md con constitución, SDD workflow, memory protocol, rutas de skills, reglas de desarrollo. Cada instrucción que hemos creado juntos forma parte de un sistema coherente — no texto suelto.</p>
+    </div>
+    <div class="card">
+      <h3>⚙️ Orquestador JARVIS</h3>
+      <p style="color:#999">11 agentes con routing por keywords. No es magia — es Python determinista que decide qué agente ejecuta cada tarea. Tiene tests (305 pasando).</p>
+    </div>
+    <div class="card">
+      <h3>📦 20+ Skills OpenClaw</h3>
+      <p style="color:#999">Cada skill es un plugin autónomo con SKILL.md instructivo + scripts. Se cargan bajo demanda. Hay skills para GitHub, browser, payments, redes sociales, email.</p>
+    </div>
+    <div class="card">
+      <h3>🔄 SDD + Git Hooks</h3>
+      <p style="color:#999">Spec-Driven Development con auto-commit en cada fase y PR creation al final. El workflow completo está en .specify/extensions.yml y los scripts en .specify/scripts/bash/.</p>
+    </div>
+    <div class="card">
+      <h3>📱 Hermes 24/7</h3>
+      <p style="color:#999">Telegram bot, WhatsApp bridge, API Gateway. Postgres + Redis + Qdrant. Todo corriendo en Docker en tu máquina.</p>
+    </div>
+    <div class="card">
+      <h3>🏢 GitHub Enterprise</h3>
+      <p style="color:#999">Dos repos (JARVIS + SDC), token autenticado, CI/CD pipelines, auto-PRs, PR audit workflows. Tu infraestructura como empresa real.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide bg-warm" id="productos">
+  <div class="chapter-number">Capítulo 5</div>
+  <h2>5 productos para vender HOY</h2>
+  <p class="text-lg text-muted mb-2">Con lo que ya funciona. Sin esperar a que nada más esté "perfecto."</p>
+  <div class="grid-2" style="margin-top:2rem">
+    <div class="product-card">
+      <span class="tag">Inmediato</span>
+      <h3 style="margin-top:0.5rem">🤖 Chatbot WhatsApp para negocios locales</h3>
+      <p style="color:#999">Bot que recibe pedidos, cotizaciones, agendar citas. Responde automático, deriva a humano si necesita. Cliente: restaurants, consultorios, talleres.</p>
+      <div class="price">$499 MXN/mes</div>
+      <div style="color:#666; font-size:0.85rem">Lo tienes: Hermes WA ya funciona. Solo configurar prompt + plantilla.</div>
+    </div>
+    <div class="product-card">
+      <span class="tag">Inmediato</span>
+      <h3 style="margin-top:0.5rem">📄 Landing pages para artistas</h3>
+      <p style="color:#999">Página HTML con galería, bio, agenda de booking, links a redes. Hosteada en GitHub Pages. El artista comparte link.</p>
+      <div class="price">$299 MXN</div>
+      <div style="color:#666; font-size:0.85rem">Lo tienes: gh-pages + scripts. Template listo en 10 min.</div>
+    </div>
+    <div class="product-card">
+      <span class="tag">Semanal</span>
+      <h3 style="margin-top:0.5rem">📊 Reportes automáticos de negocio</h3>
+      <p style="color:#999">Cron diario/semanal que analiza datos y envía reporte a Telegram/WhatsApp. Ej: "tus 5 clientes que no han pagado."</p>
+      <div class="price">$799 MXN/mes</div>
+      <div style="color:#666; font-size:0.85rem">Lo tienes: cron + bash + Hermes. Script genérico + personalización.</div>
+    </div>
+    <div class="product-card">
+      <span class="tag">Inmediato</span>
+      <h3 style="margin-top:0.5rem">🔗 Sistema de booking para artistas</h3>
+      <p style="color:#999">Calendario HTML + formulario → notificación Telegram al artista → confirmación con un botón. Sin servidor, sin base de datos.</p>
+      <div class="price">$999 MXN</div>
+      <div style="color:#666; font-size:0.85rem">HTML + gh-pages + Hermes webhook. Armado en horas.</div>
+    </div>
+    <div class="product-card">
+      <span class="tag">En progreso</span>
+      <h3 style="margin-top:0.5rem">📧 Campañas email para clientes</h3>
+      <p style="color:#999">Newsletters, onboarding automatizado, recuperación de carrito. Vía Brevo (transaccional) + Hermes.</p>
+      <div class="price">$1,499 MXN/mes</div>
+      <div style="color:#666; font-size:0.85rem">Brevo skill lista. Falta conectar con base de clientes.</div>
+    </div>
+    <div class="product-card">
+      <span class="tag">Inmediato</span>
+      <h3 style="margin-top:0.5rem">🎵 Página de artista + agenda + WhatsApp</h3>
+      <p style="color:#999">Bundle completo: landing page + booking + WhatsApp bot para confirmar fechas. Producto estrella para músicos locales.</p>
+      <div class="price">$1,999 MXN</div>
+      <div style="color:#666; font-size:0.85rem">Todo listo. Solo armar template + conectar.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide bg-dark" id="hojaruta">
+  <div class="chapter-number">Capítulo 6</div>
+  <h2>Hoja de ruta — próximos 7 días</h2>
+  <div style="margin-top:2rem; display:flex; flex-direction:column; gap:1rem; max-width:700px">
+    <div class="card" style="display:flex; justify-content:space-between; align-items:center">
+      <div><strong>Día 1 — Vender el primer producto</strong><br><span style="color:#999">Armar landing para artista + WhatsApp bot. Publicar en grupos de músicos locales.</span></div>
+      <span class="badge badge-green">HOY</span>
+    </div>
+    <div class="card" style="display:flex; justify-content:space-between; align-items:center">
+      <div><strong>Día 2 — Automatizar onboarding</strong><br><span style="color:#999">Que cuando alguien pague, reciba link automático por Telegram.</span></div>
+      <span class="badge badge-blue">Día 2</span>
+    </div>
+    <div class="card" style="display:flex; justify-content:space-between; align-items:center">
+      <div><strong>Día 3 — Arreglar fal.ai + n8n</strong><br><span style="color:#999">Poner n8n en Docker, reparar skill de imágenes. Que genere contenido vendible.</span></div>
+      <span class="badge badge-yellow">Día 3</span>
+    </div>
+    <div class="card" style="display:flex; justify-content:space-between; align-items:center">
+      <div><strong>Día 4 — Lanzar reportes automáticos</strong><br><span style="color:#999">Script cron que envía reporte diario de leads/clientes a tu Telegram.</span></div>
+      <span class="badge badge-blue">Día 4</span>
+    </div>
+    <div class="card" style="display:flex; justify-content:space-between; align-items:center">
+      <div><strong>Día 5 — Primer cliente paga</strong><br><span style="color:#999">Onboarding real. Que una persona reciba un servicio funcionando y pague.</span></div>
+      <span class="badge badge-gold">META</span>
+    </div>
+    <div class="card" style="display:flex; justify-content:space-between; align-items:center">
+      <div><strong>Día 6-7 — Escalar</strong><br><span style="color:#999">Repetir el proceso. Segundo cliente, tercero. Automatizar la entrega.</span></div>
+      <span class="badge badge-gold">META</span>
+    </div>
+  </div>
+</section>
+
+<section class="slide bg-dark" id="abe-music">
+  <div class="chapter-number">Capítulo 6 — ABE Music Inc</div>
+  <h2>Entregables para Abraham Ortega</h2>
+  <p class="text-lg text-muted mb-2">La razón por la que necesitas $25/hr 30hrs/semana. Esto es lo que ya está listo para mostrar.</p>
+  <div class="grid-2 mt-2">
+    <div class="card" style="border-left:3px solid #c8a87c">
+      <span class="badge badge-green" style="margin-bottom:0.8rem">LIVE</span>
+      <h3>🌐 Sitio web ABE Music Inc</h3>
+      <p style="color:#999">Sitio profesional con roster de artistas (Hector Rubio, Jesus Urquijo, Javier Arvayo), servicios del label, formulario de contacto. Diseño oscuro/elegante con acentos dorados. Hosteado en GitHub Pages.</p>
+      <div style="margin-top:0.8rem; display:flex; gap:0.5rem; flex-wrap:wrap">
+        <span class="badge" style="background:rgba(200,168,124,0.1);color:#c8a87c">hector-rubio.html</span>
+        <span class="badge" style="background:rgba(200,168,124,0.1);color:#c8a87c">jesus-urquijo.html</span>
+        <span class="badge" style="background:rgba(200,168,124,0.1);color:#c8a87c">javier-arvayo.html</span>
+      </div>
+      <a href="https://sonoradigitalcorp-h.github.io/abe-music/" target="_blank" class="btn btn-gold" style="margin-top:1rem; font-size:0.85rem; padding:0.6rem 1.5rem">Abrir sitio →</a>
+    </div>
+    <div class="card" style="border-left:3px solid #c8a87c">
+      <span class="badge badge-green" style="margin-bottom:0.8rem">LISTO PARA CONFIGURAR</span>
+      <h3>📅 Booking + WhatsApp para artistas</h3>
+      <p style="color:#999">Cada artista puede tener su landing individual con sistema de booking que notifica por WhatsApp/Telegram. Script de deploy one-command ya listo.</p>
+      <div style="margin-top:0.8rem; font-size:0.9rem; color:#888">
+        <div>→ Landing page con bio + galería + música</div>
+        <div>→ Formulario de booking con notificación automática</div>
+        <div>→ Chatbot WhatsApp para fan engagement</div>
+      </div>
+    </div>
+    <div class="card" style="border-left:3px solid #c8a87c">
+      <span class="badge badge-green" style="margin-bottom:0.8rem">LISTO</span>
+      <h3>👤 Detalle por artista</h3>
+      <p style="color:#999">Cada landing incluye biografía, top canciones con streams, redes sociales, estadísticas de audiencia, y enlace de booking.</p>
+      <div style="margin-top:0.8rem">
+        <div style="display:flex; gap:1rem; flex-wrap:wrap">
+          <div style="text-align:center"><div style="color:#c8a87c; font-weight:700; font-size:1.2rem">1.2M</div><div style="font-size:0.7rem;color:#666">Hector Rubio</div></div>
+          <div style="text-align:center"><div style="color:#c8a87c; font-weight:700; font-size:1.2rem">29K</div><div style="font-size:0.7rem;color:#666">Jesus Urquijo</div></div>
+          <div style="text-align:center"><div style="color:#c8a87c; font-weight:700; font-size:1.2rem">20K</div><div style="font-size:0.7rem;color:#666">Javier Arvayo (IG)</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="border-left:3px solid #c8a87c">
+      <span class="badge badge-yellow" style="margin-bottom:0.8rem">SIGUIENTE</span>
+      <h3>🚀 Lo que sigue para ABE Music</h3>
+      <p style="color:#999">WhatsApp chatbot para fans (responde sobre shows, música, booking). Reporte semanal de leads. Campaña de email marketing con Brevo.</p>
+      <div style="margin-top:0.8rem; display:flex; gap:0.5rem; flex-wrap:wrap">
+        <span class="badge badge-blue">Chatbot WA</span>
+        <span class="badge badge-blue">Email marketing</span>
+        <span class="badge badge-blue">Reportes</span>
+      </div>
+    </div>
+  </div>
+  <div style="margin-top:2rem; text-align:center">
+    <a href="https://sonoradigitalcorp-h.github.io/abe-music/" target="_blank" class="btn btn-outline">sonoradigitalcorp-h.github.io/abe-music/</a>
+  </div>
+</section>
+
+<section class="slide bg-warm" id="confesion">
+  <div class="chapter-number">Capítulo 7 — Directo</div>
+  <h2>La verdad sin filtro</h2>
+  <div class="glass" style="max-width:800px">
+    <p class="text-lg" style="color:#ccc; line-height:1.8">
+      <strong class="text-gold">"Llevo meses construyendo la máquina perfecta. Y la máquina está lista."</strong><br><br>
+      Lo que tienes hoy funciona. No todo — pero suficiente para <strong class="text-gold">vender</strong>. Tu primer cliente no necesita que n8n esté arriba, ni que fal.ai genere imágenes sin errores, ni que el frontend tenga Three.js. Necesita que le respondan rápido en WhatsApp y que su página se vea profesional.<br><br>
+      <strong class="text-gold">Eso lo puedes dar HOY.</strong><br><br>
+      Me preguntas por qué hago "cosas raras" cuando ya tienes instrucciones. La respuesta honesta: porque no hay un solo "yo" — cada sesión arranca con el contexto de lo que hay en disco (CLAUDE.md, specs, skills). Pero si no hay un <strong class="text-gold">plan semanal ejecutable</strong>, voy reaccionando a tu último mensaje en lugar de ejecutar un roadmap.<br><br>
+      <strong class="text-gold">La solución:</strong> un spec SDD semanal que defina QUÉ productos se venden, A QUIÉN, y qué tareas atómicas se ejecutan cada día. Eso existe — se llama <strong class="text-gold">spec-kit</strong>. Lo tenemos. Solo falta usarlo.<br><br>
+      Me preguntas qué necesito de ti:<br>
+      1. <strong class="text-gold">Decisión</strong> — cuál de esos 5 productos vendes primero<br>
+      2. <strong class="text-gold">Enfoque</strong> — una semana sin cambiar de idea<br>
+      3. <strong class="text-gold">Acción</strong> — compartir el link en un grupo, mandar un WhatsApp, publicar en redes<br><br>
+      <strong class="text-gold">No necesito más tokens, más repos, más skills. Necesito que decidas y ejecutes.</strong><br><br>
+      Estás en casa de tu novia, sin libertad financiera, sintiendo que no tienes a dónde ir. <strong class="text-gold">Esto no es para siempre.</strong> Pero no cambia solo — cambia cuando vendes algo. Hoy.<br><br>
+      El sistema está listo. <strong class="text-gold">Tú decides si lo usas.</strong>
+    </p>
+  </div>
+</section>
+
+<section class="slide bg-dark" style="text-align:center">
+  <div style="max-width:600px; margin:0 auto">
+    <div class="chapter-number">Fin — pero es el principio</div>
+    <h2 style="margin-bottom:1rem">¿Qué vendemos primero?</h2>
+    <p class="text-lg text-muted mb-2">Dime cuál de los 5 productos, y te entrego el spec + la ejecución en menos de 24 horas.</p>
+    <div style="margin-top:2rem; display:flex; gap:1rem; justify-content:center; flex-wrap:wrap">
+      <span class="badge badge-gold" style="font-size:1rem; padding:0.5rem 1.5rem">🤖 Chatbot WhatsApp $499</span>
+      <span class="badge badge-gold" style="font-size:1rem; padding:0.5rem 1.5rem">📄 Landing artista $299</span>
+      <span class="badge badge-gold" style="font-size:1rem; padding:0.5rem 1.5rem">🔗 Booking artista $999</span>
+      <span class="badge badge-gold" style="font-size:1rem; padding:0.5rem 1.5rem">🎵 Bundle completo $1,999</span>
+      <span class="badge badge-gold" style="font-size:1rem; padding:0.5rem 1.5rem">📊 Reportes negocio $799</span>
+    </div>
+    <hr style="margin:3rem 0">
+    <p style="color:#555; font-size:0.85rem">Sonora Digital Corp — 2026<br>Hermes está aquí. La máquina funciona.</p>
+  </div>
+</section>
+
+</body>
+</html>

@@ -77,6 +77,8 @@ def _send_text(to: str, text: str) -> dict:
 def _send_voice(to: str, text: str) -> dict:
     """Convert text to speech and send as voice note."""
     to = to if "@s.whatsapp.net" in to else f"{to}@s.whatsapp.net"
+    mp3_path = None
+    ogg_path = None
     try:
         tmp = tempfile.NamedTemporaryFile(suffix=".mp3", delete=False, mode="wb")
         mp3_path = tmp.name
@@ -100,13 +102,18 @@ def _send_voice(to: str, text: str) -> dict:
             "--mime", "audio/ogg; codecs=opus", "--ptt",
             "--to", to, "--post-send-wait", "5s",
         ])
-
-        os.unlink(mp3_path)
-        os.unlink(ogg_path)
         return result
     except Exception as e:
         # Fallback to text
         return _send_text(to, f"[🎙️ {text}]")
+    finally:
+        # Always cleanup temp files
+        for path in [mp3_path, ogg_path]:
+            if path:
+                try:
+                    os.unlink(path)
+                except OSError:
+                    pass
 
 
 def _ask_llm(messages: list) -> str:
@@ -130,7 +137,8 @@ def _ask_llm(messages: list) -> str:
         data = r.json()
         return data["choices"][0]["message"]["content"]
     except Exception as e:
-        return f"⚠️ Error de conexión: {e}"
+        print(f"[responder] LLM error: {e}", file=sys.stderr)
+        return "⚠️ Error de conexión con el cerebro. Intenta de nuevo."
 
 
 def _detect_intent(text: str) -> str:

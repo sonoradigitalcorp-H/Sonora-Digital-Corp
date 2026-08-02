@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABE Music OS — The Record Label Operating System</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth;scrollbar-width:thin;scrollbar-color:#c8a87c #0a0a0a}
+body{font-family:'Inter',sans-serif;background:#0a0a0a;color:#e5e5e5;overflow-x:hidden}
+::selection{background:#c8a87c;color:#0a0a0a}
+.slide{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:6rem 8%;position:relative;overflow:hidden}
+.slide::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:radial-gradient(ellipse at 30% 50%, rgba(200,168,124,0.06), transparent 70%);pointer-events:none}
+.bg-dark{background:#0a0a0a}
+.bg-warm{background:linear-gradient(135deg,#1a1410,#0d0d0a)}
+.bg-deep{background:linear-gradient(135deg,#050505,#0a0a0a,#1a1410)}
+h1{font-family:'Playfair Display',serif;font-size:5rem;font-weight:700;letter-spacing:-0.03em;line-height:1.05}
+h1 .gold{color:#c8a87c}
+h2{font-family:'Playfair Display',serif;font-size:3rem;font-weight:700;letter-spacing:-0.02em;margin-bottom:1.5rem}
+h2 .gold{color:#c8a87c}
+h3{font-size:1.3rem;font-weight:600;margin-bottom:0.8rem;color:#c8a87c}
+.text-gold{color:#c8a87c}
+.text-muted{color:#888}
+.text-sm{font-size:0.9rem}
+.text-xs{font-size:0.75rem}
+.text-lg{font-size:1.15rem}
+.text-2xl{font-size:2rem}
+.mt-2{margin-top:2rem}
+.mt-4{margin-top:4rem}
+.mb-2{margin-bottom:2rem}
+.mb-4{margin-bottom:4rem}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:2rem}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:1.5rem}
+.card{background:rgba(255,255,255,0.02);border:1px solid rgba(200,168,124,0.12);border-radius:16px;padding:2rem;transition:all 0.4s ease}
+.card:hover{border-color:rgba(200,168,124,0.3);transform:translateY(-3px);box-shadow:0 20px 40px rgba(0,0,0,0.3)}
+.card-glow{background:rgba(200,168,124,0.03);border:1px solid rgba(200,168,124,0.2);box-shadow:0 0 40px rgba(200,168,124,0.05)}
+.highlight-card{background:linear-gradient(135deg,rgba(200,168,124,0.08),rgba(200,168,124,0.02));border:1px solid rgba(200,168,124,0.25);border-radius:20px;padding:2.5rem;position:relative;overflow:hidden}
+.highlight-card::before{content:'';position:absolute;top:-50%;right:-50%;width:100%;height:100%;background:radial-gradient(circle,rgba(200,168,124,0.05),transparent 70%);pointer-events:none}
+.tag{display:inline-block;padding:0.2rem 0.8rem;border-radius:20px;font-size:0.7rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase}
+.tag-green{background:rgba(34,197,94,0.12);color:#22c55e}
+.tag-yellow{background:rgba(234,179,8,0.12);color:#eab308}
+.tag-red{background:rgba(239,68,68,0.12);color:#ef4444}
+.tag-blue{background:rgba(59,130,246,0.12);color:#3b82f6}
+.tag-gold{background:rgba(200,168,124,0.15);color:#c8a87c}
+.badge{display:inline-flex;align-items:center;gap:0.4rem;padding:0.3rem 1rem;border-radius:20px;font-size:0.75rem;font-weight:600;letter-spacing:0.04em}
+.badge-gold{background:rgba(200,168,124,0.12);color:#c8a87c;border:1px solid rgba(200,168,124,0.2)}
+.big-number{font-size:4.5rem;font-weight:800;color:#c8a87c;line-height:1;letter-spacing:-0.03em}
+.stat-label{font-size:0.8rem;color:#888;text-transform:uppercase;letter-spacing:0.06em;margin-top:0.3rem;font-weight:500}
+.chapter{font-size:0.75rem;text-transform:uppercase;letter-spacing:0.2em;color:#c8a87c;font-weight:600;margin-bottom:0.8rem;opacity:0.7}
+.btn{display:inline-flex;align-items:center;gap:0.5rem;padding:0.9rem 2rem;border-radius:10px;font-weight:600;text-decoration:none;transition:all 0.3s ease;cursor:pointer;border:none;font-size:0.95rem}
+.btn-gold{background:#c8a87c;color:#0a0a0a}
+.btn-gold:hover{background:#d4b896;transform:translateY(-2px);box-shadow:0 8px 25px rgba(200,168,124,0.3)}
+.btn-outline{background:transparent;color:#c8a87c;border:1px solid rgba(200,168,124,0.35)}
+.btn-outline:hover{border-color:#c8a87c;background:rgba(200,168,124,0.08);transform:translateY(-2px)}
+.btn-white{background:#fff;color:#0a0a0a}
+.btn-white:hover{background:#e5e5e5;transform:translateY(-2px)}
+.chart-line{display:flex;align-items:flex-end;gap:0.3rem;height:120px;padding:1rem 0}
+.chart-bar{width:100%;border-radius:4px 4px 0 0;background:linear-gradient(to top,#c8a87c,rgba(200,168,124,0.4));transition:all 0.5s;min-height:4px}
+.chart-bar:hover{opacity:0.8}
+.chart-bar.gold{background:linear-gradient(to top,#c8a87c,rgba(200,168,124,0.5))}
+.chart-bar.green{background:linear-gradient(to top,#22c55e,rgba(34,197,94,0.4))}
+.chart-bar.blue{background:linear-gradient(to top,#3b82f6,rgba(59,130,246,0.4))}
+.floating{animation:float 6s ease-in-out infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+.glow-text{text-shadow:0 0 40px rgba(200,168,124,0.3)}
+.particle-bg{position:absolute;top:0;left:0;width:100%;height:100%;overflow:hidden;pointer-events:none}
+.particle{position:absolute;width:3px;height:3px;background:#c8a87c;border-radius:50%;opacity:0.3;animation:particle 20s linear infinite}
+@keyframes particle{0%{transform:translateY(100vh) rotate(0deg);opacity:0}10%{opacity:0.3}90%{opacity:0.3}100%{transform:translateY(-100vh) rotate(720deg);opacity:0}}
+.progress-bar{position:fixed;top:0;left:0;height:3px;background:linear-gradient(90deg,#c8a87c,#d4b896);z-index:1000;transition:width 0.3s}
+nav.nav-slides{position:fixed;top:50%;right:20px;transform:translateY(-50%);z-index:100;display:flex;flex-direction:column;gap:8px}
+nav.nav-slides a{width:10px;height:10px;border-radius:50%;background:rgba(200,168,124,0.2);transition:all 0.3s;display:block;text-decoration:none}
+nav.nav-slides a:hover,nav.nav-slides a.active{background:#c8a87c;transform:scale(1.3)}
+.price{font-size:2.5rem;font-weight:800;color:#c8a87c}
+.price span{font-size:1rem;font-weight:400;color:#888}
+.mock-dashboard{background:rgba(0,0,0,0.4);border:1px solid rgba(200,168,124,0.15);border-radius:20px;padding:2rem;backdrop-filter:blur(10px);font-family:'JetBrains Mono',monospace;font-size:0.85rem}
+.mock-dashboard .row{display:flex;justify-content:space-between;padding:0.8rem 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.mock-dashboard .row:last-child{border:none}
+.mock-dashboard .label{color:#888}
+.mock-dashboard .value{color:#e5e5e5;font-weight:500}
+.mock-dashboard .value.gold{color:#c8a87c}
+.mock-dashboard .value.green{color:#22c55e}
+.pulse{animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5}}
+.avatar{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#c8a87c,#8a6d4a);display:flex;align-items:center;justify-content:center;font-size:1.2rem;font-weight:700;color:#0a0a0a;flex-shrink:0}
+.mock-chat{background:rgba(0,0,0,0.3);border:1px solid rgba(200,168,124,0.1);border-radius:16px;padding:1.5rem;font-size:0.9rem}
+.mock-chat .msg{display:flex;gap:0.8rem;margin-bottom:1rem;align-items:flex-start}
+.mock-chat .msg.fan{flex-direction:row-reverse}
+.mock-chat .bubble{background:rgba(255,255,255,0.04);border-radius:12px 12px 12px 4px;padding:0.8rem 1rem;max-width:80%}
+.mock-chat .msg.fan .bubble{background:rgba(200,168,124,0.1);border-radius:12px 12px 4px 12px}
+.mock-chat .bubble .time{font-size:0.65rem;color:#555;margin-top:0.3rem}
+.timeline{position:relative;padding-left:2rem}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:rgba(200,168,124,0.2)}
+.timeline-item{position:relative;padding-bottom:2rem}
+.timeline-item::before{content:'';position:absolute;left:-2.4rem;top:0.4rem;width:10px;height:10px;border-radius:50%;background:#c8a87c;border:2px solid #0a0a0a}
+.mock-url{background:rgba(0,0,0,0.3);border:1px solid rgba(200,168,124,0.1);border-radius:8px;padding:0.6rem 1rem;font-family:'JetBrains Mono',monospace;font-size:0.8rem;color:#888;display:inline-flex;align-items:center;gap:0.5rem}
+.mock-url .dot{width:8px;height:8px;border-radius:50%;background:#22c55e;display:inline-block}
+table{width:100%;border-collapse:collapse;font-size:0.9rem}
+th{text-align:left;padding:0.8rem 1rem;color:#888;font-weight:500;text-transform:uppercase;font-size:0.7rem;letter-spacing:0.08em;border-bottom:1px solid rgba(255,255,255,0.05)}
+td{padding:0.8rem 1rem;border-bottom:1px solid rgba(255,255,255,0.03)}
+tr:hover td{background:rgba(200,168,124,0.03)}
+.hero-gradient{background:radial-gradient(ellipse at 50% 0%, rgba(200,168,124,0.08) 0%, transparent 60%)}
+.metric-ring{display:flex;flex-direction:column;align-items:center}
+.ring{width:80px;height:80px;border-radius:50%;border:4px solid rgba(200,168,124,0.15);border-top-color:#c8a87c;display:flex;align-items:center;justify-content:center;font-size:1.5rem;font-weight:700;color:#c8a87c;margin-bottom:0.5rem}
+.plan-card{padding:2rem;border-radius:16px;border:1px solid rgba(200,168,124,0.1);background:rgba(255,255,255,0.02);display:flex;flex-direction:column;gap:0.8rem;transition:all 0.4s}
+.plan-card.featured{border:2px solid #c8a87c;background:rgba(200,168,124,0.04);position:relative}
+.plan-card.featured::after{content:'POPULAR';position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#c8a87c;color:#0a0a0a;font-size:0.65rem;font-weight:700;padding:0.2rem 1rem;border-radius:10px;letter-spacing:0.08em}
+.plan-card .price{font-size:2.2rem}
+.plan-card ul{list-style:none;display:flex;flex-direction:column;gap:0.5rem;flex:1}
+.plan-card ul li{display:flex;gap:0.5rem;font-size:0.85rem;color:#aaa}
+.plan-card ul li::before{content:'✓';color:#c8a87c;font-weight:700}
+@media(max-width:768px){
+  h1{font-size:2.8rem}
+  h2{font-size:2rem}
+  .grid-2,.grid-3,.grid-4{grid-template-columns:1fr}
+  .slide{padding:3rem 5%}
+  nav.nav-slides{display:none}
+  .big-number{font-size:2.8rem}
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<nav class="nav-slides">
+  <a href="#cover" class="active"></a>
+  <a href="#reality"></a>
+  <a href="#problem"></a>
+  <a href="#solution"></a>
+  <a href="#products"></a>
+  <a href="#architecture"></a>
+  <a href="#hector"></a>
+  <a href="#dashboard"></a>
+  <a href="#clone"></a>
+  <a href="#subscription"></a>
+  <a href="#competition"></a>
+  <a href="#roadmap"></a>
+  <a href="#cta"></a>
+</nav>
+
+<!-- SLIDE 1: COVER -->
+<section id="cover" class="slide bg-deep" style="text-align:center">
+  <div class="particle-bg" id="particles"></div>
+  <div style="position:relative;z-index:1;max-width:900px;margin:0 auto">
+    <div class="badge badge-gold" style="margin-bottom:2rem">🎵 ABE MUSIC INC × SONORA DIGITAL CORP</div>
+    <h1 style="font-size:6rem;margin-bottom:1rem" class="glow-text">
+      <span class="gold">ABE</span> MUSIC <span class="gold">OS</span>
+    </h1>
+    <p style="font-size:1.4rem;color:#888;margin-bottom:0.5rem;font-weight:300">The Record Label Operating System</p>
+    <p style="font-size:1rem;color:#555;margin-bottom:3rem">Powered by Sonora Digital Corp · Hermosillo ↔ Los Angeles</p>
+    <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+      <a href="#reality" class="btn btn-gold">Ver la plataforma →</a>
+      <a href="#hector" class="btn btn-outline">Conoce a Héctor Rubio</a>
+    </div>
+    <div style="display:flex;gap:2rem;justify-content:center;margin-top:4rem">
+      <div><div class="big-number">1.2M</div><div class="stat-label">Monthly Listeners</div></div>
+      <div><div class="big-number">3</div><div class="stat-label">Artists</div></div>
+      <div><div class="big-number">50+</div><div class="stat-label">Releases</div></div>
+      <div><div class="big-number">$4M</div><div class="stat-label">Label Revenue</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 2: REALITY -->
+<section id="reality" class="slide bg-warm">
+  <div style="max-width:1200px;width:100%;margin:0 auto">
+    <div class="chapter">Capítulo 01</div>
+    <h2>La realidad de <span class="gold">ABE Music</span></h2>
+    <p class="text-lg text-muted mb-4">Todo lo que Abraham ha construido, en números reales.</p>
+    <div class="grid-3" style="margin-bottom:3rem">
+      <div class="highlight-card">
+        <div style="font-size:0.8rem;color:#888;margin-bottom:0.5rem">Fundado</div>
+        <div style="font-size:2rem;font-weight:700">Enero 2018</div>
+        <div style="font-size:0.85rem;color:#555">Compton, California</div>
+      </div>
+      <div class="highlight-card">
+        <div style="font-size:0.8rem;color:#888;margin-bottom:0.5rem">CEO</div>
+        <div style="font-size:2rem;font-weight:700">Abraham Ortega</div>
+        <div style="font-size:0.85rem;color:#555">(323) 819-2000 · abraham@abemusicinc.com</div>
+      </div>
+      <div class="highlight-card">
+        <div style="font-size:0.8rem;color:#888;margin-bottom:0.5rem">Partner Tecnológico</div>
+        <div style="font-size:2rem;font-weight:700">Sonora Digital Corp</div>
+        <div style="font-size:0.85rem;color:#555">Sistema operativo para tu sello</div>
+      </div>
+    </div>
+    <div class="grid-4">
+      <div class="card" style="text-align:center">
+        <div class="big-number">539K</div>
+        <div class="stat-label">Streams Gestionados</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div class="big-number">$26.9K</div>
+        <div class="stat-label">Revenue Total</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div class="big-number">3</div>
+        <div class="stat-label">Artistas Firmados</div>
+      </div>
+      <div class="card" style="text-align:center">
+        <div class="big-number">20%</div>
+        <div class="stat-label">Label Share</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 3: PROBLEM -->
+<section id="problem" class="slide bg-dark">
+  <div style="max-width:1000px;margin:0 auto">
+    <div class="chapter">Capítulo 02</div>
+    <h2>El problema con los <span class="gold">sellos</span> hoy</h2>
+    <div class="grid-2" style="margin-top:2rem">
+      <div class="card">
+        <div style="font-size:2.5rem;margin-bottom:1rem">📉</div>
+        <h3>Contratos predatorios</h3>
+        <p class="text-muted text-sm">El 85% de los artistas independientes firman contratos que les pagan 15-20% de su propio trabajo. Pierden sus masters. Pierden su voz.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:2.5rem;margin-bottom:1rem">🤖</div>
+        <h3>IA viene por tu trabajo</h3>
+        <p class="text-muted text-sm">18% de los uploads nuevos en Deezer son generados por IA. Los artistas sin protección ni estrategia digital serán reemplazados.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:2.5rem;margin-bottom:1rem">🔇</div>
+        <h3>Sin transparencia</h3>
+        <p class="text-muted text-sm">Los artistas no ven sus números en tiempo real. Esperan 60+ días para saber cuánto ganaron. Los sellos grandes no comparten datos.</p>
+      </div>
+      <div class="card">
+        <div style="font-size:2.5rem;margin-bottom:1rem">📱</div>
+        <h3>Fans sin conexión</h3>
+        <p class="text-muted text-sm">El artista promedio pierde el 90% de sus fans después del lanzamiento. No hay comunidad, no hay loyalty, no hay repeat.</p>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:3rem">
+      <div class="badge badge-gold" style="font-size:0.9rem;padding:0.5rem 1.5rem">Regional Mexican creció 400% en 5 años — pero los sellos no cambiaron</div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 4: SOLUTION -->
+<section id="solution" class="slide bg-warm">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="chapter">Capítulo 03</div>
+    <h2>ABE Music <span class="gold">OS</span></h2>
+    <p class="text-lg text-muted mb-4">No es un sello discográfico. Es un sistema operativo para tu carrera musical.</p>
+    <div class="grid-3" style="margin-top:2rem">
+      <div class="highlight-card">
+        <div style="font-size:2.5rem;margin-bottom:1rem">🎵</div>
+        <h3>Distribución Inteligente</h3>
+        <p class="text-sm text-muted">Sube tu música una vez. Llega a Spotify, Apple, TikTok, YouTube, y 50+ plataformas automáticamente. Con métricas en vivo.</p>
+      </div>
+      <div class="highlight-card">
+        <div style="font-size:2.5rem;margin-bottom:1rem">🧠</div>
+        <h3>Clon Digital IA</h3>
+        <p class="text-sm text-muted">Tu gemelo digital que interactúa con fans 24/7, promueve tu música mientras duermes, y nunca se cansa. El primer clon para regional mexicano.</p>
+      </div>
+      <div class="highlight-card">
+        <div style="font-size:2.5rem;margin-bottom:1rem">📊</div>
+        <h3>Dashboard CEO</h3>
+        <p class="text-sm text-muted">Todos tus números en tiempo real: streams, revenue, fans, bookings. Lo que los grandes sellos esconden, aquí lo ves al instante.</p>
+      </div>
+      <div class="highlight-card">
+        <div style="font-size:2.5rem;margin-bottom:1rem">🎯</div>
+        <h3>Marketing Viral</h3>
+        <p class="text-sm text-muted">Campañas con nano-creators, seeding en TikTok, playlist pitching. Estrategia comprobada que generó 100M+ streams para indies.</p>
+      </div>
+      <div class="highlight-card">
+        <div style="font-size:2.5rem;margin-bottom:1rem">🪙</div>
+        <h3>$RESO Token</h3>
+        <p class="text-sm text-muted">Gamificación que convierte oyentes en superfans. Ganan tokens por compartir, crear contenido, asistir a eventos. Los queman por merch y experiencias.</p>
+      </div>
+      <div class="highlight-card">
+        <div style="font-size:2.5rem;margin-bottom:1rem">🔄</div>
+        <h3>Pipeline Automatizado</h3>
+        <p class="text-sm text-muted">Contenido 24/7: reels generados por IA a las 3 AM, posting automático, reportes diarios a Telegram. Tu sello trabaja mientras tú descansas.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 5: PRODUCTS -->
+<section id="products" class="slide bg-dark">
+  <div style="max-width:1200px;width:100%;margin:0 auto">
+    <div class="chapter">Capítulo 04</div>
+    <h2>Productos & <span class="gold">Servicios</span></h2>
+    <p class="text-lg text-muted mb-4">Dos caras del mismo ecosistema: lo que ABE ofrece a artistas y lo que vende a fans.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:3rem">
+      <div>
+        <h3 style="margin-bottom:1.5rem">🎤 Para Artistas</h3>
+        <div class="card" style="margin-bottom:1rem">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><strong>Distribución Digital</strong><br><span class="text-sm text-muted">50+ plataformas, métricas en vivo</span></div>
+            <div class="tag tag-gold">15-30% rev share</div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:1rem">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><strong>Clon Digital IA</strong><br><span class="text-sm text-muted">Avatar 24/7 para tus fans</span></div>
+            <div class="tag tag-gold">$999 setup + $299/mo</div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:1rem">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><strong>Pipeline de Contenido</strong><br><span class="text-sm text-muted">30 reels/mes automatizados</span></div>
+            <div class="tag tag-gold">$299/mo</div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:1rem">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><strong>Campañas Virales</strong><br><span class="text-sm text-muted">Nano-creators + playlist pitching</span></div>
+            <div class="tag tag-gold">$500-$2,500</div>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:1rem">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><strong>Sync Licensing</strong><br><span class="text-sm text-muted">Música en cine, TV, ads, gaming</span></div>
+            <div class="tag tag-gold">Commission</div>
+          </div>
+        </div>
+        <div class="card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div><strong>Bookings & Touring</strong><br><span class="text-sm text-muted">Gestión de shows y giras</span></div>
+            <div class="tag tag-gold">10% commission</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="margin-bottom:1.5rem">🎟️ Para Fans</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="card" style="text-align:center;padding:1.5rem">
+            <div class="price">$99</div>
+            <div class="stat-label">BÁSICO / mes</div>
+            <div style="font-size:0.75rem;color:#555;margin-top:0.3rem">Dashboard + 5 reels IA</div>
+          </div>
+          <div class="card" style="text-align:center;padding:1.5rem;border-color:#c8a87c;background:rgba(200,168,124,0.04)">
+            <div class="price">$299</div>
+            <div class="stat-label">PRO / mes</div>
+            <div style="font-size:0.75rem;color:#555;margin-top:0.3rem">Clon IA + 20 reels + 10% merch</div>
+          </div>
+          <div class="card" style="text-align:center;padding:1.5rem">
+            <div class="price">$999</div>
+            <div class="stat-label">ÉLITE / mes</div>
+            <div style="font-size:0.75rem;color:#555;margin-top:0.3rem">Full clon + reels ilimitados + VIP</div>
+          </div>
+          <div class="card" style="text-align:center;padding:1.5rem">
+            <div style="font-size:1.5rem;font-weight:700;color:#c8a87c">$RESO</div>
+            <div class="stat-label">TOKEN</div>
+            <div style="font-size:0.75rem;color:#555;margin-top:0.3rem">Gana·Comparte·Quema</div>
+          </div>
+        </div>
+        <div style="margin-top:1.5rem">
+          <div class="card" style="text-align:center;padding:1rem">
+            <div style="font-size:0.85rem;color:#888">🎸 <strong class="text-gold">Merch</strong> — Hoodies, hats, CDs firmados · Printful dropshipping</div>
+          </div>
+          <div class="card" style="text-align:center;padding:1rem;margin-top:0.5rem">
+            <div style="font-size:0.85rem;color:#888">🥽 <strong class="text-gold">VR Cabinas</strong> — Conciertos inmersivos · $50-$200/session</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 6: ARCHITECTURE -->
+<section id="architecture" class="slide bg-warm">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="chapter">Capítulo 05</div>
+    <h2>Arquitectura del <span class="gold">Sistema</span></h2>
+    <p class="text-lg text-muted mb-4">Cómo funciona ABE Music OS por dentro.</p>
+    <div style="position:relative;padding:2rem;background:rgba(0,0,0,0.3);border-radius:24px;border:1px solid rgba(200,168,124,0.1);overflow:hidden">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:2rem;text-align:center">
+        <div style="padding:2rem;border-right:1px solid rgba(200,168,124,0.1)">
+          <div style="font-size:2rem;margin-bottom:0.5rem">🌐</div>
+          <h3>Frontend</h3>
+          <div style="font-size:0.8rem;color:#888;line-height:1.8">
+            Next.js 15<br>
+            Tailwind CSS<br>
+            Vercel Deploy<br>
+            Google Auth
+          </div>
+        </div>
+        <div style="padding:2rem;border-right:1px solid rgba(200,168,124,0.1)">
+          <div style="font-size:2rem;margin-bottom:0.5rem">⚡</div>
+          <h3>API Layer</h3>
+          <div style="font-size:0.8rem;color:#888;line-height:1.8">
+            FastAPI · Puerto 8000<br>
+            ABE CRM · Payments<br>
+            Webhooks · Clones IA<br>
+            n8n Automation
+          </div>
+        </div>
+        <div style="padding:2rem">
+          <div style="font-size:2rem;margin-bottom:0.5rem">🗄️</div>
+          <h3>Data Layer</h3>
+          <div style="font-size:0.8rem;color:#888;line-height:1.8">
+            PostgreSQL · Neo4j · Qdrant<br>
+            Stripe · MercadoPago<br>
+            Redis Cache<br>
+            Spotify API
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:2rem;padding-top:2rem;border-top:1px solid rgba(200,168,124,0.1)">
+        <div style="display:flex;gap:1rem;flex-wrap:wrap;justify-content:center">
+          <span class="badge badge-gold">Vercel</span>
+          <span class="badge badge-gold">Stripe</span>
+          <span class="badge badge-gold">MercadoPago</span>
+          <span class="badge badge-gold">Telegram Bot</span>
+          <span class="badge badge-gold">n8n</span>
+          <span class="badge badge-gold">fal-ai</span>
+          <span class="badge badge-gold">Printful</span>
+          <span class="badge badge-gold">OpenClaw</span>
+        </div>
+      </div>
+    </div>
+    <div class="mock-url" style="margin-top:2rem;width:100%;justify-content:center">
+      <span class="dot"></span> sonoradigitalcorp.com/abe-music → API:8000 → PostgreSQL + Stripe
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 7: HECTOR RUBIO -->
+<section id="hector" class="slide bg-dark">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="chapter">Capítulo 06</div>
+    <h2>⭐ <span class="gold">Héctor Rubio</span></h2>
+    <p class="text-lg text-muted mb-4">La promesa de la música mexicana. 1.2M de oyentes mensuales. Firmado con ABE Music.</p>
+    <div class="grid-2" style="margin-top:2rem">
+      <div>
+        <div class="highlight-card" style="margin-bottom:1rem">
+          <div style="display:flex;gap:2rem;align-items:center;flex-wrap:wrap">
+            <div style="background:linear-gradient(135deg,#c8a87c,#8a6d4a);width:80px;height:80px;border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:2.5rem;font-weight:700;color:#0a0a0a">HR</div>
+            <div>
+              <div style="font-weight:700;font-size:1.3rem">Héctor Rubio</div>
+              <div class="text-sm text-muted">Angostura, Sinaloa · Corridos Motivacionales</div>
+              <div class="text-xs text-muted" style="margin-top:0.3rem">@hector_rubiorr · @hector_rubio77</div>
+            </div>
+            <div style="margin-left:auto;text-align:right">
+              <div class="big-number" style="font-size:2rem">1.2M</div>
+              <div class="stat-label" style="font-size:0.65rem">Spotify Monthly Listeners</div>
+            </div>
+          </div>
+        </div>
+        <div class="grid-2" style="gap:1rem">
+          <div class="card" style="padding:1.2rem">
+            <div class="text-xs text-muted">Top Canción</div>
+            <div style="font-weight:600;font-size:0.9rem">Se Volvieron Locos</div>
+            <div class="text-gold" style="font-weight:700">16M+ streams</div>
+          </div>
+          <div class="card" style="padding:1.2rem">
+            <div class="text-xs text-muted">Álbum Reciente</div>
+            <div style="font-weight:600;font-size:0.9rem">SMOKING (2025)</div>
+            <div style="color:#888;font-size:0.8rem">7 tracks · ABE Music / VIZUAL</div>
+          </div>
+        </div>
+        <div class="card" style="margin-top:1rem;padding:1.2rem">
+          <div class="text-xs text-muted">🏆 Logro Destacado</div>
+          <div style="font-weight:600;font-size:0.9rem;margin-top:0.3rem">Abrió el "Exodo Tour" de Peso Pluma (2024) — T-Mobile Arena Las Vegas</div>
+        </div>
+      </div>
+      <div>
+        <div class="mock-dashboard" style="height:100%">
+          <div style="font-size:0.8rem;margin-bottom:1rem;color:#c8a87c;font-weight:600">📊 REAL-TIME ANALYTICS</div>
+          <div class="row"><span class="label">Monthly Listeners</span><span class="value gold">1,200,000</span></div>
+          <div class="row"><span class="label">Top Song Streams</span><span class="value gold">16,000,000+</span></div>
+          <div class="row"><span class="label">Revenue Tracked</span><span class="value gold">$9,660</span></div>
+          <div class="row"><span class="label">Collaborations</span><span class="value">Peso Pluma · Yeri Mua · Big Soto</span></div>
+          <div class="row"><span class="label">Genre</span><span class="value">Corridos Motivacionales</span></div>
+          <div class="row"><span class="label">Songwriter For</span><span class="value">Alex Favela · Edgardo Núñez</span></div>
+          <div style="margin-top:1rem;padding-top:1rem;border-top:1px solid rgba(255,255,255,0.05)">
+            <div style="display:flex;gap:0.5rem;flex-wrap:wrap">
+              <span class="tag tag-gold">🎤 Exodo Tour 2024</span>
+              <span class="tag tag-gold">💿 SMOKING Album</span>
+              <span class="tag tag-gold">🎵 Corridos Motivacionales</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 8: LIVE CEO DASHBOARD -->
+<section id="dashboard" class="slide bg-warm">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="chapter">Capítulo 07</div>
+    <h2>CEO <span class="gold">Dashboard</span></h2>
+    <p class="text-lg text-muted mb-4">Abraham ve su sello en tiempo real. Simulación en vivo.</p>
+    <div class="mock-dashboard" style="width:100%">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem">
+        <div style="font-size:0.9rem;color:#c8a87c;font-weight:600">🎵 ABE MUSIC INC — LIVE</div>
+        <div style="display:flex;gap:1rem;align-items:center">
+          <span class="tag tag-green">● LIVE</span>
+          <span class="text-xs text-muted">Updated: just now</span>
+        </div>
+      </div>
+      <div class="grid-4" style="margin-bottom:2rem">
+        <div style="text-align:center;padding:1rem;background:rgba(255,255,255,0.02);border-radius:12px">
+          <div class="big-number" style="font-size:2rem">539K</div>
+          <div class="stat-label" style="font-size:0.65rem">Total Streams</div>
+        </div>
+        <div style="text-align:center;padding:1rem;background:rgba(255,255,255,0.02);border-radius:12px">
+          <div class="big-number" style="font-size:2rem;color:#22c55e">$26.9K</div>
+          <div class="stat-label" style="font-size:0.65rem">Total Revenue</div>
+        </div>
+        <div style="text-align:center;padding:1rem;background:rgba(255,255,255,0.02);border-radius:12px">
+          <div class="big-number" style="font-size:2rem">3</div>
+          <div class="stat-label" style="font-size:0.65rem">Artists</div>
+        </div>
+        <div style="text-align:center;padding:1rem;background:rgba(255,255,255,0.02);border-radius:12px">
+          <div class="big-number" style="font-size:2rem;color:#3b82f6">$5.4K</div>
+          <div class="stat-label" style="font-size:0.65rem">Label Share (20%)</div>
+        </div>
+      </div>
+      <table>
+        <tr><th>Artist</th><th>Streams</th><th>Revenue</th><th>Label Share</th><th>Status</th></tr>
+        <tr><td><strong>Jesús Urquijo</strong><br><span class="text-xs text-muted">Pop Latino · Hermosillo</span></td><td>245,000</td><td>$12,110</td><td class="text-gold">$2,422</td><td><span class="tag tag-green">Active</span></td></tr>
+        <tr><td><strong>Héctor Rubio</strong><br><span class="text-xs text-muted">Regional Mexicano · Sinaloa</span></td><td>193,000</td><td>$9,660</td><td class="text-gold">$1,932</td><td><span class="tag tag-green">Active</span></td></tr>
+        <tr><td><strong>Javier Arvayo</strong><br><span class="text-xs text-muted">Urbano · Hermosillo</span></td><td>101,000</td><td>$5,110</td><td class="text-gold">$1,022</td><td><span class="tag tag-yellow">Signed</span></td></tr>
+      </table>
+      <div style="margin-top:1.5rem;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.05)">
+        <div class="text-xs text-muted">🔔 Recent Activity</div>
+        <div style="display:flex;flex-direction:column;gap:0.5rem;margin-top:0.5rem;font-size:0.8rem">
+          <div style="display:flex;justify-content:space-between"><span>🎵 Héctor Rubio — "Poker Star" +12K streams this week</span><span class="tag tag-green">+5%</span></div>
+          <div style="display:justify;space-between"><span>💰 New subscription: Pro Plan $299 MXN</span><span class="tag tag-blue">1h ago</span></div>
+          <div style="display:flex;justify-content:space-between"><span>🤖 AI Clone: 47 interactions today</span><span class="tag tag-gold">Active</span></div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:2rem">
+      <div class="mock-url"><span class="dot"></span> https://sonoradigitalcorp.com/abe-music/dashboard</div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 9: AI DIGITAL CLONE -->
+<section id="clone" class="slide bg-dark">
+  <div style="max-width:1000px;margin:0 auto">
+    <div class="chapter">Capítulo 08</div>
+    <h2>🧠 Clon Digital <span class="gold">IA</span></h2>
+    <p class="text-lg text-muted mb-4">Tu artista nunca duerme. El clon interactúa con fans 24/7.</p>
+    <div class="grid-2" style="margin-top:2rem">
+      <div>
+        <div class="mock-chat">
+          <div style="font-size:0.8rem;color:#c8a87c;font-weight:600;margin-bottom:1rem">💬 Chat with Héctor's AI Clone</div>
+          <div class="msg fan">
+            <div class="avatar" style="width:36px;height:36px;font-size:0.8rem">F</div>
+            <div class="bubble">
+              <div>Héctor! "Se Volvieron Locos" es mi rolita favorita. ¿Cómo la compusiste?</div>
+              <div class="time">Fan · just now</div>
+            </div>
+          </div>
+          <div class="msg">
+            <div class="avatar" style="width:36px;height:36px;font-size:0.8rem;background:linear-gradient(135deg,#c8a87c,#8a6d4a)">HR</div>
+            <div class="bubble" style="background:rgba(200,168,124,0.08)">
+              <div>¡Qué gusto! Esa rolita nació en una sesión con Grupo Selectivo en Culiacán. Queríamos algo que la raza sintiera bien profundo. 16M streams después, aquí seguimos 🎵🔥</div>
+              <div class="time">AI Héctor · 2s ago</div>
+            </div>
+          </div>
+          <div class="msg fan">
+            <div class="avatar" style="width:36px;height:36px;font-size:0.8rem">F</div>
+            <div class="bubble">
+              <div>¿Vas a sacar nueva música pronto?</div>
+              <div class="time">Fan · just now</div>
+            </div>
+          </div>
+          <div class="msg">
+            <div class="avatar" style="width:36px;height:36px;font-size:0.8rem;background:linear-gradient(135deg,#c8a87c,#8a6d4a)">HR</div>
+            <div class="bubble" style="background:rgba(200,168,124,0.08)">
+              <div>Claro que sí. Estamos preparando algo bien cabrón con ABE Music. Suscríbete al Élite y escúchalo antes que nadie 🚀</div>
+              <div class="time">AI Héctor · 2s ago</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;gap:0.5rem;margin-top:0.8rem;justify-content:center">
+          <span class="tag tag-gold">24/7 Availability</span>
+          <span class="tag tag-blue">Multi-language</span>
+          <span class="tag tag-green">Promotes Music</span>
+        </div>
+      </div>
+      <div>
+        <div class="highlight-card" style="height:100%">
+          <div style="font-size:0.9rem;font-weight:600;margin-bottom:1rem">🚀 Primer clon IA en Regional Mexicano</div>
+          <ul style="list-style:none;display:flex;flex-direction:column;gap:0.8rem;font-size:0.9rem">
+            <li style="display:flex;gap:0.5rem">🤖 <span>Interactúa con fans mientras el artista duerme</span></li>
+            <li style="display:flex;gap:0.5rem">🎵 <span>Promueve nuevos lanzamientos automáticamente</span></li>
+            <li style="display:flex;gap:0.5rem">📅 <span>Promociona shows, merch y suscripciones</span></li>
+            <li style="display:flex;gap:0.5rem">🌐 <span>100s de conversaciones simultáneas</span></li>
+            <li style="display:flex;gap:0.5rem">📊 <span>Aprende del artista para sonar auténtico</span></li>
+            <li style="display:flex;gap:0.5rem">💰 <span>Genera revenue pasivo 24/7</span></li>
+          </ul>
+          <div style="margin-top:auto;padding-top:1rem;border-top:1px solid rgba(200,168,124,0.1)">
+            <div class="text-xs text-muted">Stats: 47 interacciones hoy · 89% satisfacción · $0.002 por chat</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 10: SUBSCRIPTION FLOW -->
+<section id="subscription" class="slide bg-warm">
+  <div style="max-width:1000px;margin:0 auto">
+    <div class="chapter">Capítulo 09</div>
+    <h2>Flujo de <span class="gold">Suscripción</span></h2>
+    <p class="text-lg text-muted mb-4">Así se suscribe un fan. Así le llega el dinero a Abraham.</p>
+    <div class="grid-2" style="margin-top:2rem">
+      <div>
+        <div style="display:flex;flex-direction:column;gap:1rem">
+          <div class="plan-card featured">
+            <div class="price">$299 <span>/mes MXN</span></div>
+            <div style="font-weight:600">Plan Pro</div>
+            <ul>
+              <li>Clon IA del artista</li>
+              <li>20 reels generados por IA/mes</li>
+              <li>10% descuento en merch</li>
+              <li>Acceso anticipado a eventos</li>
+              <li>400 $RESO mensuales</li>
+            </ul>
+            <a href="#" class="btn btn-gold" style="width:100%;justify-content:center;margin-top:0.5rem">Suscribirme →</a>
+          </div>
+          <div class="text-xs text-muted" style="text-align:center">
+            💳 Pago seguro via Stripe · Cancela cuando quieras
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="mock-dashboard" style="height:100%">
+          <div style="font-size:0.8rem;color:#22c55e;font-weight:600;margin-bottom:1rem">✅ FLUJO COMPLETO</div>
+          <div style="display:flex;flex-direction:column;gap:1.2rem;font-size:0.85rem">
+            <div style="display:flex;gap:1rem;align-items:flex-start">
+              <div style="width:28px;height:28px;border-radius:50%;background:rgba(200,168,124,0.15);display:flex;align-items:center;justify-content:center;font-weight:700;color:#c8a87c;flex-shrink:0">1</div>
+              <div><strong>Fan elige plan</strong><br><span class="text-xs text-muted">Pro $299/mo desde la landing</span></div>
+            </div>
+            <div style="display:flex;gap:1rem;align-items:flex-start">
+              <div style="width:28px;height:28px;border-radius:50%;background:rgba(200,168,124,0.15);display:flex;align-items:center;justify-content:center;font-weight:700;color:#c8a87c;flex-shrink:0">2</div>
+              <div><strong>Paga con Stripe</strong><br><span class="text-xs text-muted">Tarjeta · SPEI (MercadoPago) · Crypto (Bitso)</span></div>
+            </div>
+            <div style="display:flex;gap:1rem;align-items:flex-start">
+              <div style="width:28px;height:28px;border-radius:50%;background:rgba(200,168,124,0.15);display:flex;align-items:center;justify-content:center;font-weight:700;color:#c8a87c;flex-shrink:0">3</div>
+              <div><strong>Webhook → n8n</strong><br><span class="text-xs text-muted">Dispara notificación a Telegram de Abraham</span></div>
+            </div>
+            <div style="display:flex;gap:1rem;align-items:flex-start">
+              <div style="width:28px;height:28px;border-radius:50%;background:rgba(200,168,124,0.15);display:flex;align-items:center;justify-content:center;font-weight:700;color:#c8a87c;flex-shrink:0">4</div>
+              <div><strong>Abraham recibe alerta</strong><br><span class="text-xs text-muted">"💰 Nuevo suscriptor Pro: $299 MXN"</span></div>
+            </div>
+            <div style="display:flex;gap:1rem;align-items:flex-start">
+              <div style="width:28px;height:28px;border-radius:50%;background:rgba(200,168,124,0.15);display:flex;align-items:center;justify-content:center;font-weight:700;color:#c8a87c;flex-shrink:0">5</div>
+              <div><strong>Dinero a su cuenta</strong><br><span class="text-xs text-muted">Stripe → Bank Account de Abraham · Tú ves analytics</span></div>
+            </div>
+          </div>
+          <div style="margin-top:auto;padding-top:1.5rem;border-top:1px solid rgba(255,255,255,0.05)">
+            <div class="text-xs text-muted">🔔 Último: Juan Pérez se suscribió a Pro ($299) — hace 3 min</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 11: COMPETITION -->
+<section id="competition" class="slide bg-dark">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="chapter">Capítulo 10</div>
+    <h2>ABE Music vs. <span class="gold">Los Grandes</span></h2>
+    <p class="text-lg text-muted mb-4">Cómo competimos contra los sellos que dominan el regional mexicano.</p>
+    <table style="margin-top:2rem">
+      <tr><th>Dimensión</th><th>Rancho Humilde</th><th>DEL Records</th><th>Street Mob</th><th style="color:#c8a87c">ABE Music OS</th></tr>
+      <tr><td>Fundado</td><td>2008</td><td>2009</td><td>2018</td><td class="text-gold">2018 (OS: 2026)</td></tr>
+      <tr><td>Artistas</td><td>60+</td><td>10-15</td><td>~10</td><td class="text-gold">3 (creciendo)</td></tr>
+      <tr><td>YouTube</td><td>9M subs</td><td>12M subs</td><td>N/A</td><td class="text-gold">🚀 Estrategia YouTube</td></tr>
+      <tr><td>Diferenciador</td><td>Corridos tumbados pioneer</td><td>YouTube dominance</td><td>JOP + Publishing</td><td class="text-gold">🤖 AI Clone + OS Tech</td></tr>
+      <tr><td>Talento Estrella</td><td>Natanael Cano, Fuerza Regida</td><td>Lenin Ramírez</td><td>Chino Pacas, Calle 24</td><td class="text-gold">⭐ Héctor Rubio (1.2M)</td></tr>
+      <tr><td>Tech Stack</td><td>Tradicional</td><td>Tradicional</td><td>Tradicional</td><td class="text-gold">⚡ Next.js + IA + n8n</td></tr>
+      <tr><td>AI Strategy</td><td>❌ None</td><td>❌ None</td><td>❌ None</td><td class="text-gold">✅ Digital Clone + Pipeline</td></tr>
+    </table>
+    <div style="margin-top:2rem;text-align:center">
+      <div class="highlight-card" style="display:inline-block;text-align:left;max-width:600px">
+        <div style="font-weight:600;margin-bottom:0.5rem">💪 La ventaja de ABE</div>
+        <div class="text-sm text-muted">Ningún sello independiente en regional mexicano ofrece tecnología como esta. Mientras ellos firman contratos, ABE construye sistemas.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 12: ROADMAP -->
+<section id="roadmap" class="slide bg-warm">
+  <div style="max-width:1000px;margin:0 auto">
+    <div class="chapter">Capítulo 11</div>
+    <h2>Roadmap <span class="gold">30 · 60 · 90</span></h2>
+    <p class="text-lg text-muted mb-4">Lo que sigue para ABE Music OS.</p>
+    <div class="grid-3" style="margin-top:2rem">
+      <div class="card">
+        <div class="tag tag-green" style="margin-bottom:1rem">30 DÍAS</div>
+        <div style="font-weight:600;margin-bottom:0.5rem">🚀 Lanzamiento</div>
+        <ul style="list-style:none;font-size:0.85rem;color:#aaa;display:flex;flex-direction:column;gap:0.5rem">
+          <li>✓ Landing en sonoradigitalcorp.com</li>
+          <li>✓ Dashboard CEO funcional</li>
+          <li>✓ Stripe suscripciones live</li>
+          <li>✓ Google Auth para Abraham</li>
+          <li>✓ Héctor Rubio perfil público</li>
+          <li>✓ n8n: pagos → Telegram</li>
+        </ul>
+      </div>
+      <div class="card" style="border-color:rgba(200,168,124,0.2)">
+        <div class="tag tag-gold" style="margin-bottom:1rem">60 DÍAS</div>
+        <div style="font-weight:600;margin-bottom:0.5rem">📈 Crecimiento</div>
+        <ul style="list-style:none;font-size:0.85rem;color:#aaa;display:flex;flex-direction:column;gap:0.5rem">
+          <li>✓ Clon Digital IA de Héctor Rubio</li>
+          <li>✓ Pipeline reels 3AM automático</li>
+          <li>✓ Portal del artista (cada quien ve sus stats)</li>
+          <li>✓ $RESO token live</li>
+          <li>✓ MercadoPago + Bitso integrados</li>
+          <li>✓ Campaña viral TikTok seeding</li>
+        </ul>
+      </div>
+      <div class="card">
+        <div class="tag tag-blue" style="margin-bottom:1rem">90 DÍAS</div>
+        <div style="font-weight:600;margin-bottom:0.5rem">🌎 Escalar</div>
+        <ul style="list-style:none;font-size:0.85rem;color:#aaa;display:flex;flex-direction:column;gap:0.5rem">
+          <li>✓ 5 nuevos artistas firmados</li>
+          <li>✓ Sello white-label para otros labels</li>
+          <li>✓ Sync licensing activo</li>
+          <li>✓ Gira nacional Héctor Rubio</li>
+          <li>✓ $50K MRR (monthly recurring revenue)</li>
+          <li>✓ Enterprise Score ≥70</li>
+        </ul>
+      </div>
+    </div>
+    <div class="mock-url" style="margin-top:2rem;width:100%;justify-content:center">
+      <span class="dot"></span> Estado actual: FASE 1 — Fundación. Todo lo de 30 días está en construcción AHORA.
+    </div>
+  </div>
+</section>
+
+<!-- SLIDE 13: CTA -->
+<section id="cta" class="slide bg-deep" style="text-align:center">
+  <div class="particle-bg"></div>
+  <div style="position:relative;z-index:1;max-width:700px;margin:0 auto">
+    <div class="badge badge-gold" style="margin-bottom:1.5rem">🎵 ABE MUSIC INC</div>
+    <h1 style="font-size:4rem" class="glow-text">
+      Tu sello.<br><span class="gold">Tu sistema.</span><br>Tu futuro.
+    </h1>
+    <p style="font-size:1.15rem;color:#888;margin:2rem auto;max-width:500px;line-height:1.6">
+      Lo que ves aquí no es una presentación. Es una plataforma funcionando. Los números son reales. El código está listo.
+    </p>
+    <div style="display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap;margin-top:2rem">
+      <a href="https://sonoradigitalcorp.com/abe-music" class="btn btn-gold">🌐 Abrir la plataforma</a>
+      <a href="https://wa.me/13238192000" class="btn btn-outline">💬 WhatsApp a Abraham</a>
+    </div>
+    <div style="margin-top:3rem;display:flex;justify-content:center;gap:2rem;flex-wrap:wrap">
+      <div><div class="text-xs text-muted">Powered by</div><div style="font-weight:600;font-size:0.9rem">Sonora Digital Corp</div></div>
+      <div><div class="text-xs text-muted">Para</div><div style="font-weight:600;font-size:0.9rem">Abraham Ortega · ABE Music Inc</div></div>
+      <div><div class="text-xs text-muted">Version</div><div style="font-weight:600;font-size:0.9rem">OS 1.0 · Junio 2026</div></div>
+    </div>
+  </div>
+</section>
+
+<script>
+// Progress bar
+window.addEventListener('scroll', () => {
+  const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+  const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+  document.getElementById('progressBar').style.width = (winScroll / height) * 100 + '%';
+});
+
+// Particles
+function createParticles() {
+  document.querySelectorAll('.particle-bg').forEach(section => {
+    for(let i = 0; i < 30; i++) {
+      const p = document.createElement('div');
+      p.className = 'particle';
+      p.style.left = Math.random() * 100 + '%';
+      p.style.animationDuration = (15 + Math.random() * 20) + 's';
+      p.style.animationDelay = Math.random() * 20 + 's';
+      p.style.width = (2 + Math.random() * 3) + 'px';
+      p.style.height = p.style.width;
+      section.appendChild(p);
+    }
+  });
+}
+createParticles();
+
+// Update nav dots
+const slides = document.querySelectorAll('.slide');
+const dots = document.querySelectorAll('.nav-slides a');
+window.addEventListener('scroll', () => {
+  let current = 0;
+  slides.forEach((slide, i) => {
+    if(window.scrollY >= slide.offsetTop - 300) current = i;
+  });
+  dots.forEach((dot, i) => dot.classList.toggle('active', i === current));
+});
+</script>
+</body>
+</html>

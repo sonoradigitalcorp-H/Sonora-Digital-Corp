@@ -68,7 +68,7 @@ os.environ["HERMES_HOME"] = home
 
 # Clear FAL-related env so dispatch decisions are config-driven.
 for k in (
-    "FAL_KEY", "FAL_QUEUE_GATEWAY_URL",
+    "FAL_API_KEY", "FAL_QUEUE_GATEWAY_URL",
     "TOOL_GATEWAY_DOMAIN", "TOOL_GATEWAY_USER_TOKEN",
     "FAL_IMAGE_MODEL",
 ):
@@ -149,17 +149,17 @@ SCENARIOS: list[tuple[str, str, dict[str, str]]] = [
     (
         "explicit-fal-with-creds",
         "image_gen:\n  provider: fal\n",
-        {"FAL_KEY": "test-key"},
+        {"FAL_API_KEY": "test-key"},
     ),
     (
         "explicit-fal-with-model",
         "image_gen:\n  provider: fal\n  model: fal-ai/flux-2-pro\n",
-        {"FAL_KEY": "test-key"},
+        {"FAL_API_KEY": "test-key"},
     ),
     (
         "explicit-typo-provider",
         "image_gen:\n  provider: not-a-real-backend\n",
-        {"FAL_KEY": "test-key"},
+        {"FAL_API_KEY": "test-key"},
     ),
     (
         "managed-gateway-only",

@@ -1,0 +1,208 @@
+# ESTADOS DEL AGENTE EN MUNDO 3D
+# Cada estado tiene: visual, animacion, sonido, transicion, duraciones
+
+estados:
+  dormido:
+    id: "agent_state_sleeping"
+    trigger: "sin actividad por 15 minutos"
+    visual:
+      posicion: "sentado, cabeza apoyada"
+      ojos: "cerrados"
+      brillo: 0.4
+      color_acento: "#6b7280"  # gris
+    animacion:
+      tipo: "idle_suave"
+      loop: true
+      duracion_frame: 2000ms
+      movimientos:
+        - "sube_y_baja_pecho"  # respiracion
+        - "parpadeo_lento_cada_8_seg"
+    sonido_ambiente: "ventilador_suave.mp3"
+    transicion_desde:
+      despierto: { duracion: 2000ms, tipo: "fade_in" }
+      en_llamada: { duracion: 500ms, tipo: "flash" }
+    transicion_hacia:
+      despierto: { duracion: 1500ms, tipo: "despertar_suave" }
+
+  despierto:
+    id: "agent_state_idle"
+    trigger: "activo, esperando interaccion"
+    visual:
+      posicion: "sentado erguido"
+      ojos: "abiertos, mirando pantalla"
+      brillo: 0.8
+      color_acento: "#10b981"  # verde
+    animacion:
+      tipo: "idle_activo"
+      loop: true
+      duracion_frame: 1000ms
+      movimientos:
+        - "parpadeo_cada_4_seg"
+        - "movimiento_cabeza_sutil"
+        - "dedos_en_teclado"
+    sonido_ambiente: "teclado_suave.mp3"
+    transicion_desde:
+      dormido: { duracion: 1500ms, tipo: "despertar" }
+      procesando: { duracion: 300ms, tipo: "instant" }
+    transicion_hacia:
+      en_llamada: { duracion: 500ms, tipo: "levantarse" }
+      dormido: { duracion: 2000ms, tipo: "fade_out" }
+
+  en_llamada:
+    id: "agent_state_on_call"
+    trigger: "llamada telefonica activa"
+    visual:
+      posicion: "de pie, postura atenta"
+      ojos: "abiertos, contacto visual"
+      brillo: 1.0
+      color_acento: "#3b82f6"  # azul
+      indicadores:
+        - tipo: "onda_de_sonido"
+          posicion: "cerca_de_boca"
+          animacion: "pulso_con_voz"
+        - tipo: "mic_encendido"
+          color: "#ef4444"
+          parpadeo: "cada_1_seg"
+    animacion:
+      tipo: "hablando"
+      loop: false
+      duracion_frame: 100ms  # rapido para labios
+      movimientos:
+        - "boca_se_mueve_con_voz_real"  # sincronizado con TTS
+        - "gestos_con_manos"  # aleatorio cada 5-10 seg
+        - "cabeza_asiente"  # cuando el prospecto habla
+    sonido_ambiente: "silencio"  # privacidad: no se escucha la llamada
+    overlay_hud:
+      - "Duracion de llamada"
+      - "Nombre del prospecto"
+      - "Temperamento detectado"
+      - "Transcripcion en vivo"
+    transicion_desde:
+      despierto: { duracion: 500ms, tipo: "levantarse" }
+    transicion_hacia:
+      despierto: { duracion: 1000ms, tipo: "sentarse" }
+      procesando: { duracion: 300ms, tipo: "mirar_arriba" }
+
+  procesando:
+    id: "agent_state_thinking"
+    trigger: "esperando respuesta del LLM"
+    visual:
+      posicion: "mirando hacia arriba"
+      ojos: "ligeramente cerrados, pensativos"
+      brillo: 0.7
+      color_acento: "#f59e0b"  # amarillo
+      indicadores:
+        - tipo: "espiral_de_pensamiento"
+          posicion: "sobre_cabeza"
+          animacion: "rotar"
+        - tipo: "puntos_suspensivos"
+          posicion: "frente_al_agente"
+          animacion: "parpadeo_secuencial"
+    animacion:
+      tipo: "pensando"
+      loop: true
+      duracion_frame: 500ms
+      movimientos:
+        - "cabeza_ligeramente_inclinada"
+        - "mano_en_barbilla"
+    sonido_ambiente: "zumbido_suave.mp3"  # 0.3s loop
+    transicion_desde:
+      en_llamada: { duracion: 300ms, tipo: "mirar_arriba" }
+    transicion_hacia:
+      en_llamada: { duracion: 200ms, tipo: "mirar_al_frente" }
+
+  en_reunion:
+    id: "agent_state_swarm"
+    trigger: "multiples agentes coordinando"
+    visual:
+      posicion: "de pie, centro de grupo"
+      ojos: "moviendose entre interlocutores"
+      brillo: 1.0
+      color_acento: "#8b5cf6"  # morado
+      indicadores:
+        - tipo: "lineas_de_conexion"
+          destino: "otros_avatares"
+          animacion: "pulso"
+    animacion:
+      tipo: "coordinando"
+      loop: true
+      duracion_frame: 800ms
+      movimientos:
+        - "gestos_directivos"
+        - "mirar_entre_agentes"
+        - "asentir_periodicamente"
+    sonido_ambiente: "murmullo_oficina.mp3"
+    overlay_hud:
+      - "Agentes activos en swarm"
+      - "Tarea coordinada"
+      - "Progreso de la tarea"
+    transicion_desde:
+      en_llamada: { duracion: 1000ms, tipo: "aparecen_mas_avatares" }
+    transicion_hacia:
+      en_llamada: { duracion: 800ms, tipo: "desaparecen_avatares" }
+
+  alerta:
+    id: "agent_state_alert"
+    trigger: "error critico o anomalia detectada"
+    visual:
+      posicion: "postura de atencion"
+      ojos: "abiertos, alerta"
+      brillo: 1.0
+      color_acento: "#ef4444"  # rojo
+      indicadores:
+        - tipo: "destello_rojo"
+          posicion: "alrededor_del_avatar"
+          animacion: "parpadeo_rapido"
+        - tipo: "icono_exclamacion"
+          posicion: "sobre_cabeza"
+          animacion: "float"
+    animacion:
+      tipo: "alerta"
+      loop: true
+      duracion_frame: 200ms
+      movimientos:
+        - "movimiento_brusco_cabeza"
+        - "manos_en_posicion_alerta"
+    sonido_ambiente: "notificacion_critica.mp3"
+    overlay_hud:
+      - "Tipo de alerta"
+      - "Agente afectado"
+      - "Accion recomendada"
+      - "Boton de ACK"
+    transicion_desde:
+      cualquiera: { duracion: 100ms, tipo: "flash_rojo" }
+    transicion_hacia:
+      despierto: { duracion: 2000ms, tipo: "fade_rojo_a_verde" }
+
+  offline:
+    id: "agent_state_offline"
+    trigger: "agente desconectado o servidor caido"
+    visual:
+      posicion: "ultima posicion conocida"
+      ojos: "N/A"
+      brillo: 0.2
+      color_acento: "#374151"  # gris oscuro
+      opacidad: 0.3
+    animacion:
+      tipo: "ninguna"
+      loop: false
+    sonido_ambiente: "silencio"
+    overlay_hud:
+      - "Agente sin conexion"
+      - "Ultima actividad: [timestamp]"
+      - "Intentando reconectar..."
+    transicion_desde:
+      cualquiera: { duracion: 100ms, tipo: "desvanecer" }
+    transicion_hacia:
+      despierto: { duracion: 1000ms, tipo: "aparecer_suave" }
+
+# Reglas de prioridad de estados
+# Si un agente esta en_llamada y llega una alerta, la llamada tiene prioridad
+prioridad:
+  1: en_llamada
+  2: alerta
+  3: en_reunion
+  4: procesando
+  5: despierto
+  6: dormido
+  7: offline

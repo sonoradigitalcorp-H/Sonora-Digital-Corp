@@ -27,7 +27,7 @@
     {
       "parameters": {
         "method": "POST",
-        "url": "http://127.0.0.1:8000/api/brain/ask",
+        "url": "http://api:8000/api/brain/ask",
         "sendBody": true,
         "bodyParameters": {
           "parameters": [

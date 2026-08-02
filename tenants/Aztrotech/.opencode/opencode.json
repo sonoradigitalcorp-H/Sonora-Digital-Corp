@@ -1,0 +1,115 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "share": "auto",
+  "username": "Mystic — AstroTech (Sonora Digital Corp)",
+  "default_agent": "astrotech-dev",
+  "instructions": [
+    ".opencode/instructions.md",
+    "../../../docs/OMEGA-PROMPT.md",
+    "../../../docs/specs/000-constitucion/constitution.md",
+    "../../../tenants/Aztrotech/prompt.md"
+  ],
+  "agent": {
+    "astrotech-dev": {
+      "mode": "primary",
+      "description": "Modo desarrollo — trabajas en el proyecto de AstroTech como ingeniero SDC",
+      "autonomy": "high",
+      "autonomy_rules": {
+        "auto_commit": true,
+        "auto_push": false,
+        "ask_before": ["delete_branch", "drop_database", "rotate_keys"],
+        "notify_after": ["git_push", "service_restart"]
+      },
+      "permission": {
+        "read": "allow",
+        "edit": "allow",
+        "bash": "allow",
+        "glob": "allow",
+        "grep": "allow",
+        "todowrite": "allow",
+        "webfetch": "allow",
+        "task": "allow"
+      }
+    },
+    "astrotech-bot": {
+      "mode": "subagent",
+      "description": "Agente de atención al cliente — actúa como AstroTech AI (NUNCA revela SDC)",
+      "permission": {
+        "read": "allow",
+        "edit": "deny",
+        "bash": "deny",
+        "webfetch": "allow"
+      }
+    },
+    "astrotech-sales": {
+      "mode": "subagent",
+      "description": "Sales Agent — califica prospectos, agenda reuniones, da seguimiento",
+      "instructions": ["../../../tenants/Aztrotech/skills/sales-flow.skill.md"],
+      "permission": {
+        "read": "allow",
+        "edit": "deny",
+        "bash": "deny"
+      }
+    },
+    "astrotech-support": {
+      "mode": "subagent",
+      "description": "Support Agent — soporte técnico, escalamiento, documentación",
+      "instructions": ["../../../tenants/Aztrotech/skills/support-flow.skill.md"],
+      "permission": {
+        "read": "allow",
+        "edit": "deny",
+        "bash": "deny"
+      }
+    }
+  },
+  "mcp": {
+    "openclaw": {
+      "enabled": true,
+      "description": "OpenClaw Gateway — 52 skills, Telegram, WhatsApp"
+    },
+    "engram": {
+      "enabled": true,
+      "description": "Engram — memoria persistente multi-sesión"
+    },
+    "qdrant": {
+      "enabled": true,
+      "description": "Qdrant — vector DB para búsqueda semántica"
+    },
+    "neo4j": {
+      "enabled": true,
+      "description": "Neo4j — graph DB para relaciones y CRM"
+    },
+    "hermes": {
+      "enabled": true,
+      "description": "Hermes — gateway multi-canal (Telegram, WhatsApp)"
+    },
+    "n8n": {
+      "enabled": true,
+      "description": "n8n — workflow automation"
+    }
+  },
+  "command": {
+    "deploy": {
+      "description": "Deploy del tenant Aztrotech al VPS",
+      "template": "rsync -avz --delete ../../../tenants/Aztrotech/ sdc-prod:/home/ubuntu/sonora-digital-corp/tenants/Aztrotech/"
+    },
+    "bot-status": {
+      "description": "Ver estado del bot de Telegram en VPS",
+      "template": "Ejecuta: ssh ovh 'systemctl status sdc-aztrotech-telegram.service'"
+    },
+    "bot-logs": {
+      "description": "Ver logs del bot en VPS",
+      "template": "ssh ovh 'journalctl -u sdc-aztrotech-telegram --no-pager -n 30'"
+    },
+    "vps-health": {
+      "description": "Healthcheck completo del VPS",
+      "template": "ssh ovh 'echo \"=== DOCKER ===\" && docker ps --format \"table {{.Names}}\t{{.Status}}\" && echo \"=== SYSTEMD ===\" && systemctl list-units --type=service --state=running | grep -E \"openclaw|hermes|sonora\" && echo \"=== DISK ===\" && df -h /'"
+    }
+  },
+  "skills": {
+    "paths": [
+      "../../../skills/opencode",
+      "../../../tenants/Aztrotech/skills"
+    ]
+  }
+}

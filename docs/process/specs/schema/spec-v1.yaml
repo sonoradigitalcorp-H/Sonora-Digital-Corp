@@ -1,0 +1,43 @@
+# SDD Canonical Spec Schema v1
+# Adaptable to any business vertical
+schema_version: 1.0.0
+spec:
+  id: string
+  name: string
+  business_domain: string
+  capability_type: enum [core, business, cognitive, integration]
+  version: string
+  status: enum [draft, active, experimental, deprecated]
+  owner: string
+  agent: string | null
+  cost_tier: int
+  description: string
+  invariants:
+    - id: string
+      rule: string
+      critical: bool
+  inputs:
+    - name: string
+      type: string
+      source: string
+  outputs:
+    - name: string
+      type: string
+      destination: string
+  events:
+    - event: string
+      description: string
+      produces:
+        - string
+  success_criteria:
+    - id: string
+      criterion: string
+      measurable: bool
+  dependencies:
+    - capability_id: string
+      type: enum [hard, soft, optional]
+  security_class: enum [public, internal, confidential, restricted]
+  llm_fit:
+    complexity: enum [low, medium, high]
+    reasoning_level: enum [low, medium, high]
+    domain_specialization: enum [general, domain, expert]

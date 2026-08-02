@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=720">
+<title>Sonora Digital Corp - Guia Completa del Sistema</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&display=swap" rel="stylesheet">
+<style>
+@page { size: 720px 1020px; margin: 0; }
+:root {
+    --bg: #0d0a1a; --text: #e8e6e3; --text-muted: #9ca3af;
+    --accent: #c9a227; --accent2: #6b21a8;
+    --card-bg: #1a1230; --card-border: #2d1f4e;
+    --section-bg: #150e28; --tbl-header: #1e1538;
+    --tbl-stripe: #150e28; --success: #10b981;
+    --warning: #f59e0b; --danger: #ef4444; --info: #3b82f6;
+    --white: #ffffff;
+}
+html, body {
+    margin: 0; padding: 0; width: 720px;
+    background: var(--bg); color: var(--text);
+    font-family: 'Inter', 'Noto Sans SC', sans-serif;
+    font-size: 13px; line-height: 1.65;
+    -webkit-print-color-adjust: exact; print-color-adjust: exact;
+}
+@media screen {
+    html { height: auto; display: flex; justify-content: center; background: #111; }
+    body { margin: 20px auto; }
+}
+.cover {
+    width: 720px; height: 1020px; box-sizing: border-box;
+    break-after: page; overflow: hidden; position: relative;
+    display: flex; flex-direction: column; justify-content: center;
+    align-items: center; text-align: center;
+    background: linear-gradient(160deg, #0d0a1a 0%, #1a1040 40%, #0d0a1a 100%);
+}
+.cover-moon {
+    position: absolute; top: 80px; right: 100px; width: 80px; height: 80px;
+    border-radius: 50%; background: radial-gradient(circle, rgba(201,162,39,0.25) 0%, transparent 70%);
+}
+.cover-circle {
+    position: absolute; bottom: 120px; left: 80px; width: 120px; height: 120px;
+    border-radius: 50%; border: 1px solid rgba(201,162,39,0.15);
+}
+.cover-tag { font-size: 11px; letter-spacing: 4px; text-transform: uppercase; color: var(--accent); opacity: 0.8; margin-bottom: 32px; }
+.cover-title { font-family: 'Playfair Display', serif; font-size: 48px; font-weight: 900; color: var(--white); line-height: 1.1; margin-bottom: 24px; max-width: 580px; }
+.cover-subtitle { font-size: 16px; color: var(--text-muted); font-weight: 300; max-width: 480px; line-height: 1.6; margin-bottom: 48px; }
+.cover-meta { font-size: 11px; color: var(--text-muted); opacity: 0.6; position: absolute; bottom: 50px; }
+.cover-line { width: 60px; height: 2px; background: var(--accent); margin: 0 auto 30px; opacity: 0.5; }
+.main-content { padding: 50px 55px 40px 55px; }
+.chapter-header { break-after: avoid; break-inside: avoid; margin-top: 28px; margin-bottom: 16px; }
+.section-tag { font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--accent); opacity: 0.8; margin-bottom: 6px; }
+.section-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; color: var(--white); line-height: 1.2; margin-bottom: 10px; }
+.divider { width: 40px; height: 2px; background: var(--accent); opacity: 0.4; margin-bottom: 16px; }
+.subsection-title { font-size: 17px; font-weight: 700; color: var(--accent); margin-top: 20px; margin-bottom: 10px; }
+.body-text { color: var(--text); line-height: 1.7; margin-bottom: 12px; text-align: left; }
+.card {
+    background: var(--card-bg); border: 1px solid var(--card-border);
+    border-radius: 8px; padding: 16px 18px; margin-bottom: 12px; break-inside: avoid;
+}
+.card-title { font-size: 14px; font-weight: 700; color: var(--accent); margin-bottom: 8px; }
+.card p { color: var(--text); font-size: 12.5px; line-height: 1.6; margin: 0 0 6px 0; }
+.card ul { margin: 4px 0 0 0; padding-left: 18px; }
+.card li { color: var(--text); font-size: 12px; line-height: 1.5; margin-bottom: 3px; }
+.diagram {
+    background: var(--section-bg); border: 1px solid var(--card-border);
+    border-radius: 6px; padding: 14px 16px; margin: 12px 0; break-inside: avoid;
+    font-family: 'Inter', monospace; font-size: 11px; line-height: 1.5;
+    color: var(--text); overflow-x: auto; white-space: pre-wrap; word-break: break-word;
+}
+.highlight {
+    background: rgba(201,162,39,0.08); border-left: 3px solid var(--accent);
+    padding: 12px 16px; margin: 12px 0; border-radius: 0 6px 6px 0; break-inside: avoid;
+}
+.highlight p { color: var(--text); font-size: 12.5px; margin: 0; line-height: 1.6; }
+table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 11.5px; break-inside: avoid; }
+th { background: var(--tbl-header); color: var(--accent); font-weight: 600; text-align: left; padding: 8px 10px; border-bottom: 2px solid var(--accent); font-size: 11px; }
+td { padding: 7px 10px; border-bottom: 1px solid var(--card-border); color: var(--text); vertical-align: top; }
+tr:nth-child(even) { background: var(--tbl-stripe); }
+.alert { border-radius: 6px; padding: 12px 16px; margin: 12px 0; break-inside: avoid; font-size: 12px; line-height: 1.5; color: var(--text); }
+.alert-warn { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+.alert-danger { background: rgba(239,68,68,0.1); border: 1px solid rgba(239,68,68,0.3); }
+.alert-success { background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.3); }
+.alert-info { background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.3); }
+.package { border-radius: 10px; padding: 20px; margin: 14px 0; break-inside: avoid; border: 1px solid var(--card-border); }
+.package-dark { background: #12091f; }
+.package-mid { background: var(--card-bg); }
+.package-premium { background: linear-gradient(135deg, rgba(201,162,39,0.1) 0%, rgba(107,33,168,0.1) 100%); border-color: rgba(201,162,39,0.3); }
+.package-name { font-size: 20px; font-weight: 900; margin-bottom: 4px; }
+.package-tagline { font-size: 12px; color: var(--text-muted); margin-bottom: 14px; font-style: italic; }
+.package-price { font-size: 22px; font-weight: 900; color: var(--accent); margin-bottom: 4px; }
+.package-price-note { font-size: 10px; color: var(--text-muted); margin-bottom: 14px; }
+.package ul { padding-left: 18px; margin: 0; }
+.package li { font-size: 12px; color: var(--text); line-height: 1.55; margin-bottom: 3px; }
+.perspective { border-radius: 8px; padding: 16px 18px; margin: 12px 0; break-inside: avoid; }
+.perspective-ext { background: rgba(59,130,246,0.08); border-left: 3px solid var(--info); }
+.perspective-consumer { background: rgba(16,185,129,0.08); border-left: 3px solid var(--success); }
+.perspective-creator { background: rgba(201,162,39,0.08); border-left: 3px solid var(--accent); }
+.perspective-label { font-size: 11px; font-weight: 700; margin-bottom: 8px; }
+.perspective p { color: var(--text); font-size: 12px; line-height: 1.55; margin: 0 0 6px 0; }
+.step { display: flex; margin-bottom: 10px; break-inside: avoid; }
+.step-num {
+    background: var(--accent2); color: var(--white); font-size: 11px; font-weight: 700;
+    min-width: 22px; height: 22px; border-radius: 50%; display: flex;
+    align-items: center; justify-content: center; margin-right: 10px; margin-top: 2px; flex-shrink: 0;
+}
+.step-content { flex: 1; font-size: 12.5px; color: var(--text); line-height: 1.5; }
+.step-content strong { color: var(--accent); }
+.tag { display: inline-block; background: rgba(201,162,39,0.15); color: var(--accent); font-size: 10px; font-weight: 600; padding: 2px 8px; border-radius: 4px; margin-right: 4px; }
+.tag-green { background: rgba(16,185,129,0.15); color: var(--success); }
+.tag-red { background: rgba(239,68,68,0.15); color: var(--danger); }
+.tag-blue { background: rgba(59,130,246,0.15); color: var(--info); }
+.tag-purple { background: rgba(107,33,168,0.2); color: #a78bfa; }
+.tree {
+    background: var(--section-bg); border: 1px solid var(--card-border);
+    border-radius: 6px; padding: 14px 16px; margin: 12px 0; break-inside: avoid;
+    font-family: 'Inter', monospace; font-size: 11px; line-height: 1.55; color: var(--text);
+}
+.tree-root { color: var(--accent); font-weight: 700; }
+.tree-branch { color: #a78bfa; }
+.ending {
+    width: 720px; height: 1020px; box-sizing: border-box; break-before: page;
+    overflow: hidden; position: relative; display: flex; flex-direction: column;
+    justify-content: center; align-items: center; text-align: center;
+    background: linear-gradient(160deg, #0d0a1a 0%, #1a1040 40%, #0d0a1a 100%);
+}
+.ending-quote { font-family: 'Playfair Display', serif; font-size: 22px; font-style: italic; color: var(--text-muted); max-width: 460px; line-height: 1.6; }
+.ending-author { margin-top: 24px; font-size: 13px; color: var(--accent); letter-spacing: 2px; }
+.ending-date { margin-top: 60px; font-size: 11px; color: var(--text-muted); opacity: 0.5; }
+.green { color: var(--success); }
+.red { color: var(--danger); }
+</style>
+</head>
+<body>
+
+<div class="cover">
+    <div class="cover-tag">Sonora Digital Corp</div>
+    <div class="cover-title">Guia Completa del Sistema</div>
+    <div class="cover-subtitle">
+        Arquitectura, pipeline de voz, llamadas masivas, inteligencia del prospecto, paquetes de pricing, sistema multi-nicho, swarm agents, MCPs, seguridad, tokenomics y medicion. Todo explicado a traves de situaciones humanas reales.
+    </div>
+    <div class="cover-meta">Mystic &middot; Julio 2026 &middot; Version 2.0</div>
+</div>
+<div class="main-content">
+
+<div class="chapter-header">
+    <div class="section-tag">Capitulo 1</div>
+    <div class="section-title">El Pipeline de Voz Completo</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">
+    Imagina esto: <strong>Roberto</strong> es contador en Hermosillo. Tiene un despacho chico, 3 empleados, y pierde 15 clientes al mes porque nadie contesta el telefono despues de las 6pm. Roberto no sabe nada de IA. Solo sabe que su competencia tiene "un robot que atiende" y el quiere uno tambien. Voy a explicarte <strong>cada milisegundo</strong> de lo que pasa cuando un prospecto llama, desde tres perspectivas diferentes: el externo (quien llama), el consumidor (tu cliente), y el creador (tu, Mystic).
+</div>
+<div class="subsection-title">Perspectiva del Externo: Maria llama</div>
+<div class="body-text">
+    Maria acaba de googlear "contador en Hermosillo para declaracion anual". Ve un anuncio de Roberto. Marca el numero. A continuacion te explico exactamente que sucede en cada etapa del camino.
+</div>
+<div class="step">
+    <div class="step-num">1</div>
+    <div class="step-content">
+        <strong>La senal sale de su telefono</strong> &mdash; El telefono de Maria conecta con la antena de Telcel, viaja por la red telefonica publica (PSTN), y llega a tu VPS OVH. Tu VPS tiene un <strong>numero de telefono virtual</strong> (DID number) comprado por aproximadamente $2 USD/mes a traves de proveedores como Vonage o Twilio. Ese numero esta conectado a tu VPS por un protocolo llamado <strong>SIP</strong> (Session Initiation Protocol), que es esencialmente el "idioma" que hablan los telefonos por internet. Es como una linea telefonica digital que vive en tu servidor.
+    </div>
+</div>
+<div class="step">
+    <div class="step-num">2</div>
+    <div class="step-content">
+        <strong>FreeSWITCH contesta (0.3 segundos)</strong> &mdash; FreeSWITCH es el "recepcionista telefonico" que vive en tu VPS. Es un software 100% libre y open source que maneja llamadas telefonicas. Piensa en el como la central telefonica de una oficina grande, pero completamente digital. En este momento, FreeSWITCH hace tres cosas simultaneamente: (a) contesta la llamada, (b) identifica que numero fue marcado y a que tenant pertenece, y (c) busca en la base de datos si ese numero esta registrado como cliente activo. Todo esto ocurre en menos de medio segundo.
+    </div>
+</div>
+<div class="step">
+    <div class="step-num">3</div>
+    <div class="step-content">
+        <strong>El audio viaja a Whisper (NO al LLM aun)</strong> &mdash; Este es el paso mas critico y el que tu Planeacion Maestra original no cubria. Maria dice: "Hola, buenas tardes, quisiera informacion sobre sus servicios de contabilidad..." Ese audio <strong>NO va directo al LLM</strong> (ChatGPT, Claude, etc.). Primero pasa por tres filtros secuenciales que miden, analizan y contextualizan antes de que cualquier modelo de lenguaje intervenga.
+    </div>
+</div>
+<div class="alert alert-info">
+    <strong>FILTRO 1 &mdash; Whisper (Transcripcion):</strong> Convierte la voz de Maria a texto. "Hola, buenas tardes, quisiera informacion sobre sus servicios de contabilidad para mi negocio." Tiempo: ~0.8 segundos. Modelo: whisper-large-v3, 100% open source, corre en tu VPS.<br><br>
+    <strong>FILTRO 2 &mdash; Medicion de Energia (Sentiment + Tone):</strong> Aqui se mide todo lo que pediste. Velocidad de habla (rapida = urgencia), tono (agudo = estres, grave = confianza), volumen (alto = enojo, bajo = timidez), pausas (muchas = duda), sentimiento (positivo, neutral, negativo). Herramientas: VAD (Voice Activity Detection), Silero VAD (open source), y modelos como wav2vec2 para deteccion de emocion. Tiempo: ~0.3 segundos.<br><br>
+    <strong>FILTRO 3 &mdash; Context Retriever (Memoria):</strong> El sistema busca en la base de datos: "Maria ha llamado antes? Tiene cita? Es lead?" Si es primera vez, se etiqueta como NEW_LEAD. Si ha llamado antes, carga TODO el historial. Tiempo: ~0.2 segundos usando Redis cache.
+</div>
+<div class="step">
+    <div class="step-num">4</div>
+    <div class="step-content">
+        <strong>El Orquestador decide que agente atiende</strong> &mdash; Ahora SI entra el LLM, pero NO como piensas. El Orquestador (Mystic Core) es un programa Python que no "piensa" sino que <strong>toma decisiones basadas en reglas + ML</strong>. Regla 1: Es lead nuevo o recurrente? Nuevo va a Recepcionista. Regla 2: Cual es el temperamento? Alta energia + positivo = Vendedor modo warm. Regla 3: Que pide? Informacion = calificar. Precio = Vendedor. Queja = Soporte. En el caso de Maria: nueva lead, tono curioso, pide informacion, entonces el agente asignado es <strong>La Guardiana (Recepcionista)</strong> en modo educativo + calificacion.
+    </div>
+</div>
+<div class="step">
+    <div class="step-num">5</div>
+    <div class="step-content">
+        <strong>El LLM genera la respuesta</strong> &mdash; El Orquestador envia al LLM (Claude via OpenRouter) un system prompt que incluye la personalidad del agente, el contexto del prospecto, las medidas de energia detectadas, y las reglas de marca. El LLM genera la respuesta textual. Tiempo: ~1.5 segundos. Costo: ~$0.003 USD por interaccion. La respuesta se genera respetando siempre la filosofia de no manipulacion y empoderamiento.
+    </div>
+</div>
+<div class="step">
+    <div class="step-num">6</div>
+    <div class="step-content">
+        <strong>Kokoro convierte texto a voz</strong> &mdash; La respuesta textual se convierte a audio usando Kokoro TTS, 100% open source. La voz se clona a partir de una grabacion de 30 segundos del cliente. La velocidad y el tono se ajustan al temperamento del prospecto: si Maria esta tranquila, la voz es tranquila; si tiene urgencia, la voz es mas energica. Tiempo: ~0.5 segundos.
+    </div>
+</div>
+<div class="step">
+    <div class="step-num">7</div>
+    <div class="step-content">
+        <strong>FreeSWITCH envia la voz de vuelta a Maria</strong> &mdash; El audio viaja: Kokoro a FreeSWITCH, FreeSWITCH a SIP, SIP a PSTN, PSTN al telefono de Maria. <strong>Latencia total: ~3.5 segundos</strong> (un humano responde en 1-2 segundos). La meta es reducir esto a menos de 2.5 segundos.
+    </div>
+</div>
+<div class="subsection-title">Diagrama completo del pipeline</div>
+<div class="diagram">
+MARIA HABLA
+    |
+    v
+[TELEFONO] &rarr; [ANTENA] &rarr; [PSTN / RED TELEFONICA]
+    |
+    v
+[NUMERO DID VIRTUAL] &lt;- Vonage/Twilio ~$2/mes
+    |
+    v
+[FREESWITCH] &lt;- Tu central telefonica en el VPS
+    |  - Identifica tenant
+    |  - Identifica caller ID
+    |  - Busca historial en Redis
+    v
+[WHISPER] &lt;- Voz a texto (~0.8s)
+    |
+    v
+[ANALIZADOR DE ENERGIA] &lt;- VAD, Silero, wav2vec2
+    |  Resultado: {energy: alta, tone: curiosa...}
+    v
+[CONTEXT RETRIEVER] &lt;- Busca en BD (~0.2s)
+    |
+    v
+[ORQUESTADOR] &lt;- Decide por reglas
+    |
+    v
+[LLM: Claude/GPT/DeepSeek] &lt;- Genera respuesta (~1.5s)
+    |
+    v
+[KOKORO TTS] &lt;- Texto a voz clonada (~0.5s)
+    |
+    v
+[FREESWITCH] &rarr; [SIP] &rarr; [PSTN] &rarr; [TELEFONO]
+    |
+    v
+MARIA ESCUCHA &rarr; RESPONDE &rarr; CICLO SE REPITE</div>
+<div class="subsection-title">Perspectiva del Consumidor: Roberto en su Dashboard</div>
+<div class="perspective perspective-consumer">
+    <div class="perspective-label" style="color:var(--success)">VISTA DEL CLIENTE &mdash; Roberto (Contador)</div>
+    <p>Roberto se levanta a las 7am. Abre su dashboard (pagina web). Ve: 12 llamadas atendidas, 3 citas agendadas, 8 leads nuevos. Puede escuchar cualquier llamada en vivo o grabada, ver la transcripcion en tiempo real, y observar el temperamento de cada prospecto con iconos (cara feliz, neutral, preocupada). Recibe resumen automatico post-llamada generado por IA. Recibe alertas por Telegram: "Tu agente agendo una cita con un lead caliente." Roberto no necesita saber nada de tecnologia.</p>
+</div>
+<div class="subsection-title">Perspectiva del Creador: Mystic en su Panel</div>
+<div class="perspective perspective-creator">
+    <div class="perspective-label" style="color:var(--accent)">VISTA DEL CREADOR &mdash; Mystic (Tu)</div>
+    <p>Tu ves TODO: cada tenant activo (14), cada agente corriendo (47 instancias), tokens gastados hoy ($23.40 USD), alertas (2 pendientes). Ves latencia promedio por tenant, costos por componente (OpenRouter, Kokoro, Whisper, VPS), llamadas atendidas vs fallidas. Si algo falla, recibes alerta por Telegram antes de que el cliente se de cuenta. Control total del sistema con visibilidad completa.</p>
+</div>
+
+<div class="chapter-header">
+    <div class="section-tag">Capitulo 2</div>
+    <div class="section-title">Llamadas Masivas Outbound</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">
+    Imagina que tienes 200 numeros de prospectos y necesitas llamar a 50 personas al mismo tiempo. No puedes llamar uno por uno. El sistema necesita un <strong>ejercito de voces que llame por ti</strong>, pero con contexto, inteligencia y personalizacion para cada prospecto.
+</div>
+<div class="subsection-title">Paso 1: El cliente sube su lista</div>
+<div class="body-text">
+    Roberto sube un CSV a su dashboard con columnas: nombre, telefono, negocio, sitio web. O le dice a su agente por voz: "Busca todos los negocios de contabilidad en Hermosillo que no tienen pagina web y llamalos." El sistema genera la lista automaticamente.
+</div>
+<div class="subsection-title">Paso 2: Inteligencia del Prospecto (antes de llamar)</div>
+<div class="alert alert-warn">
+    <strong>ESTO ES LO QUE TU DOCUMENTO ORIGINAL NO TENIA Y ES CLAVE.</strong> Antes de marcar, el sistema investiga al prospecto de forma automatizada usando workers paralelos en Celery + Redis (~30 seg por prospecto).
+</div>
+<div class="card"><div class="card-title">Buscador 1: Google Business (Playwright)</div><p>Calificacion en estrellas, resenas recientes, fotos, horarios, si responden mensajes. Cada dato es una oportunidad de venta o contexto para personalizar la llamada.</p></div>
+<div class="card"><div class="card-title">Buscador 2: Pagina Web (Playwright + BeautifulSoup)</div><p>Si tiene web, si es responsive, velocidad de carga, WhatsApp flotante, boton de reserva, blog, fecha de ultima actualizacion. Cada deficiencia = oportunidad.</p></div>
+<div class="card"><div class="card-title">Buscador 3: Redes Sociales</div><p>Instagram, Facebook, TikTok. Seguidores, frecuencia de publicacion, tipo de contenido. Si publican mucho pero no tienen atencion automatizada = oportunidad.</p></div>
+<div class="card"><div class="card-title">Buscador 4: Analisis de Competencia</div><p>3 competidores principales, servicios que el prospecto NO tiene, precios del mercado. Data que alimenta el script de llamada personalizado.</p></div>
+<div class="subsection-title">Paso 3: Calificacion automatica (1-100)</div>
+<div class="body-text">
+    Con la data recolectada, el sistema asigna un <strong>Puntaje de Oportunidad</strong>: sin WhatsApp (+15), web no responsive (+20), no responde mensajes (+15), competencia mejor (+10), calificacion baja (+10), sin boton de reserva (+15), negocio activo (+10). Los mejores puntajes se llaman primero.
+</div>
+<div class="subsection-title">Paso 4: Llamada con contexto enriquecido</div>
+<div class="body-text">
+    El agente SABE todo sobre el prospecto: "Hola Maria, vi que Ropa Lindo tiene una web que no se ve en celular. Sabias que el 78% de tus clientes te buscan desde su telefono?" Si hay interes, el sistema envia automaticamente por WhatsApp: video demo, fotos de ejemplos, diapositiva antes/despues, link a landing page, nota de voz. Todo se dispara al detectar interes.
+</div>
+<div class="subsection-title">Paso 5: Mapa de llamadas en tiempo real</div>
+<div class="body-text">
+    Mientras 50 llamadas ocurren simultaneamente, tu ves: nombre del prospecto, temperatura (caliente/tibio/frio), duracion, estado (en curso, conectada, no contesto, buzon). Seccion de inteligencia acumulada: patrones detectados, mejor horario de contacto, objeciones mas comunes, tasa de interes, citas agendadas. Control total del ejercito.
+</div>
+
+<div class="chapter-header">
+    <div class="section-tag">Capitulo 3</div>
+    <div class="section-title">Los 3 Paquetes de Pricing</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">
+    <strong>No vendas herramientas, vende transformacion.</strong> No se pone el precio rapido. Se empieza con freemium y se escala. El precio es dinamico: no es el mismo para alguien personal que para una empresa. El onboarding es diferente para cada tipo de humano.
+</div>
+<div class="highlight"><p><strong>Situacion real:</strong> Ana tiene reposteria en casa, sin marca, gana $8,000 MXN/mes. Carlos tiene clinica dental con 3 sucursales, 12 empleados, $500,000 MXN/mes. Deberian pagar lo mismo? No. El sistema detecta y adapta.</p></div>
+<div class="package package-dark">
+    <div class="package-name" style="color:var(--text-muted)">Despertar</div>
+    <div class="package-tagline">"Para el humano que empieza a despertar su presencia digital"</div>
+    <div class="package-price">GRATIS 14 dias &rarr; $299 MXN/mes</div>
+    <div class="package-price-note">~$17 USD/mes &middot; Margen: 70% &middot; Objetivo: HOOK</div>
+    <ul>
+        <li><strong>1 Agente de voz</strong> (Recepcionista)</li>
+        <li><strong>1 canal</strong> (WhatsApp o Telegram)</li>
+        <li><strong>100 llamadas/mes</strong></li>
+        <li>Dashboard basico con transcripcion automatica</li>
+        <li>1 numero de telefono virtual</li>
+        <li>Resumen diario por WhatsApp</li>
+        <li>Reporte semanal por email</li>
+    </ul>
+</div>
+<div class="package package-mid">
+    <div class="package-name" style="color:var(--accent)">Elevar</div>
+    <div class="package-tagline">"Para el negocio que quiere que su presencia digital trabaje mientras duerme"</div>
+    <div class="package-price">$1,499 MXN/mes</div>
+    <div class="package-price-note">~$89 USD/mes &middot; Margen: 50% &middot; Objetivo: CASH COW</div>
+    <ul>
+        <li><strong>3 Agentes de voz</strong>: Recepcionista, Vendedor, Soporte</li>
+        <li><strong>3 canales</strong>: WhatsApp + Telegram + Llamadas</li>
+        <li><strong>500 llamadas/mes</strong></li>
+        <li>Dashboard avanzado con metricas en tiempo real</li>
+        <li>Embudo de ventas automatizado (Cold &rarr; Warm &rarr; Hot)</li>
+        <li>Inteligencia del prospecto (scraping web completo)</li>
+        <li>3 numeros de telefono virtual</li>
+        <li>Campanas outbound (el sistema llama por ti)</li>
+        <li>Content factory (30 piezas/mes de marketing)</li>
+        <li>Clonacion de voz profesional</li>
+        <li>Reportes semanales + alertas en tiempo real</li>
+        <li>Soporte prioritario por WhatsApp</li>
+    </ul>
+</div>
+<div class="package package-premium">
+    <div class="package-name" style="color:var(--white)">Soberano</div>
+    <div class="package-tagline">"Para la empresa que quiere su propio reino digital completo"</div>
+    <div class="package-price">CUSTOM (Cotizar)</div>
+    <div class="package-price-note">$5,000 - $50,000+ MXN/mes &middot; Setup: $10,000 MXN &middot; Objetivo: ANCLA</div>
+    <ul>
+        <li><strong>Todo lo de Elevar</strong> mas: Agentes ilimitados, Llamadas ilimitadas, Canales ilimitados</li>
+        <li>Dashboard 3D "Hogar del Agente" (tipo JARVIS: voz + visuales + movimiento)</li>
+        <li>Inteligencia profunda del prospecto (analisis de toda su presencia digital)</li>
+        <li>Embudos personalizados ilimitados</li>
+        <li>Clonacion de voz + imagen + 3D</li>
+        <li>Swarm agents (coordinacion multi-agente)</li>
+        <li>API dedicada (conecta tu propio software)</li>
+        <li>White-label (tu marca, no la nuestra)</li>
+        <li>Training custom, SLA 99.9%, Account manager dedicado</li>
+    </ul>
+</div>
+<div class="subsection-title">Onboarding Especial: Nicho OnlyFans/NSFW</div>
+<div class="body-text">
+    El nicho de OnlyFans requiere onboarding unico: el sistema mide al creador (nivel de contenido, frecuencia, tipo de interaccion, tono preferido), realiza clonacion avanzada de voz con tonos multiples y clon de imagen. El agente aprende la personalidad del creador y genera DMs personalizados, mensajes de cumpleanos, promociones. Todo con consentimiento explicito y aprobacion del creador antes de publicar.
+</div>
+<div class="subsection-title">Tabla Comparativa</div>
+<table>
+    <tr><th>Feature</th><th>Despertar</th><th>Elevar</th><th>Soberano</th></tr>
+    <tr><td>Agentes</td><td>1</td><td>3</td><td>Ilimitados</td></tr>
+    <tr><td>Llamadas/mes</td><td>100</td><td>500</td><td>Ilimitadas</td></tr>
+    <tr><td>Dashboard</td><td>Basico</td><td>Avanzado</td><td>3D Jarvis</td></tr>
+    <tr><td>Inteligencia</td><td>No</td><td>Basica</td><td>Profunda</td></tr>
+    <tr><td>Embudos</td><td>No</td><td>1</td><td>Ilimitados</td></tr>
+    <tr><td>Clon Voz+Img</td><td>No</td><td>Voz</td><td>Voz+Img+3D</td></tr>
+    <tr><td>Swarm Agents</td><td>No</td><td>No</td><td>Si</td></tr>
+    <tr><td>White-label</td><td>No</td><td>No</td><td>Si</td></tr>
+    <tr><td>Soporte</td><td>Email</td><td>WhatsApp</td><td>Dedicado</td></tr>
+    <tr><td>Precio</td><td>$299</td><td>$1,499</td><td>Custom</td></tr>
+    <tr><td>Costo real</td><td>~$5 USD</td><td>~$25 USD</td><td>~$100+ USD</td></tr>
+    <tr><td>Margen</td><td>70%</td><td>50%</td><td>40-60%</td></tr>
+</table>
+
+<div class="chapter-header">
+    <div class="section-tag">Capitulo 4</div>
+    <div class="section-title">Sistema Multi-Nicho</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">
+    La vision: <strong>agentes que saben exactamente que decirle a un contador, a un restaurantero, a un creador de OnlyFans.</strong> Roberto (contador) y Don Felipe (restaurante) contratan el mismo sistema pero ven cosas completamente diferentes.
+</div>
+<div class="perspective perspective-consumer">
+    <div class="perspective-label" style="color:var(--success)">Roberto (Contador)</div>
+    <p>Dashboard azul profesional. Agentes: "Recepcionista Contable" (ISR, declaraciones, facturas), "Agente Vendedor" (paquetes contables), "Agente Soporte" (facturas, SAT). Terminologia adaptada: "Leads" = "Prospectos fiscales", "Ventas" = "Contratos firmados". Knowledge base: ISR 2026, IETU, IVA, fechas de declaracion, servicios y precios de Roberto.</p>
+</div>
+<div class="perspective perspective-creator">
+    <div class="perspective-label" style="color:var(--accent)">Don Felipe (Restaurante)</div>
+    <p>Dashboard calido naranja. Agentes: "Recepcionista Gastronomica" (menu, precios, reservas), "Agente Reservas" (agenda mesas), "Agente Pedidos" (domicilio). Terminologia: "Leads" = "Comensales", "Ventas" = "Pedidos confirmados". Knowledge base: menu, ingredientes, alergenos, horarios, zona de entrega, promociones.</p>
+</div>
+<div class="subsection-title">Base de Conocimiento por Nicho (3 carpetas)</div>
+<div class="body-text">
+    Cada nicho tiene: <strong>(1) Knowledge Base</strong> (informacion del sector: leyes, regulaciones, tendencias, jerga), <strong>(2) Client Profile</strong> (datos del cliente: servicios, precios, politicas, FAQ), y <strong>(3) Objections Handbook</strong> (como manejar objeciones especificas del nicho con ejemplos de respuestas empoderadoras, nunca manipuladoras).
+</div>
+
+<div class="chapter-header">
+    <div class="section-tag">Capitulo 5</div>
+    <div class="section-title">Swarm Agents y 23 MCPs</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">
+    Un <strong>swarm de agentes</strong> es como una colmena: multiples agentes con roles especificos trabajando juntos, coordinados por un cerebro central. El cliente escucha una sola voz y no sabe que hay multiples agentes detras.
+</div>
+<div class="highlight"><p><strong>Ejemplo:</strong> Un cliente pide reserva para 20 + menu ninos + catering. El Recepcionista detecta complejidad alta y deriva al Agente Catering (cotizacion) y al Agente Reservas (agenda mesa). El Coordinador une todo. Al final, WhatsApp con confirmacion + cotizacion. Todo automatico.</p></div>
+<div class="subsection-title">Los 23 MCPs organizados por categoria</div>
+<table>
+    <tr><th>#</th><th>MCP</th><th>Funcion</th><th>Open Source</th></tr>
+    <tr><td colspan="4" style="color:var(--accent);font-weight:700">BASE DE DATOS (4)</td></tr>
+    <tr><td>1</td><td>supabase-mcp</td><td>Datos del negocio</td><td class="green">Si</td></tr>
+    <tr><td>2</td><td>neo4j-mcp</td><td>Relaciones entre datos</td><td class="green">Si</td></tr>
+    <tr><td>3</td><td>qdrant-mcp</td><td>Busqueda semantica</td><td class="green">Si</td></tr>
+    <tr><td>4</td><td>redis-mcp</td><td>Cache y sesiones</td><td class="green">Si</td></tr>
+    <tr><td colspan="4" style="color:var(--accent);font-weight:700">VOZ (3)</td></tr>
+    <tr><td>5</td><td>whisper-mcp</td><td>Audio a texto (STT)</td><td class="green">Si</td></tr>
+    <tr><td>6</td><td>kokoro-mcp</td><td>Texto a voz clonada (TTS)</td><td class="green">Si</td></tr>
+    <tr><td>7</td><td>freeswitch-mcp</td><td>Telefonia SIP</td><td class="green">Si</td></tr>
+    <tr><td colspan="4" style="color:var(--accent);font-weight:700">COMUNICACION (4)</td></tr>
+    <tr><td>8</td><td>telegram-mcp</td><td>Mensajes Telegram</td><td class="green">Si</td></tr>
+    <tr><td>9</td><td>whatsapp-mcp</td><td>Mensajes WhatsApp</td><td class="green">Parcial</td></tr>
+    <tr><td>10</td><td>email-mcp</td><td>Email transaccional</td><td class="green">Si</td></tr>
+    <tr><td>11</td><td>instagram-mcp</td><td>DMs y contenido</td><td class="red">No</td></tr>
+    <tr><td colspan="4" style="color:var(--accent);font-weight:700">INTELIGENCIA (5)</td></tr>
+    <tr><td>12</td><td>scraper-mcp</td><td>Web scraping</td><td class="green">Si</td></tr>
+    <tr><td>13</td><td>google-mcp</td><td>Busqueda Google</td><td class="green">Si</td></tr>
+    <tr><td>14</td><td>vision-mcp</td><td>Generacion de video</td><td class="red">No</td></tr>
+    <tr><td>15</td><td>sentiment-mcp</td><td>Sentimiento y emocion</td><td class="green">Si</td></tr>
+    <tr><td>16</td><td>enrich-mcp</td><td>Enriquecimiento de data</td><td class="green">Si</td></tr>
+    <tr><td colspan="4" style="color:var(--accent);font-weight:700">PAGOS Y NEGOCIO (3)</td></tr>
+    <tr><td>17</td><td>mercadopago-mcp</td><td>Cobros y suscripciones</td><td class="red">No</td></tr>
+    <tr><td>18</td><td>calendar-mcp</td><td>Agenda</td><td class="green">Si</td></tr>
+    <tr><td>19</td><td>crm-mcp</td><td>Gestion de leads</td><td class="green">Si</td></tr>
+    <tr><td colspan="4" style="color:var(--accent);font-weight:700">SISTEMA INTERNO (4)</td></tr>
+    <tr><td>20</td><td>agent-registry-mcp</td><td>Registro de agentes</td><td class="green">Si</td></tr>
+    <tr><td>21</td><td>token-mcp</td><td>Economia SON</td><td class="green">Si</td></tr>
+    <tr><td>22</td><td>monitoring-mcp</td><td>Alertas y metricas</td><td class="green">Si</td></tr>
+    <tr><td>23</td><td>evolution-mcp</td><td>Auto-mejora prompts</td><td class="green">Si</td></tr>
+</table>
+<div class="highlight"><p><strong>Total: 23 MCPs | 18 open source (78%) | 5 propietarios. Meta 90% open source cumplida.</strong></p></div>
+
+<div class="chapter-header">
+    <div class="section-tag">Capitulo 6</div>
+    <div class="section-title">Arboles de Medicion</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text"><strong>Lo que no se mide, no existe.</strong> Cada area tiene su arbol con umbrales que generan alertas automaticas.</div>
+<div class="subsection-title">Arbol: Agente Recepcionista</div>
+<div class="tree">
+<span class="tree-root">RECEPCIONISTA</span>
+  <span class="tree-branch">RENDIMIENTO</span>
+  <span class="tree-leaf">  Llamadas atendidas (meta: 95%+)</span>
+  <span class="tree-leaf">  Tiempo de respuesta (meta: &lt;3 seg)</span>
+  <span class="tree-leaf">  Duracion promedio (meta: 2-5 min)</span>
+  <span class="tree-leaf">  Tasa de abandono (meta: &lt;5%)</span>
+  <span class="tree-branch">CALIDAD</span>
+  <span class="tree-leaf">  Empatia detectada (meta: &gt;80%)</span>
+  <span class="tree-leaf">  Uso de jerga del nicho (meta: &gt;70%)</span>
+  <span class="tree-leaf">  Sin FOMO toxico (meta: 100%)</span>
+  <span class="tree-leaf">  BANT completado (meta: &gt;85%)</span>
+  <span class="tree-branch">IMPACTO NEGOCIO</span>
+  <span class="tree-leaf">  Leads calificados generados</span>
+  <span class="tree-leaf">  Conversion lead &rarr; cita (meta: &gt;30%)</span>
+  <span class="tree-leaf">  Revenue atribuido</span>
+  <span class="tree-branch">TECNICO</span>
+  <span class="tree-leaf">  Latencia total (meta: &lt;2.5s)</span>
+  <span class="tree-leaf">  Costo por llamada (meta: &lt;$0.05)</span>
+  <span class="tree-leaf">  Uptime (meta: 99.9%)</span></div>
+<div class="subsection-title">Arbol: Embudo Cold Call</div>
+<div class="tree">
+<span class="tree-root">FUNNEL COLD CALL</span>
+  <span class="tree-branch">ENTRADA</span>
+  <span class="tree-leaf">  Total prospectos, data enriquecida, puntaje promedio</span>
+  <span class="tree-branch">CONTACTO</span>
+  <span class="tree-leaf">  Llamadas completadas, tasa contacto (meta: &gt;40%)</span>
+  <span class="tree-branch">CALIFICACION</span>
+  <span class="tree-leaf">  BANT completado, tasa calificacion (meta: &gt;25%)</span>
+  <span class="tree-branch">CONVERSION</span>
+  <span class="tree-leaf">  Citas agendadas, tasa cierre (meta: &gt;15%)</span>
+  <span class="tree-branch">FINANCIERO</span>
+  <span class="tree-leaf">  Costo por lead, revenue total, ROI (meta: &gt;5x)</span></div>
+<div class="subsection-title">Arbol: Infraestructura</div>
+<div class="tree">
+<span class="tree-root">INFRAESTRUCTURA</span>
+  <span class="tree-branch">RECURSOS VPS</span>
+  <span class="tree-leaf">  CPU (meta: &lt;60%), RAM (meta: &lt;70%), Disco (meta: &lt;80%)</span>
+  <span class="tree-branch">LATENCIA</span>
+  <span class="tree-leaf">  Whisper &lt;1s, LLM &lt;1.5s, Kokoro &lt;0.5s, Pipeline &lt;2.5s</span>
+  <span class="tree-branch">COSTOS</span>
+  <span class="tree-leaf">  OpenRouter, TTS, STT, VPS (diario/semanal/mensual)</span>
+  <span class="tree-branch">ALERTAS</span>
+  <span class="tree-leaf">  CPU&gt;80%, RAM&gt;85%, Latencia&gt;5s, Budget&gt;150%</span></div>
+
+<div class="chapter-header">
+    <div class="section-tag">Capitulo 7</div>
+    <div class="section-title">Plan Anti-Pirateria (6 Capas)</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">Tu "receta" (prompts, knowledge bases, motor de medicion) es tu propiedad intelectual mas valiosa. Si alguien copia tu codigo pero no tus prompts, no puede replicar tu producto.</div>
+<table>
+    <tr><th>Capa</th><th>Proteccion</th></tr>
+    <tr><td>1. Infraestructura</td><td>Firewall UFW, Fail2ban, WireGuard VPN, Nginx WAF, rate limiting, SSL</td></tr>
+    <tr><td>2. Aplicacion</td><td>API Keys en Vault, JWT 1h exp, Row Level Security, input sanitization, CORS</td></tr>
+    <tr><td>3. Prompts</td><td>Encriptados en DB, solo Orquestador desencripta, version control, Prompt Vault</td></tr>
+    <tr><td>4. Modelos</td><td>Container Docker aislado por tenant, archivos encriptados, borrado criptografico</td></tr>
+    <tr><td>5. Codigo</td><td>Open Core: framework open source (AGPL-3.0), prompts y nicho KB son propietarios</td></tr>
+    <tr><td>6. Anti-Reverse</td><td>Rutas ofuscadas, respuestas sanitizadas, monitoreo anomalias, honeypots</td></tr>
+</table>
+<div class="chapter-header">
+    <div class="section-tag">Capitulo 8</div>
+    <div class="section-title">Alertas, Cron Jobs y Evolution Engine</div>
+    <div class="divider"></div>
+</div>
+<div class="subsection-title">Niveles de Alerta (Telegram)</div>
+<div class="card"><div class="card-title">INFO (cada hora)</div><p>Resumen: llamadas, citas, costo, latencia.</p></div>
+<div class="card"><div class="card-title">WARNING (inmediato)</div><p>Latencia subio, anomalia detectada.</p></div>
+<div class="card"><div class="card-title">CRITICAL (inmediato + SMS)</div><p>Agente caido, llamadas sin contestar.</p></div>
+<div class="card"><div class="card-title">BUDGET (diario)</div><p>Gasto vs limite, tenant mas costoso.</p></div>
+<div class="card"><div class="card-title">VENTA (inmediato)</div><p>Venta cerrada, nuevo cliente, upgrade.</p></div>
+<div class="subsection-title">Cron Jobs</div>
+<table>
+    <tr><th>Frecuencia</th><th>Tarea</th></tr>
+    <tr><td>Cada minuto</td><td>Verificar agentes online, latencia &lt;3s</td></tr>
+    <tr><td>Cada 5 min</td><td>Cola emails, WhatsApp seguimiento leads warm</td></tr>
+    <tr><td>Cada hora</td><td>Metricas, rotar API keys, limpiar cache</td></tr>
+    <tr><td>Cada dia (6am)</td><td>Reporte clientes, scraper prospectos, contenido redes, prompt evals, verificar backups</td></tr>
+    <tr><td>Cada semana</td><td>Reporte semanal, A/B testing, actualizar KB, limpiar logs</td></tr>
+    <tr><td>Cada luna llena</td><td>Burn tokens, lanzar feature, publicar Ritual Digital</td></tr>
+</table>
+<div class="subsection-title">Evolution Engine: Auto-mejora</div>
+<div class="body-text">
+    <strong>(1) Recopilacion:</strong> cada llamada se guarda con metadata completa. <strong>(2) Analisis:</strong> cada noche, identifica patrones de exito y fracaso. <strong>(3) Propuesta:</strong> si detecta un fallo repetido, genera mejora de prompt y la envia a Mystic via Telegram para aprobacion. <strong>(4) A/B Test:</strong> si se aprueba, se prueba en 20% de llamadas. Si funciona mejor, se expande al 100%. <strong>(5) Itera:</strong> los resultados se miden y el ciclo continua. No es magia: es Medir, Analizar, Proponer, Probar, Iterar.
+</div>
+<div class="chapter-header">
+    <div class="section-tag">Capitulo 9</div>
+    <div class="section-title">Variables de Entorno</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">Hay 3 niveles: globales (compartidas), por agente (especificas del rol), y por tenant (aislan a cada cliente). Cada nivel tiene sus variables propias que controlan el comportamiento, la seguridad y la medicion.</div>
+<div class="subsection-title">Tokenomics por Paquete</div>
+<table>
+    <tr><th>Accion</th><th>Despertar</th><th>Elevar</th><th>Soberano</th></tr>
+    <tr><td>Llamada atendida</td><td>1 SON</td><td>2 SON</td><td>3 SON</td></tr>
+    <tr><td>Lead capturado</td><td>5 SON</td><td>10 SON</td><td>15 SON</td></tr>
+    <tr><td>Venta cerrada</td><td>-</td><td>50 SON</td><td>100 SON</td></tr>
+    <tr><td>Onboarding</td><td>20 SON</td><td>30 SON</td><td>50 SON</td></tr>
+    <tr><td>Referir</td><td>50 SON</td><td>75 SON</td><td>100 SON</td></tr>
+    <tr><td>Pago en SON</td><td>10% desc.</td><td>10% desc.</td><td>10% desc.</td></tr>
+</table>
+<div class="chapter-header">
+    <div class="section-tag">Capitulo 10</div>
+    <div class="section-title">Analogia: El Restaurante Mistico</div>
+    <div class="divider"></div>
+</div>
+<table>
+    <tr><th>Componente</th><th>Equivalente</th><th>Que hace</th></tr>
+    <tr><td>VPS OVH</td><td>El edificio</td><td>Lugar fisico donde todo ocurre</td></tr>
+    <tr><td>FreeSWITCH+Whisper+Kokoro</td><td>La cocina</td><td>Voz entra cruda, se cocina, sale lista</td></tr>
+    <tr><td>LLM (Claude)</td><td>El chef</td><td>Toma ingredientes, crea platillo perfecto</td></tr>
+    <tr><td>Knowledge Base</td><td>El menu</td><td>Sabe que hacer segun el tipo de restaurante</td></tr>
+    <tr><td>El Agente</td><td>El mesero</td><td>Interactua con el cliente</td></tr>
+    <tr><td>Multi-tenant</td><td>Mesas separadas</td><td>Nadie ve lo que come el otro</td></tr>
+    <tr><td>Orquestador</td><td>El gerente</td><td>Decide que mesero atiende que mesa</td></tr>
+    <tr><td>Tokenomics</td><td>El cajero</td><td>Cada transaccion se mide en SON</td></tr>
+    <tr><td>Prometheus+Grafana</td><td>Las camaras</td><td>Si algo se quema, suena la alarma</td></tr>
+    <tr><td>Evolution Engine</td><td>Libro de quejas</td><td>Si muchos se quejan, cambia la receta</td></tr>
+    <tr><td>3 Paquetes</td><td>La carta</td><td>Carta, Menu del dia, Banquete</td></tr>
+</table>
+<div class="chapter-header">
+    <div class="section-tag">Capitulo 11</div>
+    <div class="section-title">Flujo Humano: De TikTok a Cliente</div>
+    <div class="divider"></div>
+</div>
+<div class="body-text">
+    <strong>Anna (mecanica)</strong> ve tu TikTok. Te manda WhatsApp. En 72 horas, tiene un agente atendiendo sus clientes. Dia 1: Descubrimiento (onboarding adaptado en landing, sube audio, elige plan Despertar GRATIS). Dia 2: Activacion (sistema clona voz, crea KB de mecanica, entrena agente, WhatsApp de bienvenida). Dias 3-14: Periodo gratuito (agente atiende ~5 llamadas/dia, reportes nocturnos por WhatsApp). Dia 15: Conversion. Meses despues: Ana sube a Elevar, luego Soberano, refiere amigos, gana tokens. <strong>Este es el ciclo de vida de tu cliente.</strong>
+</div>
+<div class="highlight"><p><strong>El LLM no es el producto. Tu producto es el sistema completo que conecta telefonia, voz, inteligencia, personalizacion y medicion. Tu no vendes agentes de IA. Vendes que tu negocio nunca duerme.</strong></p></div>
+</div><!-- end main-content -->
+
+<div class="ending">
+    <div class="ending-quote">
+        "El LLM no es el producto. El LLM es una pieza del pipeline. Tu producto es el sistema completo que conecta telefonia, voz, inteligencia, personalizacion y medicion."
+    </div>
+    <div class="ending-author">MYSTIC &middot; SONORA DIGITAL CORP</div>
+    <div class="ending-date">Julio 2026 &middot; Version 2.0</div>
+</div>
+</body>
+</html>

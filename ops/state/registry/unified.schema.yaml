@@ -1,0 +1,51 @@
+# Unified Registry Schema — Meta-registry v1
+# Todos los registros fuente se sincronizan a state/registry/unified.yaml
+# Types: agent, capability, tool, skill, collector, pack, infra_service
+
+_definitions:
+  entity:
+    properties:
+      id: { type: string, required: true }
+      type: { type: string, required: true }
+      name: { type: string }
+      source: { type: string }  # archivo de origen
+      version: { type: string }
+      status: { type: string, enum: [active, inactive, experimental, deprecated] }
+      tenant: { type: string }
+
+agent:
+  allOf:
+    - $ref: "#/_definitions/entity"
+    - properties:
+        role: { type: string }
+        tools: { type: array, items: string }
+        memory: { type: string }
+        channel: { type: string }
+        triggers: { type: array, items: string }
+        emits: { type: array, items: string }
+
+capability:
+  allOf:
+    - $ref: "#/_definitions/entity"
+    - properties:
+        domain: { type: string }
+        agent: { type: string }
+        cost_tier: { type: integer }
+        providers: { type: array, items: { type: object } }
+
+tool:
+  allOf:
+    - $ref: "#/_definitions/entity"
+    - properties:
+        server: { type: string }
+        description: { type: string }
+        has_doc: { type: boolean }
+        input_schema: { type: object }
+
+skill:
+  allOf:
+    - $ref: "#/_definitions/entity"
+    - properties:
+        category: { type: string }
+        ecosystem: { type: string, enum: [sdc, hermes, openclaw, adk] }
+        file_path: { type: string }

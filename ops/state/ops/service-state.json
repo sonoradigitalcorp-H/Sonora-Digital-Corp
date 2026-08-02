@@ -1,0 +1,19 @@
+{
+  "hermes": "down",
+  "hermes-dashboard": "down",
+  "sdc-neo4j": "healthy",
+  "supabase-kong": "down",
+  "supabase-db": "down",
+  "supabase-studio": "down",
+  "sdc-redis": "healthy",
+  "sdc-qdrant": "healthy",
+  "sdc-grafana": "down",
+  "sonora-hasura": "down",
+  "sdc-pgadmin4": "down",
+  "sdc-omnivoice": "down",
+  "syncthing@ubuntu": "down(inactive)",
+  "event-listener": "down(inactive)",
+  "omnivoice-agent": "down(inactive)",
+  "disk": "61%",
+  "disk_status": "ok"
+}

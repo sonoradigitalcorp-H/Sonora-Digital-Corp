@@ -1,0 +1,12 @@
+{
+  "company": "Nathy Conta",
+  "primary_color": "#0f1b4d",
+  "secondary_color": "#1a237e",
+  "accent_color": "#c9a84c",
+  "logo": "nathy-logo.svg",
+  "powered_by": true,
+  "tone": "professional",
+  "language": "es",
+  "font_display": "Georgia, Times New Roman, serif",
+  "font_body": "Inter, sans-serif"
+}

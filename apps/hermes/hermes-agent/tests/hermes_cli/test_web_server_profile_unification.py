@@ -111,7 +111,7 @@ class TestProfileScopedEnv:
     def test_env_set_lands_in_target_profile_only(self, client, isolated_profiles):
         resp = client.put(
             "/api/env",
-            json={"key": "FAL_KEY", "value": "test-fal-123", "profile": "worker_beta"},
+            json={"key": "FAL_API_KEY", "value": "test-fal-123", "profile": "worker_beta"},
         )
         assert resp.status_code == 200
         worker_env = (isolated_profiles["worker_beta"] / ".env").read_text()
@@ -122,22 +122,22 @@ class TestProfileScopedEnv:
 
     def test_env_list_reads_target_profile(self, client, isolated_profiles):
         (isolated_profiles["worker_beta"] / ".env").write_text(
-            "FAL_KEY=worker-only-value\n", encoding="utf-8"
+            "FAL_API_KEY=worker-only-value\n", encoding="utf-8"
         )
         resp = client.get("/api/env", params={"profile": "worker_beta"})
         assert resp.status_code == 200
-        assert resp.json()["FAL_KEY"]["is_set"] is True
+        assert resp.json()["FAL_API_KEY"]["is_set"] is True
         resp = client.get("/api/env")
-        assert resp.json()["FAL_KEY"]["is_set"] is False
+        assert resp.json()["FAL_API_KEY"]["is_set"] is False
 
     def test_env_delete_scoped(self, client, isolated_profiles):
         (isolated_profiles["worker_beta"] / ".env").write_text(
-            "FAL_KEY=doomed\n", encoding="utf-8"
+            "FAL_API_KEY=doomed\n", encoding="utf-8"
         )
         resp = client.request(
             "DELETE",
             "/api/env",
-            json={"key": "FAL_KEY", "profile": "worker_beta"},
+            json={"key": "FAL_API_KEY", "profile": "worker_beta"},
         )
         assert resp.status_code == 200
         assert "doomed" not in (isolated_profiles["worker_beta"] / ".env").read_text()

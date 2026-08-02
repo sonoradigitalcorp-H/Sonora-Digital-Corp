@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Mystica — Portal de Voz</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --c1:#AC6D3E;--c2:#CD8D5D;--cg:rgba(172,109,62,0.3);
+  --s1:#B6C08B;
+  --bg:#08090f;--card:rgba(17,23,40,0.88);--b1:rgba(172,109,62,0.12);
+  --tx:#e8edf5;--tm:rgba(232,237,245,0.35);
+}
+[data-t="cosmic"]{--c1:#a855f7;--c2:#c084fc;--cg:rgba(168,85,247,0.25);--b1:rgba(168,85,247,0.12)}
+[data-t="sunset"]{--c1:#f97316;--c2:#fb923c;--cg:rgba(249,115,22,0.25);--b1:rgba(249,115,22,0.12)}
+[data-t="ocean"]{--c1:#06b6d4;--c2:#22d3ee;--cg:rgba(6,182,212,0.2);--b1:rgba(6,182,212,0.12)}
+html,body{height:100%;overflow:hidden;font-family:'Inter',sans-serif;background:var(--bg);color:var(--tx);user-select:none}
+#bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
+
+/* HEADER */
+.hdr{
+  position:fixed;top:0;left:0;right:0;z-index:1000;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:8px 16px;background:linear-gradient(180deg,rgba(8,9,15,0.95),transparent);
+  height:44px;pointer-events:none;
+}
+.hdr>*{pointer-events:auto}
+.hl{display:flex;align-items:center;gap:8px}
+.hl .lg{width:26px;height:26px;border-radius:7px;background:linear-gradient(135deg,var(--c1),var(--c2));display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff}
+.hl h1{font-size:13px;font-weight:600}
+.hl span{font-weight:300;color:var(--c2)}
+.hr{display:flex;align-items:center;gap:10px;font-size:10px;color:var(--tm)}
+.dt{width:14px;height:14px;border-radius:50%;border:1px solid rgba(255,255,255,0.1);cursor:pointer;transition:.2s}
+.dt:hover{transform:scale(1.3);border-color:var(--c1)}
+.dt[data-t="portal"]{background:var(--c1)}
+.dt[data-t="cosmic"]{background:#a855f7}
+.dt[data-t="sunset"]{background:#f97316}
+.dt[data-t="ocean"]{background:#06b6d4}
+
+/* PANELS */
+.p{
+  position:fixed;z-index:100;
+  background:var(--card);border:1px solid var(--b1);
+  border-radius:10px;backdrop-filter:blur(24px);
+  box-shadow:0 4px 32px rgba(0,0,0,0.5);
+  display:flex;flex-direction:column;min-width:180px;min-height:50px;
+  cursor:grab;transition:box-shadow .2s,opacity .2s;
+}
+.p:active{cursor:grabbing}
+.p:hover{box-shadow:0 4px 40px var(--cg);z-index:200}
+.p-h{
+  padding:6px 10px;border-bottom:1px solid var(--b1);
+  font-size:9px;font-weight:600;color:var(--c2);
+  display:flex;justify-content:space-between;align-items:center;
+  cursor:grab;user-select:none;letter-spacing:.3px;min-height:28px;
+}
+.p-h:active{cursor:grabbing}
+.p-b{padding:8px 10px;flex:1;overflow:auto;cursor:auto;font-size:11px;line-height:1.5}
+.p-b::-webkit-scrollbar{width:3px}
+.p-b::-webkit-scrollbar-thumb{background:var(--b1);border-radius:2px}
+
+/* CHAT */
+#chatP{width:440px;height:380px;top:52px;left:12px}
+.cm{flex:1;overflow-y:auto;padding:6px 8px;display:flex;flex-direction:column;gap:5px;min-height:0}
+.cm:empty::after{content:'✦ Conecta para comenzar...';display:block;text-align:center;color:var(--tm);padding:30px 10px;font-size:11px;font-weight:300}
+.msg{display:flex;gap:5px;max-width:92%;animation:pop .25s ease}
+@keyframes pop{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.msg.u{margin-left:auto;flex-direction:row-reverse}
+.msg.b{margin-right:auto;max-width:95%}
+.msg .av{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:8px;flex-shrink:0;margin-top:1px}
+.msg.u .av{background:var(--c1);color:#fff;order:1}
+.msg.b .av{background:var(--s1);color:var(--bg);font-weight:700}
+.msg .bb{padding:5px 8px;border-radius:7px;font-size:11px;line-height:1.5;word-wrap:break-word}
+.msg.u .bb{background:var(--c1);color:#fff;border-bottom-right-radius:2px}
+.msg.b .bb{background:rgba(255,255,255,0.04);border:1px solid var(--b1);border-bottom-left-radius:2px}
+.ci{display:flex;gap:4px;padding:5px 8px;border-top:1px solid var(--b1);align-items:center}
+.ci input{flex:1;background:rgba(255,255,255,0.03);border:1px solid var(--b1);border-radius:5px;color:var(--tx);font-family:'Inter',sans-serif;font-size:10px;padding:5px 8px;outline:none}
+.ci input::placeholder{color:var(--tm)}
+.ci button{width:26px;height:26px;border-radius:50%;border:none;background:var(--c1);color:#fff;font-size:10px;cursor:pointer;transition:.2s;display:flex;align-items:center;justify-content:center}
+.ci button:hover{background:var(--c2);transform:scale(1.05)}
+.ci button:disabled{opacity:.3;cursor:not-allowed;transform:none}
+.call-b{
+  display:flex;align-items:center;gap:4px;font-size:9px;padding:2px 8px;border-radius:6px;
+  background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.1);
+  cursor:pointer;transition:.2s;border:none;font-family:'Inter',sans-serif;
+}
+.call-b:hover{background:rgba(16,185,129,0.2)}
+.call-b.inactive{color:var(--tm);background:transparent}
+
+/* TENANT INFO */
+#tenantP{width:240px;height:280px;top:52px;right:12px}
+.dr{display:flex;justify-content:space-between;padding:2px 0;font-size:10px}
+.dl{color:var(--tm)}
+.dv{font-weight:500}
+.bd{display:inline-block;padding:0 5px;border-radius:99px;font-size:8px;font-weight:600}
+.bd-hot{background:rgba(248,113,113,0.15);color:#f87171}
+.bd-warm{background:rgba(251,191,36,0.15);color:#fbbf24}
+.bd-cold{background:rgba(96,165,250,0.15);color:#60a5fa}
+.bd-ent{background:rgba(172,109,62,0.2);color:var(--c2)}
+.st{display:inline-block;padding:1px 5px;border-radius:3px;font-size:8px;background:rgba(255,255,255,0.03);border:1px solid var(--b1);margin:1px}
+
+/* STATS */
+#statsP{width:300px;height:160px;bottom:12px;right:12px}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.si{text-align:center;padding:3px}
+.sn{font-size:16px;font-weight:200;color:var(--c2)}
+.sl{font-size:8px;color:var(--tm)}
+
+/* CARD */
+.fc{
+  position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:500;
+  width:320px;border-radius:10px;
+  background:linear-gradient(145deg,rgba(17,23,40,0.96),rgba(8,9,15,0.96));
+  border:2px solid var(--c1);box-shadow:0 0 50px var(--cg);
+  animation:ca .4s ease;display:none;pointer-events:auto;
+}
+.fc.show{display:block}
+@keyframes ca{from{opacity:0;transform:translate(-50%,-50%) scale(0.8)}to{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.fc .tp{height:3px;background:linear-gradient(90deg,var(--c1),var(--c2),var(--c1));border-radius:10px 10px 0 0}
+.fc .bd{padding:18px}
+.fc .ic{font-size:24px;margin-bottom:6px;display:block}
+.fc .ti{font-size:15px;font-weight:600;margin-bottom:3px}
+.fc .sb{font-size:9px;color:var(--c2);margin-bottom:10px}
+.fc .cx{font-size:11px;line-height:1.6}
+.fc .ac{display:flex;gap:6px;margin-top:12px}
+.fc .ac button{flex:1;padding:6px;border-radius:6px;border:1px solid var(--b1);background:rgba(255,255,255,0.03);color:var(--tx);font-family:'Inter',sans-serif;font-size:10px;cursor:pointer;transition:.2s}
+.fc .ac button:hover{background:var(--c1);color:#fff;border-color:var(--c1)}
+</style>
+</head>
+<body>
+<canvas id="bg"></canvas>
+<div class="hdr">
+  <div class="hl">
+    <div class="lg">✦</div>
+    <h1><span>Mystica</span> · Voz</h1>
+  </div>
+  <div class="hr">
+    <span id="st">● Sistema activo</span>
+    <span id="tm">00:00</span>
+    <button class="dt" data-t="portal" onclick="setTheme('portal')"></button>
+    <button class="dt" data-t="cosmic" onclick="setTheme('cosmic')"></button>
+    <button class="dt" data-t="sunset" onclick="setTheme('sunset')"></button>
+    <button class="dt" data-t="ocean" onclick="setTheme('ocean')"></button>
+  </div>
+</div>
+
+<div class="p" id="chatP">
+  <div class="p-h">
+    <span>✦ Conversación</span>
+    <div style="display:flex;gap:5px;align-items:center">
+      <span style="font-size:8px;font-weight:400;color:var(--tm)" id="mc">0</span>
+      <button class="call-b" id="cb" onclick="tc()"><span>📞</span> Llamar</button>
+    </div>
+  </div>
+  <div class="cm" id="cm"></div>
+  <div class="ci">
+    <input id="mi" placeholder="Escribe un mensaje..." onkeydown="if(event.key=='Enter'&&!event.shiftKey){event.preventDefault();stm()}">
+    <button onclick="stm()">➤</button>
+  </div>
+</div>
+
+<div class="p" id="tenantP">
+  <div class="p-h"><span>■ Cliente</span><span id="ti" style="font-size:8px;font-weight:400;color:var(--tm)">—</span></div>
+  <div class="p-b">
+    <div class="dr"><span class="dl">Nombre</span><span class="dv" id="dN">—</span></div>
+    <div class="dr"><span class="dl">Empresa</span><span class="dv" id="dC">—</span></div>
+    <div class="dr"><span class="dl">Plan</span><span class="dv" id="dP">—</span></div>
+    <div class="dr"><span class="dl">Tipo</span><span class="dv" id="dT">—</span></div>
+    <div class="dr"><span class="dl">Llamadas</span><span class="dv" id="dL">0</span></div>
+    <div style="margin-top:6px"><div style="font-size:8px;letter-spacing:.05em;color:var(--tm);margin-bottom:4px">SERVICIOS</div><div id="dS"></div></div>
+  </div>
+</div>
+
+<div class="p" id="statsP">
+  <div class="p-h"><span>◆ Sistema</span></div>
+  <div class="p-b">
+    <div class="sg">
+      <div class="si"><div class="sn" id="sC">0</div><div class="sl">Llamadas</div></div>
+      <div class="si"><div class="sn" id="sT">0</div><div class="sl">Tenants</div></div>
+      <div class="si"><div class="sn" id="sL">0</div><div class="sl">Leads</div></div>
+      <div class="si"><div class="sn" id="sD">0m</div><div class="sl">Duración</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="fc" id="fc">
+  <div class="tp"></div>
+  <div class="bd">
+    <span class="ic" id="fci">✦</span>
+    <div class="ti" id="fct">Mystica</div>
+    <div class="sb" id="fcs">Sonora Digital Corp</div>
+    <div class="cx" id="fcc">Bienvenido.</div>
+    <div class="ac"><button onclick="hc()">Cerrar</button></div>
+  </div>
+</div>
+
+<script>
+// ===== THEME =====
+function setTheme(t){
+  document.documentElement.setAttribute('data-t',t);
+  localStorage.setItem('mt',t);
+}
+const st=localStorage.getItem('mt');
+if(st)setTheme(st);
+
+// ===== THREE.JS =====
+const c=document.getElementById('bg'),sc=new THREE.Scene(),ca=new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
+const re=new THREE.WebGLRenderer({canvas:c,alpha:true,antialias:true});
+re.setSize(window.innerWidth,window.innerHeight);re.setPixelRatio(Math.min(window.devicePixelRatio,2));
+const cnt=2500,g=new THREE.BufferGeometry(),p=new Float32Array(cnt*3),cl=new Float32Array(cnt*3);
+for(let i=0;i<cnt;i++){p[i*3]=(Math.random()-.5)*40;p[i*3+1]=(Math.random()-.5)*40;p[i*3+2]=(Math.random()-.5)*40;cl[i*3]=.25+Math.random()*.25;cl[i*3+1]=.15+Math.random()*.2;cl[i*3+2]=.1+Math.random()*.15}
+g.setAttribute('position',new THREE.BufferAttribute(p,3));g.setAttribute('color',new THREE.BufferAttribute(cl,3));
+const m=new THREE.PointsMaterial({size:.05,vertexColors:true,transparent:true,opacity:.5,sizeAttenuation:true,blending:THREE.AdditiveBlending});
+const pt=new THREE.Points(g,m);sc.add(pt);ca.position.z=14;
+let mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=(e.clientX/window.innerWidth)*2-1;my=-(e.clientY/window.innerHeight)*2+1});
+function an(){requestAnimationFrame(an);pt.rotation.x+=.0002;pt.rotation.y+=.0004;ca.position.x+=(mx*2-ca.position.x)*.015;ca.position.y+=(-my*2-ca.position.y)*.015;ca.lookAt(0,0,0);re.render(sc,ca)}
+an();
+window.addEventListener('resize',()=>{ca.aspect=window.innerWidth/window.innerHeight;ca.updateProjectionMatrix();re.setSize(window.innerWidth,window.innerHeight)});
+
+// ===== DRAGGABLE PANELS =====
+function makeDrag(el){
+  let dx=0,dy=0,x=0,y=0;
+  const h=el.querySelector('.p-h');
+  if(!h)return;
+  h.onmousedown=e=>{
+    e.preventDefault();
+    el.style.zIndex=500;
+    const r=el.getBoundingClientRect();
+    x=r.left;y=r.top;dx=e.clientX-r.left;dy=e.clientY-r.top;
+    document.onmousemove=ev=>{
+      let nx=ev.clientX-dx,ny=ev.clientY-dy;
+      el.style.left=nx+'px';el.style.top=ny+'px';
+    };
+    document.onmouseup=()=>{document.onmousemove=null;document.onmouseup=null};
+  };
+}
+document.querySelectorAll('.p').forEach(makeDrag);
+
+// ===== WEBSOCKET + WEBRTC =====
+let pc=null,ws=null,ca_=false,ct=null,cs=0;
+
+function am(t,type){
+  const l=document.getElementById('cm');
+  const d=document.createElement('div');d.className='msg '+(type==='user'?'u':'b');
+  const av=document.createElement('div');av.className='av';av.textContent=type==='user'?'Tú':'M';
+  const bb=document.createElement('div');bb.className='bb';bb.textContent=t;
+  if(type==='user'){d.appendChild(bb);d.appendChild(av)}
+  else{d.appendChild(av);d.appendChild(bb)}
+  l.appendChild(d);l.scrollTop=l.scrollHeight;
+  document.getElementById('mc').textContent=l.children.length;
+}
+
+function sc(icon,title,sub,content){
+  const f=document.getElementById('fc');
+  document.getElementById('fci').textContent=icon;
+  document.getElementById('fct').textContent=title;
+  document.getElementById('fcs').textContent=sub;
+  document.getElementById('fcc').textContent=content;
+  f.classList.add('show');
+  setTimeout(()=>f.classList.remove('show'),5000);
+}
+function hc(){document.getElementById('fc').classList.remove('show')}
+
+function us(t,c){document.getElementById('st').textContent=t;document.getElementById('st').style.color=c==='connected'?'#10b981':c==='error'?'#f87171':'var(--tm)'}
+
+async function tc(){
+  const b=document.getElementById('cb');
+  if(ca_){ec();return}
+  b.innerHTML='<span>◌</span> Conectando...';b.disabled=true;
+  try{
+    ws=new WebSocket(`ws://${location.host}/ws`);
+    ws.onopen=async ()=>{
+      pc=new RTCPeerConnection({iceServers:[{urls:'stun:stun.l.google.com:19302'}]});
+      pc.ontrack=e=>{const a=document.createElement('audio');a.srcObject=e.streams[0];a.autoplay=true};
+      const s=await navigator.mediaDevices.getUserMedia({audio:true});
+      s.getTracks().forEach(t=>pc.addTrack(t,s));
+      pc.onicecandidate=e=>{if(e.candidate)ws.send(JSON.stringify({type:'candidate',candidate:e.candidate}))};
+      const o=await pc.createOffer();await pc.setLocalDescription(o);
+      ws.send(JSON.stringify({type:'offer',sdp:o.sdp}));
+    };
+    ws.onmessage=e=>{
+      const m=JSON.parse(e.data);
+      switch(m.type){
+        case 'answer':
+          pc.setRemoteDescription(new RTCSessionDescription({type:'answer',sdp:m.sdp}));
+          ca_=true;cs=Date.now();
+          b.innerHTML='<span>✕</span> Colgar';b.disabled=false;
+          us('En llamada','connected');
+          ct=setInterval(()=>{const e=Math.floor((Date.now()-cs)/1000);document.getElementById('tm').textContent=String(Math.floor(e/60)).padStart(2,'0')+':'+String(e%60).padStart(2,'0')},1000);
+          sc('📞','Conectado','Mystica · SDC','Bienvenido al portal de voz. Habla cuando quieras.');
+          break;
+        case 'candidate':if(pc&&pc.remoteDescription)pc.addIceCandidate(new RTCIceCandidate(m.candidate)).catch(()=>{});break;
+        case 'transcript':am(m.text,'user');break;
+        case 'response':am(m.text,'bot');break;
+        case 'tenant':
+          if(m.name)document.getElementById('dN').textContent=m.name;
+          if(m.company)document.getElementById('dC').textContent=m.company;
+          if(m.plan){document.getElementById('dP').textContent=m.plan;
+            document.getElementById('dP').className='dv bd bd-'+(m.plan==='enterprise'?'ent':m.plan);}
+          if(m.lead_type){document.getElementById('dT').textContent=m.lead_type;
+            document.getElementById('dT').className='dv bd bd-'+m.lead_type;}
+          if(m.total_calls!==undefined)document.getElementById('dL').textContent=m.total_calls;
+          if(m.skills)document.getElementById('dS').innerHTML=m.skills.map(s=>`<span class="st">${s}</span>`).join('');
+          break;
+        case 'dashboard':break;
+        case 'close':ec();break;
+        case 'error':am('⚠ '+m.text,'system');break;
+      }
+    };
+    ws.onclose=()=>{if(ca_)ec()};
+    ws.onerror=()=>{am('⚠ Error de conexión','system')};
+  }catch(e){am('⚠ Error: '+e.message,'system');b.innerHTML='<span>📞</span> Llamar';b.disabled=false}
+}
+
+function ec(){
+  if(pc){pc.close();pc=null}
+  if(ws){ws.close();ws=null}
+  ca_=false;if(ct){clearInterval(ct);ct=null}
+  document.getElementById('cb').innerHTML='<span>📞</span> Llamar';
+  document.getElementById('cb').disabled=false;
+  us('Sistema activo','');document.getElementById('tm').textContent='00:00';
+}
+
+function stm(){
+  const i=document.getElementById('mi'),t=i.value.trim();
+  if(!t)return;am(t,'user');i.value='';
+  if(ws&&ws.readyState===WebSocket.OPEN)ws.send(JSON.stringify({type:'text',text:t}));
+}
+
+// ===== DASHBOARD =====
+async function ld(){
+  try{
+    const r=await fetch('/api/dashboard');
+    const d=await r.json();
+    document.getElementById('sC').textContent=d.total_calls||0;
+    document.getElementById('sT').textContent=d.total_tenants||0;
+    document.getElementById('sL').textContent=d.total_leads||0;
+    document.getElementById('sD').textContent=(d.total_duration||0)+'m';
+    if(d.recent_tenants&&d.recent_tenants[0]){
+      const t=d.recent_tenants[0];
+      document.getElementById('dN').textContent=t.name||'—';
+      document.getElementById('dC').textContent=t.company||'—';
+      if(t.plan)document.getElementById('dP').textContent=t.plan;
+      if(t.lead_type){document.getElementById('dT').textContent=t.lead_type;
+        document.getElementById('dT').className='dv bd bd-'+t.lead_type;}
+      if(t.total_calls!==undefined)document.getElementById('dL').textContent=t.total_calls;
+      if(t.skills)document.getElementById('dS').innerHTML=t.skills.map(s=>`<span class="st">${s}</span>`).join('');
+    }
+  }catch(e){}
+}
+ld();setInterval(ld,30000);
+</script>
+</body>
+</html>

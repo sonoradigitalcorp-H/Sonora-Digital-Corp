@@ -56,7 +56,7 @@ class FalImageGenProvider(ImageGenProvider):
         return "FAL.ai"
 
     def is_available(self) -> bool:
-        # Available when direct FAL_KEY is set OR the managed Nous
+        # Available when direct FAL_API_KEY is set OR the managed Nous
         # gateway resolves a fal-queue origin. Both checks come from the
         # legacy module so this provider tracks whatever logic ships
         # there.
@@ -90,7 +90,7 @@ class FalImageGenProvider(ImageGenProvider):
             "tag": "Pick from flux-2-klein, flux-2-pro, gpt-image, nano-banana, etc.",
             "env_vars": [
                 {
-                    "key": "FAL_KEY",
+                    "key": "FAL_API_KEY",
                     "prompt": "FAL API key",
                     "url": "https://fal.ai/dashboard/keys",
                 },

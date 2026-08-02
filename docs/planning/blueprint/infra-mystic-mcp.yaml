@@ -1,0 +1,68 @@
+# MCP PROPIO: Infra-Mystic-MCP
+# Funcion: Gestion de infraestructura magica (VPS, Backups, API Keys)
+# Integracion con: OpenClaw + system-monitor skill
+
+mcp:
+  name: "infra-mystic-mcp"
+  version: "1.0.0"
+  descripcion: "Control de infraestructura con enfoque en mantenimiento predictivo"
+
+  herramientas:
+    - nombre: "rotate_api_keys"
+      descripcion: "Rotar claves API (OpenRouter, Vonage, etc.) automaticamente"
+      proceso:
+        - "1. Generar nueva key en el proveedor"
+        - "2. Actualizar en Vault/Secrets"
+        - "3. Recargar en servicios activos sin downtime"
+        - "4. Invalidar key anterior"
+        - "5. Registrar rotacion en audit log"
+      frecuencia: "Cada 30 dias automatico via Celery Beat"
+      tiempo_max: "30s por servicio"
+
+    - nombre: "verify_backup_integrity"
+      descripcion: "Verificar que los backups sean restaurables"
+      proceso:
+        - "1. Descargar ultimo backup de PostgreSQL"
+        - "2. Restaurar en base de datos temporal"
+        - "3. Ejecutar integrity tests (row count, checksum)"
+        - "4. Eliminar base temporal"
+        - "5. Reportar resultado"
+      frecuencia: "Cada Luna Nueva"
+      tiempo_max: "300s"
+
+    - nombre: "scale_workers"
+      descripcion: "Escalar o reducir workers de Celery segun carga"
+      parametros:
+        - nombre: "action"
+          tipo: "enum"
+          valores: ["up", "down", "auto"]
+          requerido: true
+        - nombre: "count"
+          tipo: "int"
+          requerido: false
+      proceso:
+        - "Verificar recursos disponibles en VPS (CPU, RAM)"
+        - "Si auto: calcular optimo basado en cola pendiente"
+        - "Ejecutar docker-compose scale workers=N"
+        - "Registrar cambio en metricas"
+      tiempo_max: "60s"
+
+    - nombre: "get_infra_health"
+      descripcion: "Dashboard de salud de toda la infraestructura"
+      retorna:
+        - "servicios: list[{nombre, status, cpu_pct, mem_mb, uptime}]"
+        - "vps: {cpu_total_pct, ram_total_pct, disk_pct, network_in_mbps, network_out_mbps}"
+        - "alertas_activas: list[{nivel, servicio, mensaje, timestamp}]"
+      tiempo_max: "5s"
+
+    - nombre: "emergency_restart"
+      descripcion: "Reiniciar un servicio caido. Solo para alertas CRITICAS."
+      parametros:
+        - nombre: "service_name"
+          tipo: "string"
+          requerido: true
+      seguridad:
+        - "Solo callable desde sistema de alertas CRITICAS"
+        - "Requiere doble confirmacion"
+        - "Se registra con nivel de audit ALERTA"
+      tiempo_max: "45s"

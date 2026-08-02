@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Artista — Landing Page</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:wght@400;700&display=swap');
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Inter',sans-serif; background:#faf8f5; color:#1a1a1a; line-height:1.7; }
+.hero { min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:2rem; background:linear-gradient(135deg, #1a1410 0%, #2a2018 50%, #1a1410 100%); color:#fff; position:relative; }
+.hero::after { content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 30%, rgba(200,168,124,0.08), transparent 70%); }
+.hero-content { position:relative; z-index:1; max-width:700px; }
+.hero h1 { font-family:'Playfair Display',serif; font-size:4rem; font-weight:700; margin-bottom:0.5rem; letter-spacing:-0.02em; }
+.hero h2 { font-size:1.3rem; font-weight:300; color:#c8a87c; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:1.5rem; }
+.hero p { color:#aaa; font-size:1.1rem; max-width:500px; margin:1.5rem auto; }
+.hero-img { width:180px; height:180px; border-radius:50%; object-fit:cover; border:3px solid rgba(200,168,124,0.3); margin-bottom:2rem; box-shadow:0 20px 60px rgba(0,0,0,0.3); }
+.btn { display:inline-block; padding:0.9rem 2.5rem; border-radius:50px; font-weight:600; text-decoration:none; transition:all 0.3s; cursor:pointer; border:none; font-size:0.95rem; }
+.btn-gold { background:#c8a87c; color:#1a1a1a; }
+.btn-gold:hover { background:#d4b896; transform:translateY(-2px); box-shadow:0 8px 25px rgba(200,168,124,0.3); }
+.btn-outline-light { background:transparent; color:#fff; border:1px solid rgba(255,255,255,0.2); }
+.btn-outline-light:hover { border-color:#c8a87c; color:#c8a87c; }
+.social-links { display:flex; gap:1rem; justify-content:center; margin-top:2rem; }
+.social-links a { width:44px; height:44px; border-radius:50%; border:1px solid rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; color:#fff; text-decoration:none; font-size:1.2rem; transition:all 0.3s; }
+.social-links a:hover { border-color:#c8a87c; color:#c8a87c; transform:translateY(-2px); }
+section { padding:5rem 2rem; max-width:1100px; margin:0 auto; }
+.section-title { font-family:'Playfair Display',serif; font-size:2.2rem; font-weight:700; margin-bottom:0.5rem; text-align:center; }
+.section-subtitle { color:#888; text-align:center; margin-bottom:3rem; font-size:1rem; }
+.bio { max-width:700px; margin:0 auto; text-align:center; color:#555; font-size:1.05rem; line-height:1.8; }
+.gallery { display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:1.5rem; margin-top:2rem; }
+.gallery img { width:100%; height:300px; object-fit:cover; border-radius:12px; transition:transform 0.4s; }
+.gallery img:hover { transform:scale(1.02); }
+.music-links { display:flex; flex-wrap:wrap; gap:1rem; justify-content:center; }
+.music-links a { display:flex; align-items:center; gap:0.6rem; padding:0.8rem 1.5rem; border-radius:12px; background:#fff; border:1px solid #e5e5e5; text-decoration:none; color:#333; font-weight:500; transition:all 0.3s; }
+.music-links a:hover { border-color:#c8a87c; transform:translateY(-2px); box-shadow:0 5px 20px rgba(0,0,0,0.05); }
+.cta-section { background:linear-gradient(135deg, #1a1410, #2a2018); color:#fff; text-align:center; padding:5rem 2rem; }
+.cta-section h2 { font-family:'Playfair Display',serif; font-size:2.5rem; margin-bottom:1rem; }
+.cta-section p { color:#aaa; margin-bottom:2rem; max-width:500px; margin-left:auto; margin-right:auto; }
+footer { text-align:center; padding:2rem; color:#888; font-size:0.85rem; border-top:1px solid #e5e5e5; }
+@media(max-width:768px) {
+  .hero h1 { font-size:2.5rem; }
+  section { padding:3rem 1.5rem; }
+  .gallery { grid-template-columns:1fr; }
+}
+</style>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-content">
+    <img src="https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&h=400&fit=crop&crop=face" alt="Artista" class="hero-img">
+    <h2>Músico • Compositor</h2>
+    <h1>Nombre del<br>Artista</h1>
+    <p>Música que conecta. Shows en vivo que emocionan. Booking abierto para eventos, festivales y presentaciones privadas.</p>
+    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap">
+      <a href="booking.html" class="btn btn-gold">Agendar show</a>
+      <a href="#musica" class="btn btn-outline-light">Escuchar música</a>
+    </div>
+    <div class="social-links">
+      <a href="#" title="Instagram">📷</a>
+      <a href="#" title="YouTube">▶</a>
+      <a href="#" title="Spotify">🎧</a>
+      <a href="#" title="TikTok">♪</a>
+      <a href="#" title="WhatsApp">💬</a>
+    </div>
+  </div>
+</section>
+
+<section id="bio">
+  <h2 class="section-title">Biografía</h2>
+  <p class="section-subtitle">Conoce al artista</p>
+  <div class="bio">
+    <p>Artista multidisciplinario con más de 10 años de experiencia en escenarios nacionales e internacionales. Su sonido fusiona géneros tradicionales con producción contemporánea, creando una experiencia única que ha cautivado a audiencias en más de 15 países.</p>
+    <p style="margin-top:1rem">Ha compartido escenario con artistas de renombre y su música ha sido reproducida más de 1 millón de veces en plataformas digitales. Actualmente se encuentra en su gira "Nuevos Horizontes" con fechas disponibles para booking.</p>
+  </div>
+</section>
+
+<section id="musica">
+  <h2 class="section-title">Música</h2>
+  <p class="section-subtitle">Escucha lo último</p>
+  <div class="music-links">
+    <a href="#">🎵 Escuchar en Spotify</a>
+    <a href="#">▶ Ver en YouTube</a>
+    <a href="#">🎶 Escuchar en SoundCloud</a>
+    <a href="#">🎤 Ver en Apple Music</a>
+  </div>
+</section>
+
+<section>
+  <h2 class="section-title">Galería</h2>
+  <p class="section-subtitle">Momentos inolvidables</p>
+  <div class="gallery">
+    <img src="https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop" alt="Concierto 1">
+    <img src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=600&h=400&fit=crop" alt="Concierto 2">
+    <img src="https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?w=600&h=400&fit=crop" alt="Concierto 3">
+    <img src="https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=600&h=400&fit=crop" alt="Estudio">
+    <img src="https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?w=600&h=400&fit=crop" alt="Backstage">
+    <img src="https://images.unsplash.com/photo-1429962714451-bb934ecdc4ec?w=600&h=400&fit=crop" alt="Festival">
+  </div>
+</section>
+
+<section class="cta-section">
+  <h2>¿Quieres contratar al artista?</h2>
+  <p>Llena el formulario de booking y recibe respuesta en menos de 24 horas. Eventos privados, festivales, bodas, corporativos.</p>
+  <a href="booking.html" class="btn btn-gold" style="font-size:1.1rem">Solicitar fecha →</a>
+</section>
+
+<footer>
+  <p>© 2026 Nombre del Artista — Todos los derechos reservados</p>
+  <p style="margin-top:0.5rem; font-size:0.8rem">Powered by Sonora Digital Corp</p>
+</footer>
+
+</body>
+</html>

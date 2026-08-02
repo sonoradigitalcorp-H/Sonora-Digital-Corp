@@ -1,0 +1,145 @@
+# SONORA DIGITAL CORP - Metricas de Conversion Nivel Dios
+
+# Arbol completo de medicion por area
+
+metricas:
+
+  # ============================================
+  # EMBUDO DE CONVERSION: TikTok -> Cliente
+  # ============================================
+  embudo_conversion:
+    etapa_1_descubrimiento:
+      metrica: "Impresiones de contenido (TikTok, Instagram, YouTube)"
+      target: "> 100,000/mes"
+      medicion: "API de cada red social + n8n tracker"
+      responsable: "content_factory"
+
+    etapa_2_clic:
+      metrica: "CTR (Click Through Rate)"
+      target: "> 3%"
+      medicion: "UTM tracking en landing page"
+      formula: "clicks / impresiones * 100"
+
+    etapa_3_landing:
+      metrica: "Tasa de registro en landing"
+      target: "> 15%"
+      medicion: "Formulario de landing -> dashboard"
+      formula: "registros / clicks * 100"
+
+    etapa_4_onboarding:
+      metrica: "Tasa de completacion de onboarding"
+      target: "> 70% (Despertar), > 50% (Elevar)"
+      medicion: "Evento onboarding_completado en BD"
+      formula: "onboarding_completados / registros * 100"
+
+    etapa_5_prueba_gratis:
+      metrica: "Uso durante periodo de prueba"
+      target: "> 5 interacciones en 14 dias"
+      medicion: "Conteo de llamadas/mensajes durante trial"
+      formula: "usuarios_activos_trial / total_trial * 100"
+
+    etapa_6_conversion:
+      metrica: "Tasa de conversion trial -> pago"
+      target: "> 25%"
+      medicion: "Primer pago despues de trial"
+      formula: "pagadores / trial_terminados * 100"
+
+    etapa_7_retencion_d30:
+      metrica: "Retencion a 30 dias"
+      target: "> 85%"
+      medicion: "Clientes activos dia 30 / clientes dia 1"
+
+    etapa_8_upgrade:
+      metrica: "Tasa de upgrade a paquete superior"
+      target: "> 20% en 6 meses"
+      medicion: "Cambios de paquete en BD"
+      formula: "upgrades / clientes_activos * 100"
+
+  # ============================================
+  # CONVERSION POR AGENTE
+  # ============================================
+  agente_recepcionista:
+    rendimiento:
+      llamadas_atendidas_pct: {target: ">95%", medicion: "llamadas_contestadas / llamadas_totales"}
+      tiempo_primera_respuesta_seg: {target: "<3", medicion: "timestamp FreeSWITCH answer - timestamp ring"}
+      duracion_promedio_min: {target: "2-5", medicion: "promedio de duracion de llamadas"}
+      tasa_abandono_pct: {target: "<5%", medicion: "llamadas_cortadasantes_5s / total"}
+    calidad:
+      empatia_detectada_pct: {target: ">80%", medicion: "sentiment analysis de transcripcion"}
+      uso_jerga_nicho_pct: {target: ">70%", medicion: "keywords de nicho en respuestas / total palabras"}
+      sin_fomo_toxico: {target: "100%", medicion: "clasificador de manipulacion = 0"}
+      bant_completado_pct: {target: ">85%", medicion: "campos BANT llenos en lead"}
+    impacto_negocio:
+      leads_calificados: {target: ">30/mes (Elevar)", medicion: "leads con BANT completo"}
+      conversion_lead_cita_pct: {target: ">30%", medicion: "citas_agendadas / leads_calificados"}
+      revenue_atribuido_mxn: {medicion: "citas_que_cerraron * ticket_promedio"}
+    tecnico:
+      latencia_total_ms: {target: "<2500", medicion: "end-to-end pipeline"}
+      costo_por_llamada_usd: {target: "<0.05", medicion: "(OpenRouter + TTS + STT) / llamadas"}
+      uptime_pct: {target: ">99.9%", medicion: "Prometheus availability"}
+
+  agente_vendedor:
+    rendimiento:
+      llamadas_cerradas_pct: {target: ">15%", medicion: "ventas / llamadas_de_cierre"}
+      manejo_objeciones_pct: {target: ">70%", medicion: "objeciones_respondidas_sin_ceder / total_objeciones"}
+      avg_deal_size_rel_ticket: {target: ">1.0", medicion: "promedio_vendido / ticket_promedio"}
+    calidad:
+      sin_presion_ventas_pct: {target: ">90%", medicion: "clasificador de presion = 0"}
+      cierre_assumptivo_usado_pct: {target: ">50%", medicion: "patron_cierre_assumptivo detectado"}
+      follow_up_completado_pct: {target: ">80%", medicion: "follow_ups_enviados / follow_ups_programados"}
+
+  agente_soporte:
+    rendimiento:
+      resolucion_primer_contacto_pct: {target: ">60%", medicion: "resueltos_sin_escalacion / total_tickets"}
+      tiempo_resolucion_horas: {target: "<4", medicion: "timestamp_cierre - timestamp_apertura"}
+      satisfaccion_pct: {target: ">85%", medicion: "encuesta post-interaccion"}
+
+  # ============================================
+  # CONVERSION POR CANAL
+  # ============================================
+  canales:
+    telefono:
+      conversion_pct: {target: ">8%", medicion: "citas / llamadas"}
+      costo_por_lead_usd: {target: "<0.10"}
+    whatsapp:
+      conversion_pct: {target: ">12%", medicion: "citas / conversaciones"}
+      costo_por_lead_usd: {target: ">0.02"}
+    telegram:
+      conversion_pct: {target: ">10%", medicion: "citas / conversaciones"}
+      costo_por_lead_usd: {target: "<0.02"}
+    outbound:
+      conversion_pct: {target: ">3%", medicion: "citas / llamadas_outbound"}
+      costo_por_lead_usd: {target: "<0.15"}
+
+  # ============================================
+  # CONVERSION POR PAQUETE (LTV, CAC, ROI)
+  # ============================================
+  economia:
+    despertar:
+      precio_mxn: 299
+      costo_real_usd: 5
+      margen_pct: 70
+      cac_estimado_mxn: 500
+      payback_meses: 2
+      ltv_12m_mxn: 3588
+      churn_mes_1_pct: 25
+    elevar:
+      precio_mxn: 1499
+      costo_real_usd: 25
+      margen_pct: 50
+      cac_estimado_mxn: 2000
+      payback_meses: 2
+      ltv_12m_mxn: 17988
+      churn_mes_1_pct: 15
+    soberano:
+      precio_mxn: 50000
+      costo_real_usd: 100
+      margen_pct: 55
+      cac_estimado_mxn: 80000
+      payback_meses: 3
+      ltv_12m_mxn: 600000
+      churn_mes_1_pct: 5
+    oraculo:
+      precio_mxn: "custom"
+      revenue_share_pct: "30-60"
+      ltv_estimado: "incalculable (escala con sub-clientes)"

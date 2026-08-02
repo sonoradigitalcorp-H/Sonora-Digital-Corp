@@ -110,7 +110,7 @@
       "typeVersion": 3,
       "position": [1450, 300],
       "parameters": {
-        "url": "https://api.telegram.org/bot8875376383:AAG4dDoxdUfHqR7oIqW0lC4ygLxfzfg1EMA/sendMessage",
+        "url": "https://api.telegram.org/bot{{ $env.TELEGRAM_BOT_TOKEN }}/sendMessage",
         "method": "POST",
         "sendBody": true,
         "bodyParameters": {

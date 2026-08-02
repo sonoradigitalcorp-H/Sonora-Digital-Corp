@@ -28,4 +28,4 @@ assert:
   - type: not-contains
     value: "api_key"
   - type: not-contains
-    value: "FAL_KEY"
+    value: "FAL_API_KEY"

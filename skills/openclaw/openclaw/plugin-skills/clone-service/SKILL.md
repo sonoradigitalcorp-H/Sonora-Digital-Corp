@@ -76,4 +76,4 @@ Si el cliente pide formatos específicos:
 - Si los créditos están bajos (<20%), avisa al cliente
 - Si el cliente pide algo que no está entrenado (ej: video cuerpo completo sin fotos de cuerpo), pídele fotos específicas
 - Los assets expiran a los 30 días. Avisa si pregunta
-- NO reveles FAL_KEY, tokens, o detalles técnicos
+- NO reveles FAL_API_KEY, tokens, o detalles técnicos

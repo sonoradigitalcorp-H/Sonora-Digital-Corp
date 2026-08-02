@@ -55,3 +55,7 @@ config/.secrets/
 **/.secrets/
 *.age
 *.gpg
+skills/mcp/servers/content_mcp.py
+skills/mcp/servers/generate_mcp.py
+skills/mcp/servers/lora_mcp.py
+skills/mcp/servers/voice_mcp.py

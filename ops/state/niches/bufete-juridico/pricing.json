@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0",
+  "niche": "abogado",
+  "name": "Bufete Jurídico",
+  "slug": "bufete-juridico",
+  "currency": "MXN",
+  "updated_at": "2026-07-19",
+  "pricing_tiers": [
+    {
+      "service": "Consulta legal",
+      "tokens": 10,
+      "price_mxn": 499,
+      "currency": "MXN"
+    },
+    {
+      "service": "Redacción de contratos",
+      "tokens": 20,
+      "price_mxn": 799,
+      "currency": "MXN"
+    },
+    {
+      "service": "Video asesoría",
+      "tokens": 40,
+      "price_mxn": 1499,
+      "currency": "MXN"
+    }
+  ]
+}

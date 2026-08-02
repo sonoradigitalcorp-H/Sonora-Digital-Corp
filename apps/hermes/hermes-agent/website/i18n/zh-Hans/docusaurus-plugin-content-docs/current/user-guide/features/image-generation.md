@@ -27,9 +27,9 @@ Hermes Agent 通过 FAL.ai 根据文字提示生成图像。默认内置 8 个�
 ## 配置
 
 :::tip Nous 订阅用户
-若你持有付费 [Nous Portal](https://portal.nousresearch.com) 订阅，可通过 **[Tool Gateway](tool-gateway.md)** 使用文生图，**无需** `FAL_KEY`。模型选择在「直连 FAL」与「订阅网关」两条路径下保持一致。
+若你持有付费 [Nous Portal](https://portal.nousresearch.com) 订阅，可通过 **[Tool Gateway](tool-gateway.md)** 使用文生图，**无需** `FAL_API_KEY`。模型选择在「直连 FAL」与「订阅网关」两条路径下保持一致。
 
-若托管网关对某一模型返回 `HTTP 4xx`，通常表示该模型尚未在 Portal 侧代理——智能体会给出处理建议（例如配置 `FAL_KEY` 直连，或换用其他模型）。
+若托管网关对某一模型返回 `HTTP 4xx`，通常表示该模型尚未在 Portal 侧代理——智能体会给出处理建议（例如配置 `FAL_API_KEY` 直连，或换用其他模型）。
 :::
 
 ### 获取 FAL API Key
@@ -147,7 +147,7 @@ export IMAGE_TOOLS_DEBUG=true
 
 ## 限制
 
-- **需要 FAL 凭据**（直连 `FAL_KEY` 或 Nous 订阅网关）  
+- **需要 FAL 凭据**（直连 `FAL_API_KEY` 或 Nous 订阅网关）  
 - **仅文生图** — 不支持局部重绘、图生图或编辑类工作流  
 - **临时 URL** — FAL 托管链接会在数小时至数天后过期；请自行落盘保存  
 - **按模型能力裁剪** — 部分模型不支持 `seed`、`num_inference_steps` 等；`supports` 会静默丢弃不支持的参数，属预期行为  

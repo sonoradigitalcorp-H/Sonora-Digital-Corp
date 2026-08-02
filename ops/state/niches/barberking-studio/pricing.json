@@ -1,0 +1,28 @@
+{
+  "version": "1.0.0",
+  "niche": "barbero",
+  "name": "BarberKing Studio",
+  "slug": "barberking-studio",
+  "currency": "MXN",
+  "updated_at": "2026-07-19",
+  "pricing_tiers": [
+    {
+      "service": "Corte de cabello",
+      "tokens": 5,
+      "price_mxn": 149,
+      "currency": "MXN"
+    },
+    {
+      "service": "Fotos de perfil",
+      "tokens": 10,
+      "price_mxn": 299,
+      "currency": "MXN"
+    },
+    {
+      "service": "Video promocional",
+      "tokens": 25,
+      "price_mxn": 599,
+      "currency": "MXN"
+    }
+  ]
+}

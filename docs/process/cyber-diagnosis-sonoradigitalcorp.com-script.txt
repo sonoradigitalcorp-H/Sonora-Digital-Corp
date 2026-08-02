@@ -1,0 +1,9 @@
+Hola, soy la asistente de Sonora Digital Corp. Acabamos de completar el diagnóstico express de ciberseguridad para sonoradigitalcorp.com. 
+
+Tu calificación es D, con un score de 50 sobre 100. Es importante que tomes acciones pronto para proteger tu dominio.
+
+De 8 verificaciones realizadas, 3 están en orden, 3 tienen advertencias, y 2 requieren acción inmediata. 
+
+Los puntos críticos que detectamos son: SSL Certificate. Te recomendamos revisar el reporte detallado que te hemos enviado.
+
+Hemos enviado el reporte completo a tu correo con todos los detalles y recomendaciones. Si tienes dudas o quieres que implementemos las correcciones por ti, puedes contactarnos directamente por WhatsApp. Gracias por confiar en Sonora Digital Corp. ¡Cuida tu seguridad digital!

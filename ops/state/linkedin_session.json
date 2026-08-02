@@ -1,0 +1,65 @@
+{
+  "cookies": [
+    {
+      "name": "AnalyticsSyncHistory",
+      "value": "",
+      "domain": ".linkedin.com",
+      "path": "/",
+      "expires": 1788192968.891731,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "UserMatchHistory",
+      "value": "",
+      "domain": ".linkedin.com",
+      "path": "/",
+      "expires": 1788192968.89162,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "bcookie",
+      "value": "",
+      "domain": ".linkedin.com",
+      "path": "/",
+      "expires": 1817136969.383875,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "bscookie",
+      "value": "",
+      "domain": ".www.linkedin.com",
+      "path": "/",
+      "expires": 1813799248.067297,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "li_sugr",
+      "value": "",
+      "domain": ".linkedin.com",
+      "path": "/",
+      "expires": 1793376969.383716,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "lidc",
+      "value": "",
+      "domain": ".linkedin.com",
+      "path": "/",
+      "expires": 1785687368.891904,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    }
+  ],
+  "origins": []
+}

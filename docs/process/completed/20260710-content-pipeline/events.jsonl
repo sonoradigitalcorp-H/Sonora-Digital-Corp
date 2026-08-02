@@ -1,0 +1,14 @@
+{"event": "session.start", "id": "ses_20260710-001", "timestamp": "2026-07-10T06:00:00Z", "source": "mystic", "subject": "Content AI Pipeline", "payload": {"objective": "Unificar content pipeline con storage local"}}
+{"event": "bug.fixed", "timestamp": "2026-07-10T06:30:00Z", "source": "mystic", "subject": "edge-tts hash non-deterministic", "payload": {"file": "edge-tts-server.py", "fix": "replaced hash() with hashlib.md5()"}}
+{"event": "bug.fixed", "timestamp": "2026-07-10T06:30:00Z", "source": "mystic", "subject": "edge-tts invalid return", "payload": {"file": "edge-tts-server.py", "fix": "replaced tuple return with HTTPException"}}
+{"event": "bug.fixed", "timestamp": "2026-07-10T06:31:00Z", "source": "mystic", "subject": "edge-tts localhost URL", "payload": {"file": "edge-tts-server.py", "fix": "added PUBLIC_HOST env var"}}
+{"event": "storage.created", "timestamp": "2026-07-10T06:45:00Z", "source": "mystic", "subject": "Local storage layer", "payload": {"path": "/data/content/", "subdirs": ["images","audio","video","ocr","thumbnails"], "type": "filesystem+nginx"}}
+{"event": "infra.configured", "timestamp": "2026-07-10T06:50:00Z", "source": "mystic", "subject": "nginx storage serving", "payload": {"port": 8768, "host": "149.56.46.173", "root": "/data/content"}}
+{"event": "code.added", "timestamp": "2026-07-10T07:00:00Z", "source": "mystic", "subject": "_download_to_local function", "payload": {"file": "server.py", "description": "Downloads generation results to local storage"}}
+{"event": "code.added", "timestamp": "2026-07-10T07:10:00Z", "source": "mystic", "subject": "Webhook tools", "payload": {"tools": ["register_webhook","list_webhooks","delete_webhook"], "file": "server.py"}}
+{"event": "code.added", "timestamp": "2026-07-10T07:15:00Z", "source": "mystic", "subject": "Webhook delivery", "payload": {"file": "server.py", "function": "_deliver_webhooks", "trigger": "post-generation"}}
+{"event": "migration.applied", "timestamp": "2026-07-10T07:20:00Z", "source": "mystic", "subject": "002_storage_webhooks.sql", "payload": {"tables": ["content_webhooks","content_deliveries"], "columns_added": ["local_url","file_size_bytes","file_type"]}}
+{"event": "infra.configured", "timestamp": "2026-07-10T07:25:00Z", "source": "mystic", "subject": "Cleanup cron", "payload": {"path": "/etc/cron.daily/content-cleanup", "retention": "30 days"}}
+{"event": "container.rebuilt", "timestamp": "2026-07-10T07:30:00Z", "source": "mystic", "subject": "content-server rebuild", "payload": {"image": "infra-content-server", "status": "running"}}
+{"event": "cleanup.completed", "timestamp": "2026-07-10T08:00:00Z", "source": "mystic", "subject": "VPS disk cleanup", "payload": {"reclaimed_gb": 26, "before_pct": 71, "after_pct": 44}}
+{"event": "session.end", "id": "ses_20260710-001", "timestamp": "2026-07-10T08:30:00Z", "source": "mystic", "subject": "Content AI Pipeline", "payload": {"spec": "SPEC-20260710-001", "files_changed": 8, "tier": 2}}

@@ -1,0 +1,110 @@
+{
+  "timestamp": "2026-07-01T10:02:54.702Z",
+  "passed": 16,
+  "failed": 1,
+  "total": 17,
+  "results": [
+    {
+      "name": "Gateway Health",
+      "passed": true,
+      "result": "✅",
+      "detail": "OK"
+    },
+    {
+      "name": "Auth JWT",
+      "passed": true,
+      "result": "✅",
+      "detail": "OK"
+    },
+    {
+      "name": "Tool Count >= 166",
+      "passed": false,
+      "result": "❌",
+      "detail": "Only undefined tools"
+    },
+    {
+      "name": "ABE Artists Data",
+      "passed": true,
+      "result": "✅",
+      "detail": "OK"
+    },
+    {
+      "name": "ABE CEO Dashboard",
+      "passed": true,
+      "result": "✅",
+      "detail": "OK"
+    },
+    {
+      "name": "Enterprise Score",
+      "passed": true,
+      "result": "✅",
+      "detail": "OK"
+    },
+    {
+      "name": "ADK Agents >= 12",
+      "passed": true,
+      "result": "✅",
+      "detail": "OK"
+    },
+    {
+      "name": "Workflows >= 7",
+      "passed": true,
+      "result": "✅",
+      "detail": "OK"
+    },
+    {
+      "name": "Intake System",
+      "passed": true,
+      "result": "✅",
+      "detail": "OK"
+    },
+    {
+      "name": "Security Audit",
+      "passed": true,
+      "result": "✅",
+      "detail": "OK"
+    },
+    {
+      "name": "Page /dashboard",
+      "passed": true,
+      "result": "✅",
+      "detail": "OK"
+    },
+    {
+      "name": "Page /adk",
+      "passed": true,
+      "result": "✅",
+      "detail": "OK"
+    },
+    {
+      "name": "Page /abe",
+      "passed": true,
+      "result": "✅",
+      "detail": "OK"
+    },
+    {
+      "name": "Page /abe-saas",
+      "passed": true,
+      "result": "✅",
+      "detail": "OK"
+    },
+    {
+      "name": "Page /abraham",
+      "passed": true,
+      "result": "✅",
+      "detail": "OK"
+    },
+    {
+      "name": "Page /cheatsheet",
+      "passed": true,
+      "result": "✅",
+      "detail": "OK"
+    },
+    {
+      "name": "Page /workflow-editor",
+      "passed": true,
+      "result": "✅",
+      "detail": "OK"
+    }
+  ]
+}

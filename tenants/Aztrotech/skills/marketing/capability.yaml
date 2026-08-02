@@ -1,0 +1,18 @@
+id: marketing
+name: Marketing Campaigns
+version: 1.0.0
+status: active
+domain: marketing
+description: "Creación y lanzamiento de campañas de marketing"
+entry:
+  agent: marketing-agent
+  trigger: marketing.campaign.requested
+policies:
+  max_cost: 0.02
+  timeout_seconds: 10
+events:
+  emits:
+    - marketing.campaign.created
+    - marketing.campaign.launched
+  consumes:
+    - marketing.campaign.requested

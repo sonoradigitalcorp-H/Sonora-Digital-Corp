@@ -224,7 +224,7 @@ skills:
     # - comfyui
 env_required:
   # populate based on the chosen API:
-  - FAL_KEY                 # or REPLICATE_API_TOKEN, OPENAI_API_KEY for image-gen
+  - FAL_API_KEY                 # or REPLICATE_API_TOKEN, OPENAI_API_KEY for image-gen
   - RUNWAY_API_KEY          # or KLING_API_KEY, LUMA_API_KEY for image-to-video
   - ELEVENLABS_API_KEY      # or OPENAI_API_KEY for TTS
 ```
@@ -291,7 +291,7 @@ key is present in `${HERMES_HOME:-~/.hermes}/.env` (or macOS Keychain) before fi
 | ElevenLabs | `ELEVENLABS_API_KEY` | voice-talent |
 | OpenAI | `OPENAI_API_KEY` | image-generator (DALL-E), voice-talent (TTS) |
 | OpenRouter | `OPENROUTER_API_KEY` | reviewer, cinematographer, editor (`video_analyze` routes through `AUXILIARY_VIDEO_MODEL` → OpenRouter) |
-| FAL | `FAL_KEY` | image-generator (FAL flux models) |
+| FAL | `FAL_API_KEY` | image-generator (FAL flux models) |
 | Replicate | `REPLICATE_API_TOKEN` | image-generator (alternate provider) |
 | Runway | `RUNWAY_API_KEY` | image-to-video-generator |
 | Kling | `KLING_API_KEY` | image-to-video-generator (alternate) |

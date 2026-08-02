@@ -1,0 +1,109 @@
+# SONORA DIGITAL CORP - Paquete DESPERTAR
+# "Para el humano que empieza a despertar su presencia digital"
+# Tipo: Freemium / Auto-servicio
+
+paquete:
+  id: "sonora-despertar-v1"
+  nombre: "Despertar"
+  tagline: "Tu negocio nunca duerme, incluso cuando tu si."
+  tipo: "freemium"
+  precio_mxn: 299
+  precio_usd: 17
+  margen_pct: 70
+  costo_real_usd: 5
+  prueba_dias: 14
+  setup_fee: 0
+
+limites:
+  agentes_voz: 1
+  agentes_tipo: ["recepcionista"]
+  llamadas_mes: 100
+  canales: 1  # WhatsApp O Telegram (elegir uno)
+  numeros_virtuales: 1
+  embudos: 0
+  outbound_masivo: false
+  swarm_agents: false
+  white_label: false
+  api_acceso: false
+  reseller: false
+  dashboard_3d: false
+  inteligencia_prospecto: false
+  content_factory: false
+  clon_voz: true  # basico
+  clon_imagen: false
+  clon_3d: false
+  llamadas_simultaneas: 1
+  almacenamiento_gb: 2
+  retencion_audio_dias: 30
+
+features:
+  - id: "agente-recepcionista"
+    nombre: "Agente Recepcionista"
+    descripcion: "Guardian digital que atiende llamadas y chats 24/7"
+    incluye: true
+  - id: "dashboard-basico"
+    nombre: "Dashboard Basico"
+    descripcion: "Panel con transcripcion automatica y resumen diario"
+    incluye: true
+  - id: "resumen-whatsapp"
+    nombre: "Resumen por WhatsApp"
+    descripcion: "Resumen nocturno de actividad del agente"
+    incluye: true
+  - id: "reporte-semanal"
+    nombre: "Reporte Semanal por Email"
+    descripcion: "Metricas de la semana enviadas por email"
+    incluye: true
+  - id: "numero-virtual"
+    nombre: "Numero de Telefono Virtual"
+    descripcion: "1 numero DID virtual conectado al agente"
+    incluye: true
+  - id: "clon-voz-basico"
+    nombre: "Clonacion de Voz Basica"
+    descripcion: "Clon de voz a partir de grabacion de 30 segundos"
+    incluye: true
+
+onboarding:
+  duracion_horas: 2
+  pasos:
+    - "Registro con email y telefono"
+    - "Subir audio de 30 segundos para clon de voz"
+    - "Elegir canal (WhatsApp o Telegram)"
+    - "Configurar conocimiento base del negocio (FAQ, servicios, precios)"
+    - "Activar numero virtual"
+    - "Prueba de llamada con el agente"
+  automatizado_pct: 90
+
+soporte:
+  canal: "email"
+  tiempo_respuesta: "24 horas"
+  idiomas: ["es"]
+
+medicion:
+  uptime_target: 99.0
+  latencia_voz_max_seg: 3.0
+  tiempo_respuesta_voz_max_seg: 3.0
+  abandono_target_pct: 8
+  empatia_target_pct: 75
+  bant_target_pct: 80
+
+tokenomics:
+  llamada_atendida: 1
+  lead_capturado: 5
+  venta_cerrada: 0  # no aplica en este paquete
+  onboarding_completado: 20
+  referir: 50
+  pago_en_son_descuento: 10
+
+upgrade_path:
+  siguiente: "elevar"
+  trigger_recomendado:
+    - "Mas de 80 llamadas/mes durante 2 meses consecutivos"
+    - "Solicitud de segundo agente"
+    - "Solicitud de embudo de ventas"
+    - "Solicitud de llamadas outbound"
+
+contrato_aplicable:
+  - "terminos_uso.md"
+  - "kyc_estandar.md"
+  - "privacidad_datos.md"
+  - "uso_indebido.md"

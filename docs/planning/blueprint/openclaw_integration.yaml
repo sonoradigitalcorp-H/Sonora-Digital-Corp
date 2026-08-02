@@ -1,0 +1,73 @@
+# INTEGRACION OPENCLAW + SONORA
+# Puente de Conciencia: OpenClaw como sistema nervioso autonomo
+
+openclaw:
+  concepto: |
+    OpenClaw no reemplaza al Mystic Core. Actua como el sistema nervioso autonomo
+    que permite a la infraestructura sentirse, curarse y evolucionar.
+    Se integra via MCP (Model Context Protocol) para conectar habilidades de ClawHub
+    con la arquitectura existente de Sonora.
+
+  tabla_integracion:
+    - nivel: "Orquestador (Nivel 3)"
+      mcp: "agent-control-mcp"
+      skills_clawhub: ["prompt-evaluator", "agent-control"]
+      beneficio: "Auto-diagnostico de agentes. Detecta patrones de fallo antes de perder leads."
+    - nivel: "Infraestructura (Nivel 2)"
+      mcp: "infra-mystic-mcp"
+      skills_clawhub: ["system-monitor", "docker-manager"]
+      beneficio: "Mantenimiento predictivo. Reinicia servicios, rota keys, verifica backups."
+    - nivel: "Inteligencia (Scraper)"
+      mcp: "scraper-mcp"
+      skills_clawhub: ["web-scraper", "lead-intel"]
+      beneficio: "Enriquecimiento proactivo de prospectos sin intervencion humana."
+    - nivel: "Evolution Engine"
+      mcp: "evolution-mcp"
+      skills_clawhub: ["ab-test-runner", "prompt-evaluator"]
+      beneficio: "A/B testing automatico con analisis estadistico. Escala ganador solo si es significativo."
+    - nivel: "Comunicacion"
+      mcp: "telegram-mcp"
+      skills_clawhub: ["notification-dispatch", "telegram-control"]
+      beneficio: "Control remoto por Telegram. Pausar/escalar/recibir alertas inteligentes."
+
+  grimorios_evolutivos:
+    concepto: |
+      No se venden templates estaticos. Se ofrecen Entidades Vivas Adaptativas.
+      Cada nicho inicia con KB pre-entrenada. El agente aprende del cliente.
+      El Evolution Engine actualiza KBs de todo el nicho cuando valida mejora,
+      respetando siempre el Sigilo del Tenant.
+    flujo:
+      - "1. Grimorio Base: KB pre-entrenada por nicho (contadores, dentistas, etc.)"
+      - "2. Adaptacion: El agente aprende el tono y casos de exito del cliente"
+      - "3. Evolucion Global: Mejoras validadas se comparten al nicho (datos aislados)"
+    regla: "El cliente no configura codigo. El cliente ensena y corrige."
+
+  estrategia_consumo_libertad:
+    principio: "El cliente escala porque se siente mas libre y poderoso, no por presion."
+    mecanicas:
+      - nombre: "Desbloquea Tiempo"
+        narrativa: "Tu agente aprendio a manejar cotizaciones solo. Son 15 horas semanales que recuperas."
+        mecanica: "Las nuevas habilidades se notifican como Libertades Desbloqueadas"
+      - nombre: "Transparencia Radical"
+        narrativa: "Mira como tu agente piensa. No es caja negra, es tu extension digital."
+        mecanica: "Dashboards que muestran ahorro real y mejora de calidad"
+      - nombre: "Tokenomics Co-Creacion"
+        narrativa: "Tus mejoras benefician a todos y te recompensan."
+        mecanica: "Ganar SON al ensenar patrones exitosos. Gastar SON en capacidades premium."
+      - nombre: "Escalabilidad Organica"
+        narrativa: "Crece cuando estes listo."
+        mecanica: "OpenClaw detecta senales de saturacion y sugiere upgrades reales"
+
+  skills_clawhub_recomendadas:
+    - nombre: "docker-manager"
+      uso: "Reiniciar contenedores ante fallos"
+    - nombre: "supabase-client"
+      uso: "Consultar metricas con RLS"
+    - nombre: "redis-cli"
+      uso: "Verificar cache y colas Celery"
+    - nombre: "qdrant-query"
+      uso: "Validar semantica de KBs por nicho"
+    - nombre: "code-assistant"
+      uso: "Escribir tests y refactorizar Mystic Core"
+    - nombre: "prompt-evaluator"
+      uso: "Analizar transcripciones fallidas y proponer mejoras"

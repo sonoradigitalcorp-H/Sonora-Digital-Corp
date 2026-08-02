@@ -1,0 +1,95 @@
+{
+  "cookies": [
+    {
+      "name": "csrftoken",
+      "value": "",
+      "domain": ".instagram.com",
+      "path": "/",
+      "expires": 1819643625.274965,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "datr",
+      "value": "",
+      "domain": ".instagram.com",
+      "path": "/",
+      "expires": 1818045611.258024,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ds_user_id",
+      "value": "",
+      "domain": ".instagram.com",
+      "path": "/",
+      "expires": 1792859625.277073,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ig_did",
+      "value": "",
+      "domain": ".instagram.com",
+      "path": "/",
+      "expires": 1813855900.377977,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ig_nrcb",
+      "value": "",
+      "domain": ".instagram.com",
+      "path": "/",
+      "expires": 1813855900.37803,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "mid",
+      "value": "",
+      "domain": ".instagram.com",
+      "path": "/",
+      "expires": 1816879900.377876,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ps_l",
+      "value": "",
+      "domain": ".instagram.com",
+      "path": "/",
+      "expires": 1818312937.768509,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "ps_n",
+      "value": "",
+      "domain": ".instagram.com",
+      "path": "/",
+      "expires": 1818312937.769678,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "sessionid",
+      "value": "",
+      "domain": ".instagram.com",
+      "path": "/",
+      "expires": 1816045097.833915,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    }
+  ],
+  "origins": []
+}

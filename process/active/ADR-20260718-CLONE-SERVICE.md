@@ -18,7 +18,7 @@ Necesitamos un servicio de clon publicitario donde clientes envíen fotos/audio 
 ### 1. Backend de IA: FAL.ai (no GPU local)
 
 **Opción**: Usar FAL.ai para todo el procesamiento GPU (LoRA training, image gen, video gen, lip sync)
-**Razón**: El VPS no tiene GPU. FAL_KEY ya está configurado. Costo por entrenamiento LoRA ~$3-5, por asset ~$0.01-0.15.
+**Razón**: El VPS no tiene GPU. FAL_API_KEY ya está configurado. Costo por entrenamiento LoRA ~$3-5, por asset ~$0.01-0.15.
 **Consecuencia**: Dependencia externa, pero sin inversión en hardware. Margen >90%.
 
 ### 2. Voice cloning: OmniVoice (local) + MiniMax (FAL)

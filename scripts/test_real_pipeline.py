@@ -23,7 +23,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 
-FAL_KEY = os.environ.get("FAL_KEY", "")
+FAL_API_KEY = os.environ.get("FAL_API_KEY", "")
 PASS = 0
 FAIL = 0
 TOTAL_COST = 0.0
@@ -49,7 +49,7 @@ def call_fal(endpoint: str, payload: dict, timeout: int = 60) -> dict:
     """Call FAL.ai endpoint and return response."""
     import httpx
     headers = {
-        "Authorization": f"Key {FAL_KEY}",
+        "Authorization": f"Key {FAL_API_KEY}",
         "Content-Type": "application/json",
     }
     try:
@@ -204,11 +204,11 @@ def main():
     print(f"\n{'═'*60}")
     print("  🧪  REAL FAL.AI PIPELINE TEST")
     print(f"  {datetime.now().isoformat()}")
-    print(f"  FAL_KEY: {'✅ Configurada' if FAL_KEY else '❌ NO CONFIGURADA'}")
+    print(f"  FAL_API_KEY: {'✅ Configurada' if FAL_API_KEY else '❌ NO CONFIGURADA'}")
     print(f"{'═'*60}")
 
-    if not FAL_KEY:
-        fail("FAL_KEY not found in environment")
+    if not FAL_API_KEY:
+        fail("FAL_API_KEY not found in environment")
         sys.exit(1)
 
     quick = "--quick" in sys.argv

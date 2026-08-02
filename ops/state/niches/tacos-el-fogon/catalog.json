@@ -1,0 +1,37 @@
+{
+  "version": "1.0.0",
+  "niche": "restaurante",
+  "name": "Tacos El Fogon",
+  "slug": "tacos-el-fogon",
+  "currency": "MXN",
+  "updated_at": "2026-07-19",
+  "items": [
+    {
+      "id": "restaurante-men-digital",
+      "name": "Menú digital",
+      "description": "Servicio profesional de menú digital para Tacos El Fogon",
+      "tokens": 3,
+      "price_mxn": 99,
+      "delivery": "24-48 hrs",
+      "revisions": 2
+    },
+    {
+      "id": "restaurante-promociones",
+      "name": "Promociones",
+      "description": "Servicio profesional de promociones para Tacos El Fogon",
+      "tokens": 5,
+      "price_mxn": 149,
+      "delivery": "24-48 hrs",
+      "revisions": 2
+    },
+    {
+      "id": "restaurante-reservaciones",
+      "name": "Reservaciones",
+      "description": "Servicio profesional de reservaciones para Tacos El Fogon",
+      "tokens": 5,
+      "price_mxn": 199,
+      "delivery": "24-48 hrs",
+      "revisions": 2
+    }
+  ]
+}

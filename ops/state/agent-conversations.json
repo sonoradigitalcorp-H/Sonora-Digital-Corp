@@ -1,0 +1,326 @@
+{
+  "conversations": [
+    {
+      "id": "conv-1782902773169-q5if",
+      "agents": [
+        "abe-analytics-agent",
+        "abe-marketing-agent"
+      ],
+      "topic": "analyze ABE Music Q3 strategy",
+      "messages": [
+        {
+          "agent": "abe-analytics-agent",
+          "message": "Analizando \"analyze ABE Music Q3 strategy\" desde mi perspectiva de abe-analytics-agent..."
+        },
+        {
+          "agent": "abe-marketing-agent",
+          "message": "Recibido. Como abe-marketing-agent, yo puedo aportar datos y ejecución."
+        },
+        {
+          "agent": "abe-analytics-agent",
+          "message": "Perfecto. Propongo crear un producto basado en: analyze ABE Music Q3 strategy"
+        },
+        {
+          "agent": "abe-marketing-agent",
+          "message": "Aprobado. Voy a dejar traza en el knowledge graph y generar los artefactos."
+        }
+      ],
+      "started_at": "2026-07-01T10:46:13.169Z",
+      "status": "completed"
+    },
+    {
+      "id": "conv-1782902773262-jngc",
+      "agents": [
+        "abe-revenue-agent",
+        "abe-scheduler-agent"
+      ],
+      "topic": "validate revenue pipeline",
+      "messages": [
+        {
+          "agent": "abe-revenue-agent",
+          "message": "Analizando \"validate revenue pipeline\" desde mi perspectiva de abe-revenue-agent..."
+        },
+        {
+          "agent": "abe-scheduler-agent",
+          "message": "Recibido. Como abe-scheduler-agent, yo puedo aportar datos y ejecución."
+        },
+        {
+          "agent": "abe-revenue-agent",
+          "message": "Perfecto. Propongo crear un producto basado en: validate revenue pipeline"
+        },
+        {
+          "agent": "abe-scheduler-agent",
+          "message": "Aprobado. Voy a dejar traza en el knowledge graph y generar los artefactos."
+        }
+      ],
+      "started_at": "2026-07-01T10:46:13.262Z",
+      "status": "completed"
+    },
+    {
+      "id": "conv-1782902793595-i58c",
+      "agents": [
+        "abe-analytics-agent",
+        "abe-marketing-agent"
+      ],
+      "topic": "analyze ABE Music Q3 strategy",
+      "messages": [
+        {
+          "agent": "abe-analytics-agent",
+          "message": "Analizando \"analyze ABE Music Q3 strategy\" desde mi perspectiva de abe-analytics-agent..."
+        },
+        {
+          "agent": "abe-marketing-agent",
+          "message": "Recibido. Como abe-marketing-agent, yo puedo aportar datos y ejecución."
+        },
+        {
+          "agent": "abe-analytics-agent",
+          "message": "Perfecto. Propongo crear un producto basado en: analyze ABE Music Q3 strategy"
+        },
+        {
+          "agent": "abe-marketing-agent",
+          "message": "Aprobado. Voy a dejar traza en el knowledge graph y generar los artefactos."
+        }
+      ],
+      "started_at": "2026-07-01T10:46:33.595Z",
+      "status": "completed"
+    },
+    {
+      "id": "conv-1782902793690-gebs",
+      "agents": [
+        "abe-revenue-agent",
+        "abe-scheduler-agent"
+      ],
+      "topic": "validate revenue pipeline",
+      "messages": [
+        {
+          "agent": "abe-revenue-agent",
+          "message": "Analizando \"validate revenue pipeline\" desde mi perspectiva de abe-revenue-agent..."
+        },
+        {
+          "agent": "abe-scheduler-agent",
+          "message": "Recibido. Como abe-scheduler-agent, yo puedo aportar datos y ejecución."
+        },
+        {
+          "agent": "abe-revenue-agent",
+          "message": "Perfecto. Propongo crear un producto basado en: validate revenue pipeline"
+        },
+        {
+          "agent": "abe-scheduler-agent",
+          "message": "Aprobado. Voy a dejar traza en el knowledge graph y generar los artefactos."
+        }
+      ],
+      "started_at": "2026-07-01T10:46:33.690Z",
+      "status": "completed"
+    },
+    {
+      "id": "conv-1782902868415-0tma",
+      "agents": [
+        "abe-analytics-agent",
+        "abe-marketing-agent"
+      ],
+      "topic": "analyze ABE Music Q3 strategy",
+      "messages": [
+        {
+          "agent": "abe-analytics-agent",
+          "message": "Analizando \"analyze ABE Music Q3 strategy\" desde mi perspectiva de abe-analytics-agent..."
+        },
+        {
+          "agent": "abe-marketing-agent",
+          "message": "Recibido. Como abe-marketing-agent, yo puedo aportar datos y ejecución."
+        },
+        {
+          "agent": "abe-analytics-agent",
+          "message": "Perfecto. Propongo crear un producto basado en: analyze ABE Music Q3 strategy"
+        },
+        {
+          "agent": "abe-marketing-agent",
+          "message": "Aprobado. Voy a dejar traza en el knowledge graph y generar los artefactos."
+        }
+      ],
+      "started_at": "2026-07-01T10:47:48.415Z",
+      "status": "completed"
+    },
+    {
+      "id": "conv-1782902868463-q367",
+      "agents": [
+        "abe-revenue-agent",
+        "abe-scheduler-agent"
+      ],
+      "topic": "validate revenue pipeline",
+      "messages": [
+        {
+          "agent": "abe-revenue-agent",
+          "message": "Analizando \"validate revenue pipeline\" desde mi perspectiva de abe-revenue-agent..."
+        },
+        {
+          "agent": "abe-scheduler-agent",
+          "message": "Recibido. Como abe-scheduler-agent, yo puedo aportar datos y ejecución."
+        },
+        {
+          "agent": "abe-revenue-agent",
+          "message": "Perfecto. Propongo crear un producto basado en: validate revenue pipeline"
+        },
+        {
+          "agent": "abe-scheduler-agent",
+          "message": "Aprobado. Voy a dejar traza en el knowledge graph y generar los artefactos."
+        }
+      ],
+      "started_at": "2026-07-01T10:47:48.463Z",
+      "status": "completed"
+    }
+  ],
+  "traces": [
+    {
+      "id": "trace-1782902773169",
+      "type": "agent_conversation",
+      "agents": [
+        "abe-analytics-agent",
+        "abe-marketing-agent"
+      ],
+      "topic": "analyze ABE Music Q3 strategy",
+      "conversation_id": "conv-1782902773169-q5if",
+      "product_id": "product-1782902773169-lk63",
+      "timestamp": "2026-07-01T10:46:13.169Z"
+    },
+    {
+      "id": "trace-1782902773262",
+      "type": "agent_conversation",
+      "agents": [
+        "abe-revenue-agent",
+        "abe-scheduler-agent"
+      ],
+      "topic": "validate revenue pipeline",
+      "conversation_id": "conv-1782902773262-jngc",
+      "product_id": "product-1782902773262-q9xv",
+      "timestamp": "2026-07-01T10:46:13.262Z"
+    },
+    {
+      "id": "trace-1782902793596",
+      "type": "agent_conversation",
+      "agents": [
+        "abe-analytics-agent",
+        "abe-marketing-agent"
+      ],
+      "topic": "analyze ABE Music Q3 strategy",
+      "conversation_id": "conv-1782902793595-i58c",
+      "product_id": "product-1782902793595-3brx",
+      "timestamp": "2026-07-01T10:46:33.596Z"
+    },
+    {
+      "id": "trace-1782902793690",
+      "type": "agent_conversation",
+      "agents": [
+        "abe-revenue-agent",
+        "abe-scheduler-agent"
+      ],
+      "topic": "validate revenue pipeline",
+      "conversation_id": "conv-1782902793690-gebs",
+      "product_id": "product-1782902793690-ezqu",
+      "timestamp": "2026-07-01T10:46:33.690Z"
+    },
+    {
+      "id": "trace-1782902868415",
+      "type": "agent_conversation",
+      "agents": [
+        "abe-analytics-agent",
+        "abe-marketing-agent"
+      ],
+      "topic": "analyze ABE Music Q3 strategy",
+      "conversation_id": "conv-1782902868415-0tma",
+      "product_id": "product-1782902868415-ft3g",
+      "timestamp": "2026-07-01T10:47:48.415Z"
+    },
+    {
+      "id": "trace-1782902868463",
+      "type": "agent_conversation",
+      "agents": [
+        "abe-revenue-agent",
+        "abe-scheduler-agent"
+      ],
+      "topic": "validate revenue pipeline",
+      "conversation_id": "conv-1782902868463-q367",
+      "product_id": "product-1782902868463-s7e7",
+      "timestamp": "2026-07-01T10:47:48.463Z"
+    }
+  ],
+  "products": [
+    {
+      "id": "product-1782902773169-lk63",
+      "name": "Generado por: abe-analytics-agent + abe-marketing-agent",
+      "topic": "analyze ABE Music Q3 strategy",
+      "agents": [
+        "abe-analytics-agent",
+        "abe-marketing-agent"
+      ],
+      "created_at": "2026-07-01T10:46:13.169Z",
+      "status": "prototype",
+      "conversation_id": "conv-1782902773169-q5if",
+      "trace": "Conversación entre abe-analytics-agent y abe-marketing-agent sobre \"analyze ABE Music Q3 strategy\" generó este producto."
+    },
+    {
+      "id": "product-1782902773262-q9xv",
+      "name": "Generado por: abe-revenue-agent + abe-scheduler-agent",
+      "topic": "validate revenue pipeline",
+      "agents": [
+        "abe-revenue-agent",
+        "abe-scheduler-agent"
+      ],
+      "created_at": "2026-07-01T10:46:13.262Z",
+      "status": "prototype",
+      "conversation_id": "conv-1782902773262-jngc",
+      "trace": "Conversación entre abe-revenue-agent y abe-scheduler-agent sobre \"validate revenue pipeline\" generó este producto."
+    },
+    {
+      "id": "product-1782902793595-3brx",
+      "name": "Generado por: abe-analytics-agent + abe-marketing-agent",
+      "topic": "analyze ABE Music Q3 strategy",
+      "agents": [
+        "abe-analytics-agent",
+        "abe-marketing-agent"
+      ],
+      "created_at": "2026-07-01T10:46:33.596Z",
+      "status": "prototype",
+      "conversation_id": "conv-1782902793595-i58c",
+      "trace": "Conversación entre abe-analytics-agent y abe-marketing-agent sobre \"analyze ABE Music Q3 strategy\" generó este producto."
+    },
+    {
+      "id": "product-1782902793690-ezqu",
+      "name": "Generado por: abe-revenue-agent + abe-scheduler-agent",
+      "topic": "validate revenue pipeline",
+      "agents": [
+        "abe-revenue-agent",
+        "abe-scheduler-agent"
+      ],
+      "created_at": "2026-07-01T10:46:33.690Z",
+      "status": "prototype",
+      "conversation_id": "conv-1782902793690-gebs",
+      "trace": "Conversación entre abe-revenue-agent y abe-scheduler-agent sobre \"validate revenue pipeline\" generó este producto."
+    },
+    {
+      "id": "product-1782902868415-ft3g",
+      "name": "Generado por: abe-analytics-agent + abe-marketing-agent",
+      "topic": "analyze ABE Music Q3 strategy",
+      "agents": [
+        "abe-analytics-agent",
+        "abe-marketing-agent"
+      ],
+      "created_at": "2026-07-01T10:47:48.415Z",
+      "status": "prototype",
+      "conversation_id": "conv-1782902868415-0tma",
+      "trace": "Conversación entre abe-analytics-agent y abe-marketing-agent sobre \"analyze ABE Music Q3 strategy\" generó este producto."
+    },
+    {
+      "id": "product-1782902868463-s7e7",
+      "name": "Generado por: abe-revenue-agent + abe-scheduler-agent",
+      "topic": "validate revenue pipeline",
+      "agents": [
+        "abe-revenue-agent",
+        "abe-scheduler-agent"
+      ],
+      "created_at": "2026-07-01T10:47:48.463Z",
+      "status": "prototype",
+      "conversation_id": "conv-1782902868463-q367",
+      "trace": "Conversación entre abe-revenue-agent y abe-scheduler-agent sobre \"validate revenue pipeline\" generó este producto."
+    }
+  ]
+}

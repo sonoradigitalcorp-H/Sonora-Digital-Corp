@@ -1,0 +1,65 @@
+{
+  "cookies": [
+    {
+      "name": "dbln",
+      "value": "",
+      "domain": ".facebook.com",
+      "path": "/login/device-based/",
+      "expires": 1790802421.417677,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "datr",
+      "value": "",
+      "domain": ".facebook.com",
+      "path": "/",
+      "expires": 1817584884.809963,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "fr",
+      "value": "",
+      "domain": ".facebook.com",
+      "path": "/",
+      "expires": 1792245197.826696,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "ps_l",
+      "value": "",
+      "domain": ".facebook.com",
+      "path": "/",
+      "expires": 1817584885.573423,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "Lax"
+    },
+    {
+      "name": "ps_n",
+      "value": "",
+      "domain": ".facebook.com",
+      "path": "/",
+      "expires": 1817584885.573522,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    },
+    {
+      "name": "sb",
+      "value": "",
+      "domain": ".facebook.com",
+      "path": "/",
+      "expires": 1817585027.058179,
+      "httpOnly": true,
+      "secure": true,
+      "sameSite": "None"
+    }
+  ],
+  "origins": []
+}

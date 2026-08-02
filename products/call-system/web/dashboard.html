@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mystica Dashboard</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f0f1a; color: #e0e0e0; padding: 2rem; }
+h1 { font-size: 2rem; margin-bottom: 2rem; font-weight: 300; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+.card { background: #1a1a2e; border-radius: 12px; padding: 1.5rem; }
+.card h2 { font-size: 1.1rem; color: #888; margin-bottom: 1rem; font-weight: 400; }
+.stat { font-size: 2.5rem; font-weight: 300; margin-bottom: 0.5rem; }
+.stat-label { color: #888; font-size: 0.85rem; }
+table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
+th { text-align: left; color: #888; padding: 0.5rem 0; border-bottom: 1px solid #2a2a3e; }
+td { padding: 0.5rem 0; border-bottom: 1px solid #1a1a2e; }
+.badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 99px; font-size: 0.75rem; }
+.badge-hot { background: #ef4444; color: white; }
+.badge-warm { background: #f59e0b; color: black; }
+.badge-cold { background: #3b82f6; color: white; }
+.badge-lead { background: #6b7280; color: white; }
+.variant-A { color: #60a5fa; }
+.variant-B { color: #4ade80; }
+.variant-C { color: #f59e0b; }
+.summary-bar { display: flex; gap: 0.5rem; align-items: center; margin-top: 0.5rem; }
+.bar { height: 20px; border-radius: 4px; transition: width 0.3s; min-width: 2px; }
+</style>
+</head>
+<body>
+<h1>Mystica Dashboard</h1>
+<div class="grid" id="stats-grid"></div>
+<div class="grid">
+  <div class="card"><h2>A/B Testing</h2><div id="ab-results"></div></div>
+  <div class="card"><h2>Variantes activas</h2><div id="variant-detail"></div></div>
+</div>
+<div class="card" style="margin-bottom:2rem"><h2>Campañas</h2><div id="campaigns"></div></div>
+<div class="card" style="margin-bottom:2rem"><h2>Últimas llamadas</h2><div id="recent-calls"></div></div>
+<div class="card"><h2>Tenants recientes</h2><div id="recent-tenants"></div></div>
+<script>
+async function load() {
+  const r = await fetch('/api/dashboard');
+  const d = await r.json();
+  renderStats(d);
+  renderAB(d.ab_stats || {});
+  renderCampaigns(d.campaigns || {});
+  renderCalls(d.recent_calls || []);
+  renderTenants(d.recent_tenants || []);
+}
+function renderStats(d) {
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="card"><div class="stat">${d.total_calls||0}</div><div class="stat-label">Llamadas</div></div>
+    <div class="card"><div class="stat">${d.total_tenants||0}</div><div class="stat-label">Tenants</div></div>
+    <div class="card"><div class="stat">${d.total_leads||0}</div><div class="stat-label">Leads</div></div>
+    <div class="card"><div class="stat">${d.total_duration||0}min</div><div class="stat-label">Duración total</div></div>
+  `;
+}
+function renderAB(stats) {
+  const variants = ['A','B','C'];
+  let html = '<table><tr><th>Variante</th><th>Score</th><th>Llamadas</th><th>Distribución</th></tr>';
+  const max = Math.max(...variants.map(v => (stats[v]||{}).avg||0), 1);
+  for (const v of variants) {
+    const s = stats[v] || {};
+    const pct = max > 0 ? ((s.avg||0)/max*100) : 0;
+    html += `<tr>
+      <td class="variant-${v}">${v}</td>
+      <td>${s.avg||0}</td>
+      <td>${s.count||0}</td>
+      <td><div class="summary-bar"><div class="bar variant-${v}" style="width:${pct}%;background:${v==='A'?'#60a5fa':v==='B'?'#4ade80':'#f59e0b'}"></div></div></td>
+    </tr>`;
+  }
+  html += '</table>';
+  document.getElementById('ab-results').innerHTML = html;
+  let detail = '';
+  for (const v of variants) {
+    const s = stats[v] || {};
+    detail += `<p><span class="variant-${v}" style="font-weight:600">Variante ${v}</span>: ${s.avg||0} avg / ${s.count||0} calls</p>`;
+  }
+  document.getElementById('variant-detail').innerHTML = detail;
+}
+function renderCampaigns(c) {
+  let html = '<table><tr><th>Nicho</th><th>Leads</th><th>Contactados</th></tr>';
+  for (const [niche, data] of Object.entries(c)) {
+    html += `<tr><td>${niche}</td><td>${data.total||0}</td><td>${data.contacted||0}</td></tr>`;
+  }
+  html += '</table>';
+  document.getElementById('campaigns').innerHTML = html;
+}
+function renderCalls(calls) {
+  if (!calls.length) { document.getElementById('recent-calls').innerHTML = '<p style="color:#888">Sin llamadas aún</p>'; return; }
+  let html = '<table><tr><th>Tenant</th><th>Duración</th><th>Sentimiento</th><th>Resumen</th></tr>';
+  for (const c of calls) {
+    html += `<tr><td>${c.tenant_id||'?'}</td><td>${c.duration_sec||0}s</td><td>${c.sentiment||'neutral'}</td><td>${(c.summary||'').slice(0,80)}...</td></tr>`;
+  }
+  html += '</table>';
+  document.getElementById('recent-calls').innerHTML = html;
+}
+function renderTenants(tenants) {
+  if (!tenants.length) { document.getElementById('recent-tenants').innerHTML = '<p style="color:#888">Sin tenants aún</p>'; return; }
+  let html = '<table><tr><th>Nombre</th><th>Empresa</th><th>Tipo</th><th>Plan</th><th>Llamadas</th></tr>';
+  for (const t of tenants) {
+    const badge = t.tier === 'master' ? 'badge-hot' : t.lead_type === 'warm' ? 'badge-warm' : 'badge-cold';
+    html += `<tr><td>${t.name||'?'}</td><td>${t.company||''}</td><td><span class="badge ${badge}">${t.lead_type||'lead'}</span></td><td>${t.plan||'trial'}</td><td>${t.total_calls||0}</td></tr>`;
+  }
+  html += '</table>';
+  document.getElementById('recent-tenants').innerHTML = html;
+}
+load();
+setInterval(load, 10000);
+</script>
+</body>
+</html>

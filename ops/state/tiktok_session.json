@@ -1,0 +1,15 @@
+{
+  "cookies": [
+    {
+      "name": "_ttp",
+      "value": "",
+      "domain": ".tiktok.com",
+      "path": "/",
+      "expires": 1819161065.362312,
+      "httpOnly": false,
+      "secure": true,
+      "sameSite": "None"
+    }
+  ],
+  "origins": []
+}

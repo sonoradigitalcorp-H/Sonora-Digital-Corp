@@ -32,7 +32,7 @@ Prices are FAL's pricing at time of writing; check [fal.ai](https://fal.ai/) for
 :::tip Nous Subscribers
 If you have a paid [Nous Portal](https://portal.nousresearch.com) subscription, you can use image generation through the **[Tool Gateway](tool-gateway.md)** without a FAL API key. Your model selection persists across both paths. New installs can run `hermes setup --portal` to log in and turn on every gateway tool at once; existing installs can pick **Nous Subscription** as the image-gen backend via `hermes tools`.
 
-If the managed gateway returns `HTTP 4xx` for a specific model, that model isn't yet proxied on the portal side — the agent will tell you so, with remediation steps (set `FAL_KEY` for direct access, or pick a different model).
+If the managed gateway returns `HTTP 4xx` for a specific model, that model isn't yet proxied on the portal side — the agent will tell you so, with remediation steps (set `FAL_API_KEY` for direct access, or pick a different model).
 :::
 
 ### Get a FAL API Key
@@ -152,7 +152,7 @@ Debug logs go to `./logs/image_tools_debug_<session_id>.json` with per-call deta
 
 ## Limitations
 
-- **Requires FAL credentials** (direct `FAL_KEY` or Nous Subscription)
+- **Requires FAL credentials** (direct `FAL_API_KEY` or Nous Subscription)
 - **Text-to-image only** — no inpainting, img2img, or editing via this tool
 - **Temporary URLs** — FAL returns hosted URLs that expire after hours/days; save locally if needed
 - **Per-model constraints** — some models don't support `seed`, `num_inference_steps`, etc. The `supports` filter silently drops unsupported params; this is expected behavior

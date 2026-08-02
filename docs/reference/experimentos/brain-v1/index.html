@@ -1,0 +1,1176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✦ Mystic Grimoire — El Portal de la Creación</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=MedievalSharp&family=Cinzel+Decorative:wght@400;700;900&display=swap');
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #000;
+  color: #e0e0e0;
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  cursor: default;
+}
+
+#bg-canvas {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 0;
+}
+
+#graph-container {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+}
+
+#graph-svg { width: 100%; height: 100%; }
+
+/* ≡≡≡ HEADER ≡≡≡ */
+#header {
+  position: fixed;
+  top: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  text-align: center;
+  pointer-events: none;
+  transition: opacity 0.5s;
+}
+
+#header h1 {
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(0.9rem, 2vw, 1.6rem);
+  font-weight: 700;
+  text-shadow: 0 0 30px currentColor, 0 0 60px currentColor;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  transition: color 1.5s ease;
+}
+
+#header .subtitle {
+  font-size: clamp(0.45rem, 0.8vw, 0.6rem);
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  margin-top: 4px;
+  opacity: 0.5;
+  transition: color 1.5s ease;
+}
+
+/* ≡≡≡ TIME DISPLAY ≡≡≡ */
+#time-display {
+  position: fixed;
+  top: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  text-align: center;
+  pointer-events: none;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(0.5rem, 0.9vw, 0.7rem);
+  letter-spacing: 4px;
+  opacity: 0.4;
+  transition: color 1.5s ease;
+}
+
+#phase-name {
+  font-size: clamp(0.7rem, 1.2vw, 0.95rem);
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  margin-top: 4px;
+  font-weight: 700;
+  opacity: 0.6;
+  transition: color 1.5s ease;
+}
+
+/* ≡≡≡ STATS PANEL ≡≡≡ */
+#stats-panel {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  z-index: 3;
+  background: rgba(0,0,0,0.75);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 12px 16px;
+  backdrop-filter: blur(16px);
+  min-width: 160px;
+  pointer-events: auto;
+  transition: border-color 1.5s ease, box-shadow 1.5s ease;
+}
+
+#stats-panel h3 {
+  font-size: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.4;
+  margin-bottom: 6px;
+  transition: color 1.5s ease;
+}
+
+.stat-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+  font-size: 0.65rem;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+  transition: color 1.5s ease;
+}
+.stat-row:last-child { border-bottom: none; }
+.stat-label { opacity: 0.5; }
+.stat-value { font-weight: 600; font-variant-numeric: tabular-nums; }
+
+/* ≡≡≡ LEGEND ≡≡≡ */
+#legend {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 3;
+  background: rgba(0,0,0,0.75);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 12px;
+  padding: 10px 14px;
+  backdrop-filter: blur(16px);
+  pointer-events: auto;
+  transition: border-color 1.5s ease;
+}
+
+#legend h4 {
+  font-size: 0.45rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  opacity: 0.4;
+  margin-bottom: 5px;
+  transition: color 1.5s ease;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 1.5px 0;
+  font-size: 0.6rem;
+  opacity: 0.6;
+  transition: color 1.5s ease;
+}
+.legend-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+
+/* ≡≡≡ TOOLTIP ≡≡≡ */
+#info-tooltip {
+  position: fixed;
+  z-index: 3;
+  background: rgba(0,0,0,0.88);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px;
+  padding: 8px 12px;
+  backdrop-filter: blur(12px);
+  max-width: 240px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.25s, border-color 0.5s;
+  font-size: 0.7rem;
+  line-height: 1.5;
+}
+#info-tooltip.visible { opacity: 1; }
+#info-tooltip .tip-title { font-weight: 700; margin-bottom: 2px; }
+#info-tooltip .tip-desc { opacity: 0.7; font-size: 0.65rem; }
+#info-tooltip .tip-type {
+  display: inline-block;
+  font-size: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-top: 2px;
+  opacity: 0.6;
+}
+
+/* ≡≡≡ MANTRA ≡≡≡ */
+#mantra {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  text-align: center;
+  pointer-events: none;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(0.5rem, 0.8vw, 0.7rem);
+  letter-spacing: 10px;
+  text-transform: uppercase;
+  opacity: 0;
+  transition: opacity 4s ease, color 2s ease;
+}
+#mantra.visible { opacity: 0.2; }
+
+/* ≡≡≡ ELEMENT MARKERS ≡≡≡ */
+.element-marker {
+  position: fixed;
+  z-index: 2;
+  font-family: 'Cinzel Decorative', serif;
+  font-size: clamp(0.4rem, 0.7vw, 0.6rem);
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  opacity: 0.12;
+  pointer-events: none;
+  transition: opacity 3s ease, color 2s ease;
+}
+
+/* ≡≡≡ GRAPH NODES ≡≡≡ */
+.node circle {
+  stroke-width: 1.5px;
+  cursor: pointer;
+  transition: stroke-width 0.3s, filter 0.3s;
+}
+.node:hover circle {
+  stroke-width: 2.5px;
+  filter: brightness(1.3);
+}
+.node text {
+  font-family: 'Inter', sans-serif;
+  pointer-events: none;
+  fill: rgba(255,255,255,0.7);
+  text-shadow: 0 0 8px rgba(0,0,0,0.9);
+  font-size: 6px;
+  transition: fill 0.5s;
+}
+.node:hover text { fill: rgba(255,255,255,0.95); }
+.link {
+  stroke-opacity: 0.15;
+  transition: stroke 1.5s ease, stroke-opacity 1.5s ease;
+}
+.link.flow {
+  stroke-dasharray: 2 3;
+  animation: dash-flow 0.6s linear infinite;
+}
+@keyframes dash-flow { to { stroke-dashoffset: -5; } }
+
+/* ≡≡≡ LOADER ≡≡≡ */
+#loader {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: #000;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  transition: opacity 1s;
+}
+#loader.hidden { opacity: 0; pointer-events: none; }
+
+.loader-ring {
+  width: 50px; height: 50px;
+  border: 1px solid rgba(255,255,255,0.05);
+  border-top: 1px solid rgba(255,255,255,0.3);
+  border-radius: 50%;
+  animation: spin 2s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+#loader p {
+  margin-top: 16px;
+  opacity: 0.3;
+  font-size: 0.6rem;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  font-family: 'Cinzel Decorative', serif;
+}
+
+/* ≡≡≡ RESPONSIVE ≡≡≡ */
+@media (max-width: 768px) {
+  #stats-panel, #legend { display: none; }
+}
+</style>
+</head>
+
+<body>
+<div id="loader"><div class="loader-ring"></div><p>Abriendo el portal...</p></div>
+
+<canvas id="bg-canvas"></canvas>
+<div id="graph-container"><svg id="graph-svg"></svg></div>
+
+<div id="header">
+  <h1 id="title-text">✦ Mystic Grimoire</h1>
+  <div class="subtitle" id="title-sub">Sonora Digital Corp</div>
+</div>
+
+<div id="time-display">
+  <span id="time-clock">00:00</span>
+  <div id="phase-name">Noche profunda</div>
+</div>
+
+<div id="mantra" class="visible">Yo Soy — El que crea — El que todo lo puede</div>
+
+<!-- Element markers -->
+<div class="element-marker" style="top:8%;left:8%;">△ Fuego</div>
+<div class="element-marker" style="top:8%;right:8%;">○ Aire</div>
+<div class="element-marker" style="bottom:12%;left:8%;">▽ Tierra</div>
+<div class="element-marker" style="bottom:12%;right:8%;">~ Agua</div>
+
+<div id="stats-panel">
+  <h3 id="stats-title">▸ Sistema</h3>
+  <div class="stat-row"><span class="stat-label">Agentes</span><span class="stat-value" id="stat-agents">—</span></div>
+  <div class="stat-row"><span class="stat-label">Skills</span><span class="stat-value" id="stat-skills">—</span></div>
+  <div class="stat-row"><span class="stat-label">Conexiones</span><span class="stat-value" id="stat-connections">—</span></div>
+  <div class="stat-row"><span class="stat-label">Elementos</span><span class="stat-value" id="stat-elements">4</span></div>
+  <div class="stat-row"><span class="stat-label">Ciclo</span><span class="stat-value" id="stat-cycle">☉</span></div>
+</div>
+
+<div id="legend">
+  <h4 id="legend-title">▸ Nodos</h4>
+  <div class="legend-item"><div class="legend-dot" style="background:#ff6b35;"></div>Agentes</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#00d4ff;"></div>Bases de Datos</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#7b2ff7;"></div>Servicios</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#4ade80;"></div>Canales</div>
+  <div class="legend-item"><div class="legend-dot" style="background:#facc15;"></div>Memoria</div>
+</div>
+
+<div id="info-tooltip">
+  <div class="tip-title"></div>
+  <div class="tip-desc"></div>
+  <div class="tip-type"></div>
+</div>
+
+<script>
+// =========================================================================
+// 1. ENGINE — Time System (24h cycle in ~4 minutes)
+// =========================================================================
+const TIME = {
+  virtualHour: 0,        // 0-23.99
+  virtualMinute: 0,      // 0-59
+  phase: 'night',
+  phaseProgress: 0,      // 0-1 within current phase
+  dayProgress: 0,        // 0-1 across full 24h cycle
+  
+  // Cycle duration in ms (4 minutes = 240,000ms for a full 24h day)
+  CYCLE_MS: 240000,
+  
+  startTime: Date.now(),
+  
+  update() {
+    const elapsed = (Date.now() - this.startTime) % this.CYCLE_MS;
+    this.dayProgress = elapsed / this.CYCLE_MS;
+    
+    // 0.0 = midnight, 0.5 = noon
+    const totalHours = this.dayProgress * 24;
+    this.virtualHour = totalHours;
+    this.virtualMinute = (totalHours % 1) * 60;
+    
+    this.updatePhase();
+  },
+  
+  updatePhase() {
+    const h = this.virtualHour;
+    
+    // NIGHT: 22-4
+    if (h >= 22 || h < 4) {
+      this.phase = 'night';
+      this.phaseProgress = h >= 22 ? (h - 22) / 6 : (h + 2) / 6;
+    }
+    // DAWN: 4-7
+    else if (h < 7) {
+      this.phase = 'dawn';
+      this.phaseProgress = (h - 4) / 3;
+    }
+    // MORNING: 7-10
+    else if (h < 10) {
+      this.phase = 'morning';
+      this.phaseProgress = (h - 7) / 3;
+    }
+    // DAY: 10-16
+    else if (h < 16) {
+      this.phase = 'day';
+      this.phaseProgress = (h - 10) / 6;
+    }
+    // SUNSET: 16-19
+    else if (h < 19) {
+      this.phase = 'sunset';
+      this.phaseProgress = (h - 16) / 3;
+    }
+    // EVENING: 19-22
+    else {
+      this.phase = 'evening';
+      this.phaseProgress = (h - 19) / 3;
+    }
+    
+    this.updateUI();
+  },
+  
+  getColor() {
+    // Returns [r, g, b] arrays for the current time
+    const p = this.dayProgress;
+    const phases = [
+      { start: 0, end: 0.167, colors: { night: [5,0,15], dawn: [60,20,80] } },
+      { start: 0.167, end: 0.292, colors: { dawn: [60,20,80], morning: [100,150,200] } },
+      { start: 0.292, end: 0.417, colors: { morning: [100,150,200], day: [180,200,255] } },
+      { start: 0.417, end: 0.667, colors: { day: [180,200,255], sunset: [255,120,50] } },
+      { start: 0.667, end: 0.792, colors: { sunset: [255,120,50], evening: [80,10,60] } },
+      { start: 0.792, end: 1, colors: { evening: [80,10,60], night: [5,0,15] } },
+    ];
+    
+    for (const seg of phases) {
+      if (p >= seg.start && p < seg.end) {
+        const t = (p - seg.start) / (seg.end - seg.start);
+        const from = Object.values(seg.colors)[0];
+        const to = Object.values(seg.colors)[1];
+        return [
+          from[0] + (to[0] - from[0]) * t,
+          from[1] + (to[1] - from[1]) * t,
+          from[2] + (to[2] - from[2]) * t,
+        ];
+      }
+    }
+    return [5, 0, 15];
+  },
+  
+  getPhaseInfo() {
+    const info = {
+      night:  { name: 'Noche Profunda',     mantra: 'En el silencio — todo nace',        sun: 0 },
+      dawn:   { name: 'Amanecer Místico',   mantra: 'La luz despierta — lo sagrado surge', sun: 0.3 },
+      morning:{ name: 'Mañana de Poder',    mantra: 'El verbo se hace — acción creadora',  sun: 0.6 },
+      day:    { name: 'Plenitud del Día',   mantra: 'Yo Soy — la fuente inagotable',       sun: 1 },
+      sunset: { name: 'Ocaso Dorado',       mantra: 'La transformación — el fuego sagrado',sun: 0.7 },
+      evening:{ name: 'Crepúsculo Mágico',  mantra: 'Los velos se abren — el misterio habla', sun: 0.2 },
+    };
+    return info[this.phase] || info.night;
+  },
+  
+  updateUI() {
+    const info = this.getPhaseInfo();
+    const h = Math.floor(this.virtualHour);
+    const m = Math.floor(this.virtualMinute);
+    document.getElementById('time-clock').textContent = 
+      `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`;
+    document.getElementById('phase-name').textContent = info.name;
+    
+    const mantra = document.getElementById('mantra');
+    mantra.textContent = info.mantra;
+    
+    const c = this.getColor();
+    const cssColor = `rgb(${c[0]|0},${c[1]|0},${c[2]|0})`;
+    const brightCss = `rgb(${Math.min(255,c[0]+80)|0},${Math.min(255,c[1]+80)|0},${Math.min(255,c[2]+80)|0})`;
+    
+    document.getElementById('title-text').style.color = brightCss;
+    document.getElementById('title-sub').style.color = cssColor;
+    document.getElementById('time-display').style.color = cssColor;
+    document.getElementById('phase-name').style.color = brightCss;
+    document.getElementById('stats-panel').style.borderColor = `rgba(${c[0]|0},${c[1]|0},${c[2]|0},0.15)`;
+    document.getElementById('stats-panel').style.boxShadow = `0 0 20px rgba(${c[0]|0},${c[1]|0},${c[2]|0},0.05)`;
+    document.getElementById('stats-title').style.color = cssColor;
+    document.getElementById('legend-title').style.color = cssColor;
+    
+    // Cycle indicator
+    const cycleChar = ['🌑','🌒','🌓','🌔','🌕','🌖','🌗','🌘'][Math.floor(this.dayProgress * 8) % 8];
+    document.getElementById('stat-cycle').textContent = cycleChar;
+    
+    // Element markers color
+    document.querySelectorAll('.element-marker').forEach(el => {
+      el.style.color = cssColor;
+    });
+  }
+};
+
+// =========================================================================
+// 2. CANVAS — Mystical Background
+// =========================================================================
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener('resize', resize);
+
+// ≡≡≡ PARTICLES ≡≡≡
+class Particle {
+  constructor() { this.reset(true); }
+  reset(init=false) {
+    this.x = Math.random() * W;
+    this.y = init ? Math.random() * H : H + 20;
+    this.size = 0.3 + Math.random() * 1.5;
+    this.alpha = 0.1 + Math.random() * 0.3;
+    this.vx = (Math.random() - 0.5) * 0.08;
+    this.vy = -0.05 - Math.random() * 0.15;
+    this.life = 0.5 + Math.random() * 0.5;
+    this.maxLife = this.life;
+    this.pulse = Math.random() * Math.PI * 2;
+    this.pulseSpeed = 0.005 + Math.random() * 0.01;
+  }
+  update() {
+    this.x += this.vx + Math.sin(this.pulse) * 0.02;
+    this.y += this.vy;
+    this.pulse += this.pulseSpeed;
+    this.life -= 0.001;
+    if (this.life <= 0 || this.y < -20) this.reset();
+  }
+  draw(c) {
+    const lifeFactor = this.life / this.maxLife;
+    const a = this.alpha * lifeFactor;
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size * (0.5 + lifeFactor * 0.5), 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`;
+    ctx.fill();
+  }
+}
+
+const particles = [];
+for (let i = 0; i < 500; i++) particles.push(new Particle());
+
+// ≡≡≡ SMOKE SYSTEM ≡≡≡
+class SmokeParticle {
+  constructor() {
+    this.reset();
+  }
+  reset() {
+    this.x = W * 0.2 + Math.random() * W * 0.6;
+    this.y = H + 10 + Math.random() * 40;
+    this.size = 20 + Math.random() * 80;
+    this.alpha = 0.02 + Math.random() * 0.05;
+    this.vx = (Math.random() - 0.5) * 0.15;
+    this.vy = -0.1 - Math.random() * 0.2;
+    this.life = 0;
+    this.maxLife = 400 + Math.random() * 400;
+    this.wobble = Math.random() * Math.PI * 2;
+    this.wobbleSpeed = 0.003 + Math.random() * 0.005;
+  }
+  update() {
+    this.wobble += this.wobbleSpeed;
+    this.x += this.vx + Math.sin(this.wobble) * 0.3;
+    this.y += this.vy;
+    this.life++;
+    this.size *= 0.9995;
+    this.alpha *= 0.998;
+    if (this.life > this.maxLife || this.alpha < 0.001) this.reset();
+  }
+  draw(c) {
+    const grad = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.size);
+    grad.addColorStop(0, `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${this.alpha * 0.3})`);
+    grad.addColorStop(0.5, `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${this.alpha * 0.1})`);
+    grad.addColorStop(1, `rgba(${c[0]|0},${c[1]|0},${c[2]|0},0)`);
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+  }
+}
+
+const smokes = [];
+for (let i = 0; i < 30; i++) smokes.push(new SmokeParticle());
+
+// ≡≡≡ WAVES OF CREATION ≡≡≡
+class WaveLayer {
+  constructor(offset, amp, freq, speed, color) {
+    this.offset = offset;
+    this.baseAmp = amp;
+    this.freq = freq;
+    this.speed = speed;
+    this.baseColor = color;
+    this.time = Math.random() * 100;
+  }
+  draw(c, brightness) {
+    this.time += this.speed;
+    ctx.beginPath();
+    ctx.moveTo(0, H * this.offset);
+    for (let x = 0; x <= W; x += 3) {
+      const y = H * this.offset + 
+                Math.sin(x * this.freq + this.time) * this.baseAmp * brightness +
+                Math.sin(x * this.freq * 0.5 + this.time * 0.7) * this.baseAmp * 0.3 * brightness +
+                Math.sin(x * this.freq * 2 + this.time * 1.3) * this.baseAmp * 0.15 * brightness;
+      ctx.lineTo(x, y);
+    }
+    ctx.lineTo(W, H);
+    ctx.lineTo(0, H);
+    ctx.closePath();
+    
+    const alpha = 0.03 + brightness * 0.04;
+    ctx.fillStyle = `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${alpha})`;
+    ctx.fill();
+  }
+}
+
+const waveLayers = [
+  new WaveLayer(0.5, 30, 0.008, 0.02, [100, 150, 255]),
+  new WaveLayer(0.6, 20, 0.012, 0.03, [150, 100, 255]),
+  new WaveLayer(0.4, 15, 0.006, 0.015, [255, 150, 100]),
+  new WaveLayer(0.7, 25, 0.01, 0.025, [50, 200, 150]),
+  new WaveLayer(0.3, 18, 0.009, 0.02, [200, 100, 200]),
+];
+
+// ≡≡≡ SACRED GEOMETRY SIGILS ≡≡≡
+function drawTriquetra(cx, cy, size, color, alpha) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.globalAlpha = alpha * 0.3;
+  ctx.strokeStyle = `rgb(${color[0]|0},${color[1]|0},${color[2]|0})`;
+  ctx.lineWidth = 0.5;
+  
+  for (let i = 0; i < 3; i++) {
+    ctx.save();
+    ctx.rotate(i * Math.PI * 2 / 3);
+    ctx.beginPath();
+    ctx.arc(0, -size * 0.35, size * 0.65, -Math.PI * 0.35, Math.PI * 0.35);
+    ctx.stroke();
+    ctx.restore();
+  }
+  
+  // Outer circle
+  ctx.beginPath();
+  ctx.arc(0, 0, size, 0, Math.PI * 2);
+  ctx.stroke();
+  
+  ctx.restore();
+}
+
+function drawPentagram(cx, cy, size, color, alpha) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.globalAlpha = alpha * 0.15;
+  ctx.strokeStyle = `rgb(${color[0]|0},${color[1]|0},${color[2]|0})`;
+  ctx.lineWidth = 0.5;
+  
+  ctx.beginPath();
+  for (let i = 0; i < 5; i++) {
+    const angle = (i * 4 * Math.PI / 5) - Math.PI / 2;
+    const px = Math.cos(angle) * size;
+    const py = Math.sin(angle) * size;
+    i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+  }
+  ctx.closePath();
+  ctx.stroke();
+  
+  // Outer circle
+  ctx.beginPath();
+  ctx.arc(0, 0, size * 1.2, 0, Math.PI * 2);
+  ctx.stroke();
+  
+  ctx.restore();
+}
+
+function drawFlowerOfLife(cx, cy, size, color, alpha) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.globalAlpha = alpha * 0.12;
+  ctx.strokeStyle = `rgb(${color[0]|0},${color[1]|0},${color[2]|0})`;
+  ctx.lineWidth = 0.4;
+  
+  const r = size / 3;
+  // Center circle
+  ctx.beginPath();
+  ctx.arc(0, 0, r, 0, Math.PI * 2);
+  ctx.stroke();
+  
+  // 6 surrounding circles
+  for (let i = 0; i < 6; i++) {
+    const angle = i * Math.PI / 3;
+    ctx.beginPath();
+    ctx.arc(Math.cos(angle) * r, Math.sin(angle) * r, r, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+  
+  ctx.restore();
+}
+
+function drawAbundanceSigil(cx, cy, size, color, alpha) {
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.globalAlpha = alpha * 0.2;
+  ctx.strokeStyle = `rgb(${color[0]|0},${color[1]|0},${color[2]|0})`;
+  ctx.lineWidth = 0.6;
+  
+  // Rune of abundance: Fehu (ᚠ) inspired
+  ctx.beginPath();
+  ctx.moveTo(-size * 0.3, -size * 0.7);
+  ctx.lineTo(-size * 0.3, size * 0.7);
+  ctx.moveTo(-size * 0.3, -size * 0.3);
+  ctx.lineTo(size * 0.3, -size * 0.7);
+  ctx.moveTo(-size * 0.3, 0);
+  ctx.lineTo(size * 0.3, 0);
+  ctx.moveTo(-size * 0.3, size * 0.3);
+  ctx.lineTo(size * 0.3, size * 0.7);
+  
+  // Diamond around it
+  ctx.moveTo(0, -size);
+  ctx.lineTo(size, 0);
+  ctx.lineTo(0, size);
+  ctx.lineTo(-size, 0);
+  ctx.closePath();
+  
+  ctx.stroke();
+  ctx.restore();
+}
+
+// ≡≡≡ 4 ELEMENTS REPRESENTATION ≡≡≡
+class ElementFire {
+  constructor() {
+    this.particles = [];
+    for (let i = 0; i < 60; i++) this.particles.push(this.createParticle());
+  }
+  createParticle() {
+    return {
+      x: W / 2 + (Math.random() - 0.5) * 300,
+      y: H * 0.15,
+      vx: (Math.random() - 0.5) * 0.5,
+      vy: -0.5 - Math.random() * 1.5,
+      size: 2 + Math.random() * 6,
+      life: Math.random(),
+      maxLife: 0.5 + Math.random() * 0.5,
+      hue: 20 + Math.random() * 30,
+    };
+  }
+  update(c, brightness) {
+    const count = Math.floor(40 + brightness * 40);
+    while (this.particles.length < count) this.particles.push(this.createParticle());
+    for (const p of this.particles) {
+      p.x += p.vx + Math.sin(p.life * 10) * 0.2;
+      p.y += p.vy;
+      p.life -= 0.005;
+      if (p.life <= 0) Object.assign(p, this.createParticle());
+    }
+  }
+  draw(c, brightness) {
+    for (const p of this.particles) {
+      const a = p.life * 0.4 * brightness;
+      const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.size);
+      grad.addColorStop(0, `rgba(255,${Math.min(255, p.hue * 4)},0,${a})`);
+      grad.addColorStop(1, `rgba(255,${Math.min(255, p.hue * 2)},0,0)`);
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fillStyle = grad;
+      ctx.fill();
+    }
+  }
+}
+
+class ElementWater {
+  constructor() {
+    this.time = 0;
+  }
+  update(c, brightness) {
+    this.time += 0.008;
+  }
+  draw(c, brightness) {
+    const alpha = 0.04 * brightness;
+    ctx.strokeStyle = `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${alpha})`;
+    ctx.lineWidth = 0.5;
+    
+    const baseY = H * 0.8;
+    for (let row = 0; row < 5; row++) {
+      ctx.beginPath();
+      for (let x = 0; x <= W; x += 4) {
+        const y = baseY + row * 15 + 
+                  Math.sin(x * 0.01 + this.time + row * 1.5) * 10 * brightness +
+                  Math.sin(x * 0.02 + this.time * 1.5 + row * 2) * 5 * brightness;
+        x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+    }
+  }
+}
+
+class ElementEarth {
+  constructor() {
+    this.crystals = [];
+    for (let i = 0; i < 12; i++) this.crystals.push({
+      x: W * (0.1 + Math.random() * 0.8),
+      y: H * (0.75 + Math.random() * 0.15),
+      size: 5 + Math.random() * 15,
+      angle: Math.random() * Math.PI * 2,
+      rotation: (Math.random() - 0.5) * 0.003,
+      phase: Math.random() * Math.PI * 2,
+    });
+  }
+  draw(c, brightness) {
+    for (const cr of this.crystals) {
+      cr.angle += cr.rotation;
+      const alpha = 0.1 * brightness;
+      ctx.save();
+      ctx.translate(cr.x, cr.y);
+      ctx.rotate(cr.angle + Math.sin(Date.now() * 0.001 + cr.phase) * 0.02);
+      ctx.globalAlpha = alpha;
+      ctx.strokeStyle = `rgb(${c[0]|0},${c[1]|0},${c[2]|0})`;
+      ctx.lineWidth = 0.5;
+      
+      // Crystal shape
+      ctx.beginPath();
+      ctx.moveTo(0, -cr.size);
+      ctx.lineTo(cr.size * 0.3, 0);
+      ctx.lineTo(0, cr.size);
+      ctx.lineTo(-cr.size * 0.3, 0);
+      ctx.closePath();
+      ctx.stroke();
+      
+      // Inner lines
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(0, -cr.size * 0.7);
+      ctx.moveTo(0, 0);
+      ctx.lineTo(0, cr.size * 0.7);
+      ctx.stroke();
+      
+      ctx.restore();
+    }
+  }
+}
+
+class ElementAir {
+  constructor() {
+    this.threads = [];
+    for (let i = 0; i < 15; i++) this.threads.push({
+      x: Math.random() * W,
+      y: Math.random() * H * 0.4 + H * 0.05,
+      vx: 0.1 + Math.random() * 0.3,
+      vy: (Math.random() - 0.5) * 0.05,
+      length: 50 + Math.random() * 150,
+      phase: Math.random() * Math.PI * 2,
+    });
+  }
+  draw(c, brightness) {
+    ctx.strokeStyle = `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${0.03 * brightness})`;
+    ctx.lineWidth = 0.4;
+    for (const t of this.threads) {
+      t.x += t.vx;
+      t.y += t.vy + Math.sin(Date.now() * 0.0005 + t.phase) * 0.02;
+      if (t.x > W + t.length) t.x = -t.length;
+      
+      ctx.beginPath();
+      for (let i = 0; i < t.length; i += 5) {
+        const px = t.x - i;
+        const py = t.y + Math.sin(i * 0.02 + Date.now() * 0.001 + t.phase) * 8;
+        i === 0 ? ctx.moveTo(px, py) : ctx.lineTo(px, py);
+      }
+      ctx.stroke();
+    }
+  }
+}
+
+// ≡≡≡ I AM PRESENCE (Central Source) ≡≡≡
+class IAmPresence {
+  constructor() {
+    this.pulse = 0;
+    this.radius = 0;
+  }
+  update(c, brightness) {
+    this.pulse += 0.008;
+    this.radius = 20 + brightness * 30 + Math.sin(this.pulse) * 10;
+  }
+  draw(c, brightness) {
+    const cx = W / 2;
+    const cy = H / 2;
+    const r = this.radius;
+    const alpha = 0.08 * brightness;
+    
+    // Outer glow rings
+    for (let i = 0; i < 5; i++) {
+      const ringR = r * (1 + i * 0.5 + Math.sin(this.pulse + i) * 0.1);
+      ctx.beginPath();
+      ctx.arc(cx, cy, ringR, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${alpha / (i + 1)})`;
+      ctx.lineWidth = 0.5 - i * 0.08;
+      ctx.stroke();
+    }
+    
+    // Radial rays
+    const rayCount = 12;
+    for (let i = 0; i < rayCount; i++) {
+      const angle = (i / rayCount) * Math.PI * 2 + this.pulse * 0.3;
+      const innerR = r * 0.3;
+      const outerR = r * (1.2 + Math.sin(this.pulse + i * 2) * 0.3);
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(angle) * innerR, cy + Math.sin(angle) * innerR);
+      ctx.lineTo(cx + Math.cos(angle) * outerR, cy + Math.sin(angle) * outerR);
+      ctx.strokeStyle = `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${alpha * 0.5})`;
+      ctx.lineWidth = 0.3;
+      ctx.stroke();
+    }
+    
+    // Central glow
+    const grad = ctx.createRadialGradient(cx, cy, 0, cx, cy, r * 2);
+    grad.addColorStop(0, `rgba(${Math.min(255,c[0]+100)|0},${Math.min(255,c[1]+100)|0},${Math.min(255,c[2]+100)|0},${alpha * 2})`);
+    grad.addColorStop(0.3, `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${alpha * 0.5})`);
+    grad.addColorStop(1, `rgba(${c[0]|0},${c[1]|0},${c[2]|0},0)`);
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 2, 0, Math.PI * 2);
+    ctx.fillStyle = grad;
+    ctx.fill();
+  }
+}
+
+// ≡≡≡ INIT ALL ELEMENTS ≡≡≡
+const fire = new ElementFire();
+const water = new ElementWater();
+const earth = new ElementEarth();
+const air = new ElementAir();
+const iAm = new IAmPresence();
+
+// ≡≡≡ MAIN CANVAS LOOP ≡≡≡
+function drawCanvas() {
+  TIME.update();
+  const c = TIME.getColor();
+  const brightness = 0.3 + TIME.dayProgress < 0.5 
+    ? 0.3 + TIME.dayProgress * 1.4 
+    : 1.0 - (TIME.dayProgress - 0.5) * 1.4;
+  const clampedBrightness = Math.max(0.15, Math.min(1, brightness));
+
+  // Clear with slight trail
+  ctx.fillStyle = `rgba(0,0,0,0.12)`;
+  ctx.fillRect(0, 0, W, H);
+
+  // 1. Background ambient
+  const bgGrad = ctx.createRadialGradient(W/2, H/2, 0, W/2, H/2, Math.max(W, H) * 0.7);
+  bgGrad.addColorStop(0, `rgba(${c[0]|0},${c[1]|0},${c[2]|0},0.03)`);
+  bgGrad.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // 2. I AM Presence (background layer)
+  iAm.update(c, clampedBrightness);
+  iAm.draw(c, clampedBrightness);
+
+  // 3. Sacred sigils
+  const sigilAlpha = 0.3 + clampedBrightness * 0.4;
+  const time = Date.now() * 0.0001;
+  
+  // Floating sigils
+  const s1x = W * 0.15 + Math.sin(time * 0.5) * 30;
+  const s1y = H * 0.25 + Math.cos(time * 0.3) * 20;
+  drawPentagram(s1x, s1y, 40 + Math.sin(time) * 5, c, sigilAlpha);
+  
+  const s2x = W * 0.85 + Math.sin(time * 0.4 + 1) * 30;
+  const s2y = H * 0.2 + Math.cos(time * 0.6) * 20;
+  drawTriquetra(s2x, s2y, 35 + Math.cos(time * 0.5) * 5, c, sigilAlpha);
+  
+  const s3x = W * 0.5 + Math.sin(time * 0.2 + 2) * 50;
+  const s3y = H * 0.07 + Math.cos(time * 0.4 + 1) * 15;
+  drawFlowerOfLife(s3x, s3y, 50 + Math.sin(time * 0.3) * 5, c, sigilAlpha * 0.8);
+  
+  const s4x = W * 0.2 + Math.sin(time * 0.6 + 3) * 25;
+  const s4y = H * 0.6 + Math.cos(time * 0.2) * 20;
+  drawAbundanceSigil(s4x, s4y, 30, c, sigilAlpha);
+
+  const s5x = W * 0.8 + Math.sin(time * 0.5 + 4) * 25;
+  const s5y = H * 0.6 + Math.cos(time * 0.3 + 2) * 20;
+  drawAbundanceSigil(s5x, s5y, 30, c, sigilAlpha);
+
+  // 4. Waves of creation
+  for (const wave of waveLayers) {
+    wave.draw(c, clampedBrightness);
+  }
+
+  // 5. Elements
+  fire.update(c, clampedBrightness);
+  fire.draw(c, clampedBrightness);
+  water.update(c, clampedBrightness);
+  water.draw(c, clampedBrightness);
+  earth.draw(c, clampedBrightness);
+  air.draw(c, clampedBrightness);
+
+  // 6. Smoke rising
+  for (const s of smokes) {
+    s.update();
+    s.draw(c);
+  }
+
+  // 7. Ambient particles
+  for (const p of particles) {
+    p.update();
+    p.draw(c);
+  }
+
+  requestAnimationFrame(drawCanvas);
+}
+
+// =========================================================================
+// 3. D3.js — Brain Graph Overlay
+// =========================================================================
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+loadScript('https://d3js.org/d3.v7.min.js').then(() => {
+  document.getElementById('loader').classList.add('hidden');
+  initGraph();
+  drawCanvas();
+}).catch(() => {
+  document.getElementById('loader').classList.add('hidden');
+  drawCanvas();
+});
+
+function initGraph() {
+  const data = {
+    nodes: [
+      { id:'mystic', label:'Mystic', type:'agent', desc:'Alma de SDC — Orquestador', color:'#ff6b35', r:14 },
+      { id:'openclaw', label:'OpenClaw', type:'agent', desc:'Gateway — 42 skills', color:'#ff6b35', r:11 },
+      { id:'hermes', label:'Hermes', type:'agent', desc:'Bridge multi-canal', color:'#ff6b35', r:11 },
+      { id:'abe', label:'ABE Music', type:'agent', desc:'Producción musical', color:'#ff6b35', r:10 },
+      { id:'sales', label:'Sales Agent', type:'agent', desc:'Pipeline de ventas', color:'#ff6b35', r:9 },
+      { id:'engram', label:'Engram', type:'agent', desc:'Memoria — 7 capas', color:'#ff6b35', r:10 },
+      { id:'sdd', label:'SDD Agent', type:'agent', desc:'Pipeline SDD', color:'#ff6b35', r:8 },
+      { id:'quality', label:'Quality OS', type:'agent', desc:'Tests, auditorías', color:'#ff6b35', r:8 },
+      { id:'strategy', label:'Strategy OS', type:'agent', desc:'Score, planeación', color:'#ff6b35', r:8 },
+      { id:'support', label:'Support OS', type:'agent', desc:'Soporte, SLAs', color:'#ff6b35', r:7 },
+      { id:'finance', label:'Finance OS', type:'agent', desc:'FinOps, revenue', color:'#ff6b35', r:7 },
+      { id:'knowledge', label:'Knowledge OS', type:'agent', desc:'ADRs, memoria', color:'#ff6b35', r:7 },
+      { id:'devops', label:'DevOps OS', type:'agent', desc:'Infra, CI/CD', color:'#ff6b35', r:7 },
+      { id:'security', label:'Security OS', type:'agent', desc:'Secretos, compliance', color:'#ff6b35', r:7 },
+      { id:'content', label:'Content', type:'agent', desc:'Blogs, medios', color:'#ff6b35', r:7 },
+      { id:'voice', label:'Voice', type:'agent', desc:'STT/TTS', color:'#ff6b35', r:6 },
+      { id:'postgres', label:'PostgreSQL', type:'db', desc:'Datos de negocio', color:'#00d4ff', r:12 },
+      { id:'neo4j', label:'Neo4j', type:'db', desc:'Grafo de conocimiento', color:'#00d4ff', r:12 },
+      { id:'qdrant', label:'Qdrant', type:'db', desc:'Búsqueda semántica', color:'#00d4ff', r:10 },
+      { id:'redis', label:'Redis', type:'db', desc:'Caché y colas', color:'#00d4ff', r:8 },
+      { id:'engram-db', label:'Engram DB', type:'db', desc:'Memoria SQLite', color:'#00d4ff', r:8 },
+      { id:'n8n', label:'n8n', type:'service', desc:'Workflows', color:'#7b2ff7', r:10 },
+      { id:'webui', label:'Web UI', type:'service', desc:'FastAPI :5174', color:'#7b2ff7', r:9 },
+      { id:'mcp', label:'MCP Server', type:'service', desc:'Gateway MCP', color:'#7b2ff7', r:8 },
+      { id:'gitea', label:'Gitea', type:'service', desc:'Git self-hosted', color:'#7b2ff7', r:8 },
+      { id:'dashboard', label:'Mission Ctrl', type:'service', desc:'Dashboard ejecutivo', color:'#7b2ff7', r:7 },
+      { id:'abe-svc', label:'ABE Service', type:'service', desc:'API ABE', color:'#7b2ff7', r:6 },
+      { id:'telegram', label:'Telegram', type:'channel', desc:'Bot 98 skills', color:'#4ade80', r:10 },
+      { id:'whatsapp', label:'WhatsApp', type:'channel', desc:'Bridge WA', color:'#4ade80', r:8 },
+      { id:'terminal', label:'Terminal', type:'channel', desc:'CLI', color:'#4ade80', r:6 },
+      { id:'state', label:'state/', type:'memory', desc:'42 dirs, 351 files', color:'#facc15', r:10 },
+      { id:'events', label:'Eventos', type:'memory', desc:'Flujo de eventos', color:'#facc15', r:8 },
+      { id:'h-brain', label:'Hermes Brain', type:'memory', desc:'27 dirs de memoria', color:'#facc15', r:8 },
+      { id:'skills', label:'Skills', type:'memory', desc:'213 skills', color:'#facc15', r:8 },
+      { id:'kgraph', label:'K-Graph', type:'memory', desc:'Grafo JSON', color:'#facc15', r:6 },
+    ],
+    links: [
+      ...['openclaw','hermes','abe','sales','engram','sdd','quality','strategy','support','finance','knowledge','devops','security','content','voice'].map(id => ({ source:'mystic', target:id, flow:true })),
+      { source:'hermes', target:'postgres', flow:true },
+      { source:'sales', target:'postgres', flow:true },
+      { source:'engram', target:'engram-db', flow:true },
+      { source:'knowledge', target:'neo4j', flow:true },
+      { source:'knowledge', target:'qdrant', flow:true },
+      { source:'strategy', target:'postgres', flow:true },
+      { source:'mystic', target:'postgres', flow:true },
+      { source:'mystic', target:'neo4j', flow:true },
+      { source:'mystic', target:'qdrant', flow:true },
+      { source:'mystic', target:'redis', flow:true },
+      { source:'hermes', target:'telegram', flow:true },
+      { source:'hermes', target:'whatsapp', flow:true },
+      { source:'hermes', target:'terminal', flow:true },
+      { source:'openclaw', target:'telegram', flow:true },
+      { source:'n8n', target:'postgres', flow:true },
+      { source:'n8n', target:'redis', flow:true },
+      { source:'webui', target:'postgres', flow:true },
+      { source:'mcp', target:'neo4j', flow:false },
+      { source:'abe', target:'abe-svc', flow:true },
+      { source:'abe-svc', target:'postgres', flow:true },
+      { source:'state', target:'events', flow:false },
+      { source:'state', target:'skills', flow:false },
+      { source:'state', target:'kgraph', flow:false },
+      { source:'engram', target:'events', flow:true },
+      { source:'engram', target:'state', flow:true },
+      { source:'hermes', target:'h-brain', flow:true },
+      { source:'devops', target:'state', flow:false },
+      { source:'strategy', target:'state', flow:false },
+      { source:'dashboard', target:'state', flow:true },
+      { source:'mystic', target:'dashboard', flow:true },
+      { source:'abe', target:'sales', flow:true },
+      { source:'abe', target:'content', flow:true },
+      { source:'openclaw', target:'hermes', flow:true },
+      { source:'sales', target:'support', flow:true },
+      { source:'finance', target:'strategy', flow:true },
+      { source:'knowledge', target:'quality', flow:false },
+      { source:'security', target:'devops', flow:true },
+      { source:'sdd', target:'quality', flow:true },
+      { source:'sdd', target:'knowledge', flow:true },
+      { source:'voice', target:'hermes', flow:true },
+      { source:'engram', target:'knowledge', flow:true },
+    ]
+  };
+
+  const svg = d3.select('#graph-svg');
+  const w = window.innerWidth, h = window.innerHeight;
+  svg.attr('viewBox', [0, 0, w, h]);
+
+  const sim = d3.forceSimulation(data.nodes)
+    .force('link', d3.forceLink(data.links).id(d => d.id).distance(d =>
+      d.source.id === 'mystic' || d.target.id === 'mystic' ? 60 : 90
+    ))
+    .force('charge', d3.forceManyBody().strength(d => -50 * (d.r / 7)))
+    .force('center', d3.forceCenter(w / 2, h / 2))
+    .force('collision', d3.forceCollide().radius(d => d.r + 4));
+
+  const link = svg.append('g').selectAll('line').data(data.links).join('line')
+    .attr('class', d => 'link' + (d.flow ? ' flow' : ''))
+    .attr('stroke', d => d.source.color || '#666')
+    .attr('stroke-width', d => d.flow ? 0.8 : 0.4);
+
+  const node = svg.append('g').selectAll('g').data(data.nodes).join('g').attr('class','node')
+    .call(d3.drag()
+      .on('start', (ev, d) => { if (!ev.active) sim.alphaTarget(0.3).restart(); d.fx = d.x; d.fy = d.y; })
+      .on('drag', (ev, d) => { d.fx = ev.x; d.fy = ev.y; })
+      .on('end', (ev, d) => { if (!ev.active) sim.alphaTarget(0); d.fx = null; d.fy = null; })
+    );
+
+  node.append('circle').attr('r', d => d.r).attr('fill', d => d.color).attr('stroke', d => d.color)
+    .attr('stroke-opacity', 0.3).style('opacity', 0.7);
+  node.append('circle').attr('r', d => d.r * 0.3).attr('fill','#fff').attr('opacity', 0.08);
+  node.append('text').attr('dx', d => d.r + 4).attr('dy', 2.5).text(d => d.label).style('font-size','6px');
+
+  const tooltip = document.getElementById('info-tooltip');
+  const tipT = tooltip.querySelector('.tip-title');
+  const tipD = tooltip.querySelector('.tip-desc');
+  const tipTy = tooltip.querySelector('.tip-type');
+
+  node.on('mouseenter', (ev, d) => {
+    tipT.textContent = d.label; tipD.textContent = d.desc;
+    tipTy.textContent = d.type; tipTy.style.background = d.color + '22'; tipTy.style.color = d.color;
+    tooltip.classList.add('visible');
+  }).on('mousemove', ev => {
+    tooltip.style.left = Math.min(ev.clientX + 12, w - 260) + 'px';
+    tooltip.style.top = Math.min(ev.clientY - 6, h - 120) + 'px';
+  }).on('mouseleave', () => tooltip.classList.remove('visible'));
+
+  sim.on('tick', () => {
+    link.attr('x1', d => d.source.x).attr('y1', d => d.source.y)
+        .attr('x2', d => d.target.x).attr('y2', d => d.target.y);
+    node.attr('transform', d => `translate(${d.x},${d.y})`);
+  });
+
+  svg.call(d3.zoom().scaleExtent([0.2, 3]).on('zoom', ev =>
+    svg.selectAll('g').attr('transform', ev.transform)
+  ));
+
+  setTimeout(() => {
+    svg.transition().duration(1500).call(
+      d3.zoom().transform, d3.zoomIdentity.translate(w/2, h/2).scale(0.5)
+    );
+  }, 500);
+
+  // Stats
+  document.getElementById('stat-agents').textContent = data.nodes.filter(n => n.type === 'agent').length;
+  document.getElementById('stat-skills').textContent = '213';
+  document.getElementById('stat-connections').textContent = data.links.length;
+
+  window.addEventListener('resize', () => {
+    const w2 = window.innerWidth, h2 = window.innerHeight;
+    svg.attr('viewBox', [0, 0, w2, h2]);
+    sim.force('center', d3.forceCenter(w2 / 2, h2 / 2));
+    sim.alpha(0.3).restart();
+  });
+}
+</script>
+</body>
+</html>

@@ -206,7 +206,7 @@ class TestVideoPluginProviderActive:
 
     def test_detect_active_index_picks_video_plugin_match(self, monkeypatch):
         """When xAI is the configured video_gen provider, the picker should
-        default to the xAI row even if FAL_KEY happens to be set in env.
+        default to the xAI row even if FAL_API_KEY happens to be set in env.
 
         Regression: previously _detect_active_provider_index() saw
         _is_provider_active(xai) return False (no video_gen branch),
@@ -221,7 +221,7 @@ class TestVideoPluginProviderActive:
         monkeypatch.setattr(
             tools_config,
             "get_env_value",
-            lambda key: "fal-key" if key == "FAL_KEY" else "",
+            lambda key: "fal-key" if key == "FAL_API_KEY" else "",
         )
 
         config = {"video_gen": {"provider": "xai"}}
@@ -229,7 +229,7 @@ class TestVideoPluginProviderActive:
             {"name": "xAI Grok Imagine", "env_vars": [], "video_gen_plugin_name": "xai"},
             {
                 "name": "FAL.ai",
-                "env_vars": [{"key": "FAL_KEY", "prompt": "FAL"}],
+                "env_vars": [{"key": "FAL_API_KEY", "prompt": "FAL"}],
                 "video_gen_plugin_name": "fal",
             },
         ]
