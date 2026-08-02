@@ -47,7 +47,7 @@ class LeadClassification:
 RULES = {
     "hot": {
         "intencion": [
-            r"\b(contratar|comprar|empezar|registrarme|quiero\s+ya|necesito\s+ya)\b",
+            r"\b(contratar|comprar|empezar|registrarme|quiero\s+ya|necesito\s+\S+\s+ya|necesito\s+ya)\b",
             r"\b(firmar|contrato|listos|aprobad|mandar.*contrato)\b",
             r"\b(empezamos|lunes|mañana|esta\s+semana|cuanto\s+antes)\b",
         ],
@@ -77,6 +77,11 @@ RULES = {
             r"\b(no\s+(responde|contesta)|tardo|pierdo|no\s+alcanzo|mucho\s+tiempo|clientes\s+que\s+se\s+van)\b",
             r"\b(doesn'?t\s+(answer|respond)|slow|losing|miss|customers\s+leave|no\s+time)\b",
         ],
+        "duda": [
+            r"\b(no\s+estoy\s+seguro|no\s+sé\s+si|quizá|quizás|a\s+ver|déjame\s+pensar)\b",
+            r"\b(conviene\s+cambiar|vale\s+la\s+pena|compensa|merece)\b",
+            r"\b(not\s+sure|maybe|let\s+me\s+think|worth\s+it|should\s+i)\b",
+        ],
     },
     "cold": {
         "explorando": [
@@ -89,6 +94,12 @@ RULES = {
         "sin_compromiso": [
             r"\b(todavía\s+no|aún\s+no|no\s+tengo\s+negocio|apenas\s+empiezo|solo\s+consulto)\b",
             r"\b(not\s+yet|i\s+don'?t\s+have\s+a\s+business|just\s+checking)\b",
+        ],
+        "rechazo": [
+            r"\b(caro|carís|muy\s+caro|demasiado\s+caro|fuera\s+de\s+presupuesto)\b",
+            r"\b(olv(?:í)?dalo|no\s+me\s+interesa|gracias\s+pero\s+no|me\s+jode|pásalo)\b",
+            r"\b(too\s+expensive|forget\s+it|not\s+interested|never\s+mind|no\s+way)\b",
+            r"\b(no\s+me\s+convence)\b",
         ],
     },
 }
