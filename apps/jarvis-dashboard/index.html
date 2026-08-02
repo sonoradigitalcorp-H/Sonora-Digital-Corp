@@ -896,24 +896,25 @@ const voiceStatus = document.getElementById('voice-status');
 const voiceText = document.getElementById('voice-text');
 const voiceResponse = document.getElementById('voice-response');
 
-let recognition = null;
-let isListening = false;
-let ttsServer = 'http://localhost:8765';
+const WAKE_WORD = 'hey jarvis';
+const SHUTDOWN_PHRASES = ['apaga micrófono', 'apaga mic', 'para micrófono', 'silencio'];
+let lastTranscript = '';
+let wsConnection = null;
 
-// ── Speech Recognition (microphone) ──
 function initRecognition() {
   const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
   if (!SpeechRecognition) {
-    voiceStatus.textContent = '❌ Speech Recognition no soportado en este navegador';
+    voiceStatus.textContent = '❌ Speech Recognition no soportado';
     voiceStatus.style.color = '#ff4444';
     return null;
   }
 
   const rec = new SpeechRecognition();
-  rec.continuous = false;
+  rec.continuous = true;  // SIEMPRE escuchando
   rec.interimResults = true;
   rec.lang = 'es-MX';
   rec.maxAlternatives = 1;
+  rec.autostart = false;
 
   rec.onstart = () => {
     isListening = true;
@@ -937,9 +938,25 @@ function initRecognition() {
     }
     voiceText.textContent = transcript;
 
-    // Interim results
-    if (event.results[event.resultIndex].isFinal === false) {
-      voiceStatus.textContent = '🔴 ESCUCHANDO... (procesando)';
+    // Check for final result
+    if (event.results[event.resultIndex].isFinal) {
+      const text = transcript.toLowerCase().trim();
+      
+      // Check shutdown
+      if (SHUTDOWN_PHRASES.some(p => text.includes(p))) {
+        recognition.stop();
+        voiceStatus.textContent = '🔇 Micrófono apagado. Di "hey jarvis" para reactivar.';
+        voiceStatus.style.color = '#ff4444';
+        return;
+      }
+      
+      // Check wake word or direct command
+      if (text.includes(WAKE_WORD) || text.length > 5) {
+        const cmd = text.replace(WAKE_WORD, '').trim();
+        if (cmd.length > 2) {
+          processVoiceInput(cmd);
+        }
+      }
     }
   };
 
@@ -998,61 +1015,94 @@ function toggleMic() {
   }
 }
 
-// ── Process voice input → send to backend → get response ──
+// ── Process voice input via WebSocket ──
 async function processVoiceInput(text) {
   voiceStatus.textContent = '🧠 Procesando...';
   voiceStatus.style.color = '#00b4ff';
+  voiceText.textContent = text;
 
+  // Try WebSocket first
+  if (wsConnection && wsConnection.readyState === WebSocket.OPEN) {
+    wsConnection.send(JSON.stringify({
+      type: 'voice_input',
+      text: text,
+      user_id: 'luis_daniel',
+      timestamp: new Date().toISOString(),
+    }));
+    return;
+  }
+
+  // Fallback: HTTP to n8n bridge
   try {
-    // Send to n8n bridge or bot backend
     const response = await fetch('http://localhost:8767/webhook/voice_input', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        text: text,
-        source: 'jarvis_dashboard',
-        user_id: 'luis_daniel',
-        timestamp: new Date().toISOString(),
-      }),
+      body: JSON.stringify({ text, source: 'jarvis', user_id: 'luis_daniel' }),
     });
-
     let reply = '';
     if (response.ok) {
       const data = await response.json();
       reply = data.reply || data.response || data.text || '';
     }
-
-    if (!reply) {
-      // Fallback: use local response
-      reply = generateLocalResponse(text);
-    }
-
-    voiceResponse.textContent = reply;
-    voiceStatus.textContent = '🔊 Hablando...';
-    voiceStatus.style.color = '#00ff88';
-
-    // Speak response
-    await speakResponse(reply);
-
-    voiceStatus.textContent = '✅ Listo para hablar';
-    voiceStatus.style.color = '#00ff88';
-
-    // Add to feed
-    addFeedItem(text, reply);
-
+    if (!reply) reply = generateLocalResponse(text);
+    await speakAndShow(reply);
   } catch(e) {
-    // Fallback: local response
     const reply = generateLocalResponse(text);
-    voiceResponse.textContent = reply;
-    voiceStatus.textContent = '🔊 Hablando (local)...';
-    voiceStatus.style.color = '#00ff88';
-
-    await speakResponse(reply);
-    voiceStatus.textContent = '✅ Listo para hablar';
-    voiceStatus.style.color = '#00ff88';
-
-    addFeedItem(text, reply);
+    await speakAndShow(reply);
   }
+}
+
+// ── Speak + Show response ──
+async function speakAndShow(reply) {
+  voiceResponse.textContent = reply;
+  voiceStatus.textContent = '🔊 Hablando...';
+  voiceStatus.style.color = '#00ff88';
+  await speakResponse(reply);
+  voiceStatus.textContent = '✅ Escuchando...';
+  voiceStatus.style.color = '#00ff88';
+  addFeedItem(voiceText.textContent, reply);
+}
+
+// ── WebSocket connection ──
+function connectWebSocket() {
+  try {
+    wsConnection = new WebSocket('ws://localhost:8769/ws');
+    wsConnection.onopen = () => {
+      console.log('JARVIS WebSocket connected');
+      voiceStatus.textContent = '✅ JARVIS conectado';
+    };
+    wsConnection.onmessage = (event) => {
+      const data = JSON.parse(event.data);
+      if (data.type === 'response') {
+        // Show screenshot inline if available
+        if (data.screenshot) {
+          showScreenshotInline(data.screenshot);
+        }
+        speakAndShow(data.text || '');
+      }
+    };
+    wsConnection.onclose = () => {
+      setTimeout(connectWebSocket, 3000);
+    };
+    wsConnection.onerror = () => {
+      wsConnection = null;
+    };
+  } catch(e) {}
+}
+
+// ── Show screenshot inline ──
+function showScreenshotInline(path) {
+  const feed = document.getElementById('feed');
+  const item = document.createElement('div');
+  item.className = 'feed-item';
+  item.innerHTML = `
+    <div class="feed-time">${new Date().toLocaleTimeString('es-MX', {hour:'2-digit',minute:'2-digit'})}</div>
+    <div class="feed-text">📸 Screenshot capturado</div>
+    <img src="http://localhost:8769/screenshot/${path.split('/').pop()}" 
+         style="max-width:100%;border-radius:4px;margin-top:8px;border:1px solid rgba(0,180,255,0.2);"
+         onerror="this.style.display='none'" />
+  `;
+  feed.insertBefore(item, feed.firstChild);
 }
 
 // ── Local response generator (when backend is unavailable) ──
@@ -1182,8 +1232,9 @@ document.addEventListener('keydown', (e) => {
   }
 });
 
-// ── Init recognition on load ──
-recognition = initRecognition();
+// ── Init: connect WebSocket + auto-start mic ──
+connectWebSocket();
+setTimeout(() => { if (!isListening) toggleMic(); }, 2000);
 </script>
 </body>
 </html>
