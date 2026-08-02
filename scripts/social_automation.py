@@ -514,6 +514,98 @@ class InstagramAutomation(PlatformBase):
         return await self.safe_action(_do_dm, "dm", username=username, message=message)
 
 
+# ── Facebook Automation ────────────────────────────────────────
+
+class FacebookAutomation(PlatformBase):
+    """Facebook page posting, comments, DMs."""
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__("facebook", *args, **kwargs)
+    
+    async def post(self, text: str, page_url: str = None, image_path: str = None) -> bool:
+        """Post to Facebook page."""
+        async def _do_post():
+            url = page_url or "https://www.facebook.com/"
+            await self.page.goto(url, wait_until="networkidle")
+            await self._random_delay(2, 3)
+            
+            # Click "What's on your mind?"
+            create_post = self.page.locator('div[role="button"]:has-text("What"), div[role="button"]:has-text("Qué"), div[aria-label="Create a post"], div[aria-label="Crear una publicación"]').first
+            await create_post.click()
+            await self._random_delay(1, 2)
+            
+            # Type post
+            editor = self.page.locator('div[contenteditable="true"][role="textbox"]').first
+            await editor.click()
+            await editor.fill(text)
+            await self._random_delay(0.5, 1)
+            
+            # Add media if provided
+            if image_path and os.path.exists(image_path):
+                photo_btn = self.page.locator('div[aria-label="Photo/video"], div[aria-label="Foto/vídeo"]').first
+                await photo_btn.click()
+                await self._random_delay(1, 2)
+                file_input = self.page.locator('input[type="file"][accept*="image"]').first
+                await file_input.set_input_files(image_path)
+                await self._random_delay(2, 4)
+            
+            # Click post
+            post_btn = self.page.locator('div[aria-label="Post"], div[aria-label="Publicar"]').first
+            await post_btn.click()
+            await self._random_delay(3, 5)
+            
+            logger.info(f"Posted to Facebook: {text[:50]}...")
+            return True
+        
+        return await self.safe_action(_do_post, "post", text=text)
+    
+    async def reply_comment(self, post_url: str, comment: str) -> bool:
+        """Reply to a Facebook comment."""
+        async def _do_reply():
+            await self.page.goto(post_url, wait_until="networkidle")
+            await self._random_delay(2, 3)
+            
+            comment_box = self.page.locator('div[aria-label="Write a comment"], div[aria-label="Escribe un comentario"]').first
+            await comment_box.click()
+            await comment_box.fill(comment)
+            await self._random_delay(0.5, 1)
+            
+            # Press Enter to post comment
+            await self.page.keyboard.press("Enter")
+            await self._random_delay(2, 3)
+            
+            logger.info(f"Replied on Facebook: {comment[:50]}...")
+            return True
+        
+        return await self.safe_action(_do_reply, "reply", post_url=post_url, comment=comment)
+    
+    async def reply_dm(self, username: str, message: str) -> bool:
+        """Reply to Facebook DM."""
+        async def _do_dm():
+            await self.page.goto("https://www.facebook.com/messages/", wait_until="networkidle")
+            await self._random_delay(2, 3)
+            
+            # Find conversation
+            conv = self.page.locator(f'div:has-text("{username}")').first
+            await conv.click()
+            await self._random_delay(1, 2)
+            
+            # Type message
+            msg_input = self.page.locator('div[aria-label="Message"], div[aria-label="Escribe un mensaje"]').last
+            await msg_input.click()
+            await msg_input.fill(message)
+            await self._random_delay(0.5, 1)
+            
+            # Send
+            await self.page.keyboard.press("Enter")
+            await self._random_delay(1, 2)
+            
+            logger.info(f"Replied to DM on Facebook: @{username}")
+            return True
+        
+        return await self.safe_action(_do_dm, "dm", username=username, message=message)
+
+
 # ── Main Orchestrator ─────────────────────────────────────────
 
 class SocialOrchestrator:
@@ -540,9 +632,18 @@ class SocialOrchestrator:
                 self.platforms[p] = InstagramAutomation(
                     self.sessions, self.memory, self.antiloop
                 )
+            elif p == "facebook":
+                self.platforms[p] = FacebookAutomation(
+                    self.sessions, self.memory, self.antiloop
+                )
         
         # Start all browsers
         for name, platform in self.platforms.items():
+            # Try to restore session from saved state
+            session_file = BASE_DIR / "ops" / "state" / f"{name}_session.json"
+            if session_file.exists():
+                logger.info(f"Found saved session for {name}: {session_file}")
+            
             await platform.start(headless=True)
             logger.info(f"Started {name} automation")
     
