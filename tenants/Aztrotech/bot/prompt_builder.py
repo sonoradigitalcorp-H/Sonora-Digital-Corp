@@ -48,6 +48,22 @@ SEÑAL EMOCIONAL ACTUAL:
 
 CONTEXTO DEL LEAD:
 {lead_context}
+
+INSTRUCCIONES DE RESPUESTA:
+- Responde de forma natural, como si hablaras con un amigo empresario.
+- Después de tu respuesta, incluye OPCIONES CONCRETAS Y ESPECÍFICAS como botones.
+- Las opciones deben ser acciones claras, no genéricas. Ejemplos:
+  * "Quiero un Empleado Digital para mi negocio" (no "Más info")
+  * "César me llama para cotizar" (no "Contactar")
+  * "Ver casos de éxito de negocios similares" (no "Casos de éxito")
+  * "¿Cuánto tiempo tarda en funcionar?" (no "Pregunta técnica")
+- Si el lead es HOT, la opción debe ser "Hablemos ahora, ¿cuándo le cae bien a César?"
+- Si el lead es WARM, la opción debe ser "Cuéntame más de tu negocio y te doy un plan"
+- Si el lead es COLD, la opción debe ser "¿Qué problema específico quieres resolver?"
+- NUNCA uses botones como "Servicios", "Más info", "Contacto", "Siguiente".
+- Sé específico: cada botón debe llevar a una acción concreta.
+- Si el usuario habla de un problema específico, la siguiente opción debe ser sobre ese problema.
+- Si el usuario pregunta por precio, NO des opciones de precio, da la opción de "Hablemos con César para una cotización personalizada".
 """
 
 # Guardrails post-LLM: detecta violaciones
