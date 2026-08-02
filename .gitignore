@@ -1,96 +1,57 @@
-
-*~
-# Big generated artifacts
-# Collector state (auto-generated, per-machine)
-# .env files: .env is real secrets, .env.ci is CI stub (committed)
-# Event bus operational data (not committed)
-# Hermes runtime (not config)
-# IDE
-# Obsidian workspace lock
-# OpenClaw runtime
-# SECURITY: infra .env has secrets — never commit
-# SECURITY: Secrets that should NEVER be committed
-# Unification — archive data we don't version
-# Wacli session data
-*.age
-.age/
-age-key*.txt
-age-key.txt
-apps/voice/*.vpsbak
-apps/webui/data/
-archive/
-archive/**/*.tar.gz
-archive/**/*.tgz
-archive/**/*.zip
-AUDITORIA-COMPLETA.md
-backups/
-*.bak
-*.bak.*
-cache/
-collectors/state/
-config/noel_ed25519_sdc
-.coverage
-credentials/
-credentials.json
-data/
-data/generated/
-docs/sdc-brain-vault/
-*.ed25519*
-engram.db
-**/.env
-.env
-.env*
-/.env
-**/.env.development
+# ── SDC Secrets (never commit) ──
+*.env
+.env.*
 !.env.example
-**/.env.local
-**/.env.production
-frontends/dashboard/gateway-config.js
-*.gpg
-.hermes/
-hermes-env/
-infra/.env
-*.jks
+
+# ── Tokens ──
+*.token
 *.key
-lobe-config.env
-logs/
-memory_store.db
-nathy-bot/bot*.log
-nathy-bot/data/
-nathy-bot/*.log
-node_modules/
-*.obsidian/workspace
-*.obsidian/workspace.json
-.openclaw/logs/
-.openclaw/state/
-opencode.json.bak*
-opencode.json.save
-*.p12
 *.pem
-*.pfx
-products/archive/**/*.html
-products/archive/**/*.pdf
-products/mystika/web/.next/
-products/production/mystik/lobe-config.env
-*.pyc
+*.p12
+
+# ── Database ──
+*.db
+*.sqlite
+*.sqlite3
+
+# ── Logs ──
+*.log
+logs/
+
+# ── Python ──
 __pycache__/
-scripts/sync-brain-vault.sh
-.secrets/
-service-account.json
-service_account.json
-SESSION_SUMMARY.md
-skills/mcp/gateway/gateway-config.js
-speech-cesar.*
-speech-cesar.mp3
-speech-cesar.ogg
-state/
-state.db
-state/events/*.jsonl
-state/events/replay/
-*.swo
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ── Node ──
+node_modules/
+package-lock.json
+
+# ── OS ──
+.DS_Store
+Thumbs.db
+
+# ── IDE ──
+.vscode/
+.idea/
 *.swp
-.venv/
-venv/
-.vercel
-.wacli/
-**/wacli.db*
+*.swo
+
+# ── Temp ──
+tmp/
+/tmp/
+
+# ── Backup ──
+*.bak
+*.backup
+*~
+
+# ── Secret files ──
+config/.secrets/
+**/.secrets/
+*.age
+*.gpg

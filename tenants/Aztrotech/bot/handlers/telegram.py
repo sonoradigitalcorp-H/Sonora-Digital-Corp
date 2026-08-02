@@ -102,6 +102,15 @@ class TelegramHandler:
         msg = update.message
         user = update.effective_user
         texto = (msg.text or "").strip().lower()
+        
+        # ── Mystic Shield ──
+        from security.shield import shield_check
+        allowed, reason = shield_check(user.id, texto)
+        if not allowed:
+            await msg.reply_text(f"🛡️ {reason}")
+            logger.warning(f"Shield blocked user {user.id}: {reason}")
+            return
+        
         ctx = self._ctx(user.id)
 
         if not texto:

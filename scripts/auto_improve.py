@@ -20,7 +20,7 @@ from pathlib import Path
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("auto-improve")
 
-DB_URL = "postgresql://sdc:sdc_local_dev@localhost:5432/sdc"
+DB_URL = os.getenv("DATABASE_URL", "postgresql://sdc:${POSTGRES_PASSWORD:-}@localhost:5432/sdc")
 ENGRAM_DB = Path(__file__).parent.parent.parent / "sonora-digital-corp" / "ops" / "state" / "engram_aztrotech.db"
 REPORT_DIR = Path(__file__).parent.parent / "ops" / "state" / "reports"
 

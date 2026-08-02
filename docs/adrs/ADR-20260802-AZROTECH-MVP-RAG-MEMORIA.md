@@ -38,7 +38,7 @@ Se implementó un `ConversationEngine` que orquesta por cada mensaje:
 - **Positivas**: eval lead accuracy **94.4%** (18 casos multi-idioma), 0 safety issues, respuestas sin revelar precios ni SDC, costos ~$0.0001/mensaje (deepseek-v4-flash).
 - **Positivas**: identidad unificada permite que un cliente hable por WhatsApp y Telegram como el mismo usuario.
 - **Deuda**: emoción con LLM solo en ambiguos (48.6% en eval con heurísticas); latencia p50 3.5s por llamadas LLM del clasificador.
-- **Migración**: `001_mvp_identity_conversations.sql` aplicada a Postgres local (password `sdc_local_dev`).
+- **Migración**: `001_mvp_identity_conversations.sql` aplicada a Postgres local (password ${POSTGRES_PASSWORD}).
 
 ## Lessons
 

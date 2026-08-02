@@ -35,7 +35,7 @@ BASE_DIR = Path(__file__).parent.parent.parent
 TENANTS_DIR = BASE_DIR / "tenants"
 TEMPLATE_DIR = TENANTS_DIR / "Aztrotech"  # template
 QDRANT_URL = "http://localhost:6333"
-DB_URL = "postgresql://sdc:sdc_local_dev@localhost:5432/sdc"
+DB_URL = os.getenv("DATABASE_URL", "postgresql://sdc:${POSTGRES_PASSWORD:-}@localhost:5432/sdc")
 
 # ── Pricing Model ─────────────────────────────────────────────
 

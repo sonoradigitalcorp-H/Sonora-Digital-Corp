@@ -23,7 +23,7 @@ logger = logging.getLogger("notification-bot")
 
 NOTIF_BOT_TOKEN = os.getenv("NOTIF_BOT_TOKEN", "")
 OWNER_CHAT_ID = os.getenv("NOTIF_OWNER_CHAT_ID", "5738935134")
-DB_URL = "postgresql://sdc:sdc_local_dev@localhost:5432/sdc"
+DB_URL = os.getenv("DATABASE_URL", "postgresql://sdc:${POSTGRES_PASSWORD:-}@localhost:5432/sdc")
 
 
 async def start(update, context):

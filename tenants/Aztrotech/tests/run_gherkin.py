@@ -90,8 +90,8 @@ class StepExecutor:
     def __init__(self):
         self.tts_url = "http://localhost:8765"
         self.n8n_url = "http://localhost:8767"
-        self.bot_token = os.getenv("BOT_TOKEN", "8825008004:AAFHdxypgGK8LZD0yEH9g0hsCdl2pJmDd8g")
-        self.notif_token = os.getenv("NOTIF_BOT_TOKEN", "8851813996:AAHwuIwhMlI0GW3FKFQGqcjKXgwI2QpXLK8")
+        self.bot_token = os.getenv("BOT_TOKEN", os.getenv("BOT_TOKEN", ""))
+        self.notif_token = os.getenv("NOTIF_BOT_TOKEN", os.getenv("NOTIF_BOT_TOKEN", ""))
         self.cesar_chat = "5738935134"
         self.context = {}
         self.classifier = None
