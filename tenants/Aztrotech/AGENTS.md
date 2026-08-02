@@ -85,7 +85,7 @@ make vps-health → docker ps + systemd + disk
 ### Servicios 24/7 activos (systemd)
 ```
 sdc-aztrotech-bot.service      → Bot conversación César (RAG-first)
-sdc-aztrotech-notif.service    → Bot notificaciones (FenixBot)
+sdc-aztrotech-notif.service    → Bot notificaciones (@MysticUnity_bot)
 sdc-aztrotech-tts.service      → TTS DaliaNeural (:8765)
 sdc-n8n-bridge.service         → Webhook bridge bot ↔ n8n (:8767)
 + cron auto-heal cada 5min
@@ -108,3 +108,7 @@ sdc-n8n-bridge.service         → Webhook bridge bot ↔ n8n (:8767)
 ### Bloqueado
 - Canal Telegram: requiere api_id/api_hash de César (my.telegram.org)
 - WhatsApp re-auth: requiere QR interactivo (sandbox 6623538272)
+
+### Bot Dual Activo
+- **Bot conversación**: @AztroTechBot (token: 8825008004:AAFHdxypgGK8LZD0yEH9g0hsCdl2pJmDd8g) → Chat ID César: 5738935134
+- **Bot notificaciones**: @MysticUnity_bot (token: 8851813996:AAHwuIwhMlI0GW3FKFQGqcjKXgwI2QpXLK8) → Leads, alertas, resúmenes diarios
