@@ -1,0 +1,12 @@
+{
+  "id": "content-1782902868333-uc1x",
+  "type": "album_cover",
+  "icon": "💿",
+  "prompt": "Para Hector Rubio (Regional Mexicano), temporada: Verano. Temas: playa, vacaciones, sol. Hoy es Martes 30 de Verano. Contenido sobre: playa",
+  "description": "Contenido de Portada de álbum/sencillo sobre \"playa\" para Hector Rubio",
+  "artist": "Hector Rubio",
+  "genre": "Regional Mexicano",
+  "result": "{\"error\":\"FAL_API_KEY no configurada\"}",
+  "generated_at": "2026-07-01T10:47:48.333Z",
+  "status": "pending_review"
+}
