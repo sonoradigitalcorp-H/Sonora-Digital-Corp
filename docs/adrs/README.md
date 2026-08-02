@@ -25,3 +25,4 @@ Each ADR documents a significant architecture decision, including context, optio
 | ADR-20260802-AZROTECH-VOZ-LOCAL | Aztrotech Voz Local (edge-tts + faster-whisper) | accepted | 2026-08-02 |
 | ADR-20260802-AZROTECH-WHATSAPP-SANDBOX | Aztrotech WhatsApp Sandbox (solo 6623538272) | accepted | 2026-08-02 |
 | ADR-20260802-AZROTECH-GITHUB-CI | Aztrotech GitHub CI + Sync Memorias | accepted | 2026-08-02 |
+| ADR-20260802-SDC-SYSTEM-SESSION | Sesión completa: auditoría, fixes, protección, automatización, JARVIS 3D | accepted | 2026-08-02 |
