@@ -237,7 +237,7 @@
   "channels": {
     "telegram": {
       "enabled": true,
-      "botToken": "8782296127:AAHO6Fx7U6WfvS8AyD5h6rLYqc5wJ7Sf3nY",
+      "botToken": "${NOTIF_BOT_TOKEN}",
       "dmPolicy": "allowlist",
       "allowFrom": [
         "tg:5738935134"

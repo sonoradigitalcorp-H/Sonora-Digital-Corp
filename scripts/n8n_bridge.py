@@ -23,9 +23,9 @@ from aiohttp import web, ClientSession
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
 logger = logging.getLogger("n8n-bridge")
 
-DB_URL = "postgresql://sdc:sdc_local_dev@localhost:5432/sdc"
+DB_URL = os.getenv("DATABASE_URL", "postgresql://sdc:${POSTGRES_PASSWORD:-}@localhost:5432/sdc")
 N8N_BASE = "http://localhost:5678"
-NOTIF_BOT_TOKEN = os.getenv("NOTIF_BOT_TOKEN", "8782296127:AAHO6Fx7U6WfvS8AyD5h6rLYqc5wJ7Sf3nY")
+NOTIF_BOT_TOKEN = os.getenv("NOTIF_BOT_TOKEN", "")
 OWNER_CHAT_ID = os.getenv("NOTIF_OWNER_CHAT_ID", "5738935134")
 PORT = 8767
 

@@ -14,7 +14,7 @@
 
 ## Stack
 
-- **Bot Telegram**: @AztroTechBot (token: 8825008004:AAFHdxypgGK8LZD0yEH9g0hsCdl2pJmDd8g)
+- **Bot Telegram**: @AztroTechBot (token: ${AZTROTECH_BOT_TOKEN})
 - **Chat ID César**: 5738935134
 - **WhatsApp owner (Luis Daniel)**: 6623538272 (E.164: 5216623538272)
 - **WhatsApp César (cliente)**: 5216621072254
@@ -110,5 +110,5 @@ sdc-n8n-bridge.service         → Webhook bridge bot ↔ n8n (:8767)
 - WhatsApp re-auth: requiere QR interactivo (sandbox 6623538272)
 
 ### Bot Dual Activo
-- **Bot conversación**: @AztroTechBot (token: 8825008004:AAFHdxypgGK8LZD0yEH9g0hsCdl2pJmDd8g) → Chat ID César: 5738935134
-- **Bot notificaciones**: @MysticUnity_bot (token: 8851813996:AAHwuIwhMlI0GW3FKFQGqcjKXgwI2QpXLK8) → Leads, alertas, resúmenes diarios
+- **Bot conversación**: @AztroTechBot (token: ${AZTROTECH_BOT_TOKEN}) → Chat ID César: 5738935134
+- **Bot notificaciones**: @MysticUnity_bot (token: ${NOTIF_BOT_TOKEN}) → Leads, alertas, resúmenes diarios

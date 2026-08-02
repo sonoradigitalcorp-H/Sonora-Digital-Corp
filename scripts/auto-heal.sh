@@ -61,7 +61,7 @@ check_http "Qdrant" "http://localhost:6333/collections" || true
 check_http "n8n" "http://localhost:5678/healthz" || true
 
 # Verificar Postgres
-if ! PGPASSWORD=sdc_local_dev psql -h localhost -U sdc -d sdc -c "SELECT 1" > /dev/null 2>&1; then
+if ! PGPASSWORD=${POSTGRES_PASSWORD:-sdc_local_dev} psql -h localhost -U sdc -d sdc -c "SELECT 1" > /dev/null 2>&1; then
     log "⚠️  Postgres no responde. Reiniciando Docker..."
     docker restart infra-postgres-1 2>>"$LOG"
 fi
