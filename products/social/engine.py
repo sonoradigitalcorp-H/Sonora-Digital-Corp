@@ -1,22 +1,29 @@
 #!/usr/bin/env python3
 """SDC Social Media Engine — Genera + Programa + Publica contenido.
-Usa Playwright para interactuar con las plataformas reales.
-Integra IA de Mystic para respuestas automáticas en DMs/comentarios.
+
+FIX: Now uses scripts.social_automation as the base, inheriting
+AntiLoop, MemoryGuard, SessionManager, and rate limiting.
 """
+
 import asyncio
 import json
 import os
 import random
+import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
-from playwright.async_api import async_playwright
+# Import from the consolidated social_automation module
+sys.path.insert(0, str(Path(__file__).parent.parent.parent / "scripts"))
+from social_automation import (
+    SessionManager, ContentQueue, MemoryGuard, AntiLoop,
+    TwitterAutomation, InstagramAutomation, FacebookAutomation,
+    SocialOrchestrator, BASE_DIR,
+)
 
-BASE = Path(__file__).resolve().parent.parent.parent
-LOG_DIR = BASE / "state" / "social" / "logs"
-CONTENT_DIR = BASE / "state" / "social" / "content"
-SCHEDULE_FILE = BASE / "state" / "social" / "schedule.json"
-CREDENTIALS_FILE = BASE / "state" / "social" / "credentials.json"
+LOG_DIR = BASE_DIR / "ops" / "state" / "social" / "logs"
+CONTENT_DIR = BASE_DIR / "ops" / "state" / "social" / "content"
+SCHEDULE_FILE = BASE_DIR / "ops" / "state" / "social" / "schedule.json"
 
 os.makedirs(LOG_DIR, exist_ok=True)
 os.makedirs(CONTENT_DIR, exist_ok=True)

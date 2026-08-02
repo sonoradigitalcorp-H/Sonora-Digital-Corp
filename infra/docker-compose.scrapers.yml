@@ -6,14 +6,19 @@ services:
     ports:
       - "8931:8931"
     command: ["npx", "@playwright/mcp", "--port", "8931", "--headless"]
+    environment:
+      - PLAYWRIGHT_CHROMIUM_EXECUTABLE=/ms-playwright/chromium-*/chrome-linux64/chrome
     healthcheck:
-      test: ["CMD-SHELL", "pgrep -f playwright-mcp > /dev/null 2>&1 && exit 0 || exit 1"]
+      test: ["CMD-SHELL", "wget -q -O - http://localhost:8931/health || exit 1"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 30s
-    mem_limit: 256m
-    cpus: 0.5
+    mem_limit: 512m
+    cpus: 1.0
+    shm_size: "256mb"
+    security_opt:
+      - seccomp:unconfined
     networks:
       - sdc-scrapers
 
