@@ -14,9 +14,9 @@ REASONING_PATTERNS = [
 ]
 
 PREMIUM_PATTERNS = [
-    r"\b(código|programar|desarrolla|implementa|arquitectura)\b",
+    r"\b(código|programar|programa|programa\s+un|desarrolla|desarrollar|implementa|implementar|arquitectura)\b",
     r"\b(investiga|research|paper|documentación técnica)\b",
-    r"\b(diseño de sistema|scalabilidad|optimiza)\b",
+    r"\b(diseño de sistema|scalabilidad|optimiza|optimizar)\b",
 ]
 
 PACKAGES = {
@@ -83,8 +83,8 @@ class ModelRouter:
         headers = {
             "Authorization": f"Bearer {api_key}",
             "Content-Type": "application/json",
-            "HTTP-Referer": "https://astrotech.ai",
-            "X-Title": "AstroTech AI",
+            "HTTP-Referer": "https://aztrotech.mx",
+            "X-Title": "Aztrotech AI",
         }
 
         fallback_chain = [model]

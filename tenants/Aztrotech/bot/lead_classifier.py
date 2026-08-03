@@ -52,8 +52,9 @@ RULES = {
             r"\b(empezamos|lunes|mañana|esta\s+semana|cuanto\s+antes)\b",
         ],
         "budget": [
-            r"\b(presupuesto\s+(de|es)?\s*\$?\s*\d+|al\s+mes\s*\$?\s*\d+|tenemos\s+\$\d+)\b",
-            r"\b(budget|approved|money\s+ready|we\s+have\s+\$\d+)\b",
+            r"\b(presupuesto\s+(de|es)?\s*\$?\s*[\d,]+|al\s+mes\s*\$?\s*[\d,]+|tenemos\s+\$[\d,]+)\b",
+            r"\b(presupuesto\s+(de|es)?\s*\$?\s*\d+\s*k|al\s+mes\s*\$?\s*\d+\s*k)\b",
+            r"\b(budget|approved|money\s+ready|we\s+have\s+\$[\d,]+)\b",
         ],
         "urgencia": [
             r"\b(ya|urgente|inmediato|perdi\w*\s+clientes|no\s+(puedo|aguanto))\b",
@@ -74,8 +75,12 @@ RULES = {
             r"\b(i\s+have|my\s+business|my\s+company|i\s+own|clinic|restaurant|store|agency|consulting)\b",
         ],
         "dolor": [
-            r"\b(no\s+(responde|contesta)|tardo|pierdo|no\s+alcanzo|mucho\s+tiempo|clientes\s+que\s+se\s+van)\b",
+            r"\b(no\s+(responde|contesta)|tardo|pierdo|no\s+alcanzo|mucho\s+tiempo|clientes\s+(que\s+)?se\s+van)\b",
             r"\b(doesn'?t\s+(answer|respond)|slow|losing|miss|customers\s+leave|no\s+time)\b",
+        ],
+        "como_funciona": [
+            r"\b(cómo\s+funciona|como\s+funciona|how\s+does\s+it\s+work|cómo\s+trabaja)\b",
+            r"\b(sistema\s+de\s+ventas|sales\s+system|automatización|automation)\b",
         ],
         "duda": [
             r"\b(no\s+estoy\s+seguro|no\s+sé\s+si|quizá|quizás|a\s+ver|déjame\s+pensar)\b",

@@ -1,8 +1,8 @@
-# FAQ — AstroTech
+# FAQ — Aztrotech
 
 ## General
 **Q: ¿Quién es César Holguín?**
-A: Fundador de AstroTech. Emprendedor tecnológico con experiencia en IA, automatización y desarrollo de software.
+A: Fundador de Aztrotech. Emprendedor tecnológico con experiencia en IA, automatización y desarrollo de software.
 
 **Q: ¿Dónde están ubicados?**
 A: Trabajamos 100% remoto, atendiendo clientes en toda América Latina y EE.UU.

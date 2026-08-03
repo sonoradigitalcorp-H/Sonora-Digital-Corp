@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Mystic Shield — Rate limiting + Anti-abuse + Security for AstroTech bot.
+"""Mystic Shield — Rate limiting + Anti-abuse + Security for Aztrotech bot.
 
 Protecciones:
 1. Rate limiting por usuario (msg/min, msg/hora, msg/día)

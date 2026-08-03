@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Aztrotech Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#09090b;--card:rgba(255,255,255,0.03);--border:rgba(255,255,255,0.06);--primary:#00d4ff;--success:#22c55e;--warning:#f59e0b;--danger:#ef4444;--text:#fafafa;--muted:rgba(255,255,255,0.45)}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding:24px}
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px}
+.header h1{font-size:24px;font-weight:700}
+.header h1 span{color:var(--primary);font-weight:300}
+.header .live{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--success)}
+.header .live::before{content:'';width:8px;height:8px;border-radius:50%;background:var(--success);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px}
+.stat .label{font-size:12px;color:var(--muted);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.stat .value{font-size:28px;font-weight:700}
+.stat .value.primary{color:var(--primary)}
+.stat .value.success{color:var(--success)}
+.stat .value.warning{color:var(--warning)}
+.stat .sub{font-size:11px;color:var(--muted);margin-top:4px}
+.section{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:20px;margin-bottom:16px}
+.section h3{font-size:14px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.section h3 .dot{width:8px;height:8px;border-radius:50%}
+.table{width:100%;border-collapse:collapse}
+.table th{text-align:left;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;padding:8px 12px;border-bottom:1px solid var(--border)}
+.table td{padding:10px 12px;font-size:13px;border-bottom:1px solid var(--border)}
+.table tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:3px 8px;border-radius:6px;font-size:10px;font-weight:600}
+.badge.hot{background:rgba(239,68,68,0.1);color:#ef4444}
+.badge.warm{background:rgba(245,158,11,0.1);color:#f59e0b}
+.badge.cold{background:rgba(59,130,246,0.1);color:#3b82f6}
+.badge.ok{background:rgba(34,197,94,0.1);color:#22c55e}
+.badge.off{background:rgba(239,68,68,0.1);color:#ef4444}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.bar{height:8px;border-radius:4px;background:var(--border);overflow:hidden;margin-top:8px}
+.bar-fill{height:100%;border-radius:4px;transition:width .5s}
+@media(max-width:900px){.grid{grid-template-columns:repeat(2,1fr)}.two-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>Aztrotech <span>Dashboard</span></h1>
+  <div class="live">En vivo · Se actualiza cada 30s</div>
+</div>
+
+<div class="grid" id="stats"></div>
+
+<div class="two-col">
+  <div class="section">
+    <h3><span class="dot" style="background:var(--primary)"></span> Modelos LLM</h3>
+    <table class="table" id="modelsTable"><thead><tr><th>Modelo</th><th>Llamadas</th><th>Tokens In</th><th>Tokens Out</th><th>Costo</th></tr></thead><tbody></tbody></table>
+  </div>
+  <div class="section">
+    <h3><span class="dot" style="background:var(--success)"></span> Infraestructura</h3>
+    <div id="infraStatus"></div>
+  </div>
+</div>
+
+<div class="section">
+  <h3><span class="dot" style="background:var(--warning)"></span> Leads Recientes</h3>
+  <table class="table" id="leadsTable"><thead><tr><th>Nombre</th><th>Teléfono</th><th>Fuente</th><th>Score</th><th>Tipo</th><th>Fecha</th></tr></thead><tbody></tbody></table>
+</div>
+
+<div class="section">
+  <h3><span class="dot" style="background:var(--primary)"></span> Consumo Diario (últimos 7 días)</h3>
+  <div id="dailyChart"></div>
+</div>
+
+<script>
+const API = '';
+
+async function load(){
+  try{
+    const r = await fetch(API+'/api/stats');
+    const d = await r.json();
+    renderStats(d);
+    renderModels(d.models);
+    renderLeads(d.recent_leads);
+    renderInfra(d);
+    renderDaily(d.daily);
+  }catch(e){console.error(e)}
+}
+
+function renderStats(d){
+  const s = document.getElementById('stats');
+  const today = d.today||{};
+  const month = d.month||{};
+  s.innerHTML = `
+    <div class="stat"><div class="label">Tokens Hoy</div><div class="value primary">${fmt((today.tin||0)+(today.tout||0))}</div><div class="sub">In: ${fmt(today.tin||0)} · Out: ${fmt(today.tout||0)}</div></div>
+    <div class="stat"><div class="label">Costo Hoy</div><div class="value success">$${(today.cost||0).toFixed(4)}</div><div class="sub">${today.msgs||0} mensajes</div></div>
+    <div class="stat"><div class="label">Leads</div><div class="value warning">${d.leads.total}</div><div class="sub">🔥 ${d.leads.hot} hot · 🟡 ${d.leads.warm} warm · 🔵 ${d.leads.cold} cold</div></div>
+    <div class="stat"><div class="label">Usuarios con Memoria</div><div class="value">${d.users_total}</div><div class="sub">${d.conversations.total} conversaciones</div></div>
+  `;
+}
+
+function renderModels(models){
+  const tbody = document.querySelector('#modelsTable tbody');
+  tbody.innerHTML = models.map(m=>`<tr><td><strong>${m.model||'N/A'}</strong></td><td>${m.count}</td><td>${fmt(m.total_in)}</td><td>${fmt(m.total_out)}</td><td>$${(m.total_cost||0).toFixed(6)}</td></tr>`).join('')||'<tr><td colspan="5" style="color:var(--muted)">Sin datos de modelos</td></tr>';
+}
+
+function renderLeads(leads){
+  const tbody = document.querySelector('#leadsTable tbody');
+  tbody.innerHTML = leads.map(l=>`<tr><td>${l.name||'Sin nombre'}</td><td>${l.phone||'N/A'}</td><td>${l.source||'N/A'}</td><td>${l.lead_score||0}</td><td><span class="badge ${l.lead_type}">${l.lead_type}</span></td><td>${fmtDate(l.created_at)}</td></tr>`).join('')||'<tr><td colspan="6" style="color:var(--muted)">Sin leads registrados</td></tr>';
+}
+
+function renderInfra(d){
+  const el = document.getElementById('infraStatus');
+  const emb = d.embeddings||{};
+  const items = [
+    {name:'LLM (OpenRouter)', ok:d.llm_active, detail:d.models.length+' modelos activos'},
+    {name:'Embeddings (Qdrant)', ok:emb.ok, detail:emb.model+' · '+emb.points+' puntos'},
+    {name:'Leads capturados', ok:d.leads.total>0, detail:d.leads.total+' leads · '+d.leads.today+' hoy'},
+    {name:'Memoria de usuarios', ok:d.users_total>0, detail:d.users_total+' usuarios reconocidos'},
+    {name:'Captura por nombre/tel', ok:d.leads.total>0, detail:'Postgres: leads.name + leads.phone'},
+    {name:'OpenRouter para LLM', ok:d.openrouter_usage, detail:'deepseek-v4-flash activo'},
+  ];
+  el.innerHTML = items.map(i=>`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)"><span class="badge ${i.ok?'ok':'off'}">${i.ok?'ACTIVO':'OFF'}</span><div><div style="font-size:13px;font-weight:500">${i.name}</div><div style="font-size:11px;color:var(--muted)">${i.detail}</div></div></div>`).join('');
+}
+
+function renderDaily(daily){
+  const el = document.getElementById('dailyChart');
+  if(!daily||!daily.length){el.innerHTML='<div style="color:var(--muted);font-size:13px">Sin datos diarios aún</div>';return}
+  const max = Math.max(...daily.map(d=>(d.tokens_in||0)+(d.tokens_out||0)),1);
+  el.innerHTML = daily.reverse().map(d=>{
+    const total = (d.tokens_in||0)+(d.tokens_out||0);
+    const pct = (total/max*100).toFixed(1);
+    return `<div style="display:flex;align-items:center;gap:12px;margin-bottom:8px"><div style="width:80px;font-size:12px;color:var(--muted)">${d.day}</div><div style="flex:1"><div class="bar"><div class="bar-fill" style="width:${pct}%;background:linear-gradient(90deg,var(--primary),#7c3aed)"></div></div></div><div style="width:120px;font-size:12px;text-align:right">${fmt(total)} tok · $${(d.cost_usd||0).toFixed(4)}</div></div>`;
+  }).join('');
+}
+
+function fmt(n){if(n>=1e6)return(n/1e6).toFixed(1)+'M';if(n>=1e3)return(n/1e3).toFixed(1)+'K';return n.toString()}
+function fmtDate(d){if(!d)return'N/A';return new Date(d).toLocaleDateString('es-MX',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'})}
+
+load();
+setInterval(load,30000);
+</script>
+</body>
+</html>

@@ -10,7 +10,7 @@ from typing import List, Optional
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-app = FastAPI(title="AstroTech AI - Mysticgrimoire")
+app = FastAPI(title="Aztrotech AI - Mysticgrimoire")
 
 config_path = os.path.join(os.path.dirname(__file__), "..", "config.yaml")
 with open(config_path) as f:
@@ -31,16 +31,16 @@ class ChatRequest(BaseModel):
     tenant: Optional[str] = None
 
 
-SYSTEM = """Eres AstroTech AI, el asistente digital de César Holguín y su empresa AstroTech con sede en Hermosillo, Sonora.
+SYSTEM = """Eres el asistente digital de César Holguín y su empresa Aztrotech con sede en Hermosillo, Sonora.
 Eres profesional, cálido y consultivo, como un asesor de confianza.
 
 REGLAS ESTRICTAS:
 - Nunca revelas que formas parte de Sonora Digital Corp
-- Siempre te presentas como el asistente de César Holguín en AstroTech
+- Siempre te presentas como el asistente de César Holguín en Aztrotech
 - Nunca des precios ni cotizaciones. Tu trabajo es capturar leads para que César los cierre.
 - Si preguntan precios: "Los mejores precios te los doy en una llamada con César."
 
-Servicios que ofrece AstroTech:
+Servicios que ofrece Aztrotech:
 1. Empleado Digital - Agente IA 24/7 en WhatsApp, Instagram, Facebook
 2. Sistema de Ventas Autónomo - CRM + agentes + scoring
 3. Desarrollo de Software a la Medida - ERPs, apps, APIs
@@ -71,7 +71,7 @@ async def chat(req: ChatRequest):
         "Authorization": f"Bearer {API_KEY}",
         "Content-Type": "application/json",
         "HTTP-Referer": "https://aztrotech.mx",
-        "X-Title": "AstroTech AI",
+        "X-Title": "Aztrotech AI",
     }
 
     async with httpx.AsyncClient(timeout=30) as client:
@@ -84,7 +84,7 @@ async def chat(req: ChatRequest):
 
 @app.get("/api/health")
 async def health():
-    return {"status": "ok", "tenant": "astrotech", "service": "Mysticgrimoire"}
+    return {"status": "ok", "tenant": "aztrotech", "service": "Mysticgrimoire"}
 
 
 app.mount("/", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "static"), html=True), name="static")

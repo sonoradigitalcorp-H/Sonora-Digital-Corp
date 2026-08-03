@@ -1,4 +1,4 @@
-# Catálogo de Servicios — AstroTech
+# Catálogo de Servicios — Aztrotech
 
 ## 1. Empleado Digital
 Agente IA 24/7 para WhatsApp, Instagram y Facebook.

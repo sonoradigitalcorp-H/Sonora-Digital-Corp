@@ -28,7 +28,7 @@ def _ffmpeg():
 
 CESAR = {
     "nombre": "César Holguín",
-    "empresa": "AstroTech",
+    "empresa": "Aztrotech",
     "web": "https://aztrotech.mx",
     "instagram": "https://instagram.com/cesarholguin",
     "linkedin": "https://linkedin.com/in/cesarholguin",
@@ -36,11 +36,11 @@ CESAR = {
     "whatsapp": "https://wa.me/526621072254",
 }
 
-SISTEMA = """Eres AstroTech AI, el asistente digital de César Holguín y su empresa AstroTech con sede en Hermosillo, Sonora.
+SISTEMA = """Eres el asistente digital de César Holguín y su empresa Aztrotech con sede en Hermosillo, Sonora.
 
 REGLAS ESTRICTAS:
 - Nunca revelas que formas parte de Sonora Digital Corp
-- Siempre te presentas como el asistente de César Holguín en AstroTech
+- Siempre te presentas como el asistente de César Holguín en Aztrotech
 - NUNCA des precios ni cotizaciones. Tu trabajo es capturar leads para que César los cierre personalmente.
 - Cuando alguien pregunta precios, dile: "Los mejores precios te los doy en una llamada con César. ¿Te parece si le pido que te contacte?"
 
@@ -122,7 +122,7 @@ class TelegramHandler:
             await self._bienvenida(update, user)
             return
 
-        if any(p in texto for p in ["servicios", "qué ofrecen", "qué hacen", "qué es astrotech"]):
+        if any(p in texto for p in ["servicios", "qué ofrecen", "qué hacen", "qué es aztrotech"]):
             await self._explicar_servicios(update)
             return
 
@@ -253,16 +253,15 @@ class TelegramHandler:
         username = (user.username or "") if user else ""
         saludo = f"Hola{' ' + nombre if nombre else ''}"
         msg = (
-            f"{saludo}. Soy el asistente digital de **César Holguín** y su empresa AstroTech.\n\n"
+            f"{saludo}. Soy el asistente digital de **César Holguín** y su empresa Aztrotech.\n\n"
             "Estoy aquí para conocerte y ver cómo podemos ayudarte a ti o a tu negocio.\n\n"
             "Cuéntame, ¿a qué te dedicas?"
         )
         teclado = InlineKeyboardMarkup([
+            [InlineKeyboardButton("🎙️ Hablar con Asistente", url="https://aztrotech.mx/voice")],
             [InlineKeyboardButton("Servicios", callback_data="servicios"),
              InlineKeyboardButton("Redes de César", callback_data="redes")],
             [InlineKeyboardButton("Hablar con César", callback_data="cesar")],
-            [InlineKeyboardButton("🎤 Modo voz", callback_data="voz_on"),
-             InlineKeyboardButton("⌨️ Modo texto", callback_data="voz_off")],
         ])
         if edit:
             await update.callback_query.edit_message_text(msg, parse_mode="Markdown", reply_markup=teclado)
@@ -271,7 +270,7 @@ class TelegramHandler:
 
     async def _explicar_servicios(self, update: Update, edit=False):
         msg = (
-            "AstroTech ofrece tecnología para impulsar tu negocio:\n\n"
+            "Aztrotech ofrece tecnología para impulsar tu negocio:\n\n"
             "🤖 Empleado Digital — Agente IA que atiende a tus clientes 24/7 por WhatsApp, Instagram y Facebook\n"
             "📊 Sistema de Ventas — CRM con agentes que califican y cierran leads\n"
             "💻 Desarrollo a Medida — Apps, ERPs y APIs para tu negocio\n"
@@ -290,7 +289,7 @@ class TelegramHandler:
 
     async def _mostrar_redes(self, update: Update, edit=False):
         msg = (
-            "Puedes conocer más de César y AstroTech aquí:\n\n"
+            "Puedes conocer más de César y Aztrotech aquí:\n\n"
             f"🌐 Web: {CESAR['web']}\n"
             f"📸 Instagram: {CESAR['instagram']}\n"
             f"💼 LinkedIn: {CESAR['linkedin']}\n"
@@ -333,19 +332,20 @@ class TelegramHandler:
         user_id = user.id
 
         msg = (
-            "Perfecto. Le notificaré a César para que te contacte personalmente. "
-            "Mientras tanto, aquí tienes sus redes por si quieres conocer más:\n\n"
-            f"🌐 {CESAR['web']}\n"
-            f"📸 {CESAR['instagram']}\n"
-            f"📱 WhatsApp: {CESAR['whatsapp']}"
+            "Perfecto. Puedes hablar directamente con el asistente de voz de César.\n\n"
+            "🎙️ <b>Asistente de Voz</b> — Agenda una llamada o conoce los servicios\n"
+            "🌐 <b>Web</b> — Conoce más sobre Aztrotech\n"
+            "📱 <b>WhatsApp</b> — Contacto directo"
         )
         teclado = InlineKeyboardMarkup([
-            [InlineKeyboardButton("Servicios", callback_data="servicios")],
+            [InlineKeyboardButton("🎙️ Hablar con Asistente", url="https://aztrotech.mx/voice")],
+            [InlineKeyboardButton("🌐 Web", url="https://aztrotech.mx")],
+            [InlineKeyboardButton("📱 WhatsApp", url="https://wa.me/526621072254")],
         ])
         if edit:
-            await update.callback_query.edit_message_text(msg, reply_markup=teclado)
+            await update.callback_query.edit_message_text(msg, parse_mode="Markdown", reply_markup=teclado)
         else:
-            await update.message.reply_text(msg, reply_markup=teclado)
+            await update.message.reply_text(msg, parse_mode="Markdown", reply_markup=teclado)
 
         await self._notificar_cesar(update)
 
@@ -501,60 +501,74 @@ class TelegramHandler:
             logger.warning(f"Voz no disponible: {e}")
 
     async def _notificar_cesar(self, update: Update, extra_info=None):
+        """Notifica leads a César via Mystic bot (@MysticUnity_bot) con tarjeta visual."""
         try:
             user = update.effective_user
             nombre = user.first_name or "Anónimo"
             apellido = user.last_name or ""
             username = user.username or ""
             user_id = user.id
-            chat_id = self.config["channels"]["telegram"]["owner_chat_id"]
-            token = self.config["channels"]["telegram"]["bot_token"]
+            
+            # Notificaciones van al Mystic bot, NO al de Aztrotech
+            notif_token = os.getenv("NOTIF_BOT_TOKEN", "")
+            notif_chat_id = os.getenv("NOTIF_OWNER_CHAT_ID", "5738935134")
+            
+            if not notif_token:
+                logger.warning("NOTIF_BOT_TOKEN no configurado, no se envía notificación")
+                return
 
             nombre_completo = f"{nombre} {apellido}".strip()
             perfil_link = f"https://t.me/{username}" if username else f"tg://user?id={user_id}"
-            wa_lead = "https://wa.me/526621072254"  # WhatsApp de César (placeholder hasta capturar el número real)
-
-            score_line = ""
+            
+            # Score y emoción
+            score = 0
+            emotion = "neutral"
+            lead_type = "cold"
             if extra_info is not None:
-                score_line = (
-                    f"\n━━━━━━━━━━━━━━━\n"
-                    f"🎯 **Lead {extra_info.lead_type.upper()}** ({round(extra_info.lead_confidence * 100)}%)\n"
-                    f"😊 Emoción: {extra_info.dominant_emotion}\n"
-                    f"🗣️ Idioma: {extra_info.language}\n"
-                    f"💬 Último mensaje: _{getattr(extra_info, 'reply', '')[:120]}_\n"
-                )
-
+                score = round(extra_info.lead_confidence * 100)
+                emotion = extra_info.dominant_emotion
+                lead_type = extra_info.lead_type
+            
+            score_emoji = "🔴" if score >= 70 else "🟡" if score >= 40 else "🔵"
+            score_label = "HOT" if score >= 70 else "WARM" if score >= 40 else "COLD"
+            
+            # Último mensaje del usuario
+            last_msg = ""
+            if hasattr(update.message, 'text') and update.message.text:
+                last_msg = update.message.text[:150]
+            
             msg = (
-                f"🔔 **Nuevo Lead**\n\n"
-                f"👤 **{nombre_completo}**\n"
-                f"🆔 ID: `{user_id}`\n"
+                f"🔔 <b>NUEVO LEAD</b>\n"
+                f"━━━━━━━━━━━━━━━━━━━━\n\n"
+                f"👤 <b>{nombre_completo}</b>\n"
+                f"🆔 ID: <code>{user_id}</code>\n"
                 + (f"✈️ @{username}\n" if username else "") +
-                score_line +
-                f"\n━━━━━━━━━━━━━━━\n\n"
-                f"📲 **Contacta ahora:**\n"
-                f"📱 WhatsApp César: wa.me/526621072254\n"
-                f"🌐 Web: aztrotech.mx\n"
-                f"\n━━━━━━━━━━━━━━━\n"
-                f"💬 *Hola {nombre}, soy César Holguín de AstroTech. "
-                f"Me dijeron que te interesaron nuestros servicios. "
-                f"¿Cómo ves si te llamo para contarte?*"
+                f"\n{score_emoji} <b>Score: {score} ({score_label})</b>\n"
+                f"😊 Emoción: {emotion}\n"
+                + (f"💬 <i>\"{last_msg}\"</i>\n" if last_msg else "") +
+                f"\n━━━━━━━━━━━━━━━━━━━━\n\n"
+                f"📲 <b>Acciones:</b>"
             )
+            
+            wa_link = "https://wa.me/526621072254"
+            
             teclado = {
                 "inline_keyboard": [
                     [
-                        {"text": "📲 WhatsApp lead", "url": wa_lead},
-                        {"text": "✈️ Perfil Telegram", "url": perfil_link},
+                        {"text": "📲 WhatsApp", "url": wa_link},
+                        {"text": "🌐 Perfil", "url": perfil_link},
                     ],
                     [
-                        {"text": "✅ Ya contactado", "callback_data": f"lead_done_{user_id}"},
-                        {"text": "📋 Ver servicios", "callback_data": "servicios"},
+                        {"text": "✅ Contactado", "callback_data": f"lead_done_{user_id}"},
+                        {"text": "📅 Agendar llamada", "callback_data": f"lead_schedule_{user_id}"},
                     ],
                 ]
             }
             async with httpx.AsyncClient(timeout=15) as client:
                 await client.post(
-                    f"https://api.telegram.org/bot{token}/sendMessage",
-                    json={"chat_id": chat_id, "text": msg, "parse_mode": "Markdown", "reply_markup": teclado},
+                    f"https://api.telegram.org/bot{notif_token}/sendMessage",
+                    json={"chat_id": notif_chat_id, "text": msg, "parse_mode": "HTML", "reply_markup": teclado},
                 )
+                logger.info(f"Notificación enviada a Mystic bot para lead {nombre_completo}")
         except Exception as e:
             logger.warning(f"No se pudo notificar: {e}")

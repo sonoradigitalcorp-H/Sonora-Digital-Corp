@@ -54,7 +54,7 @@ def main():
     app.add_handler(MessageHandler(filters.VOICE, handler.handle_voice_message))
     app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, handler.handle_message))
 
-    logger.info("AstroTech AI iniciado")
+    logger.info("Aztrotech AI iniciado")
     app.run_polling(allowed_updates=["message", "callback_query"])
 
 

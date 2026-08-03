@@ -1,4 +1,4 @@
-# Guía de Servicios — AstroTech
+# Guía de Servicios — Aztrotech
 
 ## ¿Cómo funciona el Empleado Digital?
 1. Conectas tu WhatsApp/Instagram/Facebook
@@ -15,8 +15,8 @@
 
 ## Tecnologías que usamos
 - IA: DeepSeek V4 Flash, GLM-5.2, Kimi K3
-- Embeddings: Ollama + nomic-embed-text
-- Voz: Qwen3-TTS con clon de voz
+- Embeddings: FastEmbed + paraphrase-multilingual-MiniLM-L12-v2
+- Voz: Edge-TTS con DaliaNeural
 - Imagen: FAL AI (Flux, Wav2Lip)
 - Infra: VPS dedicado, MinIO, Qdrant, Neo4j
 - Gateway: OpenClaw

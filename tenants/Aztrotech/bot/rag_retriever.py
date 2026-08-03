@@ -160,7 +160,7 @@ if __name__ == "__main__":
 
     r = create_retriever("aztrotech")
     print("Health:", r.health())
-    q = sys.argv[1] if len(sys.argv) > 1 else "¿Qué servicios ofrece AstroTech?"
+    q = sys.argv[1] if len(sys.argv) > 1 else "¿Qué servicios ofrece Aztrotech?"
     print(f"\nQuery: {q}\n")
     context = r.get_context_for_prompt(q)
     print(context or "(sin resultados sobre el umbral)")

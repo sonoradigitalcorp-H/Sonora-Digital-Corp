@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Mysticgrimoire — AstroTech AI</title>
+<title>Mysticgrimoire — Aztrotech AI</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -79,7 +79,7 @@ textarea::placeholder{color:var(--muted)}
 <div class="app">
   <header>
     <div class="logo">✦</div>
-    <h1>AstroTech <span>AI</span></h1>
+    <h1>Aztrotech <span>AI</span></h1>
     <div class="badge"><span class="dot"></span> En línea</div>
   </header>
   <div class="chat" id="chat"></div>
@@ -93,7 +93,7 @@ textarea::placeholder{color:var(--muted)}
     </div>
     <div class="typing" id="typing"><div class="dots"><span></span><span></span><span></span></div></div>
     <div class="branding">
-      <a href="https://aztrotech.mx" target="_blank">AstroTech</a>
+      <a href="https://aztrotech.mx" target="_blank">Aztrotech</a>
        · 
       <a href="https://sonoradigitalcorp.com" target="_blank">Powered by Sonora Digital Corp</a>
        · Mystic
@@ -192,7 +192,7 @@ async function sendMsg(){
     const r=await fetch('/api/chat',{
       method:'POST',headers:{'Content-Type':'application/json'},
       body:JSON.stringify({
-        messages:[{role:'system',content:'Eres el asistente de AstroTech, empresa de César Holguín en Hermosillo, Sonora. Profesional y cálido. Capturas leads, NO das precios. Nunca revelas Sonora Digital Corp.'},{role:'user',content:t}],
+        messages:[{role:'system',content:'Eres el asistente de Aztrotech, empresa de César Holguín en Hermosillo, Sonora. Profesional y cálido. Capturas leads, NO das precios. Nunca revelas Sonora Digital Corp.'},{role:'user',content:t}],
         model:'deepseek/deepseek-v4-flash'
       })
     });
