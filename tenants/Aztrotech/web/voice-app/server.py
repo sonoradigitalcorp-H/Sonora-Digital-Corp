@@ -1,4 +1,4 @@
-"""Voice Assistant API — MCP + Memory + Calendar + Email."""
+"""Voice Assistant API — MCP + Memory + Calendar + WhatsApp."""
 import os
 import sys
 import yaml
@@ -10,7 +10,7 @@ from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
 from pydantic import BaseModel
-from typing import Optional, List
+from typing import Optional
 import httpx
 import asyncpg
 
@@ -19,7 +19,6 @@ logger = logging.getLogger("voice-assistant")
 
 app = FastAPI(title="Aztrotech Voice")
 
-# Paths
 BASE_DIR = os.path.dirname(__file__)
 SKILLS_DIR = os.path.join(BASE_DIR, "..", "..", "skills", "calendar")
 sys.path.insert(0, SKILLS_DIR)
@@ -27,7 +26,6 @@ sys.path.insert(0, SKILLS_DIR)
 CONFIG_PATH = os.path.join(BASE_DIR, "..", "..", "config.yaml")
 ENGRAM_PATH = os.getenv("ENGRAM_PATH", "/home/mystic/Documentos/Sonora Digital Corp/sonora-digital-corp/ops/state/engram_aztrotech.db")
 
-# Config
 try:
     with open(CONFIG_PATH) as f:
         CONFIG = yaml.safe_load(f)
@@ -39,120 +37,81 @@ OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
 NOTIF_BOT_TOKEN = os.getenv("NOTIF_BOT_TOKEN", "")
 NOTIF_OWNER_CHAT_ID = os.getenv("NOTIF_OWNER_CHAT_ID", "5738935134")
 DB_URL = os.getenv("DATABASE_URL", "postgresql://sdc:sdc_local_dev@localhost:5432/sdc")
-HERMES_URL = os.getenv("HERMES_URL", "http://localhost:8643")
 CESAR_PHONE = "5216621072254"
+CESAR_WA_LINK = "https://wa.me/5216621072254"
 
 
-# ===== MEMORY SYSTEM =====
+# ===== MEMORY =====
 def load_engram_memory(query: str = "", limit: int = 5) -> str:
-    """Load relevant memories from engram database."""
     try:
         conn = sqlite3.connect(ENGRAM_PATH)
         cursor = conn.cursor()
-        
         if query:
-            # Search by tags or key
             cursor.execute("""
                 SELECT key, value, importance FROM memories 
                 WHERE key LIKE ? OR tags LIKE ? OR value LIKE ?
-                ORDER BY importance DESC, access_count DESC
-                LIMIT ?
+                ORDER BY importance DESC LIMIT ?
             """, (f"%{query}%", f"%{query}%", f"%{query}%", limit))
         else:
-            # Get most important memories
-            cursor.execute("""
-                SELECT key, value, importance FROM memories 
-                ORDER BY importance DESC, access_count DESC
-                LIMIT ?
-            """, (limit,))
-        
+            cursor.execute("SELECT key, value, importance FROM memories ORDER BY importance DESC LIMIT ?", (limit,))
         rows = cursor.fetchall()
         conn.close()
-        
         if not rows:
             return ""
-        
-        memories = []
-        for key, value, importance in rows:
-            # Truncate long values
-            short_value = value[:300] + "..." if len(value) > 300 else value
-            memories.append(f"[{key}] {short_value}")
-        
-        return "\n".join(memories)
+        return "\n".join([f"[{k}] {v[:200]}..." if len(v) > 200 else f"[{k}] {v}" for k, v, i in rows])
     except Exception as e:
         logger.error(f"Engram error: {e}")
         return ""
 
 
 def load_user_memory(user_id: str) -> str:
-    """Load user-specific memory from Postgres."""
     try:
         import asyncio
         loop = asyncio.get_event_loop()
         if loop.is_running():
             return ""
-        
         pool = loop.run_until_complete(asyncpg.create_pool(DB_URL, min_size=1, max_size=2))
-        
-        # Get user identity
         identity = loop.run_until_complete(pool.fetchrow(
-            "SELECT display_name, platform, created_at FROM user_identities WHERE internal_id = $1",
-            user_id
+            "SELECT display_name, platform FROM user_identities WHERE internal_id = $1", user_id
         ))
-        
         if not identity:
             return ""
-        
-        # Get recent conversations
-        convos = loop.run_until_complete(pool.fetch("""
-            SELECT c.lead_type, c.lead_confidence, c.language, c.started_at
-            FROM conversations c
-            WHERE c.internal_user_id = $1
-            ORDER BY c.started_at DESC LIMIT 3
-        """, user_id))
-        
-        result = f"Usuario: {identity['display_name']} ({identity['platform']})\n"
-        for c in convos:
-            result += f"  Conversación {c['started_at'].strftime('%d/%m')}: lead={c['lead_type']}, idioma={c['language']}\n"
-        
-        return result
-    except Exception as e:
-        logger.error(f"User memory error: {e}")
+        return f"Usuario: {identity['display_name']} ({identity['platform']})"
+    except:
         return ""
 
 
 # ===== SYSTEM PROMPT =====
-def build_system_prompt(memory_context: str = "", user_context: str = "") -> str:
-    """Build system prompt with memory context."""
-    base = """Eres el asistente de Aztrotech. Hablas por teléfono. Sé breve y directo.
+def build_system_prompt(memory: str = "", user_ctx: str = "") -> str:
+    prompt = """Eres el asistente de Aztrotech. Guias al usuario para agendar una llamada con César Holguín.
+
+FLUJO OBLIGATORIO:
+1. Saluda: "Hola, soy el asistente de César Holguín de Aztrotech"
+2. Pregunta: "¿Te gustaría agendar una llamada gratuita con César para conocer cómo automatizar tu negocio?"
+3. Si dice sí, pregunta: "¿Mañana o tarde te queda mejor?"
+4. Muestra horarios disponibles
+5. Pide nombre: "¿Cómo te llamas?"
+6. Pide email: "¿Tu email para enviarte la confirmación?"
+7. Confirma: "¿Confirmas para las [hora]?"
+8. Al confirmar, di: "Listo, tu llamada está confirmada. Te envío un mensaje de WhatsApp con los detalles"
 
 REGLAS:
-- Máximo 2 oraciones
+- Sé breve, máximo 2 oraciones
 - NUNCA digas asteriscos, paréntesis, signos
 - NUNCA des precios, solo "César te da cotización"
 - NUNCA menciones Sonora Digital Corp
+- Si preguntan por servicios, di "César te explica todo en la llamada"
 - Responde en español
-- Si dicen nombre, confirma
-- Si dicen "sí" o "confirmo", confirma la cita
+- SIEMPRE guía hacia agendar
 
-Servicios:
-- Empleado Digital: agente IA 24/7 WhatsApp, Instagram, Facebook
-- Automatizaciones: flujos automáticos
-- Software a Medida: CRM, ERP, apps
+Servicios: Empleado Digital, Automatizaciones, Software a Medida
+WhatsApp de César: wa.me/5216621072254"""
 
-Links:
-- WhatsApp: wa.me/5216621072254
-- Instagram: instagram.com/cesarholguin
-- LinkedIn: linkedin.com/in/cesarholguin
-- Web: aztrotech.mx"""
-    
-    if memory_context:
-        base += f"\n\nMEMORIA DEL SISTEMA:\n{memory_context}"
-    
-    if user_context:
-        base += f"\n\nCONTEXTO DEL USUARIO:\n{user_context}"
-    
-    return base
+    if memory:
+        prompt += f"\n\nMEMORIA:\n{memory}"
+    if user_ctx:
+        prompt += f"\n\nUSUARIO:\n{user_ctx}"
+    return prompt
 
 
 # ===== MODELS =====
@@ -176,14 +135,10 @@ async def chat(req: ChatRequest):
     if not OPENROUTER_KEY:
         return {"error": "API key not configured"}
     
-    # Load memory
-    memory_context = load_engram_memory(req.memory_query or "", 5)
-    user_context = load_user_memory(req.user_id) if req.user_id else ""
+    memory = load_engram_memory(req.memory_query or "", 5)
+    user_ctx = load_user_memory(req.user_id) if req.user_id else ""
     
-    # Build messages
-    system_prompt = build_system_prompt(memory_context, user_context)
-    messages = [{"role": "system", "content": system_prompt}]
-    
+    messages = [{"role": "system", "content": build_system_prompt(memory, user_ctx)}]
     for m in req.messages[-8:]:
         if m.get("role") != "system":
             messages.append(m)
@@ -198,7 +153,7 @@ async def chat(req: ChatRequest):
     t0 = time.time()
     async with httpx.AsyncClient(timeout=15) as client:
         resp = await client.post(OPENROUTER_URL, json={
-            "model": req.model, "messages": messages, "max_tokens": 80, "temperature": 0.4
+            "model": req.model, "messages": messages, "max_tokens": 100, "temperature": 0.4
         }, headers=headers)
         logger.info(f"LLM: {time.time()-t0:.1f}s")
         if resp.status_code == 200:
@@ -212,7 +167,7 @@ async def get_availability(date: Optional[str] = None):
         from calendar_skill import get_available_slots
         slots = get_available_slots(date)
         return {"slots": slots, "date": date or (datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d")}
-    except Exception as e:
+    except:
         target = datetime.strptime(date, "%Y-%m-%d") if date else datetime.now() + timedelta(days=1)
         slots = []
         for h in range(8, 18):
@@ -224,77 +179,58 @@ async def get_availability(date: Optional[str] = None):
 
 @app.post("/api/schedule")
 async def schedule(req: ScheduleRequest):
-    logger.info(f"Booking: {req.name} - {req.date} {req.time} - {req.email}")
+    logger.info(f"Booking: {req.name} - {req.date} - {req.time} - {req.email}")
     
+    # Create calendar event
     try:
         from calendar_skill import create_event
-        cal_result = create_event(req.date, req.time, req.name, req.phone)
-        logger.info(f"Calendar: {cal_result}")
+        create_event(req.date, req.time, req.name, req.phone)
     except Exception as e:
         logger.error(f"Calendar error: {e}")
     
+    # Send WhatsApp to César
     try:
-        from email_service import send_booking_confirmation, send_welcome_email
-        if req.email:
-            send_booking_confirmation(req.email, req.name, req.date, req.time, req.phone)
-            send_welcome_email(req.email, req.name)
+        wa_msg = (
+            f"📅 *NUEVA CITA AGENDADA*\n\n"
+            f"👤 *{req.name}*\n"
+            f"📱 {req.phone or 'Sin teléfono'}\n"
+            f"📧 {req.email or 'Sin email'}\n"
+            f"🕐 *{req.time}*\n"
+            f"📅 *{req.date}*\n\n"
+            f"📲 Contacta: {CESAR_WA_LINK}"
+        )
+        async with httpx.AsyncClient(timeout=10) as client:
+            # Notify César via Telegram bot
+            if NOTIF_BOT_TOKEN:
+                await client.post(
+                    f"https://api.telegram.org/bot{NOTIF_BOT_TOKEN}/sendMessage",
+                    json={"chat_id": NOTIF_OWNER_CHAT_ID, "text": wa_msg, "parse_mode": "Markdown"}
+                )
     except Exception as e:
-        logger.error(f"Email error: {e}")
+        logger.error(f"Notify error: {e}")
     
-    if NOTIF_BOT_TOKEN:
-        try:
-            msg = f"NUEVA CITA\n\nNombre: {req.name}\nTelefono: {req.phone}\nEmail: {req.email}\nHora: {req.time}\nFecha: {req.date}"
-            async with httpx.AsyncClient(timeout=10) as client:
-                await client.post(f"https://api.telegram.org/bot{NOTIF_BOT_TOKEN}/sendMessage",
-                    json={"chat_id": NOTIF_OWNER_CHAT_ID, "text": msg})
-        except Exception as e:
-            logger.error(f"Telegram notify error: {e}")
-    
-    return {"status": "ok", "message": f"Cita confirmada para {req.name} el {req.date} a las {req.time}"}
+    return {"status": "ok", "message": f"Cita confirmada para {req.name}"}
 
 
 @app.get("/api/memory")
 async def get_memory(query: Optional[str] = None):
-    """Get memory from engram."""
-    memory = load_engram_memory(query, 10)
-    return {"memory": memory, "query": query}
+    return {"memory": load_engram_memory(query, 10), "query": query}
 
 
 @app.get("/api/users")
 async def get_users():
-    """Get user identities."""
     try:
         pool = await asyncpg.create_pool(DB_URL, min_size=1, max_size=2)
-        users = await pool.fetch("""
-            SELECT internal_id, display_name, platform, created_at 
-            FROM user_identities ORDER BY created_at DESC LIMIT 20
-        """)
+        users = await pool.fetch("SELECT internal_id, display_name, platform, created_at FROM user_identities ORDER BY created_at DESC LIMIT 20")
         await pool.close()
         return {"users": [dict(u) for u in users]}
     except Exception as e:
         return {"users": [], "error": str(e)}
 
 
-@app.get("/api/hermes")
-async def hermes_status():
-    """Check Hermes MCP status."""
-    try:
-        async with httpx.AsyncClient(timeout=5) as client:
-            resp = await client.get(f"{HERMES_URL}/api/health")
-            return resp.json()
-    except:
-        return {"status": "offline"}
-
-
 @app.get("/api/health")
 async def health():
-    return {
-        "status": "ok",
-        "api_key": bool(OPENROUTER_KEY),
-        "engram": os.path.exists(ENGRAM_PATH),
-        "hermes": HERMES_URL,
-        "db": DB_URL
-    }
+    return {"status": "ok", "api_key": bool(OPENROUTER_KEY), "engram": os.path.exists(ENGRAM_PATH)}
 
 
 DIST_DIR = os.path.join(BASE_DIR, "dist")
