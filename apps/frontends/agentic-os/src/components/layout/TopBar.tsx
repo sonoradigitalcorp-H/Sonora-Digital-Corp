@@ -11,10 +11,12 @@ interface TopBarProps {
   onTenantChange: (tenantId: string) => void
   onJarvisClick: () => void
   onCommandPalette: () => void
+  onAgentToggle: () => void
   jarvisOpen: boolean
+  agentDashboardOpen: boolean
 }
 
-export function TopBar({ activeTenant, onTenantChange, onJarvisClick, onCommandPalette, jarvisOpen }: TopBarProps) {
+export function TopBar({ activeTenant, onTenantChange, onJarvisClick, onCommandPalette, onAgentToggle, jarvisOpen, agentDashboardOpen }: TopBarProps) {
   const { tenants } = useTenant()
   const { phase, currentGalaxy } = useGalaxy()
 
@@ -80,6 +82,17 @@ export function TopBar({ activeTenant, onTenantChange, onJarvisClick, onCommandP
           >
             <Bot className="w-5 h-5" />
             <span className="font-medium">JARVIS</span>
+          </Button>
+
+          {/* Agents Toggle */}
+          <Button 
+            variant={agentDashboardOpen ? 'primary' : 'ghost'} 
+            size="sm" 
+            className="hidden sm:flex items-center gap-2"
+            onClick={onAgentToggle}
+          >
+            <Cpu className="w-5 h-5" />
+            <span className="font-medium">Agents</span>
           </Button>
 
           {/* Tenant Selector */}

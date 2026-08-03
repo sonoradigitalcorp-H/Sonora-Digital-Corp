@@ -11,7 +11,7 @@ import sqlite3
 import time
 from pathlib import Path
 
-ENGRAM_DIR = os.getenv("ENGRAM_DIR", "/home/ubuntu/sonora-digital-corp/state/engram")
+ENGRAM_DIR = os.getenv("ENGRAM_DIR", str(Path(__file__).resolve().parent.parent.parent / "ops" / "state"))
 
 
 def _get_db(tenant_id: str) -> sqlite3.Connection:

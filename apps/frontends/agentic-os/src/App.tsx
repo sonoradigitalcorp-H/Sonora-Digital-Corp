@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { Stars } from '@react-three/drei'
 import * as THREE from 'three'
@@ -12,6 +12,7 @@ import { CommandPalette } from '@/components/jarvis/CommandPalette'
 import { Sidebar } from '@/components/layout/Sidebar'
 import { TopBar } from '@/components/layout/TopBar'
 import { PhaseTransition } from '@/components/layout/PhaseTransition'
+import { AgentDashboard } from '@/components/agents/AgentDashboard'
 import { GALAXY_CONFIGS } from '@/types'
 
 const GALAXIES = Object.values(GALAXY_CONFIGS)
@@ -53,6 +54,7 @@ function AppContent() {
   const [commandPaletteOpen, setCommandPaletteOpen] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const [activeTenant, setActiveTenant] = useState('abe-music')
+  const [agentDashboardOpen, setAgentDashboardOpen] = useState(true)
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -67,6 +69,10 @@ function AppContent() {
       if (e.key === '`') {
         e.preventDefault()
         setJarvisOpen(!jarvisOpen)
+      }
+      if ((e.metaKey || e.ctrlKey) && e.shiftKey && e.key === 'a') {
+        e.preventDefault()
+        setAgentDashboardOpen(!agentDashboardOpen)
       }
     }
     window.addEventListener('keydown', handleKeyDown)
@@ -104,7 +110,9 @@ function AppContent() {
           onTenantChange={setActiveTenant}
           onJarvisClick={() => setJarvisOpen(!jarvisOpen)}
           onCommandPalette={() => setCommandPaletteOpen(true)}
+          onAgentToggle={() => setAgentDashboardOpen(!agentDashboardOpen)}
           jarvisOpen={jarvisOpen}
+          agentDashboardOpen={agentDashboardOpen}
         />
 
         <div className="flex-1 flex overflow-hidden">
@@ -116,10 +124,14 @@ function AppContent() {
           />
 
           <main className="flex-1 relative overflow-hidden">
-            <GalaxyNavigator 
-              galaxies={GALAXIES}
-              onObjectSelect={(obj) => console.log('Selected:', obj)}
-            />
+            {agentDashboardOpen ? (
+              <AgentDashboard />
+            ) : (
+              <GalaxyNavigator 
+                galaxies={GALAXIES}
+                onObjectSelect={(obj) => console.log('Selected:', obj)}
+              />
+            )}
           </main>
         </div>
 

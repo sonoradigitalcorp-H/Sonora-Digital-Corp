@@ -7,6 +7,7 @@ Uses OpenRouter for embeddings and chat (no Ollama needed).
 
 import json
 import os
+import sqlite3
 import sys
 import time
 from pathlib import Path
