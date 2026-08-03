@@ -122,9 +122,12 @@ class ChatRequest(BaseModel):
     memory_query: Optional[str] = None
 
 class ScheduleRequest(BaseModel):
+    tenant_id: Optional[str] = "aztrotech"
     name: str
-    email: Optional[str] = ""
     phone: Optional[str] = ""
+    email: Optional[str] = ""
+    company: Optional[str] = ""
+    service: Optional[str] = ""
     date: str
     time: str
 
@@ -179,7 +182,20 @@ async def get_availability(date: Optional[str] = None):
 
 @app.post("/api/schedule")
 async def schedule(req: ScheduleRequest):
-    logger.info(f"Booking: {req.name} - {req.date} - {req.time} - {req.email}")
+    logger.info(f"Booking: {req.name} | {req.phone} | {req.email} | {req.company} | {req.service} | {req.date} {req.time}")
+    
+    # Save lead to database
+    try:
+        pool = await asyncpg.create_pool(DB_URL, min_size=1, max_size=2)
+        await pool.execute("""
+            INSERT INTO leads (phone, name, source, lead_score, lead_type, notes)
+            VALUES ($1, $2, $3, $4, $5, $6)
+        """, req.phone, req.name, 'voice-assistant', 80, 'hot',
+             f"Empresa: {req.company} | Servicio: {req.service} | Fecha: {req.date} {req.time}")
+        await pool.close()
+        logger.info("Lead saved to database")
+    except Exception as e:
+        logger.error(f"DB save error: {e}")
     
     # Create calendar event
     try:
@@ -188,26 +204,44 @@ async def schedule(req: ScheduleRequest):
     except Exception as e:
         logger.error(f"Calendar error: {e}")
     
-    # Send WhatsApp to César
-    try:
-        wa_msg = (
-            f"📅 *NUEVA CITA AGENDADA*\n\n"
-            f"👤 *{req.name}*\n"
-            f"📱 {req.phone or 'Sin teléfono'}\n"
-            f"📧 {req.email or 'Sin email'}\n"
-            f"🕐 *{req.time}*\n"
-            f"📅 *{req.date}*\n\n"
-            f"📲 Contacta: {CESAR_WA_LINK}"
-        )
-        async with httpx.AsyncClient(timeout=10) as client:
-            # Notify César via Telegram bot
-            if NOTIF_BOT_TOKEN:
+    # Send to Mystic channel (César's notification)
+    if NOTIF_BOT_TOKEN:
+        try:
+            msg = (
+                f"📅 NUEVA CITA AGENDADA\n\n"
+                f"👤 Nombre: {req.name}\n"
+                f"📱 WhatsApp: {req.phone}\n"
+                f"📧 Email: {req.email}\n"
+                f"🏢 Empresa: {req.company}\n"
+                f"🤖 Servicio: {req.service}\n"
+                f"🕐 Hora: {req.time}\n"
+                f"📅 Fecha: {req.date}\n"
+                f"🏷️ Tenant: {req.tenant_id}"
+            )
+            async with httpx.AsyncClient(timeout=10) as client:
                 await client.post(
                     f"https://api.telegram.org/bot{NOTIF_BOT_TOKEN}/sendMessage",
-                    json={"chat_id": NOTIF_OWNER_CHAT_ID, "text": wa_msg, "parse_mode": "Markdown"}
+                    json={"chat_id": NOTIF_OWNER_CHAT_ID, "text": msg}
                 )
-    except Exception as e:
-        logger.error(f"Notify error: {e}")
+                logger.info("Notification sent to Mystic channel")
+        except Exception as e:
+            logger.error(f"Telegram error: {e}")
+    
+    # Send WhatsApp confirmation to client
+    if req.phone:
+        try:
+            wa_msg = (
+                f"Hola {req.name}, tu llamada con César Holguín de Aztrotech está confirmada.\n\n"
+                f"📅 Fecha: {req.date}\n"
+                f"🕐 Hora: {req.time}\n"
+                f"🏢 Empresa: {req.company}\n"
+                f"🤖 Servicio: {req.service}\n\n"
+                f"Si necesitas reprogramar, escríbeme por aquí."
+            )
+            # Note: WhatsApp API requires business account, logging for now
+            logger.info(f"WhatsApp to {req.phone}: {wa_msg[:100]}...")
+        except Exception as e:
+            logger.error(f"WhatsApp error: {e}")
     
     return {"status": "ok", "message": f"Cita confirmada para {req.name}"}
 
