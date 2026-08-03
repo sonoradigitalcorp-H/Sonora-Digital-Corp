@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0f172a; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+  .slide {
+    width: 1280px; height: 720px;
+    background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+    color: #e2e8f0;
+    padding: 60px 80px;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+    page-break-after: always;
+  }
+  .slide::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    background: linear-gradient(90deg, #22d3ee, #3b82f6, #a855f7);
+  }
+  .slide::after {
+    content: '';
+    position: absolute; bottom: -80px; right: -80px;
+    width: 280px; height: 280px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(59,130,246,0.18), transparent 70%);
+  }
+  .brand {
+    font-size: 15px; color: #38bdf8; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; margin-bottom: 26px;
+  }
+  h1 { font-size: 56px; line-height: 1.15; font-weight: 800; color: #f8fafc; margin-bottom: 18px; }
+  h2 { font-size: 40px; font-weight: 700; color: #f8fafc; margin-bottom: 8px; }
+  h3 { font-size: 24px; font-weight: 600; color: #38bdf8; margin-bottom: 14px; }
+  .sub { font-size: 22px; color: #94a3b8; line-height: 1.5; }
+  .accent { color: #22d3ee; }
+  .green { color: #4ade80; }
+  .red { color: #f87171; }
+  .yellow { color: #facc15; }
+  .slide-footer {
+    position: absolute; bottom: 28px; left: 80px; right: 80px;
+    display: flex; justify-content: space-between;
+    color: #475569; font-size: 14px;
+  }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 24px; margin-top: 28px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-top: 28px; }
+  .card {
+    background: rgba(30,41,59,0.85); border: 1px solid #334155;
+    border-radius: 16px; padding: 26px; position: relative; z-index: 1;
+  }
+  .card .big { font-size: 42px; font-weight: 800; margin: 8px 0; }
+  .card .label { font-size: 16px; color: #94a3b8; }
+  .card .detail { font-size: 16px; color: #cbd5e1; margin-top: 12px; line-height: 1.5; }
+  .opt { border-left: 4px solid #334155; }
+  .opt.a { border-left-color: #64748b; }
+  .opt.b { border-left-color: #facc15; }
+  .opt.c { border-left-color: #22d3ee; }
+  .tag {
+    display: inline-block; padding: 4px 12px; border-radius: 999px;
+    font-size: 13px; font-weight: 600; margin-bottom: 10px;
+  }
+  .tag.green { background: rgba(74,222,128,0.15); color: #4ade80; }
+  .tag.cyan { background: rgba(34,211,238,0.15); color: #22d3ee; }
+  .tag.gray { background: rgba(148,163,184,0.15); color: #94a3b8; }
+  .tag.yellow { background: rgba(250,204,21,0.15); color: #facc15; }
+  table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 19px; position: relative; z-index: 1; }
+  th { text-align: left; padding: 14px 16px; color: #38bdf8; border-bottom: 2px solid #3b82f6; font-weight: 600; }
+  td { padding: 14px 16px; border-bottom: 1px solid #334155; }
+  tr.hl td { background: rgba(34,211,238,0.08); }
+  .verdict { font-size: 24px; line-height: 1.6; color: #cbd5e1; position: relative; z-index: 1; }
+  .verdict b { color: #4ade80; }
+  ul { list-style: none; position: relative; z-index: 1; }
+  li { font-size: 20px; padding: 10px 0; color: #cbd5e1; line-height: 1.4; }
+  li::before { content: '▸ '; color: #22d3ee; font-weight: 700; }
+  .check { font-size: 19px; padding: 8px 0; color: #cbd5e1; }
+  .check::before { content: '☐ '; color: #22d3ee; }
+  .num-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 0; border-bottom: 1px solid #334155; font-size: 20px;
+  }
+  .num-row:last-child { border: none; }
+  .num-val { font-weight: 700; color: #22d3ee; font-size: 22px; }
+  .center { text-align: center; }
+  .thanks { font-size: 30px; color: #94a3b8; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<!-- 1. PORTADA -->
+<div class="slide">
+  <div class="brand">Sonora Digital Corp · Análisis para Alex · Mystic</div>
+  <h1>Tu situación,<br>analizada en números.</h1>
+  <div class="sub">Vivienda e inversión en EE.UU. — 3 opciones evaluadas<br>con tus datos reales y due diligence incluida.</div>
+  <div style="margin-top:40px; position:relative; z-index:1;">
+    <span class="tag cyan">Shift Manager · Producción · RYE</span>
+    <span class="tag gray">Alex · área 205 · Alabama</span>
+    <span class="tag green">Agosto 2026</span>
+  </div>
+  <div class="slide-footer"><span>Sonora Digital Corp</span><span>1 / 7</span></div>
+</div>
+
+<!-- 2. LAS 3 OPCIONES -->
+<div class="slide">
+  <div class="brand">Análisis para Alex · Mystic</div>
+  <h2>Las 3 opciones que estás evaluando</h2>
+  <div class="grid-3">
+    <div class="card opt a">
+      <span class="tag gray">Opción A</span>
+      <div class="label">Seguir rentando</div>
+      <div class="big">$400–450<span style="font-size:18px;">/mes</span></div>
+      <div class="detail">Depa barato. Cero patrimonio, cero upside. Pagas y no te queda nada.</div>
+    </div>
+    <div class="card opt b">
+      <span class="tag yellow">Opción B</span>
+      <div class="label">Comprar casa propia</div>
+      <div class="big">$300K <span style="font-size:18px;color:#94a3b8;">USD</span></div>
+      <div class="detail">La más barata que te gustó. Pagos altos, pero equity crece.</div>
+    </div>
+    <div class="card opt c">
+      <span class="tag cyan">Opción C</span>
+      <div class="label">Trailer park / multifamiliar</div>
+      <div class="big">$600K <span style="font-size:18px;color:#94a3b8;">USD</span></div>
+      <div class="detail">La que descubriste ayer. La renta paga el mortgage solo.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Sonora Digital Corp</span><span>2 / 7</span></div>
+</div>
+
+<!-- 3. NUMEROS POR OPCION -->
+<div class="slide">
+  <div class="brand">Análisis para Alex · Mystic</div>
+  <h2>Los números, opción por opción</h2>
+  <table>
+    <thead><tr><th></th><th>Opción A · Renta</th><th>Opción B · Casa $300K</th><th>Opción C · $600K · 9 unidades</th></tr></thead>
+    <tbody>
+      <tr><td>Inversión inicial (20%)</td><td>$0</td><td>$60K</td><td>$120K</td></tr>
+      <tr><td>Pago mensual</td><td>$450</td><td>~$1,967</td><td>~$3,034 (mortgage)</td></tr>
+      <tr><td>Renta que recibes</td><td>$0</td><td>$0</td><td>~$4,500 neto/mes</td></tr>
+      <tr class="hl"><td>Flujo de tu bolsillo</td><td class="red">-$450/mes</td><td class="yellow">-$1,967/mes</td><td class="green">+$1,466/mes</td></tr>
+      <tr><td>Patrimonio</td><td class="red">Nunca</td><td>Equity</td><td>Equity + rentas</td></tr>
+    </tbody>
+  </table>
+  <div class="sub" style="margin-top:22px; font-size:19px;">Opción B: mortgage $240K @ 6.5% a 30a + impuestos ~1.2% + seguro. Opción C: mortgage $480K @ 6.5% a 30a, ~40% gastos.</div>
+  <div class="slide-footer"><span>Sonora Digital Corp</span><span>3 / 7</span></div>
+</div>
+
+<!-- 4. CAP RATE Y VIVIR GRATIS -->
+<div class="slide">
+  <div class="brand">Análisis para Alex · Mystic</div>
+  <h2>Por qué la Opción C es la ganadora</h2>
+  <div class="grid-3">
+    <div class="card">
+      <span class="tag cyan">CAP rate</span>
+      <div class="big green">15%</div>
+      <div class="label">bruto ($90K / $600K)</div>
+      <div class="detail">Promedio en EE.UU.: 6–8%. Esto está muy por encima.</div>
+    </div>
+    <div class="card">
+      <span class="tag cyan">Flujo neto</span>
+      <div class="big green">+$1,466</div>
+      <div class="label">por mes, después del mortgage</div>
+      <div class="detail">Las rentas cubren el mortgage y encima te deja cash.</div>
+    </div>
+    <div class="card">
+      <span class="tag cyan">Vivir gratis</span>
+      <div class="big accent">$0</div>
+      <div class="label">de tu bolsillo en vivienda</div>
+      <div class="detail">Como en tu ejemplo: 4 trailers × $800 → se paga solo.</div>
+    </div>
+  </div>
+  <div class="slide-footer"><span>Sonora Digital Corp</span><span>4 / 7</span></div>
+</div>
+
+<!-- 5. DUE DILIGENCE CHECKLIST -->
+<div class="slide">
+  <div class="brand">Análisis para Alex · Mystic</div>
+  <h2>Due diligence antes de comprometerte</h2>
+  <div class="grid-2">
+    <div>
+      <div class="check">Zoning multifamily verificado en el condado (no solo la palabra del vendedor)</div>
+      <div class="check">Title search por una title company + seguro de título</div>
+      <div class="check">Tuberías de agua conectadas con permisos legales del county</div>
+      <div class="check">Medidores de luz separados por unidad (si es master meter, renegocia)</div>
+    </div>
+    <div>
+      <div class="check">Inquilinos actuales con contratos de renta vigentes y depósitos</div>
+      <div class="check">Estados de renta de 2–3 años: que las 9 unidades estén rentadas real</div>
+      <div class="check">Impuestos de propiedad al día + riesgo de re-assessment post-compra</div>
+      <div class="check">Inspección estructural + pest + roof + HVAC + reserva CapEx 10–15%</div>
+    </div>
+  </div>
+  <div class="verdict" style="margin-top:26px;">Si <b>todo esto pasa</b>, la Opción C te paga el mortgage y te da flujo positivo desde el mes uno.</div>
+  <div class="slide-footer"><span>Sonora Digital Corp</span><span>5 / 7</span></div>
+</div>
+
+<!-- 6. PLAN DE ACCION -->
+<div class="slide">
+  <div class="brand">Análisis para Alex · Mystic</div>
+  <h2>Plan de acción sugerido</h2>
+  <ul>
+    <li><b style="color:#22d3ee;">1.</b> Corre la due diligence sobre la propiedad de $600K / 9 unidades (nosotros te pasamos la lista completa).</li>
+    <li><b style="color:#22d3ee;">2.</b> Confirma el CAP rate real: pide los estados de renta de los últimos 2–3 años, no solo el bruto.</li>
+    <li><b style="color:#22d3ee;">3.</b> Si el flujo neto se mantiene arriba de $1,200/mes → ve por la Opción C.</li>
+    <li><b style="color:#22d3ee;">4.</b> Agenda la llamada de retro con Perroni para revisar el deal completo.</li>
+    <li><b style="color:#22d3ee;">5.</b> Te compartimos el proyecto de Sonora Digital Corp que pediste.</li>
+  </ul>
+  <div class="verdict" style="margin-top:30px;">Estamos <b>atendiendo tu situación</b>. Cuando quieras, hablamos por llamada. 🫡</div>
+  <div class="slide-footer"><span>Sonora Digital Corp</span><span>6 / 7</span></div>
+</div>
+
+<!-- 7. CIERRE -->
+<div class="slide">
+  <div class="brand">Sonora Digital Corp · Mystic</div>
+  <div style="margin-top:80px;">
+    <h1 style="font-size:64px;">Vamos a por ella. 💪</h1>
+    <div class="sub" style="margin-top:20px; max-width:800px;">El número ya habla por sí solo. Ahora toca validar la propiedad con la due diligence y cerrar el deal.</div>
+  </div>
+  <div style="margin-top:50px; position:relative; z-index:1;">
+    <span class="tag cyan">Mystic · asistente de Perroni</span>
+    <span class="tag green">Sonora Digital Corp</span>
+  </div>
+  <div class="thanks">Documentado todo el proceso en video para tu caso de éxito. 🎥</div>
+  <div class="slide-footer"><span>Sonora Digital Corp</span><span>7 / 7</span></div>
+</div>
+
+</body>
+</html>

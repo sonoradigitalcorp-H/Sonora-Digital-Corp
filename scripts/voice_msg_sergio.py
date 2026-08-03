@@ -1,17 +1,15 @@
 #!/usr/bin/env python3
-"""Genera y envía el mensaje de audio a Sergio D explicando el stack de voz."""
-import json
-import os
-import subprocess
+"""Genera y envía el mensaje de audio a Sergio D explicando el stack de voz.
+
+Usa scripts/voice_note.py (pipeline correcto: edge-tts → resample 16k → OGG/Opus).
+"""
 import sys
-import tempfile
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 
-WACLI = os.environ.get("WACLI_PATH") or os.path.expanduser("~/.local/bin/wacli")
-STORE = os.environ.get("WACLI_STORE") or os.path.expanduser("~/.wacli/accounts/personal")
+from scripts.voice_note import make_voice_note  # noqa: E402
 
 TO_NUMBER = "5216624707325"
 
@@ -36,42 +34,9 @@ SCRIPT = (
     "¿Te gusta? Te paso la documentación completa si quieres, me dices."
 )
 
-def send_voice(to: str, text: str) -> dict:
-    to = to if "@s.whatsapp.net" in to else f"{to}@s.whatsapp.net"
-    try:
-        tmp = tempfile.NamedTemporaryFile(suffix=".mp3", delete=False, mode="wb")
-        mp3_path = tmp.name
-        tmp.close()
-
-        subprocess.run([
-            "edge-tts", "--voice", "es-MX-DaliaNeural",
-            "--text", text,
-            "--write-media", mp3_path,
-        ], capture_output=True, timeout=60)
-
-        ogg_path = mp3_path.replace(".mp3", ".ogg")
-        subprocess.run([
-            "ffmpeg", "-y", "-i", mp3_path,
-            "-c:a", "libopus", "-b:a", "16k", "-ar", "16000", ogg_path
-        ], capture_output=True, timeout=60)
-
-        cmd = [WACLI, "send", "file", "--file", ogg_path,
-               "--mime", "audio/ogg; codecs=opus", "--ptt",
-               "--to", to, "--post-send-wait", "5s",
-               "--store", STORE, "--json"]
-        result = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
-        out = result.stdout.strip()
-        data = json.loads(out) if out else {"success": False, "error": "no output"}
-
-        os.unlink(mp3_path)
-        os.unlink(ogg_path)
-        return data
-    except Exception as e:
-        return {"success": False, "error": str(e)}
-
 if __name__ == "__main__":
     print(f"Enviando audio a {TO_NUMBER}...")
-    result = send_voice(TO_NUMBER, SCRIPT)
+    result = make_voice_note(SCRIPT, TO_NUMBER)
     if result.get("success") or result.get("data", {}).get("sent"):
         print("Audio enviado correctamente.")
     else:
