@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RYE Agentic OS — Consola de Ingeniería Industrial & Robótica</title>
+<style>
+:root{--p:#1a237e;--s:#00bcd4;--bg:#0b1026;--card:#141b38;--line:#2a3566;--txt:#e6e9f5;--muted:#8b93b8;--ok:#12d18e;--warn:#f5a623;--err:#ff5a5a;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+header{padding:20px 28px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.logo{font-size:1.3rem;font-weight:700;letter-spacing:.5px}
+.logo b{color:var(--s)}
+.badge{padding:4px 12px;border-radius:20px;font-size:.74rem;font-weight:600;background:rgba(18,209,142,.12);color:var(--ok);border:1px solid rgba(18,209,142,.3)}
+.chip{padding:4px 12px;border-radius:20px;font-size:.72rem;background:var(--card);border:1px solid var(--line);color:var(--muted)}
+main{padding:24px 28px;display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:1500px;margin:0 auto}
+@media(max-width:1000px){main{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.card h3{font-size:.86rem;letter-spacing:.5px;text-transform:uppercase;color:var(--s);margin-bottom:14px;display:flex;justify-content:space-between;align-items:center}
+.full{grid-column:1/-1}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.tool{background:rgba(0,188,212,.07);border:1px solid var(--line);border-radius:9px;padding:10px;font-size:.78rem}
+.tool b{display:block;color:var(--txt);margin-bottom:3px;font-size:.8rem}
+.tool span{color:var(--muted);font-size:.7rem}
+.ag{background:rgba(26,35,126,.25);border:1px solid var(--line);border-radius:9px;padding:10px;font-size:.78rem}
+.ag b{display:block;color:#aab4ff;margin-bottom:3px}
+.ag span{color:var(--muted);font-size:.7rem}
+.console{font-family:ui-monospace,monospace;background:#0b1026;border:1px solid var(--line);border-radius:9px;padding:12px;height:180px;overflow-y:auto;font-size:.74rem;line-height:1.5}
+.console .ok{color:var(--ok)}.console .w{color:var(--warn)}.console .e{color:var(--err)}.console .m{color:var(--muted)}
+.composer{display:flex;gap:10px;margin-top:12px}
+.composer input{flex:1;background:#0b1026;border:1px solid var(--line);border-radius:9px;padding:11px 14px;color:var(--txt);font-size:.86rem;outline:none}
+.composer input:focus{border-color:var(--s)}
+.composer button{background:var(--p);color:#fff;border:none;border-radius:9px;padding:11px 22px;font-weight:600;cursor:pointer}
+.composer button:hover{background:var(--s)}
+.channels{display:flex;gap:8px;flex-wrap:wrap}
+.channel{display:flex;align-items:center;gap:7px;padding:8px 14px;border-radius:9px;border:1px solid var(--line);background:#0b1026;font-size:.78rem}
+.channel .dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}
+.stat{background:#0b1026;border:1px solid var(--line);border-radius:9px;padding:12px;text-align:center}
+.stat .num{font-size:1.5rem;font-weight:700;color:var(--s)}
+.stat .lbl{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+footer{padding:20px 28px;border-top:1px solid var(--line);color:var(--muted);font-size:.72rem;text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">RYE <b>|</b> Agentic OS</div>
+  <span class="badge">● Sistema en línea</span>
+  <span class="chip">Iván — Gerente Producción RYE Design</span>
+  <span class="chip">Robot: FANUC R-2000iC · Celda 3</span>
+</header>
+
+<main>
+  <!-- CANALES -->
+  <div class="card full">
+    <h3>Comunicación — conversación fluida e inteligente <span></span></h3>
+    <div class="channels">
+      <div class="channel"><span class="dot"></span> Telegram @RyE_production_bot</div>
+      <div class="channel"><span class="dot"></span> WhatsApp (wacli)</div>
+      <div class="channel"><span class="dot"></span> Dashboard (chat web)</div>
+      <div class="channel"><span class="dot"></span> Voz (Whisper → salida TTS)</div>
+    </div>
+  </div>
+
+  <!-- AGENTES -->
+  <div class="card">
+    <h3>Agentes Especialistas (8)</h3>
+    <div class="grid">
+      <div class="ag"><b>rye-conductor</b><span>Enrutador Telegram→agente</span></div>
+      <div class="ag"><b>fanuc-expert</b><span>Diagnóstico FANUC/SRVO/KAREL</span></div>
+      <div class="ag"><b>fault-alarm</b><span>Diagnóstico rápido de alarmas</span></div>
+      <div class="ag"><b>shift-report</b><span>Reporte de turno (ciclo/downtime)</span></div>
+      <div class="ag"><b>maintenance-guide</b><span>Mantenimiento preventivo/correctivo</span></div>
+      <div class="ag"><b>process-quality</b><span>Calidad IATF/FMEA</span></div>
+      <div class="ag"><b>robot-safety</b><span>Seguridad · lockout/tagout</span></div>
+      <div class="ag"><b>escalation</b><span>Escalamiento de emergencias</span></div>
+    </div>
+  </div>
+
+  <!-- HERRAMIENTAS / MCPs -->
+  <div class="card">
+    <h3>Herramientas & MCPs conectados</h3>
+    <div class="grid">
+      <div class="tool"><b>sdc-mcp-local</b><span>RAG + engram + LLM</span></div>
+      <div class="tool"><b>rag_search</b><span>Buscar kb_rye (semántico)</span></div>
+      <div class="tool"><b>engram</b><span>Memoria persistente</span></div>
+      <div class="tool"><b>filesystem</b><span>Manuales y configs</span></div>
+      <div class="tool"><b>github</b><span>PRs / gate RDD</span></div>
+      <div class="tool"><b>fetch</b><span>Docs FANUC online</span></div>
+      <div class="tool"><b>playwright</b><span>Navegación web</span></div>
+      <div class="tool"><b>wacli</b><span>WhatsApp</span></div>
+    </div>
+  </div>
+
+  <!-- MANUALES -->
+  <div class="card full">
+    <h3>Base de Datos de Manuales (kb_rye)</h3>
+    <div class="grid">
+      <div class="tool"><b>FANUC Programación</b><span>TPP/KAREL, IA para programar</span></div>
+      <div class="tool"><b>Reparación y Mant.</b><span>Tabla SRVO, preventivo/correctivo</span></div>
+      <div class="tool"><b>Celdas & Fixtures</b><span>Setup, cambio de pieza, backups</span></div>
+      <div class="tool"><b>Integración IA</b><span>Ethernet/IP, Cognex, soldadoras</span></div>
+      <div class="tool"><b>Alarmas FANUC</b><span>SRVO-001/032/075/104</span></div>
+      <div class="tool"><b>Celda 3 Spec</b><span>R-2000iC + Lincoln, ciclo 45s</span></div>
+      <div class="tool"><b>Reporte de Turno</b><span>Formato ciclo/downtime/pendientes</span></div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="card">
+    <h3>Estado del Stack</h3>
+    <div class="grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="stat"><div class="num">19</div><div class="lbl">kb_rye points</div></div>
+      <div class="stat"><div class="num">8</div><div class="lbl">Agentes</div></div>
+      <div class="stat"><div class="num">4</div><div class="lbl">MCPs act.</div></div>
+      <div class="stat"><div class="num">2</div><div class="lbl">Canales</div></div>
+    </div>
+  </div>
+
+  <!-- CONSOLA / INPUT + OUTPUT -->
+  <div class="card">
+    <h3>Chat Inteligente (input / output)</h3>
+    <div class="console" id="console">
+      <div class="m">✦ Sistema RYE listo. Pregunta sobre robots, alarmas, turnos, mantenimiento, calidad…</div>
+    </div>
+    <div class="composer">
+      <input id="q" placeholder='Ej: ¿qué hago con una alarma SRVO-075 en la celda 3?' onkeydown="if(event.key==='Enter')send()">
+      <button onclick="send()">Enviar</button>
+    </div>
+  </div>
+</main>
+
+<footer>RYE Agentic OS · SDC · Motor: OpenRouter deepseek-v4-flash + RAG kb_rye (all-minilm) · memoria engram</footer>
+
+<script>
+function log(text, cls='m'){
+  const c=document.getElementById('console');
+  const d=document.createElement('div');d.className=cls;d.textContent=text;
+  c.appendChild(d);c.scrollTop=c.scrollHeight;
+}
+function send(){
+  const q=document.getElementById('q').value.trim();if(!q)return;
+  log('Tú: '+q,'w');document.getElementById('q').value='';
+  log('…consultando conocimiento curado + RAG kb_rye…','m');
+  // En producción: POST al backend -> rye_engine.py
+  // Demo local: llama al motor vía API (ver README integración).
+  simulate(q);
+}
+function simulate(q){
+  const lower=q.toLowerCase();
+  let out='';
+  if(lower.includes('075')||lower.includes('srvo-075')) out='SRVO-075 (posición fuera de límite): revisar el workspace de la celda, verificar COLLISION.DAO, liberar la colisión, RESET y volver a HOME. Recurrente en hombro J2 del R-2000iC. Fuente: manual FANUC Programación.';
+  else if(lower.includes('turno')||lower.includes('reporte')) out='Formato de reporte de turno: ciclo (s), downtime (min), partes OK/NG, pendientes[]. Si downtime &gt; 5% del turno, alertar a supervisión.';
+  else if(lower.includes('tcp')) out='Calibración TCP: definir UTOOL apuntando el soldador a un punto de referencia fijo; iterar hasta que el TCP no se desvíe al rotar los ejes. Fuente: manual FANUC Programación.';
+  else if(lower.includes('mantenimiento')) out='Mantenimiento preventivo R-2000iC: lubricar ejes articulación, revisar rodamientos/frenos (J2 spot-weld), inspeccionar cableado del brazo, respaldar parámetros (backup) antes de intervenir.';
+  else out='No tengo esa información en el conocimiento cargado. Puedo buscar en el manual FANUC oficial o escalar. ¿Qué celda o alarma es?';
+  setTimeout(()=>log('🤖 '+out,'ok'), 900);
+}
+</script>
+</body>
+</html>

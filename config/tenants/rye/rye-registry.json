@@ -1,0 +1,68 @@
+{
+  "tenant": "rye",
+  "version": "1.0",
+  "description": "Registry unificado del sistema de ingeniería industrial/robótica de Iván (RYE Design) — skills, tools, MCPs, CLI, pipelines y agentes disponibles.",
+  "stack": {
+    "llm": "deepseek/deepseek-v4-flash (OpenRouter)",
+    "embeddings": "ollama all-minilm (384-dim, local)",
+    "vector_store": "Qdrant kb_rye (local :6333)",
+    "memory": "engram (SQLite FTS5, tenant rye)",
+    "bot_gateway": "OpenClaw :18789",
+    "channels": ["telegram @RyE_production_bot", "whatsapp (wacli)"]
+  },
+  "skills": {
+    "rye-bot": "Motor 2 capas: conocimiento curado (índice) + RAG kb_rye + LLM. Responde alarmas FANUC, turnos, mantenimiento, calidad, seguridad, escalamiento.",
+    "rye-manuales": "Consulta la base de datos de manuales: programación, reparación y configuración de robots FANUC actualizadas.",
+    "rye-proceso": "Ingeniería de procesos: FMEA, planes de control IATF, trazabilidad, no conformidades.",
+    "rye-robotics": "Ingeniería robótica: KAREL, posiciones, R-2000iC, integración Cognex/Lincoln/Yaskawa.",
+    "rye-espanscion": "Escalamiento de alarmas recurrentes, downtime alto y emergencias a supervisión."
+  },
+  "tools": {
+    "rag_search": "Buscar en kb_rye (conocimiento + manuales) por similitud semántica.",
+    "engram_save/get/search": "Memoria persistente por tenant rye.",
+    "llm_chat": "Generación de respuesta con deepseek-v4-flash.",
+    "ingest_manuals": "Cargar manuales (md/txt/pdf) a kb_rye con chunking idempotente.",
+    "verify_stack": "Verificar stack RAG/embeddings/engram end-to-end.",
+    "report_turno": "Capturar ciclo, downtime, partes OK/NG, pendientes del turno."
+  },
+  "mcps": {
+    "sdc-mcp-local": "rag_search + engram + llm_chat (el corazón RAG/memoria/LLM).",
+    "filesystem": "Acceso a tenants/rye/** (manuales, configs).",
+    "github": "PRs, issues (gate RDD).",
+    "fetch": "Docs FANUC/Cognex online.",
+    "rag_mcp": "rag_index, rag_search, rag_list_collections (Qdrant nativo).",
+    "playwright": "Navegación web para consultas.",
+    "twilio": "Voz/telefonía.",
+    "wacli": "WhatsApp."
+  },
+  "cli": {
+    "rye_engine.py": "python3 tenants/rye/bot/rye_engine.py '<consulta>' — motor de respuesta.",
+    "ingest_qdrant_openrouter.py": "Cargar manuales a kb_rye.",
+    "verify_rag_stack.py": "Verificar stack.",
+    "sdd": "Evals estructurales.",
+    "rdd:*": "Gate de revisión (trigger via opencode)."
+  },
+  "pipelines": {
+    "text-2-answer": "consulta → índice curado → RAG kb_rye → LLM → respuesta con fuente (verificado).",
+    "audio-2-answer": "nota de voz → whisper (transcripción) → motor → respuesta (texto/voz).",
+    "image-2-answer": "foto del panel/robot → visión → contexto → motor.",
+    "pdf-2-rag": "manual PDF → extracción → chunking → kb_rye.",
+    "manual-2-rag": "manual md/txt → chunking 512/64 → embeddings → kb_rye (verificado).",
+    "turno-2-memoria": "reporte de turno → validación → formato → engram."
+  },
+  "agents": {
+    "rye-conductor": "Enrutador Telegram → agente especialista (routing telegram:*).",
+    "fanuc-expert": "Diagnóstico FANUC/SRVO/KAREL/R-2000iC (concepto curado + manuales).",
+    "fault-alarm": "Diagnóstico rápido de códigos de alarma.",
+    "shift-report": "Captura y generación de reporte de turno.",
+    "maintenance-guide": "Mantenimiento preventivo/correctivo (conceptos + manuales).",
+    "process-quality": "Calidad IATF/FMEA, trazabilidad.",
+    "robot-safety": "Seguridad, lockout/tagout, paros, SRVO-105/107.",
+    "escalation": "Escalamiento de recurrencias, downtime y emergencias."
+  },
+  "status": {
+    "verified": ["manual-2-rag", "text-2-answer"],
+    "ready_pending_demo": ["audio-2-answer", "image-2-answer", "pdf-2-rag"],
+    "llm": "deepseek-v4-flash OK (key sk-or-v1-f7881...)"
+  }
+}
