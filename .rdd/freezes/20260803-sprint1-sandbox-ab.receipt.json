@@ -1,0 +1,19 @@
+{
+  "feature": "sprint1-sandbox-ab",
+  "receipt_id": "20260803-sprint1-sandbox-ab-5873",
+  "generated_at": "2026-08-03T20:06:40.421975",
+  "freeze_fingerprint": "21aab0366b74996cef75137796e2c23c7d7defc6c6ae1e51e144f2d50176b6aa",
+  "aggregated_score": 95,
+  "critical_issues": 0,
+  "reviews_complete": true,
+  "fix_attempted": false,
+  "validation_passed": true,
+  "tests_passed": 11,
+  "line_fix_budget": 120,
+  "authorization": {
+    "allowed_to_commit": true,
+    "authorized_by": "RDD Gate",
+    "reason": "Score: 95/100, 11 sandbox tests green"
+  },
+  "message": "\u2705 RDD Receipt Generated - Safe to commit"
+}

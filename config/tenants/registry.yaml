@@ -132,3 +132,19 @@ tenants:
       primary_color: "#ff6b35"
       secondary_color: "#004e89"
       powered_by: true
+
+  rye:
+    id: rye
+    name: "RYE Design"
+    owner: "Iván Alejandro Guerrero Enciso"
+    type: client
+    tier: client_pro
+    status: active
+    features: [telegram, agents, rag, voice, crm]
+    rate_limit: 500
+    period_seconds: 60
+    max_tokens_monthly: 1000000
+    branding:
+      primary_color: "#1a237e"
+      secondary_color: "#00bcd4"
+      powered_by: true
