@@ -1,0 +1,17 @@
+{
+  "feature": "feat-multiembed-backends",
+  "receipt_id": "20260803-feat-multiembed-backends-1190",
+  "generated_at": "2026-08-03T20:51:41.639449",
+  "freeze_fingerprint": "7497ac2dc5e862e3f32372255da7fc48ed26e3db9db28bc278623a9c0ca946e5",
+  "aggregated_score": 90,
+  "critical_issues": 0,
+  "reviews_complete": true,
+  "fix_attempted": false,
+  "validation_passed": true,
+  "tests_passed": 20,
+  "authorization": {
+    "allowed_to_commit": true,
+    "authorized_by": "RDD Gate",
+    "reason": "Score 90/100, verify passed, 20 tests green"
+  }
+}

@@ -30,7 +30,7 @@ _embed_model = None
 
 
 def _get_embedding(text: str) -> list[float]:
-    """Embedding local (FastEmbed ONNX u Ollama) — coincide con la colección Qdrant de 384 dims."""
+    """Embedding (FastEmbed | Ollama | OpenRouter) — dims coherentes con la colección Qdrant."""
     global _embed_model
     if EMBED_BACKEND == "ollama":
         try:
@@ -42,6 +42,19 @@ def _get_embedding(text: str) -> list[float]:
             )
             resp.raise_for_status()
             return list(resp.json().get("embedding", []))
+        except Exception:
+            return [0.0] * EMBEDDING_DIM
+    if EMBED_BACKEND == "openrouter":
+        try:
+            import httpx
+            resp = httpx.post(
+                f"{OPENROUTER_URL}/embeddings",
+                headers={"Authorization": f"Bearer {OPENROUTER_API_KEY}"},
+                json={"model": EMBED_MODEL, "input": text},
+                timeout=30,
+            )
+            resp.raise_for_status()
+            return list(resp.json()["data"][0]["embedding"])
         except Exception:
             return [0.0] * EMBEDDING_DIM
     try:

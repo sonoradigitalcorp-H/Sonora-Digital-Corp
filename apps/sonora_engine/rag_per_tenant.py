@@ -14,15 +14,19 @@ log = logging.getLogger("sonora.engine.rag")
 
 QDRANT_HOST = os.getenv("QDRANT_HOST", "localhost")
 QDRANT_PORT = int(os.getenv("QDRANT_PORT", "6333"))
-# Embeddings locales (ONNX / Ollama, sin API key) — coherente con el stack SDC.
-# Modelo multilingual 384-dim. Backends:
-#   - fastembed (default): sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+# Embeddings — coherente con el stack SDC. Backends:
+#   - fastembed (default): sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2 (384-dim, local)
 #   - ollama (offline, si HF no accesible): all-minilm (384-dim) o nomic-embed-text (768)
+#   - openrouter (API): text-embedding-3-small (1536-dim) vía OpenRouter key
 EMBED_MODEL = os.getenv(
     "EMBED_MODEL", "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
 )
 EMBED_BACKEND = os.getenv("EMBED_BACKEND", "fastembed")
 OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
+OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
+OPENROUTER_URL = os.getenv("OPENROUTER_URL", "https://openrouter.ai/api/v1")
+# Dims por backend: fastembed/ollama=384, openrouter text-embedding-3-small=1536.
+# IMPORTANTE: la colección Qdrant usa EMBEDDING_DIM — cambiarlo requiere recrear la colección.
 EMBEDDING_DIM = int(os.getenv("EMBEDDING_DIM", "384"))
 CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "512"))
 CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "64"))
@@ -33,9 +37,9 @@ _embed_model = None
 def get_embed_model():
     """Lazy-load embedding model (shared across calls)."""
     global _embed_model
+    if EMBED_BACKEND in ("ollama", "openrouter"):
+        return EMBED_BACKEND
     if _embed_model is None:
-        if EMBED_BACKEND == "ollama":
-            return "ollama"
         from fastembed import TextEmbedding
         log.info(f"Loading FastEmbed model: {EMBED_MODEL}")
         _embed_model = TextEmbedding(model_name=EMBED_MODEL)
@@ -43,7 +47,7 @@ def get_embed_model():
 
 
 def embed_text(text: str) -> list[float]:
-    """Embed a single text to a 384-dim vector (FastEmbed or Ollama local)."""
+    """Embed a single text to a vector (backend: fastembed | ollama | openrouter)."""
     model = get_embed_model()
     if model == "ollama":
         import httpx
@@ -54,6 +58,19 @@ def embed_text(text: str) -> list[float]:
         )
         resp.raise_for_status()
         return list(resp.json().get("embedding", []))
+    if model == "openrouter":
+        import httpx
+        if not OPENROUTER_API_KEY:
+            raise RuntimeError("OPENROUTER_API_KEY not configured for openrouter embeddings")
+        resp = httpx.post(
+            f"{OPENROUTER_URL}/embeddings",
+            headers={"Authorization": f"Bearer {OPENROUTER_API_KEY}"},
+            json={"model": EMBED_MODEL, "input": text},
+            timeout=30,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+        return list(data["data"][0]["embedding"])
     return list(model.embed([text]))[0].tolist()
 
 
