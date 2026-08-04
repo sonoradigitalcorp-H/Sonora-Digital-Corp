@@ -1,0 +1,123 @@
+# .github/workflows/rye-deploy.yml
+# RYE Bot — Deploy to VPS sdc-prod
+# Triggers: push to main (manual gate via workflow_dispatch)
+
+name: "RYE Deploy"
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: "Type 'deploy' to confirm"
+        required: true
+      target:
+        description: "Deploy target"
+        required: true
+        default: "vps"
+        type: choice
+        options:
+          - vps
+          - local
+
+env:
+  VPS_HOST: 149.56.46.173
+  VPS_USER: ubuntu
+  PROJECT_DIR: /home/ubuntu/sonora-digital-corp
+
+jobs:
+  preflight:
+    name: "Preflight Checks"
+    runs-on: ubuntu-latest
+    if: github.event.inputs.confirm == 'deploy'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Verify local tests pass
+        run: |
+          pip install pytest pytest-bdd pyyaml
+          PYTHONPATH=. python3 -m pytest tests/rye/ tests/gherkin/test_rye_*.py -v --tb=short
+      - name: Verify SDD evals
+        run: |
+          PYTHONPATH=. python3 -m pytest tests/evals/structural/ -v --tb=short
+
+  deploy-vps:
+    name: "Deploy to VPS"
+    runs-on: ubuntu-latest
+    needs: preflight
+    if: github.event.inputs.target == 'vps'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Sync to VPS
+        uses: burnett01/rsync-deployments@v7
+        with:
+          switches: -avz --delete
+          path: tenants/rye/
+          remote_path: ${{ env.PROJECT_DIR }}/tenants/rye/
+          remote_host: ${{ env.VPS_HOST }}
+          remote_user: ${{ env.VPS_USER }}
+          remote_key: ${{ secrets.VPS_SSH_KEY }}
+      - name: Sync tests
+        uses: burnett01/rsync-deployments@v7
+        with:
+          switches: -avz
+          path: tests/
+          remote_path: ${{ env.PROJECT_DIR }}/tests/
+          remote_host: ${{ env.VPS_HOST }}
+          remote_user: ${{ env.VPS_USER }}
+          remote_key: ${{ secrets.VPS_SSH_KEY }}
+      - name: Sync config
+        uses: burnett01/rsync-deployments@v7
+        with:
+          switches: -avz
+          path: config/tenants/rye/
+          remote_path: ${{ env.PROJECT_DIR }}/config/tenants/rye/
+          remote_host: ${{ env.VPS_HOST }}
+          remote_user: ${{ env.VPS_USER }}
+          remote_key: ${{ secrets.VPS_SSH_KEY }}
+      - name: Sync dashboard
+        uses: burnett01/rsync-deployments@v7
+        with:
+          switches: -avz
+          path: apps/frontends/agentic-os/rye-dashboard.html
+          remote_path: ${{ env.PROJECT_DIR }}/apps/frontends/agentic-os/
+          remote_host: ${{ env.VPS_HOST }}
+          remote_user: ${{ env.VPS_USER }}
+          remote_key: ${{ secrets.VPS_SSH_KEY }}
+      - name: Run verify on VPS
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ env.VPS_HOST }}
+          username: ${{ env.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            cd ${{ env.PROJECT_DIR }}
+            docker compose -f infra/docker-compose.yml up -d qdrant
+            sleep 5
+            source ~/.config/sonora/env.local 2>/dev/null || true
+            python3 scripts/verify_rag_stack.py rye
+      - name: Restart gateway
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ env.VPS_HOST }}
+          username: ${{ env.VPS_USER }}
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            sudo systemctl restart openclaw-gateway.service
+            sleep 3
+            curl -s -o /dev/null -w "HTTP %{http_code}" http://localhost:18789/health
+
+  deploy-local:
+    name: "Deploy Local"
+    runs-on: ubuntu-latest
+    needs: preflight
+    if: github.event.inputs.target == 'local'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Local verify
+        run: |
+          pip install qdrant-client pyyaml
+          docker compose -f infra/docker-compose.yml up -d qdrant 2>/dev/null || true
+          sleep 3
+          python3 scripts/verify_rag_stack.py rye

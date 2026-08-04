@@ -1,0 +1,125 @@
+# .github/workflows/rye-ci.yml
+# RYE Bot — CI/CD pipeline
+# Triggers: push to main (RYE files), PR to main (RYE files)
+# Jobs: lint, unit tests, BDD gherkin tests, SDD evals, verify RAG stack
+
+name: "RYE CI"
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "tenants/rye/**"
+      - "tests/gherkin/rye-*"
+      - "tests/gherkin/test_rye_*"
+      - "tests/steps/rye_*"
+      - "tests/rye/**"
+      - "config/tenants/rye/**"
+      - "apps/frontends/agentic-os/rye*"
+      - "scripts/verify_rag_stack.py"
+      - "apps/sonora_engine/rag_per_tenant.py"
+      - ".github/workflows/rye-ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "tenants/rye/**"
+      - "tests/gherkin/rye-*"
+      - "tests/gherkin/test_rye_*"
+      - "tests/steps/rye_*"
+      - "tests/rye/**"
+      - "config/tenants/rye/**"
+
+jobs:
+  lint:
+    name: "Lint (ruff)"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install ruff
+      - name: Lint RYE files
+        run: |
+          ruff check tenants/rye/ tests/rye/ tests/steps/rye_* tests/gherkin/test_rye_* apps/sonora_engine/rag_per_tenant.py --output-format=github
+
+  unit-tests:
+    name: "Unit Tests (RYE)"
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - run: pip install pytest pytest-bdd pyyaml qdrant-client
+      - name: Run RYE unit tests
+        run: PYTHONPATH=. python3 -m pytest tests/rye/ -v --tb=short
+
+  bdd-tests:
+    name: "BDD Gherkin (RYE)"
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - run: pip install pytest pytest-bdd pyyaml
+      - name: Run RYE gherkin tests
+        run: PYTHONPATH=. python3 -m pytest tests/gherkin/test_rye_fanuc_expert.py tests/gherkin/test_rye_shift_report.py tests/gherkin/test_rye_rdd_gate.py tests/gherkin/test_rye_engineering_failures.py -v --tb=short
+
+  sdd-eval:
+    name: "SDD Structural Evals"
+    runs-on: ubuntu-latest
+    needs: [unit-tests, bdd-tests]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install pytest pyyaml
+      - name: Run SDD evals
+        run: PYTHONPATH=. python3 -m pytest tests/evals/structural/ -v --tb=short
+
+  verify-rag:
+    name: "Verify RAG Stack"
+    runs-on: ubuntu-latest
+    needs: [unit-tests, bdd-tests]
+    services:
+      qdrant:
+        image: qdrant/qdrant:latest
+        ports:
+          - 6333:6333
+        options: >-
+          --health-cmd "curl -f http://localhost:6333/healthz || exit 1"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - run: pip install qdrant-client pyyaml fastembed
+      - name: Verify RAG stack
+        env:
+          QDRANT_URL: http://localhost:6333
+          TENANT_ID: rye
+          EMBED_BACKEND: fastembed
+        run: timeout 120 python3 scripts/verify_rag_stack.py rye
+
+  notify:
+    name: "Notify"
+    runs-on: ubuntu-latest
+    needs: [sdd-eval, verify-rag]
+    if: always()
+    steps:
+      - name: Job status
+        run: |
+          echo "RYE CI completed"
+          echo "Lint: ${{ needs.lint.result }}"
+          echo "Unit: ${{ needs.unit-tests.result }}"
+          echo "BDD: ${{ needs.bdd-tests.result }}"
+          echo "SDD: ${{ needs.sdd-eval.result }}"
+          echo "RAG: ${{ needs.verify-rag.result }}"
