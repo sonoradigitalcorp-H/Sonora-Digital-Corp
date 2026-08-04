@@ -89,3 +89,26 @@ def test_rag_scripts_referenced():
     verify = os.path.join(REPO, "scripts", "verify_rag_stack.py")
     if not os.path.exists(verify):
         return  # created later in Sprint 0; structural eval is forward-looking
+
+
+def test_seven_rye_agent_specs_exist():
+    agents = [
+        "fanuc-expert", "fault-alarm", "shift-report",
+        "maintenance-guide", "process-quality", "robot-safety", "escalation",
+    ]
+    for aid in agents:
+        path = os.path.join(REPO, SPECS_DIR, f"030-r-a-rye-{aid}", "spec.md")
+        assert os.path.exists(path), f"Missing agent spec: {aid}"
+
+
+def test_all_rye_agent_specs_have_objective():
+    agents = [
+        "fanuc-expert", "fault-alarm", "shift-report",
+        "maintenance-guide", "process-quality", "robot-safety", "escalation",
+    ]
+    for aid in agents:
+        path = os.path.join(REPO, SPECS_DIR, f"030-r-a-rye-{aid}", "spec.md")
+        with open(path) as f:
+            content = f.read()
+        assert "## 1. Objective" in content, f"{aid} spec missing Objective"
+        assert "Stack" in content, f"{aid} spec missing Stack section"

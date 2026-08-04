@@ -1,0 +1,17 @@
+{
+  "feature": "sprint2-3-gateway-agents",
+  "receipt_id": "20260803-sprint2-3-gateway-agents-3192",
+  "generated_at": "2026-08-03T20:24:13.159478",
+  "freeze_fingerprint": "d9f60d2ada30f14e8a1d9c938d361d037c088a68c72c0805589a67bff6edc33a",
+  "aggregated_score": 92,
+  "critical_issues": 0,
+  "reviews_complete": true,
+  "fix_attempted": false,
+  "validation_passed": true,
+  "tests_passed": 13,
+  "authorization": {
+    "allowed_to_commit": true,
+    "authorized_by": "RDD Gate",
+    "reason": "Score 92/100, 13 tests green"
+  }
+}

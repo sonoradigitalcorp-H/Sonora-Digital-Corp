@@ -1,0 +1,10 @@
+ff064cacca7a92022e42d421eb62976d95604b3dce24572f5dccebaa89797e55  docs/specs/030-r-a-rye-escalation/spec.md
+e51af20daf0657e2526facf423e54d2bd30521381fd70b9326395b071440ca5f  docs/specs/030-r-a-rye-fanuc-expert/spec.md
+a4825d50b16c37e94c080f247749db32949a58c09b1bec06ab73db6cd161e1ea  docs/specs/030-r-a-rye-fault-alarm/spec.md
+a707270f7e8f342eda745db95be1b0f3f0068d9c99fa08f1b2a604c1b07036f7  docs/specs/030-r-a-rye-maintenance-guide/spec.md
+a1443aada49f6d5c24c1aa69c98be345e5c22d3b1df931651d762e3a659b77fd  docs/specs/030-r-a-rye-process-quality/spec.md
+0e8830902b94ab91980c83283312158acef53738a2bacaa06d6022a5755b08c8  docs/specs/030-r-a-rye-robot-safety/spec.md
+d9103465c8defd4e3b3e1bfff358e54ad8b142dc30d38980b2a8c81ba5442f20  docs/specs/030-r-a-rye-shift-report/spec.md
+8a0de0535291aefaaaa5b486c8a59d9c7dd370d37387ad1fe730d1cef253414d  sandbox/rye/evals/ab_baseline.jsonl
+e7e30f14952ced102db5d28e5a8ed9fb1e3300a8af6ca556d2bd1e8fe341583e  tests/evals/promptfoo/rye/fanuc-expert.yaml
+e3897de7741f9adc1465e49a03725dac1e91680a4ba9b6c726be57b3642e55ac  tests/rye/test_rye_specs.py

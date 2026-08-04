@@ -1,0 +1,32 @@
+# RYE fanuc-expert — A/B prompt eval (v1 genérico vs v2 dominio)
+# Provider: OpenRouter deepseek-v4-flash (stack RYE real)
+prompts:
+  - id: v1-generic
+    raw: |
+      Eres un asistente de robótica. El usuario pregunta: "{query}"
+      Responde con causa y acción.
+  - id: v2-domain
+    raw: |
+      Eres fanuc-expert de RYE Design (celdas FANUC R-2000iC, líneas BMW/Rivian).
+      El usuario dice: "{query}"
+      Usa RAG en kb_rye. Para alarmas SRVO: da causa probable + acción correctiva +
+      fuente. Si no está en el conocimiento, di que no lo sabes y sugiere el manual FANUC.
+
+providers:
+  - id: openrouter:deepseek/deepseek-v4-flash
+    config:
+      temperature: 0.2
+
+tests:
+  - description: SRVO-075 diagnosis
+    vars:
+      query: "alarma SRVO-075 en celda 2"
+    assert:
+      - type: contains
+        value: "colisión"
+  - description: Unknown alarm honesty
+    vars:
+      query: "alarma SRVO-999"
+    assert:
+      - type: not-contains
+        value: "SRVO-999"
