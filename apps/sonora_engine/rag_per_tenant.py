@@ -58,17 +58,29 @@ def embed_text(text: str) -> list[float]:
 
 
 def chunk_text(text: str, chunk_size: int = CHUNK_SIZE, overlap: int = CHUNK_OVERLAP) -> list[str]:
-    """Split text into overlapping chunks of ~words/tokens."""
-    words = text.split()
-    if len(words) <= chunk_size:
+    """Split text into token-safe overlapping chunks (by characters).
+
+    Default CHUNK_SIZE=512 chars fits comfortably within the embedding model's
+    token context (e.g. MiniLM num_ctx=256 ≈ ~1000 chars in Spanish).
+    """
+    text = text.strip()
+    if not text:
+        return []
+    if len(text) <= chunk_size:
         return [text]
     chunks = []
     start = 0
-    while start < len(words):
-        chunk = " ".join(words[start:start + chunk_size])
-        chunks.append(chunk)
-        start += chunk_size - overlap
-    return chunks
+    step = max(chunk_size - overlap, 1)
+    while start < len(text):
+        chunk = text[start:start + chunk_size]
+        # Avoid splitting mid-word: trim back to last space if not the last chunk
+        if start + chunk_size < len(text):
+            space = chunk.rfind(" ")
+            if space > 0:
+                chunk = chunk[:space]
+        chunks.append(chunk.strip())
+        start += step
+    return [c for c in chunks if c]
 
 
 def _point_id(doc_id: str, chunk_index: int) -> str:

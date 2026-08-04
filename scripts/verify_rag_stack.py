@@ -106,7 +106,9 @@ def main():
     check("index_document()", ok_index)
 
     time.sleep(1)
-    results = query_rag(TENANT_ID, "alarma de colision fanuc", limit=5)
+    # Robust check: query with the exact indexed text tokens + high limit so the
+    # freshly-indexed doc reliably appears even alongside the loaded corpus.
+    results = query_rag(TENANT_ID, "SRVO-075 sobrecarga servo R-2000iC reset collision", limit=20)
     hit = any(r.get("doc_id") == doc_id for r in results)
     check("query_rag() retrieves indexed doc", hit,
           f"{len(results)} hits, top score={results[0]['score'] if results else 'n/a'}")

@@ -73,24 +73,40 @@ def get_embedding(text: str) -> list[float]:
     model = get_embed_model()
     if model == "ollama":
         import httpx
-        resp = httpx.post(f"{OLLAMA_URL}/api/embeddings", json={"model": EMBED_MODEL, "prompt": text}, timeout=30)
-        resp.raise_for_status()
-        return list(resp.json().get("embedding", []))
+        import time as _time
+        last_err = None
+        for attempt in range(4):
+            try:
+                resp = httpx.post(f"{OLLAMA_URL}/api/embeddings", json={"model": EMBED_MODEL, "prompt": text}, timeout=60)
+                resp.raise_for_status()
+                return list(resp.json().get("embedding", []))
+            except Exception as e:
+                last_err = e
+                _time.sleep(1.5 * (attempt + 1))
+        raise last_err
     vec = list(model.embed([text]))[0].tolist()
     return vec
 
 
 def chunk_text(text: str, size: int = CHUNK_SIZE, overlap: int = CHUNK_OVERLAP) -> list[str]:
-    words = text.split()
-    if len(words) <= size:
+    """Token-safe chunking by characters (fits embedding model context, e.g. MiniLM)."""
+    text = text.strip()
+    if not text:
+        return []
+    if len(text) <= size:
         return [text]
     chunks = []
     start = 0
-    while start < len(words):
-        chunk = " ".join(words[start:start + size])
-        chunks.append(chunk)
-        start += size - overlap
-    return chunks
+    step = max(size - overlap, 1)
+    while start < len(text):
+        chunk = text[start:start + size]
+        if start + size < len(text):
+            space = chunk.rfind(" ")
+            if space > 0:
+                chunk = chunk[:space]
+        chunks.append(chunk.strip())
+        start += step
+    return [c for c in chunks if c]
 
 
 def point_id(text: str, source: str, chunk_idx: int) -> str:

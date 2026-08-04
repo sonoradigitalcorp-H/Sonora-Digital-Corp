@@ -1,0 +1,17 @@
+{
+  "feature": "fix-ollama-chunking-score",
+  "receipt_id": "20260803-fix-ollama-chunking-score-7044",
+  "generated_at": "2026-08-03T20:44:18.440216",
+  "freeze_fingerprint": "642cf19f2b89aa295ae60565c14a19882d4af1d967f0b9e4218d83119418e7e1",
+  "aggregated_score": 90,
+  "critical_issues": 0,
+  "reviews_complete": true,
+  "fix_attempted": false,
+  "validation_passed": true,
+  "tests_passed": 20,
+  "authorization": {
+    "allowed_to_commit": true,
+    "authorized_by": "RDD Gate",
+    "reason": "Score 90/100, 20 tests green, verify passed"
+  }
+}

@@ -233,7 +233,7 @@ def _layer_desc(layer_id: int) -> str:
 
 
 @mcp.tool(description="Busca conocimiento en Qdrant por similitud semántica usando embeddings locales FastEmbed")
-async def rag_search(tenant_id: str, query: str, collection: str = "sdc_knowledge", limit: int = 5, min_score: float = 0.65) -> str:
+async def rag_search(tenant_id: str, query: str, collection: str = "sdc_knowledge", limit: int = 5, min_score: float = 0.45) -> str:
     if not tenant_id or not query:
         return json.dumps({"error": "tenant_id and query are required"})
     try:
