@@ -1,0 +1,21 @@
+{
+  "feature": "sprint0-rye-foundation",
+  "receipt_id": "20260803-sprint0-5862",
+  "generated_at": "2026-08-03T19:48:29-07:00",
+  "freeze_fingerprint": "7ad03ec88bbf6f0dcb4bb441c0a5c32843d436e5f6c3324da75c4f9dca68c0f9",
+  "aggregated_score": 95,
+  "critical_issues": 0,
+  "reviews_complete": true,
+  "fix_attempted": false,
+  "validation_passed": true,
+  "tests_passed": 38,
+  "test_summary": "10 gherkin + 9 estructural + 12 unit + 7 sdd eval = 38 passed",
+  "line_fix_budget": 120,
+  "lines_fixed": 0,
+  "authorization": {
+    "allowed_to_commit": true,
+    "authorized_by": "RDD Gate",
+    "reason": "Score: 95/100, Critical: 0, 38 tests green"
+  },
+  "message": "✅ RDD Receipt Generated - Safe to commit and deploy"
+}

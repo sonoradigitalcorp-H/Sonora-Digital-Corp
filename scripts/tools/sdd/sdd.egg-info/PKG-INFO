@@ -1,9 +1,0 @@
-Metadata-Version: 2.4
-Name: sdd
-Version: 0.1.0
-Summary: SDC Spec-Driven Development CLI
-Requires-Python: >=3.11
-Requires-Dist: pyyaml>=6.0
-Requires-Dist: pytest>=8.0
-Requires-Dist: pytest-bdd>=7.0
-Requires-Dist: click>=8.0

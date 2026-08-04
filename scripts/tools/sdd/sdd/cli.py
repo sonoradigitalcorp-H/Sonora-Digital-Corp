@@ -2,7 +2,7 @@ import os
 import sys
 import click
 
-REPO = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+REPO = os.getcwd()
 
 
 @click.group()
@@ -20,8 +20,8 @@ def init():
         "adrs",
         "tests/gherkin",
         "tests/steps",
-        "evals/promptfoo",
-        "evals/structural",
+        "tests/evals/promptfoo",
+        "tests/evals/structural",
     ]
     for d in dirs:
         os.makedirs(os.path.join(REPO, d), exist_ok=True)
@@ -76,9 +76,9 @@ def test():
     if result.returncode != 0:
         click.echo(result.stderr)
 
-    click.echo("\n=== Running structural evals (evals/structural/) ===")
+    click.echo("\n=== Running structural evals (tests/evals/structural/) ===")
     result2 = subprocess.run(
-        [sys.executable, "-m", "pytest", "evals/structural/", "-v", "--tb=short"],
+        [sys.executable, "-m", "pytest", "tests/evals/structural/", "-v", "--tb=short"],
         cwd=repo,
         capture_output=True,
         text=True,
@@ -100,7 +100,7 @@ def eval(promptfoo):
     repo = REPO
     click.echo("=== Running structural evals ===")
     result = subprocess.run(
-        [sys.executable, "-m", "pytest", "evals/structural/", "-v"],
+        [sys.executable, "-m", "pytest", "tests/evals/structural/", "-v"],
         cwd=repo,
         capture_output=True,
         text=True,
@@ -112,7 +112,7 @@ def eval(promptfoo):
     if promptfoo:
         click.echo("\n=== Running promptfoo evals ===")
         result2 = subprocess.run(
-            ["promptfoo", "eval", "-c", "evals/promptfoo/promptfooconfig.yaml"],
+            ["promptfoo", "eval", "-c", "tests/evals/promptfoo/promptfooconfig.yaml"],
             cwd=repo,
             capture_output=True,
             text=True,

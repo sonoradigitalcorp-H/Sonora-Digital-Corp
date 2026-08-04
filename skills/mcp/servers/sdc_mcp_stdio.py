@@ -19,6 +19,9 @@ QDRANT_URL = os.getenv("QDRANT_URL", "http://localhost:6333")
 OPENROUTER_API_KEY = os.getenv("OPENROUTER_API_KEY", "")
 OPENROUTER_URL = os.getenv("OPENROUTER_URL", "https://openrouter.ai/api/v1")
 EMBED_MODEL = os.getenv("EMBED_MODEL", "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
+EMBED_BACKEND = os.getenv("EMBED_BACKEND", "fastembed")
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
+EMBEDDING_DIM = int(os.getenv("EMBEDDING_DIM", "384"))
 LLM_MODEL = os.getenv("LLM_MODEL", "deepseek/deepseek-v4-flash")
 
 mcp = FastMCP("sdc-mcp-local")
@@ -27,15 +30,27 @@ _embed_model = None
 
 
 def _get_embedding(text: str) -> list[float]:
-    """Embedding local FastEmbed (ONNX) — coincide con la colección Qdrant de 384 dims."""
+    """Embedding local (FastEmbed ONNX u Ollama) — coincide con la colección Qdrant de 384 dims."""
     global _embed_model
+    if EMBED_BACKEND == "ollama":
+        try:
+            import httpx
+            resp = httpx.post(
+                f"{OLLAMA_URL}/api/embeddings",
+                json={"model": EMBED_MODEL, "prompt": text},
+                timeout=30,
+            )
+            resp.raise_for_status()
+            return list(resp.json().get("embedding", []))
+        except Exception:
+            return [0.0] * EMBEDDING_DIM
     try:
         from fastembed import TextEmbedding
         if _embed_model is None:
             _embed_model = TextEmbedding(model_name=EMBED_MODEL)
         return list(_embed_model.embed([text]))[0].tolist()
     except Exception:
-        return [0.0] * 384
+        return [0.0] * EMBEDDING_DIM
 
 
 def _get_db(tenant_id: str):

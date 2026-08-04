@@ -5,16 +5,75 @@ Integra con Open Notebook para gestión documental.
 """
 
 import hashlib
-import json
 import logging
 import os
+import uuid
 from typing import Any
 
 log = logging.getLogger("sonora.engine.rag")
 
 QDRANT_HOST = os.getenv("QDRANT_HOST", "localhost")
 QDRANT_PORT = int(os.getenv("QDRANT_PORT", "6333"))
-EMBEDDING_DIM = 384  # all-MiniLM-L6-v2 compatible
+# Embeddings locales (ONNX / Ollama, sin API key) — coherente con el stack SDC.
+# Modelo multilingual 384-dim. Backends:
+#   - fastembed (default): sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
+#   - ollama (offline, si HF no accesible): all-minilm (384-dim) o nomic-embed-text (768)
+EMBED_MODEL = os.getenv(
+    "EMBED_MODEL", "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+)
+EMBED_BACKEND = os.getenv("EMBED_BACKEND", "fastembed")
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
+EMBEDDING_DIM = int(os.getenv("EMBEDDING_DIM", "384"))
+CHUNK_SIZE = int(os.getenv("CHUNK_SIZE", "512"))
+CHUNK_OVERLAP = int(os.getenv("CHUNK_OVERLAP", "64"))
+
+_embed_model = None
+
+
+def get_embed_model():
+    """Lazy-load embedding model (shared across calls)."""
+    global _embed_model
+    if _embed_model is None:
+        if EMBED_BACKEND == "ollama":
+            return "ollama"
+        from fastembed import TextEmbedding
+        log.info(f"Loading FastEmbed model: {EMBED_MODEL}")
+        _embed_model = TextEmbedding(model_name=EMBED_MODEL)
+    return _embed_model
+
+
+def embed_text(text: str) -> list[float]:
+    """Embed a single text to a 384-dim vector (FastEmbed or Ollama local)."""
+    model = get_embed_model()
+    if model == "ollama":
+        import httpx
+        resp = httpx.post(
+            f"{OLLAMA_URL}/api/embeddings",
+            json={"model": EMBED_MODEL, "prompt": text},
+            timeout=30,
+        )
+        resp.raise_for_status()
+        return list(resp.json().get("embedding", []))
+    return list(model.embed([text]))[0].tolist()
+
+
+def chunk_text(text: str, chunk_size: int = CHUNK_SIZE, overlap: int = CHUNK_OVERLAP) -> list[str]:
+    """Split text into overlapping chunks of ~words/tokens."""
+    words = text.split()
+    if len(words) <= chunk_size:
+        return [text]
+    chunks = []
+    start = 0
+    while start < len(words):
+        chunk = " ".join(words[start:start + chunk_size])
+        chunks.append(chunk)
+        start += chunk_size - overlap
+    return chunks
+
+
+def _point_id(doc_id: str, chunk_index: int) -> str:
+    """Deterministic UUID from doc_id + chunk_index (idempotent upsert)."""
+    return str(uuid.uuid5(uuid.NAMESPACE_DNS, f"{doc_id}:{chunk_index}"))
 
 
 def _get_client():
@@ -70,24 +129,26 @@ def index_document(tenant_id: str, doc_id: str, text: str, metadata: dict | None
 
         from qdrant_client.models import PointStruct
 
-        # Mock embedding (in production: use an embedding model)
-        mock_vector = [
-            float(int(hashlib.md5(f"{tenant_id}:{doc_id}:{i}".encode()).hexdigest(), 16) % 1000) / 1000.0
-            for i in range(EMBEDDING_DIM)
-        ]
+        chunks = chunk_text(text)
+        points = []
+        for i, chunk in enumerate(chunks):
+            vector = embed_text(chunk)
+            points.append(PointStruct(
+                id=_point_id(doc_id, i),
+                vector=vector,
+                payload={
+                    "doc_id": doc_id,
+                    "chunk_index": i,
+                    "text": chunk[:5000],
+                    "tenant_id": tenant_id,
+                    "source": (metadata or {}).get("source", ""),
+                    **(metadata or {}),
+                },
+            ))
 
         client.upsert(
             collection_name=_collection_name(tenant_id),
-            points=[PointStruct(
-                id=abs(hash(doc_id)) % (2**63),
-                vector=mock_vector,
-                payload={
-                    "doc_id": doc_id,
-                    "text": text[:5000],
-                    "tenant_id": tenant_id,
-                    **(metadata or {}),
-                },
-            )],
+            points=points,
         )
         return True
     except Exception as e:
@@ -112,15 +173,11 @@ def query_rag(tenant_id: str, query: str, limit: int = 5) -> list[dict[str, Any]
 
         from qdrant_client.models import Filter, FieldCondition, MatchValue
 
-        # Mock query vector
-        mock_vector = [
-            float(int(hashlib.md5(f"{tenant_id}:query:{i}".encode()).hexdigest(), 16) % 1000) / 1000.0
-            for i in range(EMBEDDING_DIM)
-        ]
+        query_vector = embed_text(query)
 
         results = client.search(
             collection_name=_collection_name(tenant_id),
-            query_vector=mock_vector,
+            query_vector=query_vector,
             limit=limit,
             query_filter=Filter(
                 must=[FieldCondition(key="tenant_id", match=MatchValue(value=tenant_id))]

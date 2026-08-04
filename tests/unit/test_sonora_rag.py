@@ -5,6 +5,14 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 
+@pytest.fixture(autouse=True)
+def _mock_embedding():
+    """Deterministic 384-dim vector — no network/model dependency in unit tests."""
+    vec = [0.01 * ((i % 97) + 1) for i in range(384)]
+    with patch("apps.sonora_engine.rag_per_tenant.embed_text", return_value=vec):
+        yield
+
+
 class TestCollectionManagement:
     """Cada tenant tiene su propia colección Qdrant."""
 
