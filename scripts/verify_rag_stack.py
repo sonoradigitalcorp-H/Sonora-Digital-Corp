@@ -95,7 +95,7 @@ def main():
     check("collection kb_{} ready".format(TENANT_ID.replace("-", "_")), True,
           "created" if ok_ensure else "exists")
 
-    doc_id = f"verify-{int(time.time())}"
+    doc_id = "verify-fixed-doc"  # fixed id -> idempotent upsert, no polluting kb_rye
     sample = (
         "SRVO-075 es una alarma de FANUC de colisión o sobrecarga del servo. "
         "Verificar la zona de trabajo, revisar collision detect y reiniciar con Reset "

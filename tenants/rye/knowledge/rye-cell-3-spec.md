@@ -1,3 +1,12 @@
+---
+type: concept
+title: RYE Celda 3 Specification
+tags: [rye, celda, robot, spec]
+version: 1.0
+timestamp: 2026-08-03
+vigencia: vigente
+---
+
 # RYE Celda 3 — Especificación
 
 - Robot: FANUC R-2000iC (6 ejes), soldadura spot.

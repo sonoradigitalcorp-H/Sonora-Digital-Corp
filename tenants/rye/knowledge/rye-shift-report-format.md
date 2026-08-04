@@ -1,3 +1,12 @@
+---
+type: template
+title: RYE Shift Report Format
+tags: [rye, turno, reporte]
+version: 1.0
+timestamp: 2026-08-03
+vigencia: vigente
+---
+
 # RYE Reporte de Turno — Formato
 
 Campos obligatorios por celda:

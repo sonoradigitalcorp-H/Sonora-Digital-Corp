@@ -1,0 +1,17 @@
+{
+  "feature": "unify-rye-engine-2layer-rag",
+  "receipt_id": "20260803-unify-rye-engine-2layer-rag-5521",
+  "generated_at": "2026-08-03T21:05:47.313890",
+  "freeze_fingerprint": "4745952185719ba6d0697113db54774208f9ab8849c6e32cf9b7226c1c72d20f",
+  "aggregated_score": 92,
+  "critical_issues": 0,
+  "reviews_complete": true,
+  "fix_attempted": false,
+  "validation_passed": true,
+  "tests_passed": 25,
+  "authorization": {
+    "allowed_to_commit": true,
+    "authorized_by": "RDD Gate",
+    "reason": "Score 92/100, verify passed, 25 tests green"
+  }
+}

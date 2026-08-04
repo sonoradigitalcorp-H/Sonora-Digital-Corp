@@ -1,3 +1,12 @@
+---
+type: concept
+title: FANUC SRVO Alarm Reference
+tags: [fanuc, srvo, alarmas]
+version: 1.0
+timestamp: 2026-08-03
+vigencia: vigente
+---
+
 # FANUC SRVO Alarm Reference (troubleshooting para RYE)
 
 ## SRVO-001

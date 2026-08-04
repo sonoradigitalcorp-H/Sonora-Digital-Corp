@@ -46,5 +46,27 @@ Exponer a los agentes RYE los siguientes MCP servers:
 ## Related
 
 - `skills/mcp/servers/sdc_mcp_stdio.py` (implementación sdc-mcp-local)
+- `tenants/rye/bot/rye_engine.py` (motor unificado 2 capas)
 - `scripts/rag.md` (documentación RAG MCP)
 - `ADR-20260803-RYE-SECURITY`
+
+## Hallazgo 2026-08-03: capa LLM chat
+
+La capa **RAG + conocimiento curado funciona** (verify PASSED). La capa `llm_chat`
+vía OpenRouter devuelve `401 User not found` en `/chat/completions` aunque
+`/models` responde 200 — es un problema de **cuenta/plan OpenRouter**, no de código.
+El motor `rye_engine.py` está listo para generar la respuesta; solo necesita una key
+válida de chat (activa). Diagnóstico previo en `ADR-20260802-AZROTECH-MVP-RAG-MEMORIA`
+(historial de keys OpenRouter que expiran).
+
+## Unificación (principios de Joaquín Ruiz / OKF)
+
+El RAG se mejoró siguiendo `jokiruiz.com/inteligencia-artificial/que-es-open-knowledge-format-okf-rag/`:
+- **Capa 1 (concepto curado)**: conocimiento exacto y estable en markdown con
+  frontmatter (type/version/timestamp) navegable por `rye-index.md` — respuestas
+  deterministas y trazables a ruta de archivo.
+- **Capa 2 (RAG)**: `rag_search` en `kb_rye` para "busca dónde se mencionó X".
+- **Regla de vigencia**: si el RAG contradice a un concepto curado, gana el concepto.
+- **Ausencia**: el índice permite saber qué existe; si no está, se dice y se sugiere
+  manual FANUC (en vez de alucinar).
+- **Metadata en fragmentos**: fuente + score en cada hit para trazabilidad.
