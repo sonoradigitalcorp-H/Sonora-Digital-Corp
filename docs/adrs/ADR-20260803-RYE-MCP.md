@@ -53,11 +53,17 @@ Exponer a los agentes RYE los siguientes MCP servers:
 ## Hallazgo 2026-08-03: capa LLM chat
 
 La capa **RAG + conocimiento curado funciona** (verify PASSED). La capa `llm_chat`
-vía OpenRouter devuelve `401 User not found` en `/chat/completions` aunque
-`/models` responde 200 — es un problema de **cuenta/plan OpenRouter**, no de código.
-El motor `rye_engine.py` está listo para generar la respuesta; solo necesita una key
-válida de chat (activa). Diagnóstico previo en `ADR-20260802-AZROTECH-MVP-RAG-MEMORIA`
-(historial de keys OpenRouter que expiran).
+vía OpenRouter devolvía `401 User not found` en `/chat/completions` aunque
+`/models` respondía 200 — es un problema de **cuenta/plan OpenRouter**, no de código.
+El motor `rye_engine.py` está listo para generar la respuesta.
+
+**RESOLUCIÓN (2026-08-03)**: la key activa en `~/.config/sonora/env.local`
+(`sk-or-v1-4674...`) dio 401. La key válida estaba en `infra/.env.backup`
+(`sk-or-v1-f7881...`) y funciona (200, responde en `/chat/completions`). Se
+actualizó `env.local` (respaldo previo en `env.local.bak-before-keyfix`).
+Verificado end-to-end: `rye_engine.py` genera respuesta completa con la
+definición curada de SRVO-075 + pasos accionables. Diagnóstico previo en
+`ADR-20260802-AZROTECH-MVP-RAG-MEMORIA` (historial de keys OpenRouter que expiran).
 
 ## Unificación (principios de Joaquín Ruiz / OKF)
 

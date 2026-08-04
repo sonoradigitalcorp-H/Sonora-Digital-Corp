@@ -1,0 +1,17 @@
+{
+  "feature": "fix-openrouter-key-active",
+  "receipt_id": "20260803-fix-openrouter-key-active-3318",
+  "generated_at": "2026-08-03T21:20:20.499803",
+  "freeze_fingerprint": "f4afdcb8a8a663aa8541302715ae0913e5b6762cd4e530b98afde15665231017",
+  "aggregated_score": 92,
+  "critical_issues": 0,
+  "reviews_complete": true,
+  "fix_attempted": false,
+  "validation_passed": true,
+  "tests_passed": 25,
+  "authorization": {
+    "allowed_to_commit": true,
+    "authorized_by": "RDD Gate",
+    "reason": "Score 92/100, LLM e2e working, 25 tests green"
+  }
+}
