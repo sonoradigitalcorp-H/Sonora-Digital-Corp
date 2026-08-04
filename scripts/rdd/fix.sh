@@ -1,6 +1,8 @@
 #!/bin/bash
 # RDD Step 3: Bounded fix (max 120 lines changed, single attempt)
 set -e
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
 
 FEATURE_NAME="${1:-}"
 if [ -z "$FEATURE_NAME" ]; then
@@ -8,7 +10,7 @@ if [ -z "$FEATURE_NAME" ]; then
   exit 1
 fi
 
-FREEZE_DIR="sonora-digital-corp/.rdd/freezes"
+FREEZE_DIR="$RDD_FREEZE_DIR"
 TODAY=$(date +%Y%m%d)
 REVIEW_DIR="$FREEZE_DIR/${TODAY}-${FEATURE_NAME}-reviews"
 
@@ -33,8 +35,8 @@ critical = 0
 for line in sys.stdin:
     try:
         data = json.loads(line)
-        if 'severity' in data:
-            critical += data['severity'].get('critical', 0) + data['severity'].get('high', 0)
+        severity = data.get('severity', {}) if isinstance(data.get('severity'), dict) else {}
+        critical += severity.get('critical', 0) + severity.get('high', 0)
     except:
         pass
 print(critical)
@@ -46,9 +48,8 @@ echo "Total findings: $TOTAL_FINDINGS"
 echo "Critical/High findings: $CRITICAL"
 echo ""
 
-if [ "$CRITICAL" -eq 0 ] && [ "$TOTAL_FINDINGS" -eq 0 ]; then
+if [ "${CRITICAL:-0}" -eq 0 ] && [ "${TOTAL_FINDINGS:-0}" -eq 0 ]; then
   echo "No issues found. Proceed to receipt generation."
-  echo "Run: opencode run rdd:receipt '$FEATURE_NAME'"
   exit 0
 fi
 
@@ -71,9 +72,9 @@ for f in glob.glob(os.path.join(review_dir, '*.json')):
     with open(f) as fh:
         try:
             data = json.load(fh)
-            if 'findings' in data and data['findings']:
-                print(f'## {data[\"reviewer\"]}')
-                for finding in data['findings'][:5]:  # Max 5 per reviewer
+            if isinstance(data.get('findings'), list) and data['findings']:
+                print(f'## {data.get(\"reviewer\", \"unknown\")}')
+                for finding in data['findings'][:5]:
                     print(f'- [{finding.get(\"severity\", \"medium\")}] {finding.get(\"message\", finding)}')
                 print()
         except:
@@ -86,27 +87,7 @@ cat >> "$FIX_PLAN_FILE" << EOF
 - **Single attempt only** - no iterative fixes
 - **120 line maximum** - total diff across all files
 - **Read-only validation** - must not break existing functionality
-
-## Fix Plan (auto-generated)
-
-The fix must address all critical/high findings while staying within the 120-line limit.
-
-**Approach:**
-1. Critical findings first (max 60 lines)
-2. High findings (max 40 lines)
-3. Medium/Low only if space allows (max 20 lines)
-
-**Execution:**
-Use an LLM agent with this prompt:
-"You are a focused code fixer. Fix the issues in \$FIX_PLAN_FILE.
-Make ONE edit pass. Maximum 120 lines changed across all files.
-No new features, no refactoring beyond fixes.
-After fixing, run: opencode run rdd:validate $FEATURE_NAME"
 EOF
 
 echo "Fix plan saved: $FIX_PLAN_FILE"
-echo ""
-echo "5. Execute bounded fix (single agent, 120-line limit)"
-echo "   Run: opencode agent sdd-engineer \"Fix $FEATURE_NAME per \$REVIEW_DIR/fix-plan.md. ONE pass only. 120 line limit. No new features.\""
-echo ""
-echo "6. After fix: opencode run rdd:validate '$FEATURE_NAME'"
+echo "Execute the bounded fix (single agent, 120-line limit), then: bash scripts/rdd/validate.sh '$FEATURE_NAME'"

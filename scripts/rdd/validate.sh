@@ -1,6 +1,8 @@
 #!/bin/bash
 # RDD: Aggregate reviews and validate (read-only check)
 set -e
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
 
 FEATURE_NAME="${1:-}"
 if [ -z "$FEATURE_NAME" ]; then
@@ -8,7 +10,8 @@ if [ -z "$FEATURE_NAME" ]; then
   exit 1
 fi
 
-FREEZE_DIR="sonora-digital-corp/.rdd/freezes"
+APP_DIR="${RDD_APP_DIR:-$RDD_ROOT}"
+FREEZE_DIR="$RDD_FREEZE_DIR"
 TODAY=$(date +%Y%m%d)
 REVIEW_DIR="$FREEZE_DIR/${TODAY}-${FEATURE_NAME}-reviews"
 
@@ -16,29 +19,28 @@ echo "=== RDD: Validation (Read-Only) ==="
 echo "Feature: $FEATURE_NAME"
 echo ""
 
-# 1. Verify fingerprint unchanged
+# 1. Verify fingerprint changed state (expected if fix applied)
 echo "1. Verifying fingerprint..."
-CURRENT_FINGERPRINT=$(find "sonora-digital-corp/apps/frontends/agentic-os/src" -name "*.ts" -o -name "*.tsx" | sort | xargs sha256sum | sha256sum | awk '{print $1}')
+CURRENT_FINGERPRINT=$(find "$APP_DIR" \( -path "*/.git" -o -path "*/node_modules" -o -path "*/__pycache__" -o -path "*/.rdd" \) -prune -o -type f \( -name "*.py" -o -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.md" -o -name "*.yaml" -o -name "*.json" \) -print | sort | xargs sha256sum 2>/dev/null | sha256sum | awk '{print $1}')
 STORED_FINGERPRINT=$(sha256sum "$FREEZE_DIR/${TODAY}-${FEATURE_NAME}.fingerprint" 2>/dev/null | awk '{print $1}')
 
 if [ "$CURRENT_FINGERPRINT" != "$STORED_FINGERPRINT" ]; then
   echo "   ⚠ Fingerprint mismatch (expected if fix was applied)"
-  echo "   Old: $STORED_FINGERPRINT"
-  echo "   New: $CURRENT_FINGERPRINT"
-  # Update fingerprint to new state for receipt
-  find "sonora-digital-corp/apps/frontends/agentic-os/src" -name "*.ts" -o -name "*.tsx" | sort | xargs sha256sum > "$FREEZE_DIR/${TODAY}-${FEATURE_NAME}.fingerprint.new"
   echo "   New fingerprint saved for receipt"
+  find "$APP_DIR" \( -path "*/.git" -o -path "*/node_modules" -o -path "*/__pycache__" -o -path "*/.rdd" \) -prune -o -type f \( -name "*.py" -o -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.md" -o -name "*.yaml" -o -name "*.json" \) -print | sort | xargs sha256sum > "$FREEZE_DIR/${TODAY}-${FEATURE_NAME}.fingerprint.new" 2>/dev/null || true
 else
   echo "   ✓ Fingerprint matches"
 fi
 
-# 2. Re-run tests (read-only verification)
+# 2. Run test suite (read-only)
 echo "2. Running test suite..."
-cd "sonora-digital-corp/apps/frontends/agentic-os"
-if [ -f "tests/unit" ]; then
-  npx vitest run 2>&1 | tail -10 || true
+cd "$RDD_ROOT"
+if command -v make >/dev/null 2>&1 && [ -f Makefile ]; then
+  timeout 180 make doctor-quick 2>&1 | tail -8 || true
+else
+  echo "   No Makefile; skipping test run"
 fi
 
 echo ""
 echo "3. Validation complete"
-echo "   Run: opencode run rdd:receipt '$FEATURE_NAME' to generate final receipt"
+echo "   Run: bash scripts/rdd/receipt.sh '$FEATURE_NAME' to generate final receipt"

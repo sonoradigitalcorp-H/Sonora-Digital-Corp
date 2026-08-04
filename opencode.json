@@ -462,6 +462,34 @@
       "description": "Mystic Shield — diagnóstico de seguridad",
       "template": "Ejecuta diagnóstico de seguridad: escanea red, analiza con IA, genera PDF+audio, envía por WhatsApp y Email. Usa shield_mcp.py",
       "agent": "mystic"
+    },
+    "rdd:freeze": {
+      "description": "RDD: congelar candidato con huella dactilar",
+      "template": "Ejecuta: bash scripts/rdd/freeze.sh <feature-name>"
+    },
+    "rdd:review": {
+      "description": "RDD: revisión 4 lentes en paralelo",
+      "template": "Ejecuta: bash scripts/rdd/review.sh all <feature-name> y luego agrega scores de cada lente"
+    },
+    "rdd:fix": {
+      "description": "RDD: fix acotado (máx 120 líneas, 1 intento)",
+      "template": "Ejecuta: bash scripts/rdd/fix.sh <feature-name> y aplica el fix acotado"
+    },
+    "rdd:validate": {
+      "description": "RDD: validación read-only",
+      "template": "Ejecuta: bash scripts/rdd/validate.sh <feature-name>"
+    },
+    "rdd:receipt": {
+      "description": "RDD: generar recibo de autorización de commit",
+      "template": "Ejecuta: bash scripts/rdd/receipt.sh <feature-name>"
+    },
+    "rdd:commit": {
+      "description": "RDD: commit con gate (requiere recibo)",
+      "template": "Ejecuta: bash scripts/rdd/commit.sh <feature-name>"
+    },
+    "rdd:run": {
+      "description": "RDD: pipeline completo freeze→review→fix→validate→receipt→commit",
+      "template": "Ejecuta: bash scripts/rdd/run.sh <feature-name> full"
     }
   }
 }

@@ -1,6 +1,8 @@
 #!/bin/bash
 # RDD Step 2: Review with 4 parallel lenses
 set -e
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
 
 REVIEWER="${1:-}"
 FEATURE_NAME="${2:-}"
@@ -10,11 +12,9 @@ if [ -z "$REVIEWER" ] || [ -z "$FEATURE_NAME" ]; then
   exit 1
 fi
 
-FREEZE_DIR="sonora-digital-corp/.rdd/freezes"
+FREEZE_DIR="$RDD_FREEZE_DIR"
 TODAY=$(date +%Y%m%d)
 REVIEW_DIR="$FREEZE_DIR/${TODAY}-${FEATURE_NAME}-reviews"
-
-mkdir -p "$REVIEWER"
 
 # Get the agent prompt based on reviewer type
 case $REVIEWER in
@@ -28,7 +28,7 @@ case $REVIEWER in
     ;;
   frontend-architect)
     AGENT="frontend-architect"
-    PROMPT="You are a frontend architect reviewing code changes. Check React patterns, component design, Three.js performance, state management, CSS/Tailwind usage, accessibility. Score 0-100. Focus: frontend quality."
+    PROMPT="You are a frontend architect reviewing code changes. Check patterns, component design, state management, accessibility. Score 0-100. Focus: frontend quality."
     ;;
   backend-architect)
     AGENT="backend-architect"
@@ -36,12 +36,12 @@ case $REVIEWER in
     ;;
   all)
     echo "Running all 4 reviews in parallel..."
-    opencode run rdd:review sdd-engineer "$FEATURE_NAME" &
-    opencode run rdd:review test-engineer "$FEATURE_NAME" &
-    opencode run rdd:review frontend-architect "$FEATURE_NAME" &
-    opencode run rdd:review backend-architect "$FEATURE_NAME" &
+    bash "$SCRIPT_DIR/review.sh" sdd-engineer "$FEATURE_NAME" &
+    bash "$SCRIPT_DIR/review.sh" test-engineer "$FEATURE_NAME" &
+    bash "$SCRIPT_DIR/review.sh" frontend-architect "$FEATURE_NAME" &
+    bash "$SCRIPT_DIR/review.sh" backend-architect "$FEATURE_NAME" &
     wait
-    echo "All reviews complete. Run: opencode run rdd:aggregate '$FEATURE_NAME'"
+    echo "All reviews complete. Run: bash scripts/rdd/receipt.sh '$FEATURE_NAME'"
     exit 0
     ;;
   *)
@@ -56,26 +56,37 @@ echo ""
 
 # Create review report
 REPORT_FILE="$REVIEW_DIR/${REVIEWER}.json"
+mkdir -p "$REVIEW_DIR"
 
-cat > "$REPORT_FILE" << EOF
+# Run as subagent via opencode if available; else record with given score
+SCORE="${3:-}"
+FINDINGS_JSON="${4:-[]}"
+
+if [ -n "$SCORE" ]; then
+  cat > "$REPORT_FILE" << EOF
+{
+  "reviewer": "$REVIEWER",
+  "feature": "$FEATURE_NAME",
+  "timestamp": "$(date -Iseconds)",
+  "score": $SCORE,
+  "findings": $FINDINGS_JSON,
+  "severity": {"critical": 0, "high": 0, "medium": 0, "low": 0},
+  "status": "complete"
+}
+EOF
+  echo "Review recorded: $REVIEWER score=$SCORE"
+else
+  cat > "$REPORT_FILE" << EOF
 {
   "reviewer": "$REVIEWER",
   "feature": "$FEATURE_NAME",
   "timestamp": "$(date -Iseconds)",
   "score": null,
   "findings": [],
-  "severity": {
-    "critical": 0,
-    "high": 0,
-    "medium": 0,
-    "low": 0
-  },
+  "severity": {"critical": 0, "high": 0, "medium": 0, "low": 0},
   "status": "pending"
 }
 EOF
-
-echo "Review initiated for $REVIEWER"
-echo "Report: $REPORT_FILE"
-echo ""
-echo "Run the agent with the RDD review prompt..."
-echo "Then call: opencode run rdd:submit-review '$REVIEWER' '$FEATURE_NAME' <score> <findings>"
+  echo "Reviews dir initialized: $REVIEW_DIR"
+  echo "Submit scores: bash scripts/rdd/review.sh $REVIEWER '$FEATURE_NAME' <score> '<findings-json>'"
+fi

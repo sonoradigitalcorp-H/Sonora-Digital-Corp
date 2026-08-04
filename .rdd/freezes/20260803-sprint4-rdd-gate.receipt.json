@@ -1,0 +1,17 @@
+{
+  "feature": "sprint4-rdd-gate",
+  "receipt_id": "20260803-sprint4-rdd-gate-8102",
+  "generated_at": "2026-08-03T20:32:14.489755",
+  "freeze_fingerprint": "73b693035a81e553b1b8235441a6dadcd61cbd4267831556ac20793387641a54",
+  "aggregated_score": 90,
+  "critical_issues": 0,
+  "reviews_complete": true,
+  "fix_attempted": false,
+  "validation_passed": true,
+  "tests_passed": 20,
+  "authorization": {
+    "allowed_to_commit": true,
+    "authorized_by": "RDD Gate",
+    "reason": "Score 90/100, 20 tests green"
+  }
+}

@@ -1,59 +1,33 @@
 #!/bin/bash
-# RDD: Commit with receipt validation
+# RDD Step 6: Commit with RDD gate (authorization required unless kill switch)
 set -e
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "$SCRIPT_DIR/lib.sh"
 
 FEATURE_NAME="${1:-}"
 if [ -z "$FEATURE_NAME" ]; then
-  echo "Usage: $0 <feature-name>"
+  echo "Usage: $0 <feature-name> [git-args...]"
   exit 1
 fi
+shift
 
-FREEZE_DIR="sonora-digital-corp/.rdd/freezes"
+FREEZE_DIR="$RDD_FREEZE_DIR"
 TODAY=$(date +%Y%m%d)
+
+# Gate check (respect kill switch)
+if rdd_gate_enabled; then
+  if ! rdd_require_gate "$FEATURE_NAME"; then
+    echo "❌ Commit blocked by RDD gate."
+    exit 1
+  fi
+else
+  echo "⚠  Kill switch active — bypassing gate (document emergency)."
+fi
+
 RECEIPT_FILE="$FREEZE_DIR/${TODAY}-${FEATURE_NAME}.receipt.json"
+RECEIPT_ID=$(python3 -c "import json;print(json.load(open('$RECEIPT_FILE')).get('receipt_id','unknown'))" 2>/dev/null || echo "unknown")
 
-echo "=== RDD: Commit with Receipt ==="
-echo "Feature: $FEATURE_NAME"
-echo ""
-
-if [ ! -f "$RECEIPT_FILE" ]; then
-  echo "ERROR: No receipt found"
-  echo "Generate receipt first: opencode run rdd:receipt '$FEATURE_NAME'"
-  exit 1
-fi
-
-# Check receipt authorization
-AUTHORIZED=$(python3 -c "
-import json
-with open('$RECEIPT_FILE') as f:
-    r = json.load(f)
-print(r['authorization']['allowed_to_commit'])
-" 2>/dev/null)
-
-if [ "$AUTHORIZED" != "True" ]; then
-  echo "ERROR: Receipt does not authorize commit"
-  echo "Reason: $(python3 -c "import json; print(json.load(open('$RECEIPT_FILE'))['authorization']['reason'])" 2>/dev/null)"
-  echo "Fix issues and re-run: opencode run rdd:receipt '$FEATURE_NAME'"
-  exit 1
-fi
-
-# Commit with receipt hash embedded in message
-RECEIPT_HASH=$(python3 -c "
-import json
-with open('$RECEIPT_FILE') as f:
-    r = json.load(f)
-print(r['receipt_id'])
-" 2>/dev/null)
-
-echo "Receipt: $RECEIPT_HASH"
-echo "Authorization: GRANTED"
-echo ""
-
-cd "sonora-digital-corp"
+cd "$RDD_ROOT"
 git add -A
-git commit -m "feat: $FEATURE_NAME (RDD-${RECEIPT_HASH})" --allow-empty
-
-echo ""
-echo "✅ Commit created with RDD receipt"
-echo "   git log --oneline -1"
-git -C "sonora-digital-corp" log --oneline -1
+git commit -m "$FEATURE_NAME (RDD:${RECEIPT_ID})" "$@"
+echo "✅ Commit done with RDD receipt: $RECEIPT_ID"
