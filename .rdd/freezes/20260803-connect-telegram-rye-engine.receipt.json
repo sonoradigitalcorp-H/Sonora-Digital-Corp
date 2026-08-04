@@ -1,0 +1,17 @@
+{
+  "feature": "connect-telegram-rye-engine",
+  "receipt_id": "20260803-connect-telegram-rye-engine-9021",
+  "generated_at": "2026-08-03T21:44:20.033186",
+  "freeze_fingerprint": "fe78ee4a13c87bdc154dde63a748cabb5e32a619d6365bac5d8f26ec62540ed8",
+  "aggregated_score": 92,
+  "critical_issues": 0,
+  "reviews_complete": true,
+  "fix_attempted": false,
+  "validation_passed": true,
+  "tests_passed": 27,
+  "authorization": {
+    "allowed_to_commit": true,
+    "authorized_by": "RDD Gate",
+    "reason": "Score 92/100, telegram->engine wired, 27 tests green"
+  }
+}

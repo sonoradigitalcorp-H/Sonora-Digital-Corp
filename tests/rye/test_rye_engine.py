@@ -49,3 +49,19 @@ def test_engine_uses_curated_concept_over_rag_for_stable_query():
     res = answer("genera el reporte de turno de la celda 3", use_llm=False)
     assert res["concept"] == "rye-shift-report-format.md"
     assert "reporte" in res["response"].lower() or "formato" in res["response"].lower()
+
+
+def test_openclaw_rye_bot_skill_exists():
+    """The conductor agent skill must exist and point to the engine."""
+    skill = Path("/home/mystic/.openclaw/agents/rye/agent/skills/rye-bot/SKILL.md")
+    assert skill.exists(), f"Missing OpenClaw skill: {skill}"
+    content = skill.read_text()
+    assert "rye_engine.py" in content
+    # the skill must reference the monorepo engine path
+    assert "rye_engine.py" in content
+
+
+def test_engine_path_resolvable_from_skill():
+    """The absolute path the skill invokes must resolve to the engine."""
+    engine = REPO / "tenants" / "rye" / "bot" / "rye_engine.py"
+    assert engine.exists()
