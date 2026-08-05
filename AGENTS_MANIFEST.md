@@ -31,3 +31,9 @@ Cuando construyas una automatización, su código base va a:
 - `01_Core_Platform/04_Automations_and_Workflows/02_Voice_Agents/` (Para agentes de voz como Aztrotech)
 - `01_Core_Platform/04_Automations_and_Workflows/03_Accounting_Agents/` (Para bots de contabilidad como Nathaly)
 Recuerda que las bases de datos y la memoria se gestionan vía los enlaces en `03_Agentic_Infrastructure/`.
+
+### 5. Orquestador Principal (Hermes)
+El agente "Hermes" (Nous Research) actúa como el cerebro orquestador.
+- Configuración: `01_Core_Platform/03_Agentic_Infrastructure/Hermes_Agent/Prompts/system_prompt.md`
+- Herramientas: `01_Core_Platform/03_Agentic_Infrastructure/Hermes_Agent/Tools/`
+Cuando se requiera coordinar múltiples herramientas (ej. transcribir audio, recordar en Engram, y responder por Telegram), Hermes debe ser el modelo utilizado.
