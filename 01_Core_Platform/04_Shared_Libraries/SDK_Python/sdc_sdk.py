@@ -1,6 +1,7 @@
 import os
 import json
 from datetime import datetime
+from telemetry import log_agent_action
 
 class SDC_Client:
     def __init__(self, client_name):
@@ -15,12 +16,10 @@ class SDC_Client:
         print(f"[SDC SDK] Log [{event_type}] para {self.client}: {json.dumps(payload)}")
 
     def execute_skill(self, skill_name, input_data):
-        log_agent_action("Hermes", self.client, f"skill_{skill_name}", "started", input_data)
-        print(f"[SDC SDK] Ejecutando skill {skill_name} para {self.client} con data: {input_data}")
-        # Aquí Hermes inyectaría el resultado de la tool
-        result = {"status": "success", "skill": skill_name, "client": self.client}
-        log_agent_action("Hermes", self.client, f"skill_{skill_name}", "completed", result)
-        return result
+        log_agent_action("Hermes", self.client, f"execute_{skill_name}", "started", input_data)
+        # Lógica de ejecución aquí...
+        log_agent_action("Hermes", self.client, f"execute_{skill_name}", "success", {"result": "ok"})
+        return {"status": "success", "skill": skill_name, "client": self.client}
 
     def get_secret(self, secret_name):
         """Retrieve a secret from the tenant's Vault."""

@@ -1,0 +1,21 @@
+{
+  "policy_name": "Tenant Isolation RBAC",
+  "description": "Reglas estrictas para el orquestador Hermes. Prohíbe el acceso cruzado entre tenants.",
+  "rules": [
+    {
+      "rule_id": "R1",
+      "subject": "Agent:Hermes",
+      "action": "read_write_memory",
+      "condition": "client_tenant == agent_context_client",
+      "effect": "Allow"
+    },
+    {
+      "rule_id": "R2",
+      "subject": "Agent:Hermes",
+      "action": "read_write_memory",
+      "condition": "client_tenant != agent_context_client",
+      "effect": "Deny",
+      "reason": "Cross-tenant access is strictly prohibited. Quantum state isolation violation."
+    }
+  ]
+}
