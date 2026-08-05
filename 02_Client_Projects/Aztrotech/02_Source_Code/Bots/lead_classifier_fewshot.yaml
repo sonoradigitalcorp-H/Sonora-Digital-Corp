@@ -1,0 +1,52 @@
+# Few-shot examples para clasificación de leads (cold/warm/hot)
+
+examples:
+  - id: 001
+    conversation: ["Hola", "Qué servicios tienen?", "gracias"]
+    tipo: cold
+    razones: ["saludo genérico", "pregunta informativa sin dolor", "sin contexto de negocio"]
+
+  - id: 002
+    conversation: ["Buenas, me llamo Luisa, tengo una tienda de ropa en Hermosillo", "Me interesa el empleado digital"]
+    tipo: warm
+    razones: ["da contexto de negocio", "menciona servicio específico", "muestra interés genuino"]
+
+  - id: 003
+    conversation: ["Cuánto cuesta el sistema de ventas", "Ya tengo el presupuesto aprobado"]
+    tipo: warm
+    razones: ["pregunta precio", "menciona presupuesto"]
+
+  - id: 004
+    conversation: ["Quiero contratar YA", "Mi presupuesto es 15k al mes", "Podemos empezar el lunes"]
+    tipo: hot
+    razones: ["intención explícita de compra", "presupuesto concreto", "timeline definido"]
+
+  - id: 005
+    conversation: ["Solo vi el anuncio", "Quiero más info", "No tengo negocio aún"]
+    tipo: cold
+    razones: ["sin dolor real", "sin contexto", "explorando"]
+
+  - id: 006
+    conversation: ["Hola, mi restaurante no contesta llamadas", "Ya perdí 3 clientes este mes por eso", "Necesito algo ya"]
+    tipo: hot
+    razones: ["dolor concreto y medible", "pérdida actual", "urgencia explícita"]
+
+  - id: 007
+    conversation: ["Leí que hacen bots", "Mi negocio es pequeño", "Solo estoy viendo opciones"]
+    tipo: cold
+    razones: ["búsqueda informativa", "sin urgencia", "sin compromiso"]
+
+  - id: 008
+    conversation: ["Ya uso otra herramienta pero es lenta", "Me gustaría comparar precios"]
+    tipo: warm
+    razones: ["insatisfacción con alternativa", "comparación activa"]
+
+  - id: 009
+    conversation: ["Tengo una clínica dental", "Atiendo 40 pacientes al mes", "Quiero automatizar citas"]
+    tipo: warm
+    razones: ["contexto de negocio claro", "caso de uso específico", "dolor identificado"]
+
+  - id: 010
+    conversation: ["Estamos listos para firmar", "Manda el contrato", "Mi socio ya lo aprobó"]
+    tipo: hot
+    razones: ["fase de cierre", "decisión tomada", "timeline inmediato"]

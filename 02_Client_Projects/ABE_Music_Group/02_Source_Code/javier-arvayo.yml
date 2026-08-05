@@ -1,0 +1,17 @@
+id: javier-arvayo
+name: "Javier Arvayo"
+real_name: "Javier Arvayo"
+genre: "Regional Mexicano"
+status: active
+split:
+  artist: 70
+  label: 20
+  reserve: 10
+signed_date: 2025-03-01
+social:
+  spotify_id: ""
+  youtube_id: ""
+  instagram: "@javierarvayo"
+voice_assistant: false
+monthly_streams: 50000
+monthly_revenue: 200

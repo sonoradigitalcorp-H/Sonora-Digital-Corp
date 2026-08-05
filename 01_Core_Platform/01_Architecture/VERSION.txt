@@ -1,0 +1,37 @@
+# Sonora Digital Corp - Enterprise Directory Structure
+# Version: 1.0.0
+# Released: 2026-08-05
+# Status: STABLE
+
+## Changelog
+
+### [1.0.0] - 2026-08-05
+#### Added
+- New Enterprise directory topology (00_Administration, 01_Core_Platform, 02_Client_Projects, 03_Sandbox_and_RnD)
+- Standard 4-layer client structure (Discovery, Source_Code, Media_Assets, Deployment)
+- SYSTEM_MANIFEST.md as AI automation contract
+- ADR-0001: Directory structure refactor decision record
+- SPEC-0001: Directory refactor specification document
+
+#### Changed
+- Migrated 652 files from legacy structure to enterprise structure
+- Resolved 284 filename collisions with _1, _2, _3 suffixes
+
+#### Removed
+- Eliminated 25 empty directories post-migration
+- Zero file deletions (only empty dirs cleaned)
+
+## Clients (8 total)
+| Client | Source Files | Structure |
+|---|---|---|
+| Aztrotech | 31 | Skills + Bots |
+| RYE_Ivan_Guerrero | 8 | Skills + Bots |
+| ABE_Music_Group | 549 | Skills + Bots |
+| Fourgea_Mexico | 3 | Skills + Bots |
+| Nathaly_Contabilidad | 0 | Agentes |
+| Sonora_Digital_Corp | 35 | Root only |
+| General | 14 | Root only |
+| Instaladores | 12 | Root only |
+
+## API Version
+v1.0.0-enterprise-refactor

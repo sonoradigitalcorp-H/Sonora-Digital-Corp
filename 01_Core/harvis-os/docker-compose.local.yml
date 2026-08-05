@@ -1,0 +1,31 @@
+version: '3.8'
+
+# Harvis OS - Local Development Stack
+# Usa servicios existentes: PostgreSQL, Redis, Qdrant, Ollama
+
+services:
+  # Harvis OS API
+  harvis-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_URL=redis://host.docker.internal:6379
+      - POSTGRES_URL=postgresql://sdc:sdc@host.docker.internal:5432/sdc
+      - QDRANT_URL=http://host.docker.internal:6333
+      - OLLAMA_URL=http://host.docker.internal:11434
+      - OLLAMA_MODEL=qwen3:4b
+      - LOG_LEVEL=DEBUG
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - ./src:/app/src
+      - ./config:/app/config
+    command: uvicorn src.core.main:app --host 0.0.0.0 --port 8000 --reload
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3

@@ -1,0 +1,92 @@
+# Harvis OS Routing Rules
+# Estas reglas determinan cómo se clasifican las tareas
+
+routing_rules:
+  # Código y programación
+  code:
+    patterns:
+      - "código|code|programar|implementar|escribir|crear|desarrollar"
+      - "función|function|clase|class|endpoint|api"
+      - "bug|error|fix|arreglar|corregir"
+      - "refactor|mejorar|optimizar"
+      - "módulo|module|paquete|package"
+    agent: openhands
+    priority: high
+    confidence: 0.9
+
+  # Git y control de versiones
+  git:
+    patterns:
+      - "git|commit|branch|merge|push|pull|repo"
+      - "changelog|versión|release"
+      - "stash|rebase|squash"
+    agent: aider
+    priority: medium
+    confidence: 0.85
+
+  # Consultas y datos
+  query:
+    patterns:
+      - "consultar|buscar|query|select|leer|ver|mostrar"
+      - "¿qué|cuál|cuánto|dónde|cuándo"
+      - "base de datos|database|tabla|table"
+    agent: data_agent
+    priority: low
+    confidence: 0.8
+
+  # Deploy y infraestructura
+  deploy:
+    patterns:
+      - "deploy|desplegar|publicar|subir|lanzar"
+      - "docker|container|servidor|server"
+      - "nginx|apache|proxy"
+    agent: openhands
+    priority: high
+    confidence: 0.85
+
+  # Testing y QA
+  review:
+    patterns:
+      - "revisar|review|audit|verificar|validar"
+      - "prueba|test|testing"
+      - "coverage|cobertura"
+    agent: openhands
+    priority: medium
+    confidence: 0.8
+
+  # Documentación
+  docs:
+    patterns:
+      - "documentación|documentation|docs|readme"
+      - "comentar|comment|explicar|explain"
+      - "tutorial|guía|guide"
+    agent: openhands
+    priority: low
+    confidence: 0.75
+
+  # Fallback a planner
+  other:
+    patterns:
+      - ".*"  # cualquier otro texto
+    agent: planner
+    priority: low
+    confidence: 0.5
+
+# Prioridades de agentes (cuando hay múltiples opciones)
+agent_priority:
+  openhands:
+    - code
+    - deploy
+    - review
+    - docs
+  aider:
+    - git
+  planner:
+    - other
+
+# Configuración de LLM fallback
+llm_fallback:
+  enabled: true
+  model: "llama3.1:8b"
+  confidence_threshold: 0.6
+  timeout: 30

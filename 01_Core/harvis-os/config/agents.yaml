@@ -1,0 +1,107 @@
+# Harvis OS Agent Registry Configuration
+
+agents:
+  # OpenHands - Agente autónomo principal
+  openhands:
+    name: "OpenHands"
+    description: "Agente autónomo para código, debugging y deploy"
+    capabilities:
+      - code
+      - debug
+      - test
+      - deploy
+      - browser
+      - terminal
+    tools_allowed:
+      - filesystem
+      - terminal
+      - browser
+      - git
+    max_concurrent: 2
+    health_endpoint: "http://localhost:3000/health"
+    timeout: 600
+    retry_policy:
+      max_retries: 3
+      backoff: exponential
+      initial_delay: 1
+      max_delay: 60
+    status: online
+
+  # OpenCode - IDE interactivo
+  opencode:
+    name: "OpenCode"
+    description: "IDE interactivo para desarrollo"
+    capabilities:
+      - code
+      - edit
+      - refactor
+    tools_allowed:
+      - filesystem
+      - terminal
+      - lsp
+    max_concurrent: 1
+    health_endpoint: "http://localhost:3001/health"
+    timeout: 300
+    retry_policy:
+      max_retries: 2
+      backoff: linear
+      initial_delay: 1
+      max_delay: 10
+    status: online
+
+  # Hermes - Orquestador MCP
+  hermes:
+    name: "Hermes"
+    description: "Orquestador MCP para integraciones"
+    capabilities:
+      - mcp
+      - integration
+      - workflow
+    tools_allowed:
+      - mcp
+      - api
+    max_concurrent: 3
+    health_endpoint: "http://localhost:3002/health"
+    timeout: 120
+    retry_policy:
+      max_retries: 2
+      backoff: linear
+      initial_delay: 1
+      max_delay: 5
+    status: online
+
+  # Aider - Especialista Git
+  aider:
+    name: "Aider"
+    description: "Especialista en Git y cambios múltiples"
+    capabilities:
+      - git
+      - commit
+      - changelog
+      - multi-file
+    tools_allowed:
+      - filesystem
+      - terminal
+      - git
+    max_concurrent: 1
+    health_endpoint: null
+    timeout: 300
+    retry_policy:
+      max_retries: 2
+      backoff: linear
+      initial_delay: 1
+      max_delay: 10
+    status: online
+
+# Configuración de health checks
+health_check:
+  interval: 30  # segundos
+  timeout: 10  # segundos
+  failure_threshold: 3
+  recovery_threshold: 2
+
+# Configuración de load balancing
+load_balancing:
+  strategy: "round_robin"  # round_robin, least_connections, weighted
+  health_check_required: true
+  max_retries: 3

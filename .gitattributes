@@ -1,0 +1,4 @@
+*.cli filter=lfs diff=lfs merge=lfs -text
+*.tar.gz filter=lfs diff=lfs merge=lfs -text
+OpenCode filter=lfs diff=lfs merge=lfs -text
+opencode-cli filter=lfs diff=lfs merge=lfs -text

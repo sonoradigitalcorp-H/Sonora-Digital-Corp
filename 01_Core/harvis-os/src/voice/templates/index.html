@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harvis OS - Voice Control</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #fff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #888;
+            margin-bottom: 30px;
+        }
+
+        .mic-button {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #e94560, #c23152);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 40px rgba(233, 69, 96, 0.4);
+        }
+
+        .mic-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 15px 50px rgba(233, 69, 96, 0.6);
+        }
+
+        .mic-button.listening {
+            animation: pulse 1.5s infinite;
+            background: linear-gradient(145deg, #00d9ff, #0099cc);
+            box-shadow: 0 10px 40px rgba(0, 217, 255, 0.4);
+        }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 217, 255, 0.7); }
+            70% { box-shadow: 0 0 0 30px rgba(0, 217, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 217, 255, 0); }
+        }
+
+        .mic-icon {
+            font-size: 80px;
+        }
+
+        .status {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+        }
+
+        .transcript {
+            background: rgba(0,0,0,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            min-height: 100px;
+            font-size: 1.1rem;
+        }
+
+        .transcript h3 {
+            color: #00d9ff;
+            margin-bottom: 10px;
+        }
+
+        .commands {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .command-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .command-card:hover {
+            background: rgba(233, 69, 96, 0.2);
+            border-color: #e94560;
+        }
+
+        .command-card h4 {
+            color: #e94560;
+            margin-bottom: 5px;
+        }
+
+        .command-card p {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .log {
+            background: rgba(0,0,0,0.5);
+            border-radius: 10px;
+            padding: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .log-entry {
+            padding: 5px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .log-entry.success { color: #00ff88; }
+        .log-entry.error { color: #ff4444; }
+        .log-entry.info { color: #00d9ff; }
+
+        .duration-selector {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .duration-btn {
+            padding: 10px 20px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: transparent;
+            color: #fff;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .duration-btn.active {
+            background: #e94560;
+            border-color: #e94560;
+        }
+
+        .duration-btn:hover {
+            background: rgba(233, 69, 96, 0.3);
+        }
+
+        .manual-input {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .manual-input input {
+            flex: 1;
+            padding: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(0,0,0,0.3);
+            color: #fff;
+            border-radius: 10px;
+            font-size: 1rem;
+        }
+
+        .manual-input button {
+            padding: 15px 30px;
+            background: #e94560;
+            border: none;
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎤 Harvis OS Voice Control</h1>
+        <p class="subtitle">Di un comando y Harvis lo ejecutará por ti</p>
+
+        <div class="manual-input">
+            <input type="password" id="apiKey" placeholder="API Key (VOICE_API_TOKEN)">
+            <button onclick="saveApiKey()">Guardar</button>
+        </div>
+
+        <div class="duration-selector">
+            <button class="duration-btn active" data-duration="3">3s</button>
+            <button class="duration-btn" data-duration="5">5s</button>
+            <button class="duration-btn" data-duration="10">10s</button>
+        </div>
+
+        <button class="mic-button" id="micButton">
+            <span class="mic-icon">🎤</span>
+        </button>
+
+        <div class="status" id="status">Listo para escuchar</div>
+
+        <div class="manual-input">
+            <input type="text" id="manualInput" placeholder="O escribe tu comando aquí...">
+            <button onclick="sendManualCommand()">Enviar</button>
+        </div>
+
+        <div class="transcript">
+            <h3>📝 Último comando:</h3>
+            <p id="transcriptText">Esperando...</p>
+        </div>
+
+        <h3 style="margin-bottom: 15px;">📋 Comandos disponibles:</h3>
+        <div class="commands">
+            <div class="command-card" onclick="quickCommand('abrir terminal')">
+                <h4>💻 Abrir Terminal</h4>
+                <p>Abre una nueva terminal</p>
+            </div>
+            <div class="command-card" onclick="quickCommand('listar archivos')">
+                <h4>📁 Listar Archivos</h4>
+                <p>Muestra archivos del directorio</p>
+            </div>
+            <div class="command-card" onclick="quickCommand('ver estado')">
+                <h4>📊 Ver Estado</h4>
+                <p>Estado del sistema</p>
+            </div>
+            <div class="command-card" onclick="quickCommand('test')">
+                <h4>🧪 Ejecutar Tests</h4>
+                <p>Corre la suite de tests</p>
+            </div>
+            <div class="command-card" onclick="quickCommand('commit cambios')">
+                <h4>📝 Commit</h4>
+                <p>Guarda cambios en git</p>
+            </div>
+            <div class="command-card" onclick="quickCommand('deploy')">
+                <h4>🚀 Deploy</h4>
+                <p>Despliega la aplicación</p>
+            </div>
+        </div>
+
+        <div class="log" id="log">
+            <div class="log-entry info">Sistema listo</div>
+        </div>
+    </div>
+
+    <script>
+        let isListening = false;
+        let duration = 3;
+        let mediaRecorder;
+        let audioChunks = [];
+
+        function getApiKey() {
+            return document.getElementById('apiKey').value || sessionStorage.getItem('voice_api_key') || '';
+        }
+
+        function saveApiKey() {
+            const key = document.getElementById('apiKey').value.trim();
+            if (key) sessionStorage.setItem('voice_api_key', key);
+        }
+
+        function authHeaders(extra = {}) {
+            return { ...extra, 'X-API-Key': getApiKey() };
+        }
+
+        // Duration buttons
+        document.querySelectorAll('.duration-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.duration-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                duration = parseInt(btn.dataset.duration);
+            });
+        });
+
+        // Mic button
+        document.getElementById('micButton').addEventListener('click', toggleListening);
+
+        async function toggleListening() {
+            if (isListening) {
+                stopListening();
+            } else {
+                startListening();
+            }
+        }
+
+        async function startListening() {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(stream);
+                audioChunks = [];
+
+                mediaRecorder.ondataavailable = (event) => {
+                    audioChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+                    processAudio(audioBlob);
+                    stream.getTracks().forEach(track => track.stop());
+                };
+
+                mediaRecorder.start();
+                isListening = true;
+
+                document.getElementById('micButton').classList.add('listening');
+                document.getElementById('status').textContent = '🔴 Grabando...';
+
+                setTimeout(() => {
+                    if (isListening) {
+                        stopListening();
+                    }
+                }, duration * 1000);
+
+            } catch (error) {
+                addLog('Error: No se pudo acceder al micrófono', 'error');
+            }
+        }
+
+        function stopListening() {
+            if (mediaRecorder && mediaRecorder.state === 'recording') {
+                mediaRecorder.stop();
+            }
+            isListening = false;
+            document.getElementById('micButton').classList.remove('listening');
+            document.getElementById('status').textContent = 'Procesando...';
+        }
+
+        async function processAudio(audioBlob) {
+            const formData = new FormData();
+            formData.append('audio', audioBlob, 'recording.wav');
+            formData.append('duration', duration);
+
+            try {
+                const response = await fetch('/api/voice/process', {
+                    method: 'POST',
+                    headers: authHeaders(),
+                    body: formData,
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('transcriptText').textContent = result.text;
+                    addLog(`Comando: ${result.command}`, 'info');
+                    addLog(`Resultado: ${result.result}`, 'success');
+                    document.getElementById('status').textContent = '✅ Listo para escuchar';
+                } else {
+                    addLog(`Error: ${result.error}`, 'error');
+                    document.getElementById('status').textContent = '❌ Error procesando audio';
+                }
+
+            } catch (error) {
+                addLog(`Error: ${error.message}`, 'error');
+                document.getElementById('status').textContent = '❌ Error de conexión';
+            }
+        }
+
+        function sendManualCommand() {
+            const input = document.getElementById('manualInput');
+            const text = input.value.trim();
+
+            if (!text) return;
+
+            document.getElementById('transcriptText').textContent = text;
+            addLog(`Comando manual: ${text}`, 'info');
+
+            fetch('/api/voice/command', {
+                method: 'POST',
+                headers: authHeaders({ 'Content-Type': 'application/json' }),
+                body: JSON.stringify({ text }),
+            })
+            .then(r => r.json())
+            .then(result => {
+                if (result.success) {
+                    addLog(`Resultado: ${result.result}`, 'success');
+                } else {
+                    addLog(`Error: ${result.error}`, 'error');
+                }
+            });
+
+            input.value = '';
+        }
+
+        function quickCommand(text) {
+            document.getElementById('transcriptText').textContent = text;
+            addLog(`Comando rápido: ${text}`, 'info');
+
+            fetch('/api/voice/command', {
+                method: 'POST',
+                headers: authHeaders({ 'Content-Type': 'application/json' }),
+                body: JSON.stringify({ text }),
+            })
+            .then(r => r.json())
+            .then(result => {
+                if (result.success) {
+                    addLog(`Resultado: ${result.result}`, 'success');
+                } else {
+                    addLog(`Error: ${result.error}`, 'error');
+                }
+            });
+        }
+
+        function addLog(message, type) {
+            const log = document.getElementById('log');
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            log.insertBefore(entry, log.firstChild);
+        }
+
+        // Enter key para input manual
+        document.getElementById('manualInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendManualCommand();
+            }
+        });
+    </script>
+</body>
+</html>

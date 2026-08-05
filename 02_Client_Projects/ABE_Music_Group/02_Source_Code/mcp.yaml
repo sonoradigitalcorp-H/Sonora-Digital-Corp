@@ -1,0 +1,17 @@
+mcp_servers:
+  - name: calendar
+    type: local
+    config:
+      provider: google
+      credentials_ref: abe_gcal_creds
+
+  - name: crm
+    type: http
+    url: "https://crm.abe-music.mcp/mcp"
+    auth: bearer_token_ref
+    credentials_ref: abe_crm_token
+
+  - name: telegram
+    type: local
+    config:
+      credentials_ref: abe_telegram_bot_token

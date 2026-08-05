@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonora Digital Corp — Logros AstroTech</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', sans-serif; background: #0a0a1a; color: #e0e0f0; }
+  .slide { min-height: 100vh; padding: 60px; display: flex; flex-direction: column; justify-content: center; border-bottom: 1px solid #1a1a3a; }
+  h1 { font-size: 3.5em; font-weight: 800; background: linear-gradient(135deg, #7c3aed, #00d4ff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px; }
+  h2 { font-size: 2em; font-weight: 700; color: #7c3aed; margin-bottom: 30px; }
+  h3 { font-size: 1.3em; font-weight: 600; color: #00d4ff; margin-bottom: 10px; }
+  p, li { font-size: 1.1em; line-height: 1.6; color: #b0b0d0; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin: 30px 0; }
+  .card { background: #12122a; border: 1px solid #2a2a4a; border-radius: 12px; padding: 25px; }
+  .card h3 { margin-bottom: 10px; }
+  .badge { display: inline-block; background: #7c3aed33; border: 1px solid #7c3aed; border-radius: 20px; padding: 4px 14px; font-size: 0.8em; color: #a78bfa; margin: 2px; }
+  .stats { display: flex; gap: 30px; margin: 30px 0; flex-wrap: wrap; }
+  .stat { text-align: center; padding: 20px; background: #12122a; border-radius: 12px; min-width: 150px; border: 1px solid #2a2a4a; }
+  .stat .num { font-size: 2.5em; font-weight: 800; color: #00d4ff; }
+  .stat .label { font-size: 0.9em; color: #8888aa; }
+  .tag { display: inline-block; background: #00d4ff22; border: 1px solid #00d4ff44; border-radius: 6px; padding: 3px 10px; font-size: 0.85em; color: #00d4ff; margin: 3px; }
+  ul { list-style: none; }
+  ul li::before { content: "▸ "; color: #7c3aed; }
+  .footer { margin-top: auto; text-align: center; color: #5555aa; font-size: 0.9em; }
+</style>
+</head>
+<body>
+
+<div class="slide">
+  <div class="stats">
+    <div class="stat"><div class="num">17</div><div class="label">Skills activas</div></div>
+    <div class="stat"><div class="num">3</div><div class="label">Modelos IA</div></div>
+    <div class="stat"><div class="num">6</div><div class="label">Canales</div></div>
+    <div class="stat"><div class="num">24/7</div><div class="label">Disponibilidad</div></div>
+  </div>
+  <h1>Sonora Digital Corp</h1>
+  <p style="font-size:1.3em; color:#8888cc;">Arquitectura completa desplegada para <strong style="color:#00d4ff;">AstroTech</strong></p>
+  <p style="margin-top:20px;">Mystic · Ingeniero SDC · Julio 2026</p>
+</div>
+
+<div class="slide">
+  <h2>¿Qué logramos?</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>🤖 Bot Inteligente</h3>
+      <p>Router automático DeepSeek V4 Flash → GLM-5.2 → Kimi K2.7 Code. Cada tarea al mejor modelo.</p>
+      <div><span class="tag">DeepSeek</span><span class="tag">GLM-5.2</span><span class="tag">Kimi</span></div>
+    </div>
+    <div class="card">
+      <h3>🧠 RAG Semántico</h3>
+      <p>Knowledge base con Ollama embeddings + búsqueda por similitud coseno. Indexado automático.</p>
+      <div><span class="tag">Ollama</span><span class="tag">nomic-embed</span><span class="tag">Qdrant</span></div>
+    </div>
+    <div class="card">
+      <h3>🎤 Voz Clonada</h3>
+      <p>Qwen3-TTS con clon de voz. STT → LLM → TTS pipeline en tiempo real.</p>
+      <div><span class="tag">Qwen3-TTS</span><span class="tag">Wav2Lip</span></div>
+    </div>
+    <div class="card">
+      <h3>📊 CRM + Calendar</h3>
+      <p>Scoring de leads, pipeline de ventas, agendamiento automático con disponibilidad.</p>
+      <div><span class="tag">CRM</span><span class="tag">Booking</span></div>
+    </div>
+    <div class="card">
+      <h3>📱 Multi-canal</h3>
+      <p>Telegram + WhatsApp + Web. Gateway unificado vía OpenClaw MCP.</p>
+      <div><span class="tag">Telegram</span><span class="tag">WhatsApp</span><span class="tag">OpenClaw</span></div>
+    </div>
+    <div class="card">
+      <h3>🎨 Imagen + Video</h3>
+      <p>FAL Flux para imágenes, Wav2Lip para lipsync, FFmpeg para formato redes sociales.</p>
+      <div><span class="tag">FAL AI</span><span class="tag">FFmpeg</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="slide">
+  <h2>Stack tecnológico</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Modelos</h3>
+      <p><strong>Default:</strong> DeepSeek V4 Flash ($0.14/M)<br>
+      <strong>Razonamiento:</strong> GLM-5.2 Z.ai ($0.77/M)<br>
+      <strong>Premium:</strong> Kimi K2.7 Code ($0.73/M)<br>
+      <strong>Embeddings:</strong> Ollama nomic-embed-text (local)</p>
+    </div>
+    <div class="card">
+      <h3>Infraestructura</h3>
+      <p><strong>Gateway:</strong> OpenClaw (:18789)<br>
+      <strong>VPS:</strong> OVH 149.56.46.173<br>
+      <strong>Vector DB:</strong> Qdrant + Neo4j<br>
+      <strong>Storage:</strong> MinIO S3<br>
+      <strong>API:</strong> OpenRouter</p>
+    </div>
+    <div class="card">
+      <h3>Skills instaladas</h3>
+      <p>rag · voice · crm · calendar · marketing · realtime-voice · sales-flow · support-flow</p>
+    </div>
+  </div>
+</div>
+
+<div class="slide">
+  <h2>Arquitectura</h2>
+  <pre style="background:#0a0a1a; border:1px solid #2a2a4a; border-radius:8px; padding:20px; font-size:0.9em; color:#88aacc; overflow-x:auto;">
+Usuario → Telegram/WhatsApp
+        │
+        ▼
+  ┌──────────────┐
+  │   Router     │ ← Elige modelo según intención
+  │  Inteligente │
+  └──────┬───────┘
+         │
+    ┌────┴────┬──────────┐
+    ▼         ▼          ▼
+ DeepSeek   GLM-5.2   K2.7 Code
+ Flash      (razona)   (codigo)
+ (80%)      (15%)      (5%)
+    │         │          │
+    └────┬────┴──────────┘
+         ▼
+  ┌──────────────┐
+  │  Ollama      │ ← Embeddings locales
+  │  nomic-embed │
+  └──────┬───────┘
+         ▼
+  ┌──────────────┐
+  │  Qdrant/Neo4j│ ← Memoria persistente
+  └──────────────┘
+  </pre>
+</div>
+
+<div class="slide">
+  <h2>Métricas del proyecto</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>📁 Archivos creados</h3>
+      <p style="font-size:2.5em; font-weight:800; color:#00d4ff;">40+</p>
+      <p>entre configs, skills, handlers, prompts, knowledge</p>
+    </div>
+    <div class="card">
+      <h3>🔧 Skills operativas</h3>
+      <p style="font-size:2.5em; font-weight:800; color:#7c3aed;">8</p>
+      <p>rag · voice · crm · calendar · marketing · realtime-voice · sales · support</p>
+    </div>
+    <div class="card">
+      <h3>🌐 Canales</h3>
+      <p style="font-size:2.5em; font-weight:800; color:#00d4ff;">3+</p>
+      <p>Telegram, WhatsApp, Web, Voz</p>
+    </div>
+  </div>
+</div>
+
+<div class="slide">
+  <h2>Próximos pasos</h2>
+  <ul>
+    <li>Desplegar en VPS con <code>make deploy</code></li>
+    <li>Configurar n8n workflows para automatización</li>
+    <li>Integrar Qdrant + Neo4j para memoria persistente</li>
+    <li>Activar pipeline de voz en tiempo real</li>
+    <li>Panel de monitoreo y analytics</li>
+    <li>Onboarding de nuevos clientes sobre la misma arquitectura</li>
+  </ul>
+  <div style="margin-top:40px; padding:20px; background:#12122a; border-radius:12px; border:1px solid #7c3aed44;">
+    <p style="text-align:center;"><strong>Sonora Digital Corp</strong> — Infraestructura IA para negocios</p>
+    <p style="text-align:center; color:#8888aa;">Mystic · Ingeniero de plataforma</p>
+  </div>
+</div>
+
+</body>
+</html>

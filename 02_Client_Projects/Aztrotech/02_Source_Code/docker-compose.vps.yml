@@ -1,0 +1,104 @@
+# docker-compose.vps.yml — VPS Production Override
+# NOTA: sonora-mcp-gateway corre como systemd service (no Docker)
+# para no competir por el puerto 18989.
+
+x-common-env: &common-env
+  NEO4J_URI: bolt://sdc-neo4j:7687
+  NEO4J_PASSWORD: ${NEO4J_PASSWORD}
+  QDRANT_HOST: sdc-qdrant
+  QDRANT_PORT: 6333
+  REDIS_HOST: sdc-redis
+  REDIS_PASSWORD: ${REDIS_PASSWORD}
+  POSTGRES_HOST: sdc-postgres
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  OPENROUTER_API_KEY: ${OPENROUTER_API_KEY}
+  MERCADO_PAGO_ACCESS_TOKEN: ${MERCADO_PAGO_ACCESS_TOKEN}
+  SONORA_CLIENT_ID: sdc-core
+  SONORA_CLIENT_SECRET: ${SONORA_CLIENT_SECRET}
+
+services:
+  # Infraestructura de datos
+  postgres:
+    extends:
+      file: docker-compose.yml
+      service: postgres
+
+  redis:
+    extends:
+      file: docker-compose.yml
+      service: redis
+
+  neo4j:
+    extends:
+      file: docker-compose.yml
+      service: neo4j
+
+  qdrant:
+    extends:
+      file: docker-compose.yml
+      service: qdrant
+
+  mcp-server:
+    extends:
+      file: docker-compose.yml
+      service: mcp-server
+
+  n8n:
+    extends:
+      file: docker-compose.yml
+      service: n8n
+
+  telegram-bot:
+    extends:
+      file: docker-compose.yml
+      service: telegram-bot
+
+  langfuse:
+    extends:
+      file: docker-compose.yml
+      service: langfuse
+
+  langfuse-db:
+    extends:
+      file: docker-compose.yml
+      service: langfuse-db
+
+  openclaw:
+    build: ./openclaw
+    container_name: sdc-openclaw
+    ports:
+      - "127.0.0.1:18789:18789"
+    volumes:
+      - openclaw_data:/root/.openclaw
+    restart: unless-stopped
+    networks:
+      - sdc-network
+
+  hermes:
+    image: nousresearch/hermes-agent:latest
+    container_name: sdc-hermes
+    network_mode: host
+    environment:
+      - HERMES_UID=1000
+      - HERMES_GID=1000
+      - API_SERVER_HOST=127.0.0.1
+      - API_SERVER_KEY=${HERMES_API_KEY}
+    volumes:
+      - hermes_data:/opt/data
+    restart: unless-stopped
+
+networks:
+  sdc-network:
+    external: true
+
+volumes:
+  pg_data:
+  redis_data:
+  neo4j_data:
+  neo4j_logs:
+  qdrant_storage:
+  qdrant_snapshots:
+  n8n_data:
+  langfuse_data:
+  openclaw_data:
+  hermes_data:
