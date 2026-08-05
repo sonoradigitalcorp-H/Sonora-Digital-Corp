@@ -1332,3 +1332,93 @@ tenants:
   total_calls: 0
   total_duration_min: 0
   voice: es-MX-DaliaNeural
+- ab_variant: A
+  company: Smoke Corp
+  first_contact: '2026-08-04T05:27:45.087063'
+  id: tenant_db2768b1
+  last_call: null
+  lead_type: cold
+  name: Smoke Test
+  niche: general
+  phone: '+520000000000'
+  plan: trial
+  skills:
+  - support
+  source: e2e_test
+  status: active
+  tier: lead
+  total_calls: 0
+  total_duration_min: 0
+  voice: es-MX-DaliaNeural
+- ab_variant: A
+  company: Test Corp
+  first_contact: '2026-08-04T05:27:52.770617'
+  id: tenant_4c0fff2a
+  last_call: null
+  lead_type: cold
+  name: Test User
+  niche: general
+  phone: '+52123456789'
+  plan: trial
+  skills:
+  - support
+  source: inbound_call
+  status: active
+  tier: lead
+  total_calls: 0
+  total_duration_min: 0
+  voice: es-MX-DaliaNeural
+- ab_variant: A
+  company: New Co
+  first_contact: '2026-08-04T05:27:56.217154'
+  id: tenant_ed669d6f
+  last_call: null
+  lead_type: cold
+  name: New Lead
+  niche: general
+  phone: ''
+  plan: trial
+  skills:
+  - support
+  source: inbound_call
+  status: active
+  tier: lead
+  total_calls: 0
+  total_duration_min: 0
+  voice: es-MX-DaliaNeural
+- ab_variant: A
+  company: Warm Co
+  first_contact: '2026-08-04T05:27:59.827255'
+  id: tenant_70a7256a
+  last_call: null
+  lead_type: cold
+  name: Warm Lead
+  niche: general
+  phone: ''
+  plan: trial
+  skills:
+  - support
+  source: inbound_call
+  status: active
+  tier: lead
+  total_calls: 0
+  total_duration_min: 0
+  voice: es-MX-DaliaNeural
+- ab_variant: A
+  company: Hot Co
+  first_contact: '2026-08-04T05:28:01.898764'
+  id: tenant_d94e8697
+  last_call: null
+  lead_type: cold
+  name: Hot Client
+  niche: general
+  phone: ''
+  plan: trial
+  skills:
+  - support
+  source: inbound_call
+  status: active
+  tier: lead
+  total_calls: 0
+  total_duration_min: 0
+  voice: es-MX-DaliaNeural

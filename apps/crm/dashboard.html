@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDC CRM — Leads, Conversaciones, Llamadas</title>
+<style>
+:root{--p:#1a237e;--s:#00bcd4;--bg:#0b1026;--card:#141b38;--line:#2a3566;--txt:#e6e9f5;--muted:#8b93b8;--ok:#12d18e;--warn:#f5a623;--err:#ff5a5a;--hot:#ff4444;--warm:#ffaa00;--cold:#4488ff;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--txt);font-family:'Segoe UI',system-ui,sans-serif;height:100vh;display:flex;flex-direction:column}
+header{padding:12px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+header .logo{font-size:1.1rem;font-weight:700}
+header .logo b{color:var(--s)}
+.stats{display:flex;gap:12px;margin-left:auto}
+.stat{text-align:center;padding:4px 12px;background:var(--card);border-radius:8px;border:1px solid var(--line)}
+.stat .num{font-size:1.1rem;font-weight:700;color:var(--s)}
+.stat .lbl{font-size:.6rem;color:var(--muted);text-transform:uppercase}
+main{display:flex;flex:1;overflow:hidden}
+.sidebar{width:340px;border-right:1px solid var(--line);display:flex;flex-direction:column;overflow:hidden}
+.sidebar-header{padding:10px 14px;border-bottom:1px solid var(--line);display:flex;gap:8px}
+.sidebar-header input{flex:1;background:#0b1026;border:1px solid var(--line);border-radius:6px;padding:7px 10px;color:var(--txt);font-size:.82rem;outline:none}
+.sidebar-header input:focus{border-color:var(--s)}
+.filters{display:flex;gap:4px;padding:6px 14px;border-bottom:1px solid var(--line)}
+.filter{padding:4px 10px;border-radius:12px;font-size:.7rem;border:1px solid var(--line);background:transparent;color:var(--muted);cursor:pointer}
+.filter.active{background:var(--s);color:#000;border-color:var(--s)}
+.filter.hot{border-color:var(--hot)}
+.filter.warm{border-color:var(--warm)}
+.filter.cold{border-color:var(--cold)}
+.leads{flex:1;overflow-y:auto}
+.lead{padding:10px 14px;border-bottom:1px solid var(--line);cursor:pointer;display:flex;gap:10px;align-items:center}
+.lead:hover{background:rgba(0,188,212,.05)}
+.lead.selected{background:rgba(0,188,212,.1);border-left:3px solid var(--s)}
+.lead .avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;color:#fff;flex-shrink:0}
+.lead .avatar.hot{background:var(--hot)}.lead .avatar.warm{background:var(--warm)}.lead .avatar.cold{background:var(--cold)}
+.lead .info{flex:1;min-width:0}
+.lead .name{font-size:.82rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lead .preview{font-size:.7rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lead .meta{text-align:right;flex-shrink:0}
+.lead .time{font-size:.6rem;color:var(--muted)}
+.lead .badge{font-size:.55rem;padding:2px 6px;border-radius:8px;margin-top:2px;display:inline-block}
+.lead .badge.hot{background:rgba(255,68,68,.2);color:var(--hot)}
+.lead .badge.warm{background:rgba(255,170,0,.2);color:var(--warm)}
+.lead .badge.cold{background:rgba(68,136,255,.2);color:var(--cold)}
+.detail{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.detail-header{padding:12px 20px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:14px}
+.detail-header h2{font-size:1rem;font-weight:600}
+.detail-header .lead-info{font-size:.75rem;color:var(--muted)}
+.detail-tabs{display:flex;border-bottom:1px solid var(--line)}
+.tab{padding:8px 16px;font-size:.78rem;cursor:pointer;border-bottom:2px solid transparent;color:var(--muted)}
+.tab.active{color:var(--s);border-bottom-color:var(--s)}
+.tab-content{flex:1;overflow-y:auto;padding:14px 20px}
+.message{margin-bottom:10px;max-width:80%}
+.message.inbound{margin-right:auto}
+.message.outbound{margin-left:auto}
+.message .bubble{padding:8px 12px;border-radius:12px;font-size:.82rem;line-height:1.4}
+.message.inbound .bubble{background:var(--card);border:1px solid var(--line)}
+.message.outbound .bubble{background:var(--p);color:#fff}
+.message .msg-meta{font-size:.6rem;color:var(--muted);margin-top:2px;padding:0 4px}
+.call-item{padding:10px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px}
+.call-item .call-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.call-item .call-header .dir{font-weight:600;font-size:.82rem}
+.call-item .call-header .dur{font-size:.7rem;color:var(--muted)}
+.call-item .call-summary{font-size:.75rem;color:var(--muted);margin-bottom:6px}
+.call-item audio{width:100%;height:32px;border-radius:6px}
+.call-item .transcript{font-size:.72rem;color:var(--muted);max-height:100px;overflow-y:auto;margin-top:6px;padding:6px;background:#0b1026;border-radius:6px}
+.deal-card{padding:10px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px}
+.deal-card .deal-title{font-weight:600;font-size:.85rem}
+.deal-card .deal-value{color:var(--s);font-size:1rem;font-weight:700}
+.deal-card .deal-stage{font-size:.7rem;padding:3px 8px;border-radius:8px;display:inline-block;margin-top:4px}
+.deal-card .deal-stage.prospecting{background:rgba(68,136,255,.2);color:var(--cold)}
+.deal-card .deal-stage.qualification{background:rgba(255,170,0,.2);color:var(--warm)}
+.deal-card .deal-stage.proposal{background:rgba(0,188,212,.2);color:var(--s)}
+.deal-card .deal-stage.negotiation{background:rgba(255,68,68,.2);color:var(--hot)}
+.deal-card .deal-stage.closed_won{background:rgba(18,209,142,.2);color:var(--ok)}
+.deal-card .deal-stage.closed_lost{background:rgba(255,68,68,.1);color:var(--err)}
+.empty{display:flex;align-items:center;justify-content:center;height:100%;color:var(--muted);font-size:.85rem}
+.add-btn{position:fixed;bottom:20px;right:20px;width:48px;height:48px;border-radius:50%;background:var(--s);color:#000;border:none;font-size:1.5rem;cursor:pointer;box-shadow:0 4px 12px rgba(0,188,212,.3)}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;align-items:center;justify-content:center}
+.modal.show{display:flex}
+.modal-content{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;width:400px;max-width:90vw}
+.modal-content h3{margin-bottom:14px;font-size:1rem}
+.modal-content label{display:block;font-size:.75rem;color:var(--muted);margin-bottom:4px;margin-top:10px}
+.modal-content input,.modal-content select,.modal-content textarea{width:100%;background:#0b1026;border:1px solid var(--line);border-radius:6px;padding:8px 10px;color:var(--txt);font-size:.82rem;outline:none}
+.modal-content textarea{height:60px;resize:vertical}
+.modal-content .btn-row{display:flex;gap:8px;margin-top:16px;justify-content:flex-end}
+.modal-content button{padding:8px 16px;border-radius:6px;border:none;cursor:pointer;font-size:.8rem}
+.btn-primary{background:var(--s);color:#000}.btn-cancel{background:transparent;border:1px solid var(--line);color:var(--muted)}
+footer{padding:6px 20px;border-top:1px solid var(--line);font-size:.65rem;color:var(--muted);text-align:center}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">SDC <b>CRM</b></div>
+  <div class="stats" id="stats"></div>
+</header>
+<main>
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <input id="search" placeholder="Buscar lead..." oninput="filterLeads()">
+    </div>
+    <div class="filters">
+      <button class="filter active" onclick="setTypeFilter('all',this)">Todos</button>
+      <button class="filter hot" onclick="setTypeFilter('hot',this)">🔥 Hot</button>
+      <button class="filter warm" onclick="setTypeFilter('warm',this)">⚡ Warm</button>
+      <button class="filter cold" onclick="setTypeFilter('cold',this)">❄️ Cold</button>
+    </div>
+    <div class="leads" id="leads-list"></div>
+  </div>
+  <div class="detail" id="detail">
+    <div class="empty" id="empty-state">Selecciona un lead para ver conversaciones, llamadas y deals</div>
+  </div>
+</main>
+<button class="add-btn" onclick="showAddModal()">+</button>
+<div class="modal" id="add-modal">
+  <div class="modal-content">
+    <h3>Nuevo Lead</h3>
+    <label>Nombre *</label><input id="f-name" placeholder="Nombre completo">
+    <label>Teléfono</label><input id="f-phone" placeholder="+52...">
+    <label>Email</label><input id="f-email" placeholder="email@...">
+    <label>Empresa</label><input id="f-company" placeholder="Empresa">
+    <label>Rol</label><input id="f-role" placeholder="Gerente, CEO...">
+    <label>Tipo</label>
+    <select id="f-type"><option value="cold">❄️ Cold</option><option value="warm">⚡ Warm</option><option value="hot">🔥 Hot</option></select>
+    <label>Fuente</label>
+    <select id="f-source"><option value="manual">Manual</option><option value="whatsapp">WhatsApp</option><option value="telegram">Telegram</option><option value="web">Web</option><option value="referral">Referido</option></select>
+    <label>Notas</label><textarea id="f-notes" placeholder="Info relevante..."></textarea>
+    <div class="btn-row">
+      <button class="btn-cancel" onclick="hideAddModal()">Cancelar</button>
+      <button class="btn-primary" onclick="createContact()">Crear Lead</button>
+    </div>
+  </div>
+</div>
+<footer>SDC CRM v1.0 · SQLite + FastAPI · Sonora Digital Corp</footer>
+
+<script>
+const API = '';
+let allContacts = [];
+let currentFilter = 'all';
+let selectedId = null;
+
+async function loadStats() {
+  const r = await fetch(`${API}/api/stats`);
+  const s = await r.json();
+  document.getElementById('stats').innerHTML = `
+    <div class="stat"><div class="num">${s.contacts}</div><div class="lbl">Leads</div></div>
+    <div class="stat"><div class="num" style="color:var(--hot)">${s.hot_leads}</div><div class="lbl">Hot</div></div>
+    <div class="stat"><div class="num" style="color:var(--warm)">${s.warm_leads}</div><div class="lbl">Warm</div></div>
+    <div class="stat"><div class="num">${s.interactions}</div><div class="lbl">Interacciones</div></div>
+    <div class="stat"><div class="num">${s.calls}</div><div class="lbl">Llamadas</div></div>
+    <div class="stat"><div class="num" style="color:var(--ok)">$${s.pipeline_value.toLocaleString()}</div><div class="lbl">Pipeline</div></div>
+  `;
+}
+
+async function loadContacts() {
+  const r = await fetch(`${API}/api/contacts?limit=100`);
+  const d = await r.json();
+  allContacts = d.contacts;
+  renderLeads();
+}
+
+function renderLeads() {
+  const search = document.getElementById('search').value.toLowerCase();
+  let filtered = allContacts.filter(c => {
+    if (currentFilter !== 'all' && c.lead_type !== currentFilter) return false;
+    if (search && !c.name.toLowerCase().includes(search) && !(c.company||'').toLowerCase().includes(search) && !(c.phone||'').includes(search)) return false;
+    return true;
+  });
+  const el = document.getElementById('leads-list');
+  if (!filtered.length) { el.innerHTML = '<div class="empty" style="height:100px">No hay leads</div>'; return; }
+  el.innerHTML = filtered.map(c => `
+    <div class="lead ${selectedId===c.id?'selected':''}" onclick="selectLead(${c.id})">
+      <div class="avatar ${c.lead_type}">${c.name.charAt(0).toUpperCase()}</div>
+      <div class="info">
+        <div class="name">${esc(c.name)}</div>
+        <div class="preview">${esc(c.company||c.phone||c.notes||'Sin info')}</div>
+      </div>
+      <div class="meta">
+        <div class="badge ${c.lead_type}">${c.lead_type.toUpperCase()}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterLeads() { renderLeads(); }
+function setTypeFilter(type, btn) {
+  currentFilter = type;
+  document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderLeads();
+}
+
+async function selectLead(id) {
+  selectedId = id;
+  renderLeads();
+  const r = await fetch(`${API}/api/contacts/${id}`);
+  const c = await r.json();
+  const detail = document.getElementById('detail');
+  document.getElementById('empty-state')?.remove();
+  detail.innerHTML = `
+    <div class="detail-header">
+      <div class="avatar ${c.lead_type}" style="width:42px;height:42px;font-size:1rem">${c.name.charAt(0)}</div>
+      <div>
+        <h2>${esc(c.name)}</h2>
+        <div class="lead-info">${esc(c.company||'')} · ${esc(c.role||'')} · ${esc(c.phone||c.email||'')}</div>
+        <div class="lead-info">Score: ${c.lead_score} · Source: ${c.source} · ${c.lead_type.toUpperCase()}</div>
+      </div>
+    </div>
+    <div class="detail-tabs">
+      <div class="tab active" onclick="showTab('conversations',this)">💬 Conversaciones (${c.interactions?.length||0})</div>
+      <div class="tab" onclick="showTab('calls',this)">📞 Llamadas (${c.calls?.length||0})</div>
+      <div class="tab" onclick="showTab('deals',this)">💰 Deals (${c.deals?.length||0})</div>
+      <div class="tab" onclick="showTab('activity',this)">📋 Actividad</div>
+    </div>
+    <div class="tab-content" id="tab-content">
+      ${renderConversations(c.interactions||[])}
+    </div>
+  `;
+  window._currentContact = c;
+}
+
+function showTab(tab, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const c = window._currentContact;
+  const tc = document.getElementById('tab-content');
+  if (tab === 'conversations') tc.innerHTML = renderConversations(c.interactions||[]);
+  else if (tab === 'calls') tc.innerHTML = renderCalls(c.calls||[]);
+  else if (tab === 'deals') tc.innerHTML = renderDeals(c.deals||[]);
+  else if (tab === 'activity') tc.innerHTML = renderActivity(c.activity||[]);
+}
+
+function renderConversations(items) {
+  if (!items.length) return '<div class="empty" style="height:100px">Sin conversaciones</div>';
+  return items.map(i => `
+    <div class="message ${i.direction}">
+      <div class="bubble">${esc(i.content||'[media]')}</div>
+      <div class="msg-meta">${i.channel} · ${i.direction} · ${fmt(i.created_at)} ${i.sentiment?'· '+i.sentiment:''}</div>
+    </div>
+  `).join('');
+}
+
+function renderCalls(items) {
+  if (!items.length) return '<div class="empty" style="height:100px">Sin llamadas</div>';
+  return items.map(c => `
+    <div class="call-item">
+      <div class="call-header">
+        <span class="dir">${c.direction==='inbound'?'📥 Entrante':'📤 Saliente'}</span>
+        <span class="dur">${c.duration_seconds?Math.round(c.duration_seconds)+'s':'—'} · ${c.outcome||'?'}</span>
+      </div>
+      ${c.summary?`<div class="call-summary">${esc(c.summary)}</div>`:''}
+      ${c.recording_url?`<audio controls src="${c.recording_url}"></audio>`:''}
+      ${c.transcript?`<div class="transcript">${esc(c.transcript)}</div>`:''}
+      <div class="msg-meta">${fmt(c.created_at)}</div>
+    </div>
+  `).join('');
+}
+
+function renderDeals(items) {
+  if (!items.length) return '<div class="empty" style="height:100px">Sin deals</div>';
+  return items.map(d => `
+    <div class="deal-card">
+      <div class="deal-title">${esc(d.title)}</div>
+      <div class="deal-value">$${d.value.toLocaleString()} ${d.currency}</div>
+      <span class="deal-stage ${d.stage}">${d.stage.replace('_',' ')}</span>
+      ${d.probability?`<span style="font-size:.7rem;color:var(--muted);margin-left:8px">${d.probability}%</span>`:''}
+      ${d.expected_close?`<div style="font-size:.7rem;color:var(--muted);margin-top:4px">Close: ${d.expected_close}</div>`:''}
+    </div>
+  `).join('');
+}
+
+function renderActivity(items) {
+  if (!items.length) return '<div class="empty" style="height:100px">Sin actividad</div>';
+  return items.map(a => `
+    <div style="padding:6px 0;border-bottom:1px solid var(--line);font-size:.78rem">
+      <span style="color:var(--s)">${a.action}</span> — ${esc(a.description||'')} <span style="color:var(--muted)">${fmt(a.created_at)}</span>
+    </div>
+  `).join('');
+}
+
+function showAddModal() { document.getElementById('add-modal').classList.add('show'); }
+function hideAddModal() { document.getElementById('add-modal').classList.remove('show'); }
+
+async function createContact() {
+  const data = {
+    name: document.getElementById('f-name').value,
+    phone: document.getElementById('f-phone').value || null,
+    email: document.getElementById('f-email').value || null,
+    company: document.getElementById('f-company').value || null,
+    role: document.getElementById('f-role').value || null,
+    lead_type: document.getElementById('f-type').value,
+    source: document.getElementById('f-source').value,
+    notes: document.getElementById('f-notes').value || null
+  };
+  if (!data.name) { alert('Nombre requerido'); return; }
+  await fetch(`${API}/api/contacts`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(data)});
+  hideAddModal();
+  loadContacts(); loadStats();
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-phone').value = '';
+  document.getElementById('f-email').value = '';
+  document.getElementById('f-company').value = '';
+  document.getElementById('f-role').value = '';
+  document.getElementById('f-notes').value = '';
+}
+
+function esc(s) { const d = document.createElement('div'); d.textContent = s||''; return d.innerHTML; }
+function fmt(dt) { if (!dt) return ''; try { return new Date(dt).toLocaleString('es-MX',{month:'short',day:'numeric',hour:'2-digit',minute:'2-digit'}); } catch { return dt; } }
+
+loadStats(); loadContacts();
+</script>
+</body>
+</html>

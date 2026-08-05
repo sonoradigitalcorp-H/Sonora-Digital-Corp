@@ -239,6 +239,30 @@
       "resolution": "no_resuelto",
       "objections": [],
       "lead_score_change": 0
+    },
+    {
+      "date": "2026-08-04T04:45:46.168020",
+      "duration_sec": 5,
+      "summary": "Llamada de 5s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
+    },
+    {
+      "date": "2026-08-04T04:46:18.226698",
+      "duration_sec": 5,
+      "summary": "Llamada de 5s con Desconocido. Revisar transcripción para detalles.",
+      "action_items": [
+        "Revisar transcripción completa"
+      ],
+      "sentiment": "neutral",
+      "resolution": "no_resuelto",
+      "objections": [],
+      "lead_score_change": 0
     }
   ]
 }

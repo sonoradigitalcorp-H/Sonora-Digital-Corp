@@ -295,6 +295,10 @@ async def ws_handler(request):
 
 
 async def index(request):
+    # Serve the SDC marketing page (web/index.html) at root
+    mkt_path = os.path.join(ROOT, "web", "index.html")
+    if os.path.exists(mkt_path):
+        return web.FileResponse(mkt_path)
     return web.FileResponse(os.path.join(WEB_DIR, "index.html"))
 
 async def legacy_call(request):

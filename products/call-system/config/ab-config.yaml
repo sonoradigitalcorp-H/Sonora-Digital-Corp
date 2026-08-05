@@ -3,8 +3,8 @@ improvement_threshold: 5
 min_samples_for_decision: 10
 variants:
   A:
-    avg_score: 52.0
-    count: 53
+    avg_score: 51.4
+    count: 58
     description: 'Control: prompt original'
     results:
     - 85
@@ -59,6 +59,11 @@ variants:
     - 40
     - 55
     - 55
+    - 85
+    - 35
+    - 35
+    - 35
+    - 35
     - 85
     weight: 34
   B:
