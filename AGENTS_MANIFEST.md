@@ -37,3 +37,8 @@ El agente "Hermes" (Nous Research) actúa como el cerebro orquestador.
 - Configuración: `01_Core_Platform/03_Agentic_Infrastructure/Hermes_Agent/Prompts/system_prompt.md`
 - Herramientas: `01_Core_Platform/03_Agentic_Infrastructure/Hermes_Agent/Tools/`
 Cuando se requiera coordinar múltiples herramientas (ej. transcribir audio, recordar en Engram, y responder por Telegram), Hermes debe ser el modelo utilizado.
+
+### 6. Observabilidad y Seguridad
+- **Telemetry:** Usa `log_agent_action()` del SDK para registrar TODO evento con JSON estructurado.
+- **Security:** Accede a secretos vía `client.get_secret()`. Las políticas RBAC están en `07_Security_and_RBAC/Policies/`.
+- **Graph Dashboard:** El schema de Neo4j para auditoría está en `03_Agentic_Infrastructure/Databases/Neo4j_Graph/graph_schema.md`.

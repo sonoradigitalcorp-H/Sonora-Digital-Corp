@@ -1,0 +1,13 @@
+---
+tenant: "Fourgea_Mexico"
+policies:
+  - resource: "02_Client_Projects/Fourgea_Mexico/*"
+    actions: ["read", "write", "execute"]
+    roles: ["admin", "agent_hermes", "agent_booking"]
+  - resource: "01_Core_Platform/03_Agentic_Infrastructure/Engram_Memory/*"
+    actions: ["search", "save"]
+    roles: ["agent_hermes", "agent_booking"]
+  - resource: "01_Core_Platform/03_Agentic_Infrastructure/Databases/Qdrant_Vector/*"
+    actions: ["query", "insert"]
+    roles: ["agent_hermes"]
+rbac_version: "1.0"
