@@ -1,4 +1,4 @@
-FROM alpine:3.20 AS builder
+FROM alpine:3.24 AS builder
 
 RUN apk add --no-cache curl tar
 RUN curl -sL https://github.com/openclaw/wacli/releases/download/v0.12.0/wacli_0.12.0_linux_amd64.tar.gz \
@@ -6,7 +6,7 @@ RUN curl -sL https://github.com/openclaw/wacli/releases/download/v0.12.0/wacli_0
   tar xzf /tmp/wacli.tar.gz -C /usr/local/bin/ && \
   chmod +x /usr/local/bin/wacli
 
-FROM alpine:3.20
+FROM alpine:3.24
 
 RUN apk add --no-cache ca-certificates tzdata
 
