@@ -1,4 +1,4 @@
-python-telegram-bot>=20.0
+python-telegram-bot>=22.8
 httpx>=0.25
 pyyaml>=6.0
 numpy>=1.24
