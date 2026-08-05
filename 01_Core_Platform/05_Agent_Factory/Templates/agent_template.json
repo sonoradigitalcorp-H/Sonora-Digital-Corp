@@ -1,0 +1,9 @@
+{
+  "agent_name": "new_agent",
+  "client": "default",
+  "llm_model": "hermes",
+  "system_prompt_path": "01_Core_Platform/03_Agentic_Infrastructure/Hermes_Agent/Prompts/system_prompt.md",
+  "tools": ["whisper_stt", "engram_memory"],
+  "interface": "telegram",
+  "deployment_status": "development"
+}
