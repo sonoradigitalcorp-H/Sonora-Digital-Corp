@@ -1,0 +1,22 @@
+{
+  "swarm_name": "Voice Booking Pipeline",
+  "client": "Aztrotech",
+  "agents": [
+    {
+      "role": "Listener",
+      "tool": "whisper_stt",
+      "action": "Transcribe incoming voice note to text"
+    },
+    {
+      "role": "Thinker",
+      "model": "hermes",
+      "tool": "engram_memory",
+      "action": "Analyze text, retrieve client history, decide if booking is possible"
+    },
+    {
+      "role": "Speaker",
+      "tool": "tts_local",
+      "action": "Convert Hermes JSON response back to voice note"
+    }
+  ]
+}
