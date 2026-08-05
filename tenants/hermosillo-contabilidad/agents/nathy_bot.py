@@ -28,7 +28,7 @@ REPO = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO))
 
 # ─── Config ───────────────────────────────────────────────
-TOKEN = os.environ.get("NATHY_BOT_TOKEN", "8269193231:AAF70NVpEMsrP_fePAc_qLdNEsJkBIGUy4g")
+TOKEN = os.environ.get("NATHY_BOT_TOKEN", "NATHY_BOT_TOKEN")
 CHANNEL_ID = os.environ.get("NATHY_CHANNEL_ID", "@NathyConta")
 OPENROUTER_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 LLM_MODEL = "opencode-go/deepseek-v4-flash"

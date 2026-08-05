@@ -20,7 +20,7 @@ import random
 import sys
 from datetime import datetime, time
 
-BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "8825008004:AAFHdxypgGK8LZD0yEH9g0hsCdl2pJmDd8g")
+BOT_TOKEN = os.getenv("TELEGRAM_BOT_TOKEN", "AZTROTECH_BOT_TOKEN")
 CHANNEL_ID = os.getenv("AZTROTECH_CHANNEL_ID", "")
 
 CONTENT_POOL = {

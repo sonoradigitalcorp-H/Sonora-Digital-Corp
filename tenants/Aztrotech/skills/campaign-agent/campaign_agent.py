@@ -12,7 +12,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("campaign-agent")
 
 DB_URL = os.getenv("DATABASE_URL", "postgresql://sdc:sdc_local_dev@localhost:5432/sdc")
-NOTIF_BOT_TOKEN = os.getenv("NOTIF_BOT_TOKEN", "8851813996:AAHwuIwhMlI0GW3FKFQGqcjKXgwI2QpXLK8")
+NOTIF_BOT_TOKEN = os.getenv("NOTIF_BOT_TOKEN", "")
 CESAR_CHAT_ID = "5738935134"
 
 # Message templates by lead type

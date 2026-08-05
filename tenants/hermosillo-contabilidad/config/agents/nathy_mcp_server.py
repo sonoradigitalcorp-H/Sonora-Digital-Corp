@@ -34,7 +34,7 @@ logger = logging.getLogger("nathy.mcp")
 
 app = FastAPI(title="Nathy MCP Server", version="1.0.0")
 
-TOKEN = os.environ.get("NATHY_BOT_TOKEN", "8269193231:AAF70NVpEMsrP_fePAc_qLdNEsJkBIGUy4g")
+TOKEN = os.environ.get("NATHY_BOT_TOKEN", "NATHY_BOT_TOKEN")
 TELEGRAM_API = f"https://api.telegram.org/bot{TOKEN}"
 
 

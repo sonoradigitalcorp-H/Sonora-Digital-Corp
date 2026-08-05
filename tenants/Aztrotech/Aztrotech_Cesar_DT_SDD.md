@@ -30,7 +30,7 @@
 
 ### 3.1 Telegram Bot (`bot.py`)
 - **ID**: @Aztro_tech_bot → @AztrotechCesarDT
-- **Token**: `8825008004:AAE8tfTjAoMS930ozb6FgoJacPhaOS1DzYc`
+- **Token**: `AZTROTECH_BOT_TOKEN`
 - **LLM**: deepseek-v4-flash via opencode.ai/zen/go/v1
 - **TTS**: Qwen3-TTS (voz clonada de César)
 - **RAG**: Obsidian vault indexado en Qdrant

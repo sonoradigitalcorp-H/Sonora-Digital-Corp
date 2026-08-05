@@ -1,6 +1,6 @@
 import os
 
-TOKEN = os.getenv("NATHY_CONTA_TOKEN", "8720440822:AAHAZcdNd1cZg1QI6GB48t27blhe2bkD-Hw")
+TOKEN = os.getenv("NATHY_CONTA_TOKEN", "NATHY_CONTA_TOKEN")
 BOT_USERNAME = "Nathy_Conta_bot"
 
 WEBHOOK_URL = os.getenv("NATHY_CONTA_WEBHOOK_URL", "")

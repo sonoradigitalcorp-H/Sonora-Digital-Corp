@@ -20,7 +20,7 @@ from telegram.ext import Application, CommandHandler, MessageHandler, filters
 REPO = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(REPO))
 
-TOKEN = os.environ.get("NATHY_BOT_TOKEN", "8269193231:AAF70NVpEMsrP_fePAc_qLdNEsJkBIGUy4g")
+TOKEN = os.environ.get("NATHY_BOT_TOKEN", "NATHY_BOT_TOKEN")
 OPENROUTER_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 LLM_MODEL = "opencode-go/deepseek-v4-flash"
 OC_GATEWAY = "http://127.0.0.1:18789"

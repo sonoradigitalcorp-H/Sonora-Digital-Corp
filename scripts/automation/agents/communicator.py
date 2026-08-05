@@ -14,7 +14,7 @@ AGENTS = {
     "openclaw": {"url": "http://localhost:18789", "type": "mcp"},
 
     "n8n": {"url": "http://localhost:5678", "type": "webhook"},
-    "telegram": {"token": "8875376383:AAG4dDoxdUfHqR7oIqW0lC4ygLxfzfg1EMA", "type": "bot"},
+    "telegram": {"token": "COMMUNICATOR_BOT_TOKEN", "type": "bot"},
 }
 
 class AgentOrchestrator:

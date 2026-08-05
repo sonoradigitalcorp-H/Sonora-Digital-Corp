@@ -42,7 +42,7 @@ Si no tienes servidor 24/7:
 ## Tokens de Nuestros Bots
 | Bot | Token | Host |
 |-----|-------|------|
-| Hermes default | 8875376383:AAG4dDoxdUfHqR7oIqW0lC4ygLxfzfg1EMA | localhost:3003 |
+| Hermes default | COMMUNICATOR_BOT_TOKEN | localhost:3003 |
 | Hermes admin | 7654876543:AAFakeAdmin... | localhost:3003 |
 | Hermes abraham | 7654876543:AAFakeAbraham... | localhost:3003 |
 | AzREC | CREAR NUEVO | pendiente |
