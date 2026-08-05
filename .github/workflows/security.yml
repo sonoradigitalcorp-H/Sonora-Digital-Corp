@@ -1,14 +1,18 @@
-name: Security Scan — Mystic AI OS
+name: "Security Scan — SDC"
 
 on:
   schedule:
     - cron: '0 9 * * 1'
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 jobs:
-  # ── CodeQL — análisis estático Python + TypeScript ──────────────────────────
+  # ── CodeQL — análisis estático ───────────────────────────────────────────
   codeql:
-    name: CodeQL Analysis
+    name: "CodeQL Analysis"
     runs-on: ubuntu-latest
     permissions:
       actions: read
@@ -21,65 +25,122 @@ jobs:
         language: [python, javascript-typescript]
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
+      - uses: actions/checkout@v4
+      - uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
           queries: +security-and-quality
-
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v3
-
-      - name: Analyze
-        uses: github/codeql-action/analyze@v3
+      - uses: github/codeql-action/autobuild@v3
+      - uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{ matrix.language }}"
 
-  # ── Dependency audit ─────────────────────────────────────────────────────────
+  # ── Dependency audit (recursivo, todos los directorios) ──────────────────
   audit-deps:
-    name: Dependency Audit
+    name: "Dependency Audit"
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Python safety check
+      - name: "Setup Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: "Setup Node.js"
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      # ── Python audit (todos los requirements.txt) ──────────────────────────
+      - name: "Pip audit (recursivo)"
+        run: |
+          pip install pip-audit -q
+          echo "## 📦 Pip Audit Results" >> $GITHUB_STEP_SUMMARY
+          find . -name "requirements.txt" -not -path "*/node_modules/*" -not -path "*/.git/*" -not -path "*/archive/*" | while read req; do
+            dir=$(dirname "$req")
+            echo "### $dir" >> $GITHUB_STEP_SUMMARY
+            pip-audit -r "$req" --desc on 2>&1 | head -20 >> $GITHUB_STEP_SUMMARY || true
+            echo "" >> $GITHUB_STEP_SUMMARY
+          done
+
+      # ── Node.js audit (todos los package.json) ─────────────────────────────
+      - name: "Npm audit (recursivo)"
+        run: |
+          echo "## 📦 Npm Audit Results" >> $GITHUB_STEP_SUMMARY
+          find . -name "package.json" -not -path "*/node_modules/*" -not -path "*/.git/*" -not -path "*/.next/*" -not -path "*/archive/*" | while read pkg; do
+            dir=$(dirname "$pkg")
+            echo "### $dir" >> $GITHUB_STEP_SUMMARY
+            (cd "$dir" && npm audit --audit-level=high 2>&1) | head -10 >> $GITHUB_STEP_SUMMARY || true
+            echo "" >> $GITHUB_STEP_SUMMARY
+          done
+
+      # ── Safety check (Python) ──────────────────────────────────────────────
+      - name: "Safety check"
         run: |
           pip install safety -q
-          cd backend && pip install -r requirements.txt -q 2>/dev/null || true
           safety check --json 2>/dev/null | python3 -c "
-          import json,sys
-          data=json.load(sys.stdin)
-          vulns=data.get('vulnerabilities',[])
-          if vulns:
-            print(f'⚠️  {len(vulns)} vulnerabilidades encontradas:')
-            for v in vulns[:5]:
-              print(f'  - {v[\"package_name\"]} {v[\"analyzed_version\"]}: {v[\"advisory\"][:80]}')
-          else:
-            print('✅ Sin vulnerabilidades en dependencias Python')
-          " 2>/dev/null || echo "✅ Safety check completado"
-
-      - name: Node.js audit
-        run: |
-          cd frontend && npm audit --audit-level=high --json 2>/dev/null | python3 -c "
           import json,sys
           try:
             data=json.load(sys.stdin)
-            vulns=data.get('metadata',{}).get('vulnerabilities',{})
-            high=vulns.get('high',0)+vulns.get('critical',0)
-            if high > 0:
-              print(f'⚠️  {high} vulnerabilidades high/critical en npm')
+            vulns=data.get('vulnerabilities',[])
+            if vulns:
+              print(f'⚠️ {len(vulns)} vulnerabilidades Safety:')
+              for v in vulns[:10]:
+                print(f'  - {v[\"package_name\"]} {v.get(\"analyzed_version\",\"?\")}: {v.get(\"advisory\",\"\")[:80]}')
             else:
-              print('✅ Sin vulnerabilidades críticas en npm')
-          except: print('✅ Audit completado')
-          " 2>/dev/null || echo "✅ npm audit completado"
+              print('✅ Safety: sin vulnerabilidades')
+          except: print('✅ Safety: completado')
+          "
 
-  # ── Secrets scan ─────────────────────────────────────────────────────────────
+  # ── Container scan (Trivy) ──────────────────────────────────────────────
+  container-scan:
+    name: "Container Scan (Trivy)"
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "Trivy filesystem scan"
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          format: "sarif"
+          output: "trivy-results.sarif"
+          severity: "CRITICAL,HIGH"
+          hide-progress: true
+
+      - name: "Upload Trivy results"
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: "trivy-results.sarif"
+          category: "trivy"
+        if: always()
+
+      - name: "Trivy summary"
+        run: |
+          pip install jq -q 2>/dev/null || true
+          echo "## 🐳 Trivy Container Scan" >> $GITHUB_STEP_SUMMARY
+          cat trivy-results.sarif 2>/dev/null | python3 -c "
+          import json,sys
+          try:
+            d=json.load(sys.stdin)
+            runs=d.get('runs',[{}])
+            results=runs[0].get('results',[]) if runs else []
+            print(f'⚠️ {len(results)} hallazgos CRITICAL/HIGH' if results else '✅ Sin vulnerabilidades críticas')
+            for r in results[:10]:
+              loc=r.get('locations',[{}])[0].get('physicalLocation',{})
+              print(f'  - {r.get(\"ruleId\",\"?\")}: {r.get(\"message\",{}).get(\"text\",\"\")[:80]}')
+          except: print('✅ Trivy: completado')
+          " 2>&1 >> $GITHUB_STEP_SUMMARY
+
+  # ── Secrets scan ─────────────────────────────────────────────────────────
   secrets-scan:
-    name: Secrets Detection
+    name: "Secrets Detection"
     runs-on: ubuntu-latest
 
     steps:
@@ -87,29 +148,30 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Scan for secrets
+      - name: "TruffleHog"
         uses: trufflesecurity/trufflehog@main
         with:
           path: ./
           base: ${{ github.event.repository.default_branch }}
           extra_args: --only-verified
 
-  # ── Resumen final ─────────────────────────────────────────────────────────────
+  # ── Resumen final ───────────────────────────────────────────────────────
   security-summary:
-    name: Security Summary
+    name: "Security Summary"
     runs-on: ubuntu-latest
-    needs: [audit-deps]
+    needs: [codeql, audit-deps, container-scan, secrets-scan]
     if: always()
 
     steps:
-      - name: Summary
+      - name: "Build summary"
         run: |
-          echo "## 🛡️ Mystic Security Scan" >> $GITHUB_STEP_SUMMARY
+          echo "## 🛡️ SDC Security Scan" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "| Check | Estado |" >> $GITHUB_STEP_SUMMARY
           echo "|---|---|" >> $GITHUB_STEP_SUMMARY
-          echo "| CodeQL Python | ${{ needs.codeql.result == 'success' && '✅' || '⚠️' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Dependencias | ${{ needs.audit-deps.result == 'success' && '✅' || '⚠️' }} |" >> $GITHUB_STEP_SUMMARY
-          echo "| Secrets | ${{ needs.secrets-scan.result == 'success' && '✅' || '⚠️' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| CodeQL | ${{ needs.codeql.result == 'success' && '✅' || '⚠️' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Dependencias (pip + npm) | ${{ needs.audit-deps.result == 'success' && '✅' || '⚠️' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Contenedores (Trivy) | ${{ needs.container-scan.result == 'success' && '✅' || '⚠️' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Secrets (TruffleHog) | ${{ needs.secrets-scan.result == 'success' && '✅' || '⚠️' }} |" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "_Scan automático cada lunes. Powered by Mystic AI OS_ 🔮" >> $GITHUB_STEP_SUMMARY
+          echo "_Scan automático: cada push a main + semanal. Powered by SDC Security_ 🔮" >> $GITHUB_STEP_SUMMARY

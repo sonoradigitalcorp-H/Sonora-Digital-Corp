@@ -1,0 +1,74 @@
+name: "Auto-Fix Vulnerabilities"
+
+on:
+  schedule:
+    - cron: '30 9 * * 2'  # martes
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-fix:
+    name: "Auto-Fix Dependency Vulnerabilities"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: "Setup Node.js"
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: "Setup Python"
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: "Npm audit fix (recursivo)"
+        run: |
+          find . -name "package.json" -not -path "*/node_modules/*" -not -path "*/.git/*" -not -path "*/.next/*" | while read pkg; do
+            dir=$(dirname "$pkg")
+            echo "🔧 npm audit fix en: $dir"
+            (cd "$dir" && npm audit fix --force 2>&1 | tail -5) || true
+          done
+
+      - name: "Pip audit fix"
+        run: |
+          pip install pip-audit -q
+          find . -name "requirements.txt" -not -path "*/node_modules/*" -not -path "*/.git/*" | while read req; do
+            dir=$(dirname "$req")
+            echo "🔧 pip audit en: $dir"
+            pip-audit -r "$req" --fix 2>&1 | tail -5 || true
+          done
+
+      - name: "Check for changes"
+        id: changes
+        run: |
+          if ! git diff --quiet; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+          fi
+
+      - name: "Create PR with fixes"
+        if: steps.changes.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          git config user.name "sdc-security-bot"
+          git config user.email "security@sonoradigitalcorp.com"
+          BRANCH="security/auto-fix-$(date +%Y%m%d)"
+          git checkout -b "$BRANCH"
+          git add -A
+          git commit -m "security: auto-fix dependency vulnerabilities [skip ci]" || echo "No changes to commit"
+          git push origin "$BRANCH"
+          gh pr create --base main --head "$BRANCH" \
+            --title "🔒 Auto-fix: vulnerabilidades de dependencias" \
+            --body "Fixes automáticos de vulnerabilidades encontradas por npm audit fix y pip-audit.
+            
+            Revisar antes de mergear si hay breaking changes." || true

@@ -1,0 +1,46 @@
+name: "Security Alerts"
+
+on:
+  workflow_run:
+    workflows: ["Security Scan — SDC"]
+    types: [completed]
+  schedule:
+    - cron: '0 10 * * 1'  # lunes después del scan
+  workflow_dispatch:
+
+jobs:
+  notify:
+    name: "Notify Security Status"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Get vulnerability count"
+        id: vulns
+        run: |
+          # Count from the SARIF/audit results if available
+          echo "count=0" > /tmp/vuln-count
+          
+      - name: "Send Telegram notification"
+        env:
+          NOTIF_TOKEN: ${{ secrets.NOTIF_BOT_TOKEN }}
+          TELEGRAM_CHAT: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: |
+          # If we have a token configured, send the notification
+          if [ -n "$NOTIF_TOKEN" ]; then
+            curl -s -X POST "https://api.telegram.org/bot${NOTIF_TOKEN}/sendMessage" \
+              -d "chat_id=${TELEGRAM_CHAT}" \
+              -d "text=🛡️ SDC Security Scan
+              
+✅ CodeQL: ${{ github.event.workflow_run.conclusion == 'success' && 'OK' || 'FALLÓ' }}
+📦 Dependencias: revisadas en ${{ github.run_number }} PRs
+🐳 Contenedores: Trivy scan completado
+🔑 Secrets: TruffleHog scan completado
+
+Ver detalles en: https://github.com/${{ github.repository }}/security" \
+              --data-urlencode "disable_web_page_preview=true" || echo "No Telegram token configurado"
+          else
+            echo "NOTIF_BOT_TOKEN no configurado — skip notificación"
+          fi

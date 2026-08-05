@@ -1,39 +1,204 @@
 version: 2
 updates:
+  # ── Python ──────────────────────────────────────────────────────────────
   - package-ecosystem: "pip"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 10
     labels:
       - "dependencies"
       - "security"
+      - "python"
+    groups:
+      python-deps:
+        patterns: ["*"]
+
+  - package-ecosystem: "pip"
+    directory: "/apps/sonora_engine"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "security", "python"]
+
+  - package-ecosystem: "pip"
+    directory: "/tenants/Aztrotech/bot"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "security", "python"]
+
+  - package-ecosystem: "pip"
+    directory: "/products/call-system"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "security", "python"]
+
+  # ── Node.js (principales) ────────────────────────────────────────────────
+  - package-ecosystem: "npm"
+    directory: "/apps/frontends/agentic-os"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "security", "npm"]
+    groups:
+      npm-deps:
+        patterns: ["*"]
 
   - package-ecosystem: "npm"
-    directory: "/platforms/telegram"
+    directory: "/apps/hermes/hermes-agent"
     schedule:
       interval: "weekly"
       day: "monday"
     open-pull-requests-limit: 5
-    labels:
-      - "dependencies"
-      - "security"
+    labels: ["dependencies", "security", "npm"]
 
-  - package-ecosystem: "docker"
-    directory: "/mcp"
+  - package-ecosystem: "npm"
+    directory: "/apps/hermes/hermes-agent/web"
     schedule:
       interval: "weekly"
       day: "monday"
-    labels:
-      - "dependencies"
-      - "security"
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "security", "npm"]
 
+  - package-ecosystem: "npm"
+    directory: "/apps/hermes/hermes-agent/apps/desktop"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "security", "npm"]
+
+  - package-ecosystem: "npm"
+    directory: "/apps/hermes/hermes-agent/website"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "security", "npm"]
+
+  - package-ecosystem: "npm"
+    directory: "/apps/SIGNAL"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "security", "npm"]
+
+  - package-ecosystem: "npm"
+    directory: "/infra/telegram"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "security", "npm"]
+
+  - package-ecosystem: "npm"
+    directory: "/skills/mcp"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "security", "npm"]
+
+  - package-ecosystem: "npm"
+    directory: "/products/call-system/frontend"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "security", "npm"]
+
+  - package-ecosystem: "npm"
+    directory: "/products/sdc/control-center"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "security", "npm"]
+
+  - package-ecosystem: "npm"
+    directory: "/tenants/Aztrotech/web/voice-app"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels: ["dependencies", "security", "npm"]
+
+  # ── Docker (principales) ─────────────────────────────────────────────────
+  - package-ecosystem: "docker"
+    directory: "/infra"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels: ["dependencies", "security", "docker"]
+
+  - package-ecosystem: "docker"
+    directory: "/skills/mcp"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels: ["dependencies", "security", "docker"]
+
+  - package-ecosystem: "docker"
+    directory: "/apps/hermes/hermes-agent"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels: ["dependencies", "security", "docker"]
+
+  - package-ecosystem: "docker"
+    directory: "/apps/sonora_engine"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels: ["dependencies", "security", "docker"]
+
+  - package-ecosystem: "docker"
+    directory: "/infra/telegram"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels: ["dependencies", "security", "docker"]
+
+  - package-ecosystem: "docker"
+    directory: "/infra/wacli"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels: ["dependencies", "security", "docker"]
+
+  - package-ecosystem: "docker"
+    directory: "/infra/neo4j"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels: ["dependencies", "security", "docker"]
+
+  - package-ecosystem: "docker"
+    directory: "/infra/mcp-server"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels: ["dependencies", "security", "docker"]
+
+  - package-ecosystem: "docker"
+    directory: "/products/agent-marketplace"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    labels: ["dependencies", "security", "docker"]
+
+  # ── GitHub Actions ───────────────────────────────────────────────────────
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
       day: "monday"
-    labels:
-      - "dependencies"
-      - "ci"
+    labels: ["dependencies", "ci"]
