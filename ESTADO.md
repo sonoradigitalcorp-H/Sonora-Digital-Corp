@@ -14,3 +14,11 @@
 - Redes: playwright dry-run con fotos pendiente.
 - Pendiente crítico: Nginx → /panel/login, login devuelva 200.
 - Guardianes: pre-commit + structure_guard.sh (esqueleto canónico).
+
+## MULTI-TENANT BOT ROUTING ✅
+- **Registry creado**: tenant_router.py mantiene mapping bot → tenant → agente
+- **@RyE_production_bot** → rye agent (Iván - Cheesee Assistant ecosystem)
+- **@Aztro_tech_bot** → cesar agent (César - Aztrotech Hermosillo)
+- **Webhook único**: multi_tenant_webhook.py recibe de ambos y enruta automáticamente
+- **Para agregar cliente nuevo**: `python3 tenant_router.py --bot NewBot --tenant client_id --owner "Name" --client "Company"`
+- **Memoria aislada**: cada agente tiene su propio Engram space (tenant:client_id)
