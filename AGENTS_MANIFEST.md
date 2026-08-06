@@ -58,3 +58,10 @@ Cuando se requiera coordinar múltiples herramientas (ej. transcribir audio, rec
 - Orden de enrutamiento: OKF (exacto) → RAG/Engram (experiencial, marcado "aproximado") → none.
 - Si corpus == none, la ÚNICA respuesta permitida es "no tengo datos verificados". Inventar cálculos viola la Ley de No Daño.
 - CLI: `python3 01_Core_Platform/03_Agentic_Infrastructure/Hermes_Agent/Tools/okf_mcp.py query [Tenant] "[pregunta]"`.
+
+### 10. Pipeline de Voz WhatsApp (End-to-End)
+- Flujo completo: `audio WhatsApp → whisper → hermes + OKF → edge-tts → WhatsApp`.
+- `wacli_wrapper.sh`: wrapper para recibir/enviar mensajes de voz.
+- `whatsapp_voice_pipeline.py`: orquestador del pipeline completo.
+- Componentes: wacli 0.12.0 + whisper CLI + edge-tts 7.2.8 + OpenRouter + OKF.
+- Sin modelos locales: todo pasa por OpenRouter (gemma-4-26b-a4b-it:free, $0).
