@@ -2,16 +2,28 @@
   "id": "aztrotech.pricing",
   "tenant": "Aztrotech",
   "name": "Tarifas de servicios Aztrotech",
-  "aliases": ["tarifa", "precio", "costo", "instalación", "cotización", "antena", "visita", "cobrar", "cuanto", "cuesta", "valor"],
+  "aliases": ["tarifa", "precio", "costo", "instalación", "cotización", "antena", "visita", "cobrar", "cuanto", "cuesta", "valor", "paquete", "empresa", "agente", "IA", "inteligencia"],
   "definition": "Tabla oficial de precios. Responder solo con valores exactos de esta tabla.",
   "rules": [
-    {"id": "R1", "text": "No combinar ni promediar filas. Si el servicio no existe en la tabla, aplicar contrato 'no tengo datos verificados'."}
+    {"id": "R1", "text": "No combinar ni promediar filas. Si el servicio no existe en la tabla, aplicar contrato 'no tengo datos verificados'."},
+    {"id": "R2", "text": "Si preguntan por paquetes de agente IA, mencionar solo los precios exactos en USD."}
   ],
   "tables": {
     "servicios": [
-      {"servicio": "instalación antena residencial", "mxn": 1500},
-      {"servicio": "instalación antena comercial", "mxn": 3200},
-      {"servicio": "visita técnica", "mxn": 600}
+      {"servicio": "instalación antena residencial", "mxn": 1500, "usd": 85},
+      {"servicio": "instalación antena comercial", "mxn": 3200, "usd": 180},
+      {"servicio": "visita técnica", "mxn": 600, "usd": 35}
+    ],
+    "paquetes_ia_empresa": [
+      {"paquete": "Starter AI Agent", "precio": 999, "moneda": "USD", "includes": ["Empleado digital 24/7", "WhatsApp auto-respuesta", "Captura leads básica", "Panel web simple"]},
+      {"paquete": "Growth AI Agent", "precio": 1999, "moneda": "USD", "includes": ["Todo el Starter", "Redes sociales integradas", "CRM básico + scoring", "Onboarding page personalizado", "Soporte 24/7 voz"]},
+      {"paquete": "Enterprise AI Agent", "precio": 3999, "moneda": "USD", "includes": ["Todo el Growth", "Agentes multi-nicho", "Voz clonada oficial", "Landing page 3D Mystic", "Pipeline voz completo", "Soporte dedicado + entrenamiento"]}
+    ],
+    "casos_uso": [
+      {"industria": "Restaurantes", "ejemplo": "Agente toma pedidos 24/7, reserva mesas, atiende reclamos"},
+      {"industria": "Clínicas", "ejemplo": "Agenda citas, recuerda mediciones, envía recordatorios SMS"},
+      {"industria": "Clases de música", "ejemplo": "Agenda clases, envía recordatorios, captura estudiantes"},
+      {"industria": "Agentes inmobiliarios", "ejemplo": "Captura leads, muestra propiedades vía video, agenda visitas"}
     ]
   }
 }
