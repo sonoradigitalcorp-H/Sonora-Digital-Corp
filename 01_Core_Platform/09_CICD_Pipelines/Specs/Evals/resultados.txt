@@ -1,0 +1,8 @@
+cómo se calculan los ingresos de este mes       | RAG FAIL | OKF PASS | HYBRID PASS (corpus=okf)
+cuánto cuesta la instalación de antena comerc   | RAG FAIL | OKF PASS | HYBRID PASS (corpus=okf)
+qué cuota paga ABE Music Group                  | RAG FAIL | OKF PASS | HYBRID PASS (corpus=okf)
+qué reserva pidió Aztrotech                     | RAG PASS | OKF FAIL | HYBRID PASS (corpus=rag)
+MRR de Nathaly en diciembre                     | RAG FAIL | OKF FAIL | HYBRID PASS (corpus=none)
+cuánto cuesta pintar un coche                   | RAG FAIL | OKF FAIL | HYBRID PASS (corpus=none)
+
+TOTAL: RAG 1/6 · OKF 3/6 · RAG+OKF 6/6

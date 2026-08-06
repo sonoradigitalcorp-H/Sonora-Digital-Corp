@@ -1,0 +1,8 @@
+[
+  {"question": "cómo se calculan los ingresos de este mes", "tenant": "Sonora_Digital_Corp", "expected_corpus": "okf", "contains": "cuotas"},
+  {"question": "cuánto cuesta la instalación de antena comercial", "tenant": "Aztrotech", "expected_corpus": "okf", "contains": "3200"},
+  {"question": "qué cuota paga ABE Music Group", "tenant": "Sonora_Digital_Corp", "expected_corpus": "okf", "contains": "3500"},
+  {"question": "qué reserva pidió Aztrotech", "tenant": "Aztrotech", "expected_corpus": "rag", "contains": "15 de agosto"},
+  {"question": "MRR de Nathaly en diciembre", "tenant": "Nathaly_Contabilidad", "expected_corpus": "none", "contains": "NO TENGO DATOS VERIFICADOS"},
+  {"question": "cuánto cuesta pintar un coche", "tenant": "Aztrotech", "expected_corpus": "none", "contains": "NO TENGO DATOS VERIFICADOS"}
+]

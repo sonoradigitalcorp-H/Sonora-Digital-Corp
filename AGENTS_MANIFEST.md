@@ -52,3 +52,9 @@ Cuando se requiera coordinar múltiples herramientas (ej. transcribir audio, rec
 - `00_Administration/Session_Logs/` es append-only: la historia registrada NUNCA se reescribe, solo se appenda.
 - El pre-commit la protege vía `bash 00_Administration/guardians/session_log_guard.sh --staged`.
 - Auditoría manual: `bash 00_Administration/guardians/session_log_guard.sh`.
+
+### 9. Conocimiento Exacto (OKF) — Anti-Alucinación
+- El conocimiento de negocio (tablas, fórmulas, tarifas, políticas) vive en conceptos OKF: `01_Core_Platform/03_Agentic_Infrastructure/Databases/OKF_Knowledge/concepts/`.
+- Orden de enrutamiento: OKF (exacto) → RAG/Engram (experiencial, marcado "aproximado") → none.
+- Si corpus == none, la ÚNICA respuesta permitida es "no tengo datos verificados". Inventar cálculos viola la Ley de No Daño.
+- CLI: `python3 01_Core_Platform/03_Agentic_Infrastructure/Hermes_Agent/Tools/okf_mcp.py query [Tenant] "[pregunta]"`.

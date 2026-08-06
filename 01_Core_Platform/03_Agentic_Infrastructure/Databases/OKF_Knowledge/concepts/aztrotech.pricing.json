@@ -1,0 +1,17 @@
+{
+  "id": "aztrotech.pricing",
+  "tenant": "Aztrotech",
+  "name": "Tarifas de servicios Aztrotech",
+  "aliases": ["tarifa", "precio", "costo", "instalación", "cotización", "antena", "visita"],
+  "definition": "Tabla oficial de precios. Responder solo con valores exactos de esta tabla.",
+  "rules": [
+    {"id": "R1", "text": "No combinar ni promediar filas. Si el servicio no existe en la tabla, aplicar contrato 'no tengo datos verificados'."}
+  ],
+  "tables": {
+    "servicios": [
+      {"servicio": "instalación antena residencial", "mxn": 1500},
+      {"servicio": "instalación antena comercial", "mxn": 3200},
+      {"servicio": "visita técnica", "mxn": 600}
+    ]
+  }
+}

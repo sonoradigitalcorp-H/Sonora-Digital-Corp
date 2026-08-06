@@ -1,0 +1,21 @@
+{
+  "id": "sdc.revenue",
+  "tenant": "Sonora_Digital_Corp",
+  "name": "Ingresos de Sonora Digital Corp",
+  "aliases": ["ingresos", "revenue", "facturación", "mrr", "cuota"],
+  "definition": "Ingresos del mes = cuotas activas de tenants + proyectos one-off facturados en el mes.",
+  "rules": [
+    {"id": "R1", "text": "Sumar ÚNICAMENTE filas presentes en tables. Prohibido interpolar, promediar o proyectar."},
+    {"id": "R2", "text": "Si falta un dato, responder 'no tengo datos verificados' y listar el dato faltante."}
+  ],
+  "tables": {
+    "cuotas_2026-08": [
+      {"tenant": "Aztrotech", "cuota_mxn": 5000},
+      {"tenant": "ABE_Music_Group", "cuota_mxn": 3500},
+      {"tenant": "Nathaly_Contabilidad", "cuota_mxn": 4000}
+    ],
+    "one_off_2026-08": [
+      {"tenant": "Fourgea_Mexico", "concepto": "landing", "mxn": 12000}
+    ]
+  }
+}
