@@ -1857,7 +1857,7 @@ white_label:
 ```
 # Demo Client - White Label Environment
 TENANT_ID=demo_client
-OPENROUTER_API_KEY=[REDACTED: clave OpenRouter backup]a8b7f810eee4c66f9b79e4b4e7603c8e0b42f548f86fee6adb
+OPENROUTER_API_KEY=[REDACTED]
 TELEGRAM_BOT_TOKEN=TEST_TOKEN
 OWNER_CHAT_ID=12345
 ```
@@ -1873,7 +1873,7 @@ After=network.target
 Type=simple
 User=mystic
 WorkingDirectory=/home/mystic/Documentos/Sonora Digital Corp/sonora-digital-corp/tenants/demo_client/bot
-Environment="OPENROUTER_API_KEY=[REDACTED: clave OpenRouter backup]a8b7f810eee4c66f9b79e4b4e7603c8e0b42f548f86fee6adb"
+Environment="OPENROUTER_API_KEY=[REDACTED]"
 Environment="TENANT_ID=demo_client"
 ExecStart=/usr/bin/python3 main.py
 Restart=always

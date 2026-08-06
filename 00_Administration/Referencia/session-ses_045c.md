@@ -9387,7 +9387,7 @@ TWILIO_VOICE_URL=https://tu-dominio.com/voice/incoming   # webhook público (ngr
 TWILIO_STATUS_URL=https://tu-dominio.com/voice/status
 
 # === LLM (OpenRouter) ===
-OPENROUTER_API_KEY=sk-or-v1-xxxxxxxxxxxx
+OPENROUTER_API_KEY=[REDACTED]
 OPENROUTER_BASE_URL=https://openrouter.ai/api/v1
 OPENROUTER_MODEL_COMPLEX=deepseek/deepseek-chat   # $0.14/1M input
 OPENROUTER_MODEL_FAST=deepseek/deepseek-chat       # mismo para routing si no usas Ollama

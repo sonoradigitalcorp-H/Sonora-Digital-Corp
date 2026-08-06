@@ -12,20 +12,20 @@ __pycache__/
 *.incomplete
 blobs/
 snapshots/
-
 # Secretos y Bases de datos vivas
 .env
+.env.local
+.env.vps
+.env.example
+.env.local.example
 *.db
 *.sqlite
-
 # OS
 .DS_Store
 Thumbs.db
-
 # Infraestructura symlinked (no versionar contenido real)
 01_Core_Platform/03_Agentic_Infrastructure/Engram_Memory/
 01_Core_Platform/03_Agentic_Infrastructure/OpenClaw/
 01_Core_Platform/04_Automations_and_Workflows/n8n_data/
-
 # Repositorio embebido
-01_Core/Infrastructure/sonora-digital-corp/
+01_Core_Platform/Infrastructure/sonora-digital-corp/
