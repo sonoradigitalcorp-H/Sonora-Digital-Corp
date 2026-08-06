@@ -1,0 +1,26 @@
+## 2026-08-06 SESIÓN - Multi-tenant Bot + Voice Clone
+
+### Objetivo
+Crear sistema multi-tenant con un bot por cliente + pipeline de clonación voz/imagen
+
+### Hallazgos
+- XTTS no viable para voice clone rápido → usar TTS genérico
+- Webhook multi-bot requiere IP pública (alternativa: bot único con routing)
+- Paquetes $999/$1999/$3999 USD agregados a OKF
+- 108 segundos de voz de César capturados
+- 9 fotos de César organizadas para LoRA
+
+### Avances
+- ✅ tenant_router.py con registry bot → tenant → agente
+- ✅ multi_tenant_webhook.py para recibir de múltiples bots
+- ✅ channel_proxy.py para polling de bots sin webhook
+- ✅ call_scheduler.py + IVR para booking llamadas
+- ✅ adaptive_factory.py para agentes por nicho
+- ✅ Skill: multi-tenant-bot-factory creado
+- ✅ Landing page onboarding Three.js generada
+
+### Restringido
+- Webhook necesita IP pública o ngrok para funcionar real
+- XTTS entrenamiento CPU 2-4h (pendiente)
+- FAL_KEY no exportado → image clone pendiente
+

@@ -22,3 +22,9 @@
 - **Webhook único**: multi_tenant_webhook.py recibe de ambos y enruta automáticamente
 - **Para agregar cliente nuevo**: `python3 tenant_router.py --bot NewBot --tenant client_id --owner "Name" --client "Company"`
 - **Memoria aislada**: cada agente tiene su propio Engram space (tenant:client_id)
+
+## LECCIONES DE ESTA SESIÓN
+- **XTTS voice cloning**: Instalado pero entrenamiento tarda 2-4h CPU. Usar `es-MX-JorgeNeural` como placeholder.
+- **Multi-tenant webhook**: Requiere IP pública o ngrok. Alternativa: bot único con routing inteligente.
+- **Paquetes de venta**: $999/$1999/$3999 USD configurados en OKF como tabla verificada.
+- **Skill creado**: `.opencode/skills/personales/multi-tenant-bot-factory/` con templates y comandos.
