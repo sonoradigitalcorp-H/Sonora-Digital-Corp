@@ -4,7 +4,7 @@ Usa OpenRouter como LLM, OKF como conocimiento exacto, Engram como memoria vecto
 import os, sys, json
 
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "Tools"))
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "04_Shared_Libraries", "SDK_Python"))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "05_Shared_Libraries", "SDK_Python"))
 
 from sdc_sdk import SDC_Client
 from okf_navigator import retrieve_context
