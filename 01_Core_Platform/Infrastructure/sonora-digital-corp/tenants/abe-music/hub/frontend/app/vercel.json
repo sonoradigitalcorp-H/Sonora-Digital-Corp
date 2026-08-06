@@ -1,0 +1,33 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "framework": "nextjs",
+  "installCommand": "npm install",
+  "regions": ["iad1"],
+  "env": {
+    "NEXT_PUBLIC_HERMES_API_URL": "@hermes-api-url",
+    "NEXT_PUBLIC_APP_NAME": "Abe Music Hub"
+  },
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "no-store" }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        { "key": "X-Frame-Options", "value": "DENY" },
+        { "key": "X-Content-Type-Options", "value": "nosniff" },
+        { "key": "Referrer-Policy", "value": "strict-origin-when-cross-origin" }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/hermes/(.*)",
+      "destination": "https://api.abemusic.com/api/v1/$1"
+    }
+  ]
+}

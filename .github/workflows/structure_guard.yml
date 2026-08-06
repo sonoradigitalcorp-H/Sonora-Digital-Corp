@@ -1,0 +1,9 @@
+name: Structure Guardian
+on: [push, pull_request]
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Auditar esqueleto canónico
+        run: bash 00_Administration/guardians/structure_guard.sh

@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0f14; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+  @page { size: 13.333in 7.5in; margin: 0; }
+  .slide {
+    width: 1280px; height: 720px;
+    background: radial-gradient(1200px 600px at 85% -10%, rgba(34,211,238,0.14), transparent 60%),
+                radial-gradient(900px 500px at -10% 110%, rgba(234,179,8,0.10), transparent 60%),
+                linear-gradient(145deg, #0a0f14 0%, #101826 100%);
+    color: #e2e8f0;
+    padding: 56px 72px;
+    display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+    page-break-after: always;
+  }
+  .slide::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    background: linear-gradient(90deg, #22d3ee, #3b82f6, #facc15);
+  }
+  .slide::after {
+    content: '';
+    position: absolute; bottom: -100px; right: -60px;
+    width: 320px; height: 320px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(34,211,238,0.10), transparent 70%);
+  }
+  .brand { font-size: 14px; color: #38bdf8; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: 20px; }
+  h1 { font-size: 52px; line-height: 1.12; font-weight: 800; color: #f8fafc; margin-bottom: 16px; }
+  h2 { font-size: 37px; font-weight: 800; color: #f8fafc; margin-bottom: 8px; }
+  h3 { font-size: 22px; font-weight: 700; color: #38bdf8; margin-bottom: 12px; }
+  .sub { font-size: 21px; color: #94a3b8; line-height: 1.5; }
+  .accent { color: #22d3ee; }
+  .green { color: #4ade80; }
+  .red { color: #f87171; }
+  .yellow { color: #facc15; }
+  .cyan { color: #22d3ee; }
+  .slide-footer { position: absolute; bottom: 24px; left: 72px; right: 72px; display: flex; justify-content: space-between; color: #475569; font-size: 13px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 24px; }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 24px; }
+  .grid-4 { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 16px; margin-top: 24px; }
+  .card { background: rgba(15,23,42,0.85); border: 1px solid rgba(56,189,248,0.18); border-radius: 16px; padding: 22px; position: relative; z-index: 1; }
+  .card .big { font-size: 36px; font-weight: 800; margin: 6px 0; color: #38bdf8; }
+  .card .label { font-size: 15px; color: #94a3b8; }
+  .card .detail { font-size: 15px; color: #cbd5e1; margin-top: 10px; line-height: 1.5; }
+  .card .title { font-size: 19px; font-weight: 700; color: #f8fafc; margin-bottom: 6px; }
+  .tag { display: inline-block; padding: 4px 12px; border-radius: 999px; font-size: 12px; font-weight: 600; margin-bottom: 8px; }
+  .tag.green { background: rgba(74,222,128,0.15); color: #4ade80; }
+  .tag.cyan { background: rgba(34,211,238,0.15); color: #22d3ee; }
+  .tag.gray { background: rgba(148,163,184,0.15); color: #94a3b8; }
+  .tag.yellow { background: rgba(250,204,21,0.15); color: #facc15; }
+  .tag.purple { background: rgba(168,85,247,0.15); color: #c084fc; }
+  .tag.red { background: rgba(248,113,113,0.15); color: #f87171; }
+  table { width: 100%; border-collapse: collapse; margin-top: 18px; font-size: 16px; position: relative; z-index: 1; }
+  th { text-align: left; padding: 11px 14px; color: #38bdf8; border-bottom: 2px solid #3b82f6; font-weight: 600; }
+  td { padding: 11px 14px; border-bottom: 1px solid #1e293b; }
+  tr.hl td { background: rgba(34,211,238,0.07); }
+  ul { list-style: none; position: relative; z-index: 1; }
+  li { font-size: 18px; padding: 8px 0; color: #cbd5e1; line-height: 1.4; }
+  li::before { content: '▸ '; color: #22d3ee; font-weight: 700; }
+  .stack { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; position: relative; z-index: 1; }
+  .pill { background: rgba(34,211,238,0.10); border: 1px solid rgba(34,211,238,0.35); color: #22d3ee; padding: 12px 22px; border-radius: 999px; font-size: 18px; font-weight: 700; }
+  .pill.green { background: rgba(74,222,128,0.12); border-color: rgba(74,222,128,0.35); color: #4ade80; }
+  .timeline { position: relative; z-index: 1; margin-top: 18px; }
+  .tl-item { display: flex; gap: 18px; padding: 10px 0; align-items: flex-start; }
+  .tl-time { min-width: 130px; font-weight: 700; color: #22d3ee; font-size: 18px; }
+  .tl-text { font-size: 17px; color: #cbd5e1; line-height: 1.45; }
+  .vs { display: grid; grid-template-columns: 1fr auto 1fr; gap: 20px; align-items: stretch; margin-top: 22px; }
+  .vs-col { background: rgba(15,23,42,0.85); border: 1px solid #1e293b; border-radius: 16px; padding: 24px; position: relative; z-index: 1; }
+  .vs-col.bad { border-color: rgba(248,113,113,0.4); }
+  .vs-col.good { border-color: rgba(74,222,128,0.4); }
+  .vs-col h3 { margin-bottom: 14px; }
+  .vs-mid { display: flex; align-items: center; font-size: 40px; color: #22d3ee; font-weight: 800; }
+  .pipeline { font-family: 'SF Mono', ui-monospace, monospace; font-size: 15px; color: #7dd3fc; background: rgba(10,15,20,0.7); border: 1px solid rgba(56,189,248,0.2); border-radius: 12px; padding: 18px 20px; line-height: 1.8; margin-top: 20px; position: relative; z-index: 1; }
+  .arrow { color: #475569; }
+  .alert { background: rgba(248,113,113,0.08); border-left: 4px solid #f87171; border-radius: 8px; padding: 16px 20px; margin: 14px 0; font-size: 17px; color: #fca5a5; position: relative; z-index: 1; }
+  .robot { font-family: 'SF Mono', ui-monospace, monospace; background: rgba(10,15,20,0.85); border: 1px solid rgba(250,204,21,0.25); border-radius: 14px; padding: 20px 22px; font-size: 15px; line-height: 1.7; color: #fde68a; position: relative; z-index: 1; }
+</style>
+</head>
+<body>
+
+<!-- 1. PORTADA -->
+<div class="slide">
+  <div class="brand">Sonora Digital Corp · Propuesta para RYE · Iván</div>
+  <h1>Tu línea de robots,<br><span class="accent">con ojos y memoria</span>.</h1>
+  <div class="sub">Tu sistema actual, conectado a un asistente de IA que ve cada celda,<br>lee cada alarma y te avisa antes de que la línea se pare.</div>
+  <div style="margin-top:36px; position:relative; z-index:1;">
+    <span class="tag cyan">Robótica automotriz</span>
+    <span class="tag yellow">FANUC · Cognex · Lincoln</span>
+    <span class="tag green">BMW · Rivian · VW · Mercedes</span>
+    <span class="tag purple">Agosto 2026</span>
+  </div>
+  <div class="slide-footer"><span>Sonora Digital Corp · Mystic</span><span>1 / 9</span></div>
+</div>
+
+<!-- 2. TU SISTEMA HOY -->
+<div class="slide">
+  <div class="brand">Sonora Digital Corp · Mystic</div>
+  <h2 class="red">Tu sistema hoy</h2>
+  <div class="grid-2">
+    <div class="card" style="border-color: rgba(248,113,113,0.35);">
+      <div class="tag red">Producción</div>
+      <div class="title">Reportes a mano</div>
+      <div class="detail">Ciclos, paros y calidad se capturan en Excel al final del turno. La foto de la línea siempre llega tarde.</div>
+    </div>
+    <div class="card" style="border-color: rgba(248,113,113,0.35);">
+      <div class="tag red">Robots</div>
+      <div class="title">Alarmas después del paro</div>
+      <div class="detail">SRVO-001, 032, 075… Te enteras cuando el robot ya truena y la celda ya está parada. Diagnóstico a ojo o a manual.</div>
+    </div>
+    <div class="card" style="border-color: rgba(248,113,113,0.35);">
+      <div class="tag red">Cambio de turno</div>
+      <div class="title">Pérdida de contexto</div>
+      <div class="detail">Lo que pasó en la noche se resume de boca en boca. Acuerdos de la junta que se pierden.</div>
+    </div>
+    <div class="card" style="border-color: rgba(248,113,113,0.35);">
+      <div class="tag red">Clientes</div>
+      <div class="title">Reportes que cuestan horas</div>
+      <div class="detail">Armar el resumen para BMW o Rivian toma medio día entre Excel, correos y llamadas.</div>
+    </div>
+  </div>
+  <div class="alert" style="margin-top:22px;">Resultado: cada hora no planeada de línea parada cuesta millones, y el sistema se entera después.</div>
+  <div class="slide-footer"><span>Sonora Digital Corp</span><span>2 / 9</span></div>
+</div>
+
+<!-- 3. TU SISTEMA CON EL ASISTENTE -->
+<div class="slide">
+  <div class="brand">Sonora Digital Corp · Mystic</div>
+  <h2 class="green">Tu sistema conectado al asistente</h2>
+  <div class="grid-2">
+    <div class="card" style="border-color: rgba(74,222,128,0.4);">
+      <div class="tag green">Producción</div>
+      <div class="title">Datos en vivo</div>
+      <div class="detail">Ciclos, OEE y paros por línea al minuto, en un chat. Tú no capturas nada: el sistema lee por ti.</div>
+    </div>
+    <div class="card" style="border-color: rgba(74,222,128,0.4);">
+      <div class="tag green">Robots</div>
+      <div class="title">Alerta predictiva</div>
+      <div class="detail">Monitorea el controlador FANUC y te avisa del desgaste antes de la falla. Programas el cambio en el paro planeado.</div>
+    </div>
+    <div class="card" style="border-color: rgba(74,222,128,0.4);">
+      <div class="tag green">Cambio de turno</div>
+      <div class="title">Handover digital</div>
+      <div class="detail">El shift report se arma solo: unidades, paros, motivos y pendientes, listo para el siguiente turno y el cliente.</div>
+    </div>
+    <div class="card" style="border-color: rgba(74,222,128,0.4);">
+      <div class="tag green">Clientes</div>
+      <div class="title">Reportes automáticos</div>
+      <div class="detail">Resumen con gráficas para cada OEM en un toque, audit-ready y con causa raíz de cada paro.</div>
+    </div>
+  </div>
+  <div class="sub" style="margin-top:22px;">Mismo sistema. Mismo piso. <span class="green">La diferencia es que ahora ve todo y te avisa antes.</span></div>
+  <div class="slide-footer"><span>Sonora Digital Corp</span><span>3 / 9</span></div>
+</div>
+
+<!-- 4. CÓMO SE CONECTA -->
+<div class="slide">
+  <div class="brand">Sonora Digital Corp · Mystic</div>
+  <h2>Tu piso conectado a tu Telegram</h2>
+  <div class="pipeline">
+Controladores FANUC → · MCP Server (fanuc-mcp) → · Tu Asistente IA → · Telegram (tu chat)
+Cognex / visión     → · vision-mcp      → · Tu Asistente IA → · Alerta al instante
+ERP / tu sistema    → · erp-mcp         → · Tu Asistente IA → · Reportes y órdenes
+CMMS / mantenim.    → · cmms-mcp        → · Tu Asistente IA → · Orden de trabajo predictiva
+  </div>
+  <div class="grid-3">
+    <div class="card"><span class="tag cyan">fanuc-mcp</span><div class="title">Robots</div><div class="detail">Estado, alarmas SRVO, ciclos y señales predictivas de cada celda en vivo.</div></div>
+    <div class="card"><span class="tag yellow">vision-mcp</span><div class="title">Calidad</div><div class="detail">Lee resultados Cognex y dispara alerta si una pieza sale mal antes de ensamblarse.</div></div>
+    <div class="card"><span class="tag green">erp-mcp</span><div class="title">Operación</div><div class="detail">Órdenes, inventarios y OTs sin capturas manuales: el bot consulta y actualiza.</div></div>
+  </div>
+  <div class="verdict" style="margin-top:18px; font-size:20px; color:#cbd5e1; position:relative; z-index:1;"><b class="cyan">MCP</b> (Model Context Protocol) le da manos y ojos a tu asistente: lee y escribe en tus sistemas con permisos controlados.</div>
+  <div class="slide-footer"><span>Sonora Digital Corp</span><span>4 / 9</span></div>
+</div>
+
+<!-- 5. CASO REAL: ALARMA EN LA CELDA 3 -->
+<div class="slide">
+  <div class="brand">Sonora Digital Corp · Mystic</div>
+  <h2>Caso real: una alarma en la celda 3</h2>
+  <div class="grid-2">
+    <div class="card" style="border-color: rgba(248,113,113,0.35);">
+      <div class="tag red">Hoy</div>
+      <div class="title">Después del paro</div>
+      <div class="detail">La soldadura se sale de tolerancia a media noche. Nadie lo ve. La línea produce piezas malas hasta el turno de la mañana.</div>
+      <div style="margin-top:12px; font-size:15px; color:#94a3b8;">Costos: piezas rechazadas + retrabajo + horas de línea detenida.</div>
+    </div>
+    <div class="card" style="border-color: rgba(74,222,128,0.4);">
+      <div class="tag green">Con el asistente</div>
+      <div class="title">Antes del paro</div>
+      <div class="detail">La señal de torque del R-2000iC se desvía 3%. El asistente avisa a las 00:15 con diagnóstico y pasos. El cambio se programa en el paro planeado de las 06:00.</div>
+      <div style="margin-top:12px; font-size:15px; color:#4ade80;">Resultado: cero piezas malas, cero paro no planeado.</div>
+    </div>
+  </div>
+  <div class="robot" style="margin-top:18px;">
+    📟 00:15 — Asistente RYE · Celda 3<br>
+    "Torque del R-2000iC fuera de rango (SRVO-032 en aumento). Riesgo de falla en ~5 días.<br>
+    Diagnóstico: desgaste de freno. Recomiendo cambio en el paro planeado del jueves. ¿Genero la OT?"
+  </div>
+  <div class="slide-footer"><span>Sonora Digital Corp</span><span>5 / 9</span></div>
+</div>
+
+<!-- 6. TU DÍA CON EL ASISTENTE -->
+<div class="slide">
+  <div class="brand">Sonora Digital Corp · Mystic</div>
+  <h2>Así se ve tu día con el asistente</h2>
+  <div class="timeline">
+    <div class="tl-item"><div class="tl-time">06:30</div><div class="tl-text"><b style="color:#f8fafc;">Resumen de la noche.</b> Qué pasó en el turno anterior: producción, paros, pendientes. Antes del café.</div></div>
+    <div class="tl-item"><div class="tl-time">07:00</div><div class="tl-text"><b style="color:#f8fafc;">Arranque de línea.</b> Cobertura de personal y estado de cada celda antes de arrancar.</div></div>
+    <div class="tl-item"><div class="tl-time">09:30</div><div class="tl-text"><b style="color:#f8fafc;">Junta de producción.</b> Grabas el audio de 20 min → minuta con acuerdos y responsables al instante.</div></div>
+    <div class="tl-item"><div class="tl-time">11:45</div><div class="tl-text"><b style="color:#f8fafc;">Alerta predictiva.</b> Desgaste en la celda 2 → programan el cambio antes de la falla.</div></div>
+    <div class="tl-item"><div class="tl-time">15:00</div><div class="tl-text"><b style="color:#f8fafc;">Dashboard en vivo.</b> OEE por línea con causa de cada paro. El cuello de botella en 10 segundos.</div></div>
+    <div class="tl-item"><div class="tl-time">18:00</div><div class="tl-text"><b style="color:#f8fafc;">Shift report listo.</b> Se genera solo, audit-ready para el turno siguiente y para el cliente.</div></div>
+  </div>
+  <div class="slide-footer"><span>Sonora Digital Corp</span><span>6 / 9</span></div>
+</div>
+
+<!-- 7. LOS NÚMEROS -->
+<div class="slide">
+  <div class="brand">Sonora Digital Corp · Mystic</div>
+  <h2>Los números de la industria</h2>
+  <div class="grid-3">
+    <div class="card"><span class="tag cyan">Predictivo</span><div class="big green">250–300%</div><div class="label">ROI</div><div class="detail">Reduce paros no planeados 30–50% y costos de mantenimiento 25–40%. Predice fallas semanas antes.</div></div>
+    <div class="card"><span class="tag cyan">OEE</span><div class="big green">67% → 82%</div><div class="label">en 90 días (caso real)</div><div class="detail">Planta automotriz con 6 activos monitoreados: +15 puntos de OEE, -47% downtime.</div></div>
+    <div class="card"><span class="tag yellow">Paro</span><div class="big red">$1.3–2.3M</div><div class="label">USD por hora de línea parada</div><div class="detail">Cada hora no planeada cuesta millones. El predictivo las evita.</div></div>
+  </div>
+  <div class="grid-3">
+    <div class="card"><span class="tag cyan">Inspección IA</span><div class="big green">99.8%</div><div class="label">precisión</div><div class="detail">Escapan 83% menos defectos que la inspección humana.</div></div>
+    <div class="card"><span class="tag cyan">Handover</span><div class="big green">34%</div><div class="label">menos incidentes</div><div class="detail">40% de los incidentes nacen en el cambio de turno. El handover digital los corta.</div></div>
+    <div class="card"><span class="tag green">Captura</span><div class="big green">0</div><div class="label">minutos de captura manual</div><div class="detail">De horas en Excel a datos que se generan solos.</div></div>
+  </div>
+  <div class="slide-footer"><span>Sonora Digital Corp</span><span>7 / 9</span></div>
+</div>
+
+<!-- 8. PLAN -->
+<div class="slide">
+  <div class="brand">Sonora Digital Corp · Mystic</div>
+  <h2>Plan de implementación</h2>
+  <div class="grid-3">
+    <div class="card"><span class="tag green">Fase 1 · 1 semana</span><div class="title">Piloto</div><div class="detail">Shift report automático + control de personal + respuesta de alarmas SRVO en tu Telegram.</div></div>
+    <div class="card"><span class="tag cyan">Fase 2 · 30 días</span><div class="title">Datos en vivo</div><div class="detail">Conexión MCP a un controlador FANUC o ERP. OEE real por línea en el chat.</div></div>
+    <div class="card"><span class="tag purple">Fase 3 · 90 días</span><div class="title">Predictivo completo</div><div class="detail">Alertas de fallas de robots + agentes por área (mantenimiento, calidad, logística, RRHH).</div></div>
+  </div>
+  <div class="stack">
+    <span class="pill">Telegram</span>
+    <span class="pill">FANUC MCP</span>
+    <span class="pill green">Voz (audio a minuta)</span>
+    <span class="pill">Dashboard OEE</span>
+  </div>
+  <div class="sub" style="margin-top:20px;">Primera semana <span class="green">gratis</span> en piloto, con tus datos reales.</div>
+  <div class="slide-footer"><span>Sonora Digital Corp</span><span>8 / 9</span></div>
+</div>
+
+<!-- 9. CIERRE -->
+<div class="slide">
+  <div class="brand">Sonora Digital Corp · Propuesta RYE · Iván</div>
+  <h1 style="font-size:56px;">Tu siguiente turno,<br>con otro equipo. 💪</h1>
+  <div class="sub" style="margin-top:14px;">Un asistente que no duerme, que ve tus robots,<br>que recuerda cada turno y te avisa antes de que truene.</div>
+  <div style="margin-top:32px; position:relative; z-index:1;">
+    <span class="tag cyan">Mystic · Sonora Digital Corp</span>
+    <span class="tag green">Responder "quiero mi demo"</span>
+    <span class="tag yellow">Celda 3 ya está esperando</span>
+  </div>
+  <div class="slide-footer"><span>Sonora Digital Corp · Mystic</span><span>9 / 9</span></div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+# Anticuerpo pre-commit: bloquea caos entrante
+cd "$(git rev-parse --show-toplevel)" || exit 1
+DIRS=" 00_Administration 01_Core_Platform 02_Client_Projects 03_Sandbox_and_RnD .github .githooks "
+FILES=" README.md AGENTS_MANIFEST.md SYSTEM_MANIFEST.md .gitignore "
+v=0
+while IFS= read -r f; do
+  top="${f%%/*}"
+  if [ "$top" = "$f" ]; then
+    case "$FILES" in *" $f "*) ;; *) echo "🚫 [GUARDIÁN] Archivo suelto en raíz: $f"; v=1;; esac
+  else
+    case "$DIRS" in *" $top "*) ;; *) echo "🚫 [GUARDIÁN] Carpeta fuera del esqueleto: $top/"; v=1;; esac
+  fi
+done < <(git diff --cached --name-only --diff-filter=A)
+if [ $v -ne 0 ]; then
+  echo "❌ COMMIT BLOQUEADO. Usa el esqueleto canónico (README.md) o --no-verify bajo tu responsabilidad."
+  exit 1
+fi
+exit 0

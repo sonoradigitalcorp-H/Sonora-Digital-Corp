@@ -1,0 +1,94 @@
+{
+  "name": "Newsjacking Pipeline - Julian Goldie Style",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [{"field": "minutes", "minutesInterval": 60}]
+        }
+      },
+      "name": "Cron Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "url": "=https://hacker-news.firebaseio.com/v0/topstories.json",
+        "options": {}
+      },
+      "name": "Get HN Top Stories",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Filter AI-related stories\nconst items = $input.all();\nconst topIds = items[0].json;\nconst keywords = ['ai','ml','llm','gpt','neural','openai','claude','gemini','diffusion','transformer','agent','rag','deep learning'];\nreturn topIds.slice(0,30).map(id => ({json: {storyId: id}}));"
+      },
+      "name": "Filter AI Stories",
+      "type": "n8n-nodes-base.code",
+      "position": [660, 300]
+    },
+    {
+      "parameters": {
+        "url": "=https://hacker-news.firebaseio.com/v0/item/{{$json.storyId}}.json",
+        "options": {}
+      },
+      "name": "Get Story Detail",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [860, 300]
+    },
+    {
+      "parameters": {
+        "options": {
+          "model": "gpt-4",
+          "temperature": 0.7,
+          "maxTokens": 1000
+        },
+        "jsCode": "// Generate script from article\nconst article = $input.first().json;\nreturn `🔥 BREAKING: ${article.title}\\n\\nToday we're talking about something HUGE in the AI world.\\n\\n[HOOK - first 3 seconds]\\n...source ${article.url}...\\n\\n[SCRIPT BODY - 90 seconds]\\nLet me break down what this means...\\n\\n[CTA]\\nLike and subscribe for daily AI news!`;"
+      },
+      "name": "Generate Script",
+      "type": "n8n-nodes-base.code",
+      "position": [1060, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:8765/generate",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "title", "value": "={{$json.title}}"},
+            {"name": "style", "value": "modern"},
+            {"name": "emoji", "value": "🔥"}
+          ]
+        }
+      },
+      "name": "Generate Thumbnail",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1260, 300]
+    },
+    {
+      "parameters": {
+        "url": "http://localhost:8766/publish",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {"name": "platforms", "value": "youtube,instagram,twitter"}
+          ]
+        }
+      },
+      "name": "Publish to Platforms",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [1460, 300]
+    }
+  ],
+  "connections": {
+    "Cron Trigger": {"main": [[{node: "Get HN Top Stories", type: "main"}]]},
+    "Get HN Top Stories": {"main": [[{node: "Filter AI Stories", type: "main"}]]},
+    "Filter AI Stories": {"main": [[{node: "Get Story Detail", type: "main"}]]},
+    "Get Story Detail": {"main": [[{node: "Generate Script", type: "main"}]]},
+    "Generate Script": {"main": [[{node: "Generate Thumbnail", type: "main"}]]},
+    "Generate Thumbnail": {"main": [[{node: "Publish to Platforms", type: "main"}]]}
+  },
+  "active": false,
+  "settings": {}
+}

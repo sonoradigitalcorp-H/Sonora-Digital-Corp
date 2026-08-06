@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0f172a; font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+  .canvas {
+    width: 1280px; height: 720px;
+    background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);
+    padding: 48px 60px;
+    position: relative; overflow: hidden;
+    display: flex; flex-direction: column;
+  }
+  .canvas::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 6px;
+    background: linear-gradient(90deg, #22d3ee, #3b82f6, #a855f7);
+  }
+  .canvas::after {
+    content: ''; position: absolute; bottom: -80px; right: -80px;
+    width: 280px; height: 280px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(168,85,247,0.16), transparent 70%);
+  }
+  .brand { font-size: 14px; color: #38bdf8; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 18px; }
+  h1 { font-size: 34px; font-weight: 800; color: #f8fafc; margin-bottom: 6px; }
+  .sub { font-size: 17px; color: #94a3b8; margin-bottom: 24px; }
+  .row { display: flex; gap: 26px; align-items: center; position: relative; z-index: 1; }
+  .col { flex: 1; }
+  /* center hub */
+  .hub {
+    width: 250px; height: 250px; margin: 0 auto;
+    background: linear-gradient(135deg, rgba(34,211,238,0.12), rgba(168,85,247,0.12));
+    border: 2px solid #22d3ee;
+    border-radius: 50%;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 20px;
+  }
+  .hub .t { font-size: 22px; font-weight: 800; color: #f8fafc; }
+  .hub .st { font-size: 13px; color: #67e8f9; margin-top: 6px; line-height: 1.4; }
+  .hub .live { font-size: 12px; color: #4ade80; margin-top: 8px; font-weight: 700; }
+  /* tool cards */
+  .tool {
+    background: rgba(30,41,59,0.9); border: 1px solid #334155; border-radius: 14px;
+    padding: 16px 18px; margin-bottom: 14px; display: flex; align-items: center; gap: 14px;
+  }
+  .tool .icon {
+    width: 44px; height: 44px; border-radius: 12px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; font-size: 22px;
+  }
+  .tool .name { font-size: 17px; font-weight: 700; color: #f8fafc; }
+  .tool .desc { font-size: 12.5px; color: #94a3b8; margin-top: 2px; }
+  .tool .mcp {
+    margin-left: auto; background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.4);
+    color: #c084fc; font-size: 12px; font-weight: 700; padding: 5px 10px; border-radius: 8px; flex-shrink: 0;
+  }
+  .i-cyan { background: rgba(34,211,238,0.15); }
+  .i-green { background: rgba(74,222,128,0.15); }
+  .i-yellow { background: rgba(250,204,21,0.15); }
+  .i-purple { background: rgba(168,85,247,0.15); }
+  .i-red { background: rgba(248,113,113,0.15); }
+  .i-blue { background: rgba(96,165,250,0.15); }
+  .footer {
+    margin-top: 22px; padding-top: 16px; border-top: 1px solid #334155;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 13px; color: #475569; position: relative; z-index: 1;
+  }
+  .badge {
+    display: inline-block; background: rgba(74,222,128,0.15); color: #4ade80;
+    border: 1px solid rgba(74,222,128,0.4); font-weight: 700; padding: 5px 12px; border-radius: 999px; font-size: 12px;
+  }
+  .arrow-y { color: #475569; font-size: 22px; text-align: center; }
+</style>
+</head>
+<body>
+
+<div class="canvas">
+  <div class="brand">Sonora Digital Corp · Arquitectura para RYE</div>
+  <h1>Cómo se conecta tu asistente a tus herramientas</h1>
+  <div class="sub">Cada herramienta se expone como un <b style="color:#c084fc;">MCP Server</b> — el asistente lee, escribe y actúa en tiempo real con permisos controlados.</div>
+
+  <div class="row">
+    <div class="col">
+      <div class="tool"><div class="icon i-cyan">🤖</div><div><div class="name">Robots Fanuc</div><div class="desc">Estado, alarmas, ciclos, señales</div></div><div class="mcp">fanuc-mcp</div></div>
+      <div class="tool"><div class="icon i-green">🗂️</div><div><div class="name">ERP / sistema actual</div><div class="desc">Órdenes, inventarios, OTs</div></div><div class="mcp">erp-mcp</div></div>
+      <div class="tool"><div class="icon i-yellow">🔧</div><div><div class="name">CMMS mantenimiento</div><div class="desc">Órdenes de trabajo predictivas</div></div><div class="mcp">cmms-mcp</div></div>
+    </div>
+    <div class="col" style="text-align:center;">
+      <div class="hub">
+        <div class="t">Mystic</div>
+        <div class="st">Tu asistente<br>OpenClaw + SDC</div>
+        <div class="live">● EN VIVO</div>
+      </div>
+      <div class="arrow-y">⬇ 1 hub · 40+ MCPs · permisos controlados</div>
+    </div>
+    <div class="col">
+      <div class="tool"><div class="icon i-purple">👥</div><div><div class="name">Personal / RRHH</div><div class="desc">Retardos, ausencias, cobertura</div></div><div class="mcp">hr-mcp</div></div>
+      <div class="tool"><div class="icon i-red">🚛</div><div><div class="name">Docks / fleteros</div><div class="desc">Trailers, carga y descarga</div></div><div class="mcp">logistics-mcp</div></div>
+      <div class="tool"><div class="icon i-blue">📷</div><div><div class="name">Visión Cognex</div><div class="desc">Defectos e inspección</div></div><div class="mcp">vision-mcp</div></div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>Tú hablas por Telegram / WhatsApp — el asistente hace el resto</span>
+    <span class="badge">Cada MCP aislado, auditable y con permisos</span>
+  </div>
+</div>
+
+</body>
+</html>

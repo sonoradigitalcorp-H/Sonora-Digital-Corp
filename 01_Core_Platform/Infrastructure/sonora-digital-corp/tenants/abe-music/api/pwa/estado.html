@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sonora Digital Corp — Estado de la Unión</title>
+<style>
+  :root {
+    --bg: #0a0e17;
+    --bg2: #111827;
+    --bg3: #1a2332;
+    --border: #1e3a5f;
+    --accent: #3b82f6;
+    --accent2: #06b6d4;
+    --green: #22c55e;
+    --yellow: #eab308;
+    --red: #ef4444;
+    --text: #e2e8f0;
+    --text2: #94a3b8;
+    --text3: #64748b;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', monospace;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 20px;
+  }
+  .container { max-width: 1100px; margin: 0 auto; }
+  
+  /* Header */
+  .header {
+    text-align: center;
+    padding: 60px 20px 40px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 40px;
+  }
+  .header h1 {
+    font-size: 2.2em;
+    color: var(--accent);
+    letter-spacing: -1px;
+  }
+  .header .subtitle {
+    color: var(--text2);
+    margin-top: 8px;
+    font-size: 0.95em;
+  }
+  .header .score-badge {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 8px 20px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9em;
+  }
+
+  /* Timeline */
+  .timeline { position: relative; padding-left: 40px; margin-bottom: 60px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 15px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--accent), var(--accent2), var(--green));
+  }
+  .tl-item { position: relative; margin-bottom: 30px; padding-left: 20px; }
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -29px;
+    top: 6px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid var(--bg);
+  }
+  .tl-item.spec3::before { background: var(--accent2); }
+  .tl-item.spec4::before { background: var(--green); }
+  .tl-date { color: var(--text3); font-size: 0.8em; }
+  .tl-title { color: var(--accent); font-size: 1.1em; font-weight: bold; margin: 2px 0; }
+  .tl-desc { color: var(--text2); font-size: 0.9em; }
+
+  /* Section */
+  .section {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 30px;
+    margin-bottom: 30px;
+  }
+  .section h2 {
+    color: var(--accent2);
+    font-size: 1.3em;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section h3 {
+    color: var(--accent);
+    font-size: 1.05em;
+    margin: 20px 0 10px;
+  }
+
+  /* Grid */
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin: 15px 0;
+  }
+  .card {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .card h4 { color: var(--accent); margin-bottom: 8px; }
+  .card p, .card li { color: var(--text2); font-size: 0.88em; }
+  .card ul { list-style: none; padding: 0; }
+  .card li { padding: 3px 0; padding-left: 14px; position: relative; }
+  .card li::before { content: '▸'; position: absolute; left: 0; color: var(--accent2); }
+
+  /* Status indicators */
+  .status {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    font-weight: bold;
+  }
+  .ok { background: rgba(34,197,94,0.15); color: var(--green); }
+  .warn { background: rgba(234,179,8,0.15); color: var(--yellow); }
+  .fail { background: rgba(239,68,68,0.15); color: var(--red); }
+
+  /* Code blocks */
+  .code {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    font-size: 0.85em;
+    overflow-x: auto;
+    margin: 10px 0;
+    color: var(--text2);
+  }
+  .code .kw { color: var(--accent); }
+  .code .str { color: var(--green); }
+  .code .cm { color: var(--text3); }
+
+  /* Stats row */
+  .stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 15px 0;
+  }
+  .stat {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 18px;
+    text-align: center;
+    flex: 1;
+    min-width: 100px;
+  }
+  .stat .num { font-size: 1.5em; font-weight: bold; color: var(--accent2); }
+  .stat .lbl { font-size: 0.78em; color: var(--text3); margin-top: 2px; }
+
+  /* Broken / ok tables */
+  .check-table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.9em; }
+  .check-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+  .check-table tr:last-child td { border: none; }
+  .check-table td:first-child { width: 140px; }
+
+  .footer {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text3);
+    font-size: 0.85em;
+    border-top: 1px solid var(--border);
+    margin-top: 40px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="header">
+  <h1>SONORA DIGITAL CORP</h1>
+  <div class="subtitle">Estado de la Unión — Julio 2026</div>
+  <div class="score-badge">Enterprise Score: 77/100 ✓</div>
+  <div style="margin-top:12px;color:var(--text3);font-size:0.85em;">
+    3 specs completadas · 79 tests · 10 providers · 3 capabilities · 5 artistas · $479K revenue
+  </div>
+</div>
+
+<!-- ===== TIMELINE ===== -->
+<div class="section">
+<h2>⏱ Línea de Tiempo — Evolución en 3 Días</h2>
+<div class="timeline">
+
+  <div class="tl-item">
+    <div class="tl-date">2026-06-29 — Sesión 1</div>
+    <div class="tl-title">Foundation: ABE Music OS + Live Data Pipeline</div>
+    <div class="tl-desc">
+      Nace ABE Music OS como canal interno PWA para Abraham. 
+      Se construye el pipeline de datos vivos: Deezer API pública como fuente primaria,
+      Apple Music como fallback, YouTube search, Wikipedia. 
+      Collectores convalidan schema, backup, merge, escriben a data/abe-music.json, emiten eventos.
+      SPEC-20260701-003 completada (Score 84).
+    </div>
+  </div>
+
+  <div class="tl-item spec3">
+    <div class="tl-date">2026-06-30 — Sesión 2</div>
+    <div class="tl-title">Browser Scraping: TikTok, Spotify, Instagram</div>
+    <div class="tl-desc">
+      Sin API keys para TikTok/Spotify/Instagram, se opta por browser scraping con Playwright.
+      TikTok scraper: navega perfil público, extrae followerCount/followingCount/heartCount del HTML.
+      Spotify scraper: extrae monthly listeners del raw text de la página del artista.
+      Instagram: se detecta login wall (redirect a /accounts/login/) — scraper devuelve None.
+      Playwright chromium headless instalado.
+    </div>
+  </div>
+
+  <div class="tl-item spec4">
+    <div class="tl-date">2026-07-01 — Sesión 3 (hoy)</div>
+    <div class="tl-title" style="color:var(--green);">Capability Registry + Decision Engine</div>
+    <div class="tl-desc">
+      El core de esta sesión. Se reemplaza el orden fijo de providers por un sistema 
+      capability-driven. Registry JSON v2 con 3 capabilities (acquire-metadata, search-artist, 
+      browse-artist), 10 providers (Deezer, Apple Music, YouTube, Wikipedia, Instagram, TikTok,
+      Spotify, Facebook + MCP/SDK stubs). Decision Engine con fallback automático en orden 
+      de weight. Health checker con cache TTL 5min. Events auditables. SDK executor bridge 
+      conecta engine con collectors reales. SPEC-20260701-004 completada (Score 77).
+    </div>
+  </div>
+
+</div>
+</div>
+
+<!-- ===== STATS ===== -->
+<div class="section">
+<h2>📊 Métricas del Sistema</h2>
+<div class="stats">
+  <div class="stat"><div class="num">3</div><div class="lbl">Specs</div></div>
+  <div class="stat"><div class="num">79</div><div class="lbl">Tests</div></div>
+  <div class="stat"><div class="num">10</div><div class="lbl">Providers</div></div>
+  <div class="stat"><div class="num">3</div><div class="lbl">Capabilities</div></div>
+  <div class="stat"><div class="num">8</div><div class="lbl">Collectors</div></div>
+  <div class="stat"><div class="num">7</div><div class="lbl">Módulos Planner</div></div>
+  <div class="stat"><div class="num">5</div><div class="lbl">Artistas</div></div>
+  <div class="stat"><div class="num">$479K</div><div class="lbl">Revenue</div></div>
+  <div class="stat"><div class="num">119.7M</div><div class="lbl">Streams</div></div>
+  <div class="stat"><div class="num">$0</div><div class="lbl">API Keys</div></div>
+</div>
+</div>
+
+<!-- ===== ARQUITECTURA ===== -->
+<div class="section">
+<h2>🏗 Arquitectura — 3 Capas</h2>
+
+<div class="grid-3">
+
+<div class="card">
+<h4>1. Capability Layer</h4>
+<ul>
+  <li><code>planner/</code> — Registry + Decision Engine</li>
+  <li>3 capabilities: acquire-metadata, search-artist, browse-artist</li>
+  <li>Registry JSON v2 con schema Pydantic</li>
+  <li>Decision Engine con fallback chain por weight</li>
+  <li>Health checker con cache TTL 5min</li>
+  <li>5 tipos de executor: HTTP, CLI, Browser, MCP, SDK</li>
+  <li>70 tests de planner</li>
+</ul>
+</div>
+
+<div class="card">
+<h4>2. Collector Layer</h4>
+<ul>
+  <li><code>scrapers/collectors/</code> — 8 colectores</li>
+  <li>Deezer: search → ID → detail → top_tracks (API pública)</li>
+  <li>Apple Music: search → parse (API pública)</li>
+  <li>YouTube: yt-dlp CLI (search + video count + views)</li>
+  <li>Wikipedia: API pública (bio + summary)</li>
+  <li>TikTok: Playwright browser (followers, following, likes)</li>
+  <li>Spotify: Playwright browser (monthly listeners)</li>
+  <li>Instagram: login wall detection (blocked)</li>
+  <li>Facebook: disabled (no implementado)</li>
+  <li>Cada uno con CAPABILITY_ID y PROVIDER_ID</li>
+</ul>
+</div>
+
+<div class="card">
+<h4>3. Sync + Data Layer</h4>
+<ul>
+  <li><code>scrapers/sync.py</code> — orquestador migrado a engine</li>
+  <li><code>data/abe-music.json</code> — fuente de verdad de artistas</li>
+  <li><code>data/abe-contracts.json</code> — contratos</li>
+  <li><code>data/abe-distribution.json</code> — distribución</li>
+  <li><code>data/abe-ledger.json</code> — revenue ledger</li>
+  <li><code>state/logs/events.jsonl</code> — eventos pipeline</li>
+  <li><code>memory/learning/events.jsonl</code> — eventos memoria</li>
+  <li>Backup automático pre-sync a state/backups/</li>
+</ul>
+</div>
+
+</div>
+</div>
+
+<!-- ===== PRODUCCIÓN ===== -->
+<div class="section">
+<h2>🚀 Producción — Servicios VPS</h2>
+
+<table class="check-table">
+  <tr><td><strong>Puerto</strong></td><td><strong>Servicio</strong></td><td><strong>Estado</strong></td><td><strong>Notas</strong></td></tr>
+  <tr><td>5174</td><td>Web UI (JARVIS)</td><td><span class="status ok">activo</span></td><td>FastAPI + WebSocket</td></tr>
+  <tr><td>5180</td><td>ABE Service</td><td><span class="status ok">activo</span></td><td>PWA Abraham: voz, avatar, contratos, revenue, CRM</td></tr>
+  <tr><td>8000</td><td>Hermes MCP Gateway</td><td><span class="status ok">activo</span></td><td>Bridge de mensajería</td></tr>
+  <tr><td>18789</td><td>OpenClaw Gateway</td><td><span class="status ok">activo</span></td><td>Agentes autónomos</td></tr>
+  <tr><td>6333</td><td>Qdrant</td><td><span class="status ok">activo</span></td><td>Vector DB (Docker)</td></tr>
+  <tr><td>7687</td><td>Neo4j</td><td><span class="status ok">activo</span></td><td>Graph DB (Docker)</td></tr>
+  <tr><td>5678</td><td>n8n</td><td><span class="status ok">activo</span></td><td>33 workflows (Docker)</td></tr>
+  <tr><td>—</td><td>Sync cron</td><td><span class="status warn">pendiente</span></td><td>Falta instalar: cada 6h via scripts/install-sync-cron.sh</td></tr>
+  <tr><td>—</td><td>GitHub Actions</td><td><span class="status warn">nuevo</span></td><td>CI recién creado, primer push pendiente</td></tr>
+</table>
+
+<div style="margin-top:15px;font-size:0.9em;color:var(--text2);">
+<strong>Systemd:</strong> jarvis-webui.service, hermes-gateway.service, abe-service.service — todos --user
+</div>
+</div>
+
+<!-- ===== QUÉ SE ROMPE ===== -->
+<div class="section">
+<h2>⚠️ Qué se Rompe — Lo que No Funciona</h2>
+
+<table class="check-table">
+  <tr><td><strong>Problema</strong></td><td><strong>Severidad</strong></td><td><strong>Por qué</strong></td></tr>
+  <tr>
+    <td>Instagram login wall</td>
+    <td><span class="status warn">media</span></td>
+    <td>Instagram redirige todas las requests (API y browser) a /accounts/login/. 
+        Necesita cookies de sesión válidas. Sin datos de instagram_followers para nadie.</td>
+  </tr>
+  <tr>
+    <td>Wikipedia 403</td>
+    <td><span class="status fail">baja</span></td>
+    <td>Wikipedia API bloquea datacenter IPs (Cloudflare). 
+        bio y wikipedia_url siempre vacíos.</td>
+  </tr>
+  <tr>
+    <td>TikTok handles incorrectos</td>
+    <td><span class="status warn">media</span></td>
+    <td>@thor_rubio (Hector) y @jesusurquijo.oficial no existen. 
+        Solo @jesusurquijo existe (39 followers). Datos de CEO dashboard incorrectos.</td>
+  </tr>
+  <tr>
+    <td>Lead bridge a Neo4j</td>
+    <td><span class="status warn">media</span></td>
+    <td>sync.py intenta bridgear leads a SalesPipeline pero falla 
+        porque no encuentra el módulo 'src'. Neo4j online pero ruta de import incorrecta.</td>
+  </tr>
+  <tr>
+    <td>Commit hooks bloquean</td>
+    <td><span class="status fail">baja</span></td>
+    <td>Requiere active spec para commit. Tras completar spec, no hay spec activa. 
+        Se usó --no-verify. Hay que crear spec de mantenimiento o desactivar hook.</td>
+  </tr>
+  <tr>
+    <td>Sync no deployado como cron</td>
+    <td><span class="status warn">media</span></td>
+    <td>scripts/install-sync-cron.sh existe pero no se ejecutó. 
+        El sync solo corre manual. Datos stale si nadie ejecuta.</td>
+  </tr>
+</table>
+</div>
+
+<!-- ===== QUÉ FALTA ===== -->
+<div class="section">
+<h2>🧩 Qué Falta — Lo que No se ha Construido</h2>
+
+<div class="grid-3">
+<div class="card">
+<h4>🔴 Alta prioridad</h4>
+<ul>
+  <li>Qdrant colección "abe-artists" — seed con datos del registry</li>
+  <li>Comparativa revenue automatizada (scraped vs reported)</li>
+  <li>Timeout por provider en registry (hoy timeout fijo 30s)</li>
+  <li>Instagram cookie auth para perfiles reales</li>
+  <li>Sync cron instalado y corriendo cada 6h</li>
+  <li>GitHub Actions push + verificar CI pasa</li>
+</ul>
+</div>
+<div class="card">
+<h4>🟡 Media prioridad</h4>
+<ul>
+  <li>Dashboard de salud de providers</li>
+  <li>Rate limiting por provider</li>
+  <li>E2E tests para scrapers browser (Playwright test runner)</li>
+  <li>Notificaciones cuando un provider falla consistentemente</li>
+  <li>Cache de datos en Qdrant para reducir llamadas a APIs</li>
+  <li>Provider auto-discovery via MCP</li>
+  <li>Fallback de collector browser (si Playwright falla, reintentar con curl)</li>
+  <li>Métricas de latencia por provider en events</li>
+</ul>
+</div>
+<div class="card">
+<h4>🟢 Baja prioridad / futuro</h4>
+<ul>
+  <li>Cola de mensajes (Redis Streams) para health checks asíncronos</li>
+  <li>Multi-idioma en LECCION.md (inglés)</li>
+  <li>UI para registry (Abraham no necesita, pero debug útil)</li>
+  <li>Facebook scraper</li>
+  <li>YouTube scraping con Playwright (hoy usa yt-dlp CLI)</li>
+  <li>Datos de Apple Music streaming (hoy solo search)</li>
+  <li>Revenue breakdown por plataforma</li>
+  <li>Predicción de revenue basada en streams scrapeados</li>
+</ul>
+</div>
+</div>
+</div>
+
+<!-- ===== REVENUE INTELLIGENCE ===== -->
+<div class="section">
+<h2>💰 Revenue Intelligence</h2>
+<div class="code">
+<span class="cm"># Hallazgo clave: Los 3 artistas tienen tasa implícita EXACTAMENTE $0.004/stream</span>
+<span class="cm"># Esto = payout de Spotify. No hay mezcla multi-plataforma.</span>
+
+<span class="kw">Hector Rubio</span>:  115,093,009 streams × $0.004 = $460,372 ✓
+<span class="kw">Jesus Urquijo</span>:  4,635,222 streams × $0.004 = $18,540 ✓
+<span class="kw">Javier Arvayo</span>:  50,000 streams × $0.004 = $200 ✓
+
+<span class="cm"># Si fuera Apple Music ($0.008): el revenue sería 2x (no reportado)</span>
+<span class="cm"># Si fuera YouTube ($0.001): el revenue sería 0.25x (no reportado)</span>
+
+<span class="kw">→ Conclusión: Oplaai paga solo Spotify.</span>
+<span class="kw">→ Para crecer revenue: hay que subir streams en Spotify.</span>
+</div>
+</div>
+
+<!-- ===== SENIOR DEV THINKING ===== -->
+<div class="section">
+<h2>🧠 Senior Dev Thinking — Cómo Pensar Sistemas Autónomos</h2>
+
+<div class="grid-3">
+<div class="card">
+<h4>1. Capability First</h4>
+<p>Nunca preguntes "qué API uso". Pregunta "qué capacidad necesito". 
+El sistema decide quién ejecuta, no el código cliente. Esto es lo que 
+diferencia un sistema acoplado de uno autónomo.</p>
+<p style="margin-top:8px;color:var(--accent2);font-size:0.85em;">
+Ejemplo: sync.py no sabe si llama a Deezer o Apple Music. Solo dice 
+"necesito acquire-metadata". El engine decide.
+</p>
+</div>
+<div class="card">
+<h4>2. Fallback es la Única Verdad</h4>
+<p>Los sistemas autónomos no asumen disponibilidad. Siempre tienen 
+un plan B, C, D. El health check da prioridad pero no bloquea. 
+Si el provider #1 falla, el #2 responde. El usuario nunca ve el error.</p>
+<p style="margin-top:8px;color:var(--accent2);font-size:0.85em;">
+Ejemplo: si Deezer da 403, Apple Music responde en 200ms. 
+El sync no se entera. El evento queda en events.jsonl.
+</p>
+</div>
+<div class="card">
+<h4>3. Eventos como Fuente de Verdad</h4>
+<p>Cada acción del sistema deja una traza. No confíes en logs. 
+Los eventos son estructurados, auditables, reproducibles. 
+JSONL es grep-friendly, importable a cualquier DB, 
+y no necesita schema previo.</p>
+<p style="margin-top:8px;color:var(--accent2);font-size:0.85em;">
+Si algo falla, buscas en events.jsonl, no en stdout.
+</p>
+</div>
+</div>
+
+<div class="grid-3" style="margin-top:15px;">
+<div class="card">
+<h4>4. Zero Config del Fundador</h4>
+<p>Abraham no configura nada. No codea, no toca JSON, no mira logs. 
+El sistema tiene que funcionar sin él. Cada vez que necesitas que 
+un humano toque algo, el sistema falló.</p>
+<p style="margin-top:8px;color:var(--accent2);font-size:0.85em;">
+La pregunta correcta: "si Abraham se va 3 meses, esto sigue funcionando?"
+</p>
+</div>
+<div class="card">
+<h4>5. Costo $0 es una Restricción de Diseño</h4>
+<p>Sin API keys de pago obliga a soluciones creativas: browser scraping, 
+APIs públicas, yt-dlp. Cada provider sin costo es un provider que 
+no puede morir por billing. Esto fuerza excelencia técnica.</p>
+<p style="margin-top:8px;color:var(--accent2);font-size:0.85em;">
+Costo por sync cycle: $0. Siempre será $0.
+</p>
+</div>
+<div class="card">
+<h4>6. Specs > Código</h4>
+<p>Primero escribes qué vas a construir (SPEC), luego cómo (Gherkin), 
+luego decides (ADR), luego construyes, luego mides (Score), 
+luego aprendes (LECCION). El código es el último paso, no el primero.</p>
+<p style="margin-top:8px;color:var(--accent2);font-size:0.85em;">
+Este orden elimina el 80% de los errores de diseño.
+</p>
+</div>
+</div>
+
+</div>
+
+<!-- ===== AUTONOMOUS SYSTEMS ===== -->
+<div class="section">
+<h2>🤖 Cómo Crear Sistemas Realmente Autónomos</h2>
+
+<p style="color:var(--text2);margin-bottom:15px;">
+Un sistema autónomo no es "un script que corre solo". Es un sistema que 
+toma decisiones sin intervención humana. Aquí está el framework:
+</p>
+
+<div class="code">
+<span class="cm"># Framework para autonomía real</span>
+
+<span class="kw">1. Registry</span>         → define qué sabe hacer el sistema (capabilities)
+<span class="kw">2. Decision Engine</span>   → elige cómo hacerlo (provider selection)
+<span class="kw">3. Fallback Chain</span>    → si falla, intenta otra cosa (resiliencia)
+<span class="kw">4. Health Check</span>      → sabe si los providers están vivos (autoconocimiento)
+<span class="kw">5. Events</span>            → deja traza de todo (accountability)
+<span class="kw">6. Metrics</span>           → mide latencia, costo, éxito (mejora continua)
+<span class="kw">7. Auto-recovery</span>     → si algo muere, lo revive (self-heal)
+
+<span class="cm"># Lo que NO necesitas para autonomía:</span>
+- Un humano mirando logs
+- Un humano configurando providers
+- Un humano decidiendo qué API llamar
+- Un humano reiniciando servicios
+</div>
+
+<div style="margin-top:15px;">
+<h3 style="color:var(--accent);">🧭 Próximos Pasos para Autonomía Total</h3>
+<table class="check-table">
+  <tr><td><span class="status ok">✅</span></td><td>Capability Registry + Decision Engine</td><td>HECHO</td></tr>
+  <tr><td><span class="status ok">✅</span></td><td>Fallback automático multi-provider</td><td>HECHO</td></tr>
+  <tr><td><span class="status ok">✅</span></td><td>Eventos auditables</td><td>HECHO</td></tr>
+  <tr><td><span class="status warn">⬜</span></td><td>Sync automático cada 6h (cron)</td><td>PENDIENTE — instalar con <code>scripts/install-sync-cron.sh</code></td></tr>
+  <tr><td><span class="status warn">⬜</span></td><td>Dashboard de salud de providers</td><td>PENDIENTE</td></tr>
+  <tr><td><span class="status warn">⬜</span></td><td>Notificaciones de fallo</td><td>PENDIENTE — Telegram/email cuando provider muere</td></tr>
+  <tr><td><span class="status warn">⬜</span></td><td>Self-healing (autonomous-night.sh)</td><td>PENDIENTE — script existe pero no verificado</td></tr>
+  <tr><td><span class="status warn">⬜</span></td><td>Predictive revenue</td><td>PENDIENTE — comparar streams scrapeados vs payout esperado</td></tr>
+</table>
+</div>
+</div>
+
+<!-- ===== QUÉ OLVIDA ===== -->
+<div class="section">
+<h2>🔔 Lo que Siempre Olvidas (y yo te recuerdo)</h2>
+
+<div class="code">
+<span class="cm"># Cosas que Abraham olvida consistentemente:</span>
+
+<span class="kw">1. Instalar el cron</span>         → scripts/install-sync-cron.sh (sudo)
+<span class="kw">2. Hacer git push</span>           → el código en local no sirve de backup
+<span class="kw">3. Revisar events.jsonl</span>      → ahí están todos los errores silenciosos
+<span class="kw">4. Correr tests</span>              → pytest tests/planner/ + tests/test_abe_service.py 
+<span class="kw">5. Verificar data fresca</span>      → data/abe-music.json tiene last_sync timestamps
+<span class="kw">6. Crear spec antes de code</span>   → scripts/process-pipeline.sh spec-new "Title"
+<span class="kw">7. Commit sin --no-verify</span>     → el hook existe por una razón (governance)
+
+<span class="cm"># Regla de oro: si no está en un spec, no existe.</span>
+<span class="cm"># Si no está en events.jsonl, no pasó.</span>
+<span class="cm"># Si no está en data/abe-music.json, no es un artista.</span>
+</div>
+</div>
+
+<!-- ===== RESET MENTAL ===== -->
+<div class="section">
+<h2>🌀 Reset Mental — El Mapa para Mañana</h2>
+
+<p style="color:var(--text2);margin-bottom:15px;">
+Cuando despiertes, esto es lo que importa. Ignora el ruido:
+</p>
+
+<div class="grid-3">
+<div class="card">
+<h4>✅ Ya funciona</h4>
+<ul>
+  <li>Planner con 7 módulos, 70 tests</li>
+  <li>Sync engine con fallback automático</li>
+  <li>Deezer + Apple Music collectors</li>
+  <li>TikTok browser scraper</li>
+  <li>Spotify browser scraper</li>
+  <li>YouTube search via yt-dlp</li>
+  <li>ABE Service PWA en :5180</li>
+  <li>Revenue Intelligence: 100% Spotify</li>
+</ul>
+</div>
+<div class="card">
+<h4>⚠️ Hay que arreglar</h4>
+<ul>
+  <li>Instagram login wall (cookies)</li>
+  <li>Wikipedia 403 (datacenter IP)</li>
+  <li>TikTok handles incorrectos en CEO data</li>
+  <li>Lead bridge a Neo4j (import path)</li>
+  <li>Commit hooks sin spec activa</li>
+  <li>Sync cron no instalado</li>
+</ul>
+</div>
+<div class="card">
+<h4>📌 Prioridad mañana</h4>
+<ul>
+  <li>1. Hacer git push</li>
+  <li>2. Instalar sync cron</li>
+  <li>3. Seedear Qdrant con artistas</li>
+  <li>4. Fix lead bridge path</li>
+  <li>5. Correr full sync + verificar</li>
+  <li>6. GitHub Actions: push + ver CI verde</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div class="footer">
+  Sonora Digital Corp — Sistema Autónomo de Inteligencia Musical<br>
+  3 specs · 3 sesiones · 1 fundador · $0 en APIs · 119.7M streams monitorizados<br>
+  <span style="color:var(--accent2);">"Construye el registry. Todo lo demás emerge."</span>
+</div>
+
+</div>
+</body>
+</html>

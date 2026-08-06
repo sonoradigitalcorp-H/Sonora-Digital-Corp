@@ -1,0 +1,1 @@
+"""Capability spec creation logic."""

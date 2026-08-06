@@ -1,0 +1,46 @@
+nexus_skill_spec: "1.0"
+id: abe-music.releases
+name: Releases
+version: 1.0.0
+description: Gestión de lanzamientos musicales
+
+runtime:
+  language: python
+  entrypoint: skill.py
+  timeout: 10s
+
+inputs:
+  action:
+    type: enum
+    values: [programar, notificar, distribuir, listar]
+    required: true
+  titulo:
+    type: string
+    required: false
+  fecha_lanzamiento:
+    type: string
+    required: false
+  tipo:
+    type: string
+    required: false
+
+outputs:
+  success: { type: boolean }
+  data: { type: object }
+  message: { type: string }
+
+tools_required:
+  - id: hasura.mutate
+    reason: Guardar releases en la base de datos del artista
+  - id: llm.chat
+    reason: Generar copy y descripciones para plataformas
+
+permissions:
+  roles: [admin, manager]
+
+cost:
+  per_call_usd: 0.003
+  avg_latency_ms: 600
+
+events:
+  emits: [release.programada, release.notificada, release.distribuida]

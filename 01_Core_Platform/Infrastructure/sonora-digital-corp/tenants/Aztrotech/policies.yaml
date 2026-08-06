@@ -1,0 +1,28 @@
+prompt_injection:
+  enabled: true
+  model: mystic-shield
+
+rate_limits:
+  chat: 100/hour
+  api_calls: 1000/hour
+  image_generate: 20/hour
+
+data_masking:
+  pii_detection: true
+  auto_redact:
+    - credit_card
+    - phone_number
+    - email
+
+tool_sandbox:
+  enabled: true
+  allowed_domains:
+    - "api.astrotech.mx"
+  blocked_commands:
+    - rm
+    - sudo
+    - curl
+
+session:
+  timeout_minutes: 30
+  max_history: 50

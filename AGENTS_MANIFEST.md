@@ -40,5 +40,10 @@ Cuando se requiera coordinar múltiples herramientas (ej. transcribir audio, rec
 
 ### 6. Observabilidad y Seguridad
 - **Telemetry:** Usa `log_agent_action()` del SDK para registrar TODO evento con JSON estructurado.
-- **Security:** Accede a secretos vía `client.get_secret()`. Las políticas RBAC están en `07_Security_and_RBAC/Policies/`.
+- **Security:** Accede a secretos vía `client.get_secret()`. Las políticas RBAC están en `08_Security_and_RBAC/Policies/`.
 - **Graph Dashboard:** El schema de Neo4j para auditoría está en `03_Agentic_Infrastructure/Databases/Neo4j_Graph/graph_schema.md`.
+### 7. Sistema Inmune (ANTI-CAOS PERMANENTE)
+- Esqueleto inmutable: 4 carpetas de primer nivel. Raíz: solo README, manifiestos y .gitignore.
+- El hook pre-commit BLOQUEA carpetas/archivos fuera del esqueleto. CI lo re-audita en cada push.
+- Cadáveres prohibidos por siempre: 00_Admin, 01_Core, 02_Clientes, 03_Sandbox.
+- Si dudas dónde va un archivo: README.md. Si sigues dudando: 03_Sandbox_and_RnD/.

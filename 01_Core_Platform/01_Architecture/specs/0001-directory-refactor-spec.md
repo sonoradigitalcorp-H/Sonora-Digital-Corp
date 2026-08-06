@@ -31,7 +31,7 @@ Sonora Digital Corp Nuevo/
 │   │   └── specs/          ← Technical specifications
 │   ├── 02_Source_Code/
 │   ├── 03_Infrastructure/
-│   └── 04_Shared_Libraries/
+│   └── 05_Shared_Libraries/
 ├── 02_Client_Projects/
 │   ├── [CLIENT_NAME]/
 │   │   ├── 01_Discovery/
