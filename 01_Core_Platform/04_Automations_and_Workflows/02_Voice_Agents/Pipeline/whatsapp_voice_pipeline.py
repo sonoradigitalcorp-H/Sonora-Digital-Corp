@@ -3,10 +3,11 @@
 Flujo completo: audio WhatsApp → transcripción → procesamiento → respuesta de voz → WhatsApp."""
 import os, sys, json, tempfile, subprocess, asyncio
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TOOLS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "Hermes_Agent", "Tools")
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))))
+TOOLS_DIR = os.path.join(BASE_DIR, "01_Core_Platform", "03_Agentic_Infrastructure", "Hermes_Agent", "Tools")
+SDK_DIR = os.path.join(BASE_DIR, "01_Core_Platform", "05_Shared_Libraries", "SDK_Python")
 sys.path.insert(0, TOOLS_DIR)
-sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "..", "05_Shared_Libraries", "SDK_Python"))
+sys.path.insert(0, SDK_DIR)
 
 from sdc_sdk import SDC_Client
 from okf_navigator import retrieve_context
