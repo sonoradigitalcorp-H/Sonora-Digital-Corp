@@ -1,27 +1,9 @@
-#!/usr/bin/env python3
-"""Onboarding Generator — Aztrotech.
-Genera una landing page de onboarding estilo Mysticgrimoire con branding de César.
-Input: logo_path, avatar_path, lora_assets
-Output: index.html + assets/
-
-Uso:
-    python3 onboarding_generator.py --name cesar --tenant azrotech --output /path/to/landing
-"""
-import os, sys, argparse, json
-from pathlib import Path
-from datetime import datetime
-
-from string import Template
-
-# CSS que usará Python format - escapar llaves simples con dobles
-CSS_CSS = """{margin:0;padding:0;box-sizing:border-box}"""  # marcador placeholder
-
-TEMPLATE = Template('''<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>${title}</title>
+<title>César | Aztrotech</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{{margin:0;padding:0;box-sizing:border-box}}
@@ -75,15 +57,15 @@ footer{{padding:16px 4px;border-top:1px solid var(--border);text-align:center;co
 <div id="bg"></div>
 <div class="app">
   <header>
-    <div class="logo">${initials}</div>
-    <h1><span>${name}</span> Assistant</h1>
+    <div class="logo">C</div>
+    <h1><span>César</span> Assistant</h1>
   </header>
   <div class="hero">
-    <h2>¡Hola! Soy ${name}</h2>
-    <p>${tagline}</p>
+    <h2>¡Hola! Soy César</h2>
+    <p>Tu asistente digital 24/7 para captar y atender clientes. Contáctame directamente.</p>
     <div class="cta-grid">
-      <a href="${cta1_url}" class="btn btn-cita">${cta1_text}</a>
-      <a href="${cta2_url}" class="btn">${cta2_text}</a>
+      <a href="https://wa.me/526621072254" class="btn btn-cita">WhatsApp César</a>
+      <a href="https://aztrotech.mx" class="btn">Web de César</a>
     </div>
     <div class="voz-toggle">
       <input type="checkbox" id="vozSwitch" checked>
@@ -91,7 +73,7 @@ footer{{padding:16px 4px;border-top:1px solid var(--border);text-align:center;co
     </div>
   </div>
   <footer>
-    <p>© ${year} ${company} | <a href="${web}" target="_blank" style="color:var(--primary)">Web oficial</a></p>
+    <p>© 2026 Aztrotech | <a href="https://aztrotech.mx" target="_blank" style="color:var(--primary)">Web oficial</a></p>
   </footer>
 </div>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -138,69 +120,4 @@ window.addEventListener('resize',()=>{
 });
 </script>
 </body>
-</html>''')
-
-
-def generate_onboarding(name: str, tenant: str = "Aztrotech", output_dir: str = None, configs: dict = None):
-    """Genera la landing page completa."""
-    configs = configs or {}
-    
-    cesar = {
-        "company": "Aztrotech",
-        "owner": "César Holguín",
-        "web": configs.get("web", "https://aztrotech.mx"),
-        "instagram": configs.get("instagram", "https://instagram.com/cesarholguin"),
-        "linkedin": configs.get("linkedin", "https://linkedin.com/in/cesarholguin"),
-        "whatsapp": configs.get("whatsapp", "https://wa.me/526621072254"),
-        "telegram": configs.get("telegram", "https://t.me/CesarHolguin"),
-    }
-    
-    # Fill template (using String.Template)
-    html = TEMPLATE.substitute(
-        title=f"{name} | {cesar['company']}",
-        initials=name[0].upper(),
-        name=name,
-        tagline="Tu asistente digital 24/7 para captar y atender clientes. Contáctame directamente.",
-        cta1_text="WhatsApp César",
-        cta1_url=cesar["whatsapp"],
-        cta2_text="Web de César",
-        cta2_url=cesar["web"],
-        year=datetime.now().year,
-        company=cesar["company"],
-        web=cesar["web"]
-    )
-    
-    if output_dir is None:
-        output_dir = Path("/home/mystic/Documentos/Sonora Digital Corp Nuevo/02_Client_Projects/Aztrotech/04_Deployment/onboarding")
-    else:
-        output_dir = Path(output_dir)
-    
-    output_dir.mkdir(parents=True, exist_ok=True)
-    
-    with open(output_dir / "index.html", "w", encoding="utf-8") as f:
-        f.write(html)
-    
-    return {
-        "status": "success",
-        "path": str(output_dir / "index.html"),
-        "tenant": tenant,
-        "agent": name
-    }
-
-
-if __name__ == "__main__":
-    ap = argparse.ArgumentParser(description="Onboarding Generator")
-    ap.add_argument("--name", default="César", help="Nombre del dueño")
-    ap.add_argument("--tenant", default="Aztrotech", help="Tenant/cliente")
-    ap.add_argument("--output", default=None, help="Carpeta de salida")
-    args = ap.parse_args()
-    
-    configs = {
-        "web": "https://aztrotech.mx",
-        "whatsapp": "https://wa.me/526621072254",
-        "instagram": "https://instagram.com/cesarholguin",
-        "linkedin": "https://linkedin.com/in/cesarholguin"
-    }
-    
-    result = generate_onboarding(args.name, args.tenant, args.output, configs)
-    print(json.dumps(result, indent=2, ensure_ascii=False))
+</html>
