@@ -2,7 +2,7 @@
   "id": "aztrotech.pricing",
   "tenant": "Aztrotech",
   "name": "Tarifas de servicios Aztrotech",
-  "aliases": ["tarifa", "precio", "costo", "instalación", "cotización", "antena", "visita"],
+  "aliases": ["tarifa", "precio", "costo", "instalación", "cotización", "antena", "visita", "cobrar", "cuanto", "cuesta", "valor"],
   "definition": "Tabla oficial de precios. Responder solo con valores exactos de esta tabla.",
   "rules": [
     {"id": "R1", "text": "No combinar ni promediar filas. Si el servicio no existe en la tabla, aplicar contrato 'no tengo datos verificados'."}

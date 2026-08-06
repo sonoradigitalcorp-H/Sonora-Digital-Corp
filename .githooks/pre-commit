@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # Anticuerpo pre-commit: bloquea caos entrante
 cd "$(git rev-parse --show-toplevel)" || exit 1
-DIRS=" 00_Administration 01_Core_Platform 02_Client_Projects 03_Sandbox_and_RnD .github .githooks "
-FILES=" README.md AGENTS_MANIFEST.md SYSTEM_MANIFEST.md .gitignore "
+DIRS=" 00_Administration 01_Core_Platform 02_Client_Projects 03_Sandbox_and_RnD .github .githooks .opencode "
+FILES=" README.md AGENTS_MANIFEST.md SYSTEM_MANIFEST.md AGENTS.md ESTADO.md .gitignore "
 v=0
 while IFS= read -r f; do
   top="${f%%/*}"

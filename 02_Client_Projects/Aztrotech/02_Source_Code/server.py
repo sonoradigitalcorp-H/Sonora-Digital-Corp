@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="AstroTech AI - Mysticgrimoire")
 
-config_path = os.path.join(os.path.dirname(__file__), "..", "config.yaml")
+config_path = os.path.join(os.path.dirname(__file__), "config.yaml")
 with open(config_path) as f:
     CONFIG = yaml.safe_load(f)
 

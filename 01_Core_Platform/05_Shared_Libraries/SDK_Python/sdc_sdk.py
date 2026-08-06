@@ -6,7 +6,7 @@ from telemetry import log_agent_action
 
 OPENROUTER_KEY = os.environ.get("OPENROUTER_API_KEY")
 OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions"
-OPENROUTER_MODEL = os.environ.get("OPENAI_MODEL", "google/gemma-4-26b-a4b-it:free")
+OPENROUTER_MODEL = os.environ.get("OPENAI_MODEL", "deepseek/deepseek-v4-flash-0731")
 
 class SDC_Client:
     def __init__(self, client_name):

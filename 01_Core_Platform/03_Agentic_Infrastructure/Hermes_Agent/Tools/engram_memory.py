@@ -2,25 +2,32 @@
 import subprocess
 import sys
 import os
+import json
+import urllib.request
 
 # Auto-instalación de dependencias si no existen (DevOps trick)
 try:
     from qdrant_client import QdrantClient
     from qdrant_client.models import Distance, VectorParams, PointStruct
-    from sentence_transformers import SentenceTransformer
 except ImportError:
     print("Instalando dependencias faltantes...")
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "qdrant-client", "sentence-transformers"])
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "qdrant-client"])
     from qdrant_client import QdrantClient
     from qdrant_client.models import Distance, VectorParams, PointStruct
-    from sentence_transformers import SentenceTransformer
 
-# Inicializar modelo de embeddings local (corre en CPU, sin APIs externas)
-embedder = SentenceTransformer('all-MiniLM-L6-v2')
+# Embeddings via Ollama (all-minilm, 384-dim) — sin sentence-transformers
+OLLAMA_URL = "http://localhost:11434/api/embeddings"
+OLLAMA_MODEL = "all-minilm"
 
-# Conectar a Qdrant local (Asumimos que corre en localhost:6333)
-# Si no tienes Qdrant corriendo: docker run -p 6333:6333 qdrant/qdrant
-qdrant = QdrantClient(host="localhost", port=6333)
+def _embed(text):
+    req = urllib.request.Request(OLLAMA_URL,
+        data=json.dumps({"model": OLLAMA_MODEL, "prompt": text}).encode(),
+        headers={"Content-Type": "application/json"})
+    with urllib.request.urlopen(req, timeout=30) as r:
+        return json.loads(r.read())["embedding"]
+
+def _get_qdrant():
+    return QdrantClient(host="localhost", port=6333, timeout=5)
 
 def get_collection_name(client_name):
     return f"tenant_{client_name.lower().replace(' ', '_')}"
@@ -28,7 +35,7 @@ def get_collection_name(client_name):
 def _collection_exists(collection_name):
     """Verifica si una colección existe usando get_collections (API estable)."""
     try:
-        collections = qdrant.get_collections()
+        collections = _get_qdrant().get_collections()
         return any(c.name == collection_name for c in collections.collections)
     except Exception:
         return False
@@ -39,16 +46,16 @@ def save_memory(data, client_name):
     
     # Crear colección si no existe (Aislamiento Multitenant)
     if not _collection_exists(collection):
-        qdrant.create_collection(
+        _get_qdrant().create_collection(
             collection_name=collection,
             vectors_config=VectorParams(size=384, distance=Distance.COSINE)
         )
         print(f"[Engram Tool] Colección creada para el tenant: {client_name}")
     
-    vector = embedder.encode(data).tolist()
+    vector = _embed(data)
     point_id = abs(hash(data)) % (10**10) # ID simple basado en el texto
     
-    qdrant.upsert(
+    _get_qdrant().upsert(
         collection_name=collection,
         points=[PointStruct(id=point_id, vector=vector, payload={"text": data})]
     )
@@ -61,8 +68,8 @@ def query_memory(query, client_name):
     if not _collection_exists(collection):
         return f"No hay memoria previa para {client_name}."
     
-    vector = embedder.encode(query).tolist()
-    results = qdrant.search(
+    vector = _embed(query)
+    results = _get_qdrant().search(
         collection_name=collection,
         query_vector=vector,
         limit=1
