@@ -16,4 +16,6 @@ if [ $v -ne 0 ]; then
   echo "❌ COMMIT BLOQUEADO. Usa el esqueleto canónico (README.md) o --no-verify bajo tu responsabilidad."
   exit 1
 fi
-exit 0
+# Ley de Memoria Histórica: Session_Logs/ es append-only (nunca reescribir)
+bash "00_Administration/guardians/session_log_guard.sh" --staged
+exit $?

@@ -47,3 +47,8 @@ Cuando se requiera coordinar múltiples herramientas (ej. transcribir audio, rec
 - El hook pre-commit BLOQUEA carpetas/archivos fuera del esqueleto. CI lo re-audita en cada push.
 - Cadáveres prohibidos por siempre: 00_Admin, 01_Core, 02_Clientes, 03_Sandbox.
 - Si dudas dónde va un archivo: README.md. Si sigues dudando: 03_Sandbox_and_RnD/.
+
+### 8. Ley de Memoria Histórica (INMUTABLE)
+- `00_Administration/Session_Logs/` es append-only: la historia registrada NUNCA se reescribe, solo se appenda.
+- El pre-commit la protege vía `bash 00_Administration/guardians/session_log_guard.sh --staged`.
+- Auditoría manual: `bash 00_Administration/guardians/session_log_guard.sh`.
