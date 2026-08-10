@@ -1,4 +1,4 @@
-FROM neo4j:5.19-community
+FROM neo4j:5.26-community
 
 # Plugins para Graph RAG
 ENV NEO4JLAB_PLUGINS='["apoc"]'
