@@ -16,7 +16,8 @@ except ImportError:
     from qdrant_client.models import Distance, VectorParams, PointStruct
 
 # Embeddings via Ollama (all-minilm, 384-dim) — sin sentence-transformers
-OLLAMA_URL = "http://localhost:11434/api/embeddings"
+# Ollama corre en VPS OVH (docker) — ver ~/.hermes/.env OLLAMA_ENDPOINT
+OLLAMA_URL = os.getenv("OLLAMA_ENDPOINT", "http://localhost:11434") + "/api/embeddings"
 OLLAMA_MODEL = "all-minilm"
 
 def _embed(text):

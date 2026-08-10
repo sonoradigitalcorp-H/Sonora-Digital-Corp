@@ -1,0 +1,4 @@
+{"variant": "variant_a_control", "lead_type": "hot", "engagement_score": 0.7, "survey_rating": 5, "cost_usd": 0.002, "timestamp": "2026-08-08T09:25:23.706281+00:00"}
+{"variant": "variant_b_storytelling", "lead_type": "hot", "engagement_score": 0.85, "survey_rating": 4, "cost_usd": 0.001, "timestamp": "2026-08-08T09:25:23.706527+00:00"}
+{"variant": "variant_a_control", "lead_type": "cold", "engagement_score": 0.3, "survey_rating": null, "cost_usd": 0.001, "timestamp": "2026-08-08T09:25:23.706666+00:00"}
+{"variant": "variant_b_storytelling", "lead_type": "warm", "engagement_score": 0.6, "survey_rating": 3, "cost_usd": 0.001, "timestamp": "2026-08-08T09:25:23.706790+00:00"}

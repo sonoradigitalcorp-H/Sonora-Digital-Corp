@@ -1,0 +1,49 @@
+{
+  "cycle_id": "c2029706",
+  "started_at": "2026-08-08T12:30:01.366759+00:00",
+  "completed_at": "2026-08-08T12:31:04.081358+00:00",
+  "duration_seconds": 62.71,
+  "stats": {
+    "total_tasks": 6,
+    "successes": 5,
+    "failures": 1,
+    "patterns_detected": 1,
+    "pending_insights": 0,
+    "avg_score": 5.0
+  },
+  "patterns_found": 1,
+  "insights_generated": 0,
+  "skill_audit": {
+    "skills": [],
+    "improvements": []
+  },
+  "summary": "Sonora Digital Corp. achieved an 83% success rate (5/6 tasks) with an average score of 5.0, indicating strong overall performance. One failure was detected, and a single recurring pattern was identified, suggesting a potential systemic issue. No pending insights were generated, but the pattern warrants further investigation to prevent future failures.",
+  "top_insights": [
+    {
+      "priority": 1,
+      "insight": "The single detected pattern correlates with the one failure, indicating a possible root cause that could be addressed proactively.",
+      "rationale": "With 5 successes and 1 failure, the pattern likely represents a specific condition or input that leads to failure. Analyzing this pattern can help eliminate the failure mode."
+    },
+    {
+      "priority": 2,
+      "insight": "The average score of 5.0 suggests high consistency in successful tasks, but the failure may be an outlier that, if resolved, could push performance to 100%.",
+      "rationale": "Given the small sample size (6 tasks), the failure represents a 16.7% error rate. Addressing it could significantly improve reliability."
+    },
+    {
+      "priority": 3,
+      "insight": "Zero pending insights and zero generated insights indicate that the system is not yet leveraging historical data to predict or prevent issues.",
+      "rationale": "Implementing automated insight generation from patterns and failures could enhance future decision-making and reduce manual analysis."
+    }
+  ],
+  "needs_human_review": [
+    "Failure analysis: The specific task that failed requires human inspection to understand the context and validate the pattern.",
+    "Pattern validation: The detected pattern should be reviewed by a human to confirm it is not a false positive and to determine its applicability.",
+    "Skill gap assessment: Although no skills were listed, the failure may indicate a missing capability or edge case that needs human-defined rules or training data."
+  ],
+  "next_steps": [
+    "Investigate the failed task and the detected pattern to identify the root cause and implement corrective measures.",
+    "Enhance the insight generation engine to automatically produce actionable insights from patterns and failures.",
+    "Review the skill inventory and update it with any missing competencies identified during the failure analysis.",
+    "Increase the task sample size to validate the pattern's significance and monitor performance over time."
+  ]
+}

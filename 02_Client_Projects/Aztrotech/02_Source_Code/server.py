@@ -7,6 +7,8 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import List, Optional
 
+from crm_api import router as crm_router
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -85,6 +87,15 @@ async def chat(req: ChatRequest):
 @app.get("/api/health")
 async def health():
     return {"status": "ok", "tenant": "astrotech", "service": "Mysticgrimoire"}
+
+
+app.include_router(crm_router, prefix="/api/crm")
+
+
+@app.get("/")
+async def root():
+    from fastapi.responses import RedirectResponse
+    return RedirectResponse(url="/cesar/crm_dashboard.html")
 
 
 app.mount("/", StaticFiles(directory=os.path.join(os.path.dirname(__file__), "static"), html=True), name="static")

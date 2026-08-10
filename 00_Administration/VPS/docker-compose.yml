@@ -1,0 +1,51 @@
+version: "3.8"
+
+services:
+  openclaw:
+    image: node:20-alpine
+    container_name: sdc-openclaw
+    working_dir: /root/.openclaw
+    command: >
+      sh -c "
+      npm install -g openclaw@2026.7.1-2 &&
+      cp /wacli-bin/wacli /usr/local/bin/wacli &&
+      chmod +x /usr/local/bin/wacli &&
+      pip install uv 2>/dev/null &&
+      uvx mcp-server-filesystem /repo &&
+      openclaw gateway run --port 18789
+      "
+    ports:
+      - "127.0.0.1:18789:18789"
+    environment:
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - OPENCLAW_GATEWAY_TOKEN=${OPENCLAW_GATEWAY_TOKEN:-18732f622f79afa71304a652be709d67f20e83ed0cc2e57c}
+      - HOME=/root
+    volumes:
+      - openclaw_data:/root/.openclaw
+      - wacli_bin:/wacli-bin:ro
+      - ./repo:/repo
+      - /home/ubuntu/.wacli:/home/ubuntu/.wacli:rw
+    restart: unless-stopped
+    network_mode: host
+    dns:
+      - 8.8.8.8
+      - 1.1.1.1
+
+  nginx:
+    image: nginx:alpine
+    container_name: sdc-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./site.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./html:/usr/share/nginx/html:ro
+    restart: unless-stopped
+
+volumes:
+  openclaw_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /mnt/vps-data/openclaw-data

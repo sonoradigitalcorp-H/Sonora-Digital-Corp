@@ -26,6 +26,19 @@ PACKAGES = {
 }
 
 
+def _ollama_available() -> bool:
+    endpoint = os.getenv("OLLAMA_ENDPOINT", "http://localhost:11434")
+    try:
+        import asyncio
+        async def _check():
+            async with httpx.AsyncClient(timeout=3) as client:
+                r = await client.get(f"{endpoint}/api/tags")
+                return r.status_code == 200
+        return asyncio.run(_check())
+    except Exception:
+        return False
+
+
 class ModelRouter:
     def __init__(self, config: dict):
         self.config = config
@@ -75,6 +88,37 @@ class ModelRouter:
             payload["reasoning_effort"] = "high"
         return payload
 
+    async def call_ollama(self, model: str, messages: list) -> dict:
+        """Call local Ollama LLM (no token cost)."""
+        endpoint = os.getenv("OLLAMA_ENDPOINT", "http://localhost:11434")
+        system = ""
+        user_parts = []
+        for m in messages:
+            if m["role"] == "system":
+                system += m["content"] + "\n"
+            elif m["role"] == "user":
+                user_parts.append(m["content"])
+        user_full = "\n".join(user_parts)
+        payload = {
+            "model": model,
+            "prompt": user_full,
+            "system": system.strip() if system.strip() else None,
+            "stream": False,
+            "options": {"temperature": 0.7, "num_ctx": 4096},
+        }
+        async with httpx.AsyncClient(timeout=60) as client:
+            resp = await client.post(f"{endpoint}/api/generate", json=payload)
+            if resp.status_code == 200:
+                data = resp.json()
+                return {
+                    "choices": [{
+                        "message": {"content": data.get("response", ""), "role": "assistant"}
+                    }],
+                    "model": model,
+                    "usage": {"prompt_tokens": 0, "completion_tokens": 0},
+                }
+            raise Exception(f"Ollama failed: {resp.status_code} {resp.text[:200]}")
+
     async def call(self, messages: list, model: Optional[str] = None) -> dict:
         model = model or self.default
         api_key = self.config.get("openrouter", {}).get("api_key") or os.getenv("OPENROUTER_API_KEY")
@@ -86,6 +130,13 @@ class ModelRouter:
             "HTTP-Referer": "https://astrotech.ai",
             "X-Title": "AstroTech AI",
         }
+
+        # Local-first: if OpenRouter key is empty, use Ollama (qwen2.5:3b)
+        if not api_key and _ollama_available():
+            model_map = {"deepseek/deepseek-v4-flash": "qwen2.5:3b", "z-ai/glm-5.2": "qwen2.5:3b"}
+            local_model = model_map.get(model, "qwen2.5:3b")
+            logger.info(f"LLM call (LOCAL): {local_model}")
+            return await self.call_ollama(local_model, messages)
 
         fallback_chain = [model]
         if model == self.default:

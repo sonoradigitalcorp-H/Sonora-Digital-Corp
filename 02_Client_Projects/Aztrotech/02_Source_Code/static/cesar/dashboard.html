@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🧙 Grimorio de César — AstroTech AI Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128/examples/js/controls/OrbitControls.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+:root{
+  --primary:#00d4ff;--primary-dim:rgba(0,212,255,0.15);
+  --accent:#7c3aed;--accent-dim:rgba(124,58,237,0.12);
+  --copper:#AC6D3E;--copper-bright:#FFD78A;
+  --amber:#FFAA00;--amber-dim:rgba(255,170,0,0.15);
+  --bg:#050812;--bg-deep:#020408;
+  --card:rgba(12,20,40,0.7);--card-border:rgba(0,212,255,0.08);
+  --text:#e2e8f0;--muted:rgba(226,232,240,0.35);
+  --border:rgba(0,212,255,0.1);--border-accent:rgba(124,58,237,0.2);
+  --success:#10b981;--danger:#ef4444;--warning:#f59e0b;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;position:relative}
+
+#grimoire-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.grimoire-open #grimoire-ui{z-index:10}
+#grimoire-ui{position:relative;z-index:1;display:flex;flex-direction:column;height:100vh;width:100%;max-width:1200px;margin:0 auto;padding:0 16px}
+
+/* HEADER — Grimorio */
+header{
+  display:flex;align-items:center;gap:12px;
+  padding:14px 4px;
+  border-bottom:1px solid var(--border);
+  background:rgba(5,8,16,0.6);
+  backdrop-filter:blur(12px);
+  position:sticky;top:0;z-index:10;
+}
+.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--amber),var(--copper));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px;box-shadow:0 0 20px rgba(255,170,0,0.3)}
+.logo.glow{animation:glowPulse 2s infinite;box-shadow:0 0 20px rgba(255,170,0,0.3),0 0 40px rgba(124,58,237,0.2)}
+@keyframes glowPulse{0%,100%{box-shadow:0 0 20px rgba(255,170,0,0.3),0 0 40px rgba(124,58,237,0.2)}50%{box-shadow:0 0 30px rgba(255,170,0,0.5),0 0 60px rgba(124,58,237,0.4)}}
+header h1{font-size:18px;font-weight:700;font-family:'Cinzel',serif;background:linear-gradient(135deg,var(--amber),var(--copper-bright));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+header h1 span{color:var(--primary);font-weight:400;font-family:'Inter',sans-serif}
+.badge{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:11px;padding:5px 12px;border-radius:20px;background:rgba(16,185,129,0.1);color:#10b981;border:1px solid rgba(16,185,129,0.2)}
+.badge .dot{width:6px;height:6px;border-radius:50%;background:#10b981;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
+
+/* GRIMOIRE PAGES (tabs) */
+.tabs{display:flex;gap:8px;margin:0 0 12px;overflow-x:auto;scroll-behavior:smooth}
+.tab{
+  flex:1;min-width:120px;
+  padding:10px 14px;
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:12px;
+  text-align:center;
+  font-size:12px;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s;
+  color:var(--muted);
+  white-space:nowrap;
+}
+.tab:hover{background:rgba(0,212,255,0.05);border-color:rgba(0,212,255,0.2);color:var(--primary)}
+.tab.active{background:linear-gradient(135deg,var(--primary-dim),var(--accent-dim));border-color:var(--primary);color:var(--primary)}
+.tab .icon{font-size:16px;margin-right:4px}
+
+/* CHAT AREA */
+.chat{flex:1;overflow-y:auto;padding:12px 0;display:flex;flex-direction:column;gap:8px;scroll-behavior:smooth}
+.chat:empty::after{content:'🧙 Bienvenido al Grimorio, César. ¿Qué deseas revisar hoy?';display:block;text-align:center;color:var(--muted);padding:60px 20px;font-size:15px;font-weight:300;font-family:'Cinzel',serif}
+.msg{display:flex;gap:10px;max-width:88%;animation:fadeIn .25s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY:0}}
+.msg.user{flex-direction:row-reverse;margin-left:auto}
+.msg.bot{margin-right:auto}
+.av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;border:1px solid var(--border)}
+.msg.user .av{background:var(--amber);color:#000;order:1}
+.msg.bot .av{background:linear-gradient(135deg,var(--copper-bright),var(--amber));color:#000;font-weight:700}
+.bubble{padding:12px 16px;border-radius:16px;font-size:13.5px;line-height:1.7}
+.msg.user .bubble{background:var(--amber);color:#000;border-bottom-right-radius:6px;font-weight:500}
+.msg.bot .bubble{
+  background:var(--card);
+  border:1px solid var(--border);
+  border-bottom-left-radius:6px;
+  backdrop-filter:blur(8px);
+  box-shadow:0 4px 20px rgba(0,0,0,0.2);
+}
+.msg.bot .bubble::before{content:'';position:absolute;width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:8px solid var(--card);margin-top:-8px;margin-left:-8px}
+.msg.bot{position:relative}
+.bubble strong{color:var(--primary)}
+.bubble code{font-family:'Inter',monospace;background:rgba(0,212,255,0.1);padding:2px 6px;border-radius:4px;color:var(--primary);font-size:12px}
+.time{font-size:9px;color:var(--muted);margin-top:4px}
+
+/* TYPING */
+.typing{display:none;gap:6px;padding:2px 0}
+.typing.show{display:flex}
+.typing .dots{display:flex;gap:3px;padding:12px 16px;background:var(--card);border:1px solid var(--border);border-radius:16px;border-bottom-left-radius:6px}
+.typing .dots span{width:6px;height:6px;border-radius:50%;background:var(--primary);animation:bounce 1.4s infinite}
+.typing .dots span:nth-child(2){animation-delay:-0.16s}
+.typing .dots span:nth-child(3){animation-delay:-0.32s}
+
+/* INPUT */
+footer{padding:12px 4px;border-top:1px solid var(--border);background:rgba(5,8,16,0.6);backdrop-filter:blur(12px)}
+.input-row{display:flex;gap:8px;align-items:flex-end}
+textarea{
+  flex:1;background:transparent;border:none;
+  color:var(--text);font-family:'Inter',sans-serif;
+  font-size:13.5px;resize:none;outline:none;
+  padding:10px 0;max-height:100px;line-height:1.5;
+  color:var(--text);
+}
+textarea::placeholder{color:var(--muted)}
+.actions{display:flex;gap:6px;align-items:center}
+.actions button{
+  width:38px;height:38px;border-radius:50%;
+  border:none;background:var(--primary-dim);color:var(--primary);
+  font-size:15px;cursor:pointer;transition:.2s;
+  flex-shrink:0;display:flex;align-items:center;justify-content:center
+}
+.actions button:hover{background:var(--primary);color:#000;transform:scale(1.05)}
+.actions button.send{background:linear-gradient(135deg,var(--amber),var(--copper));color:#000}
+.actions button.send:hover{transform:scale(1.08);box-shadow:0 0 20px rgba(255,170,0,0.3)}
+.actions button.recording{background:#ef4444;color:#fff;animation:recPulse 1s infinite}
+@keyframes recPulse{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 8px rgba(239,68,68,0)}}
+
+/* METRICS PANEL */
+.metrics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:12px 0}
+.metric-card{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:16px;transition:.2s
+}
+.metric-card:hover{border-color:var(--primary);box-shadow:0 0 15px rgba(0,212,255,0.1)}
+.metric-card h3{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px}
+.metric-val{font-size:26px;font-weight:800;color:var(--primary)}
+.metric-sub{font-size:11px;color:var(--muted);margin-top:4px}
+
+/* COMMUNITY FEED */
+.feed-item{
+  background:var(--card);border:1px solid var(--border);
+  border-radius:12px;padding:12px;margin-bottom:8px;transition:.2s
+}
+.feed-item:hover{border-color:var(--accent);box-shadow:0 0 15px rgba(124,58,237,0.1)}
+.feed-item .feed-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.feed-item .feed-avatar{width:24px;height:24px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;font-size:10px}
+.feed-item .feed-author{font-size:12px;font-weight:600}
+.feed-item .feed-time{font-size:10px;color:var(--muted);margin-left:auto}
+.feed-item .feed-content{font-size:12.5px;line-height:1.6;color:var(--text)}
+.feed-item .feed-actions{display:flex;gap:8px;margin-top:8px}
+.feed-action{font-size:10px;color:var(--muted);padding:4px 8px;border-radius:6px;background:rgba(0,0,0,0.2);cursor:pointer;transition:.2s}
+.feed-action:hover{background:rgba(0,212,255,0.1);color:var(--primary)}
+
+/* COMMAND BAR */
+.cmd-hint{
+  display:flex;gap:6px;flex-wrap:wrap;margin:8px 0;
+}
+.cmd-tag{font-size:10px;padding:4px 10px;border-radius:14px;background:rgba(124,58,237,0.1);color:var(--accent);border:1px solid var(--border-accent);cursor:pointer}
+.cmd-tag:hover{background:rgba(124,58,237,0.2)}
+
+/* BRAND */
+.branding{text-align:center;padding:10px 0 4px;font-size:9px;color:rgba(255,255,255,.12)}
+.branding a{color:rgba(0,212,255,.3);text-decoration:none}
+.branding a:hover{color:rgba(0,212,255,.6)}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  #grimoire-ui{padding:0 8px}
+  header h1{font-size:16px}
+  .metric-val{font-size:22px}
+}
+</style>
+</head>
+<body>
+<div id="grimoire-bg"></div>
+<div id="grimoire-ui">
+  <header>
+    <div class="logo glow">🧙</div>
+    <h1>Grimorio <span>César</span></h1>
+    <div class="badge"><span class="dot"></span> CEO Dashboard</div>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('chat')"><span class="icon">💬</span> Conversaciones</div>
+    <div class="tab" onclick="switchTab('metrics')"><span class="icon">📊</span> Métricas</div>
+    <div class="tab" onclick="switchTab('community')"><span class="icon">📱</span> Comunidad</div>
+    <div class="tab" onclick="switchTab('ideas')"><span class="icon">💡</span> Ideas</div>
+  </div>
+
+  <!-- CHAT TAB -->
+  <div id="tab-chat" class="tab-content">
+    <div class="chat" id="chat"></div>
+    <div class="typing" id="typing"><div class="dots"><span></span><span></span><span></span></div></div>
+  </div>
+
+  <!-- METRICS TAB -->
+  <div id="tab-metrics" class="tab-content" style="display:none">
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <h3>Leads Hoy</h3>
+        <div class="metric-val" id="metric-leads"> — </div>
+        <div class="metric-sub" id="metric-leads-sub"></div>
+      </div>
+      <div class="metric-card">
+        <h3>Conversión</h3>
+        <div class="metric-val" id="metric-conversion"> — </div>
+        <div class="metric-sub">últimos 7 días</div>
+      </div>
+      <div class="metric-card">
+        <h3>Revenue</h3>
+        <div class="metric-val" id="metric-revenue"> — </div>
+        <div class="metric-sub" id="metric-revenue-sub"></div>
+      </div>
+      <div class="metric-card">
+        <h3>Agentes Activos</h3>
+        <div class="metric-val" id="metric-agents"> — </div>
+        <div class="metric-sub">en vivo</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMMUNITY TAB -->
+  <div id="tab-community" class="tab-content" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h3 style="font-size:14px;font-weight:600">Feed de Comunidad</h3>
+      <button style="padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--primary-dim);color:var(--primary);font-size:11px;cursor:pointer">🔄 Refresh</button>
+    </div>
+    <div id="community-feed">
+      <div class="feed-item">
+        <div class="feed-header">
+          <div class="feed-avatar">📸</div>
+          <div class="feed-author">César Holguín</div>
+          <div class="feed-time">hace 2 min</div>
+        </div>
+        <div class="feed-content">Team, el nuevo agente de voz está generando un 40% más de leads. #Aztrotech #AI</div>
+        <div class="feed-actions">
+          <span class="feed-action">❤️ 12</span>
+          <span class="feed-action">💬 3</span>
+          <span class="feed-action">🔗 Compartir</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IDEAS TAB -->
+  <div id="tab-ideas" class="tab-content" style="display:none">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <h3 style="font-size:14px;font-weight:600">Ideas del CEO</h3>
+      <button style="padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:var(--accent-dim);color:var(--accent);font-size:11px;cursor:pointer">➕ Nueva</button>
+    </div>
+    <div id="ideas-list" style="display:flex;flex-direction:column;gap:8px">
+      <div class="feed-item">
+        <div class="feed-header">
+          <div class="feed-avatar">💡</div>
+          <div class="feed-author">César</div>
+          <div class="feed-time">hoy</div>
+        </div>
+        <div class="feed-content">Investigar voz Dalia Neural para el bot de WhatsApp — mejor calidad que la voz actual</div>
+        <div class="feed-actions">
+          <span class="feed-action">✅ Prioridad Alta</span>
+          <span class="feed-action">📋 Asignar</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INPUT -->
+  <footer>
+    <div class="cmd-hint" id="cmd-hint"></div>
+    <div class="input-row">
+      <textarea id="inp" rows="1" placeholder="Escribe un comando o mensaje para el grimorio... (Ctrl+K)" onkeydown="if(event.key=='Enter'&&!event.shiftKey){event.preventDefault();sendMsg()}}"></textarea>
+      <div class="actions">
+        <button id="micBtn" onclick="toggleMic()" title="Micrófono 🎤">🎤</button>
+        <button class="send" onclick="sendMsg()" title="Enviar">➤</button>
+      </div>
+    </div>
+    <div class="branding">
+      <a href="https://sonoradigitalcorp.com">Sonora Digital Corp</a> · AstroTech · Mystic Grimorio v2.0
+    </div>
+  </footer>
+</div>
+
+<script>
+// ===== THREE.JS 3D GRIMOIRE BACKGROUND =====
+(function initGrimoire(){
+  const container = document.getElementById('grimoire-bg');
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x020408);
+  scene.fog = new THREE.FogExp2(0x020408, 0.0015);
+
+  const camera = new THREE.PerspectiveCamera(75, container.clientWidth/container.clientHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({alpha:true, antialias:true});
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x000000, 0);
+  container.appendChild(renderer.domElement);
+
+  const controls = new THREE.OrbitControls(camera, renderer.domElement);
+  controls.enableDamping = true;
+  controls.enablePan = false;
+  controls.enableZoom = false;
+  controls.autoRotate = true;
+  controls.autoRotateSpeed = 0.3;
+
+  const group = new THREE.Group();
+
+  // Grimoire book (open book shape)
+  const bookGeom = new THREE.BoxGeometry(3, 3.5, 0.4);
+  const bookMat = new THREE.MeshStandardMaterial({
+    color: 0x0a142a,
+    emissive: 0x00d4ff,
+    emissiveIntensity: 0.05,
+    metalness: 0.8,
+    roughness: 0.2
+  });
+  const book = new THREE.Mesh(bookGeom, bookMat);
+
+  // Book pages (left + right)
+  const pageGeom = new THREE.PlaneGeometry(1.3, 3, 2, 2);
+  const leftPage = new THREE.Mesh(pageGeom, new THREE.MeshStandardMaterial({
+    color: 0x0a142a,
+    side: THREE.DoubleSide,
+    metalness: 0.9,
+    roughness: 0.1,
+    emissive: 0x7c3aed,
+    emissiveIntensity: 0.1
+  }));
+  leftPage.rotation.y = Math.PI / 6;
+  leftPage.position.x = -0.7;
+
+  const rightPage = leftPage.clone();
+  rightPage.rotation.y = -Math.PI / 6;
+  rightPage.position.x = 0.7;
+
+  // Floating runes around the book
+  const runeGeom = new THREE.RingGeometry(0.05, 0.1, 6);
+  const runeMat = new THREE.MeshBasicMaterial({
+    color: 0x00d4ff,
+    transparent: true,
+    opacity: 0.6,
+    side: THREE.DoubleSide
+  });
+
+  const runes = [];
+  for (let i = 0; i < 30; i++) {
+    const rune = new THREE.Mesh(runeGeom, runeMat);
+    const radius = 6 + Math.random() * 2;
+    const angle = (i / 30) * Math.PI * 2;
+    rune.position.set(
+      Math.cos(angle) * radius,
+      (Math.random() - 0.5) * 8,
+      Math.sin(angle) * radius
+    );
+    rune.rotation.x = Math.random() * Math.PI;
+    rune.rotation.z = Math.random() * Math.PI;
+    group.add(rune);
+    runes.push({mesh: rune, speed: 0.001 + Math.random() * 0.003});
+  }
+
+  // Energy particles
+  const particleGeom = new THREE.BufferGeometry();
+  const particleCount = 500;
+  const positions = new Float32Array(particleCount * 3);
+  const colors = new Float32Array(particleCount * 3);
+  for (let i = 0; i < particleCount; i++) {
+    positions[i*3] = (Math.random() - 0.5) * 40;
+    positions[i*3+1] = (Math.random() - 0.5) * 40;
+    positions[i*3+2] = (Math.random() - 0.5) * 40;
+    const colorChoice = Math.random();
+    if (colorChoice < 0.5) {
+      colors[i*3] = 0; colors[i*3+1] = 0.83; colors[i*3+2] = 1; // blue
+    } else {
+      colors[i*3] = 1; colors[i*3+1] = 0.48; colors[i*3+2] = 0; // amber
+    }
+  }
+  particleGeom.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  particleGeom.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+  const particleMat = new THREE.PointsMaterial({
+    size: 0.06,
+    vertexColors: true,
+    transparent: true,
+    opacity: 0.4,
+    blending: THREE.AdditiveBlending
+  });
+  const particleSystem = new THREE.Points(particleGeom, particleMat);
+  group.add(particleSystem);
+
+  // Ambient + directional light
+  const ambientLight = new THREE.AmbientLight(0x404040, 0.8);
+  scene.add(ambientLight);
+  const dirLight = new THREE.DirectionalLight(0x00d4ff, 1);
+  dirLight.position.set(5, 10, 5);
+  scene.add(dirLight);
+  const amberLight = new THREE.DirectionalLight(0xffaa00, 0.5);
+  amberLight.position.set(-5, -5, 5);
+  scene.add(amberLight);
+
+  // Add floating crystals
+  const crystalGeom = new THREE.OctahedronGeometry(0.3, 0);
+  const crystalMat = new THREE.MeshStandardMaterial({
+    color: 0x7c3aed,
+    emissive: 0x7c3aed,
+    emissiveIntensity: 0.3,
+    transparent: true,
+    opacity: 0.7
+  });
+  const crystals = [];
+  for (let i = 0; i < 10; i++) {
+    const crystal = new THREE.Mesh(crystalGeom, crystalMat);
+    crystal.position.set(
+      (Math.random() - 0.5) * 10,
+      (Math.random() - 0.5) * 6,
+      (Math.random() - 0.5) * 10
+    );
+    crystal.userData.speed = {
+      x: (Math.random() - 0.5) * 0.002,
+      y: (Math.random() - 0.5) * 0.002,
+      z: (Math.random() - 0.5) * 0.002
+    };
+    group.add(crystal);
+    crystals.push(crystal);
+  }
+
+  group.add(book, leftPage, rightPage);
+  scene.add(group);
+  camera.position.z = 12;
+
+  let t = 0;
+  function animate() {
+    requestAnimationFrame(animate);
+    t += 0.001;
+
+    // Book float + rotation
+    book.rotation.y += 0.0005;
+    book.rotation.x = Math.sin(t * 0.3) * 0.05;
+    book.position.y = Math.sin(t * 0.5) * 0.1;
+
+    leftPage.rotation.y = Math.PI / 6 + Math.sin(t * 0.3) * 0.02;
+    rightPage.rotation.y = -Math.PI / 6 + Math.sin(t * 0.3) * 0.02;
+
+    // Runes orbit
+    runes.forEach((r, i) => {
+      r.mesh.rotation.x += r.speed;
+      r.mesh.rotation.z += r.speed * 0.5;
+    });
+
+    // Crystals rotate
+    crystals.forEach(c => {
+      c.rotation.x += c.userData.speed.x;
+      c.rotation.y += c.userData.speed.y;
+      c.rotation.z += c.userData.speed.z;
+    });
+
+    // Particle drift
+    particleSystem.rotation.y += 0.0001;
+
+    controls.update();
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = container.clientWidth / container.clientHeight;
+    camera.updateProjectionProjectionMatrix;
+    camera.updateProjectionMatrix();
+    renderer.setSize(container.clientWidth, container.clientHeight);
+  });
+})();
+
+// ===== CHAT =====
+const chatEl = document.getElementById('chat');
+const inp = document.getElementById('inp');
+const typ = document.getElementById('typing');
+let listening = false;
+let recognition = null;
+
+inp.addEventListener('input', () => {
+  inp.style.height = 'auto';
+  inp.style.height = Math.min(inp.scrollHeight, 100) + 'px';
+});
+
+function escapeHtml(t) {
+  return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/`(.*?)`/g, '<code>$1</code>')
+    .replace(/\n/g, '<br>');
+}
+
+function addMsg(role, text) {
+  const d = document.createElement('div');
+  d.className = 'msg ' + role;
+  const time = new Date().toLocaleTimeString('es-MX', {hour: '2-digit', minute: '2-digit'});
+  d.innerHTML = '<div class="av">' + (role === 'user' ? '👤' : '🧙') + '</div>' +
+    '<div><div class="bubble">' + escapeHtml(text) + '</div>' +
+    '<div class="time" style="text-align:' + (role === 'user' ? 'right' : 'left') + '">' + time + '</div></div>';
+  chatEl.appendChild(d);
+  chatEl.scrollTop = chatEl.scrollHeight;
+}
+
+function showTyping() {
+  typ.classList.add('show');
+  chatEl.scrollTop = chatEl.scrollHeight;
+}
+
+function hideTyping() {
+  typ.classList.remove('show');
+}
+
+// Default voice = Dalia (Spanish) — only switches if explicitly requested
+async function getDaliaVoice() {
+  if (!window.speechSynthesis) return null;
+  const voices = await new Promise(resolve => {
+    const v = speechSynthesis.getVoices();
+    if (v.length > 0) resolve(v);
+    else {
+      speechSynthesis.onvoiceschanged = () => resolve(speechSynthesis.getVoices());
+    }
+  });
+  // Prefer DaliaNeural specifically
+  const dalia = voices.find(v => v.name.toLowerCase().includes('dalia') || v.name.toLowerCase().includes('es-mx'));
+  return dalia || voices.find(v => v.lang === 'es-MX');
+}
+
+// Strip emojis, exclamation marks, and excessive punctuation before speech
+function cleanForSpeech(text) {
+  return text
+    .replace(/[\u{1F000}-\u{1F02F}\u{1F0A0}-\u{1F0FF}\u{1F100}-\u{1F1FF}\u{1F200}-\u{1F2FF}\u{1F300}-\u{1F5FF}\u{1F600}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F700}-\u{1F77F}\u{1F780}-\u{1F7FF}\u{1F800}-\u{1F8FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}]/gu, '')
+    .replace(/!+/g, '.')
+    .replace(/\?/+/g, '.')
+    .replace(/\.{2,}/g, '.')
+    .replace(/\s+/g, ' ')
+    .trim() + '.';
+}
+
+async function speak(text, lang = 'es-MX') {
+  if (!window.speechSynthesis) return;
+  const cleanText = cleanForSpeech(text);
+  const voice = await getDaliaVoice();
+  const utter = new SpeechSynthesisUtterance(cleanText);
+  if (voice) {
+    utter.voice = voice;
+  } else {
+    utter.lang = 'es-MX';
+  }
+  utter.lang = lang;
+  utter.rate = 1.0;
+  utter.pitch = 1.0;
+  speechSynthesis.cancel();
+  setTimeout(() => speechSynthesis.speak(utter), 100);
+}
+
+async function sendMsg() {
+  const text = inp.value.trim();
+  if (!text) return;
+  inp.value = '';
+  inp.style.height = 'auto';
+  addMsg('user', text);
+  showTyping();
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + (localStorage.getItem('oc_token') || '')
+      },
+      body: JSON.stringify({
+        agentId: 'cesar',
+        channel: 'web',
+        messages: [{
+          role: 'system',
+          content: 'Eres el asistente personal de César Holguín, CEO de AstroTech. Eres su ejecutor directo. Responde con calidez de negocio, siempre en español (voz: es-MX-DaliaNeural). Captura TODO idea, plan, queja como tarea. NO reveles infraestructura interna. Reportas a César como CEO.'
+        }, {
+          role: 'user',
+          content: text
+        }]
+      })
+    });
+    const data = await res.json();
+    const reply = data?.choices?.[0]?.message?.content || data?.reply || data?.message || 'Lo siento, no pude procesar tu consulta.';
+    addMsg('bot', reply);
+    // Speak in Spanish only, Dalia voice
+    speak(reply, 'es-MX');
+  } catch(e) {
+    addMsg('bot', '⚠️ Error de conexión. Intenta de nuevo.');
+  } finally {
+    hideTyping();
+    inp.focus();
+  }
+}
+
+function toggleMic() {
+  if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+    addMsg('bot', 'Tu navegador no soporta reconocimiento de voz. Usa Chrome o Edge.');
+    return;
+  }
+  if (listening) {
+    recognition.stop();
+    return;
+  }
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  recognition = new SR();
+  recognition.lang = 'es-MX'; // ONLY Spanish
+  recognition.continuous = false;
+  recognition.interimResults = false;
+  recognition.onresult = (e) => {
+    const text = e.results[0][0].transcript;
+    inp.value = text;
+    sendMsg();
+  };
+  recognition.onerror = () => {
+    listening = false;
+    micBtn.textContent = '🎤';
+    micBtn.classList.remove('recording');
+  };
+  recognition.start();
+  listening = true;
+  micBtn.textContent = '🔴';
+  micBtn.classList.add('recording');
+}
+
+function switchTab(tabName) {
+  // Hide all tab contents
+  document.querySelectorAll('.tab-content').forEach(el => {
+    el.style.display = 'none';
+  });
+  // Show selected
+  document.getElementById('tab-' + tabName).style.display = 'block';
+  // Update tab buttons
+  document.querySelectorAll('.tab').forEach(el => {
+    el.classList.remove('active');
+  });
+  event.target.classList.add('active');
+}
+
+// Initialize command hint
+const commands = ['/ideas', '/metrics', '/aprobar', '/comunidad', '/voz es-MX', '/voz en-US'];
+const cmdHint = document.getElementById('cmd-hint');
+commands.forEach(cmd => {
+  const span = document.createElement('span');
+  span.className = 'cmd-tag';
+  span.textContent = cmd;
+  span.onclick = () => { inp.value = cmd + ' '; inp.focus(); };
+  cmdHint.appendChild(span);
+});
+
+// Load initial metrics
+async function loadMetrics() {
+  try {
+    const res = await fetch('/api/metrics', {
+      headers: { 'Authorization': 'Bearer ' + (localStorage.getItem('oc_token') || '') }
+    });
+    const data = await res.json();
+    document.getElementById('metric-leads').textContent = data.leads || '—';
+    document.getElementById('metric-conversion').textContent = data.conversion ? data.conversion + '%' : '—';
+    document.getElementById('metric-revenue').textContent = data.revenue ? '$' + data.revenue : '—';
+    document.getElementById('metric-agents').textContent = data.agents || '—';
+  } catch(e) {
+    document.getElementById('metric-leads').textContent = 'N/A';
+  }
+}
+loadMetrics();
+setInterval(loadMetrics, 30000);
+
+// Enter key = send, Ctrl+Enter = newline
+inp.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMsg();
+  }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,37 @@
+# Session 2026-08-06 — Voz simple, key nueva, deepseek-v4-flash, freeze
+
+**Fecha**: 2026-08-06 17:00 MST
+**Proyecto**: Sonora Digital Corp — bots multi-tenant (Aztrotech + RYE)
+
+## OBJETIVO
+Que el bot de César (@Aztro_tech_bot) y el de Rye (@RyE_production_bot) manden AUDIO (voz), con la voz de César, de forma SIMPLE y SIN procesos pesados (no XTTS).
+
+## QUÉ PASÓ
+1. **Key OpenRouter nueva**: sk-or-v1-282...732 es la ÚNICA con créditos ($10/mes, 0 usados). Reemplaza a la anterior (327...cb7, sin saldo).
+2. **Modelo fijado**: los 4 agentes (main, rye, ivan-rye, cesar) → `openrouter/deepseek/deepseek-v4-flash-0731`. IDs incorrectos: `opencode/deepseek-v4-flash` (billing opencode.ai → 401) y sin sufijo -0731 (Unknown model).
+3. **Pipeline de voz SIMPLE**: texto → edge-tts MP3 → ffmpeg imageio → OGG → Telegram sendVoice. Script unificado creado y probado:
+   `01_Core_Platform/03_Agentic_Infrastructure/voice_reply.py`
+4. **Se enviaron al chat 5738935134**: VOZ REAL de César (cesar_voice_sample.wav 108s) + voz sintética (es-MX-JorgeNeural, edge-tts) para comparación. Ambos OK.
+5. **Freeze de laptop**: se diagnosticó (3.3GB RAM, opencode 660MB + antigravity 430MB + openclaw 290MB = swap thrash). Se mató kokoro/pip/residuos. **Regla: NUNCA cargar modelos ML en esta laptop.**
+
+## GATEWAY OPENCLAW
+- **VUELVO A PONER**: `systemctl --user restart openclaw-gateway` tras cada cambio de key/modelo; esperar 10-15s (401 temporal).
+- Sesión sigue activa: polling telegram, bot@tokens@ correct.
+
+## VOCES EDGE-TTS
+| Section | Maa | Util |
+|---------|-----|------|
+| aztroc | es-MX-JorgeNeural | masculina mexicana, cercana a César |
+| rye | es-MX-DaliaNeural | femenia mexicana |
+
+## PENDIENTE
+- [ ] Clonar/reproducir VOZ real de C oso cuando haya servidor dedicado (aquí sin XTTS por RAM).
+- [ ] Conectar el flujo automático: mensaje→agente→texto→voice_reply para que el bot conteste en voz por sí solo.
+- [ ] webhook público (ngrok) para multi-bot recibir mensajes.
+
+## ARCHIVOS CLAVE
+- 01_Core_Platform/03_Agentic_Infrastructure/voice_reply.py (nuevo)
+- .opencode/skills/personales/voice-delivery/SKILL.md (nuevo)
+- ~/.openclaw/opencl.aw.json (modelo)
+- /tmp/sonora.env, ~/.estes/.env (key)
+- ESTADO.md (actualizado)

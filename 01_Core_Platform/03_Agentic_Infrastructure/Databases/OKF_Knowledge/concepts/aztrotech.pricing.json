@@ -1,29 +1,34 @@
 {
   "id": "aztrotech.pricing",
   "tenant": "Aztrotech",
-  "name": "Tarifas de servicios Aztrotech",
-  "aliases": ["tarifa", "precio", "costo", "instalación", "cotización", "antena", "visita", "cobrar", "cuanto", "cuesta", "valor", "paquete", "empresa", "agente", "IA", "inteligencia"],
-  "definition": "Tabla oficial de precios. Responder solo con valores exactos de esta tabla.",
+  "name": "Tarifas oficiales Aztrotech - Servicios de IA y Software",
+  "aliases": ["tarifa", "precio", "costo", "cotización", "paquete", "empresa", "agente", "IA", "inteligencia", "empleado digital", "automatización", "plataforma", "crm", "erp"],
+  "definition": "Tabla oficial de precios de Aztrotech. Responder SOLO con valores exactos de esta tabla. NUNCA inventar ni combinar.",
   "rules": [
-    {"id": "R1", "text": "No combinar ni promediar filas. Si el servicio no existe en la tabla, aplicar contrato 'no tengo datos verificados'."},
-    {"id": "R2", "text": "Si preguntan por paquetes de agente IA, mencionar solo los precios exactos en USD."}
+    {"id": "R1", "text": "No combinar ni promediar filas. Si el servicio no existe en la tabla, responder: 'No tengo datos verificados para eso. Los precios exactos te los da César en llamada.'"},
+    {"id": "R2", "text": "Si preguntan por paquetes de Empleado Digital / Agente IA, mencionar SOLO los 3 paquetes exactos en USD."},
+    {"id": "R3", "text": "Automatizaciones y Plataformas: cotización según procesos/proyecto. No hay precio fijo."},
+    {"id": "R4", "text": "Diagnóstico IA: GRATIS (30 min). Siempre ofrecerlo primero."}
   ],
   "tables": {
-    "servicios": [
-      {"servicio": "instalación antena residencial", "mxn": 1500, "usd": 85},
-      {"servicio": "instalación antena comercial", "mxn": 3200, "usd": 180},
-      {"servicio": "visita técnica", "mxn": 600, "usd": 35}
+    "paquetes_empleado_digital": [
+      {"paquete": "Starter AI Agent", "precio": 999, "moneda": "USD", "includes": ["Empleado Digital 24/7 (WhatsApp + Instagram + Facebook)", "Auto-respuesta y captura leads básica", "Panel web simple de métricas", "Setup en 5 días"]},
+      {"paquete": "Growth AI Agent", "precio": 1999, "moneda": "USD", "includes": ["Todo el Starter", "Redes sociales integradas (WhatsApp Business API, Instagram, Messenger)", "CRM básico + scoring de leads automático", "Onboarding page personalizada", "Soporte 24/7 con voz", "Integración con herramientas actuales"]},
+      {"paquete": "Enterprise AI Agent", "precio": 3999, "moneda": "USD", "includes": ["Todo el Growth", "Agentes multi-nicho (ventas, soporte, operación)", "Voz clonada oficial del dueño", "Landing page 3D Mystic", "Pipeline voz completo (STT + TTS)", "Soporte dedicado + entrenamiento al equipo", "Integraciones avanzadas: Stripe, Shopify, SAP, ERP"]}
     ],
-    "paquetes_ia_empresa": [
-      {"paquete": "Starter AI Agent", "precio": 999, "moneda": "USD", "includes": ["Empleado digital 24/7", "WhatsApp auto-respuesta", "Captura leads básica", "Panel web simple"]},
-      {"paquete": "Growth AI Agent", "precio": 1999, "moneda": "USD", "includes": ["Todo el Starter", "Redes sociales integradas", "CRM básico + scoring", "Onboarding page personalizado", "Soporte 24/7 voz"]},
-      {"paquete": "Enterprise AI Agent", "precio": 3999, "moneda": "USD", "includes": ["Todo el Growth", "Agentes multi-nicho", "Voz clonada oficial", "Landing page 3D Mystic", "Pipeline voz completo", "Soporte dedicado + entrenamiento"]}
+    "servicios_automatizacion": [
+      {"servicio": "Automatización de procesos", "tipo": "cotizacion_segun_procesos", "descripcion": "Flujos que eliminan captura manual y trabajo repetitivo. Reportes automáticos. Integraciones WhatsApp Business, Stripe, Shopify, SAP."},
+      {"servicio": "Plataforma CRM/ERP a medida", "tipo": "cotizacion_por_proyecto", "descripcion": "Construido a tu proceso real. Dashboards ejecutivos tiempo real. Apps web y móviles."},
+      {"servicio": "Plataforma Jurídica", "tipo": "ya_construida_adaptable", "descripcion": "Expedientes, audiencias, clientes, alertas vencimientos, documentos desde plantillas."},
+      {"servicio": "Plataforma Inmobiliaria", "tipo": "ya_construida_adaptable", "descripcion": "Inventario propiedades, prospectos, visitas, match IA, contratos."},
+      {"servicio": "Academia Interna", "tipo": "ya_construida_adaptable", "descripcion": "Manuales, SOPs, asistente IA por departamento, analíticas de adopción."}
     ],
-    "casos_uso": [
-      {"industria": "Restaurantes", "ejemplo": "Agente toma pedidos 24/7, reserva mesas, atiende reclamos"},
-      {"industria": "Clínicas", "ejemplo": "Agenda citas, recuerda mediciones, envía recordatorios SMS"},
-      {"industria": "Clases de música", "ejemplo": "Agenda clases, envía recordatorios, captura estudiantes"},
-      {"industria": "Agentes inmobiliarios", "ejemplo": "Captura leads, muestra propiedades vía video, agenda visitas"}
+    "diagnostico": [
+      {"servicio": "Diagnóstico IA Gratuito", "precio": 0, "moneda": "USD", "duracion": "30 min", "includes": ["5 preguntas", "Resultado inmediato", "Dice exactamente qué necesitas: Agentes, Automatizaciones o Plataforma"]}
+    ],
+    "casos_reales": [
+      {"cliente": "Suministros Palominos", "industria": "Distribución industrial", "resultado": "ERP completo a medida + Academia interna + GPTs entrenados + Plataforma colaborativa + Starter pack IA. AztroTech opera como socio tecnológico externo."},
+      {"cliente": "Jewelry Remate MX", "industria": "E-commerce joyería", "resultado": "Dashboard financiero + Sistema operación a medida + Academia interna + Agente IA CRM seguimiento automatizado. +50% ventas."}
     ]
   }
 }

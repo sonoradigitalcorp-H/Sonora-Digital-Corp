@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AstroTech — Agentes de Voz IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;400;600;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:#080c18;color:#e2e8f0}
+.section{min-height:100vh;padding:80px 40px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;position:relative}
+h1{font-size:3.5em;font-weight:800;background:linear-gradient(135deg,#00d4ff,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+h2{font-size:2em;font-weight:600;color:#00d4ff;margin-bottom:20px}
+p{font-size:1.1em;line-height:1.8;max-width:700px;color:#94a3b8}
+.sub{color:#7c3aed;font-size:1.2em;margin-top:-10px;margin-bottom:30px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;max-width:1100px;width:100%}
+.card{background:rgba(15,23,42,.75);border:1px solid rgba(0,212,255,.1);border-radius:16px;padding:30px;text-align:center;transition:.3s}
+.card:hover{border-color:#00d4ff;transform:translateY(-4px)}
+.card .icon{font-size:3em;margin-bottom:10px}
+.card h3{color:#00d4ff;font-size:1.2em;margin-bottom:8px}
+.card p{font-size:.9em;color:#94a3b8;max-width:100%}
+.btn{display:inline-block;padding:14px 40px;border-radius:30px;font-size:1.1em;font-weight:600;text-decoration:none;margin:8px;transition:.3s}
+.btn-primary{background:linear-gradient(135deg,#00d4ff,#7c3aed);color:#fff}
+.btn-primary:hover{transform:scale(1.05);box-shadow:0 0 30px rgba(0,212,255,.3)}
+.btn-outline{border:2px solid #00d4ff;color:#00d4ff;background:transparent}
+.btn-outline:hover{background:rgba(0,212,255,.1)}
+.precio{font-size:2.5em;font-weight:800;color:#00d4ff}
+.precio-sub{color:#7c3aed;font-size:.9em}
+.tag{display:inline-block;padding:4px 14px;border-radius:20px;font-size:.8em;margin:4px;background:rgba(0,212,255,.1);border:1px solid rgba(0,212,255,.2);color:#00d4ff}
+.feature-list{text-align:left;margin-top:15px}
+.feature-list li{color:#94a3b8;padding:6px 0;list-style:none;font-size:.9em}
+.feature-list li:before{content:"✓ ";color:#10b981}
+.demo-box{background:rgba(15,23,42,.75);border:1px solid rgba(0,212,255,.1);border-radius:16px;padding:30px;max-width:600px;margin:20px auto}
+.demo-box input{width:100%;padding:12px;background:rgba(0,0,0,.3);border:1px solid rgba(0,212,255,.2);border-radius:8px;color:#fff;font-size:1em;margin:8px 0}
+.demo-box .bubble{background:rgba(0,212,255,.1);padding:12px;border-radius:12px;margin:8px 0;font-size:.9em;text-align:left}
+footer{padding:40px;text-align:center;color:#475569;font-size:.8em}
+#particles{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;pointer-events:none;opacity:.3}
+</style></head>
+<body>
+
+<section class="section" id="hero">
+  <div style="font-size:5em;margin-bottom:10px">🎙️</div>
+  <h1>Tu Negocio<br>Habla 24/7</h1>
+  <p class="sub">Agentes de voz IA para restaurantes, tiendas, clínicas y más</p>
+  <p>Sin Twilio · Sin ElevenLabs · Stack 100% open source · Desde $299/mes</p>
+  <div style="margin-top:30px">
+    <a href="#paquetes" class="btn btn-primary">Ver Paquetes</a>
+    <a href="#demo" class="btn btn-outline">Ver Demo</a>
+  </div>
+</section>
+
+<section class="section" id="agentes">
+  <h2>🎭 Elige tu Agente de Voz</h2>
+  <p class="sub">Cada negocio tiene su propia voz</p>
+  <div class="grid">
+    <div class="card"><div class="icon">🍽️</div><h3>María</h3><p>Recepcionista de restaurante<br><span class="tag">Toma pedidos</span><span class="tag">Reservas</span><span class="tag">Menú</span></p></div>
+    <div class="card"><div class="icon">👗</div><h3>Sofía</h3><p>Vendedora de tienda<br><span class="tag">Catálogo</span><span class="tag">Ventas</span><span class="tag">Promociones</span></p></div>
+    <div class="card"><div class="icon">🦷</div><h3>Dra. Carmen</h3><p>Asistente de clínica<br><span class="tag">Citas</span><span class="tag">Recordatorios</span><span class="tag">Emergencias</span></p></div>
+    <div class="card"><div class="icon">💈</div><h3>Valentina</h3><p>Recepcionista de barbería<br><span class="tag">Agenda</span><span class="tag">Productos</span><span class="tag">Reseñas</span></p></div>
+    <div class="card"><div class="icon">☕</div><h3>Barista AI</h3><p>Para cafeterías<br><span class="tag">Pedidos</span><span class="tag">Eventos</span><span class="tag">Fidelidad</span></p></div>
+    <div class="card"><div class="icon">🏢</div><h3>Ejecutiva</h3><p>Para agencias/consultoras<br><span class="tag">Leads</span><span class="tag">Cotización</span><span class="tag">Cierre</span></p></div>
+  </div>
+</section>
+
+<section class="section" id="onboarding">
+  <h2>🔄 Así funciona el Onboarding</h2>
+  <p class="sub">De lead a cliente en minutos</p>
+  <div style="max-width:800px;width:100%">
+  <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:30px 0;font-family:monospace;font-size:.85em">
+    <span style="padding:8px 14px;background:rgba(0,212,255,.1);border-radius:8px;border:1px solid #00d4ff">📞 Llamada entrante</span>
+    <span style="color:#00d4ff">→</span>
+    <span style="padding:8px 14px;background:rgba(124,58,237,.1);border-radius:8px;border:1px solid #7c3aed">🎤 Whisper STT</span>
+    <span style="color:#7c3aed">→</span>
+    <span style="padding:8px 14px;background:rgba(0,212,255,.1);border-radius:8px;border:1px solid #00d4ff">🧠 DeepSeek + RAG</span>
+    <span style="color:#00d4ff">→</span>
+    <span style="padding:8px 14px;background:rgba(16,185,129,.1);border-radius:8px;border:1px solid #10b981">📊 Lead scoring</span>
+    <span style="color:#10b981">→</span>
+    <span style="padding:8px 14px;background:rgba(124,58,237,.1);border-radius:8px;border:1px solid #7c3aed">🔊 edge-tts TTS</span>
+    <span style="color:#7c3aed">→</span>
+    <span style="padding:8px 14px;background:rgba(239,68,68,.1);border-radius:8px;border:1px solid #ef4444">📱 Notif. a dueño</span>
+  </div>
+  <div class="demo-box">
+    <div class="bubble" style="border-left:3px solid #00d4ff">🎤 Cliente: "Quiero una pizza para llevar"</div>
+    <div class="bubble" style="border-left:3px solid #7c3aed;margin-left:30px">🤖 María: "Claro, ¿qué ingredientes? Te llegará en 25 min"</div>
+    <div class="bubble" style="border-left:3px solid #00d4ff">🎤 Cliente: "Pepperoni y queso extra"</div>
+    <div class="bubble" style="border-left:3px solid #10b981;margin-left:30px">✅ Pedido tomado + notificación al dueño 🍕</div>
+  </div>
+  </div>
+</section>
+
+<section class="section" id="paquetes">
+  <h2>💰 Paquetes</h2>
+  <p class="sub">El precio es consecuencia del valor</p>
+  <div class="grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="card"><h3>🌙 Despertar</h3><div class="precio">$299</div><div class="precio-sub">/mes + $15K setup</div><ul class="feature-list"><li>1 agente voz</li><li>100 llamadas/mes</li><li>1 canal WA o TG</li><li>Clon voz básico</li><li>Memoria 1 mes</li><li>Link referidos 10%</li></ul></div>
+    <div class="card" style="border-color:#7c3aed"><h3>🚀 Crecer</h3><div class="precio">$1,499</div><div class="precio-sub">/mes + $35K setup</div><ul class="feature-list"><li>3 agentes voz</li><li>500 llamadas/mes</li><li>3 canales</li><li>CRM + scoring BANT</li><li>Memoria 6 meses</li><li>Campañas outbound</li><li>Auto-redes sociales</li><li>20 leads/día scraper</li></ul></div>
+    <div class="card"><h3>👑 Transformar</h3><div class="precio">$3,999</div><div class="precio-sub">/mes + $75K setup</div><ul class="feature-list"><li>Agentes ilimitados</li><li>Llamadas ilimitadas</li><li>White-label completo</li><li>Dashboard 3D</li><li>Memoria 1 año+</li><li>100 leads/día</li><li>Evolution Engine</li><li>API dedicada + SDK</li></ul></div>
+  </div>
+</section>
+
+<section class="section" id="demo">
+  <h2>🎧 Prueba el Orbe</h2>
+  <p class="sub">Interactúa con el agente de voz aquí mismo</p>
+  <div class="demo-box" style="max-width:500px">
+    <p style="color:#7c3aed;margin-bottom:15px">🎤 Presiona el micrófono o escribe</p>
+    <input type="text" placeholder="Escribe tu mensaje aquí..." id="demoInput">
+    <div id="demoChat" style="margin-top:15px">
+      <div class="bubble" style="border-left:3px solid #7c3aed">🤖 ¡Hola! Soy el agente de AstroTech. ¿En qué puedo ayudarte?</div>
+    </div>
+    <button class="btn btn-primary" style="margin-top:10px;font-size:.9em;padding:10px 25px" onclick="sendDemo()">Enviar</button>
+  </div>
+</section>
+
+<section class="section" id="referidos">
+  <h2>🎁 Programa de Referidos</h2>
+  <p>Tú invitas → Tu amigo contrata →<br><span style="font-size:2em;font-weight:800;background:linear-gradient(135deg,#00d4ff,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent">AMBOS 10% OFF</span></p>
+  <p style="margin-top:15px;color:#94a3b8">Válido en su siguiente mes. Link único por cliente.</p>
+</section>
+
+<section class="section" id="stack">
+  <h2>⚡ Stack que lo hace posible</h2>
+  <div class="grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="card"><div class="icon">📞</div><h3>FreeSWITCH</h3><p>$0.013/min<br>Sin Twilio</p></div>
+    <div class="card"><div class="icon">🎤</div><h3>faster-whisper</h3><p>STT local<br>CPU int8</p></div>
+    <div class="card"><div class="icon">🧠</div><h3>DeepSeek V4</h3><p>$0.14/1M tokens<br>OpenRouter</p></div>
+    <div class="card"><div class="icon">🔊</div><h3>edge-tts</h3><p>TTS natural<br>Sin ElevenLabs</p></div>
+  </div>
+</section>
+
+<footer>
+  <p>AstroTech — Tecnología de <a href="https://sonoradigitalcorp.com" style="color:#00d4ff">Sonora Digital Corp</a></p>
+  <p style="margin-top:5px">Creado por COSUDE · Agosto 2026</p>
+</footer>
+
+<script>
+function sendDemo(){
+  let inp=document.getElementById('demoInput'),chat=document.getElementById('demoChat');
+  if(!inp.value.trim())return;
+  chat.innerHTML+=`<div class="bubble" style="border-left:3px solid #00d4ff;margin-left:30px">👤 ${inp.value}</div>`;
+  let msg=inp.value;inp.value='';
+  setTimeout(()=>{
+    fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({messages:[{role:'user',content:msg}]})})
+    .then(r=>r.json()).then(d=>{
+      let r=d?.choices?.[0]?.message?.content||'Gracias, te contactaremos pronto.';
+      chat.innerHTML+=`<div class="bubble" style="border-left:3px solid #7c3aed">🤖 ${r.slice(0,150)}...</div>`;
+    }).catch(()=>{
+      chat.innerHTML+=`<div class="bubble" style="border-left:3px solid #ef4444">⚠️ Error de conexión</div>`;
+    });
+  },500);
+}
+</script>
+</body></html>

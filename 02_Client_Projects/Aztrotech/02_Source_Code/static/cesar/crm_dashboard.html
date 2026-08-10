@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AstroTech AI — CRM Dashboard César</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r158/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.158/examples/js/controls/OrbitControls.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.158/examples/js/loaders/GLTFLoader.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;scroll-behavior:smooth}
+:root{
+  --primary:#00d4ff;--primary-dim:rgba(0,212,255,0.12);
+  --copper:#AC6D3E;--copper-bright:#FFD78A;
+  --amber:#FFAA00;--amber-dim:rgba(255,170,0,0.12);
+  --bg:#020408;--bg-panel:rgba(12,20,40,0.5);
+  --card:rgba(12,20,40,0.5);--card-border:rgba(0,212,255,0.08);
+  --text:#e2e8f0;--muted:rgba(226,232,240,0.35);
+  --border:rgba(0,212,255,0.1);--border-accent:rgba(124,58,237,0.2);
+  --success:#10b981;--danger:#ef4444;--warning:#f59e0b;--warm:#f59e0b;
+  --radius:12px;--transition:.2s;
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);height:100vh;overflow:hidden;position:relative}
+#three-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+
+/* PANEL LAYOUT */
+.panels{position:relative;z-index:2;display:flex;flex-direction:column;height:100vh;padding:16px;gap:12px;max-width:1200px;margin:0 auto}
+.header{display:flex;align-items:center;gap:16px;padding:12px 16px;background:var(--bg-panel);border:1px solid var(--border);border-radius:var(--radius);backdrop-filter:blur(12px)}
+.header .logo{width:36px;height:36px;border-radius:8px;background:linear-gradient(135deg,var(--amber),var(--copper));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px}
+.header h1{font-size:16px;font-weight:700}
+.header h1 span{color:var(--primary)}
+.tabs{display:flex;gap:4px;flex-wrap:wrap}
+.tab{padding:10px 16px;border-radius:var(--radius);border:1px solid var(--border);background:var(--card);font-size:12px;font-weight:600;cursor:pointer;color:var(--muted);transition:var(--transition)}
+.tab:hover{background:rgba(0,212,255,0.05);border-color:rgba(0,212,255,0.2);color:var(--primary)}
+.tab.active{background:linear-gradient(135deg,var(--primary-dim),var(--border-accent));border-color:var(--primary);color:var(--primary)}
+.tab .badge{margin-left:6px;font-size:10px;padding:2px 6px;border-radius:10px;background:rgba(0,0,0,0.2)}
+
+.content{flex:1;overflow-y:auto;padding:4px}
+
+/* LEAD CARDS — movibles */
+.lead-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:14px;transition:var(--transition);cursor:pointer;position:relative;overflow:hidden}
+.lead-card:hover{border-color:var(--primary);box-shadow:0 0 15px rgba(0,212,255,0.1);transform:translateY(-2px)}
+.lead-card.hot{border-left:3px solid var(--danger)}
+.lead-card.warm{border-left:3px solid var(--warm)}
+.lead-card.cold{border-left:3px solid var(--muted)}
+.lead-header{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.lead-name{font-size:14px;font-weight:600}
+.lead-type{font-size:10px;padding:2px 8px;border-radius:6px;font-weight:700;text-transform:uppercase}
+.lead-type.hot{background:rgba(239,68,68,0.2);color:var(--danger)}
+.lead-type.warm{background:rgba(245,152,1,b1);color:var(--warm)}
+.lead-type.cold{background:rgba(226,232,240,0.1);color:var(--muted)}
+.lead-confidence{font-size:20px;font-weight:800;color:var(--primary)}
+.lead-confidence.warm{color:var(--warm)}
+.lead-confidence.hot{color:var(--danger)}
+.lead-meta{font-size:11px;color:var(--muted);margin-top:6px;display:flex;gap:12px;flex-wrap:wrap}
+.lead-meta span{display:flex;align-items:center;gap:4px}
+.lead-cost{background:rgba(0,212,255,0.1);padding:2px 8px;border-radius:4px;font-size:10px;color:var(--primary)}
+
+/* CONVERSATION VIEW */
+.conv-container{display:flex;flex-direction:column;gap:8px}
+.conv-msg{padding:10px 14px;border-radius:var(--radius);font-size:12.5px;line-height:1.6}
+.conv-msg.user{background:rgba(255,170,0,0.12);border:1px solid rgba(255,170,0,0.2);margin-left:auto;border-bottom-right-radius:6px}
+.conv-msg.assistant{background:var(--card);border:1px solid var(--border);margin-right:auto;border-bottom-left-radius:6px}
+.conv-meta{font-size:9px;color:var(--muted);margin-top:4px}
+
+/* METRIC CARDS */
+.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px}
+.metric-card{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:16px;text-align:center;transition:var(--transition)}
+.metric-card:hover{border-color:var(--primary);box-shadow:0 0 15px rgba(0,212,255,0.1)}
+.metric-label{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px}
+.metric-value{font-size:26px;font-weight:800;color:var(--primary)}
+.metric-value.hot{color:var(--danger)}
+.metric-value.warm{color:var(--warm)}
+.metric-sub{font-size:11px;color:var(--muted);margin-top:4px}
+
+/* SURVEY */
+.survey-form{background:var(--card);border:1px solid var(--card-border);border-radius:var(--radius);padding:14px;margin-top:12px}
+.survey-form h4{font-size:13px;font-weight:600;margin-bottom:10px}
+.rating-stars{display:flex;gap:4px;margin:8px 0}
+.rating-stars button{width:24px;height:24px;border:none;background:none;font-size:18px;cursor:pointer;color:rgba(255,255,255,0.3);transition:var(--transition)}
+.rating-stars button:hover{color:var(--amber);transform:scale(1.1)}
+.rating-stars button.active{color:var(--amber)}
+.survey-btns{display:flex;gap:8px;margin-top:10px}
+.btn{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:var(--primary-dim);color:var(--primary);font-size:12px;font-weight:600;cursor:pointer;transition:var(--transition)}
+.btn:hover{background:var(--primary);color:#000;transform:translateY(-1px)}
+.btn-sm{padding:6px 10px;font-size:10px}
+.btn-green{background:rgba(16,185,129,0.15);color:var(--success);border-color:rgba(16,185,129,0.2)}
+.btn-green:hover{background:var(--success);color:#020408}
+
+/* FILTERS */
+.filters{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+.filter-chip{padding:6px 12px;border-radius:20px;border:1px solid var(--border);background:var(--card);font-size:11px;cursor:pointer;transition:var(--transition)}
+.filter-chip:hover{background:rgba(0,212,255,0.05);border-color:rgba(0,212,255,0.2)}
+.filter-chip.active{background:linear-gradient(135deg,var(--primary-dim),var(--border-accent));color:var(--primary);border-color:var(--primary)}
+.search-box{flex:1;min-width:160px;padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:transparent;color:var(--text);font-size:12px;font-family:inherit;outline:none;transition:var(--transition)}
+.search-box:focus{border-color:var(--primary);box-shadow:0 0 0 2px var(--primary-dim)}
+
+/* RESPONSIVE */
+@media(max-width:768px){.panels{padding:8px}.header h1{font-size:14px}}
+</style>
+</head>
+<body>
+<canvas id="three-canvas"></canvas>
+<div class="panels">
+  <header class="header">
+    <div class="logo">AT</div>
+    <h1>CRM <span>César</span></h1>
+    <div class="badge" style="margin-left:auto"></div>
+  </header>
+
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('leads')"><span class="badge" id="lead-count">0</span> Leads</div>
+    <div class="tab" onclick="switchTab('metrics')"><span class="badge">📊</span> Métricas</div>
+    <div class="tab" onclick="switchTab('gamificacion')"><span class="badge">🎮</span> Gamificación</div>
+  </div>
+
+  <div class="content">
+    <!-- LEADS TAB -->
+    <div id="tab-leads" class="tab-content">
+      <div class="filters" id="filters">
+        <div class="filter-chip active" onclick="filterLeads('all')">Todos</div>
+        <div class="filter-chip" onclick="filterLeads('hot')">Hot</div>
+        <div class="filter-chip" onclick="filterLeads('warm')">Warm</div>
+        <div class="filter-chip" onclick="filterLeads('cold')">Cold</div>
+        <input type="text" class="search-box" id="searchBox" placeholder="Buscar cliente..." oninput="searchLeads()">
+      </div>
+      <div class="metric-grid" id="lead-grid">
+        <!-- Lead cards populated by JS -->
+      </div>
+    </div>
+
+    <!-- LEAD DETAIL TAB (inline, shown when lead selected) -->
+    <div id="tab-detail" class="tab-content" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <h3 style="font-size:14px;font-weight:600" id="detail-name"> — </h3>
+        <button class="btn btn-sm" onclick="backToLeads()">← Volver</button>
+      </div>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-bottom:12px">
+        <div class="metric-card" style="flex:1;min-width:120px">
+          <div class="metric-label">Tipo Lead</div>
+          <div class="metric-value" id="detail-type">—</div>
+        </div>
+        <div class="metric-card" style="flex:1;min-width:120px">
+          <div class="metric-label">Confianza</div>
+          <div class="metric-value" id="detail-conf">—</div>
+        </div>
+        <div class="metric-card" style="flex:1;min-width:120px">
+          <div class="metric-label">Engagement</div>
+          <div class="metric-value" id="detail-eng">—</div>
+        </div>
+      </div>
+      <div class="conv-container" id="conv-messages">
+        <!-- Messages populated by JS -->
+      </div>
+      <div class="survey-form">
+        <h4>📋 Encuesta post-conversación</h4>
+        <div class="rating-stars" id="rating-stars">
+          <button onclick="setRating(1)">1</button>
+          <button onclick="setRating(2)">2</button>
+          <button onclick="setRating(3)">3</button>
+          <button onclick="setRating(4)">4</button>
+          <button onclick="setRating(5)">5</button>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center">
+          <label style="font-size:11px"><input type="checkbox" id="recommended"> ¿Recomienda?</label>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <input type="text" class="search-box" id="servicio-interes" placeholder="Servicio de interés" style="flex:1">
+          <button class="btn btn-green btn-sm" onclick="submitSurvey()">Enviar</button>
+        </div>
+      </div>
+    </div>
+
+     <!-- METRICS TAB -->
+     <div id="tab-metrics" class="tab-content" style="display:none">
+       <div class="metric-grid" id="metrics-grid">
+         <!-- Metrics populated by JS -->
+       </div>
+     </div>
+
+     <!-- GAMIFICACIÓN TAB -->
+     <div id="tab-gamificacion" class="tab-content" style="display:none">
+       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+         <h3 style="font-size:14px;font-weight:600">🏆 Leaderboard</h3>
+         <button class="btn btn-sm" onclick="createObsidianNote()">📝 Nota Obsidian</button>
+       </div>
+       <div style="margin-bottom:12px">
+         <div class="metric-card"><div class="metric-label">Total Puntos</div><div class="metric-value" id="total-puntos">0</div></div>
+         <div class="metric-sub" id="total-users" style="margin-top:4px">0 usuarios activos</div>
+       </div>
+       <div class="metric-grid" id="gamification-grid">
+         <!-- Badge leaderboard populated by JS -->
+       </div>
+     </div>
+  </div>
+</div>
+
+<script>
+let leads = [];
+let currentLead = null;
+
+async function fetchAPI(path, opts = {}) {
+  const res = await fetch(`/api/crm${path}`, {
+    headers: { 'Content-Type': 'application/json', ...opts.headers },
+    ...opts,
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}: ${res.statusText}`);
+  return await res.json();
+}
+
+async function loadLeads(filter = 'all') {
+  const params = new URLSearchParams();
+  if (filter !== 'all') params.set('lead_type', filter);
+  try {
+    leads = await fetchAPI(`/leads?limit=50&${params}`);
+    document.getElementById('lead-count').textContent = leads.length;
+    renderLeads();
+  } catch(e) {
+    console.error('Error loading leads:', e);
+  }
+}
+
+function renderLeads() {
+  const grid = document.getElementById('lead-grid');
+  grid.innerHTML = leads.map(lead => `
+    <div class="metric-card lead-card ${lead.lead_type || 'cold'}" onclick="viewLead('${lead.id}')">
+      <div class="lead-header">
+        <span class="lead-name">${lead.display_name || lead.platform_id}</span>
+        <span class="lead-type ${lead.lead_type || 'cold'}">${lead.lead_type || 'cold'}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div class="lead-confidence ${lead.lead_type || 'cold'}">${Math.round((lead.lead_confidence || 0) * 100)}%</div>
+        <div class="lead-meta">
+          <span>💬 ${lead.message_count}</span>
+          <span class="lead-cost">$${lead.total_cost_usd.toFixed(4)}</span>
+        </div>
+      </div>
+      ${lead.business_name ? `<div class="lead-meta" style="margin-top:4px">🏢 ${lead.business_name}</div>` : ''}
+      ${lead.servicios_requeridos && lead.servicios_requeridos.length > 0 ? `<div class="lead-meta" style="margin-top:4px">📦 ${lead.servicios_requeridos.join(', ')}</div>` : ''}
+      ${lead.cita_agendada ? `<div class="lead-meta" style="margin-top:4px">📅 ${new Date(lead.cita_agendada).toLocaleString('es-MX')}</div>` : ''}
+      ${lead.survey_feedback && Object.keys(lead.survey_feedback).length > 0 ? `<div class="lead-meta" style="margin-top:4px">📋 Encuesta: ${lead.survey_feedback.rating}⭐</div>` : ''}
+    </div>
+  `).join('');
+}
+
+function filterLeads(type) {
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+  loadLeads(type);
+}
+
+async function searchLeads() {
+  const q = document.getElementById('searchBox').value;
+  if (q.length < 2) { loadLeads(); return; }
+  leads = await fetchAPI(`/leads?search=${encodeURIComponent(q)}&limit=50`);
+  document.getElementById('lead-count').textContent = leads.length;
+  renderLeads();
+}
+
+async function viewLead(leadId) {
+  currentLead = await fetchAPI(`/lead/${leadId}`);
+  const lead = currentLead.lead;
+  document.getElementById('detail-name').textContent = lead.name || lead.platform_id;
+  document.getElementById('detail-type').textContent = lead.lead_type || 'cold';
+  document.getElementById('detail-type').className = 'metric-value ' + (lead.lead_type || 'cold');
+  document.getElementById('detail-conf').textContent = Math.round((lead.lead_confidence || 0) * 100) + '%';
+  document.getElementById('detail-eng').textContent = Math.round((lead.engagement_score || 0) * 100) + '%';
+
+  const msgs = currentLead.messages;
+  document.getElementById('conv-messages').innerHTML = msgs.map(m => `
+    <div class="conv-msg ${m.role}">
+      ${m.content.replace(/\n/g, '<br>')}
+      <div class="conv-meta">${m.role} • ${new Date(m.created_at).toLocaleTimeString('es-MX', {hour:'2-digit',minute:'2-digit'})}</div>
+    </div>
+  `).join('');
+
+  document.getElementById('tab-leads').style.display = 'none';
+  document.getElementById('tab-metrics').style.display = 'none';
+  document.getElementById('tab-detail').style.display = 'block';
+  document.querySelector('.tabs').style.display = 'none';
+}
+
+function backToLeads() {
+  document.getElementById('tab-detail').style.display = 'none';
+  document.getElementById('tab-leads').style.display = 'block';
+  document.getElementById('tab-metrics').style.display = 'none';
+  document.querySelector('.tabs').style.display = 'flex';
+}
+
+let rating = 0;
+function setRating(n) { rating = n; updateStars(); }
+function updateStars() {
+  document.querySelectorAll('#rating-stars button').forEach((b,i) => {
+    b.classList.toggle('active', i < rating);
+  });
+}
+
+async function submitSurvey() {
+  if (!currentLead || !rating) { alert('Selecciona una calificación'); return; }
+  const recommended = document.getElementById('recommended').checked;
+  const servicio = document.getElementById('servicio-interes').value;
+  await fetchAPI('/survey', {
+    method: 'POST',
+    body: JSON.stringify({
+      lead_id: currentLead.lead.id,
+      rating: rating,
+      recommended: recommended,
+      servicio_interes: servicio || undefined,
+    }),
+  });
+  alert('¡Gracias! Feedback guardado.');
+  rating = 0; updateStars();
+  document.getElementById('recommended').checked = false;
+  document.getElementById('servicio-interes').value = '';
+}
+
+async function loadMetrics() {
+  const m = await fetchAPI('/metrics');
+  document.getElementById('metrics-grid').innerHTML = `
+    <div class="metric-card"><div class="metric-label">Conversaciones</div><div class="metric-value">${m.total_conversations}</div><div class="metric-sub">${m.unique_users} usuarios únicos</div></div>
+    <div class="metric-card"><div class="metric-label">Leads Hot</div><div class="metric-value hot">${m.leads_hot}</div><div class="metric-sub">alta prioridad</div></div>
+    <div class="metric-card"><div class="metric-label">Leads Warm</div><div class="metric-value warm">${m.leads_warm}</div><div class="metric-sub">seguimiento</div></div>
+    <div class="metric-card"><div class="metric-label">Leads Cold</div><div class="metric-value cold">${m.leads_cold}</div><div class="metric-sub">nurture</div></div>
+    <div class="metric-card"><div class="metric-label">Citas Agendadas</div><div class="metric-value">${m.citas_agendadas}</div><div class="metric-sub">pendientes</div></div>
+    <div class="metric-card"><div class="metric-label">Encuestas</div><div class="metric-value">${m.surveys_respondidos}</div><div class="metric-sub">respondidas</div></div>
+    <div class="metric-card"><div class="metric-label">Costo Total</div><div class="metric-value">$${m.total_cost_usd.toFixed(4)}</div><div class="metric-sub">USD este periodo</div></div>
+    <div class="metric-card"><div class="metric-label">Engagement</div><div class="metric-value">${Math.round((m.avg_engagement||0)*100)}%</div><div class="metric-sub">promedio</div></div>
+  `;
+}
+
+async function loadGamification() {
+  const g = await fetchAPI('/gamification');
+  document.getElementById('total-puntos').textContent = g.stats.total_puntos;
+  document.getElementById('total-users').textContent = `${g.stats.total_users} usuarios activos`;
+  const badges = {
+    "Lead Minero": "⛏️", "Primera Venta": "💰", "Confiable": "🤝",
+    "Asesor Senior": "🧠", "Recolector": "🌟", "Promoto": "📣",
+    "Calificación 5": "⭐", "Reunión Agendada": "📅",
+  };
+  document.getElementById('gamification-grid').innerHTML = g.leaderboard.map(u => `
+    <div class="metric-card lead-card" style="border-left:3px solid var(--primary)">
+      ${u.badges.map(b => `<span title="${b}">${badges[b] || '🎯'}</span>`).join(' ')}
+      <div style="font-size:12px;font-weight:600;margin-top:6px">${u.display_name}</div>
+      <div class="metric-value">${u.puntos} pts</div>
+      ${u.referral_link ? `<a href="${u.referral_link}" style="font-size:10px;color:var(--muted)">Referral</a>` : ''}
+    </div>
+  `).join('');
+}
+
+async function createObsidianNote() {
+  if (!currentLead) { alert('Selecciona un lead primero'); return; }
+  try {
+    const res = await fetchAPI(`/lead/${currentLead.lead.id}/obsidian`, { method: 'POST' });
+    if (res.success) {
+      alert(`Nota creada en Obsidian.\n\nVault: ${res.note_path}`);
+    }
+  } catch(e) {
+    alert('Obsidian no configurado. Set OBSIDIAN_VAULT_PATH en ~/.hermes/.env');
+  }
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.style.display = 'none');
+  document.getElementById('tab-' + tab).style.display = 'block';
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  event?.target?.classList.add('active');
+}
+
+async function init() {
+  await loadLeads();
+  await loadMetrics();
+  await loadGamification();
+  setInterval(loadMetrics, 30000);
+}
+init();
+</script>
+
+<!-- THREE.JS CORPORATE AVATAR -- DATAPOINTS DRIVEN BY CRM -->
+<script src="https://cdn.jsdelivr.net/npm/three@0.158/examples/js/loaders/TextureLoader.min.js"></script>
+<script>
+(function initAvatar(){
+  const canvas = document.getElementById('three-canvas');
+  if (!canvas) return;
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x020408);
+
+  const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+  const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setClearColor(0x000000, 0);
+
+  const group = new THREE.Group();
+  scene.add(group);
+  camera.position.z = 8;
+
+  // Avatar de César: icosaedro texturizado con su foto
+  const avatarGeo = new THREE.IcosahedronGeometry(1.0, 3, 3);
+  const avatarMat = new THREE.MeshStandardMaterial({
+    color: 0xffffff,
+    emissive: 0x00d4ff,
+    emissiveIntensity: 0.15,
+    metalness: 0.9,
+    roughness: 0.15,
+    transparent: true,
+    opacity: 0.95,
+  });
+
+  // Cargar foto de César como textura
+  const texLoader = new THREE.TextureLoader();
+  texLoader.load(
+    '/cesar/photo_5116518832796273789_y.jpg',
+    function(tex) {
+      avatarMat.map = tex;
+      avatarMat.needsUpdate = true;
+    },
+    undefined,
+    function() { /* Si falla foto, queda el color corporativo azul-cian */ }
+  );
+
+  const avatar = new THREE.Mesh(avatarGeo, avatarMat);
+
+  // Wireframe overlay corporativo
+  const wfGeo = new THREE.IcosahedronGeometry(1.05, 2, 2);
+  const wfMat = new THREE.LineBasicMaterial({
+    color: 0xffaa00,
+    transparent: true,
+    opacity: 0.25,
+  });
+  const wireframe = new THREE.LineSegments(
+    new THREE.WireframeGeometry(wfGeo), wfMat
+  );
+  avatar.add(wireframe);
+  group.add(avatar);
+
+  // Anillos orbitales (corporativo, no mágico)
+  const ringGeo = new THREE.RingGeometry(2.0, 2.1, 64);
+  const ringMat = new THREE.LineBasicMaterial({
+    color: 0x00d4ff, transparent: true, opacity: 0.2
+  });
+  const ringX = new THREE.LineLoop(THREE.WireframeGeometry ? new THREE.WireframeGeometry(ringGeo) : ringGeo, ringMat);
+  ringX.rotation.x = Math.PI/2;
+  const ringY = ringX.clone(); ringY.rotation.y = Math.PI/2;
+  const ringZ = ringX.clone();
+  group.add(ringX, ringY, ringZ);
+
+  // Data points (uno por lead, colores por tipo)
+  const dataGeo = new THREE.SphereGeometry(0.08, 8, 8);
+  const dataColors = { hot: 0xef4444, warm: 0xf59e0b, cold: 0x64748b };
+  const dataPoints = [];
+
+  function updateDataPoints(leads) {
+    dataPoints.forEach(p => group.remove(p.mesh));
+    dataPoints.length = 0;
+    leads.forEach((lead, i) => {
+      const color = dataColors[lead.lead_type || 'cold'] || dataColors.cold;
+      const mat = new THREE.MeshBasicMaterial({ color, transparent: true, opacity: 0.8 });
+      const mesh = new THREE.Mesh(dataGeo, mat);
+      const angle = (i / Math.max(leads.length,1)) * Math.PI * 2;
+      mesh.position.set(
+        Math.cos(angle) * 3.5,
+        (Math.sin(angle * 2) * 0.8),
+        Math.sin(angle) * 3.5
+      );
+      mesh.userData.lead = lead;
+      dataPoints.push({ mesh, lead });
+      group.add(mesh);
+    });
+  }
+
+  // Lighting corporativo
+  scene.add(new THREE.AmbientLight(0x404040, 0.6));
+  const dirLight = new THREE.DirectionalLight(0x00d4ff, 0.8);
+  dirLight.position.set(5,10,5);
+  scene.add(dirLight);
+  const rimLight = new THREE.DirectionalLight(0xffaa00, 0.3);
+  rimLight.position.set(-3,-5,5);
+  scene.add(rimLight);
+
+  // Mouse follow — avatar responde al cursor (movible)
+  document.addEventListener('mousemove', (e) => {
+    const x = (e.clientX / window.innerWidth - 0.5) * 0.4;
+    const y = (e.clientY / window.innerHeight - 0.5) * 0.4;
+    avatar.rotation.y = x * 1.2;
+    avatar.rotation.x = -y * 0.5;
+    group.rotation.y = x * 0.15;
+  });
+
+  // Click = refresh CRM data
+  canvas.addEventListener('click', () => {
+    canvas.style.filter = 'brightness(1.5)';
+    setTimeout(() => canvas.style.filter = '', 300);
+    if (typeof loadLeads === 'function') loadLeads();
+  });
+
+  let t = 0;
+  function animate(){
+    requestAnimationFrame(animate);
+    t += 0.002;
+    avatar.rotation.y += 0.0008;
+    ringX.rotation.z += 0.0008;
+    ringY.rotation.x += 0.0006;
+    ringZ.rotation.y += 0.0004;
+    dataPoints.forEach(p => {
+      p.mesh.rotation.x += 0.01;
+      p.mesh.rotation.y += 0.01;
+    });
+    renderer.render(scene, camera);
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth/window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  });
+
+  // Expose for CRM JS to update data points
+  window.__THREE_AVATAR__ = { updateDataPoints };
+})();
+</script>
+</body>
+</html>

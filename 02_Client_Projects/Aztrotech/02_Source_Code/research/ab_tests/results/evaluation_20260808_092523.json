@@ -1,0 +1,10 @@
+{
+  "variant_a_control": {
+    "status": "insufficient_data",
+    "count": 2
+  },
+  "variant_b_storytelling": {
+    "status": "insufficient_data",
+    "count": 2
+  }
+}

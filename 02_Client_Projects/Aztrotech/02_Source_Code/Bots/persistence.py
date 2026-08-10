@@ -43,6 +43,9 @@ class TurnData:
     language: str = "es"
     lead_type: Optional[str] = None
     lead_confidence: float = 0.0
+    engagement_score: float = 0.0
+    servicios_requeridos: List[str] = field(default_factory=list)
+    cita_intent: Optional[str] = None
 
 
 class PersistenceWriter:
@@ -137,12 +140,8 @@ class PersistenceWriter:
                     json.dumps(turn.emotion_scores), json.dumps(turn.rag_chunks_used),
                     json.dumps(turn.emerge_layers_used), turn.language,
                 )
-                if turn.lead_type:
-                    await conn.execute(
-                        """UPDATE conversations SET lead_type=$1, lead_confidence=$2, updated_at=NOW()
-                           WHERE id=$3""",
-                        turn.lead_type, turn.lead_confidence, conv_id,
-                    )
+                # Batch UPDATE conversations with latest analytics per user
+                await self._update_conversation_analytics(conn, conv_id, turn)
             # Update daily metrics
             await self._update_daily_metrics(conn, batch)
 
@@ -163,6 +162,38 @@ class PersistenceWriter:
             turn.platform_conversation_id, turn.language,
         )
         return conv_id
+
+    async def _update_conversation_analytics(self, conn: asyncpg.Connection, conv_id, turn: TurnData):
+        """Update conversation row with lead_type, engagement, services, cita intent."""
+        set_parts = ["updated_at = NOW()"]
+        params: List[Any] = []
+
+        if turn.lead_type:
+            params.append(turn.lead_type)
+            set_parts.append(f"lead_type = ${len(params)}")
+            params.append(turn.lead_confidence)
+            set_parts.append(f"lead_confidence = ${len(params)}")
+
+        if turn.engagement_score:
+            params.append(turn.engagement_score)
+            set_parts.append(f"engagement_score = ${len(params)}")
+
+        if turn.servicios_requeridos:
+            params.append(json.dumps(turn.servicios_requeridos))
+            set_parts.append(f"servicios_requeridos = ${len(params)}::jsonb")
+
+        if turn.cita_intent:
+            params.append(datetime.utcnow())
+            set_parts.append(f"cita_agendada = ${len(params)}")
+
+        if len(params) == 0:
+            return
+
+        params.append(conv_id)
+        await conn.execute(
+            f"UPDATE conversations SET {', '.join(set_parts)} WHERE id = ${len(params)}",
+            *params,
+        )
 
     async def _update_daily_metrics(self, conn: asyncpg.Connection, batch: List[TurnData]):
         import datetime as _dt

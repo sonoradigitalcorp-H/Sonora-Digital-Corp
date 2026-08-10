@@ -6,11 +6,12 @@ Pipeline completo por mensaje:
   3. RAG-first: buscar conocimiento en Qdrant ANTES de llamar al LLM
   4. Analizar emoción (multi-idioma)
   5. Clasificar lead (híbrido)
-  6. Construir prompt (guardrails anti-venta)
+  6. Construir prompt con guardrails (anti-venta)
   7. Llamar LLM + token tracking
   8. Guardrails post-LLM (re-escribir si viola)
   9. Persistir dual (Postgres + Engram) + promover emerge
-  10. Notificar si lead hot
+  10. Gamificación: award points + A/B test registration
+  11. Trigger encuesta si lead cold/warm
 
 Permite reusar el MISMO pipeline para Telegram y WhatsApp.
 """
@@ -60,6 +61,10 @@ class TurnResult:
     guardrail_note: str = ""
     internal_user_id: str = ""
     language: str = "es"
+    engagement_score: float = 0.0
+    servicios_requeridos: List[str] = field(default_factory=list)
+    cita_intent: Optional[str] = None
+    trigger_survey: bool = False
 
 
 class ConversationEngine:
@@ -101,6 +106,16 @@ class ConversationEngine:
             elif name == "persistence":
                 from persistence import create_persistence_writer
                 self._lazy[name] = create_persistence_writer(self.config.database_url)
+            elif name == "analyzer":
+                from analysis_engine import create_analyzer
+                self._lazy[name] = create_analyzer()
+            elif name == "ab_test":
+                from ab_test_manager import create_ab_test_manager
+                self._lazy[name] = create_ab_test_manager()
+            elif name == "gamification":
+                from gamification import create_gamification_engine, POINTS as GAM_POINTS
+                self._lazy["_points"] = GAM_POINTS
+                self._lazy[name] = create_gamification_engine()
         return self._lazy[name]
 
     async def start(self):
@@ -183,6 +198,25 @@ class ConversationEngine:
         conv_texts = [h["content"] for h in (history or [])] + [user_message]
         lead = await classifier.classify(conv_texts, rag_context=rag_context)
 
+        # 4b. A/B testing: seleccionar variante de prompt
+        ab = self._get("ab_test")
+        variant_name = ab.select_variant(internal_user_id)
+        prompt_override = ab.get_prompt(variant_name) if variant_name != "variant_a_control" else None
+
+        # 4c. Análisis de conversación (engagement, servicios, cita intent)
+        analyzer = self._get("analyzer")
+        analyzer = self._get("analyzer")
+        # Convertir history a formato de mensajes para el analyzer
+        msg_history = []
+        for i, h in enumerate(history or []):
+            msg_history.append({"role": h.get("role", "user" if i % 2 else "assistant"), "content": h["content"]})
+        msg_history.append({"role": "user", "content": user_message})
+
+        eng_result = analyzer.score_engagement(msg_history)
+        services = analyzer.extract_services(conv_texts)
+        cita = analyzer.detect_cita_intent(conv_texts)
+        should_survey = analyzer.generate_survey_trigger(lead.tipo, eng_result.score)
+
         # 5. Construir prompt con guardrails
         prompt = self._get("prompt")
         from prompt_builder import PromptContext
@@ -193,10 +227,14 @@ class ConversationEngine:
             emotion_context=json.dumps(emo.to_dict(), ensure_ascii=False),
             lead_context=json.dumps(lead.to_dict(), ensure_ascii=False),
             history=history or [],
-            locale=emo.language,
-            max_history_turns=self.config.max_history_turns,
-        )
+             locale=emo.language,
+             max_history_turns=self.config.max_history_turns,
+         )
         messages = prompt.build(ctx)
+
+        # Si estamos en variant B, sobreescribimos el system prompt
+        if prompt_override:
+            messages[0]["content"] = prompt_override
 
         # 6. Llamar LLM + tokens
         if not router:
@@ -206,6 +244,10 @@ class ConversationEngine:
                 emotion_flags=emo.flags, rag_chunks=rag_chunks,
                 rag_context=rag_context, internal_user_id=internal_user_id,
                 language=emo.language,
+                engagement_score=eng_result.score,
+                servicios_requeridos=services.servicios,
+                cita_intent=cita.tipo if cita.has_cita else None,
+                trigger_survey=should_survey,
             )
         try:
             result = await router.call(messages)
@@ -217,6 +259,10 @@ class ConversationEngine:
                 dominant_emotion=emo.dominant, emotion_flags=emo.flags,
                 rag_chunks=rag_chunks, internal_user_id=internal_user_id,
                 language=emo.language,
+                engagement_score=eng_result.score,
+                servicios_requeridos=services.servicios,
+                cita_intent=cita.tipo if cita.has_cita else None,
+                trigger_survey=should_survey,
             )
 
         usage = result.get("usage", {})
@@ -232,15 +278,50 @@ class ConversationEngine:
             logger.warning(f"Guardrail: {guardrail['message']} → re-escritura")
             content = await self._regenerate_safe(prompt, ctx, content)
 
+        # 7b. Trigger encuesta post-conversación (solo cold/warm, no hot)
+        survey_suffix = ""
+        if should_survey:
+            survey_suffix = (
+                "\n\n¿Te fue útil la información? ¿Recomendarías AstroTech a un amigo? "
+                "Responde con: 1️⃣=Nada útil, 5️⃣=Muy útil."
+            )
+
         # 8. Persistir dual + promover emerge
         await self._persist(
             internal_user_id, platform, platform_conversation_id,
             user_message, content, emo, lead, rag_chunks, model, tok,
+            engagement_score=eng_result.score,
+            servicios_requeridos=services.servicios,
+            cita_intent=cita.tipo if cita.has_cita else None,
         )
         self._promote_emerge(emerge, internal_user_id, user_message, lead)
 
+        # 9. Gamificación: award points por lead qualification
+        try:
+            gam = self._get("gamification")
+            if lead.tipo == "hot":
+                await gam.award_points(internal_user_id, POINTS["hot_lead"], "hot_lead", platform)
+            elif lead.tipo == "warm":
+                await gam.award_points(internal_user_id, POINTS["warm_lead"], "warm_lead", platform)
+            elif lead.tipo == "cold":
+                await gam.award_points(internal_user_id, POINTS["cold_lead"], "cold_lead", platform)
+            if cita.has_cita:
+                await gam.award_points(internal_user_id, POINTS["cita_agendada"], "cita_intent", platform)
+        except Exception as e:
+            logger.warning(f"Gamification falló: {e}")
+
+        # 10. A/B test: registrar resultados del turno
+        ab = self._get("ab_test")
+        ab.record_turn(
+            variant=variant_name,
+            lead_type=lead.tipo,
+            engagement_score=eng_result.score,
+            survey_rating=None,  # Se registra cuando llega response survey
+            cost_usd=tok["cost_usd"],
+        )
+
         return TurnResult(
-            reply=content,
+            reply=content + survey_suffix,
             lead_type=lead.tipo,
             lead_confidence=lead.confianza,
             dominant_emotion=emo.dominant,
@@ -255,6 +336,10 @@ class ConversationEngine:
             guardrail_note=guardrail["message"],
             internal_user_id=internal_user_id,
             language=emo.language,
+            engagement_score=eng_result.score,
+            servicios_requeridos=services.servicios,
+            cita_intent=cita.tipo if cita.has_cita else None,
+            trigger_survey=should_survey,
         )
 
     async def _regenerate_safe(
@@ -292,6 +377,9 @@ class ConversationEngine:
     async def _persist(
         self, internal_user_id, platform, platform_conv_id,
         user_msg, reply, emo, lead, rag_chunks, model, tok,
+        engagement_score: float = 0.0,
+        servicios_requeridos: Optional[List[str]] = None,
+        cita_intent: Optional[str] = None,
     ):
         """Persistir turno dual (Postgres + Engram)."""
         try:
@@ -314,6 +402,9 @@ class ConversationEngine:
                     language=emo.language,
                     lead_type=lead.tipo,
                     lead_confidence=lead.confianza,
+                    engagement_score=engagement_score,
+                    servicios_requeridos=servicios_requeridos or [],
+                    cita_intent=cita_intent,
                 ))
         except Exception as e:
             logger.error(f"Persistencia falló: {e}")
