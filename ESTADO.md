@@ -18,6 +18,8 @@
 - Guardianes: pre-commit + structure_guard.sh (esqueleto canónico).
 - **Embeddings DUAL (2026-08-10)**: Ollama LOCAL activo (systemd `ollama.service`, enable --now, 127.0.0.1:11434) con `tinyllama:1.1b` + `nomic-embed-text` (768-dim). VPS OVH `149.56.46.173:11434` (docker) con `all-minilm` (384-dim) + qwen3:4b + qwen2.5. Script embedding usa `OLLAMA_ENDPOINT` (de ~/.hermes/.env = VPS). Qdrant local 6333 con colecciones por tenant: kb_rye, kb_aztrotech, hermes, tenant_aztrotech (384 dims, Cosine). ⚠️ `all-minilm` local NO instalado aún (45.9 MB) — bajar si se quiere embeddings local sin depender del VPS.
 - **MCP server movido (2026-08-10)**: `skills/mcp/servers/sdc_mcp_stdio.py` (deriva en raíz) → `01_Core_Platform/03_Agentic_Infrastructure/MCP_Servers/sdc_mcp_stdio/`. Test integration → `03_Sandbox_and_RnD/tests/integration/`. Launcher Antigravity → `~/.local/share/applications/`. `citas.db` vacío borrado. Structure guard VERDE.
+- **INFRAESTRUCTURA SYSTEMD 24/7 VIVA (2026-08-10)**: Servicios `openclaw-gateway.service` (PID 61185), `multi-tenant-bot.service` (PID 61186) y `wacli-gateway.service` (PID 61187) configurados y activos bajo supervisión systemd user con Linger habilitado (`mystic`). Entrypoint `run_multi_tenant.py` creado y commiteado. Bots operando 24/7 sin intervención manual.
+
 
 ## Aztrotech Onboarding Inteligente v2 (2026-08-07)
 - **OKF actualizado**: aztrotech.pricing.json con data REAL de aztrotech.mx (Empleado Digital $999/$1999/$3999, NO antenas/instalación)
