@@ -1,0 +1,24 @@
+- generic [ref=e4]:
+  - generic [ref=e7]:
+    - img "WhatsApp"
+  - generic [ref=e14]:
+    - heading "WhatsApp funciona con Google Chrome 100 o versiones posteriores" [level=1] [ref=e15]
+    - generic [ref=e16]:
+      - text: Para usar WhatsApp, actualiza
+      - link "Chrome" [ref=e17] [cursor=pointer]:
+        - /url: https://support.google.com/chrome/answer/95414
+      - text: o usa
+      - link "Mozilla Firefox" [ref=e18] [cursor=pointer]:
+        - /url: http://www.firefox.com/
+      - text: ","
+      - link "Safari" [ref=e19] [cursor=pointer]:
+        - /url: https://www.apple.com/safari/
+      - text: ","
+      - link "Microsoft Edge" [ref=e20] [cursor=pointer]:
+        - /url: https://www.microsoft.com/edge
+      - text: u
+      - link "Opera" [ref=e21] [cursor=pointer]:
+        - /url: http://www.opera.com/
+      - text: .
+    - link "Actualizar Google Chrome" [ref=e23] [cursor=pointer]:
+      - /url: http://www.google.com/chrome/

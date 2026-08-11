@@ -1,0 +1,132 @@
+- generic [active] [ref=f1e1]:
+  - 'button "🔊 Narración: OFF" [ref=f1e2] [cursor=pointer]'
+  - generic [ref=f1e3]:
+    - generic [ref=f1e4]:
+      - generic [ref=f1e5]: 01 / 08
+      - generic [ref=f1e6]: Sonora Digital Corp · Aztrotech
+      - heading "Tu negocio atendiendo 24/7. Con IA. Con tu voz. Sin perder clientes." [level=2] [ref=f1e7]: Tu negocio atendiendo 24/7.Con IA. Con tu voz. Sin perder clientes.
+      - paragraph [ref=f1e8]: Un asistente digital que recibe, diagnostica, cotiza y agenda — mientras tú duermes, comes o estás en obra. Esto es lo que tu bot puede hacer por Aztrotech.
+    - generic:
+      - generic: 02/08
+      - generic: El problema
+      - heading "Cada llamada perdida es dinero que se fue." [level=2]: Cada llamada perdidaes dinero que se fue.
+      - paragraph: Después de las 6 pm, los domingos, cuando estás instalando un servidor — un cliente potencial llama y nadie contesta. Con el agente IA, eso deja de pasar.
+    - generic:
+      - generic: 03/08
+      - generic: Qué hace tu agente
+      - heading "Tu bot vende de principio a fin." [level=2]
+      - generic:
+        - generic:
+          - text: "1"
+          - generic: Diagnóstico gratis
+          - text: entrevista al cliente, detecta necesidad
+        - generic:
+          - text: "2"
+          - generic: Cotiza al instante
+          - text: precios de tu catálogo Aztrotech
+        - generic:
+          - text: "3"
+          - generic: Agenda
+          - text: cita en tu calendario (Google Meet)
+        - generic:
+          - text: "4"
+          - generic: Referidos
+          - text: cobra y genera embajadores
+    - generic:
+      - generic: 04/08
+      - generic: Capacidades del bot
+      - heading "8 súper poderes, un solo bot." [level=2]
+      - generic:
+        - generic:
+          - generic: 🔍
+          - heading "Diagnóstico" [level=3]
+          - paragraph: Entrevista y detecta qué necesita el cliente
+        - generic:
+          - generic: 💰
+          - heading "Cotizador" [level=3]
+          - paragraph: Presupuesto al instante con tus precios
+        - generic:
+          - generic: 🎙️
+          - heading "Voz recepcionista" [level=3]
+          - paragraph: Atiende llamadas con tu voz clonada
+        - generic:
+          - generic: 📊
+          - heading "Demo CRM" [level=3]
+          - paragraph: Muestra el CRM a clientes potenciales
+        - generic:
+          - generic: ✍️
+          - heading "Contenido" [level=3]
+          - paragraph: Publica para tu audiencia en redes
+        - generic:
+          - generic: 📈
+          - heading "Reporte ejecutivo" [level=3]
+          - paragraph: Resumen de ventas y leads cada día
+        - generic:
+          - generic: 🤝
+          - heading "Referidos" [level=3]
+          - paragraph: Programa con descuentos por cliente traído
+        - generic:
+          - generic: 🧠
+          - heading "Multi-agente" [level=3]
+          - paragraph: Varios bots coordinados (operaciones, venta)
+    - generic:
+      - generic: 05/08
+      - generic: Inversión transparente
+      - heading "Precio claro. Sin sorpresas." [level=2]
+      - generic:
+        - generic:
+          - generic: Setup
+          - generic: $500
+          - generic: única vez
+          - list:
+            - listitem: Bot activo en WhatsApp/Telegram
+            - listitem: 8 skills configuradas
+            - listitem: Integración con tu web
+        - generic:
+          - generic: Mensualidad
+          - generic: $99-150
+          - generic: USD / mes
+          - list:
+            - listitem: 1M tokens incluidos
+            - listitem: Hosting + mantenimiento
+            - listitem: Mejoras y soporte
+            - listitem: Rápido + estable
+        - generic:
+          - generic: Voz clonada
+          - generic: +$200
+          - generic: setup · $50/mes
+          - list:
+            - listitem: Tu voz en el bot (opcional)
+            - listitem: Atiende llamadas como tú
+            - listitem: Enterprise upgrade
+      - paragraph: "Programa de referidos: 10% / 15% / 20% de descuento por cada cliente que contrate."
+    - generic:
+      - generic: 06/08
+      - generic: Tecnología local
+      - heading "IA local. Costo $0 por token." [level=2]
+      - paragraph:
+        - text: Tu bot corre sobre
+        - strong: Ollama + Qwen 3
+        - text: "en tu servidor — sin depender de APIs externas caras. El resultado: mensualidad estable, sin sobresaltos de factura, y tus datos se quedan contigo."
+    - generic:
+      - generic: 07/08
+      - generic: Demo en vivo
+      - heading "Ya trabaja. Pídele una cotización." [level=2]
+      - paragraph:
+        - text: "Envíale un WhatsApp al bot y pídele:"
+        - emphasis: "\"una cotización de asistente digital\""
+        - text: ". Verás el flujo completo: saluda, diagnostica, cotiza y agenda. En vivo, sin guiones."
+      - link "Probar el bot →":
+        - /url: https://wa.me/526621072254
+    - generic:
+      - generic: 08/08
+      - generic: Siguiente paso
+      - heading "Tu bot al aire en 7 días." [level=2]
+      - paragraph: Escribimos juntos el diagnóstico de tu negocio (gratis), activamos tu bot y en menos de una semana está recibiendo clientes. Lunes 12 / año en el que estamos.
+      - generic:
+        - link "Pide tu diagnóstico gratis":
+          - /url: https://wa.me/526621072254
+  - generic [ref=f1e9]:
+    - button "‹" [ref=f1e10] [cursor=pointer]
+    - button "›" [ref=f1e11] [cursor=pointer]
+  - generic [ref=f1e12]: ← → para navegar

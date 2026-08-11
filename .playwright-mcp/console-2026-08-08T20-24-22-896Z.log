@@ -1,0 +1,5 @@
+[    1380ms] [WARNING] [.WebGL-0x29240014c400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels @ http://127.0.0.1:8765/orbe/:121
+[    1509ms] [WARNING] [.WebGL-0x29240014c400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels @ http://127.0.0.1:8765/orbe/:0
+[    1670ms] [WARNING] [.WebGL-0x29240014c400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels @ http://127.0.0.1:8765/orbe/:0
+[    1793ms] [WARNING] [.WebGL-0x29240014c400]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat) @ http://127.0.0.1:8765/orbe/:0
+[    2062ms] [ERROR] Failed to load resource: the server responded with a status of 404 (File not found) @ http://127.0.0.1:8765/favicon.ico:0

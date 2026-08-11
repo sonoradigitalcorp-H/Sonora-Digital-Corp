@@ -1,0 +1,9 @@
+- generic [active] [ref=f10e1]:
+  - generic [ref=f10e2]: AZTROTECH · ORBE
+  - generic [ref=f10e3]:
+    - generic [ref=f10e4]: Orbe activo · atendiendo
+    - heading "Tu asistente IA te está atendiendo" [level=1] [ref=f10e5]: Tu asistente IAte está atendiendo
+    - paragraph [ref=f10e6]: Este orbe es tu agente en vivo. Diagnostica, cotiza y agenda — disponible 24/7, con IA local y tu voz. Pídele lo que necesites.
+    - link "💬 Hablar con el orbe" [ref=f10e7] [cursor=pointer]:
+      - /url: https://t.me/Aztro_tech_bot
+    - generic [ref=f10e8]: click en el orbe para saludarlo · funciona en Telegram @Aztro_tech_bot

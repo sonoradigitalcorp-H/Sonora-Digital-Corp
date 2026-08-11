@@ -1,10 +1,3 @@
-[Desktop Entry]
-Categories=
-Comment=The open source AI coding agent
-Exec=OpenCode
-StartupWMClass=OpenCode
-Icon=OpenCode
-Name=OpenCode
-Terminal=false
-Type=Application
-MimeType=x-scheme-handler/opencode
+version https://git-lfs.github.com/spec/v1
+oid sha256:fbaaa943f59ccab06159a64210153564cd8f87e812609e37ea5625114d63bb7e
+size 201

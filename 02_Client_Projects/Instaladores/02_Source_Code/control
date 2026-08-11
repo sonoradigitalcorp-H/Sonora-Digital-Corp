@@ -1,9 +1,3 @@
-Package: open-code
-Version: 1.3.0
-Architecture: amd64
-Installed-Size: 202477
-Maintainer: Anomaly Innovations
-Priority: optional
-Depends: libwebkit2gtk-4.1-0, libgtk-3-0
-Description: The open source AI coding agent
- (none)
+version https://git-lfs.github.com/spec/v1
+oid sha256:5ee225d06f8644a5a202600f5c76c9211fc7915510b553be2c9aa771f5cf3c33
+size 222
