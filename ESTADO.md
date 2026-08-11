@@ -81,3 +81,9 @@
 - **Orbe redirige a Telegram** (@Aztro_tech_bot), NO WhatsApp. Deck CTAs también.
 - **wacli**: mismatching MAC → `wacli sync --store ~/.config/wacli`. NUNCA auto-enviar al número del bot (6623538272). Media grande a contacto con "old counter" = sesión cifrada desincronizada, texto sí funciona. Envíos MCP secuenciales (paralelos dan store locked).
 - **Deck paquete César**: `02_Client_Projects/Aztrotech/04_Deployment/presentation/` (8 slides + 8 audios Dalia + preview/ con PNGs y PDF). Orbe: `orbe/`.
+## FIX 2026-08-10 (tarde)
+- **Voice service 24/7**: service `sdc-aztrotech-voice.service` fallaba con `CHDIR` tras reorganización. Fix: WORKINGDIRECTORY → path actual (`02_Client_Projects/Aztrotech/02_Source_Code`). Activo `(running)` desde 18:59.
+- **Rate limiting per-tenant**: Decorador `@rate_limit(max_requests=20, window=60)` en `/api/chat`. Test OK: 20 req → 429.
+- **clean_for_tts() anti-repetición**: Regex filtra símbolos (→ ↘ ⇿) + gestos verbalizados "(mano hacia abajo)", "(diagonal)" antes de edge-tts.
+- **Git push BLOCKED**: GitHub secret scanning detecta key en history de remote branches. Nuestros commits locales están limpios. Requiere admin approval en: https://github.com/sonoradigitalcorp-H/Sonora-Digital-Corp/security/secret-scanning/unblock-secret/3HkcopWzX6Q84r63KsvaNeTZdhv
+- **Skill actualizado**: `voice-delivery/SKILL.md` incluye patrón clean_for_tts + rate limiting
