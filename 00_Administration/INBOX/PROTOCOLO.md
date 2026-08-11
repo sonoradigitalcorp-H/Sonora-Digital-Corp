@@ -29,8 +29,8 @@
 
 ## Estado breve (para no re-leer todo)
 
-- **Modelo**: ollama/qwen3:4b local (todos los agentes) — $0, no congela.
-- **Ollama local**: systemd activo (127.0.0.1:11434).
+- **Modelo**: ollama/qwen3:4b en VPS OVH (149.56.46.173:11434) — $0, no congela. Ollama local 127.0.0.1 SOLO para embeddings (all-minilm).
+- **Embeds**: OLLAMA_ENDPOINT=VPS en ~/.hermes/.env. RAG/Qdrant local 6333 por tenant.
 - **Commit base colaborativo**: `1e26838` (Gemini) tras `15b817c` (MYSTIC).
 
 ## Cómo saber quién trabaja qué (sin pisarse)

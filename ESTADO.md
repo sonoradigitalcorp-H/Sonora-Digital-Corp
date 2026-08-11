@@ -2,11 +2,11 @@
 
 - Producción: VPS 187.124.85.191, usuarios Nathaly/Marco/TripleR activos, CI/CD despliega desde main.
 - Repo: rama `master` local; GitHub remoto `sonoradigitalcorp-H/Sonora-Digital-Corp`. Rama `next` pendiente de crear/pushear (main intocada).
-- Modelo: `deepseek/deepseek-v4-flash-0731` (OpenRouter). Key con créditos: sk-or-v1-282...732 ($10/mes) en /tmp/sonora.env + ~/.hermes/.env. La key anterior (327...cb7) quedó sin saldo.
+- **Modelo LLM bots**: `ollama/qwen3:4b` @ VPS OVH (149.56.46.173) vía openclaw.json provider ollama — $0. Key OpenRouter activa: sk-or-v1-934c2fa... en ~/.hermes/.env + openclaw.json (mcp env sdc_mcp_stdio). (Antes: deepseek-v4-flash-0731 / 282...732 expirada).
 - Engram: v1.19.0, plugin opencode instalado (memoria persistente entre sesiones). Memoria #474 guardada.
 - OpenCode COSUDE: AGENTS.md + ESTADO.md + /idea /validar /mejora /contexto + @orquestador @clientes @redes @voz + skill estilo-mystic. Reiniciar opencode para cargar.
 - Hermes Agent Factory: Orquestador/hermes_agent_factory.py + hermes_supervisor.py. Auto-crea agentes OpenClaw desde orden natural. Agente demo `cesar` (Aztrotech) enlazado a telegram, operativo.
-- Gateway OpenClaw: openclaw-gateway.service carga OPENROUTER_API_KEY via /tmp/sonora.env. Modelo de los 4 agentes = openrouter/deepseek/deepseek-v4-flash-0731.
+- Gateway OpenClaw: openclaw-gateway.service (systemd user). Modelo de los 4 agentes = `ollama/qwen3:4b` (VPS 149.56.46.173). OpenRouter en mcp env (sdc_mcp_stdio) como LLM auxiliar.
 - **Modelo ID correcto**: `openrouter/deepseek/deepseek-v4-flash-0731`. NO `opencode/deepseek-v4-flash` (billing opencode.ai, 401) ni `openrouter/deepseek/deepseek-v4-flash` sin sufijo (Unknown model).
 - Clientes a activar: Aztrotech, ABE Music Group. RYE (Iván Guerrero) bot ActivoGo/RyE_production_bot, Aztroc_Assistant (cesar).
 - Voice Clone César: Assets listos → Audio WAV (108s), 9 fotos → pipeline voice_cloner.py + image_cloner.py esperando XTTS/FAL para entrenar modelos. Sin XTTS instalado, usar TTS genérico (es-MX-JorgeNeural) mientras.
@@ -17,7 +17,7 @@
 - Pendiente crítico: Nginx → /panel/login, login devuelva 200.
 - Guardianes: pre-commit + structure_guard.sh (esqueleto canónico).
 - **⚠️ PC 3.3GB RAM — REGLA DE ORO**: Cero procesos pesados en local. LLM (qwen3:4b) y embeddings → VPS OVH (149.56.46.173). Si la PC se congela: `free -m` (RAM<400MB = crítico), kill duplicados openclaw (`ss -tlnp | grep 18789`), swap 2.3GB = swap-thrash. **GUARDIA AUTOMÁTICO**: `01_Core_Platform/04_Automations_and_Workflows/memory-guard.sh` (cron */5) mata duplicados + MCP accesorios. NO crear procesos pesados nuevos en local.
-- **Embeddings DUAL (2026-08-10)**: Ollama LOCAL activo (systemd `ollama.service`, enable --now, 127.0.0.1:11434) con `tinyllama:1.1b` + `nomic-embed-text` (768-dim). VPS OVH `149.56.46.173:11434` (docker) con `all-minilm` (384-dim) + qwen3:4b + qwen2.5. Script embedding usa `OLLAMA_ENDPOINT` (de ~/.hermes/.env = VPS). Qdrant local 6333 con colecciones por tenant: kb_rye, kb_aztrotech, hermes, tenant_aztrotech (384 dims, Cosine). ⚠️ `all-minilm` local NO instalado aún (45.9 MB) — bajar si se quiere embeddings local sin depender del VPS.
+- **Embeddings DUAL (2026-08-10)**: Ollama LOCAL activo (systemd `ollama.service`, enable --now, 127.0.0.1:11434) con `all-minilm:latest` (45.9MB, 384-dim). VPS OVH `149.56.46.173:11434` (docker) con all-minilm (384-dim) + qwen3:4b + qwen2.5. Script embedding usa `OLLAMA_ENDPOINT` (de ~/.hermes/.env = VPS). Qdrant local 6333 con colecciones por tenant: kb_rye, kb_aztrotech, hermes, tenant_aztrotech (384 dims, Cosine). ⚠️ all-minilm local INSTALADO (2026-08-10).
 - **MCP server movido (2026-08-10)**: `skills/mcp/servers/sdc_mcp_stdio.py` (deriva en raíz) → `01_Core_Platform/03_Agentic_Infrastructure/MCP_Servers/sdc_mcp_stdio/`. Test integration → `03_Sandbox_and_RnD/tests/integration/`. Launcher Antigravity → `~/.local/share/applications/`. `citas.db` vacío borrado. Structure guard VERDE.
 - **INFRAESTRUCTURA SYSTEMD 24/7 VIVA (2026-08-10)**: Servicios `openclaw-gateway.service` (PID 61185), `multi-tenant-bot.service` (PID 61186) y `wacli-gateway.service` (PID 61187) configurados y activos bajo supervisión systemd user con Linger habilitado (`mystic`). Entrypoint `run_multi_tenant.py` creado y commiteado. Bots operando 24/7 sin intervención manual.
 

@@ -62,6 +62,26 @@ def add_fillers(text: str, bot: str = "aztroc") -> str:
     return random.choice(FILLERS) + text
 
 
+def clean_for_tts(text: str) -> str:
+    """Limpia texto para TTS: sin emojis, signos de admiración, markdown ni razonamiento."""
+    import re
+    # 1. Quitar texto de razonamiento: bloques  thinking → /thinking,  reasoning → /reasoning
+    text = re.sub(r"<(?:thinking|reasoning)[^>]*>.*?</(?:thinking|reasoning)>", "", text, flags=re.S)
+    text = re.sub(r"(?:thinking|reasoning)\s*[:\-–]\s*.*", "", text, flags=re.I)
+    # 2. Quitar emojis y símbolos no-alfanuméricos sueltos (ICU-ish sin dependencias)
+    text = re.sub(r"[\U0001F000-\U0001FAFF\u2600-\u27BF\u2B00-\u2BFF\uFE0F]", "", text)
+    # 3. Quitar signos de admiración/exclamación (y su marca inversa)
+    text = text.replace("!", ".").replace("¡", "").replace("¿", "").replace("?", ".")
+    # 4. Quitar markdown/asteriscos/backticks/guiones de lista
+    text = re.sub(r"[*_`#>\-]{1,}", "", text)
+    # 5. Collapsar espacios múltiples y signos repetidos
+    text = re.sub(r"\s{2,}", " ", text)
+    text = re.sub(r"[.,]{2,}", ".", text)
+    # 6. Quitar 'texto de crítica' tipo "No pude...", "Lo siento, no" (frases de fallo que no aportan)
+    text = re.sub(r"\b(?:claro|claro que sí|por supuesto)\b(?!,)", "", text, flags=re.I)
+    return text.strip()
+
+
 def _token(bot: str) -> str:
     tf = SECRETS / BOTS[bot]
     if not tf.exists():
@@ -147,6 +167,7 @@ def main():
         text = a.text
         if not a.no_fillers:
             text = add_fillers(text, a.bot)
+        text = clean_for_tts(text)
         audio = text_to_ogg(text, voice, out, style)
     else:
         ap.error("necesitas --text o --file")
