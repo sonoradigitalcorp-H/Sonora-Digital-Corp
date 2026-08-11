@@ -2,7 +2,10 @@ import os
 import yaml
 import httpx
 import logging
-from fastapi import FastAPI
+import time
+from collections import defaultdict
+from functools import wraps
+from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 from typing import List, Optional
@@ -11,6 +14,24 @@ from crm_api import router as crm_router
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
+rate_limit_store = defaultdict(list)
+
+def rate_limit(max_requests: int = 20, window: int = 60):
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(*args, **kwargs):
+            req = kwargs.get('req')
+            tenant = req.tenant if req else "default"
+            now = time.time()
+            window_start = now - window
+            rate_limit_store[tenant] = [t for t in rate_limit_store[tenant] if t > window_start]
+            if len(rate_limit_store[tenant]) >= max_requests:
+                raise HTTPException(status_code=429, detail="Rate limit exceeded. Try again in a minute.")
+            rate_limit_store[tenant].append(now)
+            return await func(*args, **kwargs)
+        return wrapper
+    return decorator
 
 app = FastAPI(title="AstroTech AI - Mysticgrimoire")
 
@@ -51,6 +72,7 @@ Servicios que ofrece AstroTech:
 
 
 @app.post("/api/chat")
+@rate_limit(max_requests=20, window=60)
 async def chat(req: ChatRequest):
     model = req.model or "deepseek/deepseek-v4-flash"
 
