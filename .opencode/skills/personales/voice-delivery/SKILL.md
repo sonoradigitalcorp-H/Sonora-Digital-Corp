@@ -42,6 +42,46 @@ python3 voice_reply.py --bot aztroc --chat 5738935134 --file /ruta/audio.ogg
 - wacli contacts: vacío → usar números directos
 - Chat id Telegram: de getUpdates del bot
 - Kokoro (em_alex) NO es voz clonada real — es voz sintética EN. Usar edge-tts es-MX para español mexicano.
+- Repetición de símbolos/gestos en TTS → usar clean_for_tts() antes de edge-tts
+
+## PRE-FILTRO TTS: clean_for_tts()
+**Problema**: La voz repetía comandos como "mano hacia abajo", "diagonal" o símbolos (→ ↘) porque el LLM incluía marcadores de accesibilidad o gestos que el TTS leía literalmente.
+
+**Solución**: Aplicar `clean_for_tts()` antes de cualquier texto a voz. Encontrado en `voice_reply.py` y ahora integrado en pipeline web.
+
+```python
+# Anti-repetición: filtra símbolos + gestos verbalizados
+import re
+text = re.sub(r"[→-⇿\u2B00-\u2BFF]", "", text)
+text = re.sub(r"\([^)]*(?:mano|dedo|flecha|diagonal|emoji|índice|pulgar|apuntando)[^)]*\)", "", text, flags=re.I)
+```
+
+## Rate Limiting Per-Tenant (FastAPI)
+**Problema**: API endpoints sin límite pueden consumir créditos OpenRouter infinitamente.
+
+**Solución**: Decorator reusable en FastAPI:
+
+```python
+from collections import defaultdict
+from fastapi import HTTPException
+
+rate_limit_store = defaultdict(list)
+
+def rate_limit(max_requests: int = 20, window: int = 60):
+    def decorator(func):
+        @wraps(func)
+        async def wrapper(*args, **kwargs):
+            req = kwargs.get('req')
+            tenant = req.tenant if req else "default"
+            now = time.time()
+            rate_limit_store[tenant] = [t for t in rate_limit_store[tenant] if t > now - window]
+            if len(rate_limit_store[tenant]) >= max_requests:
+                raise HTTPException(status_code=429, detail="Rate limit exceeded")
+            rate_limit_store[tenant].append(now)
+            return await func(*args, **kwargs)
+        return wrapper
+    return decorator
+```
 
 ## REGLA CRÍTICA: NO cargar modelos ML en laptop <=4GB RAM
 - NO instalar/usar XTTS/TTS(elcoquai) — congela la laptop (3.3GB RAM con opencode+antigravity+openclaw)
