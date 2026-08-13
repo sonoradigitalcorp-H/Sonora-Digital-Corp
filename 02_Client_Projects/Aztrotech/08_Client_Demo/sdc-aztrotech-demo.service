@@ -1,0 +1,17 @@
+[Unit]
+Description=SDC Aztrotech Demo (staging sanitizado - sin logs internos)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/mystic/Documentos/Sonora Digital Corp Nuevo/02_Client_Projects/Aztrotech/08_Client_Demo
+ExecStart=/usr/bin/python3 /home/mystic/Documentos/Sonora Digital Corp Nuevo/02_Client_Projects/Aztrotech/08_Client_Demo/demo_server.py --port 5290 --host 0.0.0.0
+Restart=always
+RestartSec=10
+# Logs SOLO a ~/.openclaw/logs (permisos 600, solo mystic) - nunca a stdout público
+StandardOutput=append:/home/mystic/.openclaw/logs/demo-service.log
+StandardError=append:/home/mystic/.openclaw/logs/demo-service.err
+
+[Install]
+WantedBy=default.target

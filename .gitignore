@@ -29,3 +29,10 @@ Thumbs.db
 01_Core_Platform/04_Automations_and_Workflows/n8n_data/
 # Repositorio embebido
 01_Core_Platform/Infrastructure/sonora-digital-corp/
+
+# Logs y temporales
+*.log
+*.webp
+*.png
+onboarding-top.png
+preview-fullpage.png
