@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Nathaly · Contadora en Hermosillo · Sonora</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#f7f5ef;--panel:#ffffff;--ink:#1c1c1c;--muted:#6f6b63;--brand:#0e8a6d;--brand-soft:#e7f4ef;--accent:#6d28d9;--border:#e6e2d8;--shadow:0 10px 34px rgba(30,40,30,.07)}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1060px;margin:0 auto;padding:0 26px 60px}
+
+header{display:flex;align-items:center;justify-content:space-between;padding:22px 0}
+.logo{font-weight:800;font-size:17px;letter-spacing:-.3px}.logo span{color:var(--brand)}
+.badge{font-size:11px;background:var(--brand-soft);color:var(--brand);padding:6px 14px;border-radius:20px;font-weight:600;letter-spacing:.4px}
+
+.hero{padding:14px 0 26px;max-width:680px}
+.hero .tag{font-size:12px;color:var(--brand);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.hero h1{font-size:clamp(30px,6vw,46px);font-weight:800;letter-spacing:-1.2px;line-height:1.08;margin-bottom:14px}
+.hero p{color:var(--muted);font-size:15.5px;line-height:1.7}
+
+/* Orbe decorativo lateral (no detrás del carrusel) */
+.orbe-side{position:absolute;top:140px;right:4%;width:230px;height:230px;pointer-events:none;z-index:0;opacity:.85}
+@media(max-width:860px){.orbe-side{display:none}}
+
+/* Carrusel */
+.carousel{position:relative;border-radius:22px;overflow:hidden;margin:8px auto 16px;max-width:860px;background:#ece9e1;box-shadow:var(--shadow)}
+.slides{display:flex;height:100%;transition:transform .55s cubic-bezier(.4,0,.2,1)}
+.slide{position:relative;flex-shrink:0;background-size:cover;background-position:center}
+.slide .scap{position:absolute;bottom:0;left:0;right:0;padding:48px 22px 16px;background:linear-gradient(transparent,rgba(20,25,20,.58));color:#fff;font-size:13.5px;font-weight:600;letter-spacing:.2px}
+.dots{display:flex;justify-content:center;gap:8px;margin:12px 0 8px}
+.dot{width:8px;height:8px;border-radius:50%;background:#d8d4c8;cursor:pointer;transition:all .25s}
+.dot.on{background:var(--brand);width:26px;border-radius:20px}
+
+/* Laboratorio de servicios */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(235px,1fr));gap:12px;margin:30px 0}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:18px;padding:20px;transition:transform .18s,border-color .18s;cursor:pointer}
+.card:hover{transform:translateY(-3px);border-color:var(--brand)}
+.card .ic{font-size:23px;margin-bottom:8px}
+.card h3{font-size:15px;font-weight:700;margin-bottom:4px}
+.card p{font-size:12.5px;color:var(--muted);line-height:1.6}
+.card .est{font-size:10.5px;color:var(--brand);margin-top:10px;font-weight:700;letter-spacing:.5px}
+.section-title{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--brand);margin:36px 0 14px}
+
+/* Zona conversación (botón micro, input, enviar) */
+.convo{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:22px;box-shadow:var(--shadow)}
+.convo .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.mic-btn{width:54px;height:54px;border-radius:50%;background:var(--brand);border:none;color:#fff;font-size:22px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:transform .15s,background .2s;flex:none}
+.mic-btn:hover{transform:scale(1.06)}
+.mic-btn.listening{background:#d62828;animation:pulse .9s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(214,40,40,.4)}50%{box-shadow:0 0 0 14px rgba(214,40,40,0)}}
+.mic-btn .mic-off{display:none}
+.mic-btn.listening .mic-off{display:block}.mic-btn.listening .mic-on{display:none}
+.convo input{flex:1;min-width:180px;background:#fff;border:1.5px solid var(--border);border-radius:14px;padding:15px 17px;font-size:14.5px;outline:none}
+.convo input:focus{border-color:var(--brand)}
+.send-btn{background:var(--ink);border:none;border-radius:14px;padding:15px 22px;color:#fff;font-weight:700;font-size:14px;cursor:pointer}
+.send-btn:hover{background:var(--brand)}
+.mic-hint{font-size:12px;color:var(--muted);margin-top:10px}
+.mic-world{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:13px;color:var(--ink)}
+.mic-world .bar{width:150px;height:6px;border-radius:4px;background:#e4e0d6;overflow:hidden}
+.mic-world .bar i{display:block;height:100%;background:var(--brand);width:0;transition:width .15s}
+
+/* Chat burbujas (dentro de la misma página, no flotante-invasivo) */
+#chat-log{display:flex;flex-direction:column;gap:10px;margin-top:18px;max-height:380px;overflow-y:auto}
+.msg{max-width:84%;padding:12px 16px;border-radius:16px;font-size:14px;line-height:1.55;white-space:pre-wrap;animation:fadein .2s}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.msg.user{background:var(--ink);color:#fff;align-self:flex-end;border-bottom-right-radius:5px}
+.msg.bot{background:var(--brand-soft);color:var(--ink);align-self:flex-start;border-bottom-left-radius:5px;border:1px solid var(--border)}
+
+/* CTAs */
+.ctas{display:flex;gap:10px;margin:24px 0 8px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:14px 24px;border-radius:14px;font-weight:700;font-size:14.5px;text-decoration:none;border:none;cursor:pointer;transition:transform .14s}
+.btn:active{transform:scale(.97)}
+.btn-wa{background:#25D366;color:#fff}
+.btn-mail{background:#fff;color:var(--brand);border:1.5px solid var(--border)}
+.mini{font-size:12px;color:var(--muted);margin-top:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <!-- Orbe decorativo lateral (no tapa carrusel) -->
+  <canvas id="orbeCanvas" class="orbe-side"></canvas>
+
+  <header>
+    <div class="logo">Nathaly<span>.</span> Contabilidad</div>
+    <div class="badge">Hermosillo · SON · 24/7</div>
+  </header>
+
+  <div class="hero">
+    <div class="tag">Contadora certificada · asistente IA</div>
+    <h1>Tu contabilidad,<br>en orden y sin pendientes.</h1>
+    <p>Servicios de contabilidad, administración, importaciones y trámites SAT en Hermosillo. Atención personal y asistente IA para responder al momento.</p>
+  </div>
+
+  <!-- Carrusel -->
+  <div class="carousel">
+    <div class="slides" id="slides" style="aspect-ratio:3.2/1;max-width:960px"></div>
+  </div>
+  <div class="dots" id="dots"></div>
+
+  <div class="section-title">Servicios</div>
+  <div class="cards" id="cards"></div>
+
+  <!-- Zona conversación -->
+  <div class="convo">
+    <div class="row">
+      <button class="mic-btn" id="micBtn" onclick="toggleMic()" title="Activar micrófono">
+        <span class="mic-on">🎤</span><span class="mic-off">⏹</span>
+      </button>
+      <input id="msg" placeholder="Escribe tu mensaje o activa el micrófono..." autocomplete="off">
+      <button class="send-btn" onclick="go()">Enviar</button>
+    </div>
+    <div class="mic-hint" id="micHint">🎙️ Presiona el micrófono para hablar con el orbe</div>
+    <div class="mic-world" id="micWorld" style="display:none">
+      <span>Escuchando...</span><div class="bar"><i id="micLevel"></i></div>
+    </div>
+    <div id="chat-log">
+      <div class="msg bot">¡Hola! 👋 Soy la asistente IA de Nathaly, contadora en Hermosillo. Pregúntame por contabilidad, administración, importaciones, consultas o citas SAT. 💚</div>
+    </div>
+  </div>
+
+  <div class="ctas">
+    <a class="btn btn-wa" href="https://wa.me/5216623498589" target="_blank">WhatsApp 662 349 8589</a>
+    <a class="btn btn-mail" href="mailto:cp.nathalyhermosillo@gmail.com">✉️ cp.nathalyhermosillo@gmail.com</a>
+  </div>
+  <div class="mini">Diagnóstico inicial gratis · respuesta en minutos</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ═══ Servicios ──
+const SVC=[{ic:'🧾',t:'Contabilidad',d:'Contabilidad mensual, estados financieros, IVA e ISR. Cero preocupaciones.'},{ic:'⚙️',t:'Administración',d:'Nómina, flujo de caja y gestión administrativa ordenada.'},{ic:'🚢',t:'Importaciones',d:'Manifestación de importación y requisitos en regla.'},{ic:'📈',t:'Marketing',d:'Presencia y campañas para crecer tu negocio.'},{ic:'🗂️',t:'Consultas SAT',d:'Aclaraciones y trámites SAT sin vueltas.'},{ic:'📅',t:'Citas SAT',d:'Agendamos tu cita ante el SAT por ti.'}];
+const cardsEl=document.getElementById('cards');
+SVC.forEach(s=>{const d=document.createElement('div');d.className='card';
+  d.innerHTML=`<div class="ic">${s.t.includes('Conta')?'🧾':s.t.includes('Adm')?'⚙️':s.t.includes('Import')?'🚢':s.t.includes('Mkt')?'📈':s.t.includes('Cons')?'🗂️':'📅'}</div><h3>${s.t}</h3><p>${s.d}</p><div class="est">CONSULTA GRATIS →</div>`;
+  d.onclick=()=>goFromCard(s.t);cardsEl.appendChild(d);});
+function goFromCard(t){const i=document.getElementById('msg');i.value=`Hola, quiero información sobre ${t}`;go();}
+
+// ═══ Carrusel (captions profesionales) ──
+const SLIDES=[
+  {img:'hermosillo_assets/contadora_1.jpg',cap:'Asesoría contable personalizada'},
+  {img:'hermosillo_assets/citas_sat.jpg',cap:'Gestión de trámites ante el SAT'},
+  {img:'hermosillo_assets/declaracion.jpg',cap:'Declaraciones y cumplimiento fiscal'},
+  {img:'hermosillo_assets/importacion.jpg',cap:'Manifestación de importación'},
+  {img:'hermosillo_assets/consultoria.jpg',cap:'Consultoría y acompañamiento'},
+];
+const sWrap=document.getElementById('slides'),dotsEl=document.getElementById('dots');let idx=0;
+SLIDES.forEach((s,i)=>{const d=document.createElement('div');d.className='slide';
+  d.style.backgroundImage=`url(${s.img})`;d.style.width='100%';d.style.display='flex';d.style.flexDirection='column';d.style.justifyContent='flex-end';
+  d.innerHTML=`<div class="scap">${s.cap}  ·  Hermosillo</div>`;sWrap.appendChild(d);
+  const dot=document.createElement('div');dot.className='dot'+(i===0?' on':'');dot.onclick=()=>goSlide(i);dotsEl.appendChild(dot);});
+function goSlide(i){idx=i;sWrap.style.transform=`translateX(-${i*100}%)`;[...dotsEl.children].forEach((d,j)=>d.classList.toggle('on',j===i));}
+setInterval(()=>goSlide((idx+1)%SLIDES.length),5000);
+
+// ═══ Microfono (Web Speech API) ──
+let listening=false,recog=null,busy=false;
+// Filtro de regresión: el micrófono JAMÁS se re-arranca tras cerrar la frase,
+// y mientras el bot reproduce audio no escucha (evita loop de auto-captura).
+function stopMic(){listening=false;
+  const btn=document.getElementById('micBtn');
+  btn.classList.remove('listening');
+  document.getElementById('micWorld').style.display='none';
+  document.getElementById('micHint').textContent='🎙️ Presiona el micrófono para hablar con voz';
+  if(recog){try{recog.stop();}catch(e){}}
+  recog=null;}
+function toggleMic(){if(busy)return; /* no activar mic mientras responde */
+  listening=!listening;
+  const btn=document.getElementById('micBtn');
+  btn.classList.toggle('listening',listening);
+  document.getElementById('micWorld').style.display=listening?'flex':'none';
+  document.getElementById('micHint').textContent=listening?'Habla ahora, te estoy escuchando...':'🎙️ Presiona el micrófono para hablar con voz';
+  if(listening){startMic();}else{stopMic();}}
+function startMic(){
+  try{
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){alert('Tu navegador no soporta dictado. Usa Chrome/Edge.');toggleMic();return;}
+    recog=new SR();recog.lang='es-MX';recog.interimResults=false;recog.maxAlternatives=1;
+    recog.onresult=(e)=>{const t=e.results[e.results.length-1][0].transcript.trim();
+      if(!t)return;
+      document.getElementById('msg').value=t;
+      const lv=document.getElementById('micLevel');lv.style.width='100%';
+      // Apagar mic ANTES de enviar: nunca escucharse a sí mismo
+      stopMic();send();};
+    recog.onerror=(e)=>{document.getElementById('micHint').textContent='No te escuché bien, intenta de nuevo.';toggleMic();};
+    recog.onend=()=>{/* NO re-arrancar jamás: evita loop de audio */};
+    recog.start();
+  }catch(e){document.getElementById('micHint').textContent='Error de micrófono. Prueba en Chrome o escribe el mensaje.';}
+}
+// ═══ Chat / conversación con el orbe ──
+const chatLog=document.getElementById('chat-log');
+let sid='';try{sid=localStorage.getItem('naty-sid')||'';}catch(e){}
+if(!sid){sid='web-'+Date.now();try{localStorage.setItem('naty-sid',sid)}catch(e){}}
+function esc(t){const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
+function addMsg(t,who){
+  if(who==='bot'&&t.includes('🖼️')){
+    const parts=t.split('🖼️');const imgUrl=parts[1]?parts[1].split('\n')[0].trim():'';
+    const cleanTxt=parts[0].trim();
+    const d=document.createElement('div');d.className='msg '+who;d.textContent=cleanTxt;
+    chatLog.appendChild(d);
+    if(imgUrl&&imgUrl.startsWith('http')){const img=document.createElement('img');
+      img.src=imgUrl;img.style.cssText='max-width:82%;border-radius:16px;margin:2px 0 4px;align-self:flex-start;border:1px solid var(--border)';
+      chatLog.appendChild(img);}
+  }else{
+    const d=document.createElement('div');d.className='msg '+who;d.textContent=t;chatLog.appendChild(d);
+  }
+  chatLog.scrollTop=chatLog.scrollHeight;
+}
+
+// Anti-repetición: no mostrar mensaje bot idéntico al anterior del chat
+function ultimoMensaje(){const ms=chatLog.querySelectorAll('.msg');return ms.length?ms[ms.length-1].textContent:'';}
+
+async function send(){
+  const i=document.getElementById('msg');const q=i.value.trim();
+  if(!q||busy)return;               // single-flight: no doble envío
+  busy=true;
+  addMsg(q,'user');i.value='';
+  const dot=document.createElement('div');dot.className='msg bot';dot.textContent='…';chatLog.appendChild(dot);
+  let reply='';
+  try{
+    const r=await fetch('https://sonoradigitalcorp.com/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:q,sid})});
+    const d=await r.json();reply=(d.respuesta||'Lo sentimos, no obtuve respuesta.').trim();
+  }catch(e){reply='El asistente está ocupado ahora, intenta en un momento. 🙏';}
+  dot.remove();
+  // FILTRO REGRESIÓN: si la respuesta repite el mensaje del usuario (eco) o
+  // es idéntica al último bot → descartarla y usar respuesta de rescate
+  if(reply.toLowerCase()===q.toLowerCase()){reply='Te escucho. ¿Me cuentas un poco más sobre tu negocio para ayudarte mejor? 😊';}
+  if(reply===ultimoMensaje()){reply+='\n¿Quieres agendar tu diagnóstico gratis o que te muestre los paquetes?';}
+  addMsg(reply,'bot');
+  speak(reply.replace(/[^\w\sáéíóúñÁÉÍÓÚ.,:;!?¿¡%()/-]/g,'').trim());
+  busy=false;
+}
+document.getElementById('msg').addEventListener('keydown',e=>{if(e.key==='Enter')send();});
+function go(){send();}
+
+// Voz de respuesta (DaliaNeural del servidor) — NUNCA solapar audios
+let voiceOn=true,currentAudio=null;
+function cancelAudio(){try{if(window.speechSynthesis){window.speechSynthesis.cancel();}}catch(e){}
+  if(currentAudio){try{currentAudio.pause();currentAudio=null;}catch(e){}}}
+function speak(t){if(!voiceOn||!t)return;
+  cancelAudio();
+  try{const a=new Audio('https://sonoradigitalcorp.com/chat/audio?text='+encodeURIComponent(t.slice(0,280)));
+    currentAudio=a;a.play().catch(()=>{});}catch(ev){}
+}
+
+// ═══ Orbe 3D decorativo ──
+const canvas=document.getElementById('orbeCanvas');
+const W=230,H=230;
+function resizeOrbe(){canvas.width=W*2;canvas.height=H*2;}
+resizeOrbe();window.addEventListener('resize',resizeOrbe);
+const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+renderer.setSize(W,H,false);renderer.setPixelRatio(1);
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(60,W/H,.1,20);camera.position.z=6;
+const count=1400,pos=new Float32Array(count*3),col=new Float32Array(count*3),cc=new THREE.Color();
+for(let i=0;i<count;i++){const ph=Math.acos(2*Math.random()-1),th=2*Math.PI*Math.random(),r=1.6+Math.random()*.35;
+  pos[i*3]=r*Math.sin(ph)*Math.cos(th);pos[i*3+1]=r*Math.sin(ph)*Math.sin(th);pos[i*3+2]=r*Math.cos(ph);
+  cc.setHSL(.62+Math.random()*.15,.7,.5);col[i*3]=cc.r;col[i*3+1]=cc.g;col[i*3+2]=cc.b;}
+const geo=new THREE.BufferGeometry();geo.setAttribute('position',new THREE.BufferAttribute(pos,3));geo.setAttribute('color',new THREE.BufferAttribute(col,3));
+const orbe=new THREE.Points(geo,new THREE.PointsMaterial({size:.05,vertexColors:true,transparent:true,opacity:.8,blending:THREE.AdditiveBlending}));
+scene.add(orbe);
+let rot=0;function anim(){requestAnimationFrame(anim);rot+=.004;orbe.rotation.y=rot;renderer.render(scene,camera);}anim();
+</script>
+</body>
+</html>

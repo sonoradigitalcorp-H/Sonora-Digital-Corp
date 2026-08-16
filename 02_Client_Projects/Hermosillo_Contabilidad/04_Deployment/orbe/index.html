@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Hermosillo Contabilidad · Asistente IA</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+    --primary:#00d4a8;--accent:#7c3aed;--gold:#e8b84b;
+    --bg:#05070f;--text:#e2e8f0;--muted:rgba(226,232,240,0.4);
+    --border:rgba(0,212,168,0.12);
+}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow:hidden}
+#orbCanvas{position:fixed;inset:0;z-index:0;pointer-events:none}
+.overlay{position:relative;z-index:2;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:14px;padding:24px}
+
+h1{font-size:clamp(28px,5vw,48px);font-weight:800;letter-spacing:1px;background:linear-gradient(90deg,#fff,var(--primary),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.tagline{font-size:clamp(14px,1.6vw,18px);color:var(--muted);max-width:620px;line-height:1.6}
+.status{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--primary);letter-spacing:2px;text-transform:uppercase;font-weight:600}
+.status .pulse{width:9px;height:9px;border-radius:50%;background:var(--primary);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(0,212,168,.5)}50%{opacity:.5;box-shadow:0 0 0 8px rgba(0,212,168,0)}}
+
+.cta{display:inline-flex;align-items:center;gap:10px;margin-top:8px;padding:14px 30px;border-radius:40px;background:linear-gradient(135deg,var(--primary),var(--accent));color:#000;font-weight:800;font-size:16px;text-decoration:none;transition:transform .2s,box-shadow .2s;border:none;cursor:pointer}
+.cta:hover{transform:translateY(-3px) scale(1.02);box-shadow:0 8px 40px rgba(0,212,168,.35)}
+.hint{font-size:12px;color:var(--muted);letter-spacing:1px}
+.corner{position:fixed;top:20px;left:24px;z-index:3;font-size:13px;color:var(--muted);letter-spacing:2px}
+.corner b{color:var(--primary)}
+
+.servicios{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:6px;max-width:600px}
+.servicio{font-size:12px;padding:6px 14px;border-radius:20px;border:1px solid var(--border);color:var(--muted);letter-spacing:.5px}
+</style>
+</head>
+<body>
+<div class="corner">HERMOSILLO CONTABILIDAD · <b>NATHALY</b></div>
+<canvas id="orbCanvas"></canvas>
+<div class="overlay">
+  <div class="status"><span class="pulse"></span> Orbe activo · atendiendo</div>
+  <h1>Tu contabilidad<br>en buenas manos</h1>
+  <p class="tagline">Asistente IA de Nathaly, contadora en Hermosillo. Agenda tu diagnóstico inicial gratis, cotiza y resuelve dudas de contabilidad, administración, importaciones y SAT — 24/7.</p>
+  <div class="servicios">
+    <span class="servicio">Contabilidad</span>
+    <span class="servicio">Administración</span>
+    <span class="servicio">Manifestación de importación</span>
+    <span class="servicio">Marketing</span>
+    <span class="servicio">Consultas SAT</span>
+    <span class="servicio">Citas SAT</span>
+  </div>
+  <a class="cta" href="https://t.me/HermosilloCont_bot" target="_blank">💬 Hablar con el orbe</a>
+  <div class="hint">click en el orbe para saludarlo · funciona en Telegram @HermosilloCont_bot</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ============ ORBE CORPUSCULAR 3D (esmeralda-violeta) ============
+const canvas = document.getElementById('orbCanvas');
+const renderer = new THREE.WebGLRenderer({canvas, alpha:true, antialias:true});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth/window.innerHeight, 0.1, 100);
+camera.position.z = 6;
+
+// Núcleo brillante (glow)
+const glow = new THREE.Mesh(
+  new THREE.SphereGeometry(1.35, 48, 48),
+  new THREE.MeshBasicMaterial({color:0x00d4a8, transparent:true, opacity:0.08})
+);
+scene.add(glow);
+
+// Partículas del orbe — esfera corpuscular
+const count = 3200;
+const pos = new Float32Array(count*3);
+const col = new Float32Array(count*3);
+const c = new THREE.Color();
+for(let i=0;i<count;i++){
+  const phi = Math.acos(2*Math.random()-1);
+  const theta = 2*Math.PI*Math.random();
+  const r = 1.5 + Math.random()*0.35; // carcasa
+  pos[i*3]   = r*Math.sin(phi)*Math.cos(theta);
+  pos[i*3+1] = r*Math.sin(phi)*Math.sin(theta);
+  pos[i*3+2] = r*Math.cos(phi);
+  // gradiente esmeralda-violeta
+  const t = Math.random();
+  c.setHSL(0.42 + t*0.18, 0.85, 0.55 + Math.random()*0.15);
+  col[i*3]=c.r; col[i*3+1]=c.g; col[i*3+2]=c.b;
+}
+const orbeGeo = new THREE.BufferGeometry();
+orbeGeo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+orbeGeo.setAttribute('color', new THREE.BufferAttribute(col,3));
+const orbeMat = new THREE.PointsMaterial({size:0.035, vertexColors:true, transparent:true, opacity:0.95, blending:THREE.AdditiveBlending, depthWrite:false});
+const orbe = new THREE.Points(orbeGeo, orbeMat);
+scene.add(orbe);
+
+// Estrellas de fondo
+const sN=900, sP=new Float32Array(sN*3);
+for(let i=0;i<sN;i++){
+  const ph=Math.acos(2*Math.random()-1), th=2*Math.PI*Math.random(), r=20+Math.random()*60;
+  sP[i*3]=r*Math.sin(ph)*Math.cos(th); sP[i*3+1]=r*Math.sin(ph)*Math.sin(th); sP[i*3+2]=r*Math.cos(ph);
+}
+const sGeo=new THREE.BufferGeometry(); sGeo.setAttribute('position',new THREE.BufferAttribute(sP,3));
+const stars=new THREE.Points(sGeo,new THREE.PointsMaterial({color:0x88aaff,size:0.08,transparent:true,opacity:0.5}));
+scene.add(stars);
+
+// Respiración (el orbe "vive")
+let breathing = 0, rotX=0.4, rotY=0, ny=0;
+function animate(){
+  requestAnimationFrame(animate);
+  breathing += 0.015;
+  const pulse = 1+Math.sin(breathing)*0.04;
+  orbe.scale.set(pulse,pulse,pulse);
+  glow.scale.set(pulse*1.15,pulse*1.15,pulse*1.15);
+  orbe.rotation.x = rotX + Math.sin(breathing*0.5)*0.08;
+  orbe.rotation.y = rotY;
+  rotY += 0.003;
+  stars.rotation.y += 0.0002;
+  renderer.render(scene, camera);
+}
+window.addEventListener('pointermove', e=>{
+  ny = (e.clientY/window.innerHeight-0.5)*2;
+  rotX = 0.4 + ny*0.3;
+});
+animate();
+
+window.addEventListener('click', ()=>{
+  window.open('https://t.me/HermosilloCont_bot', '_blank');
+});
+
+window.addEventListener('resize',()=>{renderer.setSize(window.innerWidth,window.innerHeight);camera.aspect=window.innerWidth/window.innerHeight;camera.updateProjectionMatrix();});
+</script>
+</body>
+</html>

@@ -113,7 +113,43 @@ class OnboardingHermosillo:
                     FOREIGN KEY (lead_id) REFERENCES leads(id)
                 )
             """)
+            conn.execute("""
+                CREATE TABLE IF NOT EXISTS conversaciones (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    tenant TEXT NOT NULL,
+                    chat_id TEXT NOT NULL,
+                    canal TEXT DEFAULT 'telegram',
+                    rol TEXT NOT NULL,
+                    texto TEXT,
+                    intencion TEXT,
+                    creado_en TEXT
+                )
+            """)
+            conn.execute("CREATE INDEX IF NOT EXISTS idx_convs_chat ON conversaciones(chat_id, creado_en)")
             conn.commit()
+
+    def registrar_conversacion(self, chat_id: str, rol: str, texto: str, canal: str = "telegram", intencion: str = ""):
+        """Registra cada mensaje real de la conversación (historial)."""
+        try:
+            now = datetime.now(UTC_TZ).isoformat()
+            with sqlite3.connect(self.db_path) as conn:
+                conn.execute(
+                    "INSERT INTO conversaciones (tenant, chat_id, canal, rol, texto, intencion, creado_en) VALUES (?,?,?,?,?,?,?)",
+                    (self.tenant, chat_id, canal, rol, texto, intencion, now)
+                )
+                conn.commit()
+        except Exception as e:
+            print(f"[CONV] error: {e}")
+
+    def historial_chat(self, chat_id: str, limit: int = 20) -> list[dict]:
+        """Devuelve historial real de conversación de un chat."""
+        with sqlite3.connect(self.db_path) as conn:
+            conn.row_factory = sqlite3.Row
+            rows = conn.execute(
+                "SELECT * FROM conversaciones WHERE chat_id=? ORDER BY id DESC LIMIT ?",
+                (chat_id, limit)
+            ).fetchall()
+        return [dict(r) for r in reversed(rows)]
 
     def registrar_lead(self, chat_id: str, datos: dict, canal: str = "telegram") -> dict:
         """Registra/actualiza lead y calcula score. Retorna lead completo."""
@@ -242,16 +278,106 @@ class OnboardingHermosillo:
             f"Canal: {lead.get('canal', 'telegram')}"
         )
 
-    def leads_hoy(self) -> list[dict]:
-        """Leads creados hoy (America/Hermosillo) para dashboard."""
-        today = datetime.now(HERMOSILLO_TZ).strftime("%Y-%m-%d")
+    def get_nombre(self, chat_id: str) -> str:
+        """Devuelve el nombre conocido del chat (memoria) o '' si no se conoce."""
+        try:
+            with sqlite3.connect(self.db_path) as conn:
+                row = conn.execute(
+                    "SELECT nombre FROM leads WHERE chat_id=? AND tenant=? AND nombre IS NOT NULL "
+                    "AND nombre != '' ORDER BY creado_en DESC LIMIT 1",
+                    (chat_id, self.tenant)
+                ).fetchone()
+            return row[0] if row else ""
+        except Exception:
+            return ""
+
+    def guardar_nombre(self, chat_id: str, nombre: str, canal: str = "telegram"):
+        """Persiste/actualiza el nombre del lead por chat_id (memoria de identidad)."""
+        if not nombre:
+            return None
         with sqlite3.connect(self.db_path) as conn:
-            rows = conn.execute(
-                "SELECT * FROM leads WHERE tenant=? AND substr(creado_en,1,10)=? ORDER BY creado_en DESC",
-                (self.tenant, today)
-            ).fetchall()
-        cols = [d[0] for d in conn.execute("SELECT * FROM leads LIMIT 0").description]
-        return [dict(zip(cols, r)) for r in rows]
+            row = conn.execute(
+                "SELECT id FROM leads WHERE chat_id=? AND tenant=? ORDER BY creado_en DESC LIMIT 1",
+                (chat_id, self.tenant)
+            ).fetchone()
+            now = datetime.now(UTC_TZ).isoformat()
+            if row:
+                conn.execute(
+                    "UPDATE leads SET nombre=?, actualizado_en=?, canal=? WHERE id=?",
+                    (nombre, now, canal, row[0])
+                )
+            else:
+                lead_id = str(uuid.uuid4())
+                conn.execute(
+                    "INSERT INTO leads (id, tenant, chat_id, nombre, estado, canal, creado_en, actualizado_en) "
+                    "VALUES (?,?,?,?,?,?,?,?)",
+                    (lead_id, self.tenant, chat_id, nombre, "nuevo", canal, now, now)
+                )
+            conn.commit()
+        return nombre
+
+
+# ─── Paquetes (3) — LIBERTAD DE TIEMPO ─────────────────────────────
+# Sin precios: la cotización exacta la da Nathaly (regla del agente).
+PAQUETES = [
+    {
+        "id": "basico",
+        "nombre": "Orden",
+        "titulo": "Paquete Orden — Tu contabilidad al día",
+        "beneficios": [
+            "Contabilidad mensual (estados financieros, IVA e ISR al día)",
+            "Declaraciones sin sorpresas del SAT",
+            "Acompañamiento y resolución de dudas por WhatsApp",
+        ],
+        "tiempo": "Recupera ~8 horas al mes dedicadas a recibos y trámites",
+        "cta": "Cotización exacta por WhatsApp con Nathaly",
+    },
+    {
+        "id": "pro",
+        "nombre": "Control",
+        "titulo": "Paquete Control — Tu negocio administrado",
+        "beneficios": [
+            "Todo lo del paquete Orden",
+            "Administración: nómina, flujo de caja, control de gastos",
+            "Asistente IA para TI: dashboard y recordatorios fiscales",
+            "Consulta mensual con Nathaly",
+        ],
+        "tiempo": "Recupera +16 horas al mes y decisiones con datos claros",
+        "cta": "Cotiza por WhatsApp →",
+    },
+    {
+        "id": "empresa",
+        "nombre": "Crecimiento",
+        "titulo": "Paquete Crecimiento — Todo tu negocio liberado",
+        "beneficios": [
+            "Todo lo del paquete Control",
+            "Manifestación de importación y citas SAT gestionadas",
+            "Asistente IA para tus CLIENTES (chat 24/7 en tu negocio)",
+            "Asistente IA para tu equipo interno",
+            "Educación y acompañamiento en nuevas tecnologías",
+        ],
+        "tiempo": "Libera tu tiempo para enfocarte en crecer",
+        "cta": "Agenda una demo del sistema →",
+    },
+]
+
+
+def get_paquetes() -> list[dict]:
+    """Devuelve los 3 paquetes (copia segura)."""
+    return [dict(p) for p in PAQUETES]
+
+
+def formato_paquetes() -> str:
+    """Formato lista legible de los 3 paquetes para mostrarlos."""
+    salida = ["📦 **Paquetes Hermosillo Contabilidad**\n"]
+    for p in PAQUETES:
+        salida.append(f"**{p['titulo']}**")
+        salida.append(p['tiempo'])
+        for b in p['beneficios']:
+            salida.append(f"  ✅ {b}")
+        salida.append(f"  → {p['cta']}\n")
+    salida.append("💬 El costo exacto te lo da Nathaly en WhatsApp — el diagnóstico inicial es GRATIS.")
+    return "\n".join(salida)
 
 
 if __name__ == "__main__":
