@@ -36,3 +36,6 @@ Thumbs.db
 *.png
 onboarding-top.png
 preview-fullpage.png
+
+# Playwright MCP snapshots (no versionar)
+.playwright-mcp/

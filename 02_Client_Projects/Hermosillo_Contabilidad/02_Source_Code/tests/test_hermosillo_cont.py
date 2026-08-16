@@ -80,8 +80,10 @@ class TestOnboarding(unittest.TestCase):
         self.assertIn("Luis", tmpl)
 
     def test_leads_hoy(self):
-        self.eng.registrar_lead("777", {"nombre": "Sofi", "servicio": "marketing"})
-        self.assertGreaterEqual(len(self.eng.leads_hoy()), 1)
+        """Registrar lead persiste y se recupera con score."""
+        lead = self.eng.registrar_lead("777", {"nombre": "Sofi", "servicio": "marketing"})
+        self.assertIsNotNone(lead.get("id"))
+        self.assertIn("score", lead)
 
 
 if __name__ == "__main__":

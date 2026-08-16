@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Nathaly · Contadora en Hermosillo · Sonora</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧮</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#f6f4ee;--panel:#ffffff;--ink:#1c1c1c;--muted:#6f6a60;--brand:#0e8a6d;--brand-soft:#e7f4ef;--accent:#6d28d9;--border:#e6e2d6;--shadow:0 12px 38px rgba(30,40,30,.08)}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+.wrap{max-width:1060px;margin:0 auto;padding:0 22px 70px}
+header{display:flex;align-items:center;justify-content:space-between;padding:20px 0}
+.logo{font-weight:800;font-size:17px}.logo span{color:var(--brand)}
+.badge{font-size:11px;background:var(--brand-soft);color:var(--brand);padding:6px 14px;border-radius:20px;font-weight:600}
+.hero{padding:12px 0 24px;max-width:680px}
+.hero .tag{font-size:12px;color:var(--brand);font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.hero h1{font-size:clamp(30px,6vw,46px);font-weight:800;letter-spacing:-1.2px;line-height:1.08;margin-bottom:14px}
+.hero p{color:var(--muted);font-size:15.5px;line-height:1.7}
+
+.carousel{position:relative;border-radius:22px;overflow:hidden;margin:8px auto 6px;max-width:900px;background:#ece9e1;box-shadow:var(--shadow)}
+.slides{display:flex;transition:transform .55s cubic-bezier(.4,0,.2,1)}
+.slide{position:relative;flex-shrink:0;background-size:cover;background-position:center}
+.slide .scap{position:absolute;bottom:0;left:0;right:0;padding:46px 22px 15px;background:linear-gradient(transparent,rgba(20,25,20,.6));color:#fff;font-size:13.5px;font-weight:600}
+.dots{display:flex;justify-content:center;gap:8px;margin:12px 0 6px}
+.dot{width:8px;height:8px;border-radius:50%;background:#d8d4c8;cursor:pointer;transition:all .25s}
+.dot.on{background:var(--brand);width:26px;border-radius:20px}
+.section-title{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--brand);margin:32px 0 14px}
+
+/* ─── Cards glass estilo Yu-Gi-Oh (flip 3D) ─── */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px}
+.gcard{perspective:1200px;height:240px;cursor:pointer}
+.gcard-in{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d;border-radius:18px}
+.gcard.flipped .gcard-in{transform:rotateY(180deg)}
+.gface{position:absolute;inset:0;backface-visibility:hidden;border-radius:18px;padding:18px;display:flex;flex-direction:column;justify-content:center}
+.gfront{background:linear-gradient(160deg,rgba(255,255,255,.85),rgba(255,255,255,.55));border:1px solid rgba(255,255,255,.6);box-shadow:var(--shadow);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+.gfront .ic{font-size:30px;margin-bottom:8px}
+.gfront h3{font-size:16px;font-weight:800;margin-bottom:6px}
+.gfront .tap{font-size:11px;color:var(--muted);margin-top:8px;letter-spacing:.5px}
+.gback{transform:rotateY(180deg);background:linear-gradient(150deg,#0e8a6d,#0a5f4a);color:#fff;border:1px solid rgba(255,255,255,.15);box-shadow:0 16px 40px rgba(14,138,109,.35)}
+.gback h4{font-size:13px;font-weight:800;margin-bottom:10px;letter-spacing:.5px}
+.gback ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.gback li{font-size:12px;line-height:1.45}
+.gback li b{color:#d8ffe f}
+.gback .sello{position:absolute;top:12px;right:14px;font-size:22px;opacity:.9}
+
+/* ─── Convo ─── */
+.convo{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:20px;box-shadow:var(--shadow)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.mic-btn,.stop-btn{width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:20px;transition:transform .15s;flex:none}
+.mic-btn{background:var(--brand);color:#fff}
+.mic-btn.listening{background:#d62828;animation:pulse .9s infinite}
+.stop-btn{background:#222;color:#fff;opacity:0;pointer-events:none;transition:opacity .2s}
+.stop-btn.on{opacity:1;pointer-events:auto}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(214,40,40,.4)}50%{box-shadow:0 0 0 14px rgba(214,40,40,0)}}
+.convo input{flex:1;min-width:170px;border:1.5px solid var(--border);border-radius:14px;padding:14px 16px;font-size:14.5px;outline:none}
+.convo input:focus{border-color:var(--brand)}
+.send-btn{background:var(--ink);border:none;border-radius:14px;padding:15px 20px;color:#fff;font-weight:700;font-size:14px;cursor:pointer}
+.mic-hint{font-size:12px;color:var(--muted);margin-top:9px}
+.mic-world{display:flex;align-items:center;gap:8px;margin-top:9px;font-size:13px}
+.mic-world .bar{width:140px;height:6px;border-radius:4px;background:#e4e0d6;overflow:hidden}
+.mic-world .bar i{display:block;height:100%;background:var(--brand);width:0;transition:width .15s}
+#chat-log{display:flex;flex-direction:column;gap:10px;margin-top:16px;max-height:380px;overflow-y:auto}
+.msg{max-width:84%;padding:12px 16px;border-radius:16px;font-size:14px;line-height:1.55;white-space:pre-wrap;animation:fadein .2s}
+@keyframes fadein{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.msg.user{background:var(--ink);color:#fff;align-self:flex-end;border-bottom-right-radius:5px}
+.msg.bot{background:var(--brand-soft);color:var(--ink);align-self:flex-start;border-bottom-left-radius:5px;border:1px solid var(--border)}
+.msg img{max-width:240px;border-radius:14px;margin-top:6px}
+
+/* ─── Iconos contacto ─── */
+.contact-row{display:flex;gap:14px;align-items:center;margin:24px 0 8px;flex-wrap:wrap}
+.ico{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;text-decoration:none;transition:transform .15s;box-shadow:var(--shadow)}
+.ico:hover{transform:scale(1.1)}
+.ico-wa{background:#25D366;color:#fff}
+.ico-tg{background:#229ED9;color:#fff}
+.ico-mail{background:#fff;border:1.5px solid var(--border);color:var(--brand)}
+.ico-ig{background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff}
+.mini{font-size:12px;color:var(--muted);margin-top:6px}
+
+/* ─── FAQ + privacidad ─── */
+details.faq{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:14px 18px;margin-bottom:10px;cursor:pointer}
+details.faq summary{font-weight:700;font-size:14px;list-style:none;display:flex;justify-content:space-between;align-items:center}
+details.faq summary::after{content:'+';font-size:18px;color:var(--brand)}
+details.faq[open] summary::after{content:'−'}
+details.faq p{font-size:13px;color:var(--muted);margin-top:10px;line-height:1.6}
+.privacy{font-size:11.5px;color:var(--muted);line-height:1.6;border-top:1px solid var(--border);padding-top:14px;margin-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="logo">Nathaly<span>.</span> Contabilidad</div>
+  <div class="badge">Hermosillo · Sonora</div>
+</header>
+
+<div class="hero">
+  <div class="tag">Contadora certificada · asistente IA 24/7</div>
+  <h1>Tu contabilidad,<br>en orden y sin pendientes.</h1>
+  <p>Contabilidad, administración, importaciones y trámites SAT en Hermosillo. Atención personal y un asistente IA que responde al momento.</p>
+</div>
+
+<div class="carousel"><div class="slides" id="slides"></div></div>
+<div class="dots" id="dots"></div>
+
+<div class="section-title">Servicios · toca la tarjeta</div>
+<div class="grid" id="grid"></div>
+
+<div class="section-title">Habla con el asistente</div>
+<div class="convo">
+  <div class="row">
+    <button class="mic-btn" id="micBtn" onclick="toggleMic()" title="Activar micrófono"><span class="mic-on">🎤</span><span class="mic-off">⏹</span></button>
+    <button class="stop-btn" id="stopBtn" onclick="stopSpeaking()" title="Detener voz">■</button>
+    <input id="msg" placeholder="Escribe tu mensaje o activa el micrófono..." autocomplete="off">
+    <button class="send-btn" onclick="send()">Enviar</button>
+  </div>
+  <div class="mic-hint" id="micHint">🎙️ Presiona el micrófono para hablar</div>
+  <div class="mic-world" id="micWorld" style="display:none"><span>Escuchando...</span><div class="bar"><i id="micLevel"></i></div></div>
+  <div id="chat-log">
+    <div class="msg bot">Hola, soy la asistente de Nathaly, contadora en Hermosillo. ¿En qué te ayudo? Contabilidad, administración, importaciones, consultas o citas SAT.</div>
+  </div>
+</div>
+
+<div class="contact-row">
+  <a class="ico ico-wa" id="waLink" href="#" target="_blank" title="WhatsApp">🟢</a>
+  <a class="ico ico-tg" href="https://t.me/HermosilloCont_bot" target="_blank" title="Telegram">✈️</a>
+  <a class="ico ico-mail" href="mailto:cp.nathalyhermosillo@gmail.com" title="Correo">✉️</a>
+  <a class="ico ico-ig" href="#" id="igLink" target="_blank" title="Instagram">📷</a>
+</div>
+<div class="mini">Diagnóstico inicial gratis · respuesta en minutos</div>
+
+<div class="section-title">Preguntas frecuentes</div>
+<details class="faq"><summary>¿Cuánto cuesta la contabilidad mensual?</summary><p>El costo exacto te lo da Nathaly por WhatsApp o correo, según el tamaño de tu negocio. El diagnóstico inicial es gratis.</p></details>
+<details class="faq"><summary>¿Qué necesito para empezar?</summary><p>En el diagnóstico inicial (15 min) revisamos tu situación: si ya llevas contabilidad, tu actividad, y qué necesitas cumplir ante el SAT.</p></details>
+<details class="faq"><summary>¿Agendan citas ante el SAT?</summary><p>Sí, agendamos tu cita ante el SAT por ti y te acompañamos en el trámite.</p></details>
+<details class="faq"><summary>¿Manejan importaciones?</summary><p>Sí, manifestación de importación, pedimento y requisitos en regla para que tu mercancía cruce sin retrasos.</p></details>
+<details class="faq"><summary>¿Me ayudan a entender las nuevas tecnologías?</summary><p>Sí, te acompañamos y educamos en herramientas digitales y fiscales para que tu negocio crezca seguro.</p></details>
+
+<div class="privacy">
+  Aviso de privacidad: tus datos (nombre, negocio, contacto) se usan únicamente para brindarte atención y cotización de servicios de Hermosillo Contabilidad. No se comparten con terceros. Puedes solicitar su eliminación en cualquier momento escribiendo a cp.nathalyhermosillo@gmail.com.
+</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ─── Servicios: glass flip cards (Yu-Gi-Oh) ───
+const SVC=[
+ {ic:'🧾',t:'Contabilidad',f:'Estados financieros, IVA e ISR al día, cumplimiento sin sorpresas.',b:[['Orden','contabilidad mensual, IVA e ISR'],['Tranquilidad','cero multas ni sorpresas'],['Tiempo','recuperas ~8 horas al mes']],wa:'Contabilidad mensual'},
+ {ic:'⚙️',t:'Administración',f:'Nómina, flujo de caja y gastos bajo control.',b:[['Orden','nómina y flujo de caja claros'],['Control','decisiones con datos'],['Tiempo','+16 horas al mes']],wa:'Administración'},
+ {ic:'🚢',t:'Importaciones',f:'Manifestación de importación y requisitos en regla.',b:[['Tranquilidad','tu mercancía cruza sin retrasos'],['Orden','papeles en regla'],['Apoyo','despacho aduanero sin atascos']],wa:'Manifestación de importación'},
+ {ic:'📈',t:'Marketing',f:'Presencia y campañas para crecer tu negocio.',b:[['Crecimiento','más clientes'],['Orden','campañas enfocadas'],['Tiempo','nosotros lo gestionamos']],wa:'Marketing para mi negocio'},
+ {ic:'🗂️',t:'Consultas SAT',f:'Aclaraciones y trámites ante el SAT.',b:[['Tranquilidad','no te bloquean ni multan'],['Apoyo','trámites sin vueltas'],['Tiempo','resolvemos por ti']],wa:'Consulta ante el SAT'},
+ {ic:'📅',t:'Citas SAT',f:'Agendamos tu cita ante el SAT por ti.',b:[['Tiempo','sin filas ni esperas'],['Orden','fecha asegurada'],['Apoyo','te acompañamos']],wa:'Cita ante el SAT'},
+];
+const grid=document.getElementById('grid');
+SVC.forEach((s,i)=>{const d=document.createElement('div');d.className='gcard'+(i===0?' flipped':'');
+ d.innerHTML=`<div class="gcard-in"><div class="gface gfront"><div class="ic">${s.ic}</div><h3>${s.t}</h3><p style="font-size:12.5px;color:var(--muted);line-height:1.5">${s.f}</p><div class="tap">TOUCA PARA VER BENEFICIOS</div></div><div class="gface gback"><div class="sello">🔮</div><h4>Nos ocupamos de tus dolores de cabeza</h4><ul>${s.b.map(b=>`<li><b>${b[0]}:</b> ${b[1]}</li>`).join('')}</ul></div></div>`;
+ d.onclick=()=>{d.classList.toggle('flipped');
+  // al voltear, actualizar link WA con el servicio
+  document.getElementById('waLink').href=`https://wa.me/5216623498589?text=${encodeURIComponent('Hola Nathaly, quiero información sobre '+s.wa)}`;
+  document.getElementById('igLink').href='https://instagram.com/'+('#');};
+ grid.appendChild(d);});
+// WA link inicial con servicio genérico
+document.getElementById('waLink').href='https://wa.me/5216623498589?text='+encodeURIComponent('Hola Nathaly, quiero información sobre contabilidad');
+document.getElementById('igLink').href='https://www.instagram.com/';
+
+// ─── Carrusel ───
+const SLIDES=[
+ {img:'hermosillo_assets/contadora_1.jpg',cap:'Asesoría contable personalizada'},
+ {img:'hermosillo_assets/citas_sat.jpg',cap:'Gestión de trámites ante el SAT'},
+ {img:'hermosillo_assets/declaracion.jpg',cap:'Declaraciones y cumplimiento fiscal'},
+ {img:'hermosillo_assets/importacion.jpg',cap:'Manifestación de importación'},
+ {img:'hermosillo_assets/consultoria.jpg',cap:'Consultoría y acompañamiento'},
+];
+const sWrap=document.getElementById('slides'),dotsEl=document.getElementById('dots');let idx=0;
+SLIDES.forEach((s,i)=>{const d=document.createElement('div');d.className='slide';
+ d.style.backgroundImage=`url(${s.img})`;d.style.width='100%';d.style.aspectRatio='3.4/1';
+ d.style.display='flex';d.style.alignItems='flex-end';
+ d.innerHTML=`<div class="scap">${s.cap} · Hermosillo</div>`;sWrap.appendChild(d);
+ const dot=document.createElement('div');dot.className='dot'+(i===0?' on':'');dot.onclick=()=>goSlide(i);dotsEl.appendChild(dot);});
+function goSlide(i){idx=i;sWrap.style.transform=`translateX(-${i*100}%)`;[...dotsEl.children].forEach((d,j)=>d.classList.toggle('on',j===i));}
+setInterval(()=>goSlide((idx+1)%SLIDES.length),5000);
+
+// ─── Micro ───
+let listening=false,recog=null,busy=false;
+function stopMic(){listening=false;const b=document.getElementById('micBtn');b.classList.remove('listening');
+ document.getElementById('micWorld').style.display='none';
+ document.getElementById('micHint').textContent='🎙️ Presiona el micrófono para hablar';
+ if(recog){try{recog.stop();}catch(e){}}recog=null;}
+function toggleMic(){if(busy)return;listening=!listening;const b=document.getElementById('micBtn');
+ b.classList.toggle('listening',listening);
+ document.getElementById('micWorld').style.display=listening?'flex':'none';
+ document.getElementById('micHint').textContent=listening?'Habla ahora, te escucho...':'🎙️ Presiona el micrófono para hablar';
+ if(listening)startMic();else stopMic();}
+function startMic(){try{const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){alert('Tu navegador no soporta dictado. Usa Chrome/Edge.');toggleMic();return;}
+ recog=new SR();recog.lang='es-MX';recog.interimResults=false;
+ recog.onresult=e=>{const t=e.results[e.results.length-1][0].transcript.trim();
+  if(!t)return;document.getElementById('msg').value=t;
+  const lv=document.getElementById('micLevel');lv.style.width='100%';stopMic();send();};
+ recog.onerror=()=>{document.getElementById('micHint').textContent='No te escuché bien, intenta de nuevo.';toggleMic();};
+ recog.onend=()=>{};recog.start();}catch(e){document.getElementById('micHint').textContent='Error de micrófono. Prueba en Chrome o escribe el mensaje.';}}
+
+// ─── Voz: natural + STOP ───
+let voiceOn=true,currentAudio=null;
+function stopSpeaking(){try{if(window.speechSynthesis)window.speechSynthesis.cancel();}catch(e){}
+ if(currentAudio){try{currentAudio.pause();currentAudio=null;}catch(e){}}
+ document.getElementById('stopBtn').classList.remove('on');}
+function speak(t){if(!voiceOn||!t)return;
+ try{if(window.speechSynthesis){window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(t);u.lang='es-MX';u.rate=.93;u.pitch=1.02;
+  u.onend=()=>document.getElementById('stopBtn').classList.remove('on');
+  u.onerror=()=>document.getElementById('stopBtn').classList.remove('on');
+  window.speechSynthesis.speak(u);
+  document.getElementById('stopBtn').classList.add('on');return;}}catch(e){}
+ try{stopSpeaking();const a=new Audio('https://sonoradigitalcorp.com/chat/audio?text='+encodeURIComponent(t.slice(0,280)));
+  currentAudio=a;a.onended=()=>document.getElementById('stopBtn').classList.remove('on');
+  a.play();document.getElementById('stopBtn').classList.add('on');}catch(ev){}
+ document.getElementById('stopBtn').classList.add('on');}
+
+// ─── Chat ───
+const chatLog=document.getElementById('chat-log');
+let sid='';try{sid=localStorage.getItem('naty-sid')||'';}catch(e){}
+if(!sid){sid='web-'+Date.now();try{localStorage.setItem('naty-sid',sid)}catch(e){}}
+function addMsg(t,who){const clean=(t||'').replace(/[!¡?¿*]/g,'').replace(/[\u{1F000}-\u{1FAFF}\u{2600}-\u{27BF}\u{FE0F}]/gu,'').replace(/\s+/g,' ').trim();
+ const d=document.createElement('div');d.className='msg '+who;d.textContent=clean;chatLog.appendChild(d);chatLog.scrollTop=chatLog.scrollHeight;}
+async function send(){
+ const i=document.getElementById('msg');const q=i.value.trim();if(!q||busy)return;busy=true;
+ addMsg(q,'user');i.value='';
+ const dot=document.createElement('div');dot.className='msg bot';dot.textContent='…';chatLog.appendChild(dot);
+ let reply='';
+ try{const r=await fetch('https://sonoradigitalcorp.com/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text:q,sid})});
+  const d=await r.json();reply=(d.respuesta||'Lo sentimos, no obtuve respuesta.').trim();}
+ catch(e){reply='El asistente está ocupado ahora, intenta en un momento.';}
+ dot.remove();addMsg(reply,'bot');speak(reply);busy=false;}
+document.getElementById('msg').addEventListener('keydown',e=>{if(e.key==='Enter')send();});
+</script>
+</body>
+</html>

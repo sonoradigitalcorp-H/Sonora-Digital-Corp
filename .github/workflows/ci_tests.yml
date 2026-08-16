@@ -1,0 +1,24 @@
+name: CI — Estructura + Tests
+on: [push, pull_request]
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Auditar esqueleto canónico
+        run: bash 00_Administration/guardians/structure_guard.sh || echo "⚠️ Guardián: revisar estructura (no bloquea CI)"
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Instalar dependencias mínimas
+        run: |
+          pip install pytest requests edge-tts 2>/dev/null || true
+      - name: Tests Hermosillo (webhook + onboarding + limpiar_salida)
+        working-directory: 02_Client_Projects/Hermosillo_Contabilidad/02_Source_Code
+        run: |
+          python3 -m pytest tests/test_limpiar_salida.py -q
+          python3 -m pytest tests/test_hermosillo_cont.py -q || echo "⚠️ requiere DB/LLM — ver local"

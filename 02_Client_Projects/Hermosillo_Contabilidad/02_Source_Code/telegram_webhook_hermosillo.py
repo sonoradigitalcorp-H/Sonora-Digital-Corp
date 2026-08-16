@@ -65,7 +65,8 @@ ENGINE = OnboardingHermosillo(str(DB_PATH))
 
 # ─── Voz ─────────────────────────────────────────────────────────────
 EDGE_TTS_VOICE = "es-MX-DaliaNeural"
-EDGE_TTS_RATE = "-5%"
+EDGE_TTS_RATE = "+4%"      # ágil, rápida, natural (cliente pidió que no sea lenta)
+EDGE_TTS_PITCH = "+2Hz"    # suavidad sutil
 
 _ASSETS_DIR = Path(os.environ.get("HERMOSILLO_ASSETS_DIR", str(Path(__file__).resolve().parent / "assets")))
 _ASSETS_DIR.mkdir(exist_ok=True)
@@ -97,7 +98,7 @@ def tg_send_voice(chat_id: str, text: str) -> bool:
         mp3_path = ogg_path.replace(".ogg", ".mp3")
 
         async def _gen():
-            c = edge_tts.Communicate(text, EDGE_TTS_VOICE, rate=EDGE_TTS_RATE)
+            c = edge_tts.Communicate(text, EDGE_TTS_VOICE, rate=EDGE_TTS_RATE, pitch=EDGE_TTS_PITCH)
             await c.save(mp3_path)
         asyncio.run(_gen())
 
@@ -175,7 +176,7 @@ def tts_to_ogg(text: str) -> bytes | None:
         fd, mp3 = tempfile.mkstemp(suffix=".mp3")
         os.close(fd)
         async def _g():
-            c = edge_tts.Communicate(text, EDGE_TTS_VOICE, rate=EDGE_TTS_RATE)
+            c = edge_tts.Communicate(text, EDGE_TTS_VOICE, rate=EDGE_TTS_RATE, pitch=EDGE_TTS_PITCH)
             await c.save(mp3)
         asyncio.run(_g())
         data = Path(mp3).read_bytes()
@@ -214,7 +215,7 @@ def wa_voice(to_phone: str, text: str, store: str = WACLI_STORE_EMPRESA) -> bool
         mp3_path = ogg_path.replace(".ogg", ".mp3")
 
         async def _g():
-            c = edge_tts.Communicate(text, EDGE_TTS_VOICE, rate=EDGE_TTS_RATE)
+            c = edge_tts.Communicate(text, EDGE_TTS_VOICE, rate=EDGE_TTS_RATE, pitch=EDGE_TTS_PITCH)
             await c.save(mp3_path)
         asyncio.run(_g())
 
@@ -288,9 +289,35 @@ def show_asset(chat_id: str, servicio: str) -> bool:
 # PIPELINE PRINCIPAL
 # =====================================================================
 
+def limpiar_salida(texto: str) -> str:
+    """Limpia la respuesta para el cliente: SIN emojis, asteriscos, signos de
+    admiración ni markdown. Voz + texto consistente y profesional."""
+    if not texto:
+        return texto
+    import re
+    # Quitar emojis (unicode pictographs/símbolos)
+    texto = re.sub(
+        r"[\U0001F000-\U0001FAFF\U00002600-\U000027BF\U0001F1E6-\U0001F1FF"
+        r"\U00002190-\U000021FF\U00002B00-\U00002BFF\U0000FE0F\U00002700-\U000027BF]",
+        "", texto)
+    # Quitar asteriscos y markdown
+    texto = re.sub(r"[*_`#>|~]", "", texto)
+    # Quitar signos de admiración e interrogación de cierre excesivo (!!/??) → punto
+    texto = re.sub(r"[!¡]{2,}", ".", texto)
+    texto = re.sub(r"[?¿]{2,}", ".", texto)
+    texto = texto.replace("!", "").replace("¡", "").replace("?", "").replace("¿", "")
+    # Normalizar espacios múltiples y espacios antes de puntuación
+    texto = re.sub(r"\s+", " ", texto).strip()
+    texto = re.sub(r"\s+([.,;:])", r"\1", texto)
+    # Asegurar terminación en punto si es frase
+    if texto and texto[-1] not in ".:;":
+        texto += "."
+    return texto
+
+
 def responde_paquetes() -> str:
-    """Devuelve el texto de los 3 paquetes."""
-    return formato_paquetes()
+    """Devuelve el texto de los 3 paquetes (limpio, sin markdown/emojis)."""
+    return limpiar_salida(formato_paquetes())
 
 
 def saludo_personalizado(chat_id: str, fallback: str) -> str:
@@ -437,6 +464,7 @@ def process_text(chat_id: str, text: str, is_jefa: bool) -> dict:
     # 4. Responder (voz si jefa, texto si lead) — con nombre si es saludo
     if cls.intencion == "saludo":
         reply = saludo_personalizado(chat_id, reply)
+    reply = limpiar_salida(reply)  # sin emojis/*/!
     if is_jefa:
         tg_send_voice(chat_id, reply)
     else:
@@ -578,6 +606,7 @@ def chat_json(text: str, chat_sid: str = "") -> dict:
         reply = "El costo exacto te lo da Nathaly en WhatsApp. ¿Te agendo una consulta gratis?"
     # Registrar respuesta bot web
     ENGINE.registrar_conversacion(sid, "bot", reply, canal="web")
+    reply = limpiar_salida(reply)
     return {"ok": True, "respuesta": reply, "intencion": cls.intencion, "accion": action, "sid": sid}
 
 class WebhookHandler(BaseHTTPRequestHandler):
