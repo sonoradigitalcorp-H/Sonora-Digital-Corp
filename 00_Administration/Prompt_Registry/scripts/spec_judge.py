@@ -52,7 +52,17 @@ def judge(prompt_text, spec_text, feature_text):
     user = (f"# SPEC\n{spec_text}\n\n# FEATURE (GHERKIN)\n{feature_text}\n\n"
             f"# PROMPT A EVALUAR\n{prompt_text}\n\n"
             f"# CRITERIOS A EVALUAR\n" + "\n".join(f"- {k}: {v}" for k, v in criteria))
-    raw = _llm(system, user)
+    raw = None
+    for attempt in range(3):
+        try:
+            raw = _llm(system, user)
+            if raw:
+                break
+        except Exception:
+            raw = None
+        import time; time.sleep(3 * (attempt + 1))
+    if not raw:
+        return {"scores": {}, "veredicto": "FAIL", "razon": "API sin respuesta tras 3 intentos"}, criteria
     try:
         m = re.search(r"\{.*\}", raw, re.DOTALL)
         result = json.loads(m.group(0) if m else raw)

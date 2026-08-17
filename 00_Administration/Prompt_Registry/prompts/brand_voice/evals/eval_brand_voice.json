@@ -1,0 +1,27 @@
+[
+  {
+    "id": "brand_voice_001",
+    "input": "Caption de post para clínica dental con la plantilla brand_voice",
+    "expect": {
+      "max_words": 99,
+      "must_not_contain": ["#", "http"],
+      "must_contain": ["clínica", "dental"]
+    }
+  },
+  {
+    "id": "brand_voice_002",
+    "input": "Mensaje DM a lead de contabilidad con la plantilla brand_voice",
+    "expect": {
+      "must_contain": ["negocio", "ayudar"],
+      "max_words": 99
+    }
+  },
+  {
+    "id": "brand_voice_003",
+    "input": "Copy de promoción con la plantilla brand_voice",
+    "expect": {
+      "must_not_contain": ["#", "http", "!!!"],
+      "max_words": 99
+    }
+  }
+]

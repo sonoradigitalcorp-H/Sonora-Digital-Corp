@@ -1,0 +1,25 @@
+[
+  {
+    "id": "cinematic_hyperreal_001",
+    "input": "Imagen editorial de producto con la plantilla cinematic_hyperreal",
+    "expect": {
+      "must_contain": ["luz dorada", "profundidad de campo"],
+      "must_not_contain": ["texto"]
+    }
+  },
+  {
+    "id": "cinematic_hyperreal_002",
+    "input": "Video corto de moda con la plantilla cinematic_hyperreal",
+    "expect": {
+      "max_cost_usd": 0.50,
+      "max_frames": 64
+    }
+  },
+  {
+    "id": "cinematic_hyperreal_003",
+    "input": "Imagen con color grading cálido usando la plantilla cinematic_hyperreal",
+    "expect": {
+      "must_contain": ["color grading", "acento azul", "dorado"]
+    }
+  }
+]

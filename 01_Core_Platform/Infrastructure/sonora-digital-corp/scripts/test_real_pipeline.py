@@ -23,7 +23,7 @@ from pathlib import Path
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO))
 
-FAL_API_KEY = os.environ.get("FAL_API_KEY", "")
+FAL_API_KEY = os.environ.get("FAL_API_KEY", "") or os.environ.get("FAL_KEY", "")
 PASS = 0
 FAIL = 0
 TOTAL_COST = 0.0
