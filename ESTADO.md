@@ -108,12 +108,22 @@
 - **VPS OVH nginx sin config sonoradigitalcorp.com**: Docker nginx (sdc-nginx) sirve /mnt/vps-data/html con config default de Debian. DNS apunta a VPS (149.56.46.173) pero nginx no tiene virtual host para nuestro dominio. Config debe ir en /mnt/vps-data/nginx.conf (montado como /etc/nginx/conf.d/default.conf en container).
 - **Website files copiados a VPS**: index.html, chat.html, paquetes.html, agentes.html en /mnt/vps-data/html/ via scp.
 - **Redact.py fix para Python 3.10**: possessive quantifiers (++,*+) no soportados → reemplazados con +,* en agent/redact.py.
+- **MCP Composio ACTIVADO**: config.yaml → composio.enabled=true + key ck_UY0Z9y9jVNgijBQJoM4v. Gateway reiniciado. Tools MCP: SEARCH, MANAGE_CONNECTIONS, WAIT, GET_SCHEMAS disponibles.
+- **Meta Webhook VPS 24/7**: `wa_webhook.py` deployado en VPS :8080 → nginx `/webhook/meta` → sonoradigitalcorp.com/webhook/meta (HTTPS, verificación OK). Service `meta-webhook.service` (systemd, VPS).
+- **Conexiones Composio ACTIVAS**: Facebook ✅, Instagram ✅, WhatsApp ✅, YouTube ✅ (via MCP + OAuth). LinkedIn pendiente.
+- **WhatsApp Webhook suscrito**: WABA `1158874942978786` + verify_token `d49a07131999c48d4be19c7dd3f8f28d` + callback `https://sonoradigitalcorp.com/webhook/meta`. Intentado via Composio SDK (requiere toolkit_version + dangerously_skip_version_check).
+- **Webhooks manuales configurados**: Instagram (messages, messaging_postbacks, message_reactions), Page (messages, messaging_postbacks, feed), Messenger (messages, messaging_postbacks) — Callback URL + Verify Token idénticos.
+- **Hermes 24/7 VPS LEVANTADO**: gateway :8643, dashboard :9120, meta-webhook :8080, hermosillo :5291. `restart.sh` actualizado con paths correctos.
+- **Unificación completada**: `Hermes Millonario` archivado en `_archived/`. `~/.hermes/` = single source of truth. Local meta-webhook apagado (redundante). VPS = único público 24/7.
+- **Grafo ecosistema actualizado**: `00_Administration/Grafo_Ecosistema_SDC.html` con estado 2026-08-16 (nemotron free principal, nathaly agent, hermosillo client, API 8642, MUAPI, skills actuales).
 
 ## PENDIENTES CRÍTICOS (2026-08-16)
-1. **Deploy nginx config a VPS**: Actualizar /mnt/vps-data/nginx.conf con virtual host sonoradigitalcorp.com + proxy /api/ → 127.0.0.1:8642 (o tunnel al gateway local).
-2. **Habilitar Telegram bots en Hermes**: config.yaml → telegram.enabled=true + tokens correctos por tenant.
-3. **Multi-tenant webhook corriendo**: Levantar multi_tenant_webhook.py en puerto 5289 (o integrar en Hermes).
-4. **Orbe + voz en web**: chat.html usa API endpoint, necesita TTS edge-tts → OGG → voice response.
-5. **Whalink funcional**: wacli/whatsapp link generable y funcional.
-6. **E2E tests TDD/BDD**: Gherkin scenarios para onboarding, chat, voice, multi-tenant.
-7. **Eval prompts**: Benchmark de prompts de venta/agentes contra nemotron free.
+1. **WABA approval**: Esperar aprobación Meta (Review in Progress → Approved) para suscribir `message_deliveries`, `message_reads`, `messaging_postbacks`, `message_echoes` en WhatsApp.
+2. **Telegram bots en Hermes**: config.yaml → telegram.enabled=true + tokens por tenant (cesar/rye/nathaly/sonora).
+3. **LinkedIn en Composio**: Conectar OAuth via MCP (`composio link linkedin`).
+4. **FAL_KEY regenerar**: vencida 401 → fal.ai/dashboard para campañas IG + assets Hermosillo.
+5. **Orbe + voz en web**: chat.html → TTS edge-tts → OGG → voice response.
+6. **Whalink funcional**: wacli/whatsapp link generable y funcional.
+7. **E2E tests TDD/BDD**: Gherkin scenarios para onboarding, chat, voice, multi-tenant.
+8. **Eval prompts**: Benchmark prompts venta/agentes vs nemotron free.
+9. **Apagar Meta Business Agent**: En WhatsApp Business → Tools → IA Agent → "Paused for new chats but learning".

@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDC Ecosystem Graph — 2026-08-16</title>
+<script src="https://unpkg.com/vis-network@9.1.9/standalone/umd/vis-network.min.js"></script>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#1e1e1e; color:#d4d4d4; font-family:'Segoe UI', system-ui, sans-serif; overflow:hidden; height:100vh; }
+  #header { position:fixed; top:0; left:0; right:0; z-index:10; display:flex; align-items:center; gap:12px; padding:8px 16px; background:rgba(30,30,30,0.9); border-bottom:1px solid #333; }
+  #header h1 { font-size:14px; font-weight:600; color:#e0e0e0; letter-spacing:0.5px; }
+  #header .dot { width:8px; height:8px; border-radius:50%; background:#7c3aed; box-shadow:0 0 8px #7c3aed; animation:pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+  #header .date { font-size:10px; color:#7c3aed; background:rgba(124,58,237,0.15); padding:2px 8px; border-radius:10px; }
+  #header .count { font-size:11px; color:#888; }
+  #controls { margin-left:auto; display:flex; gap:8px; align-items:center; }
+  #controls label { font-size:11px; color:#888; }
+  #controls input[type=range] { width:90px; }
+  #search { background:#2d2d2d; border:1px solid #444; color:#ccc; padding:4px 8px; border-radius:4px; font-size:11px; width:160px; outline:none; }
+  #search:focus { border-color:#7c3aed; }
+  #legend { position:fixed; bottom:16px; left:16px; z-index:10; background:rgba(30,30,30,0.92); border:1px solid #3a3a3a; border-radius:8px; padding:10px 14px; font-size:11px; line-height:1.8; }
+  #legend .item { display:flex; align-items:center; gap:8px; }
+  #legend .sw { width:10px; height:10px; border-radius:3px; display:inline-block; }
+  #network { width:100vw; height:100vh; }
+  #hint { position:fixed; bottom:16px; right:16px; z-index:10; font-size:10px; color:#666; background:rgba(30,30,30,0.8); padding:6px 10px; border-radius:6px; border:1px solid #333; }
+  #stamp { position:fixed; top:44px; right:16px; z-index:9; font-size:9px; color:#7c3aed; background:rgba(30,30,30,0.85); padding:3px 8px; border-radius:6px; border:1px solid #7c3aed33; }
+</style>
+</head>
+<body>
+
+<div id="header">
+  <div class="dot"></div>
+  <h1>SDC ECOSYSTEM — GRAPH VIEW</h1>
+  <span class="date">2026-08-16</span>
+  <span class="count" id="count"></span>
+  <div id="controls">
+    <input id="search" type="text" placeholder="🔍 buscar nodo...">
+    <label>zoom <input type="range" id="zoom" min="0.2" max="2.5" step="0.05" value="1"></label>
+  </div>
+</div>
+
+<div id="legend">
+  <div class="item"><span class="sw" style="background:#22d3ee"></span> Tools nativas Hermes</div>
+  <div class="item"><span class="sw" style="background:#a78bfa"></span> MCP Servers</div>
+  <div class="item"><span class="sw" style="background:#34d399"></span> Providers / Modelos</div>
+  <div class="item"><span class="sw" style="background:#fbbf24"></span> Skills sdc:* (tuyas)</div>
+  <div class="item"><span class="sw" style="background:#fb7185"></span> Skills clients:* (tuyas)</div>
+  <div class="item"><span class="sw" style="background:#f97316"></span> Skills tools:* (tuyas)</div>
+  <div class="item"><span class="sw" style="background:#94a3b8"></span> Skills nativas/community</div>
+  <div class="item"><span class="sw" style="background:#2dd4bf"></span> Infra VPS / Local</div>
+  <div class="item"><span class="sw" style="background:#e879f9"></span> Agentes / Tenants</div>
+  <div class="item"><span class="sw" style="background:#facc15"></span> Clientes / Negocio</div>
+</div>
+
+<div id="hint">🖱 scroll = zoom · arrastra = mover · clic = enfocar · doble clic = expandir</div>
+<div id="stamp">generado por MYSTIC · estado vivo ESTADO.md</div>
+<div id="network"></div>
+
+<script>
+// ================= NODOS =================
+const nodes = [
+  // --- CENTRO ---
+  { id:'hermes', label:'HERMES\n(Único orquestador)', group:'core', size:48, color:{background:'#0ea5e9', border:'#38bdf8'}, font:{size:13, color:'#fff'} },
+
+  // --- API / CANALES ---
+  { id:'api_8642', label:'API server\n:8642 (/api/v1)', group:'native', size:20 },
+  { id:'gw_8643', label:'Gateway\n:8643 (systemd)', group:'native', size:20 },
+  { id:'tg_bots', label:'Telegram bots\ncesar·rye·nathaly', group:'native', size:18 },
+  { id:'wh_webhook', label:'multi_tenant_webhook\n:5289·:5291', group:'native', size:16 },
+
+  // --- TOOLS NATIVAS ---
+  { id:'t_terminal', label:'terminal', group:'native' },
+  { id:'t_file', label:'file tools\n(read/write/patch)', group:'native' },
+  { id:'t_search', label:'search_files', group:'native' },
+  { id:'t_web', label:'web\n(search/extract/browser)', group:'native' },
+  { id:'t_delegate', label:'delegate_task\n+ execute_code', group:'native' },
+  { id:'t_cron', label:'cronjob', group:'native' },
+  { id:'t_memory', label:'memory\n+ fact_store', group:'native' },
+  { id:'t_skill', label:'skills\n(view/manage/list)', group:'native' },
+  { id:'t_session', label:'session_search', group:'native' },
+  { id:'t_tts', label:'text_to_speech', group:'native' },
+  { id:'t_img', label:'image_generate', group:'native' },
+  { id:'t_clarify', label:'clarify', group:'native' },
+  { id:'t_mcp', label:'tool_search\n+MCP dynamic', group:'native' },
+
+  // --- MCP ---
+  { id:'mcp_fs', label:'MCP filesystem', group:'mcp' },
+  { id:'mcp_agents', label:'MCP hermes-agents\n(hermes_agents_mcp.py)', group:'mcp' },
+  { id:'mcp_sdc', label:'MCP sdc-stdio\n(OKF·log·insights)', group:'mcp' },
+
+  // --- PROVIDERS / MODELOS ---
+  { id:'prov_nemotron', label:'nemotron-3-ultra:free\nPRINCIPAL ($0)', group:'provider', size:30, color:{background:'#065f46', border:'#34d399'} },
+  { id:'prov_openrouter', label:'OpenRouter\ndeepseek-v4-flash-0731\n(fallback pagado)', group:'provider', size:24 },
+  { id:'prov_ollama', label:'Ollama VPS\nqwen3:4b·qwen2.5vl\nall-minilm (embeddings)', group:'provider', size:24 },
+  { id:'prov_fal', label:'fal.ai FLUX 2\n⚠️ key vencida 401', group:'provider', size:18 },
+  { id:'prov_tts', label:'TTS edge-tts\n(Dalia / Jorge)', group:'provider', size:18 },
+  { id:'prov_whisper', label:'Whisper tiny\n(STT)', group:'provider', size:14 },
+
+  // --- VPS / INFRA ---
+  { id:'vps', label:'VPS OVH\n149.56.46.173\n2.9G discos·Docker', group:'infra', size:34, color:{background:'#0f766e', border:'#2dd4bf'} },
+  { id:'vps_docker', label:'Docker\n(ollama + sdc-nginx)', group:'infra' },
+  { id:'vps_gateway', label:'gateway', group:'infra' },
+  { id:'vps_data', label:'/mnt/vps-data\n(sitios web)', group:'infra' },
+  { id:'vps_nginx', label:'nginx web\nsonoradigitalcorp.com', group:'infra' },
+  { id:'vps_health', label:'vps-health.sh\ncron */10', group:'infra' },
+  { id:'local_pc', label:'mysticpc (laptop)\n3.3GB RAM — light', group:'infra', size:24 },
+  { id:'local_ollama', label:'ollama local\nall-minilm + qdrant', group:'infra', size:16 },
+  { id:'local_desktop', label:'Hermes Desktop\n(Electron → 8642/8643)', group:'infra' },
+  { id:'local_wacli', label:'wacli\nWhatsApp CLI', group:'infra' },
+
+  // --- SKILLS SDC (tuyas) ---
+  { id:'sk_mystic', label:'estilo-mystic', group:'sdc' },
+  { id:'sk_auto', label:'auto-mejora', group:'sdc' },
+  { id:'sk_personas', label:'analisis-personas', group:'sdc' },
+  { id:'sk_ventas', label:'ventas-cesar', group:'sdc' },
+  { id:'sk_voice', label:'voice-pipeline', group:'sdc' },
+  { id:'sk_people', label:'people-recognition', group:'sdc' },
+  { id:'sk_ig', label:'ig-autopilot\n(social_autopilot.py)', group:'sdc' },
+  { id:'sk_cowork', label:'sdc-cowork-orchestrator', group:'sdc' },
+  { id:'sk_web3', label:'sdc-web\n(paquetes·agentes·chat)', group:'sdc' },
+
+  // --- SKILLS CLIENTES (tuyas) ---
+  { id:'cl_aztrotech', label:'aztrotech\n(onboarding·scoring·diag)', group:'client' },
+  { id:'cl_hermosillo', label:'nathaly\n(hermosillo cont)', group:'client' },
+  { id:'cl_rye', label:'rye\n(alarmas·turnos·OEE)', group:'client' },
+  { id:'cl_abemusic', label:'abe-music\n(expansión)', group:'client' },
+
+  // --- SKILLS TOOLS (tuyas) ---
+  { id:'tk_composio', label:'composio\n(toolkits multi-agente)', group:'toolsk' },
+  { id:'tk_stripe', label:'stripe', group:'toolsk' },
+  { id:'tk_brevo', label:'brevo', group:'toolsk' },
+  { id:'tk_supabase', label:'supabase', group:'toolsk' },
+  { id:'tk_canva', label:'canva', group:'toolsk' },
+  { id:'tk_fal', label:'fal-api', group:'toolsk' },
+  { id:'tk_pw', label:'Playwright\n(redes dry-run)', group:'toolsk' },
+  { id:'tk_people', label:'people-index\n(people_index.py)', group:'toolsk' },
+
+  // --- SKILLS NATIVAS (representativas) ---
+  { id:'sn_hermes', label:'hermes-agent', group:'native_skill' },
+  { id:'sn_skill_factory', label:'hermes-skill-factory', group:'native_skill' },
+  { id:'sn_kanban', label:'kanban-orchestrator', group:'native_skill' },
+  { id:'sn_debug', label:'debugging', group:'native_skill' },
+  { id:'sn_plan', label:'plan', group:'native_skill' },
+  { id:'sn_arch', label:'architecture-diagram', group:'native_skill' },
+  { id:'sn_manim', label:'manim-video', group:'native_skill' },
+  { id:'sn_research', label:'research', group:'native_skill' },
+  { id:'sn_github', label:'github', group:'native_skill' },
+  { id:'sn_email', label:'himalaya (email)', group:'native_skill' },
+
+  // --- AGENTES / TENANTS (multi-agente) ---
+  { id:'ag_factory', label:'hermes_agent_factory\n+ agents_registry', group:'agent', size:22 },
+  { id:'ag_consultorio', label:'consultorio-sonora', group:'agent' },
+  { id:'ag_cesar', label:'cesar (Aztrotech)', group:'agent' },
+  { id:'ag_rye', label:'rye (Iván)', group:'agent' },
+  { id:'ag_nathaly', label:'nathaly (Nathaly)', group:'agent' },
+  { id:'sdc_closer', label:'sdc-closer\n(ventas)', group:'agent' },
+  { id:'tenants', label:'Multi-Tenant\nrouter + tenants.json', group:'agent', size:24 },
+  { id:'people', label:'people.json\n+ databases.json', group:'agent', size:20 },
+
+  // --- CLIENTES / NEGOCIO ---
+  { id:'biz_aztrotech', label:'AZTROTECH\n(César)', group:'biz', size:26, color:{background:'#a16207', border:'#facc15'} },
+  { id:'biz_rye', label:'RYE Industrial\n(ivan)', group:'biz', size:24, color:{background:'#a16207', border:'#facc15'} },
+  { id:'biz_hermosillo', label:'HERMOSILLO CONT\n(Nathaly)', group:'biz', size:24, color:{background:'#a16207', border:'#facc15'} },
+  { id:'biz_abe', label:'ABE Music Group\n(expansion 2026)', group:'biz', size:20 },
+  { id:'biz_sdc', label:'SDC Propio\n(sonora_digital_bot)', group:'biz', size:24, color:{background:'#a16207', border:'#facc15'} },
+  { id:'biz_web', label:'Web ventas\nsonoradigitalcorp.com\n(paquetes·agentes·chat)', group:'biz', size:22 },
+  { id:'biz_stripe', label:'Stripe / MP\n(pagos)', group:'biz', size:18 },
+];
+
+// ================= ARISTAS =================
+const edges = [
+  // hermes → canales
+  { from:'hermes', to:'api_8642' }, { from:'hermes', to:'gw_8643' },
+  { from:'hermes', to:'tg_bots' }, { from:'hermes', to:'wh_webhook' },
+  { from:'tg_bots', to:'wh_webhook' },
+
+  // hermes → tools nativas
+  { from:'hermes', to:'t_terminal' }, { from:'hermes', to:'t_file' },
+  { from:'hermes', to:'t_search' }, { from:'hermes', to:'t_web' },
+  { from:'hermes', to:'t_delegate' }, { from:'hermes', to:'t_cron' },
+  { from:'hermes', to:'t_memory' }, { from:'hermes', to:'t_skill' },
+  { from:'hermes', to:'t_session' }, { from:'hermes', to:'t_tts' },
+  { from:'hermes', to:'t_img' }, { from:'hermes', to:'t_clarify' },
+  { from:'hermes', to:'t_mcp' },
+
+  // MCP
+  { from:'t_mcp', to:'mcp_fs' }, { from:'t_mcp', to:'mcp_agents' }, { from:'t_mcp', to:'mcp_sdc' },
+  { from:'mcp_agents', to:'ag_factory' },
+  { from:'mcp_agents', to:'ag_consultorio' }, { from:'mcp_sdc', to:'sk_personas' },
+
+  // Providers
+  { from:'hermes', to:'prov_nemotron' },
+  { from:'prov_nemotron', to:'prov_openrouter' },  // fallback
+  { from:'hermes', to:'prov_openrouter' },
+  { from:'vps', to:'prov_ollama' },
+  { from:'vps', to:'prov_fal' },
+  { from:'hermes', to:'prov_tts' },
+  { from:'local_pc', to:'prov_whisper' },
+
+  // Infra
+  { from:'vps', to:'vps_docker' },
+  { from:'vps', to:'vps_gateway' },
+  { from:'vps', to:'vps_data' },
+  { from:'vps', to:'vps_nginx' },
+  { from:'vps', to:'vps_health' },
+  { from:'local_pc', to:'vps' },
+  { from:'local_desktop', to:'api_8642' },
+  { from:'local_desktop', to:'local_pc' },
+  { from:'local_wacli', to:'local_pc' },
+  { from:'local_pc', to:'local_ollama' },
+  { from:'vps_gateway', to:'hermes' },
+  { from:'api_8642', to:'biz_web' },
+
+  // Skills SDC
+  { from:'hermes', to:'sk_mystic' }, { from:'hermes', to:'sk_auto' },
+  { from:'hermes', to:'sk_personas' }, { from:'hermes', to:'sk_ventas' },
+  { from:'hermes', to:'sk_voice' }, { from:'hermes', to:'sk_people' },
+  { from:'hermes', to:'sk_ig' }, { from:'hermes', to:'sk_cowork' },
+  { from:'hermes', to:'sk_web3' },
+
+  // Skills clientes
+  { from:'ag_cesar', to:'cl_aztrotech' },
+  { from:'ag_nathaly', to:'cl_hermosillo' },
+  { from:'ag_rye', to:'cl_rye' },
+  { from:'ag_cesar', to:'cl_abemusic' },
+
+  // Skills tools
+  { from:'hermes', to:'tk_composio' }, { from:'hermes', to:'tk_stripe' },
+  { from:'hermes', to:'tk_brevo' }, { from:'hermes', to:'tk_supabase' },
+  { from:'hermes', to:'tk_canva' }, { from:'hermes', to:'tk_fal' },
+  { from:'hermes', to:'tk_pw' }, { from:'hermes', to:'tk_people' },
+  { from:'tk_composio', to:'cl_hermosillo' },
+
+  // Skills nativas (las que usas)
+  { from:'hermes', to:'sn_hermes' }, { from:'hermes', to:'sn_skill_factory' },
+  { from:'hermes', to:'sn_kanban' }, { from:'hermes', to:'sn_debug' },
+  { from:'hermes', to:'sn_plan' }, { from:'hermes', to:'sn_arch' },
+  { from:'hermes', to:'sn_manim' }, { from:'hermes', to:'sn_research' },
+  { from:'hermes', to:'sn_github' }, { from:'hermes', to:'sn_email' },
+
+  // Factory → agentes
+  { from:'ag_factory', to:'ag_consultorio' },
+  { from:'ag_factory', to:'ag_cesar' },
+  { from:'ag_factory', to:'ag_rye' },
+  { from:'ag_factory', to:'ag_nathaly' },
+  { from:'ag_factory', to:'sdc_closer' },
+
+  // Tenants
+  { from:'hermes', to:'tenants' }, { from:'hermes', to:'people' },
+  { from:'tenants', to:'ag_consultorio' },
+  { from:'tenants', to:'ag_cesar' },
+  { from:'tenants', to:'ag_rye' },
+  { from:'tenants', to:'ag_nathaly' },
+
+  // Negocio
+  { from:'biz_sdc', to:'hermes' },
+  { from:'biz_aztrotech', to:'ag_cesar' },
+  { from:'biz_rye', to:'ag_rye' },
+  { from:'biz_hermosillo', to:'ag_nathaly' },
+  { from:'biz_abe', to:'cl_abemusic' },
+  { from:'biz_sdc', to:'biz_web' },
+  { from:'biz_sdc', to:'biz_stripe' },
+  { from:'biz_web', to:'vps_nginx' },
+  { from:'biz_stripe', to:'tk_stripe' },
+  { from:'biz_web', to:'sk_web3' },
+  { from:'biz_aztrotech', to:'sk_ventas' },
+  { from:'biz_hermosillo', to:'sk_mystic' },
+  { from:'local_wacli', to:'biz_sdc' },
+  { from:'api_8642', to:'vps_nginx' },
+  { from:'tg_bots', to:'ag_nathaly' },
+];
+
+// ================= GRUPOS / COLORES =================
+const groups = {
+  core:       { color:{ background:'#0369a1', border:'#38bdf8' }, font:{ color:'#fff', size:12 } },
+  native:     { color:{ background:'#164e63', border:'#22d3ee' }, font:{ color:'#cffafe', size:10 } },
+  mcp:        { color:{ background:'#4c1d95', border:'#a78bfa' }, font:{ color:'#ede9fe', size:10 } },
+  provider:   { color:{ background:'#064e3b', border:'#34d399' }, font:{ color:'#d1fae5', size:10 } },
+  infra:      { color:{ background:'#134e4a', border:'#2dd4bf' }, font:{ color:'#ccfbf1', size:10 } },
+  sdc:        { color:{ background:'#78350f', border:'#fbbf24' }, font:{ color:'#fef3c7', size:10 } },
+  client:     { color:{ background:'#881337', border:'#fb7185' }, font:{ color:'#ffe4e6', size:10 } },
+  toolsk:     { color:{ background:'#7c2d12', border:'#f97316' }, font:{ color:'#ffedd5', size:10 } },
+  native_skill:{ color:{ background:'#1e293b', border:'#94a3b8' }, font:{ color:'#e2e8f0', size:10 } },
+  agent:      { color:{ background:'#86198f', border:'#e879f9' }, font:{ color:'#fae8ff', size:10 } },
+  center:     { color:{ background:'#6b21a8', border:'#e879f9' }, font:{ color:'#fae8ff', size:10 } },
+  biz:        { color:{ background:'#713f12', border:'#facc15' }, font:{ color:'#fef9c3', size:10 } },
+  web:        { color:{ background:'#155e75', border:'#22d3ee' }, font:{ color:'#cffafe', size:10 } },
+};
+
+// ================= RENDER =================
+const container = document.getElementById('network');
+const data = { nodes: new vis.DataSet(nodes), edges: new vis.DataSet(edges) };
+const options = {
+  autoResize: true,
+  layout: { improvedLayout: true, randomSeed: 7 },
+  physics: {
+    enabled: true,
+    barnesHut: { gravitationalConstant: -8000, centralGravity: 0.35, springLength: 130, springConstant: 0.04, damping: 0.5 },
+    stabilization: { iterations: 250 }
+  },
+  interaction: { hover: true, tooltipDelay: 200, navigationButtons: false, keyboard: true },
+  nodes: {
+    shape: 'dot',
+    size: 14,
+    borderWidth: 2,
+    shadow: { enabled: true, color: 'rgba(0,0,0,0.4)', size: 8 },
+    font: { color: '#d4d4d4', size: 10, face: 'Segoe UI' }
+  },
+  edges: {
+    color: { color: '#475569', highlight: '#38bdf8', hover: '#64748b', opacity: 0.7 },
+    width: 1,
+    smooth: { type: 'continuous', roundness: 0.4 },
+    arrows: { to: { enabled: true, scaleFactor: 0.5 } }
+  },
+  groups
+};
+
+const network = new vis.Network(container, data, options);
+document.getElementById('count').textContent = nodes.length + ' nodos · ' + edges.length + ' conexiones';
+
+// zoom slider
+document.getElementById('zoom').addEventListener('input', e => {
+  network.moveTo({ scale: parseFloat(e.target.value), animation: { duration: 200 } });
+});
+
+// búsqueda
+document.getElementById('search').addEventListener('input', e => {
+  const q = e.target.value.trim().toLowerCase();
+  if (!q) { network.selectNodes([]); return; }
+  const matches = nodes.filter(n => (n.label || '').toLowerCase().includes(q)).map(n => n.id);
+  network.selectNodes(matches);
+  if (matches.length) network.focus(matches[0], { scale: 1.3, animation: { duration: 300 } });
+});
+</script>
+</body>
+</html>
