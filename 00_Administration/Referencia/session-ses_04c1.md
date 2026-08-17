@@ -2602,7 +2602,7 @@ Let me build this carefully.
 ## Important Details
 - **Iván Alejandro Guerrero Enciso**: Gerente de Producción en RYE (RYE Design, Claremore OK — integrador de robótica automotriz: Fanuc, Cognex, Lincoln, Servo-Robot, Yaskawa; líneas para BMW, Rivian, VW, Mercedes).
 - **Tenant RYE** en `config/tenants/registry.yaml`: id `rye`, tier `client_pro`, features `[telegram, agents, rag, voice, crm]`, owner Iván G., branding `#1a237e/#00bcd4`.
-- **Bot Telegram `@RyE_production_bot`**: token `8458043982:AAE0pa1-H3ULILw45Rxbgm4-zYnZwwlezhE` (getMe OK), guardado en `~/.openclaw/secrets/telegram-rye.token` (chmod 600).
+- **Bot Telegram `@RyE_production_bot`**: token `TELEGRAM_TOKEN_REDACTADO` (getMe OK), guardado en `~/.openclaw/secrets/telegram-rye.token` (chmod 600).
 - **Gateway OpenClaw `:18789`**: **UP** (`active`, 200). Override `Restart=no` removido, servicio `openclaw-gateway.service` `enabled`+`active`.
 - **Conductor `rye`**: routing `telegram accountId=*` (todos los DMs → rye); skill `rye-bot` en `~/.openclaw/agents/rye/agent/skills/rye-bot/SKILL.md`.
 - **MCPs configurados (4)**: `sdc-mcp-local` (rag+engram+llm), `filesystem`, `github`, `fetch` — `openclaw mcp doctor` → all `ok`.

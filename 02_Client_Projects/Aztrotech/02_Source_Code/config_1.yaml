@@ -23,7 +23,7 @@ openrouter:
 channels:
   telegram:
     enabled: true
-    bot_token: "8825008004:AAFHdxypgGK8LZD0yEH9g0hsCdl2pJmDd8g"
+    bot_token: "TELEGRAM_TOKEN_REDACTADO"
     owner_chat_id: "5738935134"
   whatsapp:
     enabled: false

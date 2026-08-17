@@ -2065,7 +2065,7 @@ The API port is 8000, not 8001. Let me start the Harvis OS API on port 8000. I n
 
 **Output:**
 ```
-OPENROUTER_API_KEY=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
+OPENROUTER_API_KEY=sk-or-REDACTADO
 
 ```
 
@@ -2082,7 +2082,7 @@ Good, the API key exists. Now let me start the Harvis OS API. I'll run it in the
 **Input:**
 ```json
 {
-  "command": "export OPENROUTER_API_KEY=\"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\" && uvicorn src.core.main:app --host 0.0.0.0 --port 8000 &\nsleep 3\necho \"---\"\ncurl -s http://localhost:8000/health | head -c 500",
+  "command": "export OPENROUTER_API_KEY=\"sk-or-REDACTADO\" && uvicorn src.core.main:app --host 0.0.0.0 --port 8000 &\nsleep 3\necho \"---\"\ncurl -s http://localhost:8000/health | head -c 500",
   "timeout": 15000,
   "workdir": "/home/mystic/Documentos/Sonora Digital Corp/harvis-os"
 }
@@ -2169,7 +2169,7 @@ Good, the old process was killed. Now let me start the Harvis OS API again with 
 **Input:**
 ```json
 {
-  "command": "export OPENROUTER_API_KEY=\"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\" && uvicorn src.core.main:app --host 0.0.0.0 --port 8000 &\nsleep 3\necho \"---\"\ncurl -s http://localhost:8000/health | head -c 500",
+  "command": "export OPENROUTER_API_KEY=\"sk-or-REDACTADO\" && uvicorn src.core.main:app --host 0.0.0.0 --port 8000 &\nsleep 3\necho \"---\"\ncurl -s http://localhost:8000/health | head -c 500",
   "timeout": 15000,
   "workdir": "/home/mystic/Documentos/Sonora Digital Corp/harvis-os"
 }
@@ -2241,7 +2241,7 @@ Actually, the issue might be that the process is being killed when the bash tool
 **Input:**
 ```json
 {
-  "command": "nohup bash -c 'export OPENROUTER_API_KEY=\"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\" && cd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os && uvicorn src.core.main:app --host 0.0.0.0 --port 8000' > /tmp/harvis_api.log 2>&1 &\necho \"PID: $!\"\nsleep 3\ncat /tmp/harvis_api.log",
+  "command": "nohup bash -c 'export OPENROUTER_API_KEY=\"sk-or-REDACTADO\" && cd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os && uvicorn src.core.main:app --host 0.0.0.0 --port 8000' > /tmp/harvis_api.log 2>&1 &\necho \"PID: $!\"\nsleep 3\ncat /tmp/harvis_api.log",
   "timeout": 10000,
   "workdir": "/home/mystic/Documentos/Sonora Digital Corp"
 }
@@ -2538,7 +2538,7 @@ The user said "continue" again. Let me restart the API and test it.
 **Input:**
 ```json
 {
-  "command": "nohup bash -c 'export OPENROUTER_API_KEY=\"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\" && cd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os && uvicorn src.core.main:app --host 0.0.0.0 --port 8000' > /tmp/harvis_api.log 2>&1 &\necho \"PID: $!\"\nsleep 3\ncat /tmp/harvis_api.log | tail -3\ncurl -s http://localhost:8000/health | python3 -m json.tool",
+  "command": "nohup bash -c 'export OPENROUTER_API_KEY=\"sk-or-REDACTADO\" && cd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os && uvicorn src.core.main:app --host 0.0.0.0 --port 8000' > /tmp/harvis_api.log 2>&1 &\necho \"PID: $!\"\nsleep 3\ncat /tmp/harvis_api.log | tail -3\ncurl -s http://localhost:8000/health | python3 -m json.tool",
   "timeout": 10000,
   "workdir": "/home/mystic/Documentos/Sonora Digital Corp"
 }
@@ -2610,7 +2610,7 @@ The port 8000 is free. Let me try starting the API again, maybe the nohup didn't
 **Input:**
 ```json
 {
-  "command": "(export OPENROUTER_API_KEY=\"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\"; cd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os; uvicorn src.core.main:app --host 0.0.0.0 --port 8000 > /tmp/harvis_api.log 2>&1 &)\nsleep 3\ncat /tmp/harvis_api.log",
+  "command": "(export OPENROUTER_API_KEY=\"sk-or-REDACTADO\"; cd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os; uvicorn src.core.main:app --host 0.0.0.0 --port 8000 > /tmp/harvis_api.log 2>&1 &)\nsleep 3\ncat /tmp/harvis_api.log",
   "timeout": 10000,
   "workdir": "/home/mystic/Documentos/Sonora Digital Corp"
 }
@@ -2634,7 +2634,7 @@ The log is empty and the API doesn't seem to be starting. Let me try a different
 **Input:**
 ```json
 {
-  "command": "export OPENROUTER_API_KEY=\"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\"\ncd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os\npython3 -c \"from src.core.main import app; print('Import OK')\"",
+  "command": "export OPENROUTER_API_KEY=\"sk-or-REDACTADO\"\ncd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os\npython3 -c \"from src.core.main import app; print('Import OK')\"",
   "timeout": 10000,
   "workdir": "/home/mystic/Documentos/Sonora Digital Corp"
 }
@@ -2659,7 +2659,7 @@ The import works fine. The issue might be with how the background process is bei
 **Input:**
 ```json
 {
-  "command": "(export OPENROUTER_API_KEY=\"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\"; cd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os; exec uvicorn src.core.main:app --host 0.0.0.0 --port 8000 > /tmp/harvis_api.log 2>&1 &)\nsleep 3\ncat /tmp/harvis_api.log",
+  "command": "(export OPENROUTER_API_KEY=\"sk-or-REDACTADO\"; cd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os; exec uvicorn src.core.main:app --host 0.0.0.0 --port 8000 > /tmp/harvis_api.log 2>&1 &)\nsleep 3\ncat /tmp/harvis_api.log",
   "timeout": 10000,
   "workdir": "/home/mystic/Documentos/Sonora Digital Corp"
 }
@@ -2687,7 +2687,7 @@ Or I can just start it with a longer timeout and wait for it to initialize.
 **Input:**
 ```json
 {
-  "command": "(export OPENROUTER_API_KEY=\"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\"; cd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os; nohup uvicorn src.core.main:app --host 0.0.0.0 --port 8000 > /tmp/harvis_api.log 2>&1 &)\nsleep 4\ncat /tmp/harvis_api.log\nss -tlnp | grep 8000",
+  "command": "(export OPENROUTER_API_KEY=\"sk-or-REDACTADO\"; cd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os; nohup uvicorn src.core.main:app --host 0.0.0.0 --port 8000 > /tmp/harvis_api.log 2>&1 &)\nsleep 4\ncat /tmp/harvis_api.log\nss -tlnp | grep 8000",
   "timeout": 15000,
   "workdir": "/home/mystic/Documentos/Sonora Digital Corp"
 }
@@ -4517,7 +4517,7 @@ Déjame reiniciar la API para probar que todo funciona con los cambios. Primero 
 **Input:**
 ```json
 {
-  "command": "export OPENROUTER_API_KEY=\"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\"\ncd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os\npython3 -c \"from src.core.main import app; print('Import OK')\"",
+  "command": "export OPENROUTER_API_KEY=\"sk-or-REDACTADO\"\ncd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os\npython3 -c \"from src.core.main import app; print('Import OK')\"",
   "timeout": 15000,
   "workdir": "/home/mystic/Documentos/Sonora Digital Corp"
 }
@@ -4567,7 +4567,7 @@ Necesito reiniciar la API con los cambios. Déjame hacerlo.
 **Input:**
 ```json
 {
-  "command": "(export OPENROUTER_API_KEY=\"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\"; cd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os; nohup uvicorn src.core.main:app --host 0.0.0.0 --port 8000 > /tmp/harvis_api.log 2>&1 &)\nsleep 5\ncat /tmp/harvis_api.log\nss -tlnp | grep 8000",
+  "command": "(export OPENROUTER_API_KEY=\"sk-or-REDACTADO\"; cd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os; nohup uvicorn src.core.main:app --host 0.0.0.0 --port 8000 > /tmp/harvis_api.log 2>&1 &)\nsleep 5\ncat /tmp/harvis_api.log\nss -tlnp | grep 8000",
   "timeout": 15000,
   "workdir": "/home/mystic/Documentos/Sonora Digital Corp"
 }
@@ -4615,7 +4615,7 @@ La API no está corriendo. Déjame intentar ejecutarla en primer plano brevement
 **Input:**
 ```json
 {
-  "command": "export OPENROUTER_API_KEY=\"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\"\ncd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os\ntimeout 10 uvicorn src.core.main:app --host 0.0.0.0 --port 8000 2>&1 | head -20",
+  "command": "export OPENROUTER_API_KEY=\"sk-or-REDACTADO\"\ncd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os\ntimeout 10 uvicorn src.core.main:app --host 0.0.0.0 --port 8000 2>&1 | head -20",
   "timeout": 15000,
   "workdir": "/home/mystic/Documentos/Sonora Digital Corp"
 }
@@ -4639,7 +4639,7 @@ Parece que el comando no está produciendo salida. Déjame intentar de otra mane
 **Input:**
 ```json
 {
-  "command": "export OPENROUTER_API_KEY=\"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\"\ncd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os\npython3 -c \"\nfrom src.core.main import app\nfrom fastapi.testclient import TestClient\nclient = TestClient(app)\nresp = client.get('/')\nprint('Status:', resp.status_code)\nprint('Body:', resp.json()[:100] if resp.json() else 'empty')\n\" 2>&1",
+  "command": "export OPENROUTER_API_KEY=\"sk-or-REDACTADO\"\ncd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os\npython3 -c \"\nfrom src.core.main import app\nfrom fastapi.testclient import TestClient\nclient = TestClient(app)\nresp = client.get('/')\nprint('Status:', resp.status_code)\nprint('Body:', resp.json()[:100] if resp.json() else 'empty')\n\" 2>&1",
   "timeout": 15000,
   "workdir": "/home/mystic/Documentos/Sonora Digital Corp"
 }
@@ -4695,7 +4695,7 @@ La API no está corriendo en el puerto 8000. Déjame verificar por qué no se in
 **Input:**
 ```json
 {
-  "command": "export OPENROUTER_API_KEY=\"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\"\ncd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os\npython3 -c \"\nimport uvicorn\nfrom src.core.main import app\nprint('App loaded OK')\n\" 2>&1",
+  "command": "export OPENROUTER_API_KEY=\"sk-or-REDACTADO\"\ncd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os\npython3 -c \"\nimport uvicorn\nfrom src.core.main import app\nprint('App loaded OK')\n\" 2>&1",
   "timeout": 15000,
   "workdir": "/home/mystic/Documentos/Sonora Digital Corp"
 }
@@ -4723,7 +4723,7 @@ El comando se está quedando sin salida y sin timeout. Parece que hay un problem
 **Input:**
 ```json
 {
-  "command": "export OPENROUTER_API_KEY=\"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\"\ncd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os\ntimeout 30 python3 -c \"\nimport sys\nsys.stdout.flush()\nprint('Starting import...', flush=True)\nfrom src.connectors.fastembed_connector import FastEmbedConnector\nprint('FastEmbedConnector imported', flush=True)\nfrom src.core.main import app\nprint('App imported', flush=True)\nprint('Success!')\n\" 2>&1 || echo \"TIMEOUT or ERROR\"",
+  "command": "export OPENROUTER_API_KEY=\"sk-or-REDACTADO\"\ncd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os\ntimeout 30 python3 -c \"\nimport sys\nsys.stdout.flush()\nprint('Starting import...', flush=True)\nfrom src.connectors.fastembed_connector import FastEmbedConnector\nprint('FastEmbedConnector imported', flush=True)\nfrom src.core.main import app\nprint('App imported', flush=True)\nprint('Success!')\n\" 2>&1 || echo \"TIMEOUT or ERROR\"",
   "timeout": 45000,
   "workdir": "/home/mystic/Documentos/Sonora Digital Corp"
 }
@@ -4751,7 +4751,7 @@ La importación funciona correctamente. El problema anterior fue que FastEmbed d
 **Input:**
 ```json
 {
-  "command": "(export OPENROUTER_API_KEY=\"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\"; cd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os; nohup uvicorn src.core.main:app --host 0.0.0.0 --port 8000 > /tmp/harvis_api.log 2>&1 &)\necho \"PID: $!\"\nsleep 10\ncat /tmp/harvis_api.log\nss -tlnp | grep 8000",
+  "command": "(export OPENROUTER_API_KEY=\"sk-or-REDACTADO\"; cd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os; nohup uvicorn src.core.main:app --host 0.0.0.0 --port 8000 > /tmp/harvis_api.log 2>&1 &)\necho \"PID: $!\"\nsleep 10\ncat /tmp/harvis_api.log\nss -tlnp | grep 8000",
   "timeout": 20000,
   "workdir": "/home/mystic/Documentos/Sonora Digital Corp"
 }
@@ -4825,7 +4825,7 @@ El archivo de log está vacío, lo que significa que no se ejecutó correctament
 **Input:**
 ```json
 {
-  "command": "export OPENROUTER_API_KEY=\"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\"\ncd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os\npython3 -m uvicorn src.core.main:app --host 0.0.0.0 --port 8000 --log-level info > /tmp/harvis_api.log 2>&1 &\necho \"PID: $!\"\nsleep 15\ncat /tmp/harvis_api.log\nss -tlnp | grep 8000",
+  "command": "export OPENROUTER_API_KEY=\"sk-or-REDACTADO\"\ncd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os\npython3 -m uvicorn src.core.main:app --host 0.0.0.0 --port 8000 --log-level info > /tmp/harvis_api.log 2>&1 &\necho \"PID: $!\"\nsleep 15\ncat /tmp/harvis_api.log\nss -tlnp | grep 8000",
   "timeout": 25000,
   "workdir": "/home/mystic/Documentos/Sonora Digital Corp"
 }
@@ -4874,7 +4874,7 @@ La API no está corriendo. Parece que hay un problema. Déjame intentar ejecutar
 **Input:**
 ```json
 {
-  "command": "export OPENROUTER_API_KEY=\"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\"\ncd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os\ntimeout 15 python3 -m uvicorn src.core.main:app --host 0.0.0.0 --port 8000 2>&1 || true",
+  "command": "export OPENROUTER_API_KEY=\"sk-or-REDACTADO\"\ncd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os\ntimeout 15 python3 -m uvicorn src.core.main:app --host 0.0.0.0 --port 8000 2>&1 || true",
   "timeout": 20000,
   "workdir": "/home/mystic/Documentos/Sonora Digital Corp"
 }
@@ -4923,7 +4923,7 @@ El proceso 287704 no existe y el log está vacío. Esto significa que uvicorn se
 **Input:**
 ```json
 {
-  "command": "export OPENROUTER_API_KEY=\"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\"\ncd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os\npython3 -c \"\nimport sys\nprint('Python path:', sys.path[:3], flush=True)\nprint('Starting import check...', flush=True)\nfrom src.connectors.fastembed_connector import FastEmbedConnector\nprint('FastEmbedConnector OK', flush=True)\nfrom src.core.main import app\nprint('app OK', flush=True)\nprint('ALL OK', flush=True)\n\" 2>&1",
+  "command": "export OPENROUTER_API_KEY=\"sk-or-REDACTADO\"\ncd /home/mystic/Documentos/Sonora\\ Digital\\ Corp/harvis-os\npython3 -c \"\nimport sys\nprint('Python path:', sys.path[:3], flush=True)\nprint('Starting import check...', flush=True)\nfrom src.connectors.fastembed_connector import FastEmbedConnector\nprint('FastEmbedConnector OK', flush=True)\nfrom src.core.main import app\nprint('app OK', flush=True)\nprint('ALL OK', flush=True)\n\" 2>&1",
   "timeout": 30000,
   "workdir": "/home/mystic/Documentos/Sonora Digital Corp"
 }

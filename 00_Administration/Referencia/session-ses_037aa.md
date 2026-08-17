@@ -2438,7 +2438,7 @@ Here is the complete analysis of all files and directory checks in `/home/mystic
 - **Key Activities:**
   - Fixed TTS server: edge-tts was not found in systemd PATH; added full path `/home/mystic/.local/bin/edge-tts`
   - Committed fix to GitHub: `2e8505f fix: TTS server full path para edge-tts`
-  - Configured @MysticUnity_bot notification bot with valid token `8851813996:AAHwuIwhMlI0GW3FKFQGqcjKXgwI2QpXLK8`
+  - Configured @MysticUnity_bot notification bot with valid token `TELEGRAM_TOKEN_REDACTADO`
   - Created systemd service `sdc-aztrotech-notif.service` and enabled it
   - Updated AGENTS.md with dual bot configuration
   - System status report showing all services active:
@@ -2504,7 +2504,7 @@ The following .odt files are in `/home/mystic/Documentos/Sonora Digital Corp/Ref
 - Error: not well-formed XML -- appears corrupted or contains non-ODT content
 
 ### untitled_0.odt (143 lines)
-- Telegram bot token: `8408996016:AAH0wcrs812ilxrdInIaFoCrB9kyqOy0OTc`
+- Telegram bot token: `TELEGRAM_TOKEN_REDACTADO`
 - Full Python bot code for "Bazar de Acordeones HMO" -- a rules-based Telegram bot with SQLite database
 - **SENSITIVE DATA** - contains bot token in plaintext
 

@@ -989,7 +989,7 @@ Let me check the specific file mentioned in the alert.
 
 **Output:**
 ```
-HEAD:00_Administration/os sesion natty 5 agosto 2026.md:26:- **OpenRouter 403** "Key limit exceeded": key `[REDACTED: clave OpenRouter revocada]` (única en `~/.config/sonora/env.local`). Backup `[REDACTED: clave OpenRouter backup]...` → 401 User not found. Afecta chat + visión (gemini-3.6-flash etc.).
+HEAD:00_Administration/os sesion natty 5 agosto 2026.md:26:- **OpenRouter 403** "Key limit exceeded": key `sk-or-REDACTADO` (única en `~/.config/sonora/env.local`). Backup `[REDACTED: clave OpenRouter backup]...` → 401 User not found. Afecta chat + visión (gemini-3.6-flash etc.).
 
 ```
 
@@ -997,7 +997,7 @@ HEAD:00_Administration/os sesion natty 5 agosto 2026.md:26:- **OpenRouter 403** 
 
 ## Assistant (Mystic-Ceo · Laguna S 2.1 Free · 15.1s)
 
-Found it! The file `00_Administration/os sesion natty 5 agosto 2026.md` at line 26 contains a plaintext OpenRouter API key: `[REDACTED: clave OpenRouter revocada]`.
+Found it! The file `00_Administration/os sesion natty 5 agosto 2026.md` at line 26 contains a plaintext OpenRouter API key: `sk-or-REDACTADO`.
 
 This is a sensitive credential exposed in the repository history. I need to remove it from the file. However, this is a reference/log file that documents past debugging notes.
 
@@ -1018,7 +1018,7 @@ Let me check if this key is the same one that was already rotated and mentioned 
 - **websearch:** funcional (se usó para investigación médica).
 
 ### Bloqueado
-- **OpenRouter 403** "Key limit exceeded": key `[REDACTED: clave OpenRouter revocada]` (única en `~/.config/sonora/env.local`). Backup `[REDACTED: clave OpenRouter backup]...` → 401 User not found. Afecta chat + visión (gemini-3.6-flash etc.).
+- **OpenRouter 403** "Key limit exceeded": key `sk-or-REDACTADO` (única en `~/.config/sonora/env.local`). Backup `[REDACTED: clave OpenRouter backup]...` → 401 User not found. Afecta chat + visión (gemini-3.6-flash etc.).
 - **FAL 401** invalid key credentials: `FAL_KEY=[REDACTED]` contra `fal.run` y `queue.fal.run` (flux/schnell). Sin Stable Diffusion/ComfyUI local (puerto 8188 sin respuesta).
 - **Modelo actual no soporta input de imagen** → no puedo ver la foto de Naty directamente.
 - Ollama solo tiene `all-minilm` y `nomic-embed-text` (sin modelo de visión).
@@ -1037,7 +1037,7 @@ I can see the exposed API keys. Let me redact them to resolve the security alert
 **Input:**
 ```json
 {
-  "command": "sed -i 's|`[REDACTED: clave OpenRouter revocada]`|`[REDACTED: clave revocada]`|g' \"00_Administration/os sesion natty 5 agosto 2026.md\" && sed -i 's|`[REDACTED: clave OpenRouter backup]...`|`[REDACTED: clave backup]`|g' \"00_Administration/os sesion natty 5 agosto 2026.md\" && sed -i 's|`FAL_KEY=[REDACTED]`|`FAL_KEY=[REDACTED]`|g' \"00_Administration/os sesion natty 5 agosto 2026.md\" && git add \"00_Administration/os sesion natty 5 agosto 2026.md\" && git commit --no-verify -m \"security: redact exposed API keys in session log\" && echo \"keys redacted\""
+  "command": "sed -i 's|`sk-or-REDACTADO`|`[REDACTED: clave revocada]`|g' \"00_Administration/os sesion natty 5 agosto 2026.md\" && sed -i 's|`[REDACTED: clave OpenRouter backup]...`|`[REDACTED: clave backup]`|g' \"00_Administration/os sesion natty 5 agosto 2026.md\" && sed -i 's|`FAL_KEY=[REDACTED]`|`FAL_KEY=[REDACTED]`|g' \"00_Administration/os sesion natty 5 agosto 2026.md\" && git add \"00_Administration/os sesion natty 5 agosto 2026.md\" && git commit --no-verify -m \"security: redact exposed API keys in session log\" && echo \"keys redacted\""
 }
 ```
 
@@ -1482,7 +1482,7 @@ I'll outline both options clearly so they can decide how to proceed.</think>I ne
 **Input:**
 ```json
 {
-  "command": "echo \"=== Testing OpenRouter key ===\" && curl -s --connect-timeout 5 -H \"Authorization: Bearer [REDACTED: clave OpenRouter revocada]\" https://openrouter.ai/api/v1/auth/key 2>/dev/null | python3 -c \"import sys,json; d=json.load(sys.stdin); print(d.get('data',{}).get('label','N/A'), d.get('data',{}).get('disabled', 'N/A'), d.get('data',{}).get('limit_seconds',{}).get('used','N/A'), 'of', d.get('data',{}).get('limit_seconds',{}).get('limit','N/A'))\" 2>/dev/null || echo \"Key invalid or 403\"\necho \"=== Testing FAL key ===\" && curl -s --connect-timeout 5 \"https://fal.run/key-info\" -H \"Authorization: Basic $(echo -n '[REDACTED: FAL key]:f1b8ddaff0bbdda7361ab6a400de27c4' | base64)\" 2>/dev/null | head -1 || echo \"FAL key test - check manually\""
+  "command": "echo \"=== Testing OpenRouter key ===\" && curl -s --connect-timeout 5 -H \"Authorization: Bearer sk-or-REDACTADO\" https://openrouter.ai/api/v1/auth/key 2>/dev/null | python3 -c \"import sys,json; d=json.load(sys.stdin); print(d.get('data',{}).get('label','N/A'), d.get('data',{}).get('disabled', 'N/A'), d.get('data',{}).get('limit_seconds',{}).get('used','N/A'), 'of', d.get('data',{}).get('limit_seconds',{}).get('limit','N/A'))\" 2>/dev/null || echo \"Key invalid or 403\"\necho \"=== Testing FAL key ===\" && curl -s --connect-timeout 5 \"https://fal.run/key-info\" -H \"Authorization: Basic $(echo -n '[REDACTED: FAL key]:f1b8ddaff0bbdda7361ab6a400de27c4' | base64)\" 2>/dev/null | head -1 || echo \"FAL key test - check manually\""
 }
 ```
 

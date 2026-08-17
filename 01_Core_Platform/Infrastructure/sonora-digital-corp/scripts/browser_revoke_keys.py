@@ -68,7 +68,7 @@ async def main():
             print("   1. Abre Chrome y ve a https://openrouter.ai/keys")
             print("   2. Inicia sesión con: perrykingla.69@gmail.com")
             print("   3. Revoca TODAS las keys excepto:")
-            print("      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")
+            print("      sk-or-REDACTADO")
             print("\n📸 Screenshot de login guardado")
             await page.screenshot(path=os.path.join(SCREENSHOT_DIR, "02-login-page.png"))
             await context.close()

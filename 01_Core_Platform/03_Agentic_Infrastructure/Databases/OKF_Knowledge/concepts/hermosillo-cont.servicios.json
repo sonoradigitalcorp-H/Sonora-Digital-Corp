@@ -2,24 +2,131 @@
   "id": "hermosillo-cont.servicios",
   "tenant": "Hermosillo Contabilidad",
   "name": "Servicios oficiales de Hermosillo Contabilidad (Nathaly)",
-  "aliases": ["contabilidad", "administración", "manifestación de importación", "importacion", "marketing", "SAT", "cita", "citas SAT", "declaración", "impuestos", "IVA", "ISR", "factura", "nómina", "despacho", "Nathaly"],
+  "aliases": [
+    "contabilidad",
+    "administración",
+    "manifestación de importación",
+    "importacion",
+    "marketing",
+    "SAT",
+    "cita",
+    "citas SAT",
+    "declaración",
+    "impuestos",
+    "IVA",
+    "ISR",
+    "factura",
+    "nómina",
+    "despacho",
+    "Nathaly"
+  ],
   "definition": "Catálogo oficial de servicios de Hermosillo Contabilidad (Nathaly, contadora en Hermosillo). Responder SOLO con los servicios de esta lista. NUNCA inventar precios: los costos exactos los define Nathaly en llamada o WhatsApp.",
   "rules": [
-    {"id": "R1", "text": "NUNCA inventar precios. Si preguntan costo → 'El costo exacto te lo da Nathaly en una llamada o WhatsApp. ¿Te agendo una consulta rápida?'"},
-    {"id": "R2", "text": "SIEMPRE ofrecer el diagnóstico inicial GRATIS (5 preguntas rápidas) como primer paso."},
-    {"id": "R3", "text": "Citas ante el SAT: agendar con fecha/hora confirmada en America/Hermosillo y notificar a Nathaly."},
-    {"id": "R4", "text": "Temas fiscales/legales técnicos → escalar a Nathaly. El bot da info general, no asesoría definitiva."},
-    {"id": "R5", "text": "Manifestación de importación = trámite de pedimento/importación. Confirmar datos del cliente (RFC, tipo de mercancía) antes de escalar."}
+    {
+      "id": "R1",
+      "text": "NUNCA inventar precios. Si preguntan costo → 'El costo exacto te lo da Nathaly en una llamada o WhatsApp. ¿Te agendo una consulta rápida?'"
+    },
+    {
+      "id": "R2",
+      "text": "SIEMPRE ofrecer el diagnóstico inicial GRATIS (5 preguntas rápidas) como primer paso."
+    },
+    {
+      "id": "R3",
+      "text": "Citas ante el SAT: agendar con fecha/hora confirmada en America/Hermosillo y notificar a Nathaly."
+    },
+    {
+      "id": "R4",
+      "text": "Temas fiscales/legales técnicos → escalar a Nathaly. El bot da info general, no asesoría definitiva."
+    },
+    {
+      "id": "R5",
+      "text": "Manifestación de importación = trámite de pedimento/importación. Confirmar datos del cliente (RFC, tipo de mercancía) antes de escalar."
+    }
   ],
   "servicios": [
-    {"id": "contabilidad", "nombre": "Contabilidad", "descripcion": "Llevar contabilidad mensual, estados financieros, IVA e ISR, cumplimiento ante el SAT.", "tipo": "servicio_recurrente"},
-    {"id": "administracion", "nombre": "Administración", "descripcion": "Gestión administrativa del negocio: nómina, flujo de caja, control de gastos e ingresos.", "tipo": "servicio_recurrente"},
-    {"id": "manifestacion_importacion", "nombre": "Manifestación de Importación", "descripcion": "Trámite completo de manifestación de importación / pedimento, papeles y requisitos.", "tipo": "tramite"},
-    {"id": "marketing", "nombre": "Marketing", "descripcion": "Servicios de marketing para negocios: presencia, campañas y crecimiento.", "tipo": "servicio"},
-    {"id": "consultas_sat", "nombre": "Consultas ante el SAT", "descripcion": "Consultas, aclaraciones y trámites ante el SAT a nombre del cliente.", "tipo": "tramite"},
-    {"id": "citas_sat", "nombre": "Citas ante el SAT", "descripcion": "Agendar citas ante el SAT a nombre del cliente, con confirmación de fecha y hora.", "tipo": "tramite"}
+    {
+      "id": "contabilidad",
+      "nombre": "Contabilidad",
+      "descripcion": "Llevar contabilidad mensual, estados financieros, IVA e ISR, cumplimiento ante el SAT.",
+      "tipo": "servicio_recurrente"
+    },
+    {
+      "id": "administracion",
+      "nombre": "Administración",
+      "descripcion": "Gestión administrativa del negocio: nómina, flujo de caja, control de gastos e ingresos.",
+      "tipo": "servicio_recurrente"
+    },
+    {
+      "id": "manifestacion_importacion",
+      "nombre": "Manifestación de Importación",
+      "descripcion": "Trámite completo de manifestación de importación / pedimento, papeles y requisitos.",
+      "tipo": "tramite"
+    },
+    {
+      "id": "marketing",
+      "nombre": "Marketing",
+      "descripcion": "Servicios de marketing para negocios: presencia, campañas y crecimiento.",
+      "tipo": "servicio"
+    },
+    {
+      "id": "consultas_sat",
+      "nombre": "Consultas ante el SAT",
+      "descripcion": "Consultas, aclaraciones y trámites ante el SAT a nombre del cliente.",
+      "tipo": "tramite"
+    },
+    {
+      "id": "citas_sat",
+      "nombre": "Citas ante el SAT",
+      "descripcion": "Agendar citas ante el SAT a nombre del cliente, con confirmación de fecha y hora.",
+      "tipo": "tramite"
+    }
   ],
   "diagnostico": [
-    {"servicio": "Diagnóstico Inicial Gratis", "precio": 0, "duracion": "5 preguntas rápidas", "descripcion": "Identifica qué necesita tu negocio: contabilidad, administración, importaciones, marketing o trámites SAT."}
-  ]
+    {
+      "servicio": "Diagnóstico Inicial Gratis",
+      "precio": 0,
+      "duracion": "5 preguntas rápidas",
+      "descripcion": "Identifica qué necesita tu negocio: contabilidad, administración, importaciones, marketing o trámites SAT."
+    }
+  ],
+  "tables": {
+    "servicios": [
+      {
+        "id": "contabilidad",
+        "nombre": "Contabilidad",
+        "descripcion": "Llevar contabilidad mensual, estados financieros, IVA e ISR, cumplimiento ante el SAT.",
+        "tipo": "servicio_recurrente"
+      },
+      {
+        "id": "administracion",
+        "nombre": "Administración",
+        "descripcion": "Gestión administrativa del negocio: nómina, flujo de caja, control de gastos e ingresos.",
+        "tipo": "servicio_recurrente"
+      },
+      {
+        "id": "manifestacion_importacion",
+        "nombre": "Manifestación de Importación",
+        "descripcion": "Trámite completo de manifestación de importación / pedimento, papeles y requisitos.",
+        "tipo": "tramite"
+      },
+      {
+        "id": "marketing",
+        "nombre": "Marketing",
+        "descripcion": "Servicios de marketing para negocios: presencia, campañas y crecimiento.",
+        "tipo": "servicio"
+      },
+      {
+        "id": "consultas_sat",
+        "nombre": "Consultas ante el SAT",
+        "descripcion": "Consultas, aclaraciones y trámites ante el SAT a nombre del cliente.",
+        "tipo": "tramite"
+      },
+      {
+        "id": "citas_sat",
+        "nombre": "Citas ante el SAT",
+        "descripcion": "Agendar citas ante el SAT a nombre del cliente, con confirmación de fecha y hora.",
+        "tipo": "tramite"
+      }
+    ]
+  }
 }
