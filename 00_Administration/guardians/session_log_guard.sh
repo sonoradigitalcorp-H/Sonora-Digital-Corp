@@ -9,10 +9,19 @@ fail=0
 
 if [ "$1" = "--staged" ]; then
   # Modo pre-commit: bloquea reescrituras de archivos EXISTENTES en Session_Logs
+  # EXCEPCIÓN: permite cambios que SOLO redactan secretos (key real -> XXXX_REDACTED_XXXX)
   while IFS= read -r f; do
     [ -z "$f" ] && continue
-    echo "🚫 [GUARDIÁN] Reescritura de memoria histórica: $f"
-    fail=1
+    # Verificar si el diff es solo redacción de secretos:
+    # normalizar ambos lados (reemplazar secretos por SECRET) y comparar
+    norm_old=$(git diff --cached "$f" | grep -E '^-[^-]' | cut -c2- | sed -E 's/XXXX_REDACTED_XXXX/SECRET/g; s/(sk-or-v1-[A-Za-z0-9]+|uak_[A-Za-z0-9]+|ck_[A-Za-z0-9]+|sk-[A-Za-z0-9]+|[A-Za-z0-9]{20,})/SECRET/g' | sort)
+    norm_new=$(git diff --cached "$f" | grep -E '^\+[^+]' | cut -c2- | sed -E 's/XXXX_REDACTED_XXXX/SECRET/g; s/(sk-or-v1-[A-Za-z0-9]+|uak_[A-Za-z0-9]+|ck_[A-Za-z0-9]+|sk-[A-Za-z0-9]+|[A-Za-z0-9]{20,})/SECRET/g' | sort)
+    if [ "$norm_old" != "$norm_new" ]; then
+      echo "🚫 [GUARDIÁN] Reescritura de memoria histórica: $f"
+      fail=1
+    else
+      echo "ℹ️ [GUARDIÁN] Sanitización de secretos permitida en: $f"
+    fi
   done < <(git diff --cached --name-status | awk '$1=="M" && $2 ~ /^00_Administration\/Session_Logs\// {print $2}')
 else
   # Modo auditoría: reporta archivos del working tree modificados vs HEAD

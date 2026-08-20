@@ -1781,7 +1781,7 @@ The gateway restarted but no specific logs about the new agent loading. Let me c
 **Input:**
 ```json
 {
-  "command": "# Check if the agent is registered in MCP\ncurl -s -X POST \"https://connect.composio.dev/mcp\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json, text/event-stream\" \\\n  -H \"x-consumer-api-key: ck_UY0Z9y9jVNgijBQJoM4v\" \\\n  -d '{\"jsonrpc\":\"2.0\",\"id\":20,\"method\":\"tools/call\",\"params\":{\"name\":\"COMPOSIO_SEARCH_TOOLS\",\"arguments\":{\"query\":\"agent sonora digital corp onboarding\"}}}' 2>&1 | head -c 2000"
+  "command": "# Check if the agent is registered in MCP\ncurl -s -X POST \"https://connect.composio.dev/mcp\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json, text/event-stream\" \\\n  -H \"x-consumer-api-key: ck_XXXX_REDACTED_XXXX\" \\\n  -d '{\"jsonrpc\":\"2.0\",\"id\":20,\"method\":\"tools/call\",\"params\":{\"name\":\"COMPOSIO_SEARCH_TOOLS\",\"arguments\":{\"query\":\"agent sonora digital corp onboarding\"}}}' 2>&1 | head -c 2000"
 }
 ```
 
@@ -1804,7 +1804,7 @@ The MCP search is not finding the Hermes agent tools. The Hermes agents are expo
 **Input:**
 ```json
 {
-  "command": "# Check Hermes agents MCP\ncurl -s -X POST \"https://connect.composio.dev/mcp\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json, text/event-stream\" \\\n  -H \"x-consumer-api-key: ck_UY0Z9y9jVNgijBQJoM4v\" \\\n  -d '{\"jsonrpc\":\"2.0\",\"id\":21,\"method\":\"tools/call\",\"params\":{\"name\":\"COMPOSIO_SEARCH_TOOLS\",\"arguments\":{\"query\":\"hermes agent list\"}}}' 2>&1 | head -c 2000"
+  "command": "# Check Hermes agents MCP\ncurl -s -X POST \"https://connect.composio.dev/mcp\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Accept: application/json, text/event-stream\" \\\n  -H \"x-consumer-api-key: ck_XXXX_REDACTED_XXXX\" \\\n  -d '{\"jsonrpc\":\"2.0\",\"id\":21,\"method\":\"tools/call\",\"params\":{\"name\":\"COMPOSIO_SEARCH_TOOLS\",\"arguments\":{\"query\":\"hermes agent list\"}}}' 2>&1 | head -c 2000"
 }
 ```
 

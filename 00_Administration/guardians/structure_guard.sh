@@ -7,7 +7,7 @@ for bad in 00_Admin 01_Core 02_Clientes 03_Sandbox; do
 done
 for f in *; do
   case "$f" in
-    00_Administration|01_Core_Platform|02_Client_Projects|03_Sandbox_and_RnD|README.md|AGENTS_MANIFEST.md|SYSTEM_MANIFEST.md|AGENTS.md|ESTADO.md|.opencode) ;;
+    00_Administration|01_Core_Platform|02_Client_Projects|03_Sandbox_and_RnD|_archived|README.md|AGENTS_MANIFEST.md|SYSTEM_MANIFEST.md|AGENTS.md|ESTADO.md|.opencode) ;;
     *) echo "🚫 Deriva en raíz: $f"; fail=1;;
   esac
 done

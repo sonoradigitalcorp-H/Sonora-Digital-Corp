@@ -3002,7 +3002,7 @@ no email provider keys
 
 === composio conexiones activas (user_data) ===
 {
- "api_key": "uak_KaP7IrCL2x0yVsDKjwo9rBsse91jj8opVSQXSE7c2oq",
+ "api_key": "uak_XXXX_REDACTED_XXXX",
  "base_url": "https://backend.composio.dev",
  "web_url": "https://dashboard.composio.dev/",
  "org_id": "ok_yRQK-yYCPN9c",

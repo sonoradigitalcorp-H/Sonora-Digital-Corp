@@ -1,4 +1,15 @@
-# ESTADO VIVO (se actualiza con /mejora — leer SIEMPRE al arrancar)
+# ESTADO VIVO
+
+## AZTROTECH BAJADO (2026-08-20)
+- **Aztrotech FUERA de servicio**: solo quedan sonoradigitalcorp.com + Nathaly Hermosillo.
+- Proceso `wacli_stdio.py` matado (0 procesos aztrotech). Crons de Aztrotech (ventas-cesar + Aztrotech_Citas x3) eliminados, backup en /tmp/crontab.bak-aztro-20260820.
+- Token `TELEGRAM_AZTROTECH_TOKEN` comentado en ~/.hermes/.env (backup .env.bak-aztro-20260820).
+- Tenant `aztrotech` eliminado de tenants.json; agente `cesar` eliminado de agents_registry.json; dir movido a ~/.hermes/agents/_archived/cesar_20260820.
+- tenant_router.py sin refs aztrotech (0). Skills cesar-* (8) archivados en ~/.hermes/skills/clients/_archived_aztro_20260820/. Skill `aztrotech-citas` CONSERVADO (lo usan nathaly + consultorio-sonora). Skill `ventas-cesar` archivado en .opencode/skills/mystic/_archived_ventas-cesar_20260820.
+- Proyecto movido: `02_Client_Projects/Aztrotech` → `_archived/Aztrotech_20260820/`.
+- Pendiente: VPS OVH sigue caído (página sonoradigitalcorp.com down desde 2026-08-19 16:20) — requiere panel OVH zona CA.
+
+ (se actualiza con /mejora — leer SIEMPRE al arrancar)
 
 - Producción: VPS 187.124.85.191, usuarios Nathaly/Marco/TripleR activos, CI/CD despliega desde main.
 - Repo: rama `master` local; GitHub remoto `sonoradigitalcorp-H/Sonora-Digital-Corp`. Rama `next` pendiente de crear/pushear (main intocada).
@@ -108,7 +119,7 @@
 - **VPS OVH nginx sin config sonoradigitalcorp.com**: Docker nginx (sdc-nginx) sirve /mnt/vps-data/html con config default de Debian. DNS apunta a VPS (149.56.46.173) pero nginx no tiene virtual host para nuestro dominio. Config debe ir en /mnt/vps-data/nginx.conf (montado como /etc/nginx/conf.d/default.conf en container).
 - **Website files copiados a VPS**: index.html, chat.html, paquetes.html, agentes.html en /mnt/vps-data/html/ via scp.
 - **Redact.py fix para Python 3.10**: possessive quantifiers (++,*+) no soportados → reemplazados con +,* en agent/redact.py.
-- **MCP Composio ACTIVADO**: config.yaml → composio.enabled=true + key ck_UY0Z9y9jVNgijBQJoM4v. Gateway reiniciado. Tools MCP: SEARCH, MANAGE_CONNECTIONS, WAIT, GET_SCHEMAS disponibles.
+- **MCP Composio ACTIVADO**: config.yaml → composio.enabled=true + key ck_XXXX_REDACTED_XXXX. Gateway reiniciado. Tools MCP: SEARCH, MANAGE_CONNECTIONS, WAIT, GET_SCHEMAS disponibles.
 - **Meta Webhook VPS 24/7**: `wa_webhook.py` deployado en VPS :8080 → nginx `/webhook/meta` → sonoradigitalcorp.com/webhook/meta (HTTPS, verificación OK). Service `meta-webhook.service` (systemd, VPS).
 - **Conexiones Composio ACTIVAS**: Facebook ✅, Instagram ✅, WhatsApp ✅, YouTube ✅ (via MCP + OAuth). LinkedIn pendiente.
 - **WhatsApp Webhook suscrito**: WABA `1158874942978786` + verify_token `d49a07131999c48d4be19c7dd3f8f28d` + callback `https://sonoradigitalcorp.com/webhook/meta`. Intentado via Composio SDK (requiere toolkit_version + dangerously_skip_version_check).
