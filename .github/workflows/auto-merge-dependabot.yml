@@ -1,0 +1,35 @@
+# Auto-merge Dependabot — patch/minor automático, major humano
+# Docs: https://docs.github.com/en/code-security/dependabot/working-with-dependabot/automating-dependabot-with-github-actions
+# Guard: .github/workflows/auto-merge-dependabot.yml
+
+name: auto-merge-dependabot
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  auto-merge:
+    runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]'
+    steps:
+      - name: Metadata de Dependabot
+        id: metadata
+        uses: dependabot/fetch-metadata@v2
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Auto-merge patch/minor (no major)
+        run: |
+          if [[ "${{ steps.metadata.outputs.update-type }}" =~ version-update:semver-(patch|minor) ]]; then
+            gh pr merge --auto --squash "$PR_URL"
+            echo "✅ Auto-merged ${{ steps.metadata.outputs.update-type }}"
+          else
+            echo "⏸️ Major — requiere revisión humana"
+          fi
+        env:
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

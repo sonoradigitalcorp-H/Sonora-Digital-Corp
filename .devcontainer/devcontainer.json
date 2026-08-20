@@ -1,0 +1,38 @@
+# Dev Container — onboarding SDC en <1 min (local VS Code + Codespaces)
+# Guard: .devcontainer/devcontainer.json
+{
+  "name": "Sonora Digital Corp",
+  "image": "mcr.microsoft.com/devcontainers/python:3.11",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "20"
+    },
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "installZsh": true
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "ms-python.black-formatter",
+        "github.copilot",
+        "github.vscode-github-actions"
+      ],
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "editor.formatOnSave": true
+      }
+    }
+  },
+  "postCreateCommand": "pip install --upgrade pip && pip install -r requirements-dev.txt",
+  "forwardPorts": [8000, 8642, 11434],
+  "mounts": [
+    "source=${localEnv:HOME}/.hermes/.env,target=/workspace/.env.local,type=bind"
+  ],
+  "remoteEnv": {
+    "OPENROUTER_API_KEY": "${localEnv:OPENROUTER_API_KEY}",
+    "OPENCODE_ZEN_API_KEY": "${localEnv:OPENCODE_ZEN_API_KEY}"
+  }
+}

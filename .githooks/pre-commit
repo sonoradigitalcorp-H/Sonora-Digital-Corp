@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Anticuerpo pre-commit: bloquea caos entrante
 cd "$(git rev-parse --show-toplevel)" || exit 1
-DIRS=" 00_Administration 01_Core_Platform 02_Client_Projects 03_Sandbox_and_RnD _archived .github .githooks .opencode "
+DIRS=" 00_Administration 01_Core_Platform 02_Client_Projects 03_Sandbox_and_RnD _archived .github .githooks .opencode .devcontainer "
 FILES=" README.md AGENTS_MANIFEST.md SYSTEM_MANIFEST.md AGENTS.md ESTADO.md .gitignore "
 v=0
 while IFS= read -r -d '' f; do
@@ -17,5 +17,11 @@ if [ $v -ne 0 ]; then
   exit 1
 fi
 # Ley de Memoria Histórica: Session_Logs/ es append-only (nunca reescribir)
-bash "00_Administration/guardians/session_log_guard.sh" --staged
-exit $?
+bash "00_Administration/guardians/session_log_guard.sh" --staged || exit 1
+# SpecJudge: specs SDD nuevas deben tener criterios de aceptación
+for spec in $(git diff --cached --name-only --diff-filter=A | grep "Specs/SDD/.*\.md$"); do
+  grep -q "Criterios de aceptación\|## Criterios" "$spec" || {
+    echo "🚫 [SPECJUDGE] $spec sin criterios de aceptación"; exit 1
+  }
+done
+exit 0

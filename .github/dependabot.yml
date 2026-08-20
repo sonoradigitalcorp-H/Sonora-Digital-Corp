@@ -1,0 +1,39 @@
+# Dependabot config — Sonora Digital Corp
+# Docs: https://docs.github.com/en/code-security/reference/supply-chain-security/dependabot-options-reference
+version: 2
+updates:
+  # Python (pip) — principal del stack SDC
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/Hermosillo"
+    groups:
+      python-runtime:
+        patterns: ["*"]
+        update-types: ["patch", "minor"]   # major = revisión humana (regla comunidad)
+    open-pull-requests-limit: 5
+    labels: ["deps", "python"]
+
+  # GitHub Actions — actualizar SHA pinning automáticamente
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    groups:
+      actions-all:
+        patterns: ["*"]
+    labels: ["deps", "ci"]
+
+  # Docker (si se usa en VPS/despliegues)
+  - package-ecosystem: "docker"
+    directory: "/"
+    schedule:
+      interval: "monthly"
+    labels: ["deps", "docker"]
+
+# Nota: Dependabot security updates se activan en Settings → Code security
+# (abre PRs automáticos con fix mínimo para CVEs, sin config YAML adicional)
