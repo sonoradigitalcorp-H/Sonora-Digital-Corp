@@ -12,7 +12,7 @@
  (se actualiza con /mejora — leer SIEMPRE al arrancar)
 
 - Producción: VPS 187.124.85.191, usuarios Nathaly/Marco/TripleR activos, CI/CD despliega desde main.
-- Repo: rama `master` local; GitHub remoto `sonoradigitalcorp-H/Sonora-Digital-Corp`. Rama `next` pendiente de crear/pushear (main intocada).
+- **RAMA DE PRODUCCIÓN = `next`** (2026-08-20): GitHub `sonoradigitalcorp-H/Sonora-Digital-Corp`, 61 commits, secretos limpiados con filter-repo, sincronizada (5b86049d). `main` = MONOREPO LEGACY CONGELADO (historia NO relacionada, 583 vulns heredadas de apps/clients/products/tenants que en next viven en _archived/ o rutas canónicas) — NO se toca ni se mergea; documentado como histórico. No hay PR posible next→main (historias no relacionadas).
 - **Modelo LLM (2026-08-12)**: `deepseek/deepseek-v4-flash-0731` vía OpenRouter en `~/.hermes/config.yaml` + `config.json`. Key OpenRouter activa en ~/.hermes/.env. Ollama VPS OVH (149.56.46.173) disponible para embeddings ($0). Verificar créditos antes de asumir fallo.
 - Engram: v1.19.0, plugin opencode instalado (memoria persistente entre sesiones). 
 - OpenCode COSUDE: AGENTS.md + ESTADO.md + /idea /validar /mejora /contexto + @orquestador @clientes @redes @voz + skill estilo-mystic. Reiniciar opencode para cargar.
