@@ -1,45 +1,38 @@
 #!/usr/bin/env bash
-# memory-guard.sh — Sonora Digital Corp
-# Evita freezes en laptop 3.3GB RAM (lecciones sesión 2026-08-10)
-# 1) Mata procesos DUPLICADOS de openclaw gateway (crash-loop breaker spawns)
-# 2) Alerta cuando RAM disponible < umbral (swap-thrash/OOM killer)
-# 3) Mata procesos MCP/dev no esenciales si crítica
-# Corre via cron cada 5 min. LOG: /tmp/memory-guard.log
+# memory-guard.sh — Sonora Digital Corp (actualizado 2026-08-22, stack Hermes)
+# Laptop 3.3GB RAM — evita freezes (lecciones sesión 2026-08-10)
+# 1) Mata DUPLICADOS de gateway hermes (debe haber solo 1 por puerto lógico)
+# 2) Alerta RAM < umbral (swap-thrash/OOM)
+# 3) Mata MCP/dev accesorios si crítica (NO mata opencode/antigravity/hermes)
+# Crons cada 5 min. LOG: /tmp/memory-guard.log
 
 set -u
 LOG=/tmp/memory-guard.log
 NOW=$(date "+%F %T")
-
-MEM=$(free -m | awk '/^Mem:/{print $7}')          # MB disponibles
+MEM=$(free -m | awk '/^Mem:/{print $7}')
 TOTAL=$(free -m | awk '/^Mem:/{print $2}')
-
 log() { echo "$NOW | $1" >> "$LOG"; }
 
-# --- 1) Duplicados de openclaw gateway: solo debe haber 1 PID escuchando en 18789 ---
-GWPIDS=$(ss -tlnp 2>/dev/null | grep "18789" | grep -oP 'pid=\K[0-9]+' | sort -u)
-GW=$(echo "$GWPIDS" | wc -l)
-if [ "$GW" -gt 1 ]; then
-  # Si systemd está sano, matar los extras
-  if systemctl --user is-active openclaw-gateway >/dev/null 2>&1; then
-    FIRST=""
-    for pid in $GWPIDS; do
-      if [ -z "$FIRST" ]; then FIRST=$pid; continue; fi
-      kill "$pid" 2>/dev/null && log "MATADO openclaw duplicado pid=$pid (pids=$GW)"
-    done
-  fi
+# --- 1) Gateway Hermes: solo 1 proceso "gateway run" (stack actual, ya NO openclaw) ---
+GWCOUNT=$(pgrep -fc "hermes_cli.main gateway run")
+if [ "$GWCOUNT" -gt 1 ]; then
+  # Matar los extra (el que tiene menor PID / más viejo se conserva)
+  for pid in $(pgrep -f "hermes_cli.main gateway run" | sort -n | sed '1d'); do
+    kill "$pid" 2>/dev/null && log "MATADO hermes gateway duplicado pid=$pid (n=$GWCOUNT)"
+  done
 fi
 
-# --- 2) Umbral de RAM crítica ---
-CRIT=400   # MB disponibles < 400 = peligro swap/OOM
+# --- 2) Umbral RAM crítica ---
+CRIT=400
 if [ "$MEM" -lt "$CRIT" ]; then
   log "ALERTA RAM disponible=${MEM}MB de ${TOTAL}MB (critico <${CRIT}MB)"
-  # Matar procesos MCP/dev accesorios (NO matar opencode/antigravity/openclaw)
-  for pat in "chrome-devtools-mcp" "mcp-server-filesystem"; do
+  # Solo accesorios MCP/dev — NUNCA opencode / antigravity / hermes gateway / wacli
+  for pat in "mcp-server-fetch" "mcp-server-filesystem" "playwright-social" "pvporcupine" "mcp-server-github"; do
     for pid in $(pgrep -f "$pat" 2>/dev/null); do
       kill "$pid" 2>/dev/null && log "MATADO accesorio $pat pid=$pid (RAM critica)"
     done
   done
 fi
 
-# --- 3) Registro normal (solo si no hay nada que hacer) ---
-[ "$MEM" -ge "$CRIT" ] && log "ok ram=${MEM}MB gw=${GW}"
+# --- 3) Registro normal ---
+[ "$MEM" -ge "$CRIT" ] && log "ok ram=${MEM}MB gw=${GWCOUNT}"

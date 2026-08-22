@@ -43,8 +43,10 @@
 - **PÁGINA NATHALY MINIMALISTA (2026-08-16)**: `/hermosillo.html` en VPS — minimalista blanco/verde, hero "Tu contabilidad sin dolores de cabeza", CARRUSEL 5 fotos (contadora/citas SAT/declaración/importación/consultoría) con fallback degradado, chips de servicios, CTA chat IA (conectado /chat) + WhatsApp 662 349 8589. Chat flotante Naty AI integrado EN LA PÁGINA (no redirige a Telegram). **FAL_KEY VENCIDA** (401/Application not found) — regenerar en fal.ai/dashboard; script `gen_fal_photos.py` listo, carrusel apunta a `/hermosillo_assets/`.
 - **AGENTE NATHALY MCP (2026-08-16)**: registry expose_as_mcp=true, skills [crm,voz,agendar_cita,sdc-company-research], composio_toolkits [telegram,whatsapp,gmail,googlecalendar,crm_library,fal]. `hermes_agents_mcp.py` expone list_agents/agent_info/agent_shell/agent_rules/agent_persona/composio_available — verificado para nathaly. Composio autenticado (happy-lantern-hare) solo IG+github ACTIVAS — conectar telegram/whatsapp/fal/gmail/calendar en Composio.
 - **MODELOS LLM — ESTRATEGIA FREE (2026-08-15)**: `nvidia/nemotron-3-ultra-550b-a55b:free` (550B, $0, el más grande free) = modelo PRINCIPAL en Hermes (default, delegation, mem0, x_search) y clasificador Hermosillo. Key OpenRouter ($5) SOLO para razonamiento pesado (fallback deepseek-v4-flash-0731). Corregido: `deepseek/deepseek-v4-flash-free` NO EXISTE (400) — estaba en mem0/x_search. Fallbacks: nemotron, gemma-4-31b, gpt-oss-20b, liquid-lfm-2.5 (free) + ollama VPS. ⚠️ Modelos reasoning con max_tokens<1500 → content vacío (reasoning consume presupuesto).
-- **VPS OVH — RUTA INTERMITENTE (2026-08-15)**: VPS 149.56.46.173 VIVO (7 días uptime, Docker: ollama Up 3 días + sdc-nginx). Port checker externo confirma 2222/80/443/11434 ABIERTOS. El timeout local era ruta ISP intermitente → fix: `AddressFamily inet` + `ConnectTimeout 20` en ~/.ssh/config (host ovh), usar `ssh -4`. Ollama VPS: docker container, puerto 11434, v0.32.6, modelos qwen3:4b / qwen2.5vl:3b / qwen2.5:3b / all-minilm / nomic-embed-text. Root / 80% (2.1G/2.9G, mejoró del 99%). Skill `conectividad-remota` creado. **MONITOREO (2026-08-15)**: `~/cron/vps-health.sh` (cron */10) — port checker externo + reintento ssh -4, logs en ~/cron/logs/vps-health.log.
-
+- **VPS OVH REPROVISIONADO Y VIVO (2026-08-21)**: SO limpio reinstalado en VPS `149.56.46.173`. SSH con llave `id_ed25519_sdc` activo sin contraseña. Firewall UFW activo (puertos 22, 80, 443, 11434, 5291 abiertos). Docker + Ollama activo en puerto 11434 con modelo `all-minilm` (verificado 200 OK vía curl). Entorno `/opt/hermes/venv` listo con dependencias (pydantic/requests/edge-tts/pytz).
+- **CLOUDFLARE TUNNEL MIGRADO AL VPS + STACK WEB RÁPIDO (2026-08-21)**: Tunnel `sonoradigitalcorp` migrado de la LAPTOP al VPS — web ya NO depende de la PC. cloudflared instalado en VPS (`/etc/cloudflared/config.yml`, credentials `a8f01806`), servicio systemd `cloudflared-tunnel.service` activo+enabled. Tunnel LOCAL apagado/deshabilitado. `vps_ai_server.py` en `/opt/hermes` (:8643, `vps-ai-server.service`): PRIMARY `deepseek/deepseek-v4-flash-0731` (rápido, pagado), timeout 25s, retry automático a `nvidia/nemotron-3-ultra-550b-a55b:free` si falla. Frontend (`index.html`, `chat.html` en `/var/www/sonoradigitalcorp/`) apunta a `MODEL=deepseek/deepseek-v4-flash-0731`. Latencia web-medida 1.9–2.6s HTTP 200 modelo real. Key OpenRouter de $5 = `sk-or-v1-10b4...49f` (`.env`, `limit_remaining $2.73`); key muerta `sk-or-v1-934c2fa008...` eliminada del `.bashrc` (401 User not found).
+- **LANDINGS CHAT TEXTO+VOZ + WEBHOOK NATHALY EN VPS (2026-08-21)**: Quité el orbe-que-habla (Web Speech API Chrome-only) de index.html, chat.html y hermosillo.html → chat limpio texto + mic (MediaRecorder→`/api/stt`) + altavoz (`/api/tts`). `vps_ai_server.py` ahora incluye `/api/stt` (faster-whisper "base" int8 CPU es-MX, instalado en venv, ~4.3s para 6s audio, $0 privado) + personas `sdc`/`nathaly` en system prompt + MODEL_CHAIN deepseek-0731→flash-latest→nemotron. **Webhook Nathaly DESPLEGADO**: `hermosillo-webhook.service` (:5291) en VPS, código en `/opt/hermes/hermosillo/` (+ sdc_sdk, telemetry, lead_scoring, tenant_router, kb/, assets/), DB `/opt/hermes/hermosillo/db/leads_hermosillo_cont.db`. Telegram getWebhookInfo pending=0 sin error (502 resuelto). Tests E2E: web 200, chats SDC/Nathaly responden, STT transcribe, onboarding inteligente (scoring/RAG/voz/seguridad) ya activo. ⚠️ meta-webhook (:8080) PENDIENTE — depende de aprobación WABA Meta.
+- **GATEWAY HERMES EN VPS (2026-08-22)**: `hermes-gateway.service` (systemd, active) en VPS `127.0.0.1:8642` (API HTTP 200 /health). Código en `/home/mystic/.hermes/hermes-agent/` (rsync del paquete + venv recreado con Python 3.12 + `pip install -e .`). Config VPS adaptada: telegram DESHABILITADO (elimina conflicto con webhook :5291 que polla el bot Nathaly; api_server es lo crítico). ⚠️ meta-webhook :8080 AÚN PENDIENTE: la ruta `/api/v1/meta/webhook` NO existe en Hermes 0.20.4 (el wa_webhook.py era del Hermes viejo) — requiere re-integración + aprobación WABA Meta.
 
 ## Aztrotech Onboarding Inteligente v2 (2026-08-07)
 - **OKF actualizado**: aztrotech.pricing.json con data REAL de aztrotech.mx (Empleado Digital $999/$1999/$3999, NO antenas/instalación)
@@ -138,3 +140,26 @@
 7. **E2E tests TDD/BDD**: Gherkin scenarios para onboarding, chat, voice, multi-tenant.
 8. **Eval prompts**: Benchmark prompts venta/agentes vs nemotron free.
 9. **Apagar Meta Business Agent**: En WhatsApp Business → Tools → IA Agent → "Paused for new chats but learning".
+
+## SESIÓN 2026-08-20 (hoy)
+- **Orbe IA web con voz** implementado en 3 páginas:
+  - `index.html` (landing principal): orb + chat + mic (Web Speech API) + TTS edge-tts
+  - `chat.html` (widget embebible): mismo patrón, mic + send + voice response
+  - `hermosillo/index.html` (panel flotante sobre orbe 3D): chat panel + mic + TTS
+- **CORS fix**: `api_server.extra.cors_origins: "*"` en `~/.hermes/config.yaml` → reinicio `hermes-gateway.service`. Browser Origin requests ahora 200 OK.
+- **WhatsApp button repositioned**: right:112px (era right:24px) para no interceptar clicks del orb (right:24px, z-index 9998 vs 9999).
+- **nginx timeout**: proxy_read_timeout 60s → 120s en `/api/v1/` para evitar 504 en LLM responses.
+- **VPS OVH status**: Panel "Activo" pero TODOS puertos cerrados (22, 80, 443, 11434, 8080, 5291). Reboot no arregló. Requiere VNC console → rescue mode → fix systemd/docker/network.
+- **Local Ollama STOPPED**: `systemctl --user stop/disable ollama.service` — libera ~1.5GB RAM en laptop 3.3GB. VPS OVH (149.56.46.173) = único lugar para embeddings/LLM.
+- **Audio resumen enviado a WhatsApp**: 2 min voz DaliaNeural via edge-tts → ffmpeg → wacli send voice (id 3EB00B9F422185CC13D948).
+
+## PENDIENTES ACTUALIZADOS (2026-08-20)
+1. **VPS OVH recovery**: VNC console → diagnose → rescue mode si no responde. Backup 2026-08-20 03:26 disponible.
+2. **FAL_KEY regenerar**: vencida 401 → fal.ai/dashboard.
+3. **LinkedIn en Composio**: `composio link linkedin`.
+4. **Telegram bots en Hermes**: telegram.enabled=true + tokens por tenant.
+5. **WABA approval**: esperar Meta.
+6. **Whalink funcional**: wacli link generable.
+7. **E2E tests TDD/BDD**: Gherkin scenarios.
+8. **Eval prompts**: Benchmark vs nemotron free.
+9. **Apagar Meta Business Agent**: WhatsApp Business → IA Agent → Paused.

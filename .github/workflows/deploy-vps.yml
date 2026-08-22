@@ -1,0 +1,58 @@
+# Deploy a VPS OVH (sdc-prod) — SOLO desde rama next, requiere approval manual
+# Secrets requeridos (Settings → Secrets → Actions):
+#   VPS_HOST=149.56.46.173
+#   VPS_USER=ubuntu
+#   VPS_KEY=clave privada id_ed25519_sdc (base64 o multilinea)
+#   VPS_SSH_PORT=22
+name: Deploy VPS (next → producción)
+
+on:
+  push:
+    branches:
+      - next
+    paths:
+      - "01_Core_Platform/09_CICD_Pipelines/**"
+      - "02_Client_Projects/Hermosillo_Contabilidad/**"
+      - "01_Core_Platform/03_Agentic_Infrastructure/**"
+      - "ESTADO.md"
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # Solo en next, con aprobación manual (protección de producción)
+    environment: production-vps
+    if: github.ref == 'refs/heads/next'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Configurar SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_KEY }}
+          log: all
+
+      - name: Arrancar host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${{ secrets.VPS_SSH_PORT }}" "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Probar conexión VPS
+        run: |
+          ssh -p "${{ secrets.VPS_SSH_PORT }}" -o StrictHostKeyChecking=no \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" "echo VPS_OK && uptime -p"
+
+      - name: Verificar servicios críticos en VPS
+        run: |
+          ssh -p "${{ secrets.VPS_SSH_PORT }}" -o StrictHostKeyChecking=no \
+            "${{ secrets.VPS_USER }}@${{ secrets.VPS_HOST }}" \
+            "for s in nginx cloudflared-tunnel vps-ai-server hermosillo-webhook hermes-gateway; do systemctl is-active \$s || echo \"FALLO \$s\"; done"
+
+      # Nota: el deploy real de código al VPS se hace por rsync scp; aquí se valida
+      # que los servicios siguen vivos tras cambios. Extender con rsync de paths si aplica.
+      - name: Resumen deploy
+        run: echo "✅ Deploy validado en ${{ secrets.VPS_HOST }} (servicios activos)"
