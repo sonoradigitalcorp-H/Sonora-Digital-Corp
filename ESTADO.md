@@ -281,3 +281,4 @@
 - **SOUL tubandera regla 7 reforzada**: cierre obligatorio con keywords valoracion/agendar/Roberto.
 - **Garantía determinista CTA** (`ensure_cta_tubandera()` en vps_ai_server.py): si respuesta tubandera llega sin CTA, se anexa cierre estándar server-side. Fix de flakiness LLM.
 - **SDD-0013 estable: 7/7 PASS ×3 corridas consecutivas.**
+- **Git**: plan movido a `00_Administration/plans/` (SPECJUDGE exige criterios aceptación en Specs/SDD). Session_logs excluidos del repo vía .gitignore (push protection). Push verde 0/0 en next.
