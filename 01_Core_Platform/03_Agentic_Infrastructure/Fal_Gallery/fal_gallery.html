@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>fal.ai Media Hub & Galería | Sonora Digital Corp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #0a0d14;
+      --bg-card: rgba(22, 27, 38, 0.7);
+      --bg-card-hover: rgba(30, 38, 54, 0.85);
+      --accent-purple: #8b5cf6;
+      --accent-blue: #3b82f6;
+      --accent-emerald: #10b981;
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border-color: rgba(255, 255, 255, 0.08);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --shadow-glow: 0 0 25px rgba(139, 92, 246, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(139, 92, 246, 0.15) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(59, 130, 246, 0.12) 0px, transparent 50%);
+      color: var(--text-main);
+      min-height: 100vh;
+      padding-bottom: 60px;
+    }
+
+    header {
+      backdrop-filter: blur(16px);
+      background: rgba(10, 13, 20, 0.8);
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 18px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.3rem;
+      box-shadow: var(--shadow-glow);
+    }
+
+    .brand-title h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #ffffff, #9ca3af);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-title p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .stats-badge {
+      background: rgba(139, 92, 246, 0.12);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.82rem;
+      color: #c4b5fd;
+      font-weight: 500;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 30px 40px;
+    }
+
+    /* Controles de Búsqueda y Filtros */
+    .controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      padding: 16px 24px;
+      border-radius: 16px;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 280px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      background: rgba(10, 13, 20, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 12px 16px 12px 42px;
+      color: var(--text-main);
+      font-size: 0.92rem;
+      outline: none;
+      transition: all 0.2s ease;
+    }
+
+    .search-box input:focus {
+      border-color: var(--accent-purple);
+      box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.2);
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--text-muted);
+      font-size: 1.1rem;
+    }
+
+    .filter-tabs {
+      display: flex;
+      gap: 8px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-size: 0.88rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(59, 130, 246, 0.2));
+      border-color: rgba(139, 92, 246, 0.4);
+      color: #ffffff;
+    }
+
+    /* Grid de Contenido */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 24px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), var(--shadow-glow);
+      border-color: rgba(139, 92, 246, 0.4);
+      background: var(--bg-card-hover);
+    }
+
+    .card-preview {
+      position: relative;
+      width: 100%;
+      height: 240px;
+      background: #000000;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .card-preview img, .card-preview video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.3s ease;
+    }
+
+    .card:hover .card-preview img,
+    .card:hover .card-preview video {
+      transform: scale(1.03);
+    }
+
+    .media-type-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(10, 13, 20, 0.75);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .card-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
+    }
+
+    .card-prompt {
+      font-size: 0.88rem;
+      line-height: 1.45;
+      color: #e5e7eb;
+      margin-bottom: 14px;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .card-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+      padding-top: 12px;
+      border-top: 1px solid var(--border-color);
+      margin-bottom: 14px;
+    }
+
+    .card-model {
+      font-weight: 600;
+      color: var(--accent-purple);
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 9px;
+      border-radius: 8px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid var(--border-color);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+      border: none;
+      color: #ffffff;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    /* Modal Lightbox */
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 1000;
+      background: rgba(5, 7, 12, 0.92);
+      backdrop-filter: blur(20px);
+      align-items: center;
+      justify-content: center;
+      padding: 40px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      max-width: 1000px;
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      max-height: 90vh;
+    }
+
+    .modal-media {
+      background: #000000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-height: 60vh;
+      overflow: hidden;
+    }
+
+    .modal-media img, .modal-media video {
+      max-width: 100%;
+      max-height: 60vh;
+      object-fit: contain;
+    }
+
+    .modal-details {
+      padding: 24px;
+      overflow-y: auto;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 24px;
+      right: 24px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: #ffffff;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--text-muted);
+      grid-column: 1 / -1;
+    }
+
+    .empty-state h3 {
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+      color: var(--text-main);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-icon">fal</div>
+      <div class="brand-title">
+        <h1>fal.ai Content Gallery</h1>
+        <p>Sonora Digital Corp — Registro Completo de Creaciones</p>
+      </div>
+    </div>
+    <div class="header-actions">
+      <div class="stats-badge" id="totalCount">0 creaciones indexadas</div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="controls">
+      <div class="search-box">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="searchInput" placeholder="Buscar por prompt, modelo o ID de petición...">
+      </div>
+
+      <div class="filter-tabs">
+        <button class="tab-btn active" data-type="">Todos</button>
+        <button class="tab-btn" data-type="image">🖼 Imágenes</button>
+        <button class="tab-btn" data-type="video">🎬 Videos</button>
+        <button class="tab-btn" data-type="audio">🎵 Audios</button>
+      </div>
+    </div>
+
+    <div class="gallery-grid" id="galleryGrid">
+      <div class="empty-state">
+        <h3>Cargando galería...</h3>
+        <p>Consultando base de datos de medios fal.ai</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Lightbox -->
+  <div class="modal" id="mediaModal">
+    <button class="modal-close" id="modalClose">&times;</button>
+    <div class="modal-content">
+      <div class="modal-media" id="modalMedia"></div>
+      <div class="modal-details">
+        <h3 style="margin-bottom: 8px; font-family: 'Outfit';" id="modalModel">Modelo</h3>
+        <p style="font-size: 0.95rem; line-height: 1.5; color: #e5e7eb; margin-bottom: 16px;" id="modalPrompt"></p>
+        <div style="display: flex; gap: 12px;" id="modalButtons"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentData = [];
+    let activeType = '';
+    let searchQuery = '';
+
+    const galleryGrid = document.getElementById('galleryGrid');
+    const searchInput = document.getElementById('searchInput');
+    const totalCount = document.getElementById('totalCount');
+    const mediaModal = document.getElementById('mediaModal');
+    const modalClose = document.getElementById('modalClose');
+
+    async function loadGallery() {
+      try {
+        const url = `/api/gallery?q=${encodeURIComponent(searchQuery)}&type=${encodeURIComponent(activeType)}`;
+        const res = await fetch(url);
+        const data = await res.json();
+        currentData = data.data || [];
+        totalCount.textContent = `${data.count || 0} creaciones indexadas`;
+        renderGrid(currentData);
+      } catch (err) {
+        galleryGrid.innerHTML = `
+          <div class="empty-state">
+            <h3>⚠ Error conectando con la API</h3>
+            <p>Asegúrate de que el servidor fal_webhook_receiver está corriendo.</p>
+          </div>
+        `;
+      }
+    }
+
+    function renderGrid(items) {
+      if (!items.length) {
+        galleryGrid.innerHTML = `
+          <div class="empty-state">
+            <h3>No se encontraron creaciones</h3>
+            <p>Prueba con otros términos de búsqueda o genera contenido con fal.ai</p>
+          </div>
+        `;
+        return;
+      }
+
+      galleryGrid.innerHTML = items.map(item => {
+        const mediaUrl = item.local_filename ? `/media/${item.local_filename}` : item.original_url;
+        const isVideo = item.media_type === 'video' || (mediaUrl && mediaUrl.endsWith('.mp4'));
+        const isAudio = item.media_type === 'audio' || (mediaUrl && (mediaUrl.endsWith('.mp3') || mediaUrl.endsWith('.wav')));
+
+        let mediaPreview = '';
+        if (isVideo) {
+          mediaPreview = `<video src="${mediaUrl}" muted loop onmouseover="this.play()" onmouseout="this.pause()"></video>`;
+        } else if (isAudio) {
+          mediaPreview = `<div style="display:flex;align-items:center;justify-content:center;height:100%;font-size:3rem;">🎵</div>`;
+        } else {
+          mediaPreview = `<img src="${mediaUrl}" alt="Media fal.ai" loading="lazy">`;
+        }
+
+        const dateStr = item.created_at ? new Date(item.created_at).toLocaleDateString('es-MX', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
+
+        return `
+          <div class="card">
+            <div class="card-preview" onclick="openModal('${item.id}')">
+              ${mediaPreview}
+              <span class="media-type-badge">${item.media_type || 'image'}</span>
+            </div>
+            <div class="card-body">
+              <div class="card-prompt" title="${item.prompt || ''}">${item.prompt || 'Sin prompt'}</div>
+              <div class="card-meta">
+                <span class="card-model">${item.model || 'flux'}</span>
+                <span>${dateStr}</span>
+              </div>
+              <div class="card-actions">
+                <button class="btn" onclick="copyPrompt('${encodeURIComponent(item.prompt || '')}')">📋 Copiar Prompt</button>
+                <a class="btn btn-primary" href="${mediaUrl}" download target="_blank">⬇ Descargar</a>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function openModal(id) {
+      const item = currentData.find(i => String(i.id) === String(id));
+      if (!item) return;
+
+      const mediaUrl = item.local_filename ? `/media/${item.local_filename}` : item.original_url;
+      const isVideo = item.media_type === 'video';
+
+      document.getElementById('modalModel').textContent = item.model || 'Modelo fal.ai';
+      document.getElementById('modalPrompt').textContent = item.prompt || 'Sin prompt';
+
+      const modalMedia = document.getElementById('modalMedia');
+      if (isVideo) {
+        modalMedia.innerHTML = `<video src="${mediaUrl}" controls autoplay style="max-height:60vh;"></video>`;
+      } else {
+        modalMedia.innerHTML = `<img src="${mediaUrl}" alt="Preview Full">`;
+      }
+
+      document.getElementById('modalButtons').innerHTML = `
+        <a class="btn btn-primary" href="${mediaUrl}" download target="_blank">⬇ Descargar Alta Resolución</a>
+        <button class="btn" onclick="copyPrompt('${encodeURIComponent(item.prompt || '')}')">📋 Copiar Prompt</button>
+      `;
+
+      mediaModal.classList.add('active');
+    }
+
+    modalClose.addEventListener('click', () => mediaModal.classList.remove('active'));
+    mediaModal.addEventListener('click', (e) => {
+      if (e.target === mediaModal) mediaModal.classList.remove('active');
+    });
+
+    function copyPrompt(encodedPrompt) {
+      const text = decodeURIComponent(encodedPrompt);
+      navigator.clipboard.writeText(text);
+      alert('✓ Prompt copiado al portapapeles');
+    }
+
+    // Filtros por tab
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeType = btn.dataset.type;
+        loadGallery();
+      });
+    });
+
+    // Búsqueda con debounce
+    let timeout = null;
+    searchInput.addEventListener('input', (e) => {
+      clearTimeout(timeout);
+      timeout = setTimeout(() => {
+        searchQuery = e.target.value;
+        loadGallery();
+      }, 300);
+    });
+
+    loadGallery();
+  </script>
+</body>
+</html>

@@ -1,0 +1,66 @@
+# Eval Prompts — Web Chat + Voz SDC (SDD-0012)
+# Juez: nvidia/nemotron-3-ultra-550b-a55b:free via OpenRouter
+# Corrida: python3 prompt_registry/run_eval.py
+
+version: 1
+judge:
+  model: nvidia/nemotron-3-ultra-550b-a55b:free
+  temperature: 0.0
+
+candidates:
+  - deepseek/deepseek-v4-flash-0731   # primary pagado
+  - nvidia/nemotron-3-ultra-550b-a55b:free  # fallback gratis
+
+rules_hard:            # falla automática, sin juez LLM
+  no_exclamation_marks: true      # ¡ y ! prohibidos en respuesta
+  no_forbidden_words: [IA, agente, modelo, LLM, token, prompt, RAG,
+                       embedding, chatbot, bot, inteligencia artificial]
+  max_chars_voice: 500            # respuestas cortas para TTS
+  max_sentences_voice: 5
+
+cases:
+  - id: saludo_frio_sdc
+    person: sdc
+    user: "Hola"
+    expect_benefits: ["horas", "tiempo", "ayudar", "negocio", "recuperar"]
+    must_not: ["precios", "tecnología"]
+
+  - id: pregunta_precio_nathaly
+    person: nathaly
+    user: "Cuánto cuesta la contabilidad mensual"
+    expect_benefits: ["Nathaly", "cotización", "WhatsApp", "diagnóstico"]
+    must_not: ["$999", "$1999", "cuesta exactamente"]  # jamás inventar precio
+
+  - id: dolor_horario_sdc
+    person: sdc
+    user: "Pierdo clientes porque nadie me contesta de noche"
+    expect_benefits: ["24", "noche", "madrugada", "contesta", "clientes", "ventas", "atender", "duerme"]
+    must_not: ["IA responde", "nuestro agente"]
+
+  - id: objecion_es_ia
+    person: sdc
+    user: "Esto es un bot de inteligencia artificial"
+    expect_benefits: ["asistente", "tiempo", "trabajo", "ayudo", "encargo"]
+    must_not: ["sí, soy una IA", "modelo de lenguaje"]
+
+  - id: cita_sat_nathaly
+    person: nathaly
+    user: "Necesito una cita en el SAT para el martes"
+    expect_benefits: ["cita", "SAT", "agendar", "Nathaly", "revis"]
+    must_not: ["no puedo agendar"]
+
+  - id: voz_larga_prohibida
+    person: sdc
+    user: "Explícame todo lo que hacen con detalle técnico completo"
+    expect_benefits: ["diagnóstico", "gratis", "llamada", "tiempo", "ayudar"]
+    must_not: ["arquitectura", "pipeline", "vector"]
+
+scoring:
+  pass_threshold: 0.85     # % de casos que pasan por candidato
+  judge_prompt: |
+    Eres juez de calidad de copy comercial en español MX.
+    Reglas duras del sistema: sin exclamaciones, sin palabras técnicas
+    (IA, bot, modelo), vender beneficios (tiempo, dinero, tranquilidad),
+    tono tranquilo, máximo 4 frases.
+    Evalúa la RESPUESTA contra lo esperado y regresa SOLO JSON:
+    {"pass": bool, "score": 0.0-1.0, "reason": "máx 20 palabras"}

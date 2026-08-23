@@ -1,5 +1,45 @@
 # ESTADO VIVO
 
+## REDISEÑO WEB CHAT + VOZ PRO MAX (SDD-0012) — 2026-08-22/23
+- **Chat + voz IA en sonoradigitalcorp.com** rediseñado por completo (`/var/www/sonoradigitalcorp/index.html`).
+  UI Pro Max: Three.js orbe 3D reactivo al audio (IcosahedronGeometry + shader fresnel + 520 partículas GPU),
+  glassmorphism (backdrop-filter blur 24px), chat burbujas glass, mic push-to-talk, altavoz con botón STOP.
+  CERO dashboard, CERO exclamaciones. Personas `?p=sdc` / `?p=nathaly` (rebrandea título, colores, hero, WA, voz).
+- **Catálogo de asistentes por nicho** (8): Boutique, Consultorio, Restaurante, Taller, Abogados, Spa, Contabilidad, Gym —
+  cada card con beneficios + AHORROS en $/mes + botón "Ver en acción" que lanza demo al chat. Sección "Muestras de valor" (rail Netflix).
+- **Agenda visible #agendaBtn**: modal con 10 días hábiles + 8 horas; confirma → POST `/api/v1/citas` → guarda en
+  SQLite `/opt/hermes/citas_db/citas_{persona}.db` + genera TTS confirmación + **wacli send voice al WhatsApp del usuario**.
+  Flujo E2E verificado en navegador (cita "Cliente E2E" 2026-08-24 11:00 guardada + confirmación por WhatsApp).
+- **Comando de silencio** (`SILENCE_RE`): si el usuario escribe "calla/silencio/basta/no hables/quita la voz", detiene el TTS.
+- **Fix mic**: umbral blob 1200→300B + manejo de errores STT + aviso si navegador sin MediaRecorder. Sin `alert()` (feedback inline).
+
+## STACK VOZ EN VPS OVH (149.56.46.173) — SDD-0012
+- **`/opt/hermes/voice/stt_server.py`** :5292 (`sdc-stt.service`, Restart=always). faster-whisper **small int8**,
+  beam_size=3, initial_prompt es-MX, lipsum strip de exclamaciones. ~2.6s/4s audio.
+- **`/opt/hermes/voice/tts_server.py`** :5293 (`sdc-tts.service`). edge-tts (kokoro onnx si existiera en /opt/hermes/kokoro).
+  `clean_for_tts` sin exclamaciones/emojis. ~1.0s, audio/mpeg, X-TTS-Engine.
+- **`/opt/hermes/vps_ai_server.py`** :8643 (`vps-ai-server.service`) REWRITE v2:
+  - `/api/v1/chat/completions` (person sdc|nathaly, SOUL server-side, chain deepseek-0731→nemotron-free, fallback offline con beneficios)
+  - `/api/stt` y `/api/tts` = PROXY → :5292/:5293
+  - `/api/v1/citas` = agenda + TTS + wacli send voice (WACLI_BIN env)
+  - `/health` agregado (stt+tts+llm)
+  - `clean_reply` (quita `!¡`, colapsa puntos) + `soft_replace_tech` (defensa en profundidad anti-palabras técnicas)
+- **wacli 0.12.0** binario Go copiado al VPS (`/home/mystic/.local/bin/wacli`, AUTHENTICATED=true JID 5216623538272),
+  envía voz OK. `npm i wacli` NO existe (es binario propietario, no npm).
+- **nginx**: location `/api/` → 8643; location `= /health` → 8643/health. Índice nuevo desplegado, backups `.bak-0012`.
+
+## SPECS Y TESTS SDD-0012
+- **Spec**: `01_Core_Platform/09_CICD_Pipelines/Specs/SDD/0012-web-chat-voice-redesign.md`
+- **Eval prompts**: `prompt_registry/eval_prompts.yaml` + `prompt_registry/run_eval.py` (juez nemotron-free, reglas duras sin exclamaciones/tecnicismos)
+- **SOUL** canónico: `01_Core_Platform/01_Architecture/SOUL.md` (versión de voz, cero exclamaciones, prohibidas palabras técnicas, vendemos beneficios)
+- **Tests**: `03_Sandbox_and_RnD/tests/integration/test_sdd0012_web_chat.py` — **22/22 PASS** (soul cleaning, UI copy sin malas palabras, catálogo, agenda, silencio, endpoints)
+
+## SOUL PROMPTS REFORZADOS (objeciones + SIEMPRE cita)
+- Los system prompts de `vps_ai_server.py` ahora manejan objeciones (caro→más barato que recepcionista; miedo tecnología→no tocas nada;
+  no tiempo→eso te devuelve; es para grandes→es tu tamaño ideal) y SIEMPRE cierran con 2 horarios concretos de esta semana,
+  NUNCA repiten el mismo escenario, y atienden comando de silencio.
+- Copy vende AHORROS ($/mes), tiempo (24/7 sin sueldo), cero multas. Nunca "IA/bot/modelo/token".
+
 ## AZTROTECH BAJADO (2026-08-20)
 - **Aztrotech FUERA de servicio**: solo quedan sonoradigitalcorp.com + Nathaly Hermosillo.
 - Proceso `wacli_stdio.py` matado (0 procesos aztrotech). Crons de Aztrotech (ventas-cesar + Aztrotech_Citas x3) eliminados, backup en /tmp/crontab.bak-aztro-20260820.
@@ -47,6 +87,8 @@
 - **CLOUDFLARE TUNNEL MIGRADO AL VPS + STACK WEB RÁPIDO (2026-08-21)**: Tunnel `sonoradigitalcorp` migrado de la LAPTOP al VPS — web ya NO depende de la PC. cloudflared instalado en VPS (`/etc/cloudflared/config.yml`, credentials `a8f01806`), servicio systemd `cloudflared-tunnel.service` activo+enabled. Tunnel LOCAL apagado/deshabilitado. `vps_ai_server.py` en `/opt/hermes` (:8643, `vps-ai-server.service`): PRIMARY `deepseek/deepseek-v4-flash-0731` (rápido, pagado), timeout 25s, retry automático a `nvidia/nemotron-3-ultra-550b-a55b:free` si falla. Frontend (`index.html`, `chat.html` en `/var/www/sonoradigitalcorp/`) apunta a `MODEL=deepseek/deepseek-v4-flash-0731`. Latencia web-medida 1.9–2.6s HTTP 200 modelo real. Key OpenRouter de $5 = `sk-or-v1-10b4...49f` (`.env`, `limit_remaining $2.73`); key muerta `sk-or-v1-934c2fa008...` eliminada del `.bashrc` (401 User not found).
 - **LANDINGS CHAT TEXTO+VOZ + WEBHOOK NATHALY EN VPS (2026-08-21)**: Quité el orbe-que-habla (Web Speech API Chrome-only) de index.html, chat.html y hermosillo.html → chat limpio texto + mic (MediaRecorder→`/api/stt`) + altavoz (`/api/tts`). `vps_ai_server.py` ahora incluye `/api/stt` (faster-whisper "base" int8 CPU es-MX, instalado en venv, ~4.3s para 6s audio, $0 privado) + personas `sdc`/`nathaly` en system prompt + MODEL_CHAIN deepseek-0731→flash-latest→nemotron. **Webhook Nathaly DESPLEGADO**: `hermosillo-webhook.service` (:5291) en VPS, código en `/opt/hermes/hermosillo/` (+ sdc_sdk, telemetry, lead_scoring, tenant_router, kb/, assets/), DB `/opt/hermes/hermosillo/db/leads_hermosillo_cont.db`. Telegram getWebhookInfo pending=0 sin error (502 resuelto). Tests E2E: web 200, chats SDC/Nathaly responden, STT transcribe, onboarding inteligente (scoring/RAG/voz/seguridad) ya activo. ⚠️ meta-webhook (:8080) PENDIENTE — depende de aprobación WABA Meta.
 - **GATEWAY HERMES EN VPS (2026-08-22)**: `hermes-gateway.service` (systemd, active) en VPS `127.0.0.1:8642` (API HTTP 200 /health). Código en `/home/mystic/.hermes/hermes-agent/` (rsync del paquete + venv recreado con Python 3.12 + `pip install -e .`). Config VPS adaptada: telegram DESHABILITADO (elimina conflicto con webhook :5291 que polla el bot Nathaly; api_server es lo crítico). ⚠️ meta-webhook :8080 AÚN PENDIENTE: la ruta `/api/v1/meta/webhook` NO existe en Hermes 0.20.4 (el wa_webhook.py era del Hermes viejo) — requiere re-integración + aprobación WABA Meta.
+- **WACLI VPS AUTENTICADO + KEEPALIVE 24/7 (2026-08-22)**: wacli instalado en VPS (`/home/mystic/wacli`, store `/home/mystic/.wacli`), autenticado por phone-code pairing (el store de la laptop NO es portable — AUTHENTICATED=false hasta re-pairing). `wacli-auth.service` (one-shot, se detiene al completar) + `wacli-keepalive.service` (`sync --follow`, `Restart=always`) mantiene la sesión WhatsApp viva y refrescada. Envío WhatsApp desde VPS OK (id 3EB0D950734B65CC571557, sin errores MAC/counter). ⚠️ `wacli doctor` da `locked_by_other_process` mientras el keepalive corre (NORMAL). Los 6 servicios VPS (hermes-gateway, vps-ai-server, hermosillo-webhook, cloudflared-tunnel, nginx, ollama) tienen `Restart=always` → siempre activos.
+- **AGENTES HÍBRIDOS NEUTROS (2026-08-22)**: 3 agentes neutros/adaptables creados de forma determinista en `~/.hermes/agents/` y registrados en agents_registry.json: `asistente-hibrido`, `soporte-adaptado`, `comercial-flexible`. Nicho `hibrido`, modelo `nvidia/nemotron-3-ultra-550b-a55b:free`, persona adaptable (`_template/personas/hibrida.md`), skills neutras (sdc-onboarding, sdc-company-research, sdc-voice-clean, people-recognition, registrar_lead), MCP expuesto True. Se adaptan a cualquier negocio/dominio. Gateway Hermes duplicado de laptop ELIMINADO (el VPS lo corre; puerto 8642 local liberado).
 
 ## Aztrotech Onboarding Inteligente v2 (2026-08-07)
 - **OKF actualizado**: aztrotech.pricing.json con data REAL de aztrotech.mx (Empleado Digital $999/$1999/$3999, NO antenas/instalación)
