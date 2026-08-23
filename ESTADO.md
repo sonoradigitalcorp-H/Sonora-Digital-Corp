@@ -349,3 +349,17 @@
 - **Sync ETL / métricas / agendado** → script+cron (skill nativa Hermes).
 - **Flujos decisionales / UI / notificaciones** → n8n.
 - **Pesado** (LLM, TTS, STT, montos) → VPS. Local solo terminal.
+
+## REPO COMO FUENTE DE VERDAD + SYNC VPS (2026-08-23) ✅
+- **Repo clonado en VPS**: `/opt/hermes/repo` (rama `next`, depth 1). GitHub accesible público (sin token).
+- **`deploy.sh`** (`01_Core_Platform/09_CICD_Pipelines/Deployment/`): sincroniza repo → `/opt/hermes/` producción. Mapa de 8 archivos (vps_ai_server, stt/tts_servers, prompt_registry, wacli_skill, sync_metrics, run_automejora). `--check` para diff, reinicia servicios afectados.
+- **Sincronización hecha**: código de producción del VPS (funcional con hotfixes) volcado al repo como fuente canónica. `git pull` en VPS verificado (`7c1f965`, luego `9d0d6493`).
+- **Fase 7 prompt registry + automejora**:
+  - `run_eval.py` + `eval_prompts.yaml` con persona `tubandera` (9 casos: sdc/nathaly/tubandera). YAML validado.
+  - `run_automejora.py` (`/opt/hermes/scripts/`): observación de evals → Postgres `metrics_eval`; `--suggest` genera propuestas de mejora de prompt (domingo 5am).
+  - Crons: `15 * * * *` observación evals, `0 5 * * 0` propuestas.
+  - `prompt_registry/` desplegado en `/opt/hermes/prompt_registry/`.
+
+### LECCIÓN ARQUITECTÓNICA (sincronización)
+- Los hotfixes/paches de producción deben vivir EN el repo (fuente de verdad), no solo en `/opt/hermes/`. El código que funciona en el VPS se volcó al repo.
+- Flujo de deploy: editar en laptop → commit+push `next` → `git pull` en VPS → `./deploy.sh` → reinicia servicios.
