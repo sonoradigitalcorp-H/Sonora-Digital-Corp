@@ -1,5 +1,32 @@
 # ESTADO VIVO
 
+## MODELO PRINCIPAL DEEPSEEK (2026-08-23) — páginas y bots
+- **`deepseek/deepseek-v4-flash-0731` = PRINCIPAL** en páginas y bots; fallback `nvidia/nemotron-3-ultra-550b-a55b:free`.
+- ⚠️ **deepseek es RAZONADOR**: `content` sale vacío si `max_tokens` es bajo (todo se va a `reasoning`).
+  **Requerido `max_tokens>=800`** en TODO payload (antes 220 → "Hola." o null). Subido a 800 en
+  vps_ai_server.py (2 payloads) y sdc_sdk.py (call_llm). Clasificador usa 1500 (correcto).
+- **Bug CÁLCULO `clean_reply` corregido**: tenía `.replace("i","")` que borraba TODAS las "i"
+  (Entiendo→Entendo). Se cambió a `.replace("¡","")` (quitar exclamación invertida). Sin esto las
+  respuestas salían mutiladas.
+- vps_ai_server.py `MODEL_CHAIN` invertido: deepseek PRIMERO, nemotron fallback.
+- lead_classifier_hermosillo.py invertido: deepseek principal, nemotron fallback (clasificación precisa).
+- VPS ai server probado 3 personas (tubandera/nathaly/sdc) con deepseek → respuestas naturales y precisas.
+
+## MULTI-LANDING POR PERSONA (SDD-0013) — 2026-08-22
+- **3 marcas sobre 1 base** (`/var/www/sonoradigitalcorp/index.html` reutilizada): SDC (`?p=sdc`),
+  Naty contabilidad (`?p=nathaly`, SOLO contabilidad/estrategia fiscal/contabilidad inteligente),
+  y **Tu Bandera A.C.** (`/tubandera.html`, marca propia rojo/azul + fotos Gemini).
+- **Persona `tubandera`** añadida a `vps_ai_server.py` (SOUL server-side + intent replies router):
+  recuperación de adicciones, tono cálido, NUNCA diagnostica ni da consejo médico, deriva a humano/911.
+- **Router determinista por persona**: precio/cita/silencio/ubicación responden sin LLM.
+- **Mic auto-stop por silencio**: cuando el analizador detecta `avg<12` por **>1200ms**, la grabación
+  se detiene sola y se envía a STT (ya no solo push-to-talk). Inyectado en index.html (sdc/nathaly) y tubandera.html.
+- **Assets marca Tu Bandera**: `/var/www/sonoradigitalcorp/tubandera_assets/` (logo rojo/azul, familia,
+  4 fotos Gemini 24/7). Integradas al carrusel (railImgs) de tubandera.
+- **Spec**: `01_Core_Platform/09_CICD_Pipelines/Specs/SDD/0013-multi-landing-personas.md` (Gherkin).
+- **Tests**: `03_Sandbox_and_RnD/tests/integration/test_sdd0013_landing.py` — **7/7 PASS** en VPS
+  (3 personas LLM/router, TTS, STT, páginas HTTP, assets).
+
 ## REDISEÑO WEB CHAT + VOZ PRO MAX (SDD-0012) — 2026-08-22/23
 - **Chat + voz IA en sonoradigitalcorp.com** rediseñado por completo (`/var/www/sonoradigitalcorp/index.html`).
   UI Pro Max: Three.js orbe 3D reactivo al audio (IcosahedronGeometry + shader fresnel + 520 partículas GPU),
