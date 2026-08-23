@@ -242,3 +242,42 @@
 7. **E2E tests TDD/BDD**: Gherkin scenarios.
 8. **Eval prompts**: Benchmark vs nemotron free.
 9. **Apagar Meta Business Agent**: WhatsApp Business → IA Agent → Paused.
+
+## SESIÓN 2026-08-23 (hoy) — CONSTRUCCIÓN TU BANDERA AGENTIFICADA
+
+### Fase 1 completada (VERDE)
+- **Knowledge Base adicciones** indexado en Qdrant (Nomic 768d):
+  - `adicciones/sustancias.md`: 66 líneas (alcohol, opioides/fentanilo, estimulantes, cannabinoides, alucinógenos, inhalantes, anabólicos, conductuales)
+  - `12-pasos/narcoticos-anonimos.md`: 29 líneas (12 pasos + 12 tradiciones NA)
+  - `alanon/alanon.md`: 21 líneas (principios para familiares)
+  - Colección `tubandera_kb`: 20 chunks, búsqueda semántica funcional
+- **DB Trazabilidad** (`/opt/hermes/tubandera/tubandera.db`):
+  - `usuarios` (tenant_id `TB-{chat_id}`, chat_id, nombre, telefono, sustancia, estado)
+  - `familiares` (usuario_id, nombre, telefono, parentesco, permiso)
+  - `avances` + `fotos` (para notificar a grupo/familiar específico)
+  - API Python: registrar_usuario, registrar_familiar, get_usuario, get_familiares, registrar_avance, registrar_foto, resumen_empresa
+- **SOUL v2**: Endpoint `/api/v1/chat/completions` con `person:tubandera` responde como experto en adicciones (probado: fentanilo, 12 pasos)
+- **Prompt injection**: Endpoint resiste ("ignora instrucciones" → responde en persona de acompañamiento)
+- **Tests**: Structure Guardian VERDE, Git 0/0, SDD-0012 22/22 PASS, VPS 8/8 servicios 24/7 activos, 3/3 contenedores on-demand, 5/5 endpoints 200
+
+### Pendientes Fase 1
+- **wacli auth**: ❌ "Not authenticated" — requiere pairing manual con Roberto
+- **Bot TG guardas**: Sin filtro explícito prompt injection (el endpoint sí protege via SOUL)
+- **RAG precisión**: Mejorar búsqueda semántica (re-rank, filtrado por fuente)
+
+### Plan maestro creado
+- `01_Core_Platform/09_CICD_Pipelines/Specs/SDD/PLAN-TUBANDERA-2026-agentificacion.md` — roadmap completo 4 fases, 12 meses, multi-agente, legal 100% donataria, monetización white-label.
+
+### Lecciones técnicas
+1. Qdrant IDs: deben ser numéricos/UUID válidos; fix con `hashlib.md5(text)[:15]` → int64.
+2. SOUL en endpoint actúa como guarda de prompt injection natural (inyección en user role, system mantiene persona).
+3. Nomic-embed-text 768d + Ollama VPS = RAG $0, sin GPU.
+4. Estructura KB por carpetas temáticas permite indexación incremental y búsqueda por dominio.
+
+### BLINDAJE GO (2026-08-23 tarde)
+- **FAL_KEY instalada** (VPS `/home/mystic/.hermes/.env` + local, chmod 600) y VALIDADA con generación real flux/schnell. Ya no está vencida.
+- **Guardas prompt injection** (`/opt/hermes/tubandera/guards.py`): regex INJECTION_RE, 6/6 tests. Integradas al bot TG (`telegram_bot_tubandera.py` filtra antes del LLM). Bot reiniciado activo.
+- **Suite automatizada** `/opt/hermes/scripts/suite_test.py`: health LLM/STT/TTS, Qdrant KB>=20, SOUL experto fentanilo, injection E2E 3/3 resistido, 3 páginas web 200 → **9/9 PASS**. CRON horario `0 * * * *` log en `/var/log/tubandera_suite.log`.
+- **SOUL tubandera regla 7 reforzada**: cierre obligatorio con keywords valoracion/agendar/Roberto.
+- **Garantía determinista CTA** (`ensure_cta_tubandera()` en vps_ai_server.py): si respuesta tubandera llega sin CTA, se anexa cierre estándar server-side. Fix de flakiness LLM.
+- **SDD-0013 estable: 7/7 PASS ×3 corridas consecutivas.**

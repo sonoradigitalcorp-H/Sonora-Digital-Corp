@@ -39,3 +39,6 @@ preview-fullpage.png
 
 # Playwright MCP snapshots (no versionar)
 .playwright-mcp/
+
+# Session logs contienen keys — NUNCA versionar
+00_Administration/Session_Logs/
