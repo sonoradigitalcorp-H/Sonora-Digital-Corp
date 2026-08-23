@@ -1,0 +1,21 @@
+version: '3.8'
+services:
+  vps_ai_server:
+    image: ghcr.io/sonoradigitalcorp-h/sonora-digital-corp/vps_ai_server:latest
+    ports: ["8643:8643"]
+    environment:
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+    restart: always
+
+  stt:
+    image: ghcr.io/sonoradigitalcorp-h/sonora-digital-corp/stt:latest
+    ports: ["5292:5292"]
+    environment:
+      - STT_MODEL=small
+      - STT_COMPUTE=int8
+    restart: always
+
+  tts:
+    image: ghcr.io/sonoradigitalcorp-h/sonora-digital-corp/tts:latest
+    ports: ["5293:5293"]
+    restart: always

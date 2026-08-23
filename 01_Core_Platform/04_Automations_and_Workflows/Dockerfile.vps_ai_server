@@ -1,0 +1,6 @@
+FROM python:3.11-slim
+WORKDIR /app
+COPY vps_ai_server.py .
+RUN pip install --no-cache-dir aiohttp edge-tts
+EXPOSE 8643
+CMD ["python", "vps_ai_server.py"]

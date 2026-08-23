@@ -1,0 +1,6 @@
+FROM python:3.11-slim
+WORKDIR /app
+COPY tts_server.py .
+RUN pip install --no-cache-dir edge-tts aiohttp
+EXPOSE 5293
+CMD ["python", "tts_server.py"]
