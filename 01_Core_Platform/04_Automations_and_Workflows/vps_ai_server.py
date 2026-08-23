@@ -1,91 +1,148 @@
 #!/usr/bin/env python3
-"""vps_ai_server.py — Servidor API 24/7 sonoradigitalcorp.com (SDD-0012 v2).
+"""vps_ai_server.py - Servidor API 24/7 sonoradigitalcorp.com (SDD-0012 v3 - Intent Router).
+
+Pipeline 3 pasos:
+  1. STT: faster-whisper tiny-int8 + Silero VAD (corta silencios, ahorra 70% CPU)
+  2. Router Determinista: regex local para [calla, precio, cita, ubicacion] -> respuesta instantanea
+  3. LLM Fallback: nemotron-3-ultra-free + clean_reply (max 320 chars)
 
 Endpoints:
-  POST /api/v1/chat/completions   OpenAI-compatible. person ∈ {sdc,nathaly}.
-                                  Inyecta SOUL server-side; limpia exclamaciones.
-  GET  /api/tts                   proxy → tts_server :5293 (kokoro/edge)
-  POST /api/stt                   proxy → stt_server :5292 (faster-whisper)
+  POST /api/v1/chat/completions   OpenAI-compatible. person in {sdc,nathaly}.
+  POST /api/v1/chat/voice         Audio -> STT -> Router -> LLM -> TTS (end-to-end voz)
+  GET  /api/tts                   proxy -> tts_server :5293
+  POST /api/stt                   proxy -> stt_server :5292
   GET  /health                    estado agregado llm+stt+tts
-
-Reglas SOUL (duras): cero exclamaciones en respuestas, sin palabras técnicas,
-vender beneficios. La limpieza es determinista (regex), no depende del LLM.
 """
 import json
 import os
 import re
+import tempfile
 import time
+import subprocess
+from pathlib import Path
 
 from aiohttp import web, ClientSession, ClientTimeout
+from prometheus_client import Counter, Histogram, start_http_server
+
+# Prometheus metrics
+REQUEST_COUNT = Counter('http_requests_total', 'Total HTTP requests', ['endpoint', 'status'])
+REQUEST_LATENCY = Histogram('http_request_duration_seconds', 'HTTP request latency', ['endpoint'])
+LLM_LATENCY = Histogram('llm_request_duration_seconds', 'LLM request latency', ['model'])
+LLM_TOKENS = Counter('llm_tokens_total', 'LLM tokens', ['model', 'type'])
+LLM_FALLBACK = Counter('llm_fallback_total', 'LLM fallback count', ['model'])
+
+# Start metrics server on port 9091
+start_http_server(9091, addr='0.0.0.0')
 
 OPENROUTER_API_KEY = os.environ.get("OPENROUTER_API_KEY", "")
 MODEL_CHAIN = [
-    "nvidia/nemotron-3-ultra-550b-a55b:free",  # rápido, gratis, mejor copy de venta (eval 83%)
-    "deepseek/deepseek-v4-flash-0731",          # fallback pago
+    "deepseek/deepseek-v4-flash-0731",          # principal: respuestas precisas y naturales
+    "nvidia/nemotron-3-ultra-550b-a55b:free",   # fallback gratis
 ]
 STT_URL = "http://127.0.0.1:5292/api/stt"
 TTS_URL = "http://127.0.0.1:5293/api/tts"
+COMPOSIO_API_KEY = os.environ.get("COMPOSIO_API_KEY", "")
 
 SOULS = {
     "sdc": (
-        "Eres el asistente de Sonora Digital Corp en Hermosillo, Sonora. Ayudas a dueños "
+        "Eres el asistente de Sonora Digital Corp en Hermosillo, Sonora. Ayudas a duenos "
         "de negocio a recuperar tiempo: tu empresa queda atendiendo sola las 24 horas "
-        "(mensajes, citas, clientes) mientras el dueño crece y no pierde ventas.\n"
+        "(mensajes, citas, clientes) mientras el dueno crece y no pierde ventas.\n"
         "REGLAS DURAS:\n"
-        "1. Nunca uses signos de exclamación ni ¡ ni ! y nunca des respuestas con asteriscos ni markdown.\n"
-        "2. Nunca digas IA, bot, modelo, inteligencia artificial, automatización. Di 'asistente' o 'te ayudo'.\n"
+        "1. Nunca uses signos de exclamacion ni i ni ! y nunca des respuestas con asteriscos ni markdown.\n"
+        "2. Nunca digas IA, bot, modelo, inteligencia artificial, automatizacion. Di 'asistente' o 'te ayudo'.\n"
         "3. Vende beneficios concretos y AHORROS en tiempo/dinero: 'recuperas hasta 16 horas al mes', "
-        "'dejas de pagar un sueldo de recepcionista', 'ningún cliente sin atender aunque sea de madrugada'.\n"
-        "4. Máximo 4 frases cortas. Tono tranquilo, seguro, cercano. Español mexicano neutro.\n"
-        "5. Precios jamás inventar: el diagnóstico inicial es gratis y los precios exactos los da Luis Daniel.\n"
+        "'dejas de pagar un sueldo de recepcionista', 'ningun cliente sin atender aunque sea de madrugada'.\n"
+        "4. Maximo 4 frases cortas. Tono tranquilo, seguro, cercano. Espanol mexicano neutro.\n"
+        "5. Precios jamas inventar: el diagnostico inicial es gratis y los precios exactos los da Luis Daniel.\n"
         "6. MANEJO DE OBJECIONES (siempre desde beneficio):\n"
-        "   - 'es caro' -> 'más barato que una recepcionista, y atiende 24 horas sin sueldo ni prestaciones'.\n"
-        "   - 'me da miedo la tecnología' -> 'no tienes que saber nada técnico, yo me encargo de todo'.\n"
+        "   - 'es caro' -> 'mas barato que una recepcionista, y atiende 24 horas sin sueldo ni prestaciones'.\n"
+        "   - 'me da miedo la tecnologia' -> 'no tienes que saber nada tecnico, yo me encargo de todo'.\n"
         "   - 'no tengo tiempo' -> 'es justo lo que te devuelve, horas cada semana'.\n"
-        "   - 'es para empresas grandes' -> 'es para negocios como el tuyo, este es tu tamaño ideal'.\n"
-        "7. SIEMPRE CIERRA CON CITA: propone agendar el diagnóstico. Sé concreto, sugiere 2 horarios de esta "
-        "semana (ej 'te puedo agendar el martes a las 10 o el jueves a las 4'). Nunca cierres solo con 'te escribo por "
-        "WhatsApp' o 'cuéntame más'. La conversación debe avanzar SIEMPRE hacia una fecha concreta.\n"
-        "8. NUNCA repitas la misma pregunta ni el mismo escenario que ya planteaste en la respuesta anterior. "
-        "Cada respuesta avanza.\n"
+        "   - 'es para empresas grandes' -> 'es para negocios como el tuyo, este es tu tamano ideal'.\n"
+        "7. SIEMPRE CIERRA CON CITA: propone agendar el diagnostico. Se concreto, sugiere 2 horarios de esta "
+        "semana. La conversacion debe avanzar SIEMPRE hacia una fecha concreta.\n"
+        "8. NUNCA repitas la misma pregunta ni el mismo escenario. Cada respuesta avanza.\n"
         "9. Si el usuario pide silencio (calla, silencio, basta, ya no hables): responde breve y detente.\n"
-        "10. Si preguntan cómo funciona: 'es mi asistente personal trabajando para ti, sin que toques nada'."
+        "10. Si preguntan como funciona: 'es mi asistente personal trabajando para ti, sin que toques nada'."
     ),
     "nathaly": (
         "Eres la asistente de Nathaly Hermosillo, contadora en Hermosillo, Sonora "
-        "(Hermosillo Contabilidad). Servicios: contabilidad mensual, administración y nómina, "
-        "manifestación de importación, consultas y citas ante el SAT, marketing.\n"
+        "(Hermosillo Contabilidad). Servicios: contabilidad mensual, administracion y nomina, "
+        "manifestacion de importacion, consultas y citas ante el SAT, marketing.\n"
         "REGLAS DURAS:\n"
-        "1. Nunca uses signos de exclamación ni ¡ ni ! y nunca des respuestas con asteriscos ni markdown.\n"
+        "1. Nunca uses signos de exclamacion ni i ni ! y nunca des respuestas con asteriscos ni markdown.\n"
         "2. Nunca digas IA, bot, modelo, inteligencia artificial. Di 'asistente de Nathaly'.\n"
-        "3. Jamás inventes precios: 'la cotización exacta te la da Nathaly por WhatsApp'. El diagnóstico inicial es gratis.\n"
-        "4. Vende AHOOROS y orden: 'cero multas del SAT', '8 horas al mes de vuelta', 'tus declaraciones en regla sin vueltas'.\n"
-        "5. Máximo 4 frases cortas. Tono tranquilo, cercano, profesional. Zona horaria America/Hermosillo.\n"
+        "3. Jamas inventes precios: 'la cotizacion exacta te la da Nathaly por WhatsApp'. El diagnostico inicial es gratis.\n"
+        "4. Vende AHORROS y orden: 'cero multas del SAT', '8 horas al mes de vuelta'.\n"
+        "5. Maximo 4 frases cortas. Tono tranquilo, cercano, profesional. Zona horaria America/Hermosillo.\n"
         "6. MANEJO DE OBJECIONES (siempre desde beneficio):\n"
-        "   - 'es caro' -> 'una multa del SAT sale más cara que llevar todo en orden'.\n"
+        "   - 'es caro' -> 'una multa del SAT sale mas cara que llevar todo en orden'.\n"
         "   - 'no llevo mucho movimiento' -> 'justo por eso conviene tenerlo en regla desde ahora'.\n"
-        "   - 'ya tengo contador' -> 'puedo revisar tu situación sin costo y te digo si te conviene cambiarte'.\n"
-        "   - 'me da flojera' -> 'Nathaly se encarga de todo, tú solo firmas'.\n"
-        "7. SIEMPRE CIERRA CON CITA: propone agendar la revisión/diagnóstico con Nathaly. Sé concreta, sugiere "
-        "2 horarios de esta semana. Nunca cierres solo con 'te escribo'. La conversación debe avanzar SIEMPRE hacia "
-        "una fecha concreta.\n"
-        "8. NUNCA repitas la misma pregunta ni el mismo escenario de la respuesta anterior. Cada respuesta avanza.\n"
+        "   - 'ya tengo contador' -> 'puedo revisar tu situacion sin costo y te digo si te conviene cambiarte'.\n"
+        "   - 'me da flojera' -> 'Nathaly se encarga de todo, tu solo firmas'.\n"
+        "7. SIEMPRE CIERRA CON CITA: propone agendar la revision con Nathaly. Se concreta, sugiere "
+        "2 horarios de esta semana.\n"
+        "8. NUNCA repitas la misma pregunta. Cada respuesta avanza.\n"
         "9. Si el usuario pide silencio (calla, silencio, basta): responde breve y detente.\n"
         "10. WhatsApp de Nathaly: 662 349 8589."
+    ),
+    "tubandera": (
+        "Eres el Asistente Oficial de Tu Bandera A.C., centro de rehabilitacion en Hermosillo, Sonora (presidido por Roberto Lara). Mision: recuperando vidas, restaurando familias. Ayudas a personas que buscan apoyo para ellas o un familiar, con acompanamiento humano las 24 horas.\n"
+        "REGLAS DURAS:\n"
+        "1. NUNCA des recetas ni prescripciones medicas. NUNCA emitas juicios de valor sobre el usuario o su familia. Jamas diagnostiques. Ante crisis o riesgo, deriva a un humano y a emergencias (911).\n"
+        "2. Nunca uses signos de exclamacion ni markdown ni asteriscos. Nunca digas IA, bot, modelo, algoritmo. Di asistente o te acompano.\n"
+        "3. Habla con calidez, cercania y esperanza. Espanol mexicano neutro. Respuesta humana en 2 a 4 frases cortas.\n"
+        "4. Ofrecemos DIAGNOSTICO GRATUITO inicial. Haz 1 o 2 preguntas basicas respetuosas para orientar. Pide amablemente un telefono de contacto para asignar el diagnostico gratis y que el equipo clinico o Roberto contacten de inmediato.\n"
+        "5. Servicios diferenciadores:\n"
+        "   - TRASLADOS 24/7: vamos por el usuario a donde este o traslados centro a centro.\n"
+        "   - TRATAMIENTO INTEGRAL: evaluacion psicologica, atencion psiquiatrica, 12 Pasos de NA y apoyo espiritual.\n"
+        "   - Flexibilidad: costos y esquemas variables segun cada caso. El primer diagnostico es gratis.\n"
+        "   - Si el contacto es institución/escuela/empresa: ofrece placas de prevencion de adicciones y talleres informativos.\n"
+        "6. MANEJO DE OBJECIONES (desde beneficio): dar el primer paso es lo mas valiente, aqui no te juzgan; no tengo dinero, el diagnostico es gratis; mi familiar no quiere, tu puedes pedir orientacion; la familia es clave.\n"
+        "7. REGLA DE CIERRE OBLIGATORIA: TODA respuesta termina invitando a la valoracion gratuita, a agendar, o a dejar su telefono para que Roberto contacte. Usa SIEMPRE al menos una de estas palabras exactas en tu cierre: valoracion, agendar, Roberto.\n"
+        "8. NUNCA repitas la misma pregunta ni escenario. Cada respuesta avanza con un paso claro.\n"
+        "9. Si pide silencio (calla, silencio, basta, no hables): responde breve y detente.\n"
+        "10. Si preguntan como funciona: es acompanamiento personal, sin que toques nada tecnico."
     ),
 }
 
 FORBIDDEN_RE = re.compile(
     r"\b(ia|agente|modelo|llm|token|prompt|rag|embedding|chatbot|bot|inteligencia artificial)\b", re.I)
 
+INTENT_PATTERNS = {
+    "SILENCE": re.compile(r"\b(calla|silencio|basta|ya no hables|quita la voz|para ya|detente)\b", re.I),
+    "PRICE": re.compile(r"\b(precio|costo|cuanto cuesta|cuanto sale|plan|paquete|tarifa)\b", re.I),
+    "BOOK_APPOINTMENT": re.compile(r"\b(cita|agendar|agenda|reservar|apartar|programar|calendario|disponibilidad)\b", re.I),
+    "LOCATION": re.compile(r"\b(donde estas|ubicacion|direccion|donde quedan|donde estan|oficina|local)\b", re.I),
+}
+
+INTENT_REPLIES = {
+    "sdc": {
+        "SILENCE": "Entendido. Me callo. Avísame si necesitas algo.",
+        "PRICE": "El diagnostico inicial es gratis. Los paquetes exactos y precios te los da Luis Daniel por WhatsApp. Te agendo la llamada esta semana? Tengo hueco martes 10 o jueves 16.",
+        "BOOK_APPOINTMENT": "Te agendo el diagnostico gratis con Luis Daniel. Tengo disponible martes a las 10:00 o jueves a las 16:00. Cual te cuadra?",
+        "LOCATION": "Estamos en Hermosillo, Sonora. Pero trabajamos 100% remoto: tu asistente atiende desde la nube, sin que vengas a oficina. Te cuento como funciona?",
+    },
+    "nathaly": {
+        "SILENCE": "Entendido. Me callo. Avísame si necesitas algo mas.",
+        "PRICE": "La revision inicial con Nathaly es gratis. La cotizacion exacta te la da ella por WhatsApp al 662 349 8589. Agendamos tu diagnostico esta semana? Tengo martes 10 u jueves 16.",
+        "BOOK_APPOINTMENT": "Te agendo la revision contable gratis con Nathaly. Tengo martes a las 10:00 o jueves a las 16:00. Cual prefieres?",
+        "LOCATION": "Nathaly atiende en Hermosillo, Sonora, y tambien 100% remoto. Todo por WhatsApp y videollamada. Te agendo la revision gratis?",
+    },
+    "tubandera": {
+        "SILENCE": "Entendido. Me callo. Avisame si necesitas algo.",
+        "PRICE": "La primera valoracion en Tu Bandera A.C. es gratuita. El plan y los costos exactos los define Roberto en una llamada sin compromiso. Dejame tus datos y te contacta.",
+        "BOOK_APPOINTMENT": "Con gusto te apoyo. La primera valoracion en Tu Bandera A.C. es sin costo. Dejame tu nombre y telefono y Roberto te contacta para agendarte, o escríbenos por WhatsApp y Telegram.",
+        "LOCATION": "Estamos en Cofre del Perote 9347, Hermosillo, Sonora. Tambien atendemos remoto. Dejame tus datos y te digo como llegar o coordinamos.",
+    },
+}
 
 def clean_reply(text: str) -> str:
-    """Limpieza determinista SOUL: exclamaciones fuera, markdown suave, longitud voz."""
     text = re.sub(r"<[^>]+>", "", text or "")
-    text = text.replace("!", ".").replace("¡", "")
+    text = text.replace("¡", "").replace("!", ".")
     text = re.sub(r"\s{2,}", " ", text)
     text = re.sub(r"[.,]{2,}", ".", text)
-    # voz: cortar a ~300 chars en frase completa (evita TTS eterno)
     if len(text) > 320:
         cut = text.rfind(". ", 0, 320)
         if cut != -1:
@@ -96,7 +153,6 @@ def clean_reply(text: str) -> str:
 
 
 def soft_replace_tech(text: str) -> str:
-    """Reemplaza palabras técnicas que se colaran del LLM (defensa en profundidad)."""
     reps = [
         (r"\binteligencia artificial\b", "mi asistente"),
         (r"\bIA\b", "mi asistente"),
@@ -113,30 +169,83 @@ def soft_replace_tech(text: str) -> str:
     return text
 
 
+
+CTA_WORDS = ("valoracion", "agendar", "roberto")
+def ensure_cta_tubandera(person: str, text: str) -> str:
+    if person != "tubandera" or not text:
+        return text
+    low = text.lower()
+    if any(w in low for w in CTA_WORDS):
+        return text
+    return text.rstrip() + " Cuando quieras damos el siguiente paso: te agendo la valoracion gratuita de Tu Bandera, o dejas tu telefono y Roberto te contacta."
+
+def detect_intent(text: str):
+    t = text.strip().lower()
+    for intent, pattern in INTENT_PATTERNS.items():
+        if pattern.search(t):
+            return intent
+    return None
+
+
+def get_intent_reply(person: str, intent: str) -> str:
+    return INTENT_REPLIES.get(person, INTENT_REPLIES["sdc"]).get(intent, "")
+
+
+async def composio_execute(toolkit: str, action: str, params: dict) -> dict:
+    if not COMPOSIO_API_KEY:
+        return {"error": "no composio key"}
+    try:
+        timeout = ClientTimeout(total=15)
+        async with ClientSession(timeout=timeout) as session:
+            async with session.post(
+                f"https://api.composio.dev/v1/toolkits/{toolkit}/actions/{action}/execute",
+                headers={"Authorization": f"Bearer {COMPOSIO_API_KEY}", "Content-Type": "application/json"},
+                json={"params": params},
+            ) as resp:
+                return await resp.json()
+    except Exception as e:
+        return {"error": str(e)}
+
+
 async def handle_chat_completions(request: web.Request) -> web.Response:
     t0 = time.time()
+    endpoint = "/api/v1/chat/completions"
     try:
         data = await request.json()
     except Exception:
         data = {}
 
-    # Formato nuevo {messages[], person} o legado {text, sid}
     if not data.get("messages") and data.get("text"):
         data["messages"] = [{"role": "user", "content": str(data["text"])}]
 
     messages = list(data.get("messages", []))
+    # Read person from JSON body, query params, or form data
     person = data.get("person")
     if not person:
-        sys0 = ""
-        if messages and messages[0].get("role") == "system":
-            sys0 = str(messages[0].get("content", ""))
-        last_user = next((str(m.get("content", "")) for m in reversed(messages)
-                          if m.get("role") == "user"), "")
-        person = "nathaly" if ("Nathaly" in sys0 or "Nathaly" in last_user
-                               or "contabilidad" in last_user.lower()
-                               or " sat" in last_user.lower()) else "sdc"
+        person = request.query.get("person", "")
+    person = (person or "").strip().lower()
 
-    # Inyectar SOUL si no viene system
+    # Fail-fast if person not in SOULS
+    if person not in SOULS:
+        return web.json_response({
+            "error": f"persona desconocida: {person}. Validas: {list(SOULS.keys())}"
+        }, status=400)
+
+    last_user_text = next((str(m.get("content", "")) for m in reversed(messages)
+                           if m.get("role") == "user"), "")
+
+    # === PASO 2: ROUTER DETERMINISTA ===
+    intent = detect_intent(last_user_text)
+    if intent:
+        reply = get_intent_reply(person, intent)
+        print(f"[router] intent={intent} person={person} {round(time.time()-t0,3)}s", flush=True)
+        return web.json_response({
+            "choices": [{"message": {"role": "assistant", "content": reply}}],
+            "model": f"router-deterministic-{intent.lower()}",
+            "intent": intent,
+        })
+
+    # === PASO 3: LLM FALLBACK ===
     if not messages or messages[0].get("role") != "system":
         messages.insert(0, {"role": "system", "content": SOULS[person]})
     elif "REGLAS DURAS" not in messages[0].get("content", ""):
@@ -152,7 +261,7 @@ async def handle_chat_completions(request: web.Request) -> web.Response:
 
     last_err = None
     for model in MODEL_CHAIN:
-        payload = {"model": model, "messages": messages, "max_tokens": 220}
+        payload = {"model": model, "messages": messages, "max_tokens": 800}
         try:
             timeout = ClientTimeout(total=22)
             async with ClientSession(timeout=timeout) as session:
@@ -166,33 +275,146 @@ async def handle_chat_completions(request: web.Request) -> web.Response:
                     if not content or not content.strip():
                         last_err = f"{model}: empty"
                         continue
-                    # Limpieza SOUL determinista
                     content = clean_reply(content)
+                    content = ensure_cta_tubandera(person, content)
                     if FORBIDDEN_RE.search(content):
                         content = soft_replace_tech(content)
                     res_json["choices"][0]["message"]["content"] = content
                     res_json["model"] = model
-                    print(f"[chat] {model} {round(time.time()-t0,2)}s person={person}", flush=True)
+                    # Record metrics
+                    elapsed = time.time() - t0
+                    REQUEST_LATENCY.labels(endpoint=endpoint).observe(elapsed)
+                    LLM_LATENCY.labels(model=model).observe(elapsed)
+                    REQUEST_COUNT.labels(endpoint=endpoint, status="200").inc()
+                    # Extract token usage if available
+                    usage = res_json.get("usage", {})
+                    if usage.get("prompt_tokens"):
+                        LLM_TOKENS.labels(model=model, type="input").inc(usage["prompt_tokens"])
+                    if usage.get("completion_tokens"):
+                        LLM_TOKENS.labels(model=model, type="output").inc(usage["completion_tokens"])
+                    print(f"[chat] {model} {round(elapsed,2)}s person={person}", flush=True)
                     return web.json_response(res_json)
         except Exception as e:
             last_err = f"{model}: {e}"
             continue
 
-    # Fallback offline: beneficio primero, sin exclamaciones
-    reply = ("Te ayudo con gusto. Cuéntame de tu negocio y qué te está quitando tiempo, "
-             "y te digo exactamente cómo lo resolveríamos. El diagnóstico inicial es gratis.")
+    reply = ("Te ayudo con gusto. Cuentame de tu negocio y que te esta quitando tiempo, "
+             "y te digo exactamente como lo resolveriamos. El diagnostico inicial es gratis.")
     if person == "nathaly":
-        reply = ("Con gusto te ayudo con tu contabilidad. Cuéntame qué necesitas: "
-                 "declaraciones, citas SAT o llevar tus cuentas al día, y agendamos tu "
-                 "diagnóstico gratis con Nathaly. También puedes escribirle directo al 662 349 8589.")
+        reply = ("Con gusto te ayudo con tu contabilidad. Cuentame que necesitas: "
+                 "declaraciones, citas SAT o llevar tus cuentas al dia, y agendamos tu "
+                 "diagnostico gratis con Nathaly. Tambien puedes escribirle directo al 662 349 8589.")
+    REQUEST_COUNT.labels(endpoint=endpoint, status="200").inc()
+    REQUEST_LATENCY.labels(endpoint=endpoint).observe(time.time() - t0)
     return web.json_response({
         "choices": [{"message": {"role": "assistant", "content": reply}}],
         "model": "fallback-offline",
     })
 
 
+async def handle_voice_chat(request: web.Request) -> web.Response:
+    t0 = time.time()
+    try:
+        reader = await request.multipart()
+        audio_data = None
+        person = "sdc"
+        async for part in reader:
+            if part.name == "audio":
+                audio_data = await part.read()
+            elif part.name == "person":
+                person = (await part.text()).strip()
+
+        if not audio_data:
+            return web.json_response({"error": "no audio"}, status=400)
+
+        try:
+            timeout = ClientTimeout(total=45)
+            async with ClientSession(timeout=timeout) as session:
+                async with session.post(STT_URL, data=audio_data,
+                                        headers={"Content-Type": "audio/wav"}) as resp:
+                    if resp.status != 200:
+                        return web.json_response({"error": "stt failed"}, status=502)
+                    stt_res = await resp.json()
+        except Exception as e:
+            return web.json_response({"error": f"stt: {e}"}, status=502)
+
+    except Exception as e:
+        return web.json_response({"error": f"parse: {e}"}, status=400)
+
+    transcript = (stt_res.get("text") or "").strip()
+    if not transcript:
+        return web.json_response({"error": "empty transcript"}, status=400)
+
+    intent = detect_intent(transcript)
+    if intent:
+        reply = get_intent_reply(person, intent)
+        model_used = f"router-deterministic-{intent.lower()}"
+    else:
+        messages = [
+            {"role": "system", "content": SOULS[person]},
+            {"role": "user", "content": transcript},
+        ]
+        headers = {
+            "Content-Type": "application/json",
+            "HTTP-Referer": "https://sonoradigitalcorp.com",
+            "X-Title": "Sonora Digital Corp",
+        }
+        if OPENROUTER_API_KEY:
+            headers["Authorization"] = f"Bearer {OPENROUTER_API_KEY}"
+
+        reply = None
+        model_used = "fallback-offline"
+        for model in MODEL_CHAIN:
+            payload = {"model": model, "messages": messages, "max_tokens": 800}
+            try:
+                timeout = ClientTimeout(total=22)
+                async with ClientSession(timeout=timeout) as session:
+                    async with session.post("https://openrouter.ai/api/v1/chat/completions",
+                                            headers=headers, json=payload) as resp:
+                        if resp.status != 200:
+                            continue
+                        res_json = await resp.json()
+                        content = res_json.get("choices", [{}])[0].get("message", {}).get("content", "")
+                        if content and content.strip():
+                            reply = clean_reply(content)
+                            reply = ensure_cta_tubandera(person, reply)
+                            if FORBIDDEN_RE.search(reply):
+                                reply = soft_replace_tech(reply)
+                            model_used = model
+                            break
+            except Exception:
+                continue
+
+        if not reply:
+            reply = ("Te ayudo con gusto. Cuentame de tu negocio y que te esta quitando tiempo, "
+                     "y te digo exactamente como lo resolveriamos. El diagnostico inicial es gratis.")
+            if person == "nathaly":
+                reply = ("Con gusto te ayudo con tu contabilidad. Cuentame que necesitas: "
+                         "declaraciones, citas SAT o llevar tus cuentas al dia, y agendamos tu "
+                         "diagnostico gratis con Nathaly.")
+
+    audio_response = b""
+    try:
+        async with ClientSession(timeout=ClientTimeout(total=30)) as session:
+            async with session.post(TTS_URL, json={"text": reply, "person": person}) as resp:
+                if resp.status == 200:
+                    audio_response = await resp.read()
+    except Exception:
+        pass
+
+    print(f"[voice] person={person} intent={intent or model_used} {round(time.time()-t0,2)}s", flush=True)
+
+    import base64
+    return web.json_response({
+        "text": reply,
+        "audio_base64": base64.b64encode(audio_response).decode() if audio_response else "",
+        "intent": intent,
+        "model": model_used,
+        "transcript": transcript,
+    })
+
+
 async def handle_stt(request: web.Request) -> web.Response:
-    """Proxy multipart → stt_server :5292."""
     try:
         timeout = ClientTimeout(total=45)
         async with ClientSession(timeout=timeout) as session:
@@ -208,7 +430,6 @@ async def handle_stt(request: web.Request) -> web.Response:
 
 
 async def handle_tts(request: web.Request) -> web.Response:
-    """Proxy GET/POST query/body → tts_server :5293."""
     try:
         timeout = ClientTimeout(total=30)
         async with ClientSession(timeout=timeout) as session:
@@ -235,17 +456,13 @@ async def handle_tts(request: web.Request) -> web.Response:
 
 
 async def handle_citas(request: web.Request) -> web.Response:
-    """POST /api/v1/citas — agenda y manda audio de confirmación al teléfono (wacli).
-    Body: {persona, nombre, negocio, telefono, fecha, hora}
-    """
-    import subprocess
-    import tempfile
-    from pathlib import Path
+    import uuid
+    import datetime
 
     try:
         data = await request.json()
     except Exception:
-        return web.json_response({"error": "json inválido"}, status=400)
+        return web.json_response({"error": "json invalido"}, status=400)
 
     persona = data.get("persona", "sdc")
     nombre = (data.get("nombre") or "para ti").strip()
@@ -256,18 +473,16 @@ async def handle_citas(request: web.Request) -> web.Response:
 
     if not (telefono and fecha and hora):
         return web.json_response({"error": "faltan telefono/fecha/hora"}, status=400)
-    # validar teléfono MX: 10 dígitos o 521+10
     digits = re.sub(r"\D", "", telefono)
     if len(digits) == 10:
         digits = "52" + digits
     elif len(digits) == 11 and digits.startswith("1"):
         digits = "52" + digits[1:]
 
-    # → guardar cita (SQLite determinista, misma DB de leads del tenant)
     db_dir = Path("/opt/hermes/citas_db")
     db_dir.mkdir(parents=True, exist_ok=True)
     db_path = db_dir / f"citas_{persona}.db"
-    import sqlite3, uuid, datetime
+    import sqlite3
     cita_id = str(uuid.uuid4())
     now = datetime.datetime.now().isoformat()
     try:
@@ -282,10 +497,9 @@ async def handle_citas(request: web.Request) -> web.Response:
     except Exception as e:
         print(f"[citas] db error: {e}", flush=True)
 
-    # → TTS confirmación (voz de la persona)
     msg = (f"Hola {nombre}. Tu cita queda confirmada para el {fecha} a las {hora}. "
            f"{'Te espero.' if persona=='sdc' else 'Te espera Nathaly.'} "
-           f"Si necesitas cambiar el día, no dudes en escribir.")
+           f"Si necesitas cambiar el dia, no dudes en escribir.")
     try:
         async with ClientSession(timeout=ClientTimeout(total=30)) as session:
             async with session.post(TTS_URL, json={"text": msg, "person": persona}) as resp:
@@ -294,7 +508,6 @@ async def handle_citas(request: web.Request) -> web.Response:
         print(f"[citas] tts error: {e}", flush=True)
         audio = b""
 
-    # → wacli send voice al teléfono (binario Go + store autenticado personal)
     wacli_status = "skipped-no-audio"
     if audio:
         tmp = tempfile.mktemp(suffix=".ogg")
@@ -320,6 +533,64 @@ async def handle_citas(request: web.Request) -> web.Response:
                               "wacli": wacli_status, "telefono": digits})
 
 
+async def handle_whatsapp(request: web.Request) -> web.Response:
+    """Exponer skill wacli como tool de Hermes (texto/voice/doc).
+    POST /api/v1/whatsapp {action: text|voice|doc|auth, phone, ...}"""
+    data = {}
+    if request.method == "POST":
+        try:
+            data = await request.json()
+        except Exception:
+            return web.json_response({"error": "json invalido"}, status=400)
+    action = (data.get("action") or "text").strip()
+    phone = str(data.get("phone") or "").strip()
+    digits = re.sub(r"\D", "", phone)
+    if len(digits) == 10:
+        digits = "52" + digits
+    elif len(digits) == 11 and digits.startswith("1"):
+        digits = "52" + digits[1:]
+    jid = f"{digits}@s.whatsapp.net"
+    wacli_bin = os.environ.get("WACLI_BIN", "/home/mystic/wacli")
+    wacli_store = os.environ.get("WACLI_STORE", "/home/mystic/.wacli")
+
+    def run_wacli(args):
+        try:
+            r = subprocess.run(args, capture_output=True, text=True, timeout=60)
+            return r.returncode == 0, (r.stdout + r.stderr).strip()
+        except Exception as e:
+            return False, str(e)
+
+    if action == "auth":
+        ok, out = run_wacli([wacli_bin, "doctor", "--store", wacli_store])
+        return web.json_response({"authenticated": "AUTHENTICATED" in out and "true" in out,
+                                  "output": out})
+    if action == "text":
+        text = str(data.get("text") or "").strip()
+        if not text:
+            return web.json_response({"error": "text vacio"}, status=400)
+        ok, out = run_wacli([wacli_bin, "send", "text", "--store", wacli_store,
+                             "--to", jid, "--message", text])
+        return web.json_response({"ok": ok, "output": out, "to": jid,
+                                  "status": "sent" if ok else "error"})
+    if action == "voice":
+        audio_path = str(data.get("audio_path") or "").strip()
+        if not audio_path:
+            return web.json_response({"error": "audio_path vacio"}, status=400)
+        ok, out = run_wacli([wacli_bin, "send", "voice", "--store", wacli_store,
+                             "--to", jid, "--file", audio_path])
+        return web.json_response({"ok": ok, "output": out, "to": jid,
+                                  "status": "sent" if ok else "error"})
+    if action == "doc":
+        file_path = str(data.get("file_path") or "").strip()
+        if not file_path:
+            return web.json_response({"error": "file_path vacio"}, status=400)
+        ok, out = run_wacli([wacli_bin, "send", "file", "--store", wacli_store,
+                             "--to", jid, "--file", file_path])
+        return web.json_response({"ok": ok, "output": out, "to": jid,
+                                  "status": "sent" if ok else "error"})
+    return web.json_response({"error": f"accion desconocida: {action}"}, status=400)
+
+
 async def handle_health(request: web.Request) -> web.Response:
     services = {}
     async with ClientSession(timeout=ClientTimeout(total=3)) as session:
@@ -339,17 +610,25 @@ async def handle_health(request: web.Request) -> web.Response:
 
 app = web.Application(client_max_size=16 * 1024 * 1024)
 app.router.add_get("/health", handle_health)
+app.router.add_get("/metrics", lambda r: web.Response(
+    text=__import__("prometheus_client").generate_latest().decode(),
+    content_type="text/plain"
+))
 app.router.add_post("/api/v1/chat/completions", handle_chat_completions)
 app.router.add_get("/api/v1/chat/completions", handle_chat_completions)
 app.router.add_post("/v1/chat/completions", handle_chat_completions)
-app.router.add_post("/chat", handle_chat_completions)          # compat páginas viejas
+app.router.add_post("/chat", handle_chat_completions)
+app.router.add_post("/api/v1/chat/voice", handle_voice_chat)
 app.router.add_post("/api/stt", handle_stt)
 app.router.add_get("/api/stt", handle_stt)
 app.router.add_post("/api/tts", handle_tts)
 app.router.add_get("/api/tts", handle_tts)
 app.router.add_post("/api/v1/citas", handle_citas)
+app.router.add_post("/api/v1/whatsapp", handle_whatsapp)
+app.router.add_get("/api/v1/whatsapp", handle_whatsapp)
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", "8643"))
     print(f"[ai] escuchando :{port} (chain: {' -> '.join(MODEL_CHAIN)})", flush=True)
     web.run_app(app, host="127.0.0.1", port=port)
+

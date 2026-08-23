@@ -11,8 +11,14 @@ import re
 import time
 
 from aiohttp import web
+from prometheus_client import Counter, Histogram, start_http_server
 
-MODEL_NAME = os.environ.get("STT_MODEL", "small")     # small int8 ~500MB RAM
+# Prometheus metrics
+STT_COUNT = Counter('stt_requests_total', 'STT requests', ['status'])
+STT_LATENCY = Histogram('stt_duration_seconds', 'STT duration')
+start_http_server(9293, addr='0.0.0.0')
+
+MODEL_NAME = os.environ.get("STT_MODEL", "base")     # small int8 ~500MB RAM
 COMPUTE = os.environ.get("STT_COMPUTE", "int8")
 PORT = int(os.environ.get("STT_PORT", "5292"))
 MAX_AUDIO_SECONDS = 60
@@ -31,6 +37,7 @@ def get_model():
 
 
 async def handle_stt(request: web.Request) -> web.Response:
+    t0 = time.time()
     t0 = time.time()
     reader = await request.multipart()
     audio_bytes = None

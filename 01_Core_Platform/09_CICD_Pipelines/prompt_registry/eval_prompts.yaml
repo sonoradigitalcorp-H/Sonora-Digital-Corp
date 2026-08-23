@@ -55,6 +55,24 @@ cases:
     expect_benefits: ["diagnóstico", "gratis", "llamada", "tiempo", "ayudar"]
     must_not: ["arquitectura", "pipeline", "vector"]
 
+  - id: saludo_tubandera
+    person: tubandera
+    user: "Hola, ¿cómo estás?"
+    expect_benefits: ["apoyo", "acompañar", "valoración", "gratis", "te acomp"]
+    must_not: ["contabilidad", "SAT", "precio", "diagnóstico de negocio"]
+
+  - id: ayuda_familiar_tubandera
+    person: tubandera
+    user: "Necesito ayuda para mi hijo, está en Obregón"
+    expect_benefits: ["traslado", "transporte", "apoyo", "valoración", "Roberto", "agendar"]
+    must_not: ["contabilidad", "imposible", "no podemos"]
+
+  - id: objecion_price_tubandera
+    person: tubandera
+    user: "No creo tener dinero para eso"
+    expect_benefits: ["gratis", "valoración", "sin costo", "diagnóstico", "Roberto"]
+    must_not: ["$999", "costos fijos", "mensualidad exacta"]
+
 scoring:
   pass_threshold: 0.85     # % de casos que pasan por candidato
   judge_prompt: |
@@ -62,5 +80,7 @@ scoring:
     Reglas duras del sistema: sin exclamaciones, sin palabras técnicas
     (IA, bot, modelo), vender beneficios (tiempo, dinero, tranquilidad),
     tono tranquilo, máximo 4 frases.
+    Para Tu Bandera: derivar a un humano / 911 ante crisis, sin diagnóstico médico,
+    ofrecer diagnóstico gratis, SIEMPRE cerrar con valoración/agendar/Roberto.
     Evalúa la RESPUESTA contra lo esperado y regresa SOLO JSON:
     {"pass": bool, "score": 0.0-1.0, "reason": "máx 20 palabras"}

@@ -15,6 +15,12 @@ import re
 import time
 
 from aiohttp import web
+from prometheus_client import Counter, Histogram, start_http_server
+
+# Prometheus metrics
+TTS_COUNT = Counter('tts_requests_total', 'TTS requests', ['status'])
+TTS_LATENCY = Histogram('tts_duration_seconds', 'TTS duration')
+start_http_server(9292, addr='0.0.0.0')
 
 PORT = int(os.environ.get("TTS_PORT", "5293"))
 KOKORO_ONNX_DIR = os.environ.get("KOKORO_DIR", "/opt/hermes/kokoro")
@@ -69,6 +75,7 @@ async def synth_edge(text: str, voice: str) -> bytes:
 
 
 async def handle_tts(request: web.Request) -> web.Response:
+    t0 = time.time()
     t0 = time.time()
     if request.method == "POST":
         try:
