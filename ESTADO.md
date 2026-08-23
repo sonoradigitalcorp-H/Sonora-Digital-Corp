@@ -282,3 +282,9 @@
 - **Garantía determinista CTA** (`ensure_cta_tubandera()` en vps_ai_server.py): si respuesta tubandera llega sin CTA, se anexa cierre estándar server-side. Fix de flakiness LLM.
 - **SDD-0013 estable: 7/7 PASS ×3 corridas consecutivas.**
 - **Git**: plan movido a `00_Administration/plans/` (SPECJUDGE exige criterios aceptación en Specs/SDD). Session_logs excluidos del repo vía .gitignore (push protection). Push verde 0/0 en next.
+
+### LIMPIEZA ARQUITECTÓNICA TU BANDERA (2026-08-23 tarde)
+- **Duplicado eliminado**: `/opt/hermes/tu_bandera/` → archivado en `/opt/hermes/_archived/tu_bandera_20260823/`. Todo vive en `/opt/hermes/tubandera/` (bot+kb+db+guards).
+- **Secrets a env**: token TG y key OpenRouter ya NO hardcodeados en el bot; inyectados via `Environment=` en `tubandera-bot.service`. Repo limpio para push protection.
+- **Trazabilidad activa**: bot registra cada usuario nuevo con tenant_id (`TB-{chat_id}`) vía personas_db.py; familiares vinculables.
+- **Repo sincronizado**: bot/scoring/guards/personas_db/indexador en `02_Client_Projects/Tu_Bandera_Froy/02_Source_Code/`. Push verde next 0/0.
