@@ -288,3 +288,9 @@
 - **Secrets a env**: token TG y key OpenRouter ya NO hardcodeados en el bot; inyectados via `Environment=` en `tubandera-bot.service`. Repo limpio para push protection.
 - **Trazabilidad activa**: bot registra cada usuario nuevo con tenant_id (`TB-{chat_id}`) vía personas_db.py; familiares vinculables.
 - **Repo sincronizado**: bot/scoring/guards/personas_db/indexador en `02_Client_Projects/Tu_Bandera_Froy/02_Source_Code/`. Push verde next 0/0.
+
+### FRONTEND TUBANDERA REDESIGN PROFESIONAL (2026-08-23 noche)
+- **tubandera.html v2 limpia**: fondo claro (paper), navy+rojo acento, tipografía Inter, mucho whitespace. SIN carrusel ni saturación. Secciones: nav sticky, hero split + badge "línea activa", trust strip 3 items, servicios 4 cards SVG inline, proceso 3 pasos, galería tira snap-scroll (7 imágenes Gemini), sobre Roberto con cita, CTA band navy, footer donataria.
+- **Imágenes Gemini integradas**: renombradas a URLs limpias (`g1-g7.jpg`, `logo.jpeg`, `hero-familia.jpeg`, `about-restaurando.jpg`) en `/var/www/sonoradigitalcorp/tubandera_assets/`. Originales conservados.
+- Backup diseño anterior: `tubandera.html.bak-saturada-20260823`. Stack chat+voz IDÉNTICO conservado (person:tubandera, STT/TTS, auto-stop silencio).
+- Verificado: página 200, 10/10 imágenes 200, suite 9/9 PASS.
