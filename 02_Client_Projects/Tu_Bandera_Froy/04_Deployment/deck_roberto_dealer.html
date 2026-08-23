@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propuesta Tecnológica: Campaña Froy & Tu Bandera A.C. | Sonora Digital Corp</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #080c14;
+      --bg-card: rgba(18, 24, 38, 0.75);
+      --accent-gold: #f59e0b;
+      --accent-blue: #2563eb;
+      --accent-emerald: #10b981;
+      --accent-purple: #8b5cf6;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --shadow-glow: 0 10px 40px rgba(37, 99, 235, 0.2);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(37, 99, 235, 0.15) 0%, transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(245, 158, 11, 0.12) 0%, transparent 40%);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .deck-container {
+      max-width: 1000px;
+      width: 100%;
+      position: relative;
+    }
+
+    .slide {
+      background: var(--bg-card);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 24px;
+      padding: 48px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), var(--shadow-glow);
+      display: none;
+      flex-direction: column;
+      min-height: 560px;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    .slide.active {
+      display: flex;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .badge {
+      background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(245, 158, 11, 0.2));
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .slide-number {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    h1, h2 {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      line-height: 1.2;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #ffffff, #cbd5e1);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    h2 {
+      font-size: 1.8rem;
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 10px;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      transition: all 0.3s ease;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(37, 99, 235, 0.5);
+      background: rgba(255, 255, 255, 0.06);
+      transform: translateY(-3px);
+    }
+
+    .icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 16px;
+    }
+
+    .icon-box.gold {
+      background: linear-gradient(135deg, var(--accent-gold), #d97706);
+    }
+
+    .icon-box.emerald {
+      background: linear-gradient(135deg, var(--accent-emerald), #059669);
+    }
+
+    .feature-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #f1f5f9;
+    }
+
+    .feature-desc {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    .controls {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 24px;
+      width: 100%;
+    }
+
+    .btn-nav {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 12px 24px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-nav:hover {
+      background: rgba(255, 255, 255, 0.18);
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.2);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .dot.active {
+      background: var(--accent-gold);
+      width: 28px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="deck-container">
+    
+    <!-- SLIDE 1: Cover -->
+    <div class="slide active" id="slide-1">
+      <div class="slide-header">
+        <span class="badge">Sonora Digital Corp x Roberto Dealer</span>
+        <span class="slide-number">01 / 05</span>
+      </div>
+      <div style="flex: 1; display: flex; flex-direction: column; justify-content: center;">
+        <h1 style="font-size: 2.8rem;">Ecosistema Inteligente de Participación y Salud</h1>
+        <p class="subtitle">Estrategia Tecnológica de Atención Ciudadana 24/7 para la Campaña de Froy y Modernización Digital para Tu Bandera A.C.</p>
+        
+        <div class="grid-2" style="margin-top: 20px;">
+          <div class="feature-card">
+            <div class="icon-box gold">🏛</div>
+            <div class="feature-title">Canal Ciudadano 24/7 Froy</div>
+            <div class="feature-desc">Buzón de quejas, propuestas e interactividad continua con la ciudadanía de Hermosillo.</div>
+          </div>
+          <div class="feature-card">
+            <div class="icon-box emerald">🌱</div>
+            <div class="feature-title">Tu Bandera A.C. Tech</div>
+            <div class="feature-desc">Atención IA a familias, internamiento y seguimiento de pacientes en rehabilitación.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 2: Campaña Froy Telegram/WhatsApp -->
+    <div class="slide" id="slide-2">
+      <div class="slide-header">
+        <span class="badge">Campaña Froy Hermosillo</span>
+        <span class="slide-number">02 / 05</span>
+      </div>
+      <h2>Bot Ciudadano de Atención e Interacción 24/7</h2>
+      <p class="subtitle">Canal directo en Telegram y WhatsApp para captar el sentir de los hermosillenses y responder con inmediatez.</p>
+
+      <div class="grid-2">
+        <div class="feature-card">
+          <div class="icon-box">💬</div>
+          <div class="feature-title">Escucha y Respuesta Inmediata</div>
+          <div class="feature-desc">El ciudadano registra reportes, quejas o propuestas. El asistente responde al instante agradeciendo su participación y confirmando atención.</div>
+        </div>
+        <div class="feature-card">
+          <div class="icon-box gold">📊</div>
+          <div class="feature-title">Clasificación por Colonia y Sector</div>
+          <div class="feature-desc">Mapeo automático de demandas ciudadanas (agua, seguridad, calles, salud) enviadas en tiempo real al equipo de Froy.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 3: Conexión con Redes Oficiales -->
+    <div class="slide" id="slide-3">
+      <div class="slide-header">
+        <span class="badge">Estrategia Digital</span>
+        <span class="slide-number">03 / 05</span>
+      </div>
+      <h2>Sincronización con Redes Oficiales y Difusión</h2>
+      <p class="subtitle">Conectando la actividad diaria de Froy con la ciudadanía en todos los canales digitales.</p>
+
+      <div class="grid-2">
+        <div class="feature-card">
+          <div class="icon-box emerald">📲</div>
+          <div class="feature-title">Feed de Noticias y Propuestas</div>
+          <div class="feature-desc">Difusión directa de las acciones, propuestas de campaña y agenda diaria de Froy directamente a los usuarios en Telegram/WhatsApp.</div>
+        </div>
+        <div class="feature-card">
+          <div class="icon-box">🔗</div>
+          <div class="feature-title">Integración Redes Sociales</div>
+          <div class="feature-desc">Conexión con Instagram, Facebook y X de Froy para amplificar el alcance de sus propuestas y publicaciones oficiales.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 4: Tu Bandera A.C. -->
+    <div class="slide" id="slide-4">
+      <div class="slide-header">
+        <span class="badge">Tu Bandera A.C.</span>
+        <span class="slide-number">04 / 05</span>
+      </div>
+      <h2>Tecnología para Centros de Rehabilitación</h2>
+      <p class="subtitle">Impacto social real apoyando a las familias y dando seguimiento a los pacientes.</p>
+
+      <div class="grid-2">
+        <div class="feature-card">
+          <div class="icon-box gold">❤️</div>
+          <div class="feature-title">Atención 24/7 a Familias</div>
+          <div class="feature-desc">Asistente IA que brinda orientación empatica a familiares que buscan ayuda, requisitos de internamiento y proceso terapéutico.</div>
+        </div>
+        <div class="feature-card">
+          <div class="icon-box emerald">📋</div>
+          <div class="feature-title">Expediente y Seguimiento Post-Tratamiento</div>
+          <div class="feature-desc">Plataforma ligera de seguimiento para asegurar la reinserción social y la continuidad del programa de 12 pasos.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SLIDE 5: Colaboración Sonora Digital Corp -->
+    <div class="slide" id="slide-5">
+      <div class="slide-header">
+        <span class="badge">Alianza Estratégica</span>
+        <span class="slide-number">05 / 05</span>
+      </div>
+      <h2>Colaboración Sonora Digital Corp & Roberto Dealer</h2>
+      <p class="subtitle">Despliegue ágil, infraestructura 24/7 en la nube y visión de impacto local.</p>
+
+      <div class="grid-2">
+        <div class="feature-card">
+          <div class="icon-box">⚡</div>
+          <div class="feature-title">Despliegue Inmediato (48 Horas)</div>
+          <div class="feature-desc">Estructura multicanal en la nube sin costo de infraestructura local para la campaña ni la asociación.</div>
+        </div>
+        <div class="feature-card">
+          <div class="icon-box gold">🤝</div>
+          <div class="feature-title">Acompañamiento Técnico Continuo</div>
+          <div class="feature-desc">Equipo dedicado de Sonora Digital Corp (Mystic / Nodo COSUDE) para personalización y análisis de datos.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONTROLES -->
+    <div class="controls">
+      <button class="btn-nav" id="btnPrev">← Anterior</button>
+      <div class="dots" id="dotsContainer"></div>
+      <button class="btn-nav" id="btnNext">Siguiente →</button>
+    </div>
+
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 5;
+
+    const btnPrev = document.getElementById('btnPrev');
+    const btnNext = document.getElementById('btnNext');
+    const dotsContainer = document.getElementById('dotsContainer');
+
+    function initDots() {
+      dotsContainer.innerHTML = '';
+      for (let i = 1; i <= totalSlides; i++) {
+        const dot = document.createElement('div');
+        dot.className = `dot ${i === currentSlide ? 'active' : ''}`;
+        dot.addEventListener('click', () => goToSlide(i));
+        dotsContainer.appendChild(dot);
+      }
+    }
+
+    function goToSlide(n) {
+      document.getElementById(`slide-${currentSlide}`).classList.remove('active');
+      currentSlide = n;
+      document.getElementById(`slide-${currentSlide}`).classList.add('active');
+      initDots();
+    }
+
+    btnPrev.addEventListener('click', () => {
+      if (currentSlide > 1) goToSlide(currentSlide - 1);
+    });
+
+    btnNext.addEventListener('click', () => {
+      if (currentSlide < totalSlides) goToSlide(currentSlide + 1);
+    });
+
+    initDots();
+  </script>
+</body>
+</html>

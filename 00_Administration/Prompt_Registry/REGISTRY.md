@@ -8,6 +8,7 @@
 |---|---|---|---|---|---|---|
 | `cinematic_hyperreal` | v1.0.0 | **approved** | 94.0 | PASS | 2026-08-13 | imagen/video cinematográfico FLUX/SD + control de guion |
 | `brand_voice` | v1.0.0 | **approved** | 91.0 | PASS | 2026-08-13 | voz/tono de marca personal + colores + filosofía |
+| `content_free` | v1.1.0 | **approved** | 96.0 | PASS | 2026-08-22 | motor contenido 100% libre, neutral, anti-gasto (SDD 0011) |
 
 ## Historial de evaluaciones
 
@@ -16,6 +17,8 @@
 | 2026-08-13 | cinematic_hyperreal v1.0.0 | PASS | 94.0 | 80 | cumple CA1-CA6, coverage Gherkin, costo<=$0.50 |
 | 2026-08-13 | (prueba negativa, prompt malo) | FAIL | 0.0 | 80 | omitió directivas, texto en imagen, sin contexto — rechazado ✓ |
 | 2026-08-13 | brand_voice v1.0.0 | PASS | 91.0 | 80 | voz de marca, paleta, filosofía, anti-guiones — aprobado ✓ |
+| 2026-08-22 | content_free v1.0.0 | FAIL | 59.0 | 80 | omitió ACs, assets manuales, feedback_loop, topes — mejorado ✓ |
+| 2026-08-22 | content_free v1.1.0 | PASS | 96.0 | 80 | cubre AC1-AC6, Gherkin 1-3, $0 libre, neutral — aprobado ✓ |
 
 ## Cómo registrar un nuevo prompt
 1. Crear `prompts/<id>/` con spec → features (Gherkin/BDD) → PROMPT.md.

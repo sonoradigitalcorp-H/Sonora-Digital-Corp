@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tu Bandera A.C. | Tratamiento Integral de Adicciones & Diagnóstico Gratuito 24/7</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-light: #f8fafc;
+      --card-bg: #ffffff;
+      --emerald: #059669;
+      --emerald-dark: #047857;
+      --emerald-light: #d1fae5;
+      --blue: #0284c7;
+      --gold: #d97706;
+      --text-dark: #0f172a;
+      --text-muted: #64748b;
+      --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.08);
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      line-height: 1.6;
+    }
+
+    /* Header */
+    header {
+      background: var(--card-bg);
+      border-bottom: 1px solid #e2e8f0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 16px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .brand-logo {
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, var(--emerald), var(--blue));
+      border-radius: 12px;
+      color: white;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .brand-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text-dark);
+    }
+
+    .brand-subtitle {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .header-contact {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .phone-btn {
+      background: var(--emerald-light);
+      color: var(--emerald-dark);
+      border: 1px solid rgba(5, 150, 105, 0.3);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Hero */
+    .hero {
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .hero-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.8rem;
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--text-dark);
+      margin-bottom: 20px;
+    }
+
+    .hero-title span {
+      color: var(--emerald);
+    }
+
+    .hero-desc {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      margin-bottom: 30px;
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      cursor: pointer;
+      border: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--emerald), var(--emerald-dark));
+      color: white;
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--text-dark);
+      border: 1px solid #cbd5e1;
+    }
+
+    .hero-card {
+      background: var(--card-bg);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid #e2e8f0;
+    }
+
+    .hero-card-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+
+    /* Grid de Servicios */
+    .section-title {
+      text-align: center;
+      font-family: 'Outfit', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      margin: 60px 0 16px 0;
+    }
+
+    .section-desc {
+      text-align: center;
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 40px auto;
+    }
+
+    .services-grid {
+      max-width: 1200px;
+      margin: 0 auto 60px auto;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+    }
+
+    .service-card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.04);
+      border: 1px solid #e2e8f0;
+      transition: transform 0.25s ease;
+    }
+
+    .service-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .service-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 12px;
+      background: var(--emerald-light);
+      color: var(--emerald-dark);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.5rem;
+      margin-bottom: 16px;
+    }
+
+    .service-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .service-desc {
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+
+    /* Chat Widget Flotante */
+    .chat-toggle {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--emerald), var(--blue));
+      color: white;
+      border: none;
+      box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4);
+      font-size: 1.8rem;
+      cursor: pointer;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: transform 0.2s ease;
+    }
+
+    .chat-toggle:hover {
+      transform: scale(1.08);
+    }
+
+    .chat-window {
+      position: fixed;
+      bottom: 96px;
+      right: 24px;
+      width: 380px;
+      height: 540px;
+      background: var(--card-bg);
+      border-radius: 20px;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+      border: 1px solid #e2e8f0;
+      z-index: 999;
+      display: none;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .chat-window.active {
+      display: flex;
+    }
+
+    .chat-header {
+      background: linear-gradient(135deg, var(--emerald), var(--blue));
+      color: white;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .chat-header-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    .chat-messages {
+      flex: 1;
+      padding: 16px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      background: #f8fafc;
+    }
+
+    .msg {
+      max-width: 82%;
+      padding: 10px 14px;
+      border-radius: 14px;
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+
+    .msg-bot {
+      background: white;
+      color: var(--text-dark);
+      border: 1px solid #e2e8f0;
+      align-self: flex-start;
+      border-bottom-left-radius: 4px;
+    }
+
+    .msg-user {
+      background: var(--emerald);
+      color: white;
+      align-self: flex-end;
+      border-bottom-right-radius: 4px;
+    }
+
+    .chat-input-area {
+      padding: 12px 16px;
+      border-top: 1px solid #e2e8f0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      background: white;
+    }
+
+    .chat-input-area input {
+      flex: 1;
+      border: 1px solid #cbd5e1;
+      border-radius: 20px;
+      padding: 10px 16px;
+      font-size: 0.88rem;
+      outline: none;
+    }
+
+    .chat-btn-mic, .chat-btn-send {
+      background: var(--emerald-light);
+      color: var(--emerald-dark);
+      border: none;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+    }
+
+    .chat-btn-send {
+      background: var(--emerald);
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-logo">TB</div>
+      <div>
+        <div class="brand-name">Tu Bandera A.C.</div>
+        <div class="brand-subtitle">Centro de Rehabilitación Integral | Hermosillo, Sonora</div>
+      </div>
+    </div>
+    <div class="header-contact">
+      <a href="tel:6623645186" class="phone-btn">
+        📞 Roberto Lara (CEO): 662 364 5186
+      </a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div>
+      <h1 class="hero-title">Tu recuperación empieza hoy. <span>Sin juicios de valor.</span></h1>
+      <p class="hero-desc">Ofrecemos diagnóstico gratuito las 24 horas, orientación psicológica y servicio especializado de traslados a donde sea que estés.</p>
+      
+      <div class="hero-buttons">
+        <button class="btn btn-primary" onclick="toggleChat()">🕊️ Diagnóstico Gratuito por Chat</button>
+        <a href="https://wa.me/5216623645186?text=Hola%20Roberto%2C%20requiero%20informaci%C3%B3n%20sobre%20traslados%20o%20internamiento" target="_blank" class="btn btn-secondary">🚚 Solicitar Traslado 24/7</a>
+      </div>
+    </div>
+
+    <div class="hero-card">
+      <div class="hero-card-title">🩺 Atención Humana y Profesional</div>
+      <p style="font-size: 0.92rem; color: var(--text-muted); margin-bottom: 16px;">
+        En Tu Bandera A.C. entendemos que cada historia es única. Te ofrecemos orientación clínica honesta y costos variables adaptados a cada caso.
+      </p>
+      <div style="background: var(--emerald-light); padding: 12px 16px; border-radius: 10px; font-size: 0.88rem; font-weight: 600; color: var(--emerald-dark);">
+        ✓ Diagnóstico Preliminar 100% Gratuito
+      </div>
+    </div>
+  </section>
+
+  <h2 class="section-title">Nuestros Servicios Integrales</h2>
+  <p class="section-desc">Atención especializada para el usuario, acompañamiento a familias e intervenciones preventivas institucionales.</p>
+
+  <section class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🩺</div>
+      <div class="service-title">Diagnóstico Gratuito & Evaluación</div>
+      <div class="service-desc">Orientación clínica inicial por especialistas en salud mental y adicciones, sin prescribir medicamentos ni emitir juicios de valor.</div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">🚚</div>
+      <div class="service-title">Traslados 24/7 (Rescate y Centro a Centro)</div>
+      <div class="service-desc">Unidad médica equipada para ir por el usuario a cualquier lugar de Hermosillo y Sonora o realizar traslados seguros entre instituciones.</div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">🧠</div>
+      <div class="service-title">Tratamiento Integral de 3 Pilares</div>
+      <div class="service-desc">Terapia clínica individual/grupal/familiar, Programa de 12 Pasos de Narcóticos Anónimos y acompañamiento espiritual.</div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">🏫</div>
+      <div class="service-title">Pláticas Preventivas Institucionales</div>
+      <div class="service-desc">Talleres y conferencias informativas para empresas, escuelas e instituciones enfocados en la prevención oportuna.</div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">❤️</div>
+      <div class="service-title">Atención y Apoyo a Familias</div>
+      <div class="service-desc">Espacio de contención emocional, guía terapéutica y asesoría para familiares durante y después del proceso de rehabilitación.</div>
+    </div>
+
+    <div class="service-card">
+      <div class="service-icon">💳</div>
+      <div class="service-title">Costos y Servicios Variables</div>
+      <div class="service-desc">Planes de internamiento y estancia ajustables según las posibilidades de cada familia y las necesidades clínicas del caso.</div>
+    </div>
+  </section>
+
+  <!-- Botón Flotante Chat -->
+  <button class="chat-toggle" onclick="toggleChat()" title="Hablar con Asistente Tu Bandera">🕊️</button>
+
+  <!-- Ventana Chat IA Texto + Voz -->
+  <div class="chat-window" id="chatWindow">
+    <div class="chat-header">
+      <div>
+        <div class="chat-header-title">Asistente Tu Bandera A.C.</div>
+        <div style="font-size: 0.72rem; opacity: 0.9;">Texto + Voz 24/7 | Diagnóstico Gratuito</div>
+      </div>
+      <button onclick="toggleChat()" style="background:none; border:none; color:white; font-size:1.2rem; cursor:pointer;">&times;</button>
+    </div>
+
+    <div class="chat-messages" id="chatMessages">
+      <div class="msg msg-bot">
+        ¡Hola! Te damos la bienvenida a Tu Bandera A.C. Te ofrecemos un **Diagnóstico Gratuito** inicial sin juicios de valor. ¿En qué podemos apoyarte a ti o a tu familia el día de hoy?
+      </div>
+    </div>
+
+    <div class="chat-input-area">
+      <button class="chat-btn-mic" id="btnMic" onclick="toggleSpeech()" title="Hablar por micrófono">🎙️</button>
+      <input type="text" id="chatInput" placeholder="Escribe o habla tu consulta..." onkeypress="if(event.key==='Enter') sendMsg()">
+      <button class="chat-btn-send" onclick="sendMsg()">➔</button>
+    </div>
+  </div>
+
+  <script>
+    const chatWindow = document.getElementById('chatWindow');
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const btnMic = document.getElementById('btnMic');
+
+    let recognition = null;
+    let isListening = false;
+
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognition = new SpeechRecognition();
+      recognition.lang = 'es-MX';
+      recognition.interimResults = false;
+
+      recognition.onresult = (e) => {
+        const text = e.results[0][0].transcript;
+        chatInput.value = text;
+        sendMsg();
+      };
+
+      recognition.onend = () => {
+        isListening = false;
+        btnMic.style.background = 'var(--emerald-light)';
+      };
+    }
+
+    function toggleSpeech() {
+      if (!recognition) {
+        alert('Reconocimiento de voz no soportado en este navegador. Por favor escribe tu mensaje.');
+        return;
+      }
+      if (isListening) {
+        recognition.stop();
+        isListening = false;
+        btnMic.style.background = 'var(--emerald-light)';
+      } else {
+        recognition.start();
+        isListening = true;
+        btnMic.style.background = '#fca5a5';
+      }
+    }
+
+    function toggleChat() {
+      chatWindow.classList.toggle('active');
+    }
+
+    function speakText(text) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+        const clean = text.replace(/[*_#`]/g, '');
+        const utt = new SpeechSynthesisUtterance(clean);
+        utt.lang = 'es-MX';
+        utt.rate = 1.0;
+        window.speechSynthesis.speak(utt);
+      }
+    }
+
+    async function sendMsg() {
+      const text = chatInput.value.trim();
+      if (!text) return;
+
+      chatMessages.innerHTML += `<div class="msg msg-user">${text}</div>`;
+      chatInput.value = '';
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+
+      // Llamada al backend para obtener respuesta y audio
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text })
+        });
+        const data = await response.json();
+        const reply = data.reply || 'Lo siento, no puedo responder ahora.';
+        const audioUrl = data.audioUrl;
+        chatMessages.innerHTML += `<div class="msg msg-bot">${reply}</div>`;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        speakText(reply);
+        if (audioUrl) {
+          const audio = new Audio(audioUrl);
+          audio.play();
+        }
+      } catch (e) {
+        console.error('Chat error', e);
+        chatMessages.innerHTML += `<div class="msg msg-bot">Error al contactar el servidor.</div>`;
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>Sonora Digital Corp · Tu empresa atendiendo sola las 24 horas</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%230A2540'/%3E%3Cstop offset='1' stop-color='%23C9A227'/%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='32' cy='32' r='28' fill='url(%23g)'/%3E%3C/svg%3E">
+<meta name="description" content="Tu negocio atendido al momento, a cualquier hora. Diagnóstico inicial gratis en Hermosillo.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Inter',system-ui,sans-serif;
+  color:#eef2f7;background:#050a14;
+  min-height:100vh;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;
+}
+body[data-person="nathaly"]{color:#eef7f2;background:#04120c}
+
+/* ── fondo: gradiente vivo + grano ── */
+.bg{position:fixed;inset:0;z-index:-2;
+  background:
+    radial-gradient(1200px 800px at 75% -10%, rgba(201,162,39,.16), transparent 60%),
+    radial-gradient(1000px 700px at -10% 110%, rgba(41,98,255,.18), transparent 60%),
+    linear-gradient(160deg,#050a14 0%,#0a1526 55%,#050a14 100%);
+}
+body[data-person="nathaly"] .bg{
+  background:
+    radial-gradient(1200px 800px at 75% -10%, rgba(62,207,142,.14), transparent 60%),
+    radial-gradient(900px 700px at -10% 110%, rgba(13,148,136,.20), transparent 60%),
+    linear-gradient(160deg,#04120c 0%,#07231a 55%,#04120c 100%);
+}
+#orb3d{position:fixed;inset:0;z-index:-1;width:100%;height:100%;pointer-events:none}
+
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:0 clamp(16px,4vw,32px) 90px}
+
+/* ── glass system ── */
+.glass{
+  background:rgba(255,255,255,.055);
+  border:1px solid rgba(255,255,255,.14);
+  backdrop-filter:blur(24px) saturate(150%);
+  -webkit-backdrop-filter:blur(24px) saturate(150%);
+  border-radius:24px;
+  box-shadow:0 24px 60px rgba(0,0,0,.35);
+}
+body[data-person="nathaly"] .glass{
+  background:rgba(230,255,244,.05);border-color:rgba(180,255,220,.13)}
+
+/* ── header ── */
+header{display:flex;align-items:center;justify-content:space-between;padding:26px 0 8px;gap:12px}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;font-size:16px;letter-spacing:.2px}
+.brand-dot{width:26px;height:26px;border-radius:50%;flex:none;
+  background:conic-gradient(from 210deg,#C9A227,#2962ff,#C9A227);
+  box-shadow:0 0 18px rgba(201,162,39,.45)}
+body[data-person="nathaly"] .brand-dot{background:conic-gradient(from 210deg,#3ecf8e,#0d9488,#3ecf8e);box-shadow:0 0 18px rgba(62,207,142,.45)}
+.badge{font-size:11px;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;
+  padding:8px 15px;border-radius:999px;color:#cfd8ea;
+  background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12)}
+body[data-person="nathaly"] .badge{color:#cfeee0}
+
+/* ── hero ── */
+.hero{padding:clamp(34px,7vw,72px) 0 26px;max-width:720px}
+.kicker{font-size:11.5px;font-weight:700;letter-spacing:2.6px;text-transform:uppercase;color:#C9A227;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+body[data-person="nathaly"] .kicker{color:#3ecf8e}
+.kicker::before{content:"";width:26px;height:1.5px;background:currentColor;display:inline-block;opacity:.7}
+h1{font-size:clamp(34px,7vw,60px);font-weight:900;line-height:1.04;letter-spacing:-1.8px;margin-bottom:18px}
+h1 em{font-style:normal;background:linear-gradient(92deg,#C9A227,#f0d68a 55%,#C9A227);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+body[data-person="nathaly"] h1 em{background:linear-gradient(92deg,#3ecf8e,#a7f3d0 55%,#3ecf8e);-webkit-background-clip:text;background-clip:text}
+.hero p{font-size:clamp(15px,2.2vw,17.5px);line-height:1.75;color:#aeb9cd;max-width:560px}
+body[data-person="nathaly"] .hero p{color:#a9cfc0}
+
+/* ── muestras de valor (rail estilo netflix) ── */
+.rail-title{font-size:12px;font-weight:700;letter-spacing:2.4px;text-transform:uppercase;color:#8fa0bb;margin:34px 0 14px;display:flex;justify-content:space-between;align-items:center}
+.rail-title span:last-child{letter-spacing:.4px;font-weight:500;text-transform:none;color:#5b6b85;font-size:11.5px}
+.rail{display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:4px 2px 14px;scrollbar-width:none}
+.rail::-webkit-scrollbar{display:none}
+.vcard{scroll-snap-align:start;flex:0 0 clamp(168px,42vw,208px);padding:20px 18px 18px;position:relative;overflow:hidden;transition:transform .25s,border-color .25s}
+.vcard:hover{transform:translateY(-4px);border-color:rgba(201,162,39,.4)}
+.vcard b{display:block;font-size:clamp(26px,5vw,34px);font-weight:900;letter-spacing:-1px;
+  background:linear-gradient(120deg,#fff,#C9A227);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.vcard:nth-child(even) b{background:linear-gradient(120deg,#fff,#7ea4ff);-webkit-background-clip:text;background-clip:text}
+body[data-person="nathaly"] .vcard b,body[data-person="nathaly"] .vcard:nth-child(even) b{background:linear-gradient(120deg,#fff,#3ecf8e);-webkit-background-clip:text;background-clip:text}
+.vcard i{display:block;font-style:normal;font-size:12.5px;line-height:1.55;color:#9fb0c9;margin-top:8px}
+.vcard::after{content:"";position:absolute;top:-40%;right:-30%;width:130px;height:130px;border-radius:50%;
+  background:radial-gradient(circle,rgba(201,162,39,.14),transparent 70%)}
+
+/* ── catálogo de asistentes por nicho ── */
+.catcard{scroll-snap-align:center;flex:0 0 clamp(230px,78vw,290px);padding:22px 20px;position:relative;overflow:hidden;transition:transform .25s}
+.catcard:hover{transform:translateY(-5px)}
+.catcard .nicho-ic{font-size:26px;margin-bottom:8px;display:block}
+.catcard h4{font-size:16px;font-weight:800;margin-bottom:4px}
+.catcard .tag{font-size:11px;color:#9fb0c9;font-weight:600;letter-spacing:.4px;margin-bottom:10px}
+.catcard ul{list-style:none;display:flex;flex-direction:column;gap:8px;margin-bottom:14px}
+.catcard li{font-size:12.5px;line-height:1.5;color:#c3cfe1;display:flex;gap:8px;align-items:flex-start}
+.catcard li::before{content:"›";color:var(--brand);font-weight:800;flex:none;margin-top:-1px}
+.catcard li b{color:#fff;font-weight:700}
+.catcard .demo{display:inline-flex;align-items:center;gap:7px;background:var(--brand);color:#06121f;font-weight:800;font-size:12.5px;padding:10px 16px;border-radius:999px;border:none;cursor:pointer;transition:filter .2s}
+body[data-person="nathaly"] .catcard .demo{background:#3ecf8e;color:#03130c}
+.catcard .demo:hover{filter:brightness(1.12)}
+
+/* ── modal agenda ── */
+.overlay{position:fixed;inset:0;z-index:60;background:rgba(3,8,16,.72);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:20px}
+.overlay.on{display:flex}
+.agenda{width:min(94vw,460px);padding:26px;border-radius:26px}
+.agenda h3{font-size:20px;font-weight:800;margin-bottom:4px}
+.agenda .sub{font-size:13px;color:#9fb0c9;margin-bottom:18px}
+.agenda label{font-size:11.5px;color:#8fa0bb;font-weight:600;letter-spacing:.6px;text-transform:uppercase;display:block;margin:12px 0 6px}
+.agenda input,.agenda select{width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:13px;padding:13px 15px;font-size:14px;color:#eef2f7;outline:none;font-family:inherit}
+.agenda select option{background:#0a1526;color:#eef2f7}
+.agenda .slots{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.agenda .slot{padding:9px 15px;border-radius:999px;font-size:13px;font-weight:600;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);color:#dfe7f2;cursor:pointer;transition:all .15s}
+.agenda .slot.sel{background:var(--brand);color:#06121f;border-color:transparent}
+body[data-person="nathaly"] .agenda .slot.sel{background:#3ecf8e;color:#03130c}
+.agenda .confirm{margin-top:20px;width:100%;background:linear-gradient(140deg,var(--brand),#7a6618);color:#06121f;border:none;border-radius:15px;padding:15px;font-weight:800;font-size:15px;cursor:pointer}
+body[data-person="nathaly"] .agenda .confirm{background:linear-gradient(140deg,#3ecf8e,#159d6f);color:#03130c}
+.agenda .close{position:absolute;top:16px;right:18px;width:34px;height:34px;border-radius:50%;border:none;background:rgba(255,255,255,.09);color:#cfd8ea;font-size:18px;cursor:pointer;line-height:1}
+.agenda .ok{font-size:14px;color:#f0d68a;font-weight:700;margin-top:14px;display:none}
+.agenda .ok.on{display:block}
+.agenda .ok.ok-ok{color:#4ade80}
+
+/* ── chat panel ── */
+.section-label{font-size:12px;font-weight:700;letter-spacing:2.4px;text-transform:uppercase;color:#8fa0bb;margin:36px 0 14px}
+.chat{padding:clamp(16px,3vw,24px)}
+#log{display:flex;flex-direction:column;gap:11px;min-height:190px;max-height:min(46vh,430px);overflow-y:auto;padding:4px 6px 10px;scrollbar-width:thin;scrollbar-color:rgba(255,255,255,.15) transparent}
+.msg{max-width:86%;padding:13px 17px;font-size:14.5px;line-height:1.6;border-radius:19px;white-space:pre-wrap;word-break:break-word;animation:pop .28s cubic-bezier(.2,.9,.3,1.2)}
+@keyframes pop{from{opacity:0;transform:translateY(9px) scale(.97)}to{opacity:1;transform:none}}
+.msg.user{align-self:flex-end;background:linear-gradient(140deg,#1d3a6e,#152c56);border:1px solid rgba(126,164,255,.25);border-bottom-right-radius:6px;color:#eef4ff}
+body[data-person="nathaly"] .msg.user{background:linear-gradient(140deg,#124d38,#0c3a2a);border-color:rgba(62,207,142,.3)}
+.msg.bot{align-self:flex-start;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13);border-bottom-left-radius:6px;color:#e8edf6}
+.dots{display:inline-flex;gap:5px;align-items:center;padding:6px 2px}
+.dots i{width:7px;height:7px;border-radius:50%;background:#93a5c4;animation:blink 1.2s infinite}
+.dots i:nth-child(2){animation-delay:.18s}.dots i:nth-child(3){animation-delay:.36s}
+@keyframes blink{0%,70%,100%{opacity:.25;transform:scale(.85)}35%{opacity:1;transform:scale(1)}}
+
+.controls{display:flex;gap:10px;align-items:center;margin-top:14px}
+button{font-family:inherit}
+.round-btn{width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;flex:none;transition:transform .15s,box-shadow .2s}
+.round-btn:active{transform:scale(.94)}
+.round-btn svg{width:21px;height:21px;fill:currentColor}
+.mic{background:linear-gradient(140deg,#2962ff,#1a43a8);color:#fff;box-shadow:0 10px 26px rgba(41,98,255,.35)}
+body[data-person="nathaly"] .mic{background:linear-gradient(140deg,#0d9488,#0f766e);box-shadow:0 10px 26px rgba(13,148,136,.35)}
+.mic.rec{background:linear-gradient(140deg,#dc2626,#991b1b);box-shadow:0 0 0 0 rgba(220,38,38,.5);animation:pulse 1.1s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.45)}50%{box-shadow:0 0 0 15px rgba(220,38,38,0)}}
+.stopbtn{width:44px;height:44px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.16);color:#dbe4f2;opacity:0;pointer-events:none;transition:opacity .25s}
+.stopbtn.on{opacity:1;pointer-events:auto}
+.stopbtn:hover{background:rgba(255,255,255,.14)}
+.field{flex:1;display:flex;min-width:0}
+.field input{flex:1;min-width:0;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.15);border-radius:16px;padding:15px 18px;font-size:14.5px;color:#eef2f7;outline:none;transition:border-color .2s}
+.field input::placeholder{color:#64769380}
+.field input:focus{border-color:rgba(201,162,39,.55)}
+body[data-person="nathaly"] .field input:focus{border-color:rgba(62,207,142,.55)}
+.send{margin-left:10px;background:linear-gradient(140deg,#C9A227,#a5841d);color:#0b1220;border:none;border-radius:16px;padding:0 22px;font-weight:800;font-size:14px;cursor:pointer;transition:filter .2s}
+.send:hover{filter:brightness(1.1)}
+body[data-person="nathaly"] .send{background:linear-gradient(140deg,#3ecf8e,#159d6f);color:#03130c}
+.hint{font-size:11.5px;color:#5f7191;margin-top:11px;display:flex;gap:8px;align-items:center}
+.hint .lvl{flex:0 0 84px;height:5px;border-radius:3px;background:rgba(255,255,255,.09);overflow:hidden}
+.lvl i{display:block;height:100%;width:0;background:linear-gradient(90deg,#2962ff,#C9A227);transition:width .1s;border-radius:3px}
+body[data-person="nathaly"] .lvl i{background:linear-gradient(90deg,#0d9488,#3ecf8e)}
+
+/* ── contacto ── */
+.contact{display:flex;gap:13px;align-items:center;margin:30px 0 6px;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:9px;padding:13px 20px;border-radius:999px;text-decoration:none;font-weight:700;font-size:13.5px;transition:transform .15s}
+.chip:hover{transform:translateY(-2px)}
+.chip.wa{background:rgba(37,211,102,.14);border:1px solid rgba(37,211,102,.35);color:#4ade80}
+.chip.tg{background:rgba(34,158,217,.13);border:1px solid rgba(34,158,217,.35);color:#67c3ee}
+.chip svg{width:17px;height:17px;fill:currentColor}
+.privacy{font-size:11px;color:#54627e;line-height:1.65;margin-top:22px;max-width:640px}
+
+@media(max-width:560px){
+  .msg{max-width:94%}
+  .round-btn{width:48px;height:48px}
+  .controls{flex-wrap:nowrap}
+}
+</style>
+</head>
+<body data-person="sdc">
+<div class="bg"></div>
+<canvas id="orb3d"></canvas>
+
+<div class="wrap">
+<header>
+  <div class="brand"><span class="brand-dot"></span><span id="brandName">Sonora Digital Corp</span></div>
+  <div class="badge" id="badge">Hermosillo · Sonora</div>
+</header>
+
+<section class="hero">
+  <div class="kicker" id="kicker">Atención 24 horas · diagnóstico gratis</div>
+  <h1 id="heroTitle">Tu empresa atendiendo sola <em>las 24 horas.</em></h1>
+  <p id="heroSub">Mensajes, citas y clientes atendidos al momento, de día y de madrugada. Sin sueldos extra ni horarios perdidos. Tú te dedícate a crecer.</p>
+</section>
+
+<div class="rail-title"><span>Muestras de valor</span><span>desliza</span></div>
+<section class="rail" id="rail"></section>
+
+<div class="section-label">Catálogo de asistentes · elige tu negocio</div>
+<section class="rail" id="catalogRail"></section>
+
+<div class="section-label">Pruébalo ahora · escribe o habla</div>
+<section class="chat glass">
+  <div id="log"></div>
+  <div class="controls">
+    <button class="round-btn mic" id="micBtn" aria-label="Hablar">
+      <svg viewBox="0 0 24 24"><path d="M12 14a3 3 0 0 0 3-3V5a3 3 0 1 0-6 0v6a3 3 0 0 0 3 3zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 6 6.92V21h2v-3.08A7 7 0 0 0 19 11h-2z"/></svg>
+    </button>
+    <button class="round-btn stopbtn" id="stopBtn" aria-label="Detener voz">
+      <svg viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="10" rx="2"/></svg>
+    </button>
+    <div class="field"><input id="input" autocomplete="off" placeholder="Cuéntame qué te quita tiempo..."></div>
+    <button class="send" id="sendBtn">Enviar</button>
+  </div>
+  <div class="controls" style="margin-top:8px">
+    <button class="agendar-btn" id="agendaBtn" style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.16);color:#dfe7f2;border-radius:999px;padding:11px 18px;font-size:13px;font-weight:700;cursor:pointer;display:inline-flex;gap:8px;align-items:center">📅 <span id="agendaBtnText">Agendar mi diagnóstico gratis</span></button>
+  </div>
+  <div class="hint"><span id="hintText">Toca el micrófono y habla. Te respondo en voz.</span><span class="lvl"><i id="lvl"></i></span></div>
+</section>
+
+<div class="contact">
+  <a class="chip wa" id="waChip" href="#" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.1l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.6-6.1c-.3-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.5.2-.7l.4-.5c.1-.2.1-.3 0-.5l-.8-1.9c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.9.9-1.1 2.2-.2 3.9a11.6 11.6 0 0 0 4.5 4.3c1.7.8 2.4.9 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.1-1.2l-.4-.3z"/></svg>
+    <span id="waText">WhatsApp directo</span>
+  </a>
+  <a class="chip tg" href="https://t.me/sonora_digital_bot" target="_blank" rel="noopener">
+    <svg viewBox="0 0 24 24"><path d="M21.9 4.6 19 19.3c-.2 1-.8 1.2-1.6.8l-4.5-3.3-2.2 2.1c-.2.2-.4.4-.9.4l.3-4.6L18.6 7c.4-.3-.1-.5-.6-.2L7.7 13.3l-4.4-1.4c-1-.3-1-1 .2-1.4L20.5 3.3c.8-.3 1.5.2 1.4 1.3z"/></svg>
+    Telegram
+  </a>
+</div>
+
+<p class="privacy" id="privacy">Tus datos se usan solo para atender tu solicitud y agendar tu diagnóstico. No se comparten con terceros. Puedes pedir su eliminación en cualquier momento.</p>
+</div>
+
+<div class="overlay" id="agendaOverlay">
+  <div class="agenda glass">
+    <button class="close" id="agendaClose">×</button>
+    <h3>Agenda tu diagnóstico gratis</h3>
+    <div class="sub">Elige el día y la hora que te venga bien. Te llega una confirmación por WhatsApp.</div>
+    <label>Tu nombre</label>
+    <input id="agNombre" placeholder="Nombre" autocomplete="name">
+    <label>Tu negocio (opcional)</label>
+    <input id="agNegocio" placeholder="Ej. Boutique, restaurante..." autocomplete="organization">
+    <label>Tu WhatsApp</label>
+    <input id="agTelefono" placeholder="10 dígitos" inputmode="tel" autocomplete="tel">
+    <label>Elige el día</label>
+    <select id="agFecha"></select>
+    <label>Elige la hora</label>
+    <div class="slots" id="agSlots"></div>
+    <button class="confirm" id="agConfirm">Confirmar cita</button>
+    <div class="ok" id="agOk">Listo. Tu cita queda confirmada y te llega el aviso por WhatsApp.</div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+"use strict";
+/* ══════════════ CONFIG PERSONAS ══════════════ */
+const P = {
+  sdc: {
+    brand:"Sonora Digital Corp", badge:"Hermosillo · Sonora",
+    kicker:"Atención 24 horas · diagnóstico gratis",
+    title:'Tu empresa atendiendo sola <em>las 24 horas.</em>',
+    sub:"Mensajes, citas y clientes atendidos al momento, de día y de madrugada. Sin sueldos extra ni horarios perdidos. Tú te dedícate a crecer.",
+    wa:"5216623538272", waText:"WhatsApp directo",
+    tg:"https://t.me/sonora_digital_bot",
+    greet:"Hola. Soy el asistente de Sonora Digital Corp. Cuéntame de tu negocio y qué te está quitando tiempo. El diagnóstico inicial es gratis.",
+    rail:[
+      ["24/7","Tus clientes reciben respuesta a las 3 am igual que a mediodía"],
+      ["+16 h","Al mes de vuelta para dedicarlas a crecer, no a contestar"],
+      ["30 s","Tarda un cliente en quedar agendado, sin esperas"],
+      ["$0","El diagnóstico inicial. Cero riesgo para ti"],
+      ["∞","Paciencia: nunca pierde la calificación ni olvida una cita"]
+    ]
+  },
+  nathaly: {
+    brand:"Nathaly · Contabilidad", badge:"Contadora certificada · Hermosillo",
+    kicker:"Contabilidad · Importaciones · Trámites SAT",
+    title:'Tu contabilidad en orden y <em>tu tiempo de vuelta.</em>',
+    sub:"Contabilidad mensual, declaraciones, administración e importaciones en regla. Atención personal de Nathaly con respuesta al instante, a cualquier hora.",
+    wa:"5216623498589", waText:"WhatsApp de Nathaly",
+    tg:"https://t.me/HermosilloCont_bot",
+    greet:"Hola. Soy la asistente de Nathaly, contadora en Hermosillo. Te ayudo con contabilidad, declaraciones, importaciones o citas ante el SAT. Qué necesitas.",
+    rail:[
+      ["8 h","Al mes que dejas de perder en recibos, filas y trámites"],
+      ["0","Multas por declaraciones fuera de plazo. Todo en regla"],
+      ["Gratis","Diagnóstico inicial de 15 minutos, sin compromiso"],
+      ["SAT","Citas y aclaraciones gestionadas por ti, sin vueltas"],
+      ["3 am","Tu pregunta respondida igual de madrugada que de día"
+      ]
+    ]
+  }
+};
+const qs=new URLSearchParams(location.search);
+const PERSON=P[qs.get("p")]||P.sdc;
+const PERSON_KEY=(P[qs.get("p")]?qs.get("p"):"sdc");
+document.body.dataset.person=PERSON_KEY;
+document.title=PERSON_KEY==="nathaly"?"Nathaly Contabilidad · Tu tiempo de vuelta":"Sonora Digital Corp · Atención 24 horas";
+document.getElementById("brandName").textContent=PERSON.brand.split("·")[0].trim();
+document.getElementById("badge").textContent=PERSON.badge;
+document.getElementById("kicker").textContent=PERSON.kicker;
+document.getElementById("heroTitle").innerHTML=PERSON.title;
+document.getElementById("heroSub").textContent=PERSON.sub;
+document.getElementById("waChip").href=`https://wa.me/${PERSON.wa}?text=${encodeURIComponent("Hola, quiero mi diagnóstico gratis")}`;
+document.getElementById("waText").textContent=PERSON.waText;
+const railEl=document.getElementById("rail");
+PERSON.rail.forEach(([n,t])=>{const d=document.createElement("div");d.className="vcard glass";d.innerHTML=`<b>${n}</b><i>${t}</i>`;railEl.appendChild(d);});
+
+/* ══════════════ CATÁLOGO DE ASISTENTES POR NICHO ══════════════ */
+const CAT = [
+  {ic:"🛍️", n:"Boutique / Tienda", tag:"No pierdas una venta de madrugada",
+   b:[["24/7","responde tallas, horarios y pedidos a toda hora"],
+      ["Ahorra","~$9,000/mes de una recepcionista"],
+      ["Vende","agenda pedidos mientras duermes"]],
+   demo:"Manejo mi boutique de ropa y pierdo clientes que preguntan de noche"},
+  {ic:"🩺", n:"Consultorio", tag:"Pacientes agendados sin secretaria",
+   b:[["Cero","llamadas perdidas a horas pico"],
+      ["Ahorra","~$7,000/mes de recepción"],
+      ["Agenda","citas y recuerdos automáticos"]],
+   demo:"Mi consultorio pierde citas porque no alcanzo a contestar el teléfono"},
+  {ic:"🍽️", n:"Restaurante", tag:"Reservas y pedidos sin que se te escape uno",
+   b:[["Reservas","automáticas 24/7"],
+      ["Ahorra","~$8,000/mes de mesero telefónico"],
+      ["Recuerda","cumpleaños y clientes frecuentes"]],
+   demo:"Tengo un restaurante y se me escapan reservas de noche"},
+  {ic:"🔧", n:"Taller / Servicio", tag:"Cotizaciones al instante, cliente seguro",
+   b:[["Cotiza","al momento, sin esperar a mañana"],
+      ["Ahorra","~$6,000/mes de atención"],
+      ["Fideliza","seguimiento automático post-servicio"]],
+   demo:"Tengo un taller y los que preguntan precios no me vuelven a escribir"},
+  {ic:"⚖️", n:"Abogados / Notaría", tag:"Consulta inicial filtrada y agendada",
+   b:[["Filtra","solo casos que sí te sirven"],
+      ["Ahorra","~$10,000/mes de recepcionista"],
+      ["Retiene","citas confirmadas sin olvidos"]],
+   demo:"Soy abogado y tengo el teléfono saturado de consultas repetidas"},
+  {ic:"💆", n:"Spa / Belleza", tag:"Citas llenas sin personal extra",
+   b:[["Agenda","24/7 sin depender de horario"],
+      ["Ahorra","~$5,000/mes de recepcionista"],
+      ["Rellena","huecos con recordatorios inteligentes"]],
+   demo:"Tengo un spa y quiero llenar mis citas aunque esté atendiendo"},
+  {ic:"🧮", n:"Contabilidad", tag:"Tus clientes bien atendidos, tú tranquilo",
+   b:[["Responde","dudas fiscales al instante"],
+      ["Retiene","clientes sin esperas"],
+      ["Estructurado","cada cliente en su lugar"]],
+   demo:"Tengo mi despacho contable y quiero que mis clientes estén bien atendidos"},
+  {ic:"🏋️", n:"Gimnasio / Fitness", tag:"Membresías y clases sin secretaria",
+   b:[["Capta","membresías 24/7"],
+      ["Ahorra","~$4,000/mes de recepción"],
+      ["Recuerda","renovaciones automáticas"]],
+   demo:"Tengo un gimnasio y pierdo altas porque no contesto de madrugada"},
+];
+const catRail=document.getElementById("catalogRail");
+CAT.forEach(c=>{
+  const d=document.createElement("div");d.className="catcard glass";
+  d.innerHTML=`<span class="nicho-ic">${c.ic}</span><h4>${c.n}</h4><div class="tag">${c.tag}</div>
+    <ul>${c.b.map(([k,v])=>`<li><b>${k} ·</b> ${v}</li>`).join("")}</ul>
+    <button class="demo">Ver en acción →</button>`;
+  d.querySelector(".demo").onclick=()=>{document.body.dataset.mode="demo";send(c.demo);};
+  catRail.appendChild(d);
+});
+
+/* ══════════════ THREE.JS ORBE REACTIVO ══════════════ */
+const COL={sdc:{a:new THREE.Color("#0A2540"),b:new THREE.Color("#C9A227"),p:new THREE.Color("#7ea4ff")},
+           nathaly:{a:new THREE.Color("#052e21"),b:new THREE.Color("#3ecf8e"),p:new THREE.Color("#a7f3d0")}}[PERSON_KEY];
+
+const canvas=document.getElementById("orb3d");
+const renderer=new THREE.WebGLRenderer({canvas,alpha:true,antialias:true});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(50,innerWidth/innerHeight,.1,50);
+camera.position.set(0,.1,4.4);
+
+// geometría desplazada por CPU (2562 verts, barato)
+const geo=new THREE.IcosahedronGeometry(1.18,4);
+const basePos=geo.attributes.position.array.slice();
+const mat=new THREE.ShaderMaterial({
+  transparent:true,depthWrite:false,
+  uniforms:{uColA:{value:COL.a},uColB:{value:COL.b},uTime:{value:0},uAmp:{value:0}},
+  vertexShader:`varying vec3 vN;varying vec3 vV;varying float vD;
+    uniform float uAmp;attribute float aDisp;
+    void main(){vD=aDisp;vN=normalize(normalMatrix*normal);
+    vec4 mv=modelViewMatrix*vec4(position,1.0);vV=normalize(-mv.xyz);
+    gl_Position=projectionMatrix*mv;}`,
+  fragmentShader:`varying vec3 vN;varying vec3 vV;varying float vD;
+    uniform vec3 uColA;uniform vec3 uColB;uniform float uTime;
+    void main(){float fr=pow(1.0-abs(dot(vN,vV)),2.2);
+    vec3 col=mix(uColA,uColB,clamp(vD*2.2+.25,0.,1.));
+    float glow=.16+.84*fr;
+    gl_FragColor=vec4(col,glow*.92);}`
+});
+geo.setAttribute("aDisp",new THREE.BufferAttribute(new Float32Array(geo.attributes.position.count),1));
+const orb=new THREE.Mesh(geo,mat);
+scene.add(orb);
+
+// partículas shell
+const N=520,pGeo=new THREE.BufferGeometry(),pPos=new Float32Array(N*3);
+for(let i=0;i<N;i++){const r=1.7+Math.random()*1.3,t=Math.random()*Math.PI*2,ph=Math.acos(2*Math.random()-1);
+  pPos[i*3]=r*Math.sin(ph)*Math.cos(t);pPos[i*3+1]=r*Math.sin(ph)*Math.sin(t)*.8;pPos[i*3+2]=r*Math.cos(ph);}
+pGeo.setAttribute("position",new THREE.BufferAttribute(pPos,3));
+const pts=new THREE.Points(pGeo,new THREE.PointsMaterial({size:.02,color:COL.p,transparent:true,opacity:.55,blending:THREE.AdditiveBlending,depthWrite:false}));
+scene.add(pts);
+
+let amp=0,ampTarget=0;
+function resize(){renderer.setSize(innerWidth,innerHeight,false);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();}
+addEventListener("resize",resize);resize();
+
+const clock=new THREE.Clock();
+function tick(){
+  requestAnimationFrame(tick);
+  const t=clock.getElapsedTime();
+  amp+=(ampTarget-amp)*.08;
+  // respiración base + audio
+  const breathe=Math.sin(t*1.1)*.045+.05;
+  const A=breathe+amp*.55;
+  const pos=geo.attributes.position.array,dsp=geo.attributes.aDisp.array;
+  for(let i=0;i<pos.length;i+=3){
+    const x=basePos[i],y=basePos[i+1],z=basePos[i+2];
+    const d=Math.sin(x*2.3+t*1.4)*Math.cos(y*2.1-t*1.1)*Math.sin(z*1.9+t*.8)*.5+.5;
+    const f=1+d*A*.34;
+    pos[i]=x*f;pos[i+1]=y*f;pos[i+2]=z*f;dsp[i/3]=d;
+  }
+  geo.attributes.position.needsUpdate=true;geo.attributes.aDisp.needsUpdate=true;
+  orb.rotation.y=t*.12;pts.rotation.y=-t*.05;
+  mat.uniforms.uTime.value=t;
+  renderer.render(scene,camera);
+}
+tick();
+
+/* ══════════════ AUDIO GRAPH (voz bot + mic nivel) ══════════════ */
+let ac=null,botAnalyser=null,botSrc=null,micAnalyser=null,micStream=null;
+function ensureAC(){if(!ac){ac=new (window.AudioContext||window.webkitAudioContext)();}}
+function hookBotAudio(el){
+  try{ensureAC();
+    if(!botSrc){botSrc=ac.createMediaElementSource(el);}
+    if(!botAnalyser){botAnalyser=ac.createAnalyser();botAnalyser.fftSize=128;botSrc.connect(botAnalyser);botAnalyser.connect(ac.destination);}
+    else{try{botSrc.disconnect();}catch(e){}
+      botSrc.connect(botAnalyser);}
+  }catch(e){}
+}
+const buf=new Uint8Array(128),mbuf=new Uint8Array(128);
+function audioLevel(){
+  let v=0;
+  if(botAnalyser){botAnalyser.getByteFrequencyData(buf);let s=0;for(let i=2;i<40;i++)s+=buf[i];v=s/38/255;}
+  if(micAnalyser&&recState==="rec"){micAnalyser.getByteFrequencyData(mbuf);let m=0;for(let i=2;i<40;i++)m+=mbuf[i];m=m/38/255;v=Math.max(v,m);
+    document.getElementById("lvl").style.width=Math.min(100,m*160)+"%";}
+  else document.getElementById("lvl").style.width="0%";
+  ampTarget=v;
+  requestAnimationFrame(audioLevel);
+}
+audioLevel();
+
+/* ══════════════ CHAT ══════════════ */
+const API="/api/v1/chat/completions";
+const history=[];
+const log=document.getElementById("log"),input=document.getElementById("input");
+let sid="";try{sid=localStorage.getItem("sdc-sid-"+PERSON_KEY)||"";}catch(e){}
+if(!sid){sid="web-"+Date.now()+"-"+Math.random().toString(36).slice(2,7);try{localStorage.setItem("sdc-sid-"+PERSON_KEY,sid);}catch(e){}}
+
+function addMsg(text,who){
+  const d=document.createElement("div");d.className="msg "+who;d.textContent=text;
+  log.appendChild(d);log.scrollTop=log.scrollHeight;return d;
+}
+addMsg(PERSON.greet,"bot");
+
+let busy=false;
+const SILENCE_RE=/\b(calla|silencio|basta|silencio por favor|no hables|ya no hables|deten|apaga la voz|no leas|quita la voz)\b/i;
+async function send(textOverride){
+  if(busy)return;
+  const q=(textOverride!==undefined?textOverride:input.value.trim());
+  if(!q)return;
+  // comando de silencio: detener voz sin responder largo
+  if(q.length<30 && SILENCE_RE.test(q)){
+    addMsg(q,"user");
+    stopSpeaking();
+    addMsg("Entendido. Dejo de hablar. Escríbeme cuando lo necesites.","bot");
+    input.value="";
+    return;
+  }
+  busy=true;input.value="";
+  addMsg(q,"user");history.push({role:"user",content:q});
+  const thinking=addMsg("","bot");thinking.innerHTML='<span class="dots"><i></i><i></i><i></i></span>';
+  let reply="";
+  try{
+    const msgs=[{role:"system",content:"persona:"+PERSON_KEY},...history.slice(-8)];
+    const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({messages:msgs,person:PERSON_KEY,sid})});
+    const j=await r.json();
+    reply=((j.choices?.[0]?.message?.content)||"").trim()
+       || "No obtuve respuesta en este momento. Escríbeme por WhatsApp y seguimos ahí.";
+  }catch(e){
+    reply="La conexión falló. Escríbeme por WhatsApp y te ayudo igual.";
+  }
+  thinking.textContent=reply;
+  history.push({role:"assistant",content:reply});
+  if(history.length>16)history.splice(0,history.length-16);
+  speak(reply);
+  busy=false;
+}
+document.getElementById("sendBtn").onclick=()=>send();
+input.addEventListener("keydown",e=>{if(e.key==="Enter")send();});
+
+/* ══════════════ VOZ DEL BOT (TTS) ══════════════ */
+let currentAudio=null;
+function stopSpeaking(){
+  if(currentAudio){try{currentAudio.pause();currentAudio.currentTime=0;}catch(e){}currentAudio=null;}
+  document.getElementById("stopBtn").classList.remove("on");
+}
+document.getElementById("stopBtn").onclick=stopSpeaking;
+
+function speak(text){
+  stopSpeaking();
+  if(!text)return;
+  const url=`/api/tts?person=${PERSON_KEY}&text=${encodeURIComponent(text.slice(0,480))}`;
+  const a=new Audio(url);currentAudio=a;a.preload="auto";
+  document.getElementById("stopBtn").classList.add("on");
+  a.onended=()=>document.getElementById("stopBtn").classList.remove("on");
+  a.onerror=()=>document.getElementById("stopBtn").classList.remove("on");
+  const p=a.play();
+  if(p)p.then(()=>hookBotAudio(a)).catch(()=>{/*autoplay bloqueado: queda texto*/});
+}
+
+/* ══════════════ MIC PUSH-TO-TALK → STT ══════════════ */
+let recState="idle",recorder=null,chunks=[],silenceTimer=null;
+const micBtn=document.getElementById("micBtn"),hint=document.getElementById("hintText");
+
+async function startRec(){
+  try{
+    micStream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});
+  }catch(e){hint.textContent="Permiso de micrófono denegado. Actívalo en tu navegador.";return;}
+  ensureAC();
+  const src=ac.createMediaStreamSource(micStream);
+  micAnalyser=ac.createAnalyser();micAnalyser.fftSize=128;src.connect(micAnalyser);
+  const mime=["audio/webm;codecs=opus","audio/webm","audio/mp4"].find(m=>MediaRecorder.isTypeSupported(m))||"";
+  recorder=new MediaRecorder(micStream,mime?{mimeType:mime}:{});
+  chunks=[];
+  recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};
+  recorder.onstop=onRecStop;
+  recorder.start();
+  recState="rec";
+  micBtn.classList.add("rec");
+  hint.textContent="Te escucho. Toca otra vez para enviar.";
+  clearTimeout(silenceTimer);
+  silenceTimer=setTimeout(stopRec,12000);   // máx 12s
+}
+function stopRec(){
+  clearTimeout(silenceTimer);
+  if(recState!=="rec")return;
+  recState="sending";
+  micBtn.classList.remove("rec");
+  hint.textContent="Procesando tu voz...";
+  try{recorder.stop();}catch(e){onRecStop();}
+}
+function onRecStop(){
+  if(micStream){micStream.getTracks().forEach(t=>t.stop());micStream=null;}
+  micAnalyser=null;
+  const blob=new Blob(chunks,{type:chunks[0]?.type||"audio/webm"});
+  if(blob.size<300){recState="idle";hint.textContent="No escuché audio suficiente. Acércate al micrófono o escríbelo.";return;}
+  const fd=new FormData();fd.append("file",blob,"voz.webm");fd.append("lang","es");
+  hint.textContent="Procesando tu voz...";
+  fetch("/api/stt",{method:"POST",body:fd})
+    .then(r=>{if(!r.ok)throw new Error("stt-"+r.status);return r.json();})
+    .then(j=>{
+      const txt=(j.text||"").trim();
+      if(!txt){hint.textContent="No entendí tu audio. Escríbelo o intenta de nuevo más claro.";}
+      else{send(txt);hint.textContent="Toca el micrófono y habla. Te respondo en voz.";}
+    })
+    .catch(()=>{hint.textContent="El asistente escuchó, pero no pudo procesarlo. Escríbelo mientras tanto.";})
+    .finally(()=>{recState="idle";});
+}
+// si el navegador no tiene MediaRecorder, deshabilita mic y avisa
+if(!window.MediaRecorder){micBtn.disabled=true;micBtn.style.opacity=.4;hint.textContent="Tu navegador no graba voz. Escríbeme o usa Chrome/Edge.";}
+micBtn.onclick=()=>{if(busy&&recState==="idle")return;if(recState==="idle")startRec();else stopRec();};
+
+// primer gesto del usuario habilita audio
+["click","keydown","touchstart"].forEach(ev=>
+  addEventListener(ev,function once(){ensureAC();removeEventListener(ev,once);},{once:true}));
+
+/* ══════════════ AGENDA VISIBLE ══════════════ */
+const SLOTS=["09:00","10:00","11:00","12:00","13:00","16:00","17:00","18:00"];
+const overlay=document.getElementById("agendaOverlay");
+const agFecha=document.getElementById("agFecha"),agSlots=document.getElementById("agSlots");
+let selHora="";
+// próximos 14 días hábiles
+(function fillFechas(){
+  const fmt=new Intl.DateTimeFormat("es-MX",{weekday:"long",day:"numeric",month:"long"});
+  for(let i=1;i<=14;i++){
+    const d=new Date();d.setDate(d.getDate()+i);
+    const dow=d.getDay();if(dow===0||dow===6)continue; // saltar finde
+    const iso=new Date(d.getTime()-d.getTimezoneOffset()*60000).toISOString().slice(0,10);
+    const op=document.createElement("option");op.value=iso;op.textContent=fmt.format(d);
+    agFecha.appendChild(op);
+  }
+})();
+function renderSlots(){
+  agSlots.innerHTML="";
+  SLOTS.forEach(h=>{const b=document.createElement("button");b.className="slot"+(h===selHora?" sel":"");b.textContent=h;
+    b.onclick=()=>{selHora=h;renderSlots();};agSlots.appendChild(b);});
+}
+renderSlots();
+function openAgenda(){overlay.classList.add("on");}
+function closeAgenda(){overlay.classList.remove("on");document.getElementById("agOk").classList.remove("on");}
+document.getElementById("agendaBtn").onclick=openAgenda;
+document.getElementById("agendaClose").onclick=closeAgenda;
+overlay.onclick=e=>{if(e.target===overlay)closeAgenda();};
+document.getElementById("agConfirm").onclick=async()=>{
+  const nombre=document.getElementById("agNombre").value.trim();
+  const negocio=document.getElementById("agNegocio").value.trim();
+  const telefono=document.getElementById("agTelefono").value.trim();
+  const fecha=agFecha.value;
+  const okEl=document.getElementById("agOk");
+  okEl.classList.remove("on");
+  if(!nombre){okEl.textContent="Escribe tu nombre para agendar.";okEl.classList.remove("ok-ok");okEl.classList.add("on");return;}
+  if(!telefono||telefono.replace(/\D/g,"").length<10){okEl.textContent="Escribe tu WhatsApp de 10 dígitos para recibir el aviso.";okEl.classList.remove("ok-ok");okEl.classList.add("on");return;}
+  if(!selHora){okEl.textContent="Elige una hora para tu cita.";okEl.classList.remove("ok-ok");okEl.classList.add("on");return;}
+  const btn=document.getElementById("agConfirm");btn.disabled=true;btn.textContent="Confirmando...";
+  try{
+    const r=await fetch("/api/v1/citas",{method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({persona:PERSON_KEY,nombre,negocio,telefono,fecha,hora:selHora})});
+    const j=await r.json();
+    if(j.ok){
+      okEl.textContent="Listo. Tu cita queda confirmada y te llega el aviso por WhatsApp.";
+      okEl.classList.add("ok-ok");okEl.classList.add("on");
+      const pretty=new Date(fecha+"T"+selHora).toLocaleString("es-MX",{weekday:"long",day:"numeric",month:"long",hour:"numeric",minute:"2-digit"});
+      addMsg("Gracias "+nombre+". Tu diagnóstico queda para "+pretty+". Te llega la confirmación por WhatsApp.","bot");
+      setTimeout(closeAgenda,2600);
+    }else{okEl.textContent="No se pudo agendar: "+(j.error||"intenta de nuevo");okEl.classList.remove("ok-ok");okEl.classList.add("on");}
+  }catch(e){okEl.textContent="Error al agendar. Intenta de nuevo.";okEl.classList.remove("ok-ok");okEl.classList.add("on");}
+  btn.disabled=false;btn.textContent="Confirmar cita";
+};
+</script>
+</body>
+</html>
