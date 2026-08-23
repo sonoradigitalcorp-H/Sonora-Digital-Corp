@@ -294,3 +294,12 @@
 - **Imágenes Gemini integradas**: renombradas a URLs limpias (`g1-g7.jpg`, `logo.jpeg`, `hero-familia.jpeg`, `about-restaurando.jpg`) en `/var/www/sonoradigitalcorp/tubandera_assets/`. Originales conservados.
 - Backup diseño anterior: `tubandera.html.bak-saturada-20260823`. Stack chat+voz IDÉNTICO conservado (person:tubandera, STT/TTS, auto-stop silencio).
 - Verificado: página 200, 10/10 imágenes 200, suite 9/9 PASS.
+
+### HARDENING SEGURIDAD VPS (2026-08-23 noche)
+- **fail2ban ACTIVADO** (jail sshd, maxretry=3, bantime 1h, backend systemd). Bloquea botnets SSH activas (solv/hunter/root) que estaban escaneando el puerto 22 en vivo. Inactivo antes = riesgo alto.
+- **Puerto 5291 (webhook Hermosillo) cerrado al mundo en UFW**: ahora UFW solo expone 22/80/443. El webhook sigue en loopback y se sirve vía nginx `/webhook/`. Elimina exposición directa saltándose nginx.
+- **Verificado post-cambio**: fail2ban active, nginx active, suite 9/9 PASS, los 7 servicios activos. UFW limpio (solo 22/80/443).
+- **Estado general**: RAM 10GB libres, disco 31%, 0 zombies, 0 defunct, sin minería, Docker solo loopback (ollama/qdrant/n8n correctos), unattended-upgrades activo.
+
+### AUDITORÍA STATUS VPS (solo lectura previa)
+- Todo sano, 0 procesos fantasmas, 0 zombies. Botnets SSH detectadas → mitigadas con fail2ban.
