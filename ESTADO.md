@@ -4,7 +4,9 @@
 - **Diseño Gemini Pro Max** (Tailwind + glassmorphism + Lucide + secciones de servicios + chatbot IA).
 - **Tu Bandera A.C.** (`/tubandera.html`): rojo/azul, secciones modelo tratamiento + chatbot IA embebido (persona `tubandera`). Imágenes rotas → assets locales.
 - **Nathaly Contabilidad** (`/nathaly.html`): verde contabilidad, servicios (contabilidad mensual, estrategia fiscal, contabilidad inteligente, SAT) + chatbot IA embebido (persona `nathaly`). Rempleazó diseño viejo.
-- **Chatbot IA común**: botón flotante → panel chat + mic auto-stop silencio (1200ms) + TTS. POST `/api/v1/chat/completions` con `person`.
+- **Stack audio/voz IDÉNTICO en todas las páginas Pro Max**: mic getUserMedia + MediaRecorder + auto-stop por silencio (avg<12 por >1200ms) + POST /api/stt + TTS speechSynthesis. Sin diferencias entre páginas.
+- **`hermosillo.html` (diseño viejo verde con orbe) ELIMINADO** → redirige a `nathaly.html` (Pro Max). Ya no hay página verde con orbe sin mic.
+- **Chatbot IA común**: botón flotante → panel chat + mic auto-stop silencio + TTS. POST `/api/v1/chat/completions` con `person`.
 - **PROBLEMA CI push protection**: session logs con `Bearer {KEY}` hacían que GitHub rechazara push. NO versionar session logs (solo `00_Administration/Session_Logs/` local).
 - **docker-compose.yml** movido raíz → `01_Core_Platform/Infrastructure/sonora-digital-corp/` (esqueleto canónico VERDE).
 
