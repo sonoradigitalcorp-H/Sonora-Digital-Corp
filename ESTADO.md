@@ -1,5 +1,13 @@
 # ESTADO VIVO
 
+## PÁGINAS PRO MAX POR CLIENTE (2026-08-23)
+- **Diseño Gemini Pro Max** (Tailwind + glassmorphism + Lucide + secciones de servicios + chatbot IA).
+- **Tu Bandera A.C.** (`/tubandera.html`): rojo/azul, secciones modelo tratamiento + chatbot IA embebido (persona `tubandera`). Imágenes rotas → assets locales.
+- **Nathaly Contabilidad** (`/nathaly.html`): verde contabilidad, servicios (contabilidad mensual, estrategia fiscal, contabilidad inteligente, SAT) + chatbot IA embebido (persona `nathaly`). Rempleazó diseño viejo.
+- **Chatbot IA común**: botón flotante → panel chat + mic auto-stop silencio (1200ms) + TTS. POST `/api/v1/chat/completions` con `person`.
+- **PROBLEMA CI push protection**: session logs con `Bearer {KEY}` hacían que GitHub rechazara push. NO versionar session logs (solo `00_Administration/Session_Logs/` local).
+- **docker-compose.yml** movido raíz → `01_Core_Platform/Infrastructure/sonora-digital-corp/` (esqueleto canónico VERDE).
+
 ## MODELO PRINCIPAL DEEPSEEK (2026-08-23) — páginas y bots
 - **`deepseek/deepseek-v4-flash-0731` = PRINCIPAL** en páginas y bots; fallback `nvidia/nemotron-3-ultra-550b-a55b:free`.
 - ⚠️ **deepseek es RAZONADOR**: `content` sale vacío si `max_tokens` es bajo (todo se va a `reasoning`).
