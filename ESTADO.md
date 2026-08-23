@@ -303,3 +303,49 @@
 
 ### AUDITORÍA STATUS VPS (solo lectura previa)
 - Todo sano, 0 procesos fantasmas, 0 zombies. Botnets SSH detectadas → mitigadas con fail2ban.
+
+## ECOSISTEMA AGENTICO (2026-08-23) — wacli, memoria, observabilidad, TTS/STT
+
+### HOTFIX TUBANDERA (crítico) ✅
+- **Bug**: la web `tubandera.html` respondía como Nathaly (contabilidad). Frontend enviaba `person:"tubandera"` correcto, PERO `vps_ai_server.py` no mapeaba `tubandera` correctamente y el fallback derivaba a `nathaly`/`sdc` por keywords.
+- **Fix**: `person` ahora se lee de body/query, se normaliza `strip().lower()`, y **fail-fast 400** si persona desconocida. Eliminada la inferencia por keywords (sys0/last_user).
+- Verificado: `person:"tubandera"` responde contexto adicciones (Roberto/valoración), `person:"inexistente"` → 400. Suite 9/9.
+
+### WACLI 24/7 (sesión permanente) ✅
+- **Store real**: `/home/mystic/.wacli` (NO `/home/ubuntu/.wacli` que estaba vacío). AUTHENTICATED=true, JID `5216623538272` (tu número).
+- **`wacli-keepalive.service` corregido**: apunta al store real (`/home/mystic/.wacli`), `Restart=always`, env `HOME=/home/mystic`. Activo.
+- **Endpoint `/api/v1/whatsapp`** en vps_ai_server.py: acciones `auth|text|voice|doc`. Solo loopback (nginx lo expone si se configura).
+- Verificado: envío texto a 5216623498589 (Nathaly) OK, envío nota de voz (TTS→wacli) OK.
+- **Skill `wacli_skill.py`**: binario `/home/mystic/wacli`, flags `--message` (no `--text`), `--store`. En `/opt/hermes/tubandera/` y repo local.
+
+### MEMORIA NATIVA HERMES + EMBEDDINGS ✅
+- `config.yaml` → `memory.memory_enabled=true`, `user_profile_enabled=true`, `provider=holographic` (SQLite `memory_store.db`).
+- **`mem0.json`** creado (OSS): embedder `nomic-embed-text` (768d), LLM `qwen3:4b`, vector_store qdrant. Listo para switch a `provider:mem0`.
+- **`nomic-embed-text`** instalado en Ollama VPS (768d, $0, español). `all-minilm`+`qwen3:4b` también.
+- Qdrant re-indexado: `tubandera_kb` 66 pts, `engram_memories`.
+
+### DOCKER COMPOSE UNIFICADO `/opt/hermes/compose/` ✅
+- `ollama` (qwen3:4b, nomic-embed-text, all-minilm), `qdrant`, `n8n`, `postgres-metrics`, `kokoro-tts`.
+- **Kokoro-FastAPI CPU** (`:8880`, limit 4G): TTS local $0, OpenAI-compatible. edge-tts sigue como fallback.
+- ⚠️ ollama perdió modelos al recrear (volumen nuevo) → re-pullado. Listo.
+- ⚠️ `docker-compose` v1 python tiene bug al recrear grafana → usar `docker run` directo.
+
+### OBSERVABILIDAD `/opt/monitoring/` ✅
+- **Prometheus** (`:9090`, host-net), **node_exporter** (`:9100`), **Grafana** (`:3000`, bridge+host.docker.internal).
+- Grafana datasource **Prometheus** provisionado (isDefault, url `http://host.docker.internal:9090`).
+- **Instrumentados con `/metrics`**: vps_ai_server (`:9091`), stt_server (`:9293`), tts_server (`:9292`). prometheus_client 0.26.0 en venv. Targets UP confirmados.
+- `prometheus.yml`: scrapea vps_ai/tts/stt/node/prometheus.
+
+### SYNC MÉTRICAS → POSTGRES ✅
+- **`sync_metrics.py`** (`/opt/hermes/scripts/`) : SQLite tenants (citas_sdc, tubandera, hermosillo_leads) → Postgres `metrics`. Postgres 6 tablas (citas/leads/llm/voice/eval/health).
+- **Cron cada 10 min** (`*/10 * * * *`, log `/var/log/sync_metrics.log`). Verificado: citas=3, tubandera=2 pasan a metrics.
+- Postgres solo loopback (`127.0.0.1:5432`).
+
+### MEOWCALLER / WACALLS SPIKE (compilado, testeo manual) ⏳
+- **WaCalls server** compilado: `/opt/meowcaller-spike/server` (39MB, Go 1.22). Flags: `-addr` (default :8080), `-db`, `-debug`, `-max-calls-per-session`.
+- Requiere QR pairing + segundo teléfono para probar llamada real. **No probado aún** (necesita sesión WhatsApp de test = número Nathaly).
+
+### REGLA DE ORQUESTACIÓN (vigente)
+- **Sync ETL / métricas / agendado** → script+cron (skill nativa Hermes).
+- **Flujos decisionales / UI / notificaciones** → n8n.
+- **Pesado** (LLM, TTS, STT, montos) → VPS. Local solo terminal.

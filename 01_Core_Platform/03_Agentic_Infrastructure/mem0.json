@@ -1,0 +1,29 @@
+{
+  "mode": "oss",
+  "user_id": "mystic",
+  "agent_id": "hermes-sdc",
+  "oss": {
+    "llm": {
+      "provider": "ollama",
+      "config": {
+        "model": "qwen3:4b",
+        "ollama_base_url": "http://149.56.46.173:11434"
+      }
+    },
+    "embedder": {
+      "provider": "ollama",
+      "config": {
+        "model": "nomic-embed-text",
+        "ollama_base_url": "http://149.56.46.173:11434",
+        "embedding_dims": 768
+      }
+    },
+    "vector_store": {
+      "provider": "qdrant",
+      "config": {
+        "url": "http://localhost:6333",
+        "collection_name": "mem0"
+      }
+    }
+  }
+}
