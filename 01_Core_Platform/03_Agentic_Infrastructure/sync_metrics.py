@@ -17,7 +17,7 @@ from datetime import datetime
 from pathlib import Path
 import psycopg2
 
-PG_PASSWORD = os.environ.get("METRICS_DB_PASSWORD", "changeme_secure_metrics_password")
+PG_PASSWORD = os.environ.get("METRICS_DB_PASSWORD", "")
 PG_HOST = os.environ.get("METRICS_PG_HOST", "127.0.0.1")
 PG_PORT = os.environ.get("METRICS_PG_PORT", "5432")
 PG_USER = os.environ.get("METRICS_PG_USER", "metrics")
@@ -30,10 +30,8 @@ SB_DB = os.environ.get("SUPABASE_DB", "postgres")
 SB_USER = os.environ.get("SUPABASE_USER", "postgres")
 SB_PASS = os.environ.get("SUPABASE_PASS", "")
 if not SB_PASS:
-    for line in open("/home/mystic/supabase/docker/.env"):
-        if line.startswith("POSTGRES_PASSWORD="):
-            SB_PASS = line.split("=", 1)[1].strip().strip('"').strip("'")
-            break
+    # Fail-closed: credenciales via env (cron wrapper), nunca de archivo.
+    print("[sync] SUPABASE_PASS no seteado via env", flush=True)
 
 def sb_conn():
     return psycopg2.connect(host=SB_HOST, port=SB_PORT, dbname=SB_DB,

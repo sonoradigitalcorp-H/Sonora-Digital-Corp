@@ -72,10 +72,8 @@ SUPABASE_DB   = os.environ.get("SUPABASE_DB", "postgres")
 SUPABASE_USER = os.environ.get("SUPABASE_USER", "postgres")
 SUPABASE_PASS = os.environ.get("SUPABASE_PASS", "")
 if not SUPABASE_PASS:
-    for line in open("/home/mystic/supabase/docker/.env"):
-        if line.startswith("POSTGRES_PASSWORD="):
-            SUPABASE_PASS = line.split("=",1)[1].strip().strip('"').strip("'")
-            break
+    # Fail-closed: credenciales via env inyectadas por systemd, NUNCA leidas de archivo.
+    print("[supabase] SUPABASE_PASS no seteado — fallo la conexion por env", flush=True)
 
 def _pg_conn(tenant="tubandera"):
     conn = psycopg2.connect(
