@@ -325,12 +325,12 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--muted);font-s
   const fab=document.getElementById("chatFabA"),panel=document.getElementById("chatPanelA");
   const body=document.getElementById("chatBodyA"),txt=document.getElementById("chatTextA");
   const micBtn=document.getElementById("chatMicA"),sendBtn=document.getElementById("chatSendA");
-  let open=false,recState="idle",recorder=null,chunks=[],stream=null,analyser=null,actx=null,silenceStart=null;
+  let open=false,recState="idle",recorder=null,chunks=[],stream=null,analyser=null,actx=null,silenceStart=null,currentAudio=null;
   function add(t,role){const d=document.createElement("div");d.className="chat-msg "+role;d.textContent=t;body.appendChild(d);body.scrollTop=body.scrollHeight;}
   function greet(){if(!body.children.length)add("Hola. Soy el asistente de Tu Bandera A.C. ¿Buscas ayuda para ti o un familiar? La primera valoración es gratis.","bot");}
   async function sendText(text){if(!text.trim())return;add(text,"user");txt.value="";
     const typing=document.createElement("div");typing.className="chat-msg bot";typing.textContent="…";typing.style.color="var(--muted)";body.appendChild(typing);body.scrollTop=body.scrollHeight;
-    try{const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({person:PERSON,chat_id:CHAT_ID,messages:[{role:"user",content:text}]})});const j=await r.json();typing.remove();const c=j.choices[0].message.content;add(c,"bot");if(window.Audio){fetch("/api/tts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:c,person:PERSON})}).then(r=>r.blob()).then(b=>{const u=URL.createObjectURL(b);new Audio(u).play();}).catch(()=>{});}}
+    try{const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({person:PERSON,chat_id:CHAT_ID,messages:[{role:"user",content:text}]})});const j=await r.json();typing.remove();const c=j.choices[0].message.content;add(c,"bot");if(window.Audio){fetch("/api/tts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:c,person:PERSON})}).then(r=>r.blob()).then(b=>{const u=URL.createObjectURL(b);if(currentAudio){currentAudio.pause();currentAudio.src="";}currentAudio=new Audio(u);currentAudio.onended=()=>{URL.revokeObjectURL(u);currentAudio=null;};currentAudio.play();}).catch(()=>{});}}
     catch(e){typing.remove();add("Estoy teniendo un momento. Roberto te contestará en breve. ¿Me dejo tu número?","bot");}}
   function stopRec(){if(recState!=="rec")return;recState="sending";micBtn.classList.remove("rec");try{recorder.stop();}catch(e){}if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}if(actx){try{actx.close();}catch(e){}actx=null;}}
   async function onStop(){const blob=new Blob(chunks,{type:chunks[0]?.type||"audio/webm"});chunks=[];if(blob.size<300){recState="idle";return;}
