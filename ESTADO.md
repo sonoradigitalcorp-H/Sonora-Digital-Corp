@@ -1,5 +1,13 @@
 # ESTADO VIVO
 
+## REDISEÑO WEB + AGENDA FUNCIONAL (2026-08-26)
+- **claude-design aplicado** a las páginas: orden + todo input→output funcional.
+- **`tubandera.html`**: modal agenda de valoración gratuita (nombre/tel/fecha/hora) → `POST /api/v1/citas` persona=tubandera → confirmación/error. Fix `id="servicios"` duplicado→`tratamiento`. Chat con indicador "escribiendo...". Fix bug `if.e.key`→`if(e.key)` (mata el SyntaxError que impedía abrir el chat).
+- **`nathaly.html`**: modal agenda de diagnóstico gratis → `POST /api/v1/citas` persona=nathaly → confirmación. CTA hero abre el modal. Paleta cian integrada.
+- **Bug router EMERGENCY corregido**: ya NO capta resistencias familiares ("mi familiar no quiere/se niega" = consultas normales) → SOLO riesgo real (sobredosis, convulsiones, arma, amenaza, autolesión, suicidio). Verificado: "se niega"→normal, "sobredosis"→911.
+- ✅ **Verificado E2E con Playwright** (citas de prueba reales en Supabase: `test agenda cliente`, `cliente nathaly test`).
+- ⚠️ `nathaly.html` tiene CSS chat-panel DUPLICADO + un `<style>` sin cerrar (preexistente) → pendiente de limpieza.
+
 ## HERMES MANTENIMIENTO (2026-08-26)
 - ✅ **doctor --fix aplicado**: symlink `~/.local/bin/hermes` creado, config migrado, Skills Hub inicializado. Gateway sigue **active/200**.
 - ⚠️ **hermes update BLOQUEADO**: usa `git@github.com:NousResearch/hermes-agent` (SSH) y el VPS no tiene llave GitHub → `Host key verification failed`. El bug de SQLite WAL-reset NO es activo (DBs en `journal_mode=delete`, no WAL) → update no urgente. Pendiente: agregar llave SSH de GitHub al VPS.
