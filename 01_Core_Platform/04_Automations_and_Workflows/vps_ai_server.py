@@ -192,7 +192,9 @@ INTENT_PATTERNS = {
     "PRICE": re.compile(r"\b(precio|costo|cuanto cuesta|cuanto sale|plan|paquete|tarifa)\b", re.I),
     "BOOK_APPOINTMENT": re.compile(r"\b(cita|agendar|agenda|reservar|apartar|programar|calendario|disponibilidad)\b", re.I),
     "LOCATION": re.compile(r"\b(donde estas|ubicacion|direccion|donde quedan|donde estan|oficina|local)\b", re.I),
-    "EMERGENCY": re.compile(r"\b(navaja|arma|nos llevan|se niega|no quiere|peligro|urgencia|auxilio|socorro|emergencia|me golpean|amenaza)\b", re.I),
+    # EMERGENCY SOLO para riesgo real en curso. NO para resistencias familiares
+    # ("mi familiar no quiere/se niega") que son consultas normales de adicciones.
+    "EMERGENCY": re.compile(r"\b(navaja|arma|nos llevan|peligro|urgente|auxilio|socorro|emergencia|me golpean|amenaza|sobredosis|se esta muriendo|se esta ahogando|autolesion|se quiere lastimar|se va a lastimar|convulsion|convulsiones|intento de suicidio|suicid)\b", re.I),
 }
 
 INTENT_REPLIES = {

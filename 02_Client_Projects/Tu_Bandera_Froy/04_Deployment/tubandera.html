@@ -299,7 +299,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--muted);font-s
   fab.onclick=()=>{open=!open;panel.classList.toggle("open",open);if(open)greet();};
   document.getElementById("chatCloseA").onclick=()=>{open=false;panel.classList.remove("open");};
   sendBtn.onclick=()=>sendText(txt.value);
-  txt.addEventListener("keydown",e=>{if.e.key==="Enter")sendText(txt.value);});
+  txt.addEventListener("keydown",e=>{if(e.key==="Enter")sendText(txt.value);});
   micBtn.onclick=()=>{if(recState==="idle")startRec();else stopRec();};
   if(!window.MediaRecorder){micBtn.disabled=true;micBtn.style.opacity=.4;}
 })();
