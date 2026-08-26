@@ -115,7 +115,7 @@ INTENT_PATTERNS = {
     "PRICE": re.compile(r"\b(precio|costo|cuanto cuesta|cuanto sale|plan|paquete|tarifa)\b", re.I),
     "BOOK_APPOINTMENT": re.compile(r"\b(cita|agendar|agenda|reservar|apartar|programar|calendario|disponibilidad)\b", re.I),
     "LOCATION": re.compile(r"\b(donde estas|ubicacion|direccion|donde quedan|donde estan|oficina|local)\b", re.I),
-    "EMERGENCY": re.compile(r"\b(navaja|arma|vienen|nos llevan|se niega|no quiere|hijo|familiar|peligro|urgencia|nogales|hermosillo|auxilio|socorro|emergencia)\b", re.I),
+    "EMERGENCY": re.compile(r"\b(navaja|arma|nos llevan|se niega|no quiere|peligro|urgencia|auxilio|socorro|emergencia|me golpean|amenaza)\b", re.I),
 }
 
 INTENT_REPLIES = {
@@ -132,7 +132,7 @@ INTENT_REPLIES = {
         "LOCATION": "Nathaly atiende en Hermosillo, Sonora, y tambien 100% remoto. Todo por WhatsApp y videollamada. Te agendo la revision gratis?",
     },
     "tubandera": {
-        "SILENCE": "Entendido. Me callo. Avisame si necesito algo.",
+        "SILENCE": "Entendido. Me callo. Avisame si necesitas algo.",
         "PRICE": "La primera valoracion en Tu Bandera A.C. es gratuita. El plan y los costos exactos los define Roberto en una llamada sin compromiso. Dejame tus datos y te contacta.",
         "BOOK_APPOINTMENT": "Con gusto te apoyo. La primera valoracion en Tu Bandera A.C. es sin costo. Dejame tu nombre y telefono y Roberto te contacta para agendarte, o escríbenos por WhatsApp y Telegram.",
         "LOCATION": "Estamos en Cofre del Perote 9347, Hermosillo, Sonora. Tambien atendemos remoto. Dejame tus datos y te digo como llegar o coordinamos.",
@@ -483,11 +483,12 @@ async def handle_citas(request: web.Request) -> web.Response:
     elif len(digits) == 11 and digits.startswith("1"):
         digits = "52" + digits[1:]
 
-    # --- Google Calendar validation via Composio ---
+    # --- Google Calendar validation via Composio (best-effort; NO bloquea la cita) ---
+    # api.composio.dev NO resuelve desde este VPS -> timeout corto (3s) para no retrasar la cita.
     calendar_status = "not_checked"
     if COMPOSIO_API_KEY:
         try:
-            timeout = ClientTimeout(total=15)
+            timeout = ClientTimeout(total=3)
             async with ClientSession(timeout=timeout) as session:
                 # Check if the date/time is available via calendar
                 async with session.post(
@@ -519,9 +520,13 @@ async def handle_citas(request: web.Request) -> web.Response:
     except Exception as e:
         print(f"[citas] db error: {e}", flush=True)
 
+    cierre_persona = {
+        "sdc": "Te espero.",
+        "nathaly": "Te espera Nathaly.",
+        "tubandera": "Te espera el equipo de Tu Bandera.",
+    }.get(persona, "Te espero.")
     msg = (f"Hola {nombre}. Tu cita queda confirmada para el {fecha} a las {hora}. "
-           f"{'Te espero.' if persona=='sdc' else 'Te espera Nathaly.'} "
-           f"Si necesitas cambiar el dia, no dudes en escribir.")
+           f"{cierre_persona} Si necesitas cambiar el dia, no dudes en escribir.")
     try:
         async with ClientSession(timeout=ClientTimeout(total=30)) as session:
             async with session.post(TTS_URL, json={"text": msg, "person": persona}) as resp:
@@ -532,9 +537,16 @@ async def handle_citas(request: web.Request) -> web.Response:
 
     wacli_status_client = "skipped-no-audio"
     wacli_status_owner = "skipped-no-audio"
-    owner_phone = os.environ.get("OWNER_PHONE", "526623645186")  # Roberto's WhatsApp
+    # Notificar al dueno SOLO del tenant correcto, no global.
+    # tubandera -> Roberto Lara | nathaly -> Nathaly (empresa) | sdc -> Luis Daniel
+    owner_by_persona = {
+        "tubandera": "5216623645186",
+        "nathaly": "5216623498589",
+        "sdc": "5216623538272",
+    }
+    owner_phone = os.environ.get("OWNER_PHONE", owner_by_persona.get(persona, ""))
     digits_client = digits
-    owner_digits = re.sub(r"\D", "", owner_phone)
+    owner_digits = re.sub(r"\D", "", owner_phone) if owner_phone else ""
 
     if audio:
         tmp = tempfile.mktemp(suffix=".ogg")
@@ -543,7 +555,6 @@ async def handle_citas(request: web.Request) -> web.Response:
         wacli_store = os.environ.get("WACLI_STORE", "/home/mystic/.wacli")
         try:
             to_client = f"{digits_client}@s.whatsapp.net"
-            to_owner = f"{owner_digits}@s.whatsapp.net"
             r = subprocess.run(
                 [wacli_bin, "send", "voice", "--store", wacli_store,
                  "--to", to_client, "--file", tmp],
@@ -552,18 +563,21 @@ async def handle_citas(request: web.Request) -> web.Response:
             wacli_status_client = "sent" if r.returncode == 0 else f"err:{r.stderr[:120]}"
         except Exception as e:
             wacli_status_client = f"err:{e}"
+        if owner_digits:
+            try:
+                to_owner = f"{owner_digits}@s.whatsapp.net"
+                r2 = subprocess.run(
+                    [wacli_bin, "send", "voice", "--store", wacli_store,
+                     "--to", to_owner, "--file", tmp],
+                    capture_output=True, text=True, timeout=40,
+                )
+                wacli_status_owner = "sent" if r2.returncode == 0 else f"err:{r2.stderr[:120]}"
+            except Exception as e:
+                wacli_status_owner = f"err:{e}"
         try:
-            r2 = subprocess.run(
-                [wacli_bin, "send", "voice", "--store", wacli_store,
-                 "--to", to_owner, "--file", tmp],
-                capture_output=True, text=True, timeout=40,
-            )
-            wacli_status_owner = "sent" if r2.returncode == 0 else f"err:{r2.stderr[:120]}"
-        except Exception as e:
-            wacli_status_owner = f"err:{e}"
-        finally:
-            try: Path(tmp).unlink()
-            except Exception: pass
+            Path(tmp).unlink()
+        except Exception:
+            pass
 
     print(f"[citas] {persona} {nombre} {fecha} {hora} wacli_client={wacli_status_client} wacli_owner={wacli_status_owner} calendar={calendar_status}", flush=True)
     return web.json_response({"ok": True, "cita_id": cita_id, "estado": "confirmada",
