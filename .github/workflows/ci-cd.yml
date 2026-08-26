@@ -29,7 +29,7 @@ jobs:
       - name: MyPy typecheck
         run: mypy --ignore-missing-imports 01_Core_Platform/ 03_Sandbox_and_RnD/
       - name: Guardian structure
-        run: bash 01_Core_Platform/04_Automations_and_Workflows/structure_guard.sh
+        run: bash 00_Administration/guardians/structure_guard.sh
 
   test:
     name: Unit Tests
