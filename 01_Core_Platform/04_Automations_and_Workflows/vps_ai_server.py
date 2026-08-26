@@ -571,6 +571,25 @@ async def handle_leads(request: web.Request) -> web.Response:
         )
         conn.commit()
         cur.close(); conn.close()
+        # == Notificar a Nathaly (6623498589) por wacli — lead de la web ==
+        # Usar el STORE autenticado (/home/mystic/.wacli, JID de Luis) porque el store
+        # nathaly_business está desautenticado. No rompe el guardado si wacli falla.
+        try:
+            wacli_bin = os.environ.get("WACLI_BIN", "/home/mystic/wacli")
+            wacli_store = os.environ.get("WACLI_STORE", "/home/mystic/.wacli")
+            nathaly_jid = "526623498589@s.whatsapp.net"
+            payload = (f"🔔 LEAD WEB (nathaly)\n"
+                       f"Nombre: {nombre}\n"
+                       f"Teléfono: {telefono}\n"
+                       f"Perfil: {data.get('perfil') or '-'}\n"
+                       f"Mensaje: {mensaje[:120]}")
+            r = subprocess.run(
+                [wacli_bin, "send", "text", "--store", wacli_store,
+                 "--to", nathaly_jid, "--message", payload],
+                capture_output=True, text=True, timeout=30)
+            print(f"[leads] notificado nathaly: {r.returncode==0} {r.stderr[:80] if r.returncode else ''}", flush=True)
+        except Exception as e:
+            print(f"[leads] wacli notify error: {e}", flush=True)
         return web.json_response({"ok": True, "lead": nombre})
     except Exception as e:
         print(f"[leads] db error: {e}", flush=True)
