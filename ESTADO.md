@@ -5,7 +5,9 @@
 - **Skill**: `.opencode/skills/mystic/code-review-adversarial/SKILL.md` · **ADR**: `00_Administration/ADRs/0016-code-review-adversarial.md`.
 - Fuente: video "curso de code review por IA" (Gentleman, ID `38Y1JWU-mdE`), transcript en `01_Core_Platform/05_SelfImprovement/learning/youtube/`.
 - Claves: content-addressed storage (hash=SHA-256), event sourcing (estado inmutable), fail-closed (lo no probado se rechaza), ledger congelado (findings no desaparecen), racionalidad acotada (máx 2 iteraciones), gates (pre-commit/pre-push/pre-release/post-apply), fast-path estrecho solo en main (hash + CI verde).
-- ⚠️ Estado: PROPUESTO → validar en un fix real con findings falsos antes de marcarlo IMPLEMENTADO.
+- ✅ **VALIDADO en fix real** (piloto `vps_ai_server.py`): findings H1 (auth /api/v1/whatsapp) + H2 (rutas huerfanas) CORROBORADOS y FIX VERIFICADO en runtime. Zero regresión.
+- ⚠️ **CAUSA RAÍZ DE DUPLICACIÓN — lección crítica**: el commit del fix quedó SOLO LOCAL (sin push). Un commit local sin push NO llega a producción aunque `deploy.sh` corra: producción siguió con código viejo expuesto. El refutador validando EN VIVO lo atrapó (la autoaprobación no). **Regla**: `/opt/hermes/repo` → `git pull` debe traer el commit ANTES de deployar; verificar `git log`/`origin/next` == local + `git status` limpio antes de deploy.
+- Backlog (inconcluso, no bloquea): M1 citas en sqlite vs Supabase (doble fuente), M2 password hardcodeado en path `.env`.
 
 ## PÁGINAS PRO MAX POR CLIENTE (2026-08-23)
 - **Diseño Gemini Pro Max** (Tailwind + glassmorphism + Lucide + secciones de servicios + chatbot IA).
