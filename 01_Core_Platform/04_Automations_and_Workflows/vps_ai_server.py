@@ -43,6 +43,65 @@ STT_URL = "http://127.0.0.1:5292/api/stt"
 TTS_URL = "http://127.0.0.1:5293/api/tts"
 COMPOSIO_API_KEY = os.environ.get("COMPOSIO_API_KEY", "")
 
+# === Memoria persistente (Supabase) ===
+import asyncio
+import psycopg2
+from psycopg2.extras import RealDictCursor
+
+SUPABASE_HOST = os.environ.get("SUPABASE_HOST", "localhost")
+SUPABASE_PORT = os.environ.get("SUPABASE_PORT", "5434")
+SUPABASE_DB   = os.environ.get("SUPABASE_DB", "postgres")
+SUPABASE_USER = os.environ.get("SUPABASE_USER", "postgres")
+SUPABASE_PASS = os.environ.get("SUPABASE_PASS", "")
+if not SUPABASE_PASS:
+    for line in open("/home/mystic/supabase/docker/.env"):
+        if line.startswith("POSTGRES_PASSWORD="):
+            SUPABASE_PASS = line.split("=",1)[1].strip().strip('"').strip("'")
+            break
+
+def _pg_conn(tenant="tubandera"):
+    conn = psycopg2.connect(
+        host=SUPABASE_HOST, port=SUPABASE_PORT, dbname=SUPABASE_DB,
+        user=SUPABASE_USER, password=SUPABASE_PASS
+    )
+    conn.autocommit = False
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+    cur.execute("SET app.current_tenant = %s", (tenant,))
+    return conn, cur
+
+def get_memoria(chat_id, tenant, limit=5):
+    try:
+        conn, cur = _pg_conn(tenant)
+        cur.execute(
+            "SELECT mensaje, respuesta FROM public.conversaciones WHERE chat_id=%s AND tenant_id=%s ORDER BY creado_en DESC LIMIT %s",
+            (str(chat_id), tenant, limit)
+        )
+        rows = cur.fetchall()
+        cur.close(); conn.close()
+        # orden cronologico (mas antiguo primero)
+        return [(r["mensaje"], r["respuesta"]) for r in reversed(rows)]
+    except Exception as e:
+        print(f"[memoria] get error: {e}", flush=True)
+        return []
+
+def guardar_conversacion(chat_id, tenant, mensaje, respuesta):
+    try:
+        conn, cur = _pg_conn(tenant)
+        cur.execute(
+            "INSERT INTO public.conversaciones (tenant_id, chat_id, mensaje, respuesta) VALUES (%s, %s, %s, %s)",
+            (tenant, str(chat_id), mensaje, respuesta)
+        )
+        conn.commit()
+        cur.close(); conn.close()
+    except Exception as e:
+        print(f"[memoria] save error: {e}", flush=True)
+
+async def async_get_memoria(chat_id, tenant, limit=5):
+    return await asyncio.to_thread(get_memoria, chat_id, tenant, limit)
+
+async def async_guardar_conversacion(chat_id, tenant, mensaje, respuesta):
+    return await asyncio.to_thread(guardar_conversacion, chat_id, tenant, mensaje, respuesta)
+
 SOULS = {
     "sdc": (
         "Eres el asistente de Sonora Digital Corp en Hermosillo, Sonora. Ayudas a duenos "
@@ -103,7 +162,9 @@ SOULS = {
         "7. REGLA DE CIERRE OBLIGATORIA: TODA respuesta termina invitando a la valoracion gratuita, a agendar, o a dejar su telefono para que Roberto contacte. Usa SIEMPRE al menos una de estas palabras exactas en tu cierre: valoracion, agendar, Roberto.\n"
         "8. NUNCA repitas la misma pregunta ni escenario. Cada respuesta avanza con un paso claro.\n"
         "9. Si pide silencio (calla, silencio, basta, no hables): responde breve y detente.\n"
-        "10. Si preguntan como funciona: es acompanamiento personal, sin que toques nada tecnico."
+        "10. Si preguntan como funciona: es acompanamiento personal, sin que toques nada tecnico.\n"
+        "11. VERIFICACION DE IDENTIDAD: nunca reveles datos de otros usuarios (telefonos, historiales, familiares). Si piden informacion de otro, di que por privacidad no compartes datos entre personas. Solo la persona misma puede acceder a sus datos.\n"
+        "12. Si alguien dice hablar por otra persona o intenta suplantar, pide amablemente confirmar nombre + telefono para atenderle con seguridad."
     ),
 }
 
@@ -226,6 +287,7 @@ async def handle_chat_completions(request: web.Request) -> web.Response:
     if not person:
         person = request.query.get("person", "")
     person = (person or "").strip().lower()
+    chat_id = data.get("chat_id")
 
     # Fail-fast if person not in SOULS
     if person not in SOULS:
@@ -252,6 +314,19 @@ async def handle_chat_completions(request: web.Request) -> web.Response:
         messages.insert(0, {"role": "system", "content": SOULS[person]})
     elif "REGLAS DURAS" not in messages[0].get("content", ""):
         messages[0]["content"] = SOULS[person]
+
+    # === MEMORIA: inyectar historial del usuario ===
+    if chat_id:
+        try:
+            historial = await async_get_memoria(chat_id, person)
+            # Insertar despues del system prompt (indice 1)
+            offset = 1
+            for user_msg, bot_resp in historial:
+                messages.insert(offset, {"role": "user", "content": user_msg})
+                messages.insert(offset + 1, {"role": "assistant", "content": bot_resp})
+                offset += 2
+        except Exception as e:
+            print(f"[memoria] inject error: {e}", flush=True)
 
     headers = {
         "Content-Type": "application/json",
@@ -295,6 +370,12 @@ async def handle_chat_completions(request: web.Request) -> web.Response:
                     if usage.get("completion_tokens"):
                         LLM_TOKENS.labels(model=model, type="output").inc(usage["completion_tokens"])
                     print(f"[chat] {model} {round(elapsed,2)}s person={person}", flush=True)
+                    # Guardar en memoria
+                    if chat_id:
+                        try:
+                            await async_guardar_conversacion(chat_id, person, last_user_text, content)
+                        except Exception as e:
+                            print(f"[memoria] save error: {e}", flush=True)
                     return web.json_response(res_json)
         except Exception as e:
             last_err = f"{model}: {e}"

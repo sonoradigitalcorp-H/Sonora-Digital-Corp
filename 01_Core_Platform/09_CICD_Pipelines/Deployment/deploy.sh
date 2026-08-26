@@ -22,6 +22,10 @@ declare -A MAP=(
   ["01_Core_Platform/03_Agentic_Infrastructure/wacli_skill.py"]="/opt/hermes/tubandera/wacli_skill.py"
   ["01_Core_Platform/03_Agentic_Infrastructure/sync_metrics.py"]="/opt/hermes/scripts/sync_metrics.py"
   ["01_Core_Platform/03_Agentic_Infrastructure/run_automejora.py"]="/opt/hermes/scripts/run_automejora.py"
+  ["02_Client_Projects/Tu_Bandera_Froy/02_Source_Code/personas_db.py"]="/opt/hermes/tubandera/personas_db.py"
+  ["02_Client_Projects/Tu_Bandera_Froy/04_Deployment/tubandera.html"]="/var/www/sonoradigitalcorp/tubandera.html"
+  ["02_Client_Projects/Hermosillo_Contabilidad/04_Deployment/nathaly.html"]="/var/www/sonoradigitalcorp/nathaly.html"
+  ["02_Client_Projects/Sonora_Digital_Corp/04_Deployment/chat_pro_max/index.html"]="/var/www/sonoradigitalcorp/chat.html"
 )
 
 for src in "${!MAP[@]}"; do

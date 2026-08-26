@@ -482,7 +482,7 @@ async function send(textOverride){
   try{
     const msgs=[{role:"system",content:"persona:"+PERSON_KEY},...history.slice(-8)];
     const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({messages:msgs,person:PERSON_KEY,sid})});
+      body:JSON.stringify({messages:msgs,person:PERSON_KEY,chat_id:sid})});
     const j=await r.json();
     reply=((j.choices?.[0]?.message?.content)||"").trim()
        || "No obtuve respuesta en este momento. Escríbeme por WhatsApp y seguimos ahí.";

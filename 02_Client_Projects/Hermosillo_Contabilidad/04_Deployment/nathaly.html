@@ -633,6 +633,8 @@
 <script>
 (function(){
   const API="/api/v1/chat/completions",STT="/api/stt",PERSON="nathaly";
+  let CHAT_ID = localStorage.getItem("nathaly_chat_id");
+  if(!CHAT_ID){CHAT_ID="web-"+Math.random().toString(36).slice(2,10)+"-"+Date.now().toString(36);localStorage.setItem("nathaly_chat_id",CHAT_ID);}
   const fab=document.getElementById("chatFabA"),panel=document.getElementById("chatPanelA");
   const body=document.getElementById("chatBodyA"),txt=document.getElementById("chatTextA");
   const micBtn=document.getElementById("chatMicA"),sendBtn=document.getElementById("chatSendA");
@@ -640,7 +642,7 @@
   function add(t,role){const d=document.createElement("div");d.className="chat-msg "+role;d.textContent=t;body.appendChild(d);body.scrollTop=body.scrollHeight;}
   function greet(){if(!body.children.length)add("Hola. Soy el asistente de Nathaly, contadora en Hermosillo. Te ayudo con contabilidad, impuestos o citas al SAT. Qué necesitas?","bot");}
   async function sendText(text){if(!text.trim())return;add(text,"user");txt.value="";
-    try{const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({person:PERSON,messages:[{role:"user",content:text}]})});const j=await r.json();const c=j.choices[0].message.content;add(c,"bot");if("speechSynthesis" in window){const u=new SpeechSynthesisUtterance(c);u.lang="es-MX";window.speechSynthesis.speak(u);}}
+    try{const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({person:PERSON,chat_id:CHAT_ID,messages:[{role:"user",content:text}]})});const j=await r.json();const c=j.choices[0].message.content;add(c,"bot");if("speechSynthesis" in window){const u=new SpeechSynthesisUtterance(c);u.lang="es-MX";window.speechSynthesis.speak(u);}}
     catch(e){add("Estoy teniendo un momento. Nathaly te contestará en breve. ¿Me dejas tu número?","bot");}}
   function stopRec(){if(recState!=="rec")return;recState="sending";micBtn.classList.remove("rec");try{recorder.stop();}catch(e){}if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}if(actx){try{actx.close();}catch(e){}actx=null;}}
   async function onStop(){const blob=new Blob(chunks,{type:chunks[0]?.type||"audio/webm"});chunks=[];if(blob.size<300){recState="idle";return;}

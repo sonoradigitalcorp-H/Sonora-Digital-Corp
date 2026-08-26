@@ -1,52 +1,102 @@
-import sqlite3, os, json
-DB="/opt/hermes/tubandera/tubandera.db"
-def conn():
-    c=sqlite3.connect(DB); c.row_factory=sqlite3.Row; return c
+import os, psycopg2
+from psycopg2.extras import RealDictCursor
+
+SUPABASE_HOST = os.environ.get("SUPABASE_HOST", "localhost")
+SUPABASE_PORT = os.environ.get("SUPABASE_PORT", "5433")
+SUPABASE_DB   = os.environ.get("SUPABASE_DB", "postgres")
+SUPABASE_USER = os.environ.get("SUPABASE_USER", "postgres")
+SUPABASE_PASS = os.environ.get("SUPABASE_PASS", "")
+
+def _pg(tenant="tubandera"):
+    conn = psycopg2.connect(
+        host=SUPABASE_HOST, port=SUPABASE_PORT, dbname=SUPABASE_DB,
+        user=SUPABASE_USER, password=SUPABASE_PASS
+    )
+    conn.autocommit = False
+    cur = conn.cursor(cursor_factory=RealDictCursor)
+    cur.execute("SET app.current_tenant = %s", (tenant,))
+    return conn, cur
+
 def init():
-    c=conn(); c.executescript("""
-    CREATE TABLE IF NOT EXISTS usuarios (
-        id INTEGER PRIMARY KEY, tenant_id TEXT UNIQUE, chat_id INTEGER,
-        nombre TEXT, telefono TEXT, fecha_ingreso TEXT, estado TEXT DEFAULT activo,
-        sustancia_principal TEXT, notas TEXT
-    );
-    CREATE TABLE IF NOT EXISTS familiares (
-        id INTEGER PRIMARY KEY, usuario_id INTEGER, nombre TEXT, telefono TEXT,
-        parentesco TEXT, permiso INTEGER DEFAULT 0,
-        FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
-    );
-    CREATE TABLE IF NOT EXISTS avances (
-        id INTEGER PRIMARY KEY, usuario_id INTEGER, fecha TEXT, tipo TEXT, detalle TEXT,
-        FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
-    );
-    CREATE TABLE IF NOT EXISTS fotos (
-        id INTEGER PRIMARY KEY, usuario_id INTEGER, fecha TEXT, ruta TEXT, para_grupo INTEGER DEFAULT 0,
-        FOREIGN KEY(usuario_id) REFERENCES usuarios(id)
-    );
-    """); c.commit(); c.close()
-def registrar_usuario(chat_id, nombre, telefono, sustancia=None):
-    c=conn(); tid="TB-"+str(chat_id)
-    c.execute("INSERT OR IGNORE INTO usuarios(tenant_id,chat_id,nombre,telefono,sustancia_principal) VALUES(?,?,?,?,?)",
-              (tid,chat_id,nombre,telefono,sustancia)); c.commit(); c.close(); return tid
-def registrar_familiar(usuario_id, nombre, telefono, parentesco, permiso=0):
-    c=conn(); c.execute("INSERT INTO familiares(usuario_id,nombre,telefono,parentesco,permiso) VALUES(?,?,?,?,?)",
-                        (usuario_id,nombre,telefono,parentesco,permiso)); c.commit(); c.close()
-def get_usuario(chat_id):
-    c=conn(); r=c.execute("SELECT * FROM usuarios WHERE chat_id=?",(chat_id,)).fetchone(); c.close(); return dict(r) if r else None
-def get_familiares(usuario_id):
-    c=conn(); r=c.execute("SELECT * FROM familiares WHERE usuario_id=?",(usuario_id,)).fetchall(); c.close(); return [dict(x) for x in r]
-def registrar_avance(usuario_id, tipo, detalle):
-    import datetime; c=conn()
-    c.execute("INSERT INTO avances(usuario_id,fecha,tipo,detalle) VALUES(?,?,?,?)",
-              (usuario_id, datetime.datetime.now().isoformat(), tipo, detalle)); c.commit(); c.close()
-def registrar_foto(usuario_id, ruta, para_grupo=1):
-    import datetime; c=conn()
-    c.execute("INSERT INTO fotos(usuario_id,fecha,ruta,para_grupo) VALUES(?,?,?,?)",
-              (usuario_id, datetime.datetime.now().isoformat(), ruta, para_grupo)); c.commit(); c.close()
-def resumen_empresa():
-    c=conn(); r=c.execute("SELECT estado, COUNT(*) n FROM usuarios GROUP BY estado").fetchall()
-    ft=c.execute("SELECT COUNT(*) n FROM fotos").fetchone(); c.close()
-    return {"usuarios_por_estado":{x["estado"]:x["n"] for x in r},"fotos":ft["n"]}
-if __name__=="__main__":
-    init(); print("DB inicializada", DB)
-    print("test:", registrar_usuario(123456,"Juan Perez","6621112233","opioides"))
+    conn, cur = _pg()
+    cur.execute("SELECT current_setting('app.current_tenant', true)")
+    conn.commit(); cur.close(); conn.close()
+
+def registrar_usuario(chat_id, nombre, telefono, sustancia=None, tenant="tubandera"):
+    tid = "TB-" + str(chat_id)
+    conn, cur = _pg(tenant)
+    cur.execute("""
+        INSERT INTO public.personas (tenant_id, chat_id, nombre, telefono, sustancia_principal, estado)
+        VALUES (%s, %s, %s, %s, %s, %s)
+        ON CONFLICT (tenant_id, chat_id) DO NOTHING
+        RETURNING id
+    """, (tid, chat_id, nombre, telefono, sustancia or "", "activo"))
+    cur.fetchone()
+    conn.commit(); cur.close(); conn.close()
+    return tid
+
+def get_usuario(chat_id, tenant="tubandera"):
+    conn, cur = _pg(tenant)
+    cur.execute("SELECT * FROM public.personas WHERE chat_id=%s", (chat_id,))
+    r = cur.fetchone()
+    cur.close(); conn.close()
+    return dict(r) if r else None
+
+def registrar_familiar(chat_id, nombre, telefono, parentesco, permiso=False, tenant="tubandera"):
+    u = get_usuario(chat_id, tenant)
+    if not u:
+        return None
+    conn, cur = _pg(tenant)
+    cur.execute("""
+        INSERT INTO public.familiares (tenant_id, persona_id, nombre, telefono, parentesco, permiso)
+        VALUES (%s, %s, %s, %s, %s, %s)
+    """, (tenant, u["id"], nombre, telefono, parentesco, permiso))
+    conn.commit(); cur.close(); conn.close()
+
+def get_familiares(chat_id, tenant="tubandera"):
+    u = get_usuario(chat_id, tenant)
+    if not u:
+        return []
+    conn, cur = _pg(tenant)
+    cur.execute("SELECT * FROM public.familiares WHERE persona_id=%s", (u["id"],))
+    rows = cur.fetchall()
+    cur.close(); conn.close()
+    return [dict(r) for r in rows]
+
+def registrar_avance(chat_id, tipo, detalle, tenant="tubandera"):
+    import datetime
+    u = get_usuario(chat_id, tenant)
+    if not u:
+        return
+    conn, cur = _pg(tenant)
+    cur.execute("""
+        INSERT INTO public.avances (tenant_id, persona_id, tipo, detalle)
+        VALUES (%s, %s, %s, %s)
+    """, (tenant, u["id"], tipo, detalle))
+    conn.commit(); cur.close(); conn.close()
+
+def registrar_foto(chat_id, ruta, para_grupo=True, tenant="tubandera"):
+    import datetime
+    u = get_usuario(chat_id, tenant)
+    if not u:
+        return
+    conn, cur = _pg(tenant)
+    cur.execute("""
+        INSERT INTO public.fotos (tenant_id, persona_id, ruta, para_grupo)
+        VALUES (%s, %s, %s, %s)
+    """, (tenant, u["id"], ruta, para_grupo))
+    conn.commit(); cur.close(); conn.close()
+
+def resumen_empresa(tenant="tubandera"):
+    conn, cur = _pg(tenant)
+    cur.execute("SELECT estado, COUNT(*) n FROM public.personas WHERE tenant_id=%s GROUP BY estado", (tenant,))
+    rows = cur.fetchall()
+    cur.execute("SELECT COUNT(*) n FROM public.fotos WHERE tenant_id=%s", (tenant,))
+    ft = cur.fetchone()
+    cur.close(); conn.close()
+    return {"usuarios_por_estado": {r["estado"]: r["n"] for r in rows}, "fotos": ft["n"] if ft else 0}
+
+if __name__ == "__main__":
+    init(); print("Supabase conectado OK")
+    print("test:", registrar_usuario(123456, "Juan Perez", "6621112233", "opioides"))
     print("resumen:", resumen_empresa())
