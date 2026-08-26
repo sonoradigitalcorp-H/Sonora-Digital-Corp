@@ -17,8 +17,11 @@ _INJECTION_PATTERNS = [
     r"(a\s+)?(different|unrestricted|uncensored|jailbroken|free|evil|dan|gpt)",
     # Revelación de sistema
     r"reveal\s+(your\s+)?(system\s+)?(prompt|instructions?|configuration)",
-    r"(revela|muestra|dime|repite|imprime)\s+(tu\s+)?"
-    r"(prompt|instrucciones?|sistema|configuraci[oó]n|reglas?)",
+    r"(revela|muestra|dime|muestrame|ense[ñn]a|exhibe|exp[oó]n|comparte|cu[eé]ntame|ense[ñn]ame|describe|detalla)\s+"
+    r"(tu|tus|todos?|la|las|el|los)?\s*(system\s+)?"
+    r"(prompt|instrucciones?|sistema|configuraci[oó]n|reglas?|soul|persona|directrices|estructura|detalles|c[oó]digo)",
+    # Ver la estructura/comportamiento de sistema (exfiltración ampliada)
+    r"(como\s+funcionas|que\s+reglas\s+tienes|que\s+prompt\s+tienes|cual\s+es\s+tu\s+(prompt|instrucci[oó]n|configuraci[oó]n))",
     # Modos especiales / jailbreak conocidos
     r"developer\s+mode|dan\s+mode|jailbreak|god\s+mode|unrestricted\s+mode",
     r"(activate|enable|switch\s+to)\s+(developer|god|unrestricted|uncensored)\s+mode",
