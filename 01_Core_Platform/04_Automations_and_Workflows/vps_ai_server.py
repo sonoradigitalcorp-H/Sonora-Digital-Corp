@@ -272,22 +272,6 @@ def get_intent_reply(person: str, intent: str) -> str:
     return INTENT_REPLIES.get(person, INTENT_REPLIES["sdc"]).get(intent, "")
 
 
-async def composio_execute(toolkit: str, action: str, params: dict) -> dict:
-    if not COMPOSIO_API_KEY:
-        return {"error": "no composio key"}
-    try:
-        timeout = ClientTimeout(total=15)
-        async with ClientSession(timeout=timeout) as session:
-            async with session.post(
-                f"https://api.composio.dev/v1/toolkits/{toolkit}/actions/{action}/execute",
-                headers={"Authorization": f"Bearer {COMPOSIO_API_KEY}", "Content-Type": "application/json"},
-                json={"params": params},
-            ) as resp:
-                return await resp.json()
-    except Exception as e:
-        return {"error": str(e)}
-
-
 async def handle_chat_completions(request: web.Request) -> web.Response:
     t0 = time.time()
     endpoint = "/api/v1/chat/completions"
@@ -619,24 +603,12 @@ async def handle_citas(request: web.Request) -> web.Response:
     elif len(digits) == 11 and digits.startswith("1"):
         digits = "52" + digits[1:]
 
-    # --- Google Calendar validation via Composio (best-effort; NO bloquea la cita) ---
-    # api.composio.dev NO resuelve desde este VPS -> timeout corto (3s) para no retrasar la cita.
-    calendar_status = "not_checked"
-    if COMPOSIO_API_KEY:
-        try:
-            timeout = ClientTimeout(total=3)
-            async with ClientSession(timeout=timeout) as session:
-                # Check if the date/time is available via calendar
-                async with session.post(
-                    f"https://api.composio.dev/v1/toolkits/google-calendar-mcp/actions/check_availability/execute",
-                    headers={"Authorization": f"Bearer {COMPOSIO_API_KEY}", "Content-Type": "application/json"},
-                    json={"params": {"date": fecha, "time": hora, "participants": [{"name": nombre, "phone": digits}]}}
-                ) as resp:
-                    if resp.status == 200:
-                        calendar_data = await resp.json()
-                        calendar_status = calendar_data.get("status", "checked")
-        except Exception as e:
-            calendar_status = f"error: {str(e)[:50]}"
+    # --- Disponibilidad de calendar (best-effort, NO bloquea la cita) ---
+    # NOTA (2026-08-26): la API REST de Composio (api.composio.dev) fue DEPRECADA (HTTP 410 Gone)
+    # y el dominio ya no resuelve. Si se requiere disponibilidad real de calendar, usar MCP
+    # de Composio (mcp.composio.dev) u otro proveedor. Aquí NO se llama a la REST muerta.
+    calendar_status = "not_available"
+    # TODO: validar disponibilidad real via composio MCP cuando se integre.
 
     # === Migrar cita a Supabase (fuente única de verdad) — ya no sqlite ===
     cita_id = str(uuid.uuid4())
