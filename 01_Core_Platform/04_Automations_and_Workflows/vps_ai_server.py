@@ -302,10 +302,17 @@ async def handle_chat_completions(request: web.Request) -> web.Response:
 
     reply = ("Te ayudo con gusto. Cuentame de tu negocio y que te esta quitando tiempo, "
              "y te digo exactamente como lo resolveriamos. El diagnostico inicial es gratis.")
-    if person == "nathaly":
-        reply = ("Con gusto te ayudo con tu contabilidad. Cuentame que necesitas: "
-                 "declaraciones, citas SAT o llevar tus cuentas al dia, y agendamos tu "
-                 "diagnostico gratis con Nathaly. Tambien puedes escribirle directo al 662 349 8589.")
+    fallback_by_persona = {
+        # cada tenant cae a SU texto, nunca a otro (la key puede morir y no confundir marcas)
+        "nathaly": ("Con gusto te ayudo con tu contabilidad. Cuentame que necesitas: "
+                    "declaraciones, citas SAT o llevar tus cuentas al dia, y agendamos tu "
+                    "diagnostico gratis con Nathaly. Tambien puedes escribirle directo al 662 349 8589."),
+        "tubandera": ("Te acompaño con gusto. En Tu Bandera A.C. ayudamos a personas que buscan "
+                      "apoyo para ellas o un familiar con temas de adicciones. La primera valoracion "
+                      "es gratuita y sin compromiso. Dejame tu telefono y Roberto te contacta, o "
+                      "escribenos por WhatsApp. Si hay riesgo inmediato, llama al 911."),
+    }
+    reply = fallback_by_persona.get(person, reply)
     REQUEST_COUNT.labels(endpoint=endpoint, status="200").inc()
     REQUEST_LATENCY.labels(endpoint=endpoint).observe(time.time() - t0)
     return web.json_response({
