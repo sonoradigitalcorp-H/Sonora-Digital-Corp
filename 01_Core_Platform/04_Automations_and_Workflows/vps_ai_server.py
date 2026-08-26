@@ -563,6 +563,36 @@ async def handle_tts(request: web.Request) -> web.Response:
         return web.json_response({"error": f"tts upstream: {e}"}, status=502)
 
 
+async def handle_leads(request: web.Request) -> web.Response:
+    """POST /api/v1/leads — guarda un lead (contacto/quiz) en public.leads (fuente única Supabase).
+    Body: {persona, nombre, telefono, perfil?, urgencia?, mensaje, respuesta?, canal?, estado?}"""
+    try:
+        data = await request.json()
+    except Exception:
+        return web.json_response({"error": "json invalido"}, status=400)
+    persona = (data.get("persona") or "nathaly").strip()
+    nombre = (data.get("nombre") or "").strip()
+    telefono = (data.get("telefono") or "").strip()
+    mensaje = (data.get("mensaje") or "").strip()
+    if not (nombre and telefono):
+        return web.json_response({"error": "faltan nombre/telefono"}, status=400)
+    try:
+        conn, cur = _pg_conn(persona)
+        cur.execute(
+            "INSERT INTO public.leads (tenant_id, canal, nombre, telefono, perfil, mensaje, estado, datos) "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+            (persona, data.get("canal") or "web", nombre, telefono,
+             data.get("perfil") or "", mensaje, data.get("estado") or "nuevo",
+             json.dumps({"respuesta": data.get("respuesta") or "", "urgencia": data.get("urgencia") or ""}))
+        )
+        conn.commit()
+        cur.close(); conn.close()
+        return web.json_response({"ok": True, "lead": nombre})
+    except Exception as e:
+        print(f"[leads] db error: {e}", flush=True)
+        return web.json_response({"error": f"db: {e}"}, status=500)
+
+
 async def handle_citas(request: web.Request) -> web.Response:
     import uuid
     import datetime
@@ -783,6 +813,7 @@ app.router.add_get("/api/stt", handle_stt)
 app.router.add_post("/api/tts", handle_tts)
 app.router.add_get("/api/tts", handle_tts)
 app.router.add_post("/api/v1/citas", handle_citas)
+app.router.add_post("/api/v1/leads", handle_leads)
 app.router.add_post("/api/v1/whatsapp", require(handle_whatsapp))
 app.router.add_get("/api/v1/whatsapp", require(handle_whatsapp))
 
