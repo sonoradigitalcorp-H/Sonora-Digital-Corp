@@ -1,5 +1,12 @@
 # ESTADO VIVO
 
+## HERMES MANTENIMIENTO (2026-08-26)
+- ✅ **doctor --fix aplicado**: symlink `~/.local/bin/hermes` creado, config migrado, Skills Hub inicializado. Gateway sigue **active/200**.
+- ⚠️ **hermes update BLOQUEADO**: usa `git@github.com:NousResearch/hermes-agent` (SSH) y el VPS no tiene llave GitHub → `Host key verification failed`. El bug de SQLite WAL-reset NO es activo (DBs en `journal_mode=delete`, no WAL) → update no urgente. Pendiente: agregar llave SSH de GitHub al VPS.
+- ⚠️ **npm vulns** (nanoid/postcss via vite/sanitize-html) en workspaces **web/ui-tui** = dev-deps de build, NO runtime del gateway. `npm audit fix` falló por bug de lockfile (`Cannot read null edgesOut`); NO se forcea (`--force` rompería build del portal). Backlog aceptable.
+- ⚠️ **GITHUB_TOKEN** no seteado (solo baja rate-limit de gh/API, 60→más; no crítico). Pendiente: agregar token al `.env`.
+- Modelo Hermes: `deepseek/deepseek-v4-flash-0731` (Custom endpoint). Keys OpenRouter/Gemini/FAL activas. Memoria holographic activa.
+
 ## CODE REVIEW ADVERSARIAL — PROCESO CANÓNICO (2026-08-26)
 - **Arnés 4R** con separación de deberes (autor/revisor/refutador/validador) para matar autoaprobación, findings falsos y loops de revisión.
 - **Skill**: `.opencode/skills/mystic/code-review-adversarial/SKILL.md` · **ADR**: `00_Administration/ADRs/0016-code-review-adversarial.md`.
