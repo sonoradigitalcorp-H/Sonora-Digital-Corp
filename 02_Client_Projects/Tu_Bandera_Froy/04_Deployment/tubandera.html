@@ -108,6 +108,25 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--muted);font-s
 .mic-btn{background:#EEF1F4;color:var(--navy)}
 .mic-btn.rec{background:var(--red);color:#fff;animation:pulse 1.2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.55}}
+
+/* ===== Modal de agenda (input→output: cita real) ===== */
+.modal-ovl{position:fixed;inset:0;background:rgba(19,41,61,.5);z-index:10000;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-ovl.open{display:flex}
+.modal{background:#fff;border-radius:16px;max-width:420px;width:100%;padding:28px 26px;box-shadow:0 20px 60px rgba(19,41,61,.3);max-height:90vh;overflow-y:auto}
+.modal h3{font-size:20px;color:var(--navy);margin-bottom:6px}
+.modal p.mod-sub{font-size:13px;color:var(--muted);margin-bottom:18px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:700;color:var(--navy);margin-bottom:5px}
+.field input,.field select{width:100%;border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;outline:none;background:#fff}
+.field input:focus,.field select:focus{border-color:var(--red)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.btn-block{width:100%;text-align:center;margin-top:6px}
+.agenda-ok{background:#EAF6EF;border:1px solid #BBE4CE;color:#1B6E3E;padding:14px;border-radius:10px;font-size:13px;font-weight:600;display:none;margin-bottom:14px}
+.agenda-err{background:#FDECEC;border:1px solid #F2C6C6;color:#A12626;padding:14px;border-radius:10px;font-size:13px;font-weight:600;display:none;margin-bottom:14px}
+.modal-close{position:absolute;top:14px;right:16px;background:none;border:none;font-size:24px;cursor:pointer;color:var(--muted);line-height:1}
+.modal-wrap{position:relative}
+.lab-link{font-size:12px;color:var(--muted);text-align:center;margin-top:14px}
+.lab-link a{color:var(--red);font-weight:600;text-decoration:none}
 </style>
 </head>
 <body>
@@ -163,7 +182,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--muted);font-s
   </div>
 </section>
 
-<section id="servicios" style="padding-top:0;">
+<section id="tratamiento" style="padding-top:0;">
   <div class="wrap">
     <span class="kicker">Servicios</span>
     <h2>Tratamiento integral, hecho a tu medida</h2>
@@ -200,7 +219,7 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--muted);font-s
       <h2>Tres pasos para empezar</h2>
       <p class="lead">Dar el primer paso es lo más valiente que harás hoy. Nosotros nos encargamos del resto.</p>
       <div class="hero-actions">
-        <a class="btn btn-primary" href="#" onclick="document.getElementById('chatFabA').click();return false;">Agendar mi valoración gratis</a>
+        <a class="btn btn-primary" href="#" id="openAgenda">Agendar mi valoración gratis</a>
       </div>
     </div>
     <div class="steps">
@@ -259,6 +278,33 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--muted);font-s
   </div>
 </footer>
 
+<div class="modal-ovl" id="agendaOvl">
+  <div class="modal-wrap">
+    <button class="modal-close" id="agendaClose" aria-label="Cerrar">×</button>
+    <div class="modal">
+      <h3>Agenda tu valoración gratuita</h3>
+      <p class="mod-sub">Sin compromiso. El equipo clínico te contacta para confirmar.</p>
+      <div class="agenda-ok" id="agendaOk"></div>
+      <div class="agenda-err" id="agendaErr"></div>
+      <form id="agendaForm" novalidate>
+        <div class="field"><label>Tu nombre</label><input type="text" id="ap_nombre" required placeholder="Nombre y apellido"></div>
+        <div class="field"><label>Tu teléfono (WhatsApp)</label><input type="tel" id="ap_tel" required placeholder="662 123 4567"></div>
+        <div class="field"><label>Tu negocio (opcional)</label><input type="text" id="ap_negocio" placeholder="Si vienes por una empresa"></div>
+        <div class="field-row">
+          <div class="field"><label>Fecha</label><input type="date" id="ap_fecha" required></div>
+          <div class="field"><label>Hora</label><select id="ap_hora" required>
+            <option value="">Elige...</option>
+            <option>09:00</option><option>10:00</option><option>11:00</option>
+            <option>12:00</option><option>16:00</option><option>17:00</option><option>18:00</option>
+          </select></div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Confirmar mi valoración</button>
+        <p class="lab-link">¿Prefieres WhatsApp directo? <a href="https://wa.me/526623645186?text=Hola%2C%20quiero%20una%20valoraci%C3%B3n%20gratuita" target="_blank" rel="noopener">Escríbenos aquí</a></p>
+      </form>
+    </div>
+  </div>
+</div>
+
 <button class="chat-fab" id="chatFabA" aria-label="Abrir asistente IA">🤖</button>
 <div class="chat-panel" id="chatPanelA">
   <div class="chat-head"><span>Asistente Tu Bandera</span><button id="chatCloseA" aria-label="Cerrar">×</button></div>
@@ -283,8 +329,9 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--muted);font-s
   function add(t,role){const d=document.createElement("div");d.className="chat-msg "+role;d.textContent=t;body.appendChild(d);body.scrollTop=body.scrollHeight;}
   function greet(){if(!body.children.length)add("Hola. Soy el asistente de Tu Bandera A.C. ¿Buscas ayuda para ti o un familiar? La primera valoración es gratis.","bot");}
   async function sendText(text){if(!text.trim())return;add(text,"user");txt.value="";
-    try{const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({person:PERSON,chat_id:CHAT_ID,messages:[{role:"user",content:text}]})});const j=await r.json();const c=j.choices[0].message.content;add(c,"bot");if(window.Audio){fetch("/api/tts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:c,person:PERSON})}).then(r=>r.blob()).then(b=>{const u=URL.createObjectURL(b);new Audio(u).play();}).catch(()=>{});}}
-    catch(e){add("Estoy teniendo un momento. Roberto te contestará en breve. ¿Me dejo tu número?","bot");}}
+    const typing=document.createElement("div");typing.className="chat-msg bot";typing.textContent="…";typing.style.color="var(--muted)";body.appendChild(typing);body.scrollTop=body.scrollHeight;
+    try{const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({person:PERSON,chat_id:CHAT_ID,messages:[{role:"user",content:text}]})});const j=await r.json();typing.remove();const c=j.choices[0].message.content;add(c,"bot");if(window.Audio){fetch("/api/tts",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text:c,person:PERSON})}).then(r=>r.blob()).then(b=>{const u=URL.createObjectURL(b);new Audio(u).play();}).catch(()=>{});}}
+    catch(e){typing.remove();add("Estoy teniendo un momento. Roberto te contestará en breve. ¿Me dejo tu número?","bot");}}
   function stopRec(){if(recState!=="rec")return;recState="sending";micBtn.classList.remove("rec");try{recorder.stop();}catch(e){}if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}if(actx){try{actx.close();}catch(e){}actx=null;}}
   async function onStop(){const blob=new Blob(chunks,{type:chunks[0]?.type||"audio/webm"});chunks=[];if(blob.size<300){recState="idle";return;}
     const fd=new FormData();fd.append("file",blob,"voz.webm");add("Escuchando...","user");
@@ -302,6 +349,46 @@ footer{padding:36px 0;border-top:1px solid var(--line);color:var(--muted);font-s
   txt.addEventListener("keydown",e=>{if(e.key==="Enter")sendText(txt.value);});
   micBtn.onclick=()=>{if(recState==="idle")startRec();else stopRec();};
   if(!window.MediaRecorder){micBtn.disabled=true;micBtn.style.opacity=.4;}
+
+  // ===== Agenda de citas (input → POST /api/v1/citas → output) =====
+  const ovl=document.getElementById("agendaOvl"),agendaOk=document.getElementById("agendaOk"),agendaErr=document.getElementById("agendaErr");
+  const openAgenda=document.getElementById("openAgenda");
+  if(openAgenda) openAgenda.onclick=(e)=>{e.preventDefault();ovl.classList.add("open");};
+  document.getElementById("agendaClose").onclick=()=>{ovl.classList.remove("open");};
+  ovl.addEventListener("click",e=>{if(e.target===ovl)ovl.classList.remove("open");});
+
+  // Fecha mínima: hoy
+  const fEl=document.getElementById("ap_fecha");
+  if(fEl){fEl.min=new Date().toISOString().split("T")[0];}
+
+  document.getElementById("agendaForm").onsubmit=async(e)=>{
+    e.preventDefault();
+    agendaOk.style.display="none";agendaErr.style.display="none";
+    const nombre=document.getElementById("ap_nombre").value.trim();
+    const telefono=document.getElementById("ap_tel").value.trim();
+    const fecha=document.getElementById("ap_fecha").value;
+    const hora=document.getElementById("ap_hora").value;
+    if(!nombre||!telefono||!fecha||!hora){agendaErr.textContent="Completa nombre, teléfono, fecha y hora.";agendaErr.style.display="block";return;}
+    const btn=e.target.querySelector("button[type=submit]");
+    btn.disabled=true;btn.textContent="Agendando...";
+    try{
+      const r=await fetch("/api/v1/citas",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({persona:"tubandera",nombre,telefono,negocio:document.getElementById("ap_negocio").value.trim(),fecha,hora})});
+      const j=await r.json();
+      if(j.ok){
+        agendaOk.innerHTML="<b>¡Listo, "+nombre+"!</b><br>Tu valoración quedó <b>solicitada para el "+fecha+" a las "+hora+"</b>. Te contactamos para confirmar y coordinar el traslado si lo necesitas.";
+        agendaOk.style.display="block";
+        e.target.reset();
+      }else{
+        agendaErr.textContent="No pudimos agendar.\nIntenta por WhatsApp o llama al 662 364 5186.";
+        agendaErr.style.display="block";
+      }
+    }catch(err){
+      agendaErr.textContent="Sin conexión.\nEscríbenos por WhatsApp al 662 364 5186.";
+      agendaErr.style.display="block";
+    }
+    btn.disabled=false;btn.textContent="Confirmar mi valoración";
+  };
 })();
 </script></body>
 </html>
