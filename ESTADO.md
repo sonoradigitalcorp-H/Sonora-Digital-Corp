@@ -8,7 +8,7 @@
 - ✅ **VALIDADO en fix real** (piloto `vps_ai_server.py`): findings H1 (auth /api/v1/whatsapp) + H2 (rutas huerfanas) CORROBORADOS y FIX VERIFICADO en runtime. Zero regresión.
 - ⚠️ **CAUSA RAÍZ DE DUPLICACIÓN — lección crítica**: el commit del fix quedó SOLO LOCAL (sin push). Un commit local sin push NO llega a producción aunque `deploy.sh` corra: producción siguió con código viejo expuesto. El refutador validando EN VIVO lo atrapó (la autoaprobación no). **Regla**: `/opt/hermes/repo` → `git pull` debe traer el commit ANTES de deployar; verificar `git log`/`origin/next` == local + `git status` limpio antes de deploy.
 - ✅ **M1 RESUELTO (2026-08-26)**: citas unificadas en Supabase (`public.citas`); `handle_citas` ya NO escribe sqlite; `sync_metrics` + `test_e2e` migrados a Supabase; 3 citas históricas backfilleadas (commit `9a90093e`, verificado en runtime). Fuente única de verdad.
-- 🔲 **M2 pendiente**: password hardcodeado en path `.env` (`SUPABASE_PASS`/`METRICS_DB_PASSWORD`) — migrar a env vars inyectadas por systemd (más seguro).
+- ✅ **M2 RESUELTO (2026-08-26)**: credenciales via env, nunca path hardcodeado. `/opt/hermes/.env.secrets` (chmod 600) + `EnvironmentFile` en vps-ai-server + wrapper cron `run_sync_metrics.sh` (source). Fail-closed: sin env → no lee archivo. Commit `0deb3e01`. ⚠️ Lección: heredoc `<< "EOF"` no expande `$VAR` → usar Python/printf para escribir secrets.
 
 ## PÁGINAS PRO MAX POR CLIENTE (2026-08-23)
 - **Diseño Gemini Pro Max** (Tailwind + glassmorphism + Lucide + secciones de servicios + chatbot IA).
