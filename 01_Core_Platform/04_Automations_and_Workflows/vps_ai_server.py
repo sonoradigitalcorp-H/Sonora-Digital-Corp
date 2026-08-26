@@ -43,6 +43,24 @@ STT_URL = "http://127.0.0.1:5292/api/stt"
 TTS_URL = "http://127.0.0.1:5293/api/tts"
 COMPOSIO_API_KEY = os.environ.get("COMPOSIO_API_KEY", "")
 
+# === Auth para endpoints sensibles de envio (fail-closed) ===
+API_SERVER_KEY = os.environ.get("API_SERVER_KEY", "")
+
+async def _authorized(request: web.Request) -> bool:
+    """Valida Authorization: Bearer <API_SERVER_KEY>. Fail-closed: sin key o sin token -> False."""
+    if not API_SERVER_KEY:
+        return False
+    auth = request.headers.get("Authorization", "")
+    return auth.replace("Bearer ", "").strip() == API_SERVER_KEY
+
+def require(key: str):
+    """Decorator: exige auth en el handler marcado."""
+    async def wrapper(request):
+        if not await _authorized(request):
+            return web.json_response({"error": "unauthorized"}, status=401)
+        return await key(request)
+    return wrapper
+
 # === Memoria persistente (Supabase) ===
 import asyncio
 import psycopg2
@@ -674,7 +692,7 @@ async def handle_citas(request: web.Request) -> web.Response:
 
 
 async def handle_whatsapp(request: web.Request) -> web.Response:
-    """Exponer skill wacli como tool de Hermes (texto/voice/doc).
+    """Exponer skill wacli como tool de Hermes (texto/voice/doc). Auto: API_SERVER_KEY.
     POST /api/v1/whatsapp {action: text|voice|doc|auth, phone, ...}"""
     data = {}
     if request.method == "POST":
@@ -756,16 +774,14 @@ app.router.add_get("/metrics", lambda r: web.Response(
 ))
 app.router.add_post("/api/v1/chat/completions", handle_chat_completions)
 app.router.add_get("/api/v1/chat/completions", handle_chat_completions)
-app.router.add_post("/v1/chat/completions", handle_chat_completions)
-app.router.add_post("/chat", handle_chat_completions)
 app.router.add_post("/api/v1/chat/voice", handle_voice_chat)
 app.router.add_post("/api/stt", handle_stt)
 app.router.add_get("/api/stt", handle_stt)
 app.router.add_post("/api/tts", handle_tts)
 app.router.add_get("/api/tts", handle_tts)
 app.router.add_post("/api/v1/citas", handle_citas)
-app.router.add_post("/api/v1/whatsapp", handle_whatsapp)
-app.router.add_get("/api/v1/whatsapp", handle_whatsapp)
+app.router.add_post("/api/v1/whatsapp", require(handle_whatsapp))
+app.router.add_get("/api/v1/whatsapp", require(handle_whatsapp))
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", "8643"))
