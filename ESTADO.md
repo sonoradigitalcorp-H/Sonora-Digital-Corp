@@ -7,7 +7,8 @@
 - Claves: content-addressed storage (hash=SHA-256), event sourcing (estado inmutable), fail-closed (lo no probado se rechaza), ledger congelado (findings no desaparecen), racionalidad acotada (máx 2 iteraciones), gates (pre-commit/pre-push/pre-release/post-apply), fast-path estrecho solo en main (hash + CI verde).
 - ✅ **VALIDADO en fix real** (piloto `vps_ai_server.py`): findings H1 (auth /api/v1/whatsapp) + H2 (rutas huerfanas) CORROBORADOS y FIX VERIFICADO en runtime. Zero regresión.
 - ⚠️ **CAUSA RAÍZ DE DUPLICACIÓN — lección crítica**: el commit del fix quedó SOLO LOCAL (sin push). Un commit local sin push NO llega a producción aunque `deploy.sh` corra: producción siguió con código viejo expuesto. El refutador validando EN VIVO lo atrapó (la autoaprobación no). **Regla**: `/opt/hermes/repo` → `git pull` debe traer el commit ANTES de deployar; verificar `git log`/`origin/next` == local + `git status` limpio antes de deploy.
-- Backlog (inconcluso, no bloquea): M1 citas en sqlite vs Supabase (doble fuente), M2 password hardcodeado en path `.env`.
+- ✅ **M1 RESUELTO (2026-08-26)**: citas unificadas en Supabase (`public.citas`); `handle_citas` ya NO escribe sqlite; `sync_metrics` + `test_e2e` migrados a Supabase; 3 citas históricas backfilleadas (commit `9a90093e`, verificado en runtime). Fuente única de verdad.
+- 🔲 **M2 pendiente**: password hardcodeado en path `.env` (`SUPABASE_PASS`/`METRICS_DB_PASSWORD`) — migrar a env vars inyectadas por systemd (más seguro).
 
 ## PÁGINAS PRO MAX POR CLIENTE (2026-08-23)
 - **Diseño Gemini Pro Max** (Tailwind + glassmorphism + Lucide + secciones de servicios + chatbot IA).
