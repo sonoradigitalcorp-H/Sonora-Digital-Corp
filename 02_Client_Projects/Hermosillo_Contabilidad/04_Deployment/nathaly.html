@@ -661,7 +661,7 @@
             const fd=new FormData();fd.append('file',blob,'voz.webm');add('Escuchando...','user');
             try{const r=await fetch(STT,{method:'POST',body:fd});const j=await r.json();const t=j.text||'';if(t.trim()){body.lastChild.remove();sendText(t);}else{body.lastChild.remove();add('No entendí. Repite.','bot');}}
             catch(e){body.lastChild.remove();add('Error de voz. Escríbelo.','bot');}recState='idle';}
-          async function startRec(){if(recState!=='idle')return;chunks=[];try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});}catch(e){add('Permiso de micrófono denegado.','bot');return;}
+          async function startRec(){if(recState!=='idle')return;chunks=[];try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});}catch(e){recState='idle';micBtn.classList.remove('rec');add(e && e.name==='NotAllowedError'?'Permiso de micrófono denegado. Actívalo en el candado del navegador y vuelve a intentar.':'No se pudo acceder al micrófono. Usa el texto abajo.','bot');return;}
             actx=new (window.AudioContext||window.webkitAudioContext)();const src=actx.createMediaStreamSource(stream);analyser=actx.createAnalyser();analyser.fftSize=256;src.connect(analyser);
             const mime=['audio/webm;codecs=opus','audio/webm','audio/mp4'].find(m=>MediaRecorder.isTypeSupported(m))||'';recorder=new MediaRecorder(stream,mime?{mimeType:mime}:{});recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};recorder.onstop=onStop;recorder.start();
             micBtn.classList.add('rec');recState='rec';silenceStart=null;
