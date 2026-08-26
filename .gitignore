@@ -43,5 +43,7 @@ preview-fullpage.png
 # Session logs contienen keys — NUNCA versionar
 00_Administration/Session_Logs/
 
-# Scratch / artefactos de trabajo (no versionar)
-.opencode/scratch/
+# IDE / Tooling configs
+.vscode/
+.opencode/
+

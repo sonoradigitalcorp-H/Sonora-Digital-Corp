@@ -1,0 +1,54 @@
+{
+  "5216623538272": {
+    "name": "Luis Daniel Guerrero Enciso",
+    "alias": ["Mystic", "COSUDE", "Jefe", "Luis"],
+    "role": "owner",
+    "email": "sonoradigitalcorp@gmail.com",
+    "telegram": "@sonora_digital_bot",
+    "company": "Sonora Digital Corp",
+    "tenant": "mystic",
+    "preferences": {
+      "theme": "dark",
+      "language": "es"
+    }
+  },
+  "526623645186": {
+    "name": "Roberto Elizandro Lara",
+    "alias": ["Roberto Dealer", "Rob", "Presidente"],
+    "role": "client_owner",
+    "email": "",
+    "telegram": "",
+    "company": "Tu Bandera A.C.",
+    "tenant": "tu-bandera",
+    "preferences": {
+      "theme": "warm",
+      "language": "es"
+    }
+  },
+  "6623498589": {
+    "name": "Nathaly Hermosillo",
+    "alias": ["Nathaly", "Naty"],
+    "role": "client_owner",
+    "email": "",
+    "telegram": "@HermosilloCont_bot",
+    "company": "Hermosillo Contabilidad / Nathaly Contabilidad",
+    "tenant": "nathaly",
+    "preferences": {
+      "theme": "green",
+      "focus": "contabilidad"
+    }
+  },
+  "5216623498589": {
+    "name": "Contacto Tu Bandera A.C.",
+    "alias": ["Contacto Tubandera", "Línea Tu Bandera"],
+    "role": "user",
+    "email": "",
+    "telegram": "",
+    "company": "Tu Bandera A.C.",
+    "tenant": "tu-bandera",
+    "preferences": {
+      "theme": "warm",
+      "focus": "rehabilitacion"
+    }
+  }
+}

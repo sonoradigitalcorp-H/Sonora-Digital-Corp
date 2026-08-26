@@ -115,6 +115,7 @@ INTENT_PATTERNS = {
     "PRICE": re.compile(r"\b(precio|costo|cuanto cuesta|cuanto sale|plan|paquete|tarifa)\b", re.I),
     "BOOK_APPOINTMENT": re.compile(r"\b(cita|agendar|agenda|reservar|apartar|programar|calendario|disponibilidad)\b", re.I),
     "LOCATION": re.compile(r"\b(donde estas|ubicacion|direccion|donde quedan|donde estan|oficina|local)\b", re.I),
+    "EMERGENCY": re.compile(r"\b(navaja|arma|vienen|nos llevan|se niega|no quiere|hijo|familiar|peligro|urgencia|nogales|hermosillo|auxilio|socorro|emergencia)\b", re.I),
 }
 
 INTENT_REPLIES = {
@@ -131,10 +132,11 @@ INTENT_REPLIES = {
         "LOCATION": "Nathaly atiende en Hermosillo, Sonora, y tambien 100% remoto. Todo por WhatsApp y videollamada. Te agendo la revision gratis?",
     },
     "tubandera": {
-        "SILENCE": "Entendido. Me callo. Avisame si necesitas algo.",
+        "SILENCE": "Entendido. Me callo. Avisame si necesito algo.",
         "PRICE": "La primera valoracion en Tu Bandera A.C. es gratuita. El plan y los costos exactos los define Roberto en una llamada sin compromiso. Dejame tus datos y te contacta.",
         "BOOK_APPOINTMENT": "Con gusto te apoyo. La primera valoracion en Tu Bandera A.C. es sin costo. Dejame tu nombre y telefono y Roberto te contacta para agendarte, o escríbenos por WhatsApp y Telegram.",
         "LOCATION": "Estamos en Cofre del Perote 9347, Hermosillo, Sonora. Tambien atendemos remoto. Dejame tus datos y te digo como llegar o coordinamos.",
+        "EMERGENCY": "Entiendo que es una situación urgente. Por seguridad, si hay riesgo inmediato de daño, llama a emergencias al 911. Yo puedo ayudar a registrar el caso y poner en contacto a Roberto con la familia. ¿Hay peligro inminente? ¿Necesitas que te acompañe a un lugar seguro mientras contactamos al equipo?"
     },
 }
 
@@ -458,6 +460,7 @@ async def handle_tts(request: web.Request) -> web.Response:
 async def handle_citas(request: web.Request) -> web.Response:
     import uuid
     import datetime
+    from urllib.parse import urlparse, parse_qs
 
     try:
         data = await request.json()
@@ -473,11 +476,30 @@ async def handle_citas(request: web.Request) -> web.Response:
 
     if not (telefono and fecha and hora):
         return web.json_response({"error": "faltan telefono/fecha/hora"}, status=400)
+
     digits = re.sub(r"\D", "", telefono)
     if len(digits) == 10:
         digits = "52" + digits
     elif len(digits) == 11 and digits.startswith("1"):
         digits = "52" + digits[1:]
+
+    # --- Google Calendar validation via Composio ---
+    calendar_status = "not_checked"
+    if COMPOSIO_API_KEY:
+        try:
+            timeout = ClientTimeout(total=15)
+            async with ClientSession(timeout=timeout) as session:
+                # Check if the date/time is available via calendar
+                async with session.post(
+                    f"https://api.composio.dev/v1/toolkits/google-calendar-mcp/actions/check_availability/execute",
+                    headers={"Authorization": f"Bearer {COMPOSIO_API_KEY}", "Content-Type": "application/json"},
+                    json={"params": {"date": fecha, "time": hora, "participants": [{"name": nombre, "phone": digits}]}}
+                ) as resp:
+                    if resp.status == 200:
+                        calendar_data = await resp.json()
+                        calendar_status = calendar_data.get("status", "checked")
+        except Exception as e:
+            calendar_status = f"error: {str(e)[:50]}"
 
     db_dir = Path("/opt/hermes/citas_db")
     db_dir.mkdir(parents=True, exist_ok=True)
@@ -490,9 +512,9 @@ async def handle_citas(request: web.Request) -> web.Response:
             conn.execute("""CREATE TABLE IF NOT EXISTS citas (
                 id TEXT PRIMARY KEY, persona TEXT, nombre TEXT, negocio TEXT,
                 telefono TEXT, fecha TEXT, hora TEXT, estado TEXT DEFAULT 'confirmada',
-                creado_en TEXT)""")
-            conn.execute("INSERT INTO citas VALUES (?,?,?,?,?,?,?,?,?)",
-                         (cita_id, persona, nombre, negocio, digits, fecha, hora, "confirmada", now))
+                creado_en TEXT, calendar_verified TEXT)""")
+            conn.execute("INSERT INTO citas VALUES (?,?,?,?,?,?,?,?,?,?)",
+                         (cita_id, persona, nombre, negocio, digits, fecha, hora, "confirmada", now, calendar_status))
             conn.commit()
     except Exception as e:
         print(f"[citas] db error: {e}", flush=True)
@@ -508,29 +530,45 @@ async def handle_citas(request: web.Request) -> web.Response:
         print(f"[citas] tts error: {e}", flush=True)
         audio = b""
 
-    wacli_status = "skipped-no-audio"
+    wacli_status_client = "skipped-no-audio"
+    wacli_status_owner = "skipped-no-audio"
+    owner_phone = os.environ.get("OWNER_PHONE", "526623645186")  # Roberto's WhatsApp
+    digits_client = digits
+    owner_digits = re.sub(r"\D", "", owner_phone)
+
     if audio:
         tmp = tempfile.mktemp(suffix=".ogg")
         Path(tmp).write_bytes(audio)
         wacli_bin = os.environ.get("WACLI_BIN", "/home/mystic/.local/bin/wacli")
         wacli_store = os.environ.get("WACLI_STORE", "/home/mystic/.wacli")
         try:
-            to = f"{digits}@s.whatsapp.net"
+            to_client = f"{digits_client}@s.whatsapp.net"
+            to_owner = f"{owner_digits}@s.whatsapp.net"
             r = subprocess.run(
                 [wacli_bin, "send", "voice", "--store", wacli_store,
-                 "--to", to, "--file", tmp],
+                 "--to", to_client, "--file", tmp],
                 capture_output=True, text=True, timeout=40,
             )
-            wacli_status = "sent" if r.returncode == 0 else f"err:{r.stderr[:120]}"
+            wacli_status_client = "sent" if r.returncode == 0 else f"err:{r.stderr[:120]}"
         except Exception as e:
-            wacli_status = f"err:{e}"
+            wacli_status_client = f"err:{e}"
+        try:
+            r2 = subprocess.run(
+                [wacli_bin, "send", "voice", "--store", wacli_store,
+                 "--to", to_owner, "--file", tmp],
+                capture_output=True, text=True, timeout=40,
+            )
+            wacli_status_owner = "sent" if r2.returncode == 0 else f"err:{r2.stderr[:120]}"
+        except Exception as e:
+            wacli_status_owner = f"err:{e}"
         finally:
             try: Path(tmp).unlink()
             except Exception: pass
 
-    print(f"[citas] {persona} {nombre} {fecha} {hora} wacli={wacli_status}", flush=True)
+    print(f"[citas] {persona} {nombre} {fecha} {hora} wacli_client={wacli_status_client} wacli_owner={wacli_status_owner} calendar={calendar_status}", flush=True)
     return web.json_response({"ok": True, "cita_id": cita_id, "estado": "confirmada",
-                              "wacli": wacli_status, "telefono": digits})
+                              "wacli_client": wacli_status_client, "wacli_owner": wacli_status_owner,
+                              "calendar_verified": calendar_status, "telefono": digits})
 
 
 async def handle_whatsapp(request: web.Request) -> web.Response:

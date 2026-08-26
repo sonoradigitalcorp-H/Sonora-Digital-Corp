@@ -84,7 +84,7 @@
 - Tenant `aztrotech` eliminado de tenants.json; agente `cesar` eliminado de agents_registry.json; dir movido a ~/.hermes/agents/_archived/cesar_20260820.
 - tenant_router.py sin refs aztrotech (0). Skills cesar-* (8) archivados en ~/.hermes/skills/clients/_archived_aztro_20260820/. Skill `aztrotech-citas` CONSERVADO (lo usan nathaly + consultorio-sonora). Skill `ventas-cesar` archivado en .opencode/skills/mystic/_archived_ventas-cesar_20260820.
 - Proyecto movido: `02_Client_Projects/Aztrotech` → `_archived/Aztrotech_20260820/`.
-- Pendiente: VPS OVH sigue caído (página sonoradigitalcorp.com down desde 2026-08-19 16:20) — requiere panel OVH zona CA.
+- **VPS OVH VIVO (2026-08-26 verificado)**: El VPS `149.56.46.173` NUNCA estuvo muerto de verdad. SSH funciona con `ubuntu@149.56.46.173` (key `~/.ssh/id_ed25519_sdc`). NO usar `root@` (falla). Los 7 servicios corren 24/7: `vps-ai-server` (:8643), `hermes-gateway` (:8642), `sdc-stt` (:5292), `sdc-tts` (:5293), `hermosillo-webhook` (:5291), `nginx`, `cloudflared-tunnel`. Web sonoradigitalcorp.com = 200 OK. Los reportes de "VPS caído / rescue mode" de 2026-08-19→21 fueron diagnósticos erróneos (ruta ISP intermitente + login con usuario equivocado).
 
  (se actualiza con /mejora — leer SIEMPRE al arrancar)
 
@@ -228,12 +228,12 @@
 - **CORS fix**: `api_server.extra.cors_origins: "*"` en `~/.hermes/config.yaml` → reinicio `hermes-gateway.service`. Browser Origin requests ahora 200 OK.
 - **WhatsApp button repositioned**: right:112px (era right:24px) para no interceptar clicks del orb (right:24px, z-index 9998 vs 9999).
 - **nginx timeout**: proxy_read_timeout 60s → 120s en `/api/v1/` para evitar 504 en LLM responses.
-- **VPS OVH status**: Panel "Activo" pero TODOS puertos cerrados (22, 80, 443, 11434, 8080, 5291). Reboot no arregló. Requiere VNC console → rescue mode → fix systemd/docker/network.
+- **VPS OVH status (2026-08-26)**: ✅ VIVO. SSH OK con `ubuntu@` (NO root). Servicios: vps-ai-server, hermes-gateway, sdc-stt, sdc-tts, hermosillo-webhook, nginx, cloudflared-tunnel = TODOS active. Web 200 OK. Los reportes previos de "puertos cerrados / rescue mode" fueron falsos (error de usuario + ruta ISP intermitente).
 - **Local Ollama STOPPED**: `systemctl --user stop/disable ollama.service` — libera ~1.5GB RAM en laptop 3.3GB. VPS OVH (149.56.46.173) = único lugar para embeddings/LLM.
 - **Audio resumen enviado a WhatsApp**: 2 min voz DaliaNeural via edge-tts → ffmpeg → wacli send voice (id 3EB00B9F422185CC13D948).
 
 ## PENDIENTES ACTUALIZADOS (2026-08-20)
-1. **VPS OVH recovery**: VNC console → diagnose → rescue mode si no responde. Backup 2026-08-20 03:26 disponible.
+1. **VPS OVH**: ✅ VIVO (2026-08-26). SSH `ubuntu@149.56.46.173` con `~/.ssh/id_ed25519_sdc`. Los 7 servicios activos. No requiere rescue mode (fue diagnóstico erróneo). Acceso correcto: `ubuntu@`, NUNCA `root@`.
 2. **FAL_KEY regenerar**: vencida 401 → fal.ai/dashboard.
 3. **LinkedIn en Composio**: `composio link linkedin`.
 4. **Telegram bots en Hermes**: telegram.enabled=true + tokens por tenant.

@@ -11,33 +11,32 @@ import yaml  # pyyaml
 
 HERE = Path(__file__).parent
 KEY = ""
-for line in (Path.home() / ".hermes" / ".env").read_text().splitlines():
-    if line.startswith("OPENROUTER_API_KEY="):
-        KEY = line.split("=", 1)[1].strip().strip('"')
+# 1) Variable de entorno directa (si el service/systemd la inyecta)
+KEY = os.environ.get("OPENROUTER_API_KEY", "")
+# 2) ~/.hermes/.env del usuario actual
 if not KEY:
-    sys.exit("OPENROUTER_API_KEY no encontrada en ~/.hermes/.env")
+    for candidate in [Path.home() / ".hermes" / ".env",
+                      Path("/home/mystic/.hermes/.env"),
+                      Path("/root/.hermes/.env")]:
+        if candidate.exists():
+            for line in candidate.read_text().splitlines():
+                if line.startswith("OPENROUTER_API_KEY="):
+                    KEY = line.split("=", 1)[1].strip().strip('"')
+                    break
+        if KEY:
+            break
+if not KEY:
+    sys.exit("OPENROUTER_API_KEY no encontrada (~/.hermes/.env, /home/mystic/.hermes/.env, o env)")
 
 FORBIDDEN = ["ia", "agente", "modelo", "llm", "token", "prompt", "rag",
              "embedding", "chatbot", "bot", "inteligencia artificial"]
 
-SOULS = {
-    "sdc": "Eres el asistente de Sonora Digital Corp en Hermosillo. Ayudas a dueños "
-           "de negocio a recuperar tiempo: tu empresa atiende sola las 24 horas. "
-           "Reglas: nunca uses signos de exclamación, nunca digas IA/bot/modelo, "
-           "vende beneficios (tiempo, dinero, tranquilidad), máximo 4 frases cortas, "
-           "tono tranquilo. Ofrece diagnóstico gratis por WhatsApp cuando convenga.",
-    "nathaly": "Eres la asistente de Nathaly, contadora en Hermosillo. Contabilidad, "
-               "administración, importaciones y trámites SAT. Reglas: nunca uses signos "
-               "de exclamación, nunca inventes precios (deriva a Nathaly por WhatsApp), "
-               "nunca digas IA/bot/modelo, vende beneficios (orden, cero multas, tiempo), "
-               "máximo 4 frases cortas, tono tranquilo y cercano.",
-    "tubandera": "Eres el Asistente Oficial de Tu Bandera A.C., centro de rehabilitación en "
-                 "Hermosillo (Roberto Lara). Ayudas a personas que buscan apoyo para ellas o "
-                 "un familiar. Reglas: NUNCA des recetas ni diagnosticas, NUNCA juzgues, ante "
-                 "crisis deriva a humano/911. Sin exclamaciones ni palabras técnicas (IA/bot/modelo). "
-                 "Habla con calidez y esperanza, 2-4 frases cortas. Ofrece DIAGNÓSTICO GRATUITO "
-                 "y SIEMPRE cierra con valoración/agendar/Roberto. Ofrece traslados 24/7.",
-}
+# SOULS canónicos de producción (extraídos de vps_ai_server.py). import souls
+try:
+    from souls import SOULS
+except ImportError:
+    SOULS = {}
+    print("[warn] souls.py no encontrado en prompt_registry; SOULS quedará vacío", file=sys.stderr)
 
 
 def hard_rules(text: str) -> list[str]:
