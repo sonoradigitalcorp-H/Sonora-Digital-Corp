@@ -116,6 +116,28 @@
 .send-btn{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
 @keyframes pulseRec{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.5)}50%{box-shadow:0 0 0 12px rgba(220,38,38,0)}}
 </style>
+<style>
+/* ===== Modal de agenda (input→output: cita real) ===== */
+.modal-ovl{position:fixed;inset:0;background:rgba(2,6,23,.6);z-index:10002;display:none;align-items:center;justify-content:center;padding:16px}
+.modal-ovl.open{display:flex}
+.modal{background:#fff;border-radius:20px;max-width:420px;width:100%;padding:28px 26px;box-shadow:0 24px 70px rgba(0,0,0,.5);max-height:90vh;overflow-y:auto}
+.modal h3{color:#0f172a;font-size:20px;margin:0 0 6px;font-weight:800}
+.modal p.mod-sub{color:#64748b;font-size:13px;margin-bottom:18px}
+.field{margin-bottom:14px}
+.field label{display:block;font-size:12px;font-weight:700;color:#0f172a;margin-bottom:5px}
+.field input,.field select{width:100%;border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;outline:none;background:#fff;color:#0f172a}
+.field input:focus,.field select:focus{border-color:#0d6efd}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.agenda-ok{background:#EAF6EF;border:1px solid #BBE4CE;color:#1B6E3E;padding:14px;border-radius:10px;font-size:13px;font-weight:600;display:none;margin-bottom:14px}
+.agenda-err{background:#FDECEC;border:1px solid #F2C6C6;color:#A12626;padding:14px;border-radius:10px;font-size:13px;font-weight:600;display:none;margin-bottom:14px}
+.btn-block{display:block;width:100%;text-align:center;margin-top:6px}
+.btn-block.btn{background:linear-gradient(135deg,#0d6efd,#00a3ff);color:#fff;border:none;padding:13px;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px;transition:.15s}
+.btn-block.btn:hover{transform:translateY(-1px)}
+.modal-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:26px;cursor:pointer;color:#64748b;line-height:1;z-index:10003}
+.modal-wrap{position:relative}
+.lab-link{font-size:12px;color:#64748b;text-align:center;margin-top:14px}
+.lab-link a{color:#0d6efd;font-weight:700;text-decoration:none}
+</style>
 </head>
 <body class="antialiased selection:bg-brand-blue selection:text-white">
 
@@ -203,7 +225,7 @@
 
             <!-- Hero Action Buttons -->
             <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
-                <a href="javascript:document.getElementById("chatFabA")&&document.getElementById("chatFabA").click();" target="_blank" rel="noopener noreferrer" 
+                <a href="#openAgenda" id="openAgenda" onclick="return false;" 
                    class="w-full sm:w-auto cta-gradient-btn text-white px-8 py-4 rounded-xl font-bold text-base tracking-wide flex items-center justify-center gap-3 transition-all transform hover:scale-105">
                     <i data-lucide="send" class="w-5 h-5"></i>
                     HABLAR CON ASISTENTE VIRTUAL
@@ -620,6 +642,33 @@
         }
     </script>
 
+<div class="modal-ovl" id="agendaOvl">
+  <div class="modal-wrap">
+    <button class="modal-close" id="agendaClose" aria-label="Cerrar">×</button>
+    <div class="modal">
+      <h3>Agenda tu diagnóstico gratis</h3>
+      <p class="mod-sub">Revisión sin costo. Nathaly te contacta para confirmar.</p>
+      <div class="agenda-ok" id="agendaOk"></div>
+      <div class="agenda-err" id="agendaErr"></div>
+      <form id="agendaForm" novalidate>
+        <div class="field"><label>Tu nombre</label><input type="text" id="ap_nombre" required placeholder="Nombre y apellido"></div>
+        <div class="field"><label>Tu teléfono (WhatsApp)</label><input type="tel" id="ap_tel" required placeholder="662 123 4567"></div>
+        <div class="field"><label>Tu negocio (opcional)</label><input type="text" id="ap_negocio" placeholder="Nombre de tu negocio"></div>
+        <div class="field-row">
+          <div class="field"><label>Fecha</label><input type="date" id="ap_fecha" required></div>
+          <div class="field"><label>Hora</label><select id="ap_hora" required>
+            <option value="">Elige...</option><option>09:00</option><option>10:00</option>
+            <option>11:00</option><option>12:00</option><option>16:00</option>
+            <option>17:00</option><option>18:00</option>
+          </select></div>
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Confirmar</button>
+        <p class="lab-link">¿Prefieres WhatsApp directo? <a href="https://wa.me/526623498589" target="_blank" rel="noopener">Escríbenos aquí</a></p>
+      </form>
+    </div>
+  </div>
+</div>
+
 <button class="chat-fab" id="chatFabA" aria-label="Abrir asistente IA">🤖</button>
 <div class="chat-panel" id="chatPanelA">
   <div class="chat-head"><span>Asistente IA</span><button id="chatCloseA" aria-label="Cerrar">×</button></div>
@@ -661,6 +710,36 @@
   txt.addEventListener("keydown",e=>{if(e.key==="Enter")sendText(txt.value);});
   micBtn.onclick=()=>{if(recState==="idle")startRec();else stopRec();};
   if(!window.MediaRecorder){micBtn.disabled=true;micBtn.style.opacity=.4;}
+
+  // ===== Agenda de llamada/diagnóstico (input → POST /api/v1/citas → output) =====
+  const ovl=document.getElementById("agendaOvl"),agendaOk=document.getElementById("agendaOk"),agendaErr=document.getElementById("agendaErr");
+  const openAgenda=document.getElementById("openAgenda");
+  if(openAgenda) openAgenda.onclick=(e)=>{e.preventDefault();ovl.classList.add("open");};
+  document.getElementById("agendaClose").onclick=()=>{ovl.classList.remove("open");};
+  ovl.addEventListener("click",e=>{if(e.target===ovl)ovl.classList.remove("open");});
+  const fEl=document.getElementById("ap_fecha");
+  if(fEl){fEl.min=new Date().toISOString().split("T")[0];}
+  document.getElementById("agendaForm").onsubmit=async(e)=>{
+    e.preventDefault();
+    agendaOk.style.display="none";agendaErr.style.display="none";
+    const nombre=document.getElementById("ap_nombre").value.trim();
+    const telefono=document.getElementById("ap_tel").value.trim();
+    const fecha=document.getElementById("ap_fecha").value;
+    const hora=document.getElementById("ap_hora").value;
+    if(!nombre||!telefono||!fecha||!hora){agendaErr.textContent="Completa nombre, teléfono, fecha y hora.";agendaErr.style.display="block";return;}
+    const btn=e.target.querySelector("button[type=submit]");
+    btn.disabled=true;btn.textContent="Agendando...";
+    try{
+      const r=await fetch("/api/v1/citas",{method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({persona:"nathaly",nombre,telefono,fecha,hora})});
+      const j=await r.json();
+      if(j.ok){
+        agendaOk.innerHTML="<b>¡Listo, "+nombre+"!</b><br>Tu revisión quedó <b>solicitada para el "+fecha+" a las "+hora+"</b>. Nathaly te contacta para confirmar.";
+        agendaOk.style.display="block";e.target.reset();
+      }else{agendaErr.textContent="No pudimos agendar.\nIntenta por WhatsApp al 662 349 8589.";agendaErr.style.display="block";}
+    }catch(err){agendaErr.textContent="Sin conexión.\nEscríbenos por WhatsApp al 662 349 8589.";agendaErr.style.display="block";}
+    btn.disabled=false;btn.textContent="Confirmar";
+  };
 })();
 </script></body>
 </html>
