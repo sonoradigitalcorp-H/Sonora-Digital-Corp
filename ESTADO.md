@@ -1,5 +1,12 @@
 # ESTADO VIVO
 
+## CODE REVIEW ADVERSARIAL — PROCESO CANÓNICO (2026-08-26)
+- **Arnés 4R** con separación de deberes (autor/revisor/refutador/validador) para matar autoaprobación, findings falsos y loops de revisión.
+- **Skill**: `.opencode/skills/mystic/code-review-adversarial/SKILL.md` · **ADR**: `00_Administration/ADRs/0016-code-review-adversarial.md`.
+- Fuente: video "curso de code review por IA" (Gentleman, ID `38Y1JWU-mdE`), transcript en `01_Core_Platform/05_SelfImprovement/learning/youtube/`.
+- Claves: content-addressed storage (hash=SHA-256), event sourcing (estado inmutable), fail-closed (lo no probado se rechaza), ledger congelado (findings no desaparecen), racionalidad acotada (máx 2 iteraciones), gates (pre-commit/pre-push/pre-release/post-apply), fast-path estrecho solo en main (hash + CI verde).
+- ⚠️ Estado: PROPUESTO → validar en un fix real con findings falsos antes de marcarlo IMPLEMENTADO.
+
 ## PÁGINAS PRO MAX POR CLIENTE (2026-08-23)
 - **Diseño Gemini Pro Max** (Tailwind + glassmorphism + Lucide + secciones de servicios + chatbot IA).
 - **Tu Bandera A.C.** (`/tubandera.html`): rojo/azul, secciones modelo tratamiento + chatbot IA embebido (persona `tubandera`). Imágenes rotas → assets locales.
