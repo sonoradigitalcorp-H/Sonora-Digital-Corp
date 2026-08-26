@@ -31,9 +31,9 @@ import tempfile
 sys.path.insert(0, "/opt/hermes/tubandera")
 from guards import is_injection
 try:
-    from personas_db import init as pdb_init, registrar_usuario, get_usuario
+    from personas_db import init as pdb_init, registrar_usuario, get_usuario, guardar_lead
 except Exception:
-    pdb_init = registrar_usuario = get_usuario = None
+    pdb_init = registrar_usuario = get_usuario = guardar_lead = None
 
 from pathlib import Path
 from datetime import datetime
@@ -54,7 +54,7 @@ sys.path.insert(0, str(BASE_DIR / "02_Source_Code"))
 
 import tubandera_scoring  # noqa: E402
 
-DB_DIR = BASE_DIR / "03_Infrastructure"
+DB_DIR = BASE_DIR / "data"
 DB_DIR.mkdir(parents=True, exist_ok=True)
 DB_PATH = DB_DIR / "tu_bandera_leads.db"
 
@@ -90,6 +90,17 @@ def init_db():
 
 
 def save_lead(user_id, username, full_name, perfil, urgencia, mensaje, respuesta, telefono="", notificado=False):
+    """Persiste en Supabase (fuente única de leads). Fallback: sqlite local en data/ si falla."""
+    nombre = full_name or username or f"TG {user_id}"
+    tel = telefono or (username or f"TG {user_id}")
+    try:
+        pdb_init()
+        guardar_lead(user_id, nombre, tel, perfil, urgencia, mensaje, respuesta,
+                     canal="telegram", estado="nuevo")
+        return
+    except Exception as e:
+        print(f"[tubandera] Supabase save_lead fallo, fallback sqlite: {e}", flush=True)
+    # Fallback local
     init_db()
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()

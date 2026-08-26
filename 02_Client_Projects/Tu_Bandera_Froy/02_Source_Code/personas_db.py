@@ -2,7 +2,7 @@ import os, psycopg2
 from psycopg2.extras import RealDictCursor
 
 SUPABASE_HOST = os.environ.get("SUPABASE_HOST", "localhost")
-SUPABASE_PORT = os.environ.get("SUPABASE_PORT", "5433")
+SUPABASE_PORT = os.environ.get("SUPABASE_PORT", "5434")
 SUPABASE_DB   = os.environ.get("SUPABASE_DB", "postgres")
 SUPABASE_USER = os.environ.get("SUPABASE_USER", "postgres")
 SUPABASE_PASS = os.environ.get("SUPABASE_PASS", "")
@@ -41,6 +41,17 @@ def get_usuario(chat_id, tenant="tubandera"):
     r = cur.fetchone()
     cur.close(); conn.close()
     return dict(r) if r else None
+
+def guardar_lead(chat_id, nombre, telefono, perfil, urgencia, mensaje, respuesta,
+                 canal="telegram", estado="nuevo", tenant="tubandera"):
+    """Persiste un lead en public.leads (fuente única). Idempotente por (tenant_id, chat_id, creado_en)."""
+    conn, cur = _pg(tenant)
+    cur.execute("""
+        INSERT INTO public.leads (tenant_id, canal, chat_id, nombre, telefono, perfil, urgencia, mensaje, respuesta, estado)
+        VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+    """, (tenant, canal, str(chat_id), nombre, telefono, perfil, urgencia, mensaje, respuesta, estado))
+    conn.commit(); cur.close(); conn.close()
+    return True
 
 def registrar_familiar(chat_id, nombre, telefono, parentesco, permiso=False, tenant="tubandera"):
     u = get_usuario(chat_id, tenant)
