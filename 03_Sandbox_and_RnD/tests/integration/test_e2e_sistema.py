@@ -140,14 +140,16 @@ class TestHermes:
     def test_ai_server_health_8643(self):
         assert curl_http("http://127.0.0.1:8643/health") == 200
 
-    def test_config_usa_ollama_local(self):
+    def test_config_usa_deepseek_principal(self):
         out = ssh_run(f"grep -A4 '^model:' {HERMES_VPS}/config.yaml 2>/dev/null")
-        assert "custom:ollama-local" in out, f"config.yaml no usa ollama-local: {out!r}"
-        assert "qwen3:4b" in out, f"config.yaml no usa qwen3:4b: {out!r}"
+        assert "deepseek/deepseek-v4-flash-0731" in out, f"config.yaml no usa deepseek principal: {out!r}"
+        assert "provider: openrouter" in out, f"config.yaml no usa openrouter: {out!r}"
 
     def test_ollama_provider_base_url_loopback(self):
         out = ssh_run(f"grep -A2 'name: ollama-local' {HERMES_VPS}/config.yaml 2>/dev/null")
-        assert "127.0.0.1:11434" in out, f"ollama-local base_url debe ser loopback: {out!r}"
+        # Si existe ollama-local configurado, debe apuntar a loopback. Si no, es OK (no usamos ollama).
+        if out.strip():
+            assert "127.0.0.1:11434" in out, f"ollama-local base_url debe ser loopback: {out!r}"
 
 
 # ───────────────────────────── TÚNEL MCP ─────────────────────────────
@@ -228,7 +230,7 @@ class TestMetadataRAG:
 
 class TestBasesDeDatos:
     def test_citas_sdc_poblada(self):
-        out = ssh_run("python3 -c \"import psycopg2; c=psycopg2.connect(host='localhost',port=5434,dbname='postgres',user='postgres',password=open('/home/mystic/supabase/docker/.env').read().split('POSTGRES_PASSWORD=')[1].split()[0]); cur=c.cursor(); cur.execute(\\\"SELECT COUNT(*) FROM public.citas WHERE persona='sdc'\\\"); print(cur.fetchone()[0])\"")
+        out = ssh_run("export $(grep -v '^#' /opt/hermes/.env.secrets | xargs) && /opt/hermes/venv/bin/python3 -c \"import psycopg2; c=psycopg2.connect(host='localhost',port=5434,dbname='postgres',user='postgres',password=__import__('os').environ['SUPABASE_PASS']); cur=c.cursor(); cur.execute(\\\"SELECT COUNT(*) FROM public.citas WHERE persona='sdc'\\\"); print(cur.fetchone()[0])\"")
         assert int(out.strip() or 0) >= 3, f"citas supabase sdc: {out.strip()!r}"
 
     def test_tubandera_usuarios(self):
