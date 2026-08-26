@@ -228,8 +228,8 @@ class TestMetadataRAG:
 
 class TestBasesDeDatos:
     def test_citas_sdc_poblada(self):
-        out = ssh_run("python3 -c \"import sqlite3; print(sqlite3.connect('/opt/hermes/citas_db/citas_sdc.db').execute('SELECT COUNT(*) FROM citas').fetchone()[0])\"")
-        assert int(out.strip() or 0) >= 3, f"citas_sdc.db: {out.strip()!r}"
+        out = ssh_run("python3 -c \"import psycopg2; c=psycopg2.connect(host='localhost',port=5434,dbname='postgres',user='postgres',password=open('/home/mystic/supabase/docker/.env').read().split('POSTGRES_PASSWORD=')[1].split()[0]); cur=c.cursor(); cur.execute(\\\"SELECT COUNT(*) FROM public.citas WHERE persona='sdc'\\\"); print(cur.fetchone()[0])\"")
+        assert int(out.strip() or 0) >= 3, f"citas supabase sdc: {out.strip()!r}"
 
     def test_tubandera_usuarios(self):
         out = ssh_run("python3 -c \"import sqlite3; print(sqlite3.connect('/opt/hermes/tubandera/tubandera.db').execute('SELECT COUNT(*) FROM usuarios').fetchone()[0])\"")

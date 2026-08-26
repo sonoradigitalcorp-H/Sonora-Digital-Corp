@@ -15,12 +15,29 @@ import sqlite3
 import subprocess
 from datetime import datetime
 from pathlib import Path
+import psycopg2
 
 PG_PASSWORD = os.environ.get("METRICS_DB_PASSWORD", "changeme_secure_metrics_password")
 PG_HOST = os.environ.get("METRICS_PG_HOST", "127.0.0.1")
 PG_PORT = os.environ.get("METRICS_PG_PORT", "5432")
 PG_USER = os.environ.get("METRICS_PG_USER", "metrics")
 PG_DB = os.environ.get("METRICS_PG_DB", "metrics")
+
+# Supabase (fuente única de citas) :5434
+SB_HOST = os.environ.get("SUPABASE_HOST", "localhost")
+SB_PORT = os.environ.get("SUPABASE_PORT", "5434")
+SB_DB = os.environ.get("SUPABASE_DB", "postgres")
+SB_USER = os.environ.get("SUPABASE_USER", "postgres")
+SB_PASS = os.environ.get("SUPABASE_PASS", "")
+if not SB_PASS:
+    for line in open("/home/mystic/supabase/docker/.env"):
+        if line.startswith("POSTGRES_PASSWORD="):
+            SB_PASS = line.split("=", 1)[1].strip().strip('"').strip("'")
+            break
+
+def sb_conn():
+    return psycopg2.connect(host=SB_HOST, port=SB_PORT, dbname=SB_DB,
+                            user=SB_USER, password=SB_PASS)
 
 def psql(cmd: str) -> str:
     """Ejecuta SQL vía psql (docker exec postgres-metrics psql)."""
@@ -32,31 +49,28 @@ def psql(cmd: str) -> str:
     return r.stdout + r.stderr
 
 def citas_personas():
-    """Inserta citas de todas las DBs citas_{persona}.db en metrics_citas."""
-    base_dir = Path("/opt/hermes/citas_db")
-    if not base_dir.exists():
-        return 0
+    """Inserta citas de Supabase (fuente única) en metrics_citas."""
     cnt = 0
-    for db in base_dir.glob("citas_*.db"):
-        persona = db.stem.replace("citas_", "")
-        try:
-            conn = sqlite3.connect(db)
-            rows = conn.execute("SELECT id, persona, nombre, telefono, fecha, hora, estado FROM citas").fetchall()
-            conn.close()
-            for r in rows:
-                cid, p, nombre, tel, fecha, hora, estado = r
-                psql(
-                    f"INSERT INTO metrics_citas (tenant, fecha, hora, confirmada) VALUES "
-                    f"('{persona}', '{fecha}', '{hora}', true) "
-                    f"ON CONFLICT DO NOTHING;"
-                )
-                psql(
-                    f"INSERT INTO metrics_leads (tenant, canal, telefono, estado) VALUES "
-                    f"('{persona}', 'telegram', '{tel}', '{estado}');"
-                )
-                cnt += 1
-        except Exception as e:
-            print(f"[sync] citas {persona}: {e}")
+    try:
+        conn = sb_conn()
+        cur = conn.cursor()
+        cur.execute("SELECT persona, nombre, telefono, fecha, hora, estado, tenant_id FROM public.citas")
+        rows = cur.fetchall()
+        conn.close()
+        for persona, nombre, tel, fecha, hora, estado, tenant_id in rows:
+            persona_src = tenant_id or persona
+            psql(
+                f"INSERT INTO metrics_citas (tenant, fecha, hora, confirmada) VALUES "
+                f"('{persona_src}', '{fecha}', '{hora}', true) "
+                f"ON CONFLICT DO NOTHING;"
+            )
+            psql(
+                f"INSERT INTO metrics_leads (tenant, canal, telefono, estado) VALUES "
+                f"('{persona_src}', 'telegram', '{tel}', '{estado}');"
+            )
+            cnt += 1
+    except Exception as e:
+        print(f"[sync] citas supabase: {e}")
     return cnt
 
 def tubandera_usuarios():

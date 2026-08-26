@@ -608,21 +608,24 @@ async def handle_citas(request: web.Request) -> web.Response:
         except Exception as e:
             calendar_status = f"error: {str(e)[:50]}"
 
-    db_dir = Path("/opt/hermes/citas_db")
-    db_dir.mkdir(parents=True, exist_ok=True)
-    db_path = db_dir / f"citas_{persona}.db"
-    import sqlite3
+    # === Migrar cita a Supabase (fuente única de verdad) — ya no sqlite ===
     cita_id = str(uuid.uuid4())
     now = datetime.datetime.now().isoformat()
     try:
-        with sqlite3.connect(db_path) as conn:
-            conn.execute("""CREATE TABLE IF NOT EXISTS citas (
-                id TEXT PRIMARY KEY, persona TEXT, nombre TEXT, negocio TEXT,
-                telefono TEXT, fecha TEXT, hora TEXT, estado TEXT DEFAULT 'confirmada',
-                creado_en TEXT, calendar_verified TEXT)""")
-            conn.execute("INSERT INTO citas VALUES (?,?,?,?,?,?,?,?,?,?)",
-                         (cita_id, persona, nombre, negocio, digits, fecha, hora, "confirmada", now, calendar_status))
-            conn.commit()
+        conn, cur = _pg_conn(persona)
+        # negocio + calendar_verified se colapsan en `notas` (schema supabase no tiene columnas propias)
+        notas = ""
+        if negocio:
+            notas += f"negocio: {negocio} | "
+        if calendar_status:
+            notas += f"calendar: {calendar_status}"
+        cur.execute(
+            "INSERT INTO public.citas (tenant_id, persona, nombre, telefono, fecha, hora, estado, notas, creado_en) "
+            "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)",
+            (persona, persona, nombre, digits, fecha, hora, "confirmada", notas, now)
+        )
+        conn.commit()
+        cur.close(); conn.close()
     except Exception as e:
         print(f"[citas] db error: {e}", flush=True)
 
