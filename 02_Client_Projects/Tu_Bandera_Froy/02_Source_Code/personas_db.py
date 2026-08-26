@@ -30,14 +30,14 @@ def registrar_usuario(chat_id, nombre, telefono, sustancia=None, tenant="tubande
         VALUES (%s, %s, %s, %s, %s, %s)
         ON CONFLICT (tenant_id, chat_id) DO NOTHING
         RETURNING id
-    """, (tid, chat_id, nombre, telefono, sustancia or "", "activo"))
+    """, (tid, str(chat_id), nombre, telefono, sustancia or "", "activo"))
     cur.fetchone()
     conn.commit(); cur.close(); conn.close()
     return tid
 
 def get_usuario(chat_id, tenant="tubandera"):
     conn, cur = _pg(tenant)
-    cur.execute("SELECT * FROM public.personas WHERE chat_id=%s", (chat_id,))
+    cur.execute("SELECT * FROM public.personas WHERE chat_id=%s", (str(chat_id),))
     r = cur.fetchone()
     cur.close(); conn.close()
     return dict(r) if r else None
