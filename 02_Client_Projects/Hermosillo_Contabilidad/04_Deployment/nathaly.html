@@ -1,745 +1,612 @@
 <!DOCTYPE html>
-<html lang="es" class="dark scroll-smooth">
+<html lang="es" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nathaly Contabilidad · Tu contabilidad en orden</title>
+    <title>N.H. Contabilidad y Asesoría Empresarial</title>
+    <meta name="description" content="Contabilidad, asesoría fiscal y regularización ante el SAT en Hermosillo. Diagnóstico gratuito, atención presencial y remota 24/7.">
+
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Cinzel:wght@600;700;800&display=swap" rel="stylesheet">
+
     <script>
         tailwind.config = {
-            darkMode: 'class',
             theme: {
                 extend: {
-                    colors: {
-                        brand: {
-                            blue: '#10b981',
-                            darkBlue: '#052e21',
-                            red: '#059669',
-                            darkRed: '#064e3b',
-                            bgDark: '#080c14',
-                            cardBg: '#0f172a',
-                            glassBorder: 'rgba(255, 255, 255, 0.1)',
-                            accentCyan: '#34d399',
-                            accentOrange: '#f59e0b'
-                        }
-                    },
                     fontFamily: {
-                        sans: ['Inter', 'system-ui', 'sans-serif'],
-                        heading: ['Montserrat', 'sans-serif'],
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        serif: ['Cinzel', 'serif'],
+                    },
+                    colors: {
+                        gold: {
+                            100: '#fef9c3', 200: '#fef08a', 300: '#fde047',
+                            400: '#eab308', 500: '#d4af37', 600: '#ca8a04',
+                            700: '#a16207', 800: '#854d0e', 900: '#713f12',
+                            glow: '#f5d77f'
+                        },
+                        dark: { 900: '#07090e', 800: '#0d111a', 700: '#161d2d', 600: '#1e293b' }
+                    },
+                    boxShadow: {
+                        'glass': '0 8px 32px 0 rgba(0, 0, 0, 0.37)',
+                        'gold-glow': '0 0 25px rgba(212, 175, 55, 0.35)',
+                        'gold-subtle': '0 0 15px rgba(212, 175, 55, 0.15)',
                     }
                 }
             }
         }
     </script>
-    <!-- Google Fonts & Lucide Icons -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@600;700;800;900&display=swap" rel="stylesheet">
-    <script src="https://unpkg.com/lucide@latest"></script>
+
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #06090e;
-            color: #f1f5f9;
-        }
-        h1, h2, h3, h4, .font-heading {
-            font-family: 'Montserrat', sans-serif;
-        }
-        .hero-glow {
-            background: radial-gradient(circle at 50% 30%, rgba(13, 110, 253, 0.25) 0%, rgba(220, 53, 69, 0.15) 45%, rgba(6, 9, 14, 0.95) 100%);
-        }
-        .glass-card {
-            background: rgba(15, 23, 42, 0.75);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-        }
-        .glass-card-hover {
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .glass-card-hover:hover {
-            transform: translateY(-5px);
-            border-color: rgba(0, 163, 255, 0.4);
-            box-shadow: 0 20px 40px -15px rgba(0, 163, 255, 0.25);
-        }
-        .cta-gradient-btn {
-            background: linear-gradient(135deg, #0d6efd 0%, #00a3ff 100%);
-            box-shadow: 0 4px 20px rgba(13, 110, 253, 0.4);
-        }
-        .cta-gradient-btn:hover {
-            background: linear-gradient(135deg, #0b5ed7 0%, #008cdb 100%);
-            box-shadow: 0 6px 25px rgba(0, 163, 255, 0.6);
-        }
-        .telegram-banner {
-            background: linear-gradient(135deg, rgba(13, 110, 253, 0.2) 0%, rgba(249, 115, 22, 0.2) 100%);
-            border: 1px solid rgba(0, 163, 255, 0.3);
-        }
-    
-<style>
-.chat-fab{position:fixed;bottom:22px;right:22px;z-index:10000;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#0d6efd,#00a3ff);color:#fff;border:none;font-size:26px;cursor:pointer;box-shadow:0 10px 30px rgba(13,110,253,.5);display:flex;align-items:center;justify-content:center;transition:transform .2s}
-.chat-fab:hover{transform:scale(1.08)}
-.chat-panel{position:fixed;bottom:92px;right:18px;z-index:10001;width:min(390px,calc(100vw - 36px));max-height:70vh;display:none;flex-direction:column;background:rgba(15,23,42,.92);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);border-radius:20px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.5)}
-.chat-panel.open{display:flex}
-.chat-head{padding:14px 18px;background:linear-gradient(135deg,#0d6efd,#00a3ff);color:#fff;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center}
-.chat-head button{background:none;border:none;color:#fff;font-size:20px;cursor:pointer}
-.chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;max-height:46vh;min-height:220px}
-.chat-msg{padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.5;max-width:88%;white-space:pre-wrap}
-.chat-msg.bot{align-self:flex-start;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
-.chat-msg.user{align-self:flex-end;background:linear-gradient(135deg,#0d6efd,#00a3ff);color:#fff}
-.chat-input{display:flex;align-items:center;gap:8px;padding:12px;border-top:1px solid rgba(255,255,255,.12)}
-.chat-input input{flex:1;background:transparent;border:none;color:#fff;font-size:14px;outline:none}
-.chat-input input::placeholder{color:#64748b}
-.chat-btn{width:42px;height:42px;border-radius:50%;border:none;display:grid;place-items:center;cursor:pointer;flex:none;font-size:18px}
-.mic-btn{background:linear-gradient(135deg,#0d6efd,#00a3ff);color:#fff}
-.mic-btn.rec{background:linear-gradient(135deg,#dc2626,#991b1b);animation:pulseRec 1s infinite}
-.send-btn{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
-@keyframes pulseRec{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.5)}50%{box-shadow:0 0 0 12px rgba(220,38,38,0)}}
-</style>
-<style>
-.chat-fab{position:fixed;bottom:22px;right:22px;z-index:10000;width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#0d6efd,#00a3ff);color:#fff;border:none;font-size:26px;cursor:pointer;box-shadow:0 10px 30px rgba(13,110,253,.5);display:flex;align-items:center;justify-content:center;transition:transform .2s}
-.chat-fab:hover{transform:scale(1.08)}
-.chat-panel{position:fixed;bottom:92px;right:18px;z-index:10001;width:min(390px,calc(100vw - 36px));max-height:70vh;display:none;flex-direction:column;background:rgba(15,23,42,.92);backdrop-filter:blur(16px);border:1px solid rgba(255,255,255,.12);border-radius:20px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.5)}
-.chat-panel.open{display:flex}
-.chat-head{padding:14px 18px;background:linear-gradient(135deg,#0d6efd,#00a3ff);color:#fff;font-weight:700;font-size:15px;display:flex;justify-content:space-between;align-items:center}
-.chat-head button{background:none;border:none;color:#fff;font-size:20px;cursor:pointer}
-.chat-body{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;max-height:46vh;min-height:220px}
-.chat-msg{padding:10px 14px;border-radius:14px;font-size:14px;line-height:1.5;max-width:88%;white-space:pre-wrap}
-.chat-msg.bot{align-self:flex-start;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12)}
-.chat-msg.user{align-self:flex-end;background:linear-gradient(135deg,#0d6efd,#00a3ff);color:#fff}
-.chat-input{display:flex;align-items:center;gap:8px;padding:12px;border-top:1px solid rgba(255,255,255,.12)}
-.chat-input input{flex:1;background:transparent;border:none;color:#fff;font-size:14px;outline:none}
-.chat-input input::placeholder{color:#64748b}
-.chat-btn{width:42px;height:42px;border-radius:50%;border:none;display:grid;place-items:center;cursor:pointer;flex:none;font-size:18px}
-.mic-btn{background:linear-gradient(135deg,#0d6efd,#00a3ff);color:#fff}
-.mic-btn.rec{background:linear-gradient(135deg,#dc2626,#991b1b);animation:pulseRec 1s infinite}
-.send-btn{background:linear-gradient(135deg,#10b981,#059669);color:#fff}
-@keyframes pulseRec{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,.5)}50%{box-shadow:0 0 0 12px rgba(220,38,38,0)}}
-</style>
-<style>
-/* ===== Modal de agenda (input→output: cita real) ===== */
-.modal-ovl{position:fixed;inset:0;background:rgba(2,6,23,.6);z-index:10002;display:none;align-items:center;justify-content:center;padding:16px}
-.modal-ovl.open{display:flex}
-.modal{background:#fff;border-radius:20px;max-width:420px;width:100%;padding:28px 26px;box-shadow:0 24px 70px rgba(0,0,0,.5);max-height:90vh;overflow-y:auto}
-.modal h3{color:#0f172a;font-size:20px;margin:0 0 6px;font-weight:800}
-.modal p.mod-sub{color:#64748b;font-size:13px;margin-bottom:18px}
-.field{margin-bottom:14px}
-.field label{display:block;font-size:12px;font-weight:700;color:#0f172a;margin-bottom:5px}
-.field input,.field select{width:100%;border:1px solid #e2e8f0;border-radius:10px;padding:10px 12px;font-size:14px;font-family:inherit;outline:none;background:#fff;color:#0f172a}
-.field input:focus,.field select:focus{border-color:#0d6efd}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.agenda-ok{background:#EAF6EF;border:1px solid #BBE4CE;color:#1B6E3E;padding:14px;border-radius:10px;font-size:13px;font-weight:600;display:none;margin-bottom:14px}
-.agenda-err{background:#FDECEC;border:1px solid #F2C6C6;color:#A12626;padding:14px;border-radius:10px;font-size:13px;font-weight:600;display:none;margin-bottom:14px}
-.btn-block{display:block;width:100%;text-align:center;margin-top:6px}
-.btn-block.btn{background:linear-gradient(135deg,#0d6efd,#00a3ff);color:#fff;border:none;padding:13px;border-radius:10px;font-weight:700;cursor:pointer;font-size:14px;transition:.15s}
-.btn-block.btn:hover{transform:translateY(-1px)}
-.modal-close{position:absolute;top:12px;right:16px;background:none;border:none;font-size:26px;cursor:pointer;color:#64748b;line-height:1;z-index:10003}
-.modal-wrap{position:relative}
-.lab-link{font-size:12px;color:#64748b;text-align:center;margin-top:14px}
-.lab-link a{color:#0d6efd;font-weight:700;text-decoration:none}
-</style>
+        .glass-panel { background: rgba(13, 17, 26, 0.65); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid rgba(212, 175, 55, 0.22); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4); }
+        .glass-panel-light { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(212, 175, 55, 0.18); }
+        .glass-nav { background: rgba(7, 9, 14, 0.75); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-bottom: 1px solid rgba(212, 175, 55, 0.2); }
+        .gold-gradient-text { background: linear-gradient(135deg, #fff2cb 0%, #d4af37 50%, #aa7c11 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #07090e; }
+        ::-webkit-scrollbar-thumb { background: #d4af37; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #eab308; }
+        @keyframes ambientPulse { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.08); } }
+        .animate-ambient { animation: ambientPulse 8s infinite ease-in-out; }
+        .gold-emboss-shadow { filter: drop-shadow(0px 10px 18px rgba(0, 0, 0, 0.6)) drop-shadow(0px 2px 8px rgba(212, 175, 55, 0.35)); }
+        .toast-fixed { position: fixed; bottom: 24px; right: 24px; z-index: 9999; }
+    </style>
 </head>
-<body class="antialiased selection:bg-brand-blue selection:text-white">
+<body class="bg-dark-900 text-slate-100 font-sans antialiased relative min-h-screen overflow-x-hidden">
 
-    <!-- 1. TOP BAR PROMO -->
-    <div class="bg-gradient-to-r from-red-950 via-brand-darkBlue to-red-950 text-white text-xs sm:text-sm font-medium py-2.5 px-4 text-center border-b border-white/10 sticky top-0 z-50 backdrop-blur-md">
-        <div class="max-w-7xl mx-auto flex items-center justify-center gap-2 flex-wrap">
-            <span class="inline-flex items-center gap-1.5 bg-red-600/80 text-white px-2 py-0.5 rounded-full text-xs font-bold uppercase tracking-wider">
-                <i data-lucide="gift" class="w-3.5 h-3.5"></i> Gran Promoción
-            </span>
-            <span class="font-semibold text-slate-100">PERÍODO FISCAL EN ORDEN</span>
-            <span class="text-slate-400">|</span>
-            <span>Diagnóstico inicial <strong class="text-amber-400 font-bold">GRATIS</strong>*</span>
-            <span class="hidden md:inline text-slate-400 text-xs">(Todos los servicios · Sin costo de diagnóstico)</span>
+    <svg width="0" height="0" class="absolute block">
+        <defs>
+            <linearGradient id="gold-foil-1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#FFF5D0" /><stop offset="25%" stop-color="#E5C158" />
+                <stop offset="50%" stop-color="#9C731A" /><stop offset="75%" stop-color="#FDF0A6" /><stop offset="100%" stop-color="#805908" />
+            </linearGradient>
+            <linearGradient id="gold-foil-2" x1="100%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#FDF0A6" /><stop offset="30%" stop-color="#D4AF37" />
+                <stop offset="70%" stop-color="#735008" /><stop offset="100%" stop-color="#C59E2B" />
+            </linearGradient>
+            <radialGradient id="gold-radial-center" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.9" /><stop offset="30%" stop-color="#F7E599" stop-opacity="0.8" />
+                <stop offset="70%" stop-color="#C59E2B" stop-opacity="0.9" /><stop offset="100%" stop-color="#543A03" />
+            </radialGradient>
+            <filter id="gold-3d-shadow" x="-20%" y="-20%" width="140%" height="140%">
+                <feDropShadow dx="2" dy="5" stdDeviation="4" flood-color="#000000" flood-opacity="0.7"/>
+                <feDropShadow dx="0" dy="0" stdDeviation="6" flood-color="#D4AF37" flood-opacity="0.3"/>
+            </filter>
+        </defs>
+    </svg>
+
+    <div class="fixed top-1/4 left-10 w-96 h-96 bg-gold-500/10 rounded-full blur-[120px] pointer-events-none animate-ambient -z-10"></div>
+    <div class="fixed bottom-1/4 right-10 w-96 h-96 bg-amber-600/10 rounded-full blur-[140px] pointer-events-none animate-ambient -z-10" style="animation-delay: 4s;"></div>
+
+    <!-- Navigation -->
+    <header class="fixed top-0 left-0 w-full z-50 glass-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#inicio" class="flex items-center gap-3.5 group">
+                <div class="w-12 h-12 relative flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform duration-300">
+                    <svg viewBox="0 0 200 200" class="w-full h-full gold-emboss-shadow">
+                        <circle cx="100" cy="100" r="82" fill="none" stroke="url(#gold-foil-1)" stroke-width="4" stroke-dasharray="3,3" />
+                        <circle cx="100" cy="100" r="74" fill="none" stroke="url(#gold-foil-2)" stroke-width="2.5" />
+                        <path d="M 100 10 L 105 22 L 100 28 L 95 22 Z" fill="url(#gold-foil-1)" />
+                        <path d="M 100 190 L 105 178 L 100 172 L 95 178 Z" fill="url(#gold-foil-1)" />
+                        <path d="M 42 150 L 42 50 L 62 50 L 96 118 L 96 50 L 114 50 L 114 150 L 94 150 L 60 82 L 60 150 Z" fill="url(#gold-foil-1)" stroke="#4A3403" stroke-width="1.5" />
+                        <path d="M 94 150 L 94 50 L 112 50 L 112 90 L 146 90 L 146 50 L 164 50 L 164 150 L 146 150 L 146 108 L 112 108 L 112 150 Z" fill="url(#gold-foil-2)" stroke="#4A3403" stroke-width="1.5" />
+                        <polygon points="104,88 116,100 104,112 92,100" fill="url(#gold-radial-center)" stroke="#FFF" stroke-width="1.5" />
+                    </svg>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-serif font-extrabold text-xl tracking-widest text-white leading-none gold-gradient-text">N.H.</span>
+                    <span class="text-[9px] sm:text-[10px] tracking-[0.2em] text-gold-400 font-bold uppercase block mt-1 leading-none">Contabilidad y Asesoría Empresarial</span>
+                </div>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
+                <a href="#servicios" class="hover:text-gold-400 transition-colors">Servicios</a>
+                <a href="#informales" class="hover:text-gold-400 transition-colors">Emprendedores & Informales</a>
+                <a href="#sat" class="hover:text-gold-400 transition-colors">Diagnóstico SAT</a>
+                <a href="#cotizador" class="hover:text-gold-400 transition-colors">Cotizador</a>
+                <a href="#nosotros" class="hover:text-gold-400 transition-colors">Nathaly</a>
+            </nav>
+
+            <div class="flex items-center gap-4">
+                <button onclick="openBookingModal()" class="hidden sm:inline-flex items-center gap-2 bg-gradient-to-r from-gold-600 via-gold-500 to-gold-700 text-dark-900 font-bold text-xs uppercase tracking-wider px-5 py-3 rounded-xl shadow-gold-subtle hover:shadow-gold-glow hover:scale-[1.02] transition-all">
+                    <i data-lucide="calendar" class="w-4 h-4"></i><span>Agendar Cita</span>
+                </button>
+                <button id="mobile-menu-btn" class="md:hidden text-slate-300 hover:text-gold-400 p-2"><i data-lucide="menu" class="w-6 h-6"></i></button>
+            </div>
         </div>
-    </div>
 
-    <!-- 2. NAVBAR -->
-    <nav class="bg-brand-bgDark/90 backdrop-blur-md border-b border-white/10 sticky top-[37px] z-40">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                
-                <!-- Logo -->
-                <div class="flex items-center gap-3">
-                    <div class="relative w-12 h-12 flex items-center justify-center">
-                        <!-- Custom SVG Diamond Emblem from logo -->
-                        <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-[0_0_10px_rgba(13,110,253,0.5)]">
-                            <polygon points="50,5 95,50 50,95 5,50" fill="none" stroke="#00a3ff" stroke-width="4"/>
-                            <rect x="25" y="35" width="30" height="30" fill="none" stroke="#0d6efd" stroke-width="5" transform="rotate(45 40 50)" />
-                            <rect x="45" y="35" width="30" height="30" fill="none" stroke="#dc3545" stroke-width="5" transform="rotate(45 60 50)" />
-                        </svg>
-                    </div>
-                    <div>
-                        <span class="font-heading font-extrabold text-xl sm:text-2xl tracking-tight text-white block leading-none">
-                            NATHALY <span class="text-brand-accentCyan">CONTABILIDAD</span>
-                        </span>
-                        <span class="text-[10px] tracking-widest text-slate-400 uppercase font-semibold">Contadora certificada · Hermosillo</span>
-                    </div>
+        <div id="mobile-menu" class="hidden md:hidden glass-panel border-t border-gold-500/20 px-6 py-6 space-y-4">
+            <a href="#servicios" class="block text-slate-200 hover:text-gold-400 py-2">Servicios</a>
+            <a href="#informales" class="block text-slate-200 hover:text-gold-400 py-2">Emprendedores & Informales</a>
+            <a href="#sat" class="block text-slate-200 hover:text-gold-400 py-2">Diagnóstico SAT</a>
+            <a href="#cotizador" class="block text-slate-200 hover:text-gold-400 py-2">Cotizador Express</a>
+            <a href="#nosotros" class="block text-slate-200 hover:text-gold-400 py-2">Sobre Nathaly</a>
+            <button onclick="openBookingModal()" class="w-full mt-4 flex items-center justify-center gap-2 bg-gradient-to-r from-gold-600 to-gold-500 text-dark-900 font-bold text-xs uppercase tracking-wider px-5 py-3 rounded-xl"><i data-lucide="calendar" class="w-4 h-4"></i><span>Agendar Consulta</span></button>
+        </div>
+    </header>
+
+    <!-- Hero -->
+    <section id="inicio" class="relative pt-36 pb-20 md:pt-44 md:pb-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="grid lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-7 space-y-8 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel-light border border-gold-500/30 text-gold-400 text-xs font-semibold uppercase tracking-wider">
+                    <span class="w-2 h-2 rounded-full bg-gold-400 animate-ping"></span>Despacho Contable & Soluciones Fiscales Estratégicas
                 </div>
-
-                <!-- Desktop Navigation Links -->
-                <div class="hidden md:flex items-center gap-8 text-sm font-medium text-slate-300">
-                    <a href="#inicio" class="hover:text-brand-accentCyan transition-colors">Inicio</a>
-                    <a href="#modelo" class="hover:text-brand-accentCyan transition-colors">Servicios</a>
-                    <a href="#areas" class="hover:text-brand-accentCyan transition-colors">Áreas Complementarias</a>
-                    <a href="#faqs" class="hover:text-brand-accentCyan transition-colors">Preguntas Frecuentes</a>
-                    <a href="#contacto" class="hover:text-brand-accentCyan transition-colors">Contacto</a>
-                </div>
-
-                <!-- CTA Button -->
-                <div class="flex items-center gap-3">
-                    <a href="javascript:document.getElementById("chatFabA")&&document.getElementById("chatFabA").click();" target="_blank" rel="noopener noreferrer" 
-                       class="cta-gradient-btn text-white px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm tracking-wide uppercase flex items-center gap-2 transition-all">
-                        <i data-lucide="bot" class="w-4 h-4"></i>
-                        <span class="hidden sm:inline">Hablar con</span> Asistente Virtual
+                <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-[1.15]">
+                    Tranquilidad fiscal y <span class="gold-gradient-text font-serif">crecimiento seguro</span> para tu negocio.
+                </h1>
+                <p class="text-slate-300 text-base sm:text-lg max-w-2xl font-light leading-relaxed mx-auto lg:mx-0">
+                    Especialista en estructuración financiera para empresas constituidas, regularización fiscal sin riesgos para negocios informales, y resolución experta de trámites ante el SAT.
+                </p>
+                <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4 pt-2">
+                    <button onclick="openBookingModal()" class="w-full sm:w-auto flex items-center justify-center gap-3 bg-gradient-to-r from-gold-500 via-gold-400 to-gold-600 text-dark-900 font-bold px-8 py-4 rounded-xl shadow-gold-glow hover:scale-105 transition-all">
+                        <span>Consulta Diagnóstico Gratis</span><i data-lucide="arrow-right" class="w-5 h-5"></i>
+                    </button>
+                    <a href="#cotizador" class="w-full sm:w-auto flex items-center justify-center gap-2 glass-panel text-slate-200 hover:text-gold-300 font-semibold px-8 py-4 rounded-xl hover:bg-white/5 transition-all">
+                        <i data-lucide="calculator" class="w-5 h-5 text-gold-400"></i><span>Calcular Honorarios</span>
                     </a>
                 </div>
-            </div>
-        </div>
-    </nav>
-
-    <!-- 3. HERO SECTION -->
-    <section id="inicio" class="relative min-h-[85vh] flex items-center justify-center overflow-hidden py-20 border-b border-white/5">
-        <!-- Background Overlay Image & Glow -->
-        <div class="absolute inset-0 z-0">
-            <img src="/hermosillo_assets/contadora.jpg" alt="Nathaly contadora en Hermosillo" class="w-full h-full object-cover opacity-20 filter blur-[2px]">
-            <div class="absolute inset-0 hero-glow"></div>
-            <div class="absolute inset-0 bg-gradient-to-b from-brand-bgDark/40 via-brand-bgDark/80 to-brand-bgDark"></div>
-        </div>
-
-        <div class="relative z-10 max-w-5xl mx-auto px-4 text-center">
-            <!-- Badge -->
-            <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-card text-brand-accentCyan text-xs sm:text-sm font-semibold mb-6 border border-brand-accentCyan/30">
-                <i data-lucide="shield-check" class="w-4 h-4 text-brand-accentCyan"></i>
-                Contabilidad y estrategia fiscal en Hermosillo · 24/7
-            </div>
-
-            <!-- Title -->
-            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-black text-white uppercase tracking-tight leading-none mb-6">
-                TU CONTABILIDAD EN ORDEN, <span class="bg-clip-text text-transparent bg-gradient-to-r from-emerald-400 via-teal-200 to-green-400">TU TIEMPO DE VUELTA.</span>
-            </h1>
-
-            <p class="text-base sm:text-xl text-slate-300 max-w-3xl mx-auto font-normal leading-relaxed mb-8">
-                Contabilidad mensual, estrategia fiscal y contabilidad inteligente para que tu negocio esté en regla sin perder tiempo. Atención personal de <strong class="text-white">Nathaly</strong>, contadora certificada, con respuestas al instante y cero multas del SAT.
-            </p>
-
-            <!-- Hero Action Buttons -->
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 max-w-md mx-auto">
-                <a href="#openAgenda" id="openAgenda" onclick="return false;" 
-                   class="w-full sm:w-auto cta-gradient-btn text-white px-8 py-4 rounded-xl font-bold text-base tracking-wide flex items-center justify-center gap-3 transition-all transform hover:scale-105">
-                    <i data-lucide="send" class="w-5 h-5"></i>
-                    HABLAR CON ASISTENTE VIRTUAL
-                </a>
-                <a href="tel:+526623498589" 
-                   class="w-full sm:w-auto glass-card hover:bg-white/10 text-white border border-white/20 px-8 py-4 rounded-xl font-bold text-base tracking-wide flex items-center justify-center gap-3 transition-all">
-                    <i data-lucide="phone-call" class="w-5 h-5 text-emerald-400"></i>
-                    Llamar a Nathaly
-                </a>
-            </div>
-
-            <!-- Quick Metrics / Features -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-16 text-left">
-                <div class="glass-card p-4 rounded-xl border border-white/5">
-                    <div class="text-brand-accentCyan text-2xl font-bold font-heading">24 / 7</div>
-                    <div class="text-xs text-slate-400 font-medium">Cero multas del SAT</div>
-                </div>
-                <div class="glass-card p-4 rounded-xl border border-white/5">
-                    <div class="text-emerald-400 text-2xl font-bold font-heading">$0</div>
-                    <div class="text-xs text-slate-400 font-medium">Diagnóstico inicial</div>
-                </div>
-                <div class="glass-card p-4 rounded-xl border border-white/5">
-                    <div class="text-amber-400 text-2xl font-bold font-heading">SAT</div>
-                    <div class="text-xs text-slate-400 font-medium">Declaraciones al día</div>
-                </div>
-                <div class="glass-card p-4 rounded-xl border border-white/5">
-                    <div class="text-red-400 text-2xl font-bold font-heading">100%</div>
-                    <div class="text-xs text-slate-400 font-medium">Trámites y declaraciones</div>
+                <div class="pt-8 grid grid-cols-3 gap-4 border-t border-slate-800">
+                    <div><span class="text-2xl sm:text-3xl font-bold font-serif gold-gradient-text block">100%</span><span class="text-xs text-slate-400 mt-1 block">Cumplimiento SAT</span></div>
+                    <div><span class="text-2xl sm:text-3xl font-bold font-serif gold-gradient-text block">+350</span><span class="text-xs text-slate-400 mt-1 block">Negocios Atendidos</span></div>
+                    <div><span class="text-2xl sm:text-3xl font-bold font-serif gold-gradient-text block">0%</span><span class="text-xs text-slate-400 mt-1 block">Estrés Fiscal</span></div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- 4. NUESTROS SERVICIOS -->
-    <section id="modelo" class="py-24 relative bg-brand-bgDark">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-white mb-3">
-                    NUESTROS SERVICIOS
-                </h2>
-                <p class="text-slate-400 text-base sm:text-lg font-medium">
-                    Todo lo que tu negocio necesita para estar en regla y ahorrar tiempo, <span class="text-brand-accentCyan font-bold">con contabilidad inteligente</span> y atención personalizada.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                
-                <!-- Servicio 1: Contabilidad Mensual -->
-                <div class="glass-card glass-card-hover rounded-2xl p-8 flex flex-col justify-between border-t-4 border-t-pink-500 relative overflow-hidden group">
-                    <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-pink-500/10 rounded-full blur-2xl group-hover:bg-pink-500/20 transition-all"></div>
-                    <div>
-                        <div class="w-14 h-14 rounded-2xl bg-pink-500/10 border border-pink-500/30 flex items-center justify-center text-pink-400 mb-6">
-                            <i data-lucide="brain" class="w-8 h-8"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-4 uppercase tracking-wide">
-                            CONTABILIDAD MENSUAL
-                        </h3>
-                        <p class="text-slate-300 text-sm leading-relaxed mb-6">
-                            Llevo tu contabilidad al día, mes a mes, para que nunca pierdas el control de tu negocio. Tú te dedicas a crecer y yo me encargo de que todo cuadre.
-                        </p>
-                    </div>
-                    <ul class="text-xs text-slate-400 space-y-2 border-t border-white/10 pt-4">
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-400"></i> Registro y control de ingresos</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-400"></i> Conciliación bancaria</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-pink-400"></i> Emisión de facturas y nómina</li>
-                    </ul>
-                </div>
-
-                <!-- Servicio 2: Estrategia Fiscal -->
-                <div class="glass-card glass-card-hover rounded-2xl p-8 flex flex-col justify-between border-t-4 border-t-brand-blue relative overflow-hidden group">
-                    <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all"></div>
-                    <div>
-                        <div class="w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-brand-accentCyan mb-6">
-                            <i data-lucide="footprints" class="w-8 h-8"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-4 uppercase tracking-wide">
-                            ESTRATEGIA FISCAL
-                        </h3>
-                        <p class="text-slate-300 text-sm leading-relaxed mb-6">
-                            Planeación fiscal inteligente para pagar lo justo y no un peso de más. Anticipo cargas, aprovecho deducciones y te blindo ante el SAT.
-                        </p>
-                    </div>
-                    <ul class="text-xs text-slate-400 space-y-2 border-t border-white/10 pt-4">
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-accentCyan"></i> Planeación de impuestos</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-accentCyan"></i> Deducciones y aprovechamientos</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-brand-accentCyan"></i> Cumplimiento ante el SAT</li>
-                    </ul>
-                </div>
-
-                <!-- Servicio 3: Contabilidad Inteligente -->
-                <div class="glass-card glass-card-hover rounded-2xl p-8 flex flex-col justify-between border-t-4 border-t-amber-400 relative overflow-hidden group">
-                    <div class="absolute -right-10 -bottom-10 w-32 h-32 bg-amber-500/10 rounded-full blur-2xl group-hover:bg-amber-500/20 transition-all"></div>
-                    <div>
-                        <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400 mb-6">
-                            <i data-lucide="sparkles" class="w-8 h-8"></i>
-                        </div>
-                        <h3 class="text-xl font-bold text-white mb-4 uppercase tracking-wide">
-                            CONTABILIDAD INTELIGENTE
-                        </h3>
-                        <p class="text-slate-300 text-sm leading-relaxed mb-6">
-                            Automatizo tareas repetitivas y te doy una visión clara de tus números con un asistente que responde tus dudas al instante, a cualquier hora.
-                        </p>
-                    </div>
-                    <ul class="text-xs text-slate-400 space-y-2 border-t border-white/10 pt-4">
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-amber-400"></i> Asistente IA 24/7 para tus dudas</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-amber-400"></i> Dashboard y reportes claros</li>
-                        <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-amber-400"></i> Menos papeleo y más control</li>
-                    </ul>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- 5. BENEFICIOS PARA TU NEGOCIO -->
-    <section id="areas" class="py-20 relative bg-slate-950 border-t border-white/5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-16">
-                <h2 class="text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-white mb-3">
-                    BENEFICIOS PARA TU NEGOCIO
-                </h2>
-                <p class="text-slate-400 text-sm sm:text-base">
-                    Orden, tranquilidad y cero multas para que tu negocio crezca sin preocupaciones.
-                </p>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                
-                <!-- Beneficio 1: Cero multas -->
-                <div class="glass-card p-6 rounded-xl border border-white/10 flex items-start gap-4">
-                    <div class="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 flex-shrink-0">
-                        <i data-lucide="heart-handshake" class="w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-white text-base mb-2">CERO MULTAS DEL SAT</h4>
-                        <p class="text-slate-300 text-xs leading-relaxed">
-                            Todo en regla y a tiempo: tus declaraciones presentadas sin vueltas ni sorpresas.
-                        </p>
-                        <span class="inline-block mt-3 text-[11px] text-amber-400 font-semibold">*Incluye seguimiento mensual</span>
-                    </div>
-                </div>
-
-                <!-- Beneficio 2: Tiempo recuperado -->
-                <div class="glass-card p-6 rounded-xl border border-white/10 flex items-start gap-4">
-                    <div class="p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg text-brand-accentCyan flex-shrink-0">
-                        <i data-lucide="door-open" class="w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-white text-base mb-2">8 HORAS AL MES DE VUELTA</h4>
-                        <p class="text-slate-300 text-xs leading-relaxed">
-                            Dejas de perder tiempo en recibos, filas y trámites. Nathaly se encarga de todo.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Beneficio 3: Orden y control -->
-                <div class="glass-card p-6 rounded-xl border border-white/10 flex items-start gap-4">
-                    <div class="p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg text-amber-400 flex-shrink-0">
-                        <i data-lucide="lightbulb" class="w-6 h-6"></i>
-                    </div>
-                    <div>
-                        <h4 class="font-bold text-white text-base mb-2">ORDEN Y CONTROL</h4>
-                        <p class="text-slate-300 text-xs leading-relaxed">
-                            Tus números claros y al día, con reportes simples para tomar decisiones con confianza.
-                        </p>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Instalaciones & Ubicación -->
-            <div class="mt-16 glass-card rounded-2xl p-6 sm:p-10 border border-white/10 grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
-                <div>
-                    <span class="text-brand-accentCyan font-bold text-xs uppercase tracking-widest block mb-2">Atención en Hermosillo y remoto</span>
-                    <h3 class="text-2xl sm:text-3xl font-extrabold text-white mb-4">Atendiendo en Hermosillo y remoto</h3>
-                    <p class="text-slate-300 text-sm leading-relaxed mb-6">
-                        Atención 100% en línea por WhatsApp y videollamada, o presencial en Hermosillo. Tú eliges cómo quieres trabajar.
-                    </p>
-                    <div class="space-y-3 text-xs sm:text-sm text-slate-300">
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="map-pin" class="w-5 h-5 text-red-500"></i>
-                            <span>Hermosillo, Sonora · Atención remota 24/7</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="phone" class="w-5 h-5 text-brand-accentCyan"></i>
-                            <span>662 349 8589</span>
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <i data-lucide="clock" class="w-5 h-5 text-emerald-400"></i>
-                            <span>Responde tus dudas al instante, a cualquier hora</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="relative rounded-xl overflow-hidden border border-white/10 h-64 sm:h-80 group">
-                    <img src="/hermosillo_assets/declaracion.jpg" alt="Gestión de declaraciones ante el SAT" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-6">
-                        <div class="bg-black/60 backdrop-blur-md px-4 py-2 rounded-lg border border-white/10 text-xs font-semibold text-white">
-                            Atención presencial y remota en Hermosillo
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 6. FAQS (PREGUNTAS FRECUENTES) ACCORDION -->
-    <section id="faqs" class="py-20 relative bg-brand-bgDark border-t border-white/5">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-white mb-3">
-                    PREGUNTAS FRECUENTES <span class="text-brand-accentOrange">(FAQs)</span>
-                </h2>
-                <p class="text-slate-400 text-sm sm:text-base">
-                    Resuelvo las dudas más comunes para que tu negocio esté en orden.
-                </p>
-            </div>
-
-            <!-- Accordion List -->
-            <div class="space-y-4" id="faq-accordion">
-                
-                <!-- FAQ 1 -->
-                <div class="glass-card rounded-xl border border-white/10 overflow-hidden">
-                    <button class="w-full text-left p-5 flex items-center justify-between text-white font-bold text-sm sm:text-base gap-4 focus:outline-none" onclick="toggleFaq(1)">
-                        <span class="flex items-center gap-3">
-                            <i data-lucide="help-circle" class="w-5 h-5 text-brand-accentCyan flex-shrink-0"></i>
-                            ¿Qué incluye el servicio?
-                        </span>
-                        <i data-lucide="chevron-down" id="faq-icon-1" class="w-5 h-5 text-slate-400 transition-transform"></i>
-                    </button>
-                    <div id="faq-content-1" class="hidden px-5 pb-5 text-slate-300 text-xs sm:text-sm leading-relaxed border-t border-white/5 pt-4">
-                        Contabilidad mensual, declaraciones, estrategia fiscal, nómina y un asistente IA que responde tus dudas. Todo en un solo lugar.
-                    </div>
-                </div>
-
-                <!-- FAQ 2 -->
-                <div class="glass-card rounded-xl border border-white/10 overflow-hidden">
-                    <button class="w-full text-left p-5 flex items-center justify-between text-white font-bold text-sm sm:text-base gap-4 focus:outline-none" onclick="toggleFaq(2)">
-                        <span class="flex items-center gap-3">
-                            <i data-lucide="help-circle" class="w-5 h-5 text-brand-accentCyan flex-shrink-0"></i>
-                            ¿Atienden en línea o presencial?
-                        </span>
-                        <i data-lucide="chevron-down" id="faq-icon-2" class="w-5 h-5 text-slate-400 transition-transform"></i>
-                    </button>
-                    <div id="faq-content-2" class="hidden px-5 pb-5 text-slate-300 text-xs sm:text-sm leading-relaxed border-t border-white/5 pt-4">
-                        Ambos. Puedo atenderte 100% remoto por videollamada y WhatsApp, o presencial en Hermosillo. Como te quede mejor.
-                    </div>
-                </div>
-
-                <!-- FAQ 3 -->
-                <div class="glass-card rounded-xl border border-white/10 overflow-hidden">
-                    <button class="w-full text-left p-5 flex items-center justify-between text-white font-bold text-sm sm:text-base gap-4 focus:outline-none" onclick="toggleFaq(3)">
-                        <span class="flex items-center gap-3">
-                            <i data-lucide="help-circle" class="w-5 h-5 text-brand-accentCyan flex-shrink-0"></i>
-                            ¿Cuánto cuesta?
-                        </span>
-                        <i data-lucide="chevron-down" id="faq-icon-3" class="w-5 h-5 text-slate-400 transition-transform"></i>
-                    </button>
-                    <div id="faq-content-3" class="hidden px-5 pb-5 text-slate-300 text-xs sm:text-sm leading-relaxed border-t border-white/5 pt-4">
-                        El diagnóstico inicial es gratis y sin compromiso. La cotización exacta depende de tu negocio, te la doy en una llamada.
-                    </div>
-                </div>
-
-                <!-- FAQ 4 -->
-                <div class="glass-card rounded-xl border border-white/10 overflow-hidden">
-                    <button class="w-full text-left p-5 flex items-center justify-between text-white font-bold text-sm sm:text-base gap-4 focus:outline-none" onclick="toggleFaq(4)">
-                        <span class="flex items-center gap-3">
-                            <i data-lucide="help-circle" class="w-5 h-5 text-brand-accentCyan flex-shrink-0"></i>
-                            ¿Me ayudan con el SAT?
-                        </span>
-                        <i data-lucide="chevron-down" id="faq-icon-4" class="w-5 h-5 text-slate-400 transition-transform"></i>
-                    </button>
-                    <div id="faq-content-4" class="hidden px-5 pb-5 text-slate-300 text-xs sm:text-sm leading-relaxed border-t border-white/5 pt-4">
-                        Sí. Gestiono declaraciones, aclaraciones y citas ante el SAT para que no pierdas tiempo ni dinero en multas.
-                    </div>
-                </div>
-
-                <!-- FAQ 5 -->
-                <div class="glass-card rounded-xl border border-white/10 overflow-hidden">
-                    <button class="w-full text-left p-5 flex items-center justify-between text-white font-bold text-sm sm:text-base gap-4 focus:outline-none" onclick="toggleFaq(5)">
-                        <span class="flex items-center gap-3">
-                            <i data-lucide="help-circle" class="w-5 h-5 text-brand-accentCyan flex-shrink-0"></i>
-                            ¿Qué es la contabilidad inteligente?
-                        </span>
-                        <i data-lucide="chevron-down" id="faq-icon-5" class="w-5 h-5 text-slate-400 transition-transform"></i>
-                    </button>
-                    <div id="faq-content-5" class="hidden px-5 pb-5 text-slate-300 text-xs sm:text-sm leading-relaxed border-t border-white/5 pt-4">
-                        Es mi asistente IA que responde tus dudas 24/7, te recuerda fechas y te da reportes claros. Menos papeleo y más control.
-                    </div>
-                </div>
-
-                <!-- FAQ 6 -->
-                <div class="glass-card rounded-xl border border-white/10 overflow-hidden">
-                    <button class="w-full text-left p-5 flex items-center justify-between text-white font-bold text-sm sm:text-base gap-4 focus:outline-none" onclick="toggleFaq(6)">
-                        <span class="flex items-center gap-3">
-                            <i data-lucide="help-circle" class="w-5 h-5 text-brand-accentCyan flex-shrink-0"></i>
-                            ¿Cómo te contacto?
-                        </span>
-                        <i data-lucide="chevron-down" id="faq-icon-6" class="w-5 h-5 text-slate-400 transition-transform"></i>
-                    </button>
-                    <div id="faq-content-6" class="hidden px-5 pb-5 text-slate-300 text-xs sm:text-sm leading-relaxed border-t border-white/5 pt-4">
-                        Escribe a mi asistente IA aquí, por WhatsApp al <strong>662 349 8589</strong> o Telegram <strong>@HermosilloCont_bot</strong>. Te respondo al instante.
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <!-- 7. BOT TELEGRAM INTEGRATION CTA -->
-    <section class="py-16 relative">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="telegram-banner rounded-3xl p-8 sm:p-12 text-center relative overflow-hidden shadow-2xl">
-                <div class="absolute -top-10 -right-10 w-40 h-40 bg-sky-500/20 rounded-full blur-3xl"></div>
-                <div class="relative z-10">
-                    <div class="inline-flex items-center justify-center w-16 h-16 bg-sky-500/20 rounded-2xl text-sky-400 mb-6 border border-sky-400/30">
-                        <i data-lucide="bot" class="w-10 h-10"></i>
-                    </div>
-                    <h3 class="text-2xl sm:text-4xl font-black text-white uppercase tracking-tight mb-4">
-                        RESUELVE TUS DUDAS AL INSTANTE CON MI ASISTENTE IA
-                    </h3>
-                    <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mb-8">
-                        Pide tu diagnóstico gratis, resuelve dudas de contabilidad o agenda una llamada con el asistente, disponible 24/7.
-                    </p>
-                    <a href="javascript:document.getElementById("chatFabA")&&document.getElementById("chatFabA").click();" target="_blank" rel="noopener noreferrer" 
-                       class="inline-flex items-center justify-center gap-3 bg-sky-500 hover:bg-sky-400 text-white font-bold px-8 py-4 rounded-xl text-base tracking-wide transition-all shadow-lg shadow-sky-500/30 transform hover:-translate-y-1">
-                        <i data-lucide="send" class="w-5 h-5"></i>
-                        ABRIR ASISTENTE IA
-                    </a>
-                    <div class="mt-6 text-xs text-slate-400 font-medium">
-                        NATHALY CONTABILIDAD | HERMOSILLO, SONORA | TEL: 662 349 8589
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 8. FOOTER -->
-    <footer id="contacto" class="bg-black/80 border-t border-white/10 pt-16 pb-12 text-slate-400 text-xs sm:text-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-12">
-                <div>
-                    <div class="flex items-center gap-3 mb-4">
-                        <div class="w-8 h-8 flex items-center justify-center">
-                            <svg viewBox="0 0 100 100" class="w-full h-full">
-                                <polygon points="50,5 95,50 50,95 5,50" fill="none" stroke="#00a3ff" stroke-width="6"/>
+            <div class="lg:col-span-5 flex justify-center">
+                <div class="relative w-full max-w-md">
+                    <div class="absolute -inset-1.5 bg-gradient-to-r from-gold-400 via-gold-600 to-amber-700 rounded-3xl blur-2xl opacity-40 animate-pulse"></div>
+                    <div class="relative glass-panel rounded-3xl p-8 sm:p-10 text-center space-y-6 border border-gold-500/40 shadow-2xl">
+                        <div class="w-48 h-48 mx-auto relative flex items-center justify-center group">
+                            <div class="absolute inset-0 rounded-full border border-gold-500/30 animate-spin" style="animation-duration: 25s;"></div>
+                            <svg viewBox="0 0 240 240" class="w-full h-full gold-emboss-shadow transition-transform duration-500 group-hover:scale-105">
+                                <g filter="url(#gold-3d-shadow)">
+                                    <circle cx="120" cy="120" r="105" fill="none" stroke="url(#gold-foil-1)" stroke-width="4" stroke-dasharray="8, 4" />
+                                    <circle cx="120" cy="120" r="95" fill="none" stroke="url(#gold-foil-2)" stroke-width="2" />
+                                    <circle cx="120" cy="120" r="88" fill="rgba(13, 17, 26, 0.4)" stroke="url(#gold-foil-1)" stroke-width="1.5" />
+                                    <path d="M 54 170 L 54 70 L 76 70 L 76 170 Z" fill="url(#gold-foil-1)" stroke="#3A2802" stroke-width="1.5" />
+                                    <path d="M 72 70 L 122 152 L 122 170 L 98 170 L 54 96 L 54 70 Z" fill="url(#gold-foil-2)" stroke="#3A2802" stroke-width="1.5" />
+                                    <path d="M 116 170 L 116 70 L 138 70 L 138 170 Z" fill="url(#gold-foil-1)" stroke="#3A2802" stroke-width="1.5" />
+                                    <path d="M 166 170 L 166 70 L 188 70 L 188 170 Z" fill="url(#gold-foil-2)" stroke="#3A2802" stroke-width="1.5" />
+                                    <path d="M 134 110 L 170 110 L 170 130 L 134 130 Z" fill="url(#gold-foil-1)" stroke="#3A2802" stroke-width="1.5" />
+                                    <polygon points="120,102 136,120 120,138 104,120" fill="url(#gold-radial-center)" stroke="#FFFFFF" stroke-width="2" />
+                                </g>
                             </svg>
                         </div>
-                        <span class="font-heading font-bold text-white text-lg">NATHALY CONTABILIDAD</span>
-                    </div>
-                    <p class="text-slate-400 leading-relaxed text-xs">
-                        Contadora pública en Hermosillo, Sonora. Orden, planeación fiscal y cero multas para tu negocio.
-                    </p>
-                </div>
-
-                <div>
-                    <h5 class="font-bold text-white uppercase tracking-wider text-xs mb-4">Contacto Inmediato</h5>
-                    <ul class="space-y-2 text-xs">
-                        <li class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-red-500"></i> Hermosillo, Sonora</li>
-                        <li class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4 text-brand-accentCyan"></i> 662 349 8589</li>
-                        <li class="flex items-center gap-2"><i data-lucide="send" class="w-4 h-4 text-sky-400"></i> @HermosilloCont_bot</li>
-                    </ul>
-                </div>
-
-                <div>
-                    <h5 class="font-bold text-white uppercase tracking-wider text-xs mb-4">Contacto Rápido</h5>
-                    <div class="flex gap-4 text-lg">
-                        <a href="https://wa.me/526623498589" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 hover:bg-brand-blue text-white flex items-center justify-center transition-colors">
-                            <i data-lucide="message-circle" class="w-5 h-5"></i>
-                        </a>
-                        <a href="https://t.me/HermosilloCont_bot" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 hover:bg-pink-600 text-white flex items-center justify-center transition-colors">
-                            <i data-lucide="send" class="w-5 h-5"></i>
-                        </a>
-                        <a href="https://wa.me/526623498589" target="_blank" class="w-10 h-10 rounded-lg bg-white/5 hover:bg-emerald-600 text-white flex items-center justify-center transition-colors">
-                            <i data-lucide="phone-call" class="w-5 h-5"></i>
-                        </a>
+                        <div class="space-y-1">
+                            <h2 class="font-serif font-extrabold text-3xl sm:text-4xl gold-gradient-text tracking-widest leading-none">N.H.</h2>
+                            <p class="text-xs sm:text-sm tracking-[0.25em] font-semibold text-gold-300 uppercase pt-2">CONTABILIDAD Y ASESORÍA EMPRESARIAL</p>
+                        </div>
+                        <div class="space-y-3 text-left text-xs text-slate-300 pt-4 border-t border-gold-500/20">
+                            <div class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-gold-400 shrink-0"></i><span>Optimización tributaria legal y estrategia fiscal.</span></div>
+                            <div class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-gold-400 shrink-0"></i><span>Acompañamiento cercano sin tecnicismos confusos.</span></div>
+                            <div class="flex items-center gap-3"><i data-lucide="check-circle-2" class="w-4 h-4 text-gold-400 shrink-0"></i><span>Atención presencial en Sonora y remota en todo México.</span></div>
+                        </div>
+                        <div class="pt-2"><div class="glass-panel-light p-3 rounded-xl flex items-center justify-between">
+                            <span class="text-xs text-slate-400">Estado del Consultorio</span>
+                            <span class="flex items-center gap-1.5 text-xs font-semibold text-emerald-400"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>Disponible para citas</span>
+                        </div></div>
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <div class="border-t border-white/10 pt-8 text-center text-xs text-slate-500 flex flex-col sm:flex-row items-center justify-between gap-4">
-                <p>Misión: tu contabilidad en orden, tu tiempo de vuelta. Atención 24/7 en Hermosillo y remoto.</p>
-                <p>© 2026 Nathaly Contabilidad | Todos los derechos reservados.</p>
+    <!-- Servicios -->
+    <section id="servicios" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto relative">
+        <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <h2 class="text-xs font-bold uppercase tracking-widest text-gold-400 bg-gold-500/10 px-4 py-1.5 rounded-full inline-block border border-gold-500/30">Soluciones Integrales</h2>
+            <h3 class="text-3xl sm:text-4xl font-extrabold text-white font-serif">Servicios diseñados para cada etapa de tu negocio</h3>
+            <p class="text-slate-400 text-sm sm:text-base">Desde regularizar tus primeros ingresos hasta auditar los estados financieros de una empresa consolidada.</p>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div class="glass-panel p-8 rounded-3xl hover:border-gold-500/60 transition-all duration-300 group hover:-translate-y-2">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold-400/20 to-gold-600/10 border border-gold-500/40 flex items-center justify-center text-gold-400 mb-6 group-hover:bg-gold-500 group-hover:text-dark-900 transition-all"><i data-lucide="file-text" class="w-7 h-7"></i></div>
+                <h4 class="text-xl font-bold text-white mb-3 group-hover:text-gold-300 transition-colors">Gestión & Asesoría SAT</h4>
+                <p class="text-slate-400 text-sm leading-relaxed mb-6">Cumplimiento impecable de tus obligaciones fiscales. Presentación de declaraciones mensuales, anuales y trámite de e.firma.</p>
+                <ul class="space-y-2 text-xs text-slate-300 mb-6">
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-gold-400"></i> Declaraciones ISR e IVA</li>
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-gold-400"></i> Trámite y renovación de e.firma / CSD</li>
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-gold-400"></i> Opinión de Cumplimiento Positiva</li>
+                </ul>
+                <button onclick="selectServiceModal('SAT')" class="text-gold-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1 group-hover:gap-2 transition-all">Saber más <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+            </div>
+
+            <div id="informales" class="glass-panel p-8 rounded-3xl border-gold-500/40 hover:border-gold-400 transition-all duration-300 group hover:-translate-y-2 relative overflow-hidden">
+                <div class="absolute top-4 right-4 bg-gold-500 text-dark-900 text-[10px] font-extrabold uppercase px-2.5 py-1 rounded-full">Muy Solicitado</div>
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold-400/20 to-gold-600/10 border border-gold-500/40 flex items-center justify-center text-gold-400 mb-6 group-hover:bg-gold-500 group-hover:text-dark-900 transition-all"><i data-lucide="store" class="w-7 h-7"></i></div>
+                <h4 class="text-xl font-bold text-white mb-3 group-hover:text-gold-300 transition-colors">Regularización Informal</h4>
+                <p class="text-slate-400 text-sm leading-relaxed mb-6">Pasa de la informalidad al crecimiento legal sin miedo a multas. Elegimos el mejor régimen (como RESICO) para que pagues lo justo.</p>
+                <ul class="space-y-2 text-xs text-slate-300 mb-6">
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-gold-400"></i> Diagnóstico de ingresos & depósito bancario</li>
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-gold-400"></i> Inscripción al RFC en régimen óptimo</li>
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-gold-400"></i> Estrategia para emitir facturas a clientes</li>
+                </ul>
+                <button onclick="selectServiceModal('Informales')" class="text-gold-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1 group-hover:gap-2 transition-all">Iniciar Transición <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+            </div>
+
+            <div class="glass-panel p-8 rounded-3xl hover:border-gold-500/60 transition-all duration-300 group hover:-translate-y-2">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold-400/20 to-gold-600/10 border border-gold-500/40 flex items-center justify-center text-gold-400 mb-6 group-hover:bg-gold-500 group-hover:text-dark-900 transition-all"><i data-lucide="briefcase" class="w-7 h-7"></i></div>
+                <h4 class="text-xl font-bold text-white mb-3 group-hover:text-gold-300 transition-colors">Consultoría Corporativa</h4>
+                <p class="text-slate-400 text-sm leading-relaxed mb-6">Supervisión financiera y fiscal para PYMES y empresas constituidas. Estructuración de nóminas, contabilidad electrónica y reportes.</p>
+                <ul class="space-y-2 text-xs text-slate-300 mb-6">
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-gold-400"></i> Estado de pérdidas y ganancias</li>
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-gold-400"></i> Optimización de costos y deducciones</li>
+                    <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-gold-400"></i> Cálculo de nómina e IMSS/INFONAVIT</li>
+                </ul>
+                <button onclick="selectServiceModal('Empresas')" class="text-gold-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1 group-hover:gap-2 transition-all">Solicitar Plan <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+            </div>
+
+            <div class="glass-panel p-8 rounded-3xl hover:border-gold-500/60 transition-all duration-300 group hover:-translate-y-2">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold-400/20 to-gold-600/10 border border-gold-500/40 flex items-center justify-center text-gold-400 mb-6 group-hover:bg-gold-500 group-hover:text-dark-900 transition-all"><i data-lucide="receipt" class="w-7 h-7"></i></div>
+                <h4 class="text-xl font-bold text-white mb-3 group-hover:text-gold-300 transition-colors">Facturación Electrónica</h4>
+                <p class="text-slate-400 text-sm leading-relaxed mb-6">Configuración e implementación de sistemas de facturación versión 4.0, complementos de pago y cancelación adecuada.</p>
+                <button onclick="selectServiceModal('Facturación')" class="text-gold-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1 group-hover:gap-2 transition-all">Consultar <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+            </div>
+
+            <div class="glass-panel p-8 rounded-3xl hover:border-gold-500/60 transition-all duration-300 group hover:-translate-y-2">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold-400/20 to-gold-600/10 border border-gold-500/40 flex items-center justify-center text-gold-400 mb-6 group-hover:bg-gold-500 group-hover:text-dark-900 transition-all"><i data-lucide="coins" class="w-7 h-7"></i></div>
+                <h4 class="text-xl font-bold text-white mb-3 group-hover:text-gold-300 transition-colors">Devolución de Saldos a Favor</h4>
+                <p class="text-slate-400 text-sm leading-relaxed mb-6">Recupera el dinero pagado en exceso de ISR o IVA mediante solicitudes formales de devolución manual o automática.</p>
+                <button onclick="selectServiceModal('Devoluciones')" class="text-gold-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1 group-hover:gap-2 transition-all">Consultar saldo <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+            </div>
+
+            <div class="glass-panel p-8 rounded-3xl hover:border-gold-500/60 transition-all duration-300 group hover:-translate-y-2">
+                <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-gold-400/20 to-gold-600/10 border border-gold-500/40 flex items-center justify-center text-gold-400 mb-6 group-hover:bg-gold-500 group-hover:text-dark-900 transition-all"><i data-lucide="shield-alert" class="w-7 h-7"></i></div>
+                <h4 class="text-xl font-bold text-white mb-3 group-hover:text-gold-300 transition-colors">Aclaración de Requerimientos</h4>
+                <p class="text-slate-400 text-sm leading-relaxed mb-6">¿Te llegó una carta invitación o requerimiento del SAT? Resolvemos bloqueos de sellos digitales y contingencias.</p>
+                <button onclick="selectServiceModal('SAT Requerimientos')" class="text-gold-400 text-xs font-bold uppercase tracking-wider flex items-center gap-1 group-hover:gap-2 transition-all">Atender caso <i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diagnóstico SAT (quiz → lead) -->
+    <section id="sat" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="glass-panel rounded-3xl p-8 sm:p-12 border border-gold-500/30 relative overflow-hidden">
+            <div class="grid lg:grid-cols-12 gap-10 items-center">
+                <div class="lg:col-span-5 space-y-6">
+                    <span class="text-xs font-bold uppercase tracking-widest text-gold-400 bg-gold-500/10 px-3 py-1 rounded-full border border-gold-500/30">Test de Diagnóstico Fiscal</span>
+                    <h3 class="text-3xl font-extrabold text-white font-serif leading-tight">¿Tu negocio cumple sin riesgos con el SAT?</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">Selecciona tu situación para recibir una recomendación. Déjanos tu contacto y te la hacemos llegar por WhatsApp.</p>
+                    <div class="pt-2 flex items-center gap-4 text-xs text-gold-400 font-semibold">
+                        <span class="flex items-center gap-1"><i data-lucide="lock" class="w-4 h-4"></i> 100% Confidencial</span>
+                        <span class="flex items-center gap-1"><i data-lucide="zap" class="w-4 h-4"></i> Resultado Inmediato</span>
+                    </div>
+                </div>
+                <div class="lg:col-span-7">
+                    <div class="glass-panel-light p-6 sm:p-8 rounded-2xl space-y-6">
+                        <div id="quiz-step-1" class="space-y-4">
+                            <label class="block text-sm font-semibold text-white">1. ¿Cómo recibes principalmente los pagos de tus clientes?</label>
+                            <div class="grid sm:grid-cols-2 gap-3">
+                                <button onclick="setQuizAnswer('pago','efectivo',this)" class="quiz-btn text-left p-4 rounded-xl border border-slate-700 bg-slate-900/50 hover:border-gold-500 text-xs text-slate-300 transition-all">💵 Mayormente en efectivo</button>
+                                <button onclick="setQuizAnswer('pago','transferencias',this)" class="quiz-btn text-left p-4 rounded-xl border border-slate-700 bg-slate-900/50 hover:border-gold-500 text-xs text-slate-300 transition-all">💳 Transferencias / Depósitos bancarios</button>
+                            </div>
+                        </div>
+                        <div id="quiz-step-2" class="space-y-4">
+                            <label class="block text-sm font-semibold text-white">2. ¿Cuentas con RFC activo e.e.firma actualizada?</label>
+                            <div class="grid sm:grid-cols-2 gap-3">
+                                <button onclick="setQuizAnswer('rfc','si',this)" class="quiz-btn text-left p-4 rounded-xl border border-slate-700 bg-slate-900/50 hover:border-gold-500 text-xs text-slate-300 transition-all">✅ Sí, todo en orden</button>
+                                <button onclick="setQuizAnswer('rfc','no',this)" class="quiz-btn text-left p-4 rounded-xl border border-slate-700 bg-slate-900/50 hover:border-gold-500 text-xs text-slate-300 transition-all">❌ No tengo / No estoy seguro</button>
+                            </div>
+                        </div>
+                        <div id="quiz-step-3" class="space-y-4">
+                            <label class="block text-sm font-semibold text-white">3. Déjanos tu teléfono y te enviamos el diagnóstico</label>
+                            <div class="flex gap-3">
+                                <input type="tel" id="quiz-phone" placeholder="662 123 4567" class="flex-1 bg-slate-900/80 border border-slate-700 focus:border-gold-500 rounded-xl px-4 py-3 text-sm text-white focus:outline-none">
+                                <button onclick="submitQuizLead()" class="bg-gradient-to-r from-gold-500 to-gold-600 text-dark-900 font-bold text-xs uppercase px-6 py-3 rounded-xl">Recibir diagnóstico</button>
+                            </div>
+                            <div id="quiz-phone-msg" class="hidden text-xs font-semibold text-emerald-400"></div>
+                        </div>
+                        <div id="quiz-result" class="hidden p-5 rounded-xl bg-gold-500/10 border border-gold-500/40 space-y-3">
+                            <div class="flex items-center gap-2 text-gold-400 font-bold text-sm"><i data-lucide="sparkles" class="w-5 h-5"></i><span id="quiz-result-title">Recomendación</span></div>
+                            <p id="quiz-result-text" class="text-xs text-slate-200 leading-relaxed"></p>
+                            <button onclick="openBookingModal()" class="w-full bg-gradient-to-r from-gold-500 to-gold-600 text-dark-900 font-bold text-xs uppercase py-3 rounded-lg mt-2">Agendar Asesoría Específica</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cotizador -->
+    <section id="cotizador" class="py-24 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="text-center max-w-3xl mx-auto mb-16 space-y-4">
+            <h2 class="text-xs font-bold uppercase tracking-widest text-gold-400 bg-gold-500/10 px-4 py-1.5 rounded-full inline-block border border-gold-500/30">Transparencia Total</h2>
+            <h3 class="text-3xl sm:text-4xl font-extrabold text-white font-serif">Cotizador de Honorarios Estimados</h3>
+            <p class="text-slate-400 text-sm">Calcula una tarifa mensual aproximada según la estructura y volumen de tu actividad.</p>
+        </div>
+        <div class="glass-panel max-w-4xl mx-auto rounded-3xl p-8 sm:p-12 border border-gold-500/30">
+            <div class="grid md:grid-cols-2 gap-10">
+                <div class="space-y-6">
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-300 mb-2">1. Régimen o Tipo de Negocio</label>
+                        <select id="calc-regimen" onchange="calculateFee()" class="w-full bg-slate-900/80 border border-gold-500/30 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-gold-400">
+                            <option value="informal">Emprendedor / Informal (Regularización)</option>
+                            <option value="resico">Persona Física - RESICO</option>
+                            <option value="pfae">Persona Física - Actividad Empresarial / Servicios</option>
+                            <option value="moral">Persona Moral (S.A. de C.V. / S.A.S. / Pyme)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div class="flex justify-between text-xs font-bold uppercase text-slate-300 mb-2"><span>2. Facturas / Movimientos al mes</span><span id="calc-invoices-val" class="text-gold-400">15 movimientos</span></div>
+                        <input type="range" id="calc-invoices" min="1" max="100" value="15" oninput="calculateFee()" class="w-full accent-gold-500 bg-slate-800 h-2 rounded-lg cursor-pointer">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold uppercase text-slate-300 mb-2">3. ¿Requiere Gestión de Nómina?</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button id="calc-nom-no" onclick="setNomina(false)" class="py-2.5 px-4 rounded-xl border border-gold-500 text-xs font-semibold bg-gold-500 text-dark-900 transition-all">No requiero</button>
+                            <button id="calc-nom-si" onclick="setNomina(true)" class="py-2.5 px-4 rounded-xl border border-slate-700 text-xs font-semibold bg-slate-900 text-slate-300 transition-all">Sí (1-10 empleados)</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="glass-panel-light p-8 rounded-2xl flex flex-col justify-between text-center relative border border-gold-500/40">
+                    <div class="space-y-2">
+                        <span class="text-xs font-semibold text-slate-400 uppercase tracking-widest">Honorario Mensual Estimado</span>
+                        <div class="text-4xl sm:text-5xl font-extrabold font-serif gold-gradient-text my-4" id="fee-amount">$1,200 <span class="text-xs font-sans text-slate-400">MXN/mes</span></div>
+                        <p class="text-xs text-slate-400 leading-relaxed">Incluye presentación de declaraciones mensuales, contabilidad básica y atención vía WhatsApp.</p>
+                    </div>
+                    <div class="pt-6 border-t border-slate-800 space-y-3">
+                        <button onclick="bookCalculatedFee()" class="w-full bg-gradient-to-r from-gold-500 via-gold-400 to-gold-600 text-dark-900 font-bold text-xs uppercase tracking-wider py-3.5 rounded-xl shadow-gold-glow hover:scale-105 transition-all">Solicitar esta propuesta</button>
+                        <span class="text-[10px] text-slate-500 block">*Cotización sujeta a revisión detallada de documentación.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Sobre Nathaly -->
+    <section id="nosotros" class="py-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+        <div class="glass-panel rounded-3xl p-8 sm:p-14 border border-gold-500/30">
+            <div class="grid lg:grid-cols-12 gap-12 items-center">
+                <div class="lg:col-span-5 flex justify-center">
+                    <div class="relative w-64 h-64 sm:w-80 sm:h-80">
+                        <div class="absolute inset-0 bg-gradient-to-br from-gold-400 to-amber-700 rounded-2xl transform rotate-3 blur-md opacity-40"></div>
+                        <div class="relative w-full h-full glass-panel rounded-2xl border-2 border-gold-500/50 flex flex-col items-center justify-center p-6 text-center">
+                            <div class="w-20 h-20 rounded-full bg-gradient-to-tr from-gold-600 to-gold-300 flex items-center justify-center mb-4 shadow-gold-glow"><i data-lucide="award" class="w-10 h-10 text-dark-900"></i></div>
+                            <h4 class="font-serif font-bold text-xl text-white">Nathaly H.</h4>
+                            <p class="text-xs text-gold-400 font-semibold tracking-wider mt-1">C.P. & CONSULTORA FISCAL</p>
+                            <span class="mt-4 text-[11px] text-slate-400 bg-slate-900/60 px-3 py-1.5 rounded-full border border-gold-500/20">Contadora Certificada</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-7 space-y-6">
+                    <span class="text-xs font-bold uppercase tracking-widest text-gold-400 bg-gold-500/10 px-3 py-1 rounded-full border border-gold-500/30">Atención Personalizada</span>
+                    <h3 class="text-3xl sm:text-4xl font-extrabold text-white font-serif">Un enfoque claro, honesto y sin rodeos</h3>
+                    <p class="text-slate-300 text-sm leading-relaxed">Entiendo perfectamente la incertidumbre que provoca lidiar con el SAT o dar el salto de un negocio informal a la formalidad legal. Mi objetivo principal es quitarte ese peso de encima.</p>
+                    <p class="text-slate-300 text-sm leading-relaxed">No solo entrego números; traduzco la ley fiscal a un lenguaje comprensible y diseñamos juntos estrategias para cuidar tu patrimonio y multiplicar tus ingresos.</p>
+                    <div class="grid sm:grid-cols-2 gap-4 pt-4">
+                        <div class="p-4 rounded-xl glass-panel-light border border-gold-500/20"><i data-lucide="shield-check" class="w-6 h-6 text-gold-400 mb-2"></i><h5 class="text-sm font-bold text-white">Confidencialidad Total</h5><p class="text-xs text-slate-400 mt-1">Manejo seguro y profesional de tu información tributaria.</p></div>
+                        <div class="p-4 rounded-xl glass-panel-light border border-gold-500/20"><i data-lucide="message-square" class="w-6 h-6 text-gold-400 mb-2"></i><h5 class="text-sm font-bold text-white">Comunicación Directa</h5><p class="text-xs text-slate-400 mt-1">Respuestas rápidas sin intermediarios ni demoras.</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contacto -->
+    <footer id="contacto" class="relative pt-20 pb-10 border-t border-gold-500/20 glass-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid lg:grid-cols-12 gap-12 pb-16">
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="flex items-center gap-3.5">
+                        <div class="w-12 h-12 relative flex items-center justify-center shrink-0">
+                            <svg viewBox="0 0 200 200" class="w-full h-full gold-emboss-shadow">
+                                <circle cx="100" cy="100" r="82" fill="none" stroke="url(#gold-foil-1)" stroke-width="4" stroke-dasharray="3,3" />
+                                <circle cx="100" cy="100" r="74" fill="none" stroke="url(#gold-foil-2)" stroke-width="2.5" />
+                                <path d="M 42 150 L 42 50 L 62 50 L 96 118 L 96 50 L 114 50 L 114 150 L 94 150 L 60 82 L 60 150 Z" fill="url(#gold-foil-1)" />
+                                <path d="M 94 150 L 94 50 L 112 50 L 112 90 L 146 90 L 146 50 L 164 50 L 164 150 L 146 150 L 146 108 L 112 108 L 112 150 Z" fill="url(#gold-foil-2)" />
+                                <polygon points="104,88 116,100 104,112 92,100" fill="url(#gold-radial-center)" />
+                            </svg>
+                        </div>
+                        <div><span class="font-serif font-bold text-lg text-white block leading-tight">N.H.</span><span class="text-[10px] tracking-widest text-gold-400 font-semibold uppercase block">Contabilidad y Asesoría Empresarial</span></div>
+                    </div>
+                    <p class="text-slate-400 text-sm max-w-sm">Asesoría contable, fiscal y estratégica. Resolvemos la situación de tu negocio con el SAT con la máxima efectividad.</p>
+                    <div class="space-y-3 text-xs text-slate-300">
+                        <div class="flex items-center gap-3"><i data-lucide="map-pin" class="w-4 h-4 text-gold-400 shrink-0"></i><span>Hermosillo, Sonora, México (Presencial & En Línea)</span></div>
+                        <div class="flex items-center gap-3"><i data-lucide="phone" class="w-4 h-4 text-gold-400 shrink-0"></i><a href="tel:+526623498589" class="hover:text-gold-300">+52 (662) 349 8589</a></div>
+                        <div class="flex items-center gap-3"><i data-lucide="message-circle" class="w-4 h-4 text-gold-400 shrink-0"></i><a href="https://wa.me/526623498589" target="_blank" rel="noopener" class="hover:text-gold-300">WhatsApp directo</a></div>
+                    </div>
+                </div>
+                <div class="lg:col-span-7">
+                    <div class="glass-panel p-8 rounded-3xl border border-gold-500/30">
+                        <h4 class="text-lg font-bold text-white mb-6 flex items-center gap-2"><i data-lucide="send" class="w-5 h-5 text-gold-400"></i>Envía un mensaje rápido</h4>
+                        <form id="contact-form" onsubmit="handleContactSubmit(event)" class="space-y-4">
+                            <div class="grid sm:grid-cols-2 gap-4">
+                                <input type="text" id="contact-name" required placeholder="Tu Nombre Completo" class="w-full bg-slate-900/80 border border-slate-700 focus:border-gold-500 rounded-xl px-4 py-3 text-sm text-white focus:outline-none">
+                                <input type="tel" id="contact-phone" required placeholder="WhatsApp / Teléfono" class="w-full bg-slate-900/80 border border-slate-700 focus:border-gold-500 rounded-xl px-4 py-3 text-sm text-white focus:outline-none">
+                            </div>
+                            <select id="contact-topic" class="w-full bg-slate-900/80 border border-slate-700 focus:border-gold-500 rounded-xl px-4 py-3 text-sm text-white focus:outline-none">
+                                <option value="SAT">Asesoría sobre el SAT / Requerimiento</option>
+                                <option value="Informal">Quiero formalizar mi negocio informal</option>
+                                <option value="Empresarial">Servicios para Empresa / Pyme</option>
+                                <option value="Otro">Consulta General</option>
+                            </select>
+                            <textarea id="contact-msg" rows="3" required placeholder="Cuéntame brevemente cómo puedo ayudarte..." class="w-full bg-slate-900/80 border border-slate-700 focus:border-gold-500 rounded-xl px-4 py-3 text-sm text-white focus:outline-none"></textarea>
+                            <button type="submit" class="w-full bg-gradient-to-r from-gold-500 via-gold-400 to-gold-600 text-dark-900 font-bold text-xs uppercase tracking-wider py-4 rounded-xl shadow-gold-subtle hover:shadow-gold-glow transition-all">Enviar Consulta Directa</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-slate-800 text-center text-xs text-slate-500 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <p>© 2026 N.H. Contabilidad y Asesoría Empresarial. Todos los derechos reservados.</p>
+                <div class="flex gap-6"><a href="#" class="hover:text-gold-400">Aviso de Privacidad</a><a href="#" class="hover:text-gold-400">Términos del Servicio</a></div>
             </div>
         </div>
     </footer>
 
-    <!-- STICKY MOBILE CTA BUTTON -->
-    <div class="fixed bottom-4 right-4 left-4 sm:hidden z-50">
-        <a href="javascript:document.getElementById("chatFabA")&&document.getElementById("chatFabA").click();" target="_blank" 
-           class="cta-gradient-btn text-white w-full py-3.5 px-6 rounded-2xl font-bold text-sm tracking-wide shadow-2xl flex items-center justify-center gap-3 border border-white/20">
-            <i data-lucide="bot" class="w-5 h-5"></i>
-            HABLAR CON ASISTENTE IA
-        </a>
+    <!-- Modal de Cita (→ /api/v1/citas) -->
+    <div id="booking-modal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
+        <div class="relative w-full max-w-lg glass-panel rounded-3xl p-6 sm:p-8 border border-gold-500/40 shadow-2xl">
+            <button onclick="closeBookingModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white p-1"><i data-lucide="x" class="w-6 h-6"></i></button>
+            <div class="text-center mb-6">
+                <div class="w-12 h-12 rounded-full bg-gold-500/20 border border-gold-500/40 flex items-center justify-center mx-auto text-gold-400 mb-3"><i data-lucide="calendar" class="w-6 h-6"></i></div>
+                <h3 class="text-xl font-bold font-serif text-white">Agendar Cita de Diagnóstico</h3>
+                <p class="text-xs text-slate-400 mt-1">Gratis y sin compromiso. Te contactamos para confirmar.</p>
+            </div>
+            <div id="booking-ok" class="hidden bg-emerald-900/50 border border-emerald-400/40 text-emerald-200 p-4 rounded-xl text-xs font-semibold mb-4"></div>
+            <div id="booking-err" class="hidden bg-red-900/50 border border-red-400/40 text-red-200 p-4 rounded-xl text-xs font-semibold mb-4"></div>
+            <form onsubmit="handleModalSubmit(event)" class="space-y-4">
+                <div><label class="block text-xs font-semibold text-slate-300 mb-1">Nombre Completo</label><input type="text" id="modal-name" required class="w-full bg-slate-900 border border-slate-700 focus:border-gold-400 rounded-xl px-4 py-2.5 text-xs text-white"></div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-xs font-semibold text-slate-300 mb-1">WhatsApp</label><input type="tel" id="modal-phone" required class="w-full bg-slate-900 border border-slate-700 focus:border-gold-400 rounded-xl px-4 py-2.5 text-xs text-white"></div>
+                    <div><label class="block text-xs font-semibold text-slate-300 mb-1">Modalidad</label><select id="modal-type" class="w-full bg-slate-900 border border-slate-700 focus:border-gold-400 rounded-xl px-4 py-2.5 text-xs text-white"><option value="Online (Google Meet/Zoom)">En Línea (Zoom/Meet)</option><option value="Presencial (Hermosillo)">Presencial (Oficina)</option><option value="Llamada Telefónica">Llamada Telefónica</option></select></div>
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div><label class="block text-xs font-semibold text-slate-300 mb-1">Fecha Preferida</label><input type="date" id="modal-date" required class="w-full bg-slate-900 border border-slate-700 focus:border-gold-400 rounded-xl px-4 py-2.5 text-xs text-white"></div>
+                    <div><label class="block text-xs font-semibold text-slate-300 mb-1">Horario Preferido</label><select id="modal-time" class="w-full bg-slate-900 border border-slate-700 focus:border-gold-400 rounded-xl px-4 py-2.5 text-xs text-white"><option value="09:00 AM">Mañana (9:00 AM)</option><option value="10:00 AM">Mañana (10:00 AM)</option><option value="11:00 AM">Mañana (11:00 AM)</option><option value="03:00 PM">Tarde (3:00 PM)</option><option value="04:00 PM">Tarde (4:00 PM)</option></select></div>
+                </div>
+                <div><label class="block text-xs font-semibold text-slate-300 mb-1">Servicio de Interés Principal</label><input type="text" id="modal-service" readonly class="w-full bg-slate-900/60 border border-gold-500/30 rounded-xl px-4 py-2.5 text-xs text-gold-400 font-semibold"></div>
+                <button type="submit" class="w-full bg-gradient-to-r from-gold-500 to-gold-600 text-dark-900 font-bold text-xs uppercase py-3.5 rounded-xl shadow-gold-glow mt-2">Confirmar Reserva de Cita</button>
+            </form>
+        </div>
     </div>
 
-    <!-- JavaScript code -->
-    <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
+    <!-- Toast -->
+    <div id="toast" class="toast-fixed hidden glass-panel border border-gold-500/60 px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-3 text-xs text-white">
+        <div class="w-8 h-8 rounded-full bg-gold-500/20 text-gold-400 flex items-center justify-center shrink-0"><i data-lucide="check-circle" class="w-5 h-5"></i></div>
+        <div><span id="toast-title" class="font-bold block text-gold-400">¡Mensaje Enviado!</span><span id="toast-desc" class="text-slate-300">Nathaly se comunicará contigo a la brevedad.</span></div>
+    </div>
 
-        // FAQ Toggle Function
-        function toggleFaq(id) {
-            const content = document.getElementById(`faq-content-${id}`);
-            const icon = document.getElementById(`faq-icon-${id}`);
-            
-            if (content.classList.contains('hidden')) {
-                content.classList.remove('hidden');
-                icon.style.transform = 'rotate(180deg)';
-            } else {
-                content.classList.add('hidden');
-                icon.style.transform = 'rotate(0deg)';
+    <script>
+        lucide.createIcons();
+        window.addEventListener('load', () => {
+            const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('modal-date').value = tomorrow.toISOString().split('T')[0];
+            calculateFee();
+        });
+
+        // Mobile menu
+        const menuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        menuBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+        // Quiz → lead
+        const quizAnswers = {};
+        function setQuizAnswer(cat, val, btn) {
+            quizAnswers[cat] = val;
+            const parent = btn.parentElement;
+            parent.querySelectorAll('button').forEach(b => {
+                b.classList.remove('border-gold-500','bg-gold-500/20','text-white');
+                b.classList.add('border-slate-700','bg-slate-900/50','text-slate-300');
+            });
+            btn.classList.remove('border-slate-700','bg-slate-900/50','text-slate-300');
+            btn.classList.add('border-gold-500','bg-gold-500/20','text-white');
+            evaluateQuiz();
+        }
+        function evaluateQuiz() {
+            if (quizAnswers.pago && quizAnswers.rfc) {
+                document.getElementById('quiz-step-3').classList.remove('hidden');
+                document.getElementById('quiz-step-3').classList.add('block');
             }
         }
+        async function submitQuizLead() {
+            const phone = document.getElementById('quiz-phone').value.trim();
+            const msgEl = document.getElementById('quiz-phone-msg');
+            if (!phone) { msgEl.textContent = 'Escribe tu teléfono.'; msgEl.className='text-xs font-semibold text-amber-400 block mt-2'; return; }
+            let result = '';
+            if (quizAnswers.pago==='transferencias' && quizAnswers.rfc==='no') result = 'Riesgo alto: depósitos sin declarar → RESICO urgente (desde 1%).';
+            else if (quizAnswers.rfc==='no') result = 'Oportunidad: regularización gradual antes de bancarizar.';
+            else result = 'Diagnóstico: optimización de deducciones y estrategia.';
+            try {
+                const r = await fetch('/api/v1/leads', {method:'POST',headers:{'Content-Type':'application/json'},
+                  body: JSON.stringify({persona:'nathaly', nombre:'Lead Diagnóstico SAT', telefono:phone, canal:'web', perfil:'SAT', urgencia:'media', mensaje:'Quiz fiscal: '+result, respuesta:result})});
+                const j = await r.json();
+                if (j.ok) { msgEl.textContent = '✓ Recibido. Te enviamos tu diagnóstico por WhatsApp.'; msgEl.className='text-xs font-semibold text-emerald-400 block mt-2'; document.getElementById('quiz-phone').value=''; }
+                else { msgEl.textContent = 'No pudimos guardar. Escribe directo al WhatsApp 662 349 8589.'; msgEl.className='text-xs font-semibold text-amber-400 block mt-2'; }
+            } catch(e) { msgEl.textContent = 'Sin conexión. Escribe al WhatsApp 662 349 8589.'; msgEl.className='text-xs font-semibold text-amber-400 block mt-2'; }
+        }
+
+        // Cotizador
+        let hasNomina = false;
+        function setNomina(val) {
+            hasNomina = val;
+            const si=document.getElementById('calc-nom-si'), no=document.getElementById('calc-nom-no');
+            if (val) { si.className='py-2.5 px-4 rounded-xl border border-gold-500 text-xs font-semibold bg-gold-500 text-dark-900 transition-all'; no.className='py-2.5 px-4 rounded-xl border border-slate-700 text-xs font-semibold bg-slate-900 text-slate-300 transition-all'; }
+            else { no.className='py-2.5 px-4 rounded-xl border border-gold-500 text-xs font-semibold bg-gold-500 text-dark-900 transition-all'; si.className='py-2.5 px-4 rounded-xl border border-slate-700 text-xs font-semibold bg-slate-900 text-slate-300 transition-all'; }
+            calculateFee();
+        }
+        function calculateFee() {
+            const regimen = document.getElementById('calc-regimen').value;
+            const invoices = parseInt(document.getElementById('calc-invoices').value);
+            document.getElementById('calc-invoices-val').innerText = invoices + ' movimientos';
+            let base = 900;
+            if (regimen==='informal') base=800;
+            if (regimen==='resico') base=1200;
+            if (regimen==='pfae') base=1600;
+            if (regimen==='moral') base=3500;
+            const total = base + Math.floor(invoices*18) + (hasNomina?650:0);
+            document.getElementById('fee-amount').innerHTML = '$'+total.toLocaleString()+' <span class="text-xs font-sans text-slate-400">MXN/mes</span>';
+        }
+        function bookCalculatedFee() {
+            const regimen = document.getElementById('calc-regimen').options[document.getElementById('calc-regimen').selectedIndex].text;
+            openBookingModal('Cotización Estimada ('+regimen+')');
+        }
+
+        // Modal
+        function openBookingModal(serviceName='Consultoría General') {
+            document.getElementById('modal-service').value = serviceName;
+            document.getElementById('booking-ok').classList.add('hidden');
+            document.getElementById('booking-err').classList.add('hidden');
+            const m=document.getElementById('booking-modal'); m.classList.remove('hidden'); m.classList.add('flex');
+        }
+        function selectServiceModal(serviceName) { openBookingModal('Servicio: '+serviceName); }
+        function closeBookingModal() {
+            const m=document.getElementById('booking-modal'); m.classList.add('hidden'); m.classList.remove('flex');
+        }
+
+        function showToast(title, desc) {
+            const t=document.getElementById('toast');
+            document.getElementById('toast-title').innerText=title; document.getElementById('toast-desc').innerText=desc;
+            t.classList.remove('hidden');
+            setTimeout(()=>t.classList.add('hidden'), 4500);
+        }
+
+        // Contacto → lead
+        async function handleContactSubmit(e) {
+            e.preventDefault();
+            const name=document.getElementById('contact-name').value;
+            const phone=document.getElementById('contact-phone').value;
+            const topic=document.getElementById('contact-topic').value;
+            const msg=document.getElementById('contact-msg').value;
+            try {
+                const r=await fetch('/api/v1/leads',{method:'POST',headers:{'Content-Type':'application/json'},
+                  body:JSON.stringify({persona:'nathaly',nombre:name,telefono:phone,canal:'web',perfil:topic,mensaje:msg,estado:'nuevo'})});
+                const j=await r.json();
+                if (j.ok) showToast('¡Mensaje Enviado!','Gracias '+name+', Nathaly te responderá a la brevedad.');
+                else showToast('Error','No pudimos guardar. Usa WhatsApp 662 349 8589.');
+            } catch(err) { showToast('Error','Sin conexión. Usa WhatsApp 662 349 8589.'); }
+            document.getElementById('contact-form').reset();
+        }
+
+        // Cita → /api/v1/citas
+        async function handleModalSubmit(e) {
+            e.preventDefault();
+            const name=document.getElementById('modal-name').value;
+            const phone=document.getElementById('modal-phone').value;
+            const type=document.getElementById('modal-type').value;
+            const date=document.getElementById('modal-date').value;
+            const time=document.getElementById('modal-time').value;
+            const service=document.getElementById('modal-service').value;
+            const ok=document.getElementById('booking-ok'), err=document.getElementById('booking-err');
+            ok.classList.add('hidden'); err.classList.add('hidden');
+            const btn=e.target.querySelector('button[type=submit]'); btn.disabled=true; btn.textContent='Agendando...';
+            try {
+                const r=await fetch('/api/v1/citas',{method:'POST',headers:{'Content-Type':'application/json'},
+                  body:JSON.stringify({persona:'nathaly',nombre:name,telefono:phone,fecha:date,hora:time,negocio:service+' | '+type})});
+                const j=await r.json();
+                if (j.ok) {
+                    ok.innerHTML='<b>¡Reservado, '+name+'!</b> Tu sesión quedó solicitada para el '+date+' a las '+time+'. Nathaly te contacta para confirmar.';
+                    ok.classList.remove('hidden');
+                    showToast('¡Cita Registrada!','Excelente '+name+', hemos agendado tu sesión de diagnóstico.');
+                } else { err.textContent='No pudimos agendar. Escribe al WhatsApp 662 349 8589.'; err.classList.remove('hidden'); }
+            } catch(x) { err.textContent='Sin conexión. Escribe al WhatsApp 662 349 8589.'; err.classList.remove('hidden'); }
+            btn.disabled=false; btn.textContent='Confirmar Reserva de Cita';
+        }
     </script>
-
-<div class="modal-ovl" id="agendaOvl">
-  <div class="modal-wrap">
-    <button class="modal-close" id="agendaClose" aria-label="Cerrar">×</button>
-    <div class="modal">
-      <h3>Agenda tu diagnóstico gratis</h3>
-      <p class="mod-sub">Revisión sin costo. Nathaly te contacta para confirmar.</p>
-      <div class="agenda-ok" id="agendaOk"></div>
-      <div class="agenda-err" id="agendaErr"></div>
-      <form id="agendaForm" novalidate>
-        <div class="field"><label>Tu nombre</label><input type="text" id="ap_nombre" required placeholder="Nombre y apellido"></div>
-        <div class="field"><label>Tu teléfono (WhatsApp)</label><input type="tel" id="ap_tel" required placeholder="662 123 4567"></div>
-        <div class="field"><label>Tu negocio (opcional)</label><input type="text" id="ap_negocio" placeholder="Nombre de tu negocio"></div>
-        <div class="field-row">
-          <div class="field"><label>Fecha</label><input type="date" id="ap_fecha" required></div>
-          <div class="field"><label>Hora</label><select id="ap_hora" required>
-            <option value="">Elige...</option><option>09:00</option><option>10:00</option>
-            <option>11:00</option><option>12:00</option><option>16:00</option>
-            <option>17:00</option><option>18:00</option>
-          </select></div>
-        </div>
-        <button type="submit" class="btn btn-primary btn-block">Confirmar</button>
-        <p class="lab-link">¿Prefieres WhatsApp directo? <a href="https://wa.me/526623498589" target="_blank" rel="noopener">Escríbenos aquí</a></p>
-      </form>
-    </div>
-  </div>
-</div>
-
-<button class="chat-fab" id="chatFabA" aria-label="Abrir asistente IA">🤖</button>
-<div class="chat-panel" id="chatPanelA">
-  <div class="chat-head"><span>Asistente IA</span><button id="chatCloseA" aria-label="Cerrar">×</button></div>
-  <div class="chat-body" id="chatBodyA"></div>
-  <div class="chat-input">
-    <input id="chatTextA" placeholder="Escribe o usa el micrófono...">
-    <button class="chat-btn mic-btn" id="chatMicA" aria-label="Hablar">🎤</button>
-    <button class="chat-btn send-btn" id="chatSendA" aria-label="Enviar">➤</button>
-  </div>
-</div>
-<script>
-(function(){
-  const API="/api/v1/chat/completions",STT="/api/stt",PERSON="nathaly";
-  let CHAT_ID = localStorage.getItem("nathaly_chat_id");
-  if(!CHAT_ID){CHAT_ID="web-"+Math.random().toString(36).slice(2,10)+"-"+Date.now().toString(36);localStorage.setItem("nathaly_chat_id",CHAT_ID);}
-  const fab=document.getElementById("chatFabA"),panel=document.getElementById("chatPanelA");
-  const body=document.getElementById("chatBodyA"),txt=document.getElementById("chatTextA");
-  const micBtn=document.getElementById("chatMicA"),sendBtn=document.getElementById("chatSendA");
-  let open=false,recState="idle",recorder=null,chunks=[],stream=null,analyser=null,actx=null,silenceStart=null;
-  function add(t,role){const d=document.createElement("div");d.className="chat-msg "+role;d.textContent=t;body.appendChild(d);body.scrollTop=body.scrollHeight;}
-  function greet(){if(!body.children.length)add("Hola. Soy el asistente de Nathaly, contadora en Hermosillo. Te ayudo con contabilidad, impuestos o citas al SAT. Qué necesitas?","bot");}
-  async function sendText(text){if(!text.trim())return;add(text,"user");txt.value="";
-    try{const r=await fetch(API,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({person:PERSON,chat_id:CHAT_ID,messages:[{role:"user",content:text}]})});const j=await r.json();const c=j.choices[0].message.content;add(c,"bot");if("speechSynthesis" in window){const u=new SpeechSynthesisUtterance(c);u.lang="es-MX";window.speechSynthesis.speak(u);}}
-    catch(e){add("Estoy teniendo un momento. Nathaly te contestará en breve. ¿Me dejas tu número?","bot");}}
-  function stopRec(){if(recState!=="rec")return;recState="sending";micBtn.classList.remove("rec");try{recorder.stop();}catch(e){}if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}if(actx){try{actx.close();}catch(e){}actx=null;}}
-  async function onStop(){const blob=new Blob(chunks,{type:chunks[0]?.type||"audio/webm"});chunks=[];if(blob.size<300){recState="idle";return;}
-    const fd=new FormData();fd.append("file",blob,"voz.webm");add("Escuchando...","user");
-    try{const r=await fetch(STT,{method:"POST",body:fd});const j=await r.json();const t=j.text||"";if(t.trim()){body.lastChild.remove();sendText(t);}else{body.lastChild.remove();add("No entendí. Repite.","bot");}}
-    catch(e){body.lastChild.remove();add("Error de voz. Escríbelo.","bot");}recState="idle";}
-  async function startRec(){if(recState!=="idle")return;chunks=[];try{stream=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:true,noiseSuppression:true}});}catch(e){add("Permiso de micrófono denegado.","bot");return;}
-    actx=new (window.AudioContext||window.webkitAudioContext)();const src=actx.createMediaStreamSource(stream);analyser=actx.createAnalyser();analyser.fftSize=256;src.connect(analyser);
-    const mime=["audio/webm;codecs=opus","audio/webm","audio/mp4"].find(m=>MediaRecorder.isTypeSupported(m))||"";recorder=new MediaRecorder(stream,mime?{mimeType:mime}:{});recorder.ondataavailable=e=>{if(e.data.size)chunks.push(e.data);};recorder.onstop=onStop;recorder.start();
-    micBtn.classList.add("rec");recState="rec";silenceStart=null;
-    function chk(){if(recState!=="rec")return;const d=new Uint8Array(analyser.frequencyBinCount);analyser.getByteFrequencyData(d);let sum=0;for(let i=0;i<d.length;i++)sum+=d[i];const avg=sum/d.length,now=Date.now();if(avg<12){if(!silenceStart)silenceStart=now;else if(now-silenceStart>1200){stopRec();return;}}else silenceStart=null;requestAnimationFrame(chk);}
-    requestAnimationFrame(chk);}
-  fab.onclick=()=>{open=!open;panel.classList.toggle("open",open);if(open)greet();};
-  document.getElementById("chatCloseA").onclick=()=>{open=false;panel.classList.remove("open");};
-  sendBtn.onclick=()=>sendText(txt.value);
-  txt.addEventListener("keydown",e=>{if(e.key==="Enter")sendText(txt.value);});
-  micBtn.onclick=()=>{if(recState==="idle")startRec();else stopRec();};
-  if(!window.MediaRecorder){micBtn.disabled=true;micBtn.style.opacity=.4;}
-
-  // ===== Agenda de llamada/diagnóstico (input → POST /api/v1/citas → output) =====
-  const ovl=document.getElementById("agendaOvl"),agendaOk=document.getElementById("agendaOk"),agendaErr=document.getElementById("agendaErr");
-  const openAgenda=document.getElementById("openAgenda");
-  if(openAgenda) openAgenda.onclick=(e)=>{e.preventDefault();ovl.classList.add("open");};
-  document.getElementById("agendaClose").onclick=()=>{ovl.classList.remove("open");};
-  ovl.addEventListener("click",e=>{if(e.target===ovl)ovl.classList.remove("open");});
-  const fEl=document.getElementById("ap_fecha");
-  if(fEl){fEl.min=new Date().toISOString().split("T")[0];}
-  document.getElementById("agendaForm").onsubmit=async(e)=>{
-    e.preventDefault();
-    agendaOk.style.display="none";agendaErr.style.display="none";
-    const nombre=document.getElementById("ap_nombre").value.trim();
-    const telefono=document.getElementById("ap_tel").value.trim();
-    const fecha=document.getElementById("ap_fecha").value;
-    const hora=document.getElementById("ap_hora").value;
-    if(!nombre||!telefono||!fecha||!hora){agendaErr.textContent="Completa nombre, teléfono, fecha y hora.";agendaErr.style.display="block";return;}
-    const btn=e.target.querySelector("button[type=submit]");
-    btn.disabled=true;btn.textContent="Agendando...";
-    try{
-      const r=await fetch("/api/v1/citas",{method:"POST",headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({persona:"nathaly",nombre,telefono,fecha,hora})});
-      const j=await r.json();
-      if(j.ok){
-        agendaOk.innerHTML="<b>¡Listo, "+nombre+"!</b><br>Tu revisión quedó <b>solicitada para el "+fecha+" a las "+hora+"</b>. Nathaly te contacta para confirmar.";
-        agendaOk.style.display="block";e.target.reset();
-      }else{agendaErr.textContent="No pudimos agendar.\nIntenta por WhatsApp al 662 349 8589.";agendaErr.style.display="block";}
-    }catch(err){agendaErr.textContent="Sin conexión.\nEscríbenos por WhatsApp al 662 349 8589.";agendaErr.style.display="block";}
-    btn.disabled=false;btn.textContent="Confirmar";
-  };
-})();
-</script></body>
+</body>
 </html>
