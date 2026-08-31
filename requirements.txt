@@ -1,20 +1,20 @@
 # SDC Core Dependencies
-fastapi>=0.139.0
-uvicorn>=0.51.0
+fastapi>=0.141.1
+uvicorn>=0.52.4
 jinja2>=3.1.6
-python-multipart>=0.0.18
+python-multipart>=0.0.32
 httpx>=0.28.1
-requests>=2.34.0
-python-dotenv>=1.0.0
-neo4j>=6.2.0
-qdrant-client>=1.18.0
-fastmcp>=0.2.0
+requests>=2.34.2
+python-dotenv>=1.2.3
+neo4j>=6.3.0
+qdrant-client>=1.19.0
+fastmcp>=3.4.7
 
 # Voice
 faster-whisper>=1.2.1
-edge-tts>=6.1.0
+edge-tts>=7.2.8
 gTTS>=2.5.4
-SpeechRecognition>=3.10.0
+SpeechRecognition>=3.17.0
 PyAudio>=0.2.14
 pydub>=0.25.1
 
@@ -22,17 +22,17 @@ pydub>=0.25.1
 ollama>=0.6.2
 
 # Testing
-pytest>=9.1.0
-pytest-bdd>=8.0.0
-pytest-asyncio>=0.24.0
-pytest-cov>=6.0.0
-coverage>=7.15.0
+pytest>=9.1.1
+pytest-bdd>=8.1.0
+pytest-asyncio>=1.4.0
+pytest-cov>=7.1.0
+coverage>=7.15.4
 
 # Token counting
-tiktoken>=0.13.0
+tiktoken>=0.14.0
 
 # Utils
-python-dateutil>=2.8.0
+python-dateutil>=2.9.0.post0
 
 # Security audit
-pip-audit>=2.7.0
+pip-audit>=2.10.1
