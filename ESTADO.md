@@ -1,6 +1,25 @@
 # ESTADO VIVO
 
-## REDISEÑO WEB + AGENDA FUNCIONAL (2026-08-26)
+## 🚨 MIGRACIÓN OVH→CONTABO en curso (2026-09-03) — VER WEB CAÍDA
+- **OVH `149.56.46.173` CAÍDO desde ~10:20 hoy** (cron `vps-health` alertando 22/80/11434): ya NO es "ruta intermitente", son 5+ horas.
+- **sonoradigitalcorp.com = HTTP 530** (Cloudflare origin unreachable) → **WEB PÚBLICA CAÍDA**.
+- **Contabo `109.199.101.225`** (vmi3551687, cliente 15363300, Cloud VPS 8 no-setup→YA con SO): puerto 22 ABIERTO pero **NINGUNA llave entra** (`Permission denied` root/ubuntu × 3 llaves). So instaló SIN la key `mystic-contabo` inyectada.
+- **BLOQUEO**: requiere 1 de 2: (A) reinstall Contabo con llave pública `mystic-contabo` en panel, o (B) contraseña root para `sshpass`. Hasta entonces NO hay deploy a Contabo.
+- **Composio Gmail ✅ CONECTADO Y VERIFICADO** (2026-09-03): `sonoradigitalcorp@gmail.com`, 3935 msgs, fetch real OK. También activos: googlecalendar, telegram, notion, github, whatsapp, instagram, etc. MCP composio registrado (`ck_` key en config, backend 200).
+- **Inventario FASE 2 creado**: `00_Administration/plans/MIGRACION_CONTABO_INVENTARIO_FASE2.md` (19 servicios clasificados A/B/C/D + crons + secrets + DNS).
+- Sesión de migración (Gemini): `ses_f98467e05ffegRciFO9Ip5f6vJ`. `id_contabo_new` queda como llave Contabo (en `~/.ssh/ssh_keys_backup/`).
+
+## 24/7 VPS VERIFICADO + NGINX FIX (2026-08-26)
++- ✅ **8 servicios activos y enabled** (arrancan al boot): vps-ai-server, sdc-stt, sdc-tts, tubandera-bot, hermes-gateway, hermosillo-webhook, cloudflared-tunnel, **nginx**.
++- ✅ **Todos `Restart=always`** — corregido `nginx` que estaba `Restart=no` (drop-in `/etc/systemd/system/nginx.service.d/override.conf`). Era el único gap de resiliencia.
++- ✅ **Gateway Hermes (orquestador)**: health 200. **1 proceso por servicio** (sin duplicados).
++- ✅ **Crons automáticos**: suite_test (cada hora), sync_metrics (cada 10 min via wrapper env), run_automejora (cada 15 min), automejora-suggest (domingo), audio_matutino (8am). Todos apuntan al venv correcto.
++- ✅ Web pública sonoradigitalcorp.com = 200.
++- 🔲 **kokoro onnx instalado en VPS** (`kokoro-v0_19.onnx` 311MB en /opt/hermes/kokoro) pero **FALTA `voices-v1.0.bin`** → activar kokoro local (TTS $0 sin red) pendiente.
++- ✅ **Mode `tubandera_anonimo`**: modo SOUL para chat anónimo en Telegram/WEB — respeta anonimato, sin presión de CTA, validación de riesgo solo ante peligro inmediato. Reglas 1-7 incluidas en system prompt.
++- 🔧 **Fix syntax SOUL rules 13-15 tubandera**: corregido parsing de rules de internamiento y confidencialidad en vps_ai_server.py (añadidos `\n` de continuidad).
+
+ ## REDISEÑO WEB + AGENDA FUNCIONAL (2026-08-26)
 - **claude-design aplicado** a las páginas: orden + todo input→output funcional.
 - **`tubandera.html`**: modal agenda de valoración gratuita (nombre/tel/fecha/hora) → `POST /api/v1/citas` persona=tubandera → confirmación/error. Fix `id="servicios"` duplicado→`tratamiento`. Chat con indicador "escribiendo...". Fix bug `if.e.key`→`if(e.key)` (mata el SyntaxError que impedía abrir el chat).
 - **`nathaly.html`**: modal agenda de diagnóstico gratis → `POST /api/v1/citas` persona=nathaly → confirmación. CTA hero abre el modal. Paleta cian integrada.
