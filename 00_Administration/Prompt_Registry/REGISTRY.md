@@ -26,3 +26,17 @@
 3. Generar evals en `evals/` y evidencia en `assets/`.
 4. Correr `scripts/spec_judge.py` — solo pasar a `approved` si PASS >= 80.
 5. Agregar fila aquí. Unificar si existe un prompt equivalente (eliminar redundancia).
+
+## Regla de caching LLM (KV cache / prefix — cap. 2 curso de IA)
+
+Aplica a TODOS los prompts que pasan por OpenRouter (incluidos system prompts de agentes, no solo contenido). Ver skill `~/.hermes/skills/llm-prompt-caching`.
+
+**LO FIJO ADELANTE, LO VARIABLE ATRÁS.** El caché de prefijo se corta en el primer carácter que cambia.
+
+- Adelante (fijo): identidad, personalidad, instrucciones estáticas, skills, reglas canónicas.
+- Atrás (variable): timestamp/fecha, contexto del día, datos de usuario, variables de sesión.
+- ⚠️ NUNCA un `date`/`now()`/timestamp al INICIO del system prompt: mata el caché en cada llamada → 99% del prompt a precio de creación (caro) en vez de lectura (barato).
+- Cache **read** (hit) ≈ precio de lectura; cache **create** (miss) = precio de creación. Ahorro 50x–5.000x.
+- Verificar en respuestas: `provider_cache_hit` / `provider_cache_miss` / `cached_token`.
+
+**Checklist al crear/editar cualquier prompt:** fijo primero · variable al final · sin timestamp al inicio · prefijo idéntico entre llamadas repetidas.
