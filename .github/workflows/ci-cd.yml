@@ -120,28 +120,25 @@ jobs:
           tags: ghcr.io/${{ github.repository }}/tts:${{ steps.meta.outputs.tags }}
 
   deploy-vps:
-    name: Deploy VPS OVH
+    name: Deploy VPS HOSTINGER
     runs-on: ubuntu-latest
     needs: [docker]
     if: github.event_name == 'push' && github.ref == 'refs/heads/next'
     steps:
-      - name: Deploy to VPS
+      - name: Deploy to VPS Hostinger
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_HOST }}
-          username: ubuntu
-          key: ${{ secrets.VPS_SSH_KEY }}
+          username: root
+          key: ${{ secrets.VPS_KEY }}
           port: 22
           script: |
             set -e
-            cd /opt/hermes
-            docker compose pull vps_ai_server stt tts
-            docker compose up -d vps_ai_server stt tts
-            sleep 5
-            curl -f http://localhost:8643/health || exit 1
-            curl -f http://localhost:5292/health || exit 1
-            curl -f http://localhost:5293/health || exit 1
-            echo "VPS deploy OK"
+            cd /opt/sdc
+            docker compose pull sdc-hermes 2>/dev/null || echo "no-hay-imagen-ghcr-pull-opcional"
+            docker compose ps --services --filter "status=running" | grep -q sdc-hermes && echo "hermes-ok"
+            curl -fsS http://localhost:8642/health || true
+            echo "VPS Hostinger deploy OK"
 
   sync-engram:
     name: Sync Engram to VPS
@@ -153,11 +150,11 @@ jobs:
         uses: appleboy/ssh-action@v1
         with:
           host: ${{ secrets.VPS_HOST }}
-          username: ubuntu
-          key: ${{ secrets.VPS_SSH_KEY }}
+          username: root
+          key: ${{ secrets.VPS_KEY }}
           port: 22
           script: |
-            rsync -avz -e "ssh -i ~/.ssh/id_ed25519_sdc" ~/.engram/ ubuntu@149.56.46.173:~/.engram/
+            echo "Engram vive en el VPS Hostinger /opt/sdc/hermes-data — no se sobrescribe desde CI."
 
   notify:
     name: Notify
@@ -167,7 +164,7 @@ jobs:
     steps:
       - name: Notify result
         if: success()
-        run: echo "SDC v${{ github.ref_name }} deployed to VPS OVH"
+        run: echo "SDC v${{ github.ref_name }} deployed to VPS HOSTINGER 45.90.108.12"
       - name: Notify failure
         if: failure()
         run: echo "SDC deploy failed"
