@@ -1,0 +1,74 @@
+# Deploy tubandera.online → VPS HOSTINGER (Hostinger 45.90.108.12)
+# Secrets requeridos (Settings → Secrets → Actions) — MISMO juego que deploy-vps.yml:
+#   VPS_HOST=45.90.108.12
+#   VPS_USER=root
+#   VPS_KEY=clave privada id_ed25519
+#   VPS_SSH_PORT=22
+name: Deploy tubandera.online
+
+on:
+  push:
+    branches: [ next ]
+    paths:
+      - '02_Client_Projects/Tu_Bandera_Froy/04_Deployment/**'
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production-vps
+    if: github.ref == 'refs/heads/next'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # Sanity: la fuente canónica debe existir antes de tocar el VPS
+      - name: Verificar fuente canónica
+        run: |
+          test -f 02_Client_Projects/Tu_Bandera_Froy/04_Deployment/tubandera.html && echo "fuente OK" || { echo "FALTA tubandera.html"; exit 1; }
+
+      - name: Configurar SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.VPS_KEY }}
+
+      - name: Arrancar host key
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${{ secrets.VPS_SSH_PORT }}" "${{ secrets.VPS_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Subir tubandera.html al VPS
+        env:
+          SSH_HOST: ${{ secrets.VPS_HOST }}
+          SSH_USER: ${{ secrets.VPS_USER }}
+          SSH_PORT: ${{ secrets.VPS_SSH_PORT }}
+        run: |
+          scp -P "$SSH_PORT" -o StrictHostKeyChecking=no \
+            02_Client_Projects/Tu_Bandera_Froy/04_Deployment/tubandera.html \
+            "$SSH_USER@$SSH_HOST:/var/www/sonoradigitalcorp/tubandera.html"
+
+      - name: Reload Nginx
+        env:
+          SSH_HOST: ${{ secrets.VPS_HOST }}
+          SSH_USER: ${{ secrets.VPS_USER }}
+          SSH_PORT: ${{ secrets.VPS_SSH_PORT }}
+        run: |
+          ssh -p "$SSH_PORT" -o StrictHostKeyChecking=no \
+            "$SSH_USER@$SSH_HOST" "sudo systemctl reload nginx && echo Nginx_reloaded"
+
+      # Verificación por hash: lo servido debe ser idéntico al repo (evita subir dos veces)
+      - name: Verificar deploy por hash
+        env:
+          SSH_HOST: ${{ secrets.VPS_HOST }}
+          SSH_USER: ${{ secrets.VPS_USER }}
+          SSH_PORT: ${{ secrets.VPS_SSH_PORT }}
+        run: |
+          LOCAL=$(sha256sum 02_Client_Projects/Tu_Bandera_Froy/04_Deployment/tubandera.html | cut -d' ' -f1)
+          REMOTO=$(ssh -p "$SSH_PORT" -o StrictHostKeyChecking=no \
+            "$SSH_USER@$SSH_HOST" "sha256sum /var/www/sonoradigitalcorp/tubandera.html | cut -d' ' -f1")
+          echo "local=$LOCAL remoto=$REMOTO"
+          [ "$LOCAL" = "$REMOTO" ] && echo "✅ hashes coinciden" || { echo "❌ hash no coincide"; exit 1; }
+          curl -fsSL --max-time 20 http://tubandera.online | grep -qi "tubandera" || { echo "❌ tubandera.online no responde con contenido"; exit 1; }
