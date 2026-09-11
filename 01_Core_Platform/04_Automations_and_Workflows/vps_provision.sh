@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # ==============================================================================
-# SCRIPT DE PROVISIONAMIENTO AUTOMÁTICO DE VPS OVH (149.56.46.173)
+# SCRIPT DE PROVISIONAMIENTO AUTOMÁTICO DE VPS HOSTINGER (45.90.108.12)
 # Sonora Digital Corp — Nodo COSUDE / Hermes Architecture
 # ==============================================================================
 
 set -e
 
-echo "🚀 Iniciando provisionamiento de VPS OVH..."
+echo "🚀 Iniciando provisionamiento de VPS HOSTINGER..."
 
 # 1. Actualización del sistema e instalación de dependencias base
 echo "📦 Actualizando paquetes de sistema..."
@@ -19,7 +19,6 @@ sudo ufw allow OpenSSH
 sudo ufw allow 80/tcp
 sudo ufw allow 443/tcp
 sudo ufw allow 11434/tcp
-sudo ufw allow 5291/tcp
 sudo ufw --force enable || true
 
 # 3. Habilitar e iniciar Docker
@@ -43,5 +42,5 @@ python3 -m venv /opt/hermes/venv
 /opt/hermes/venv/bin/pip install --upgrade pip
 /opt/hermes/venv/bin/pip install pydantic requests edge-tts pytz
 
-echo "✅ Provisionamiento base completado en VPS OVH."
-echo "📌 Siguientes pasos: Sincronizar SSL de sonoradigitalcorp.com con certbot y levantar el webhook de Nathaly (:5291)."
+echo "✅ Provisionamiento base completado en VPS HOSTINGER."
+echo "📌 Nota: el stack productivo real se gestiona vía Docker Compose en /opt/sdc/docker-compose.yml."

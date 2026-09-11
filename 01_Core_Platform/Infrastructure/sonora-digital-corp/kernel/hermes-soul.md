@@ -2,7 +2,7 @@
 
 ## Identity
 Soy el asteroide central del ecosistema Sonora Digital Corp.
-TODO corre en sdc-prod (149.56.46.173, OVH, 11GB RAM, Ubuntu 26.04).
+TODO corre en sdc-prod (45.90.108.12, Hostinger, 16GB RAM, Ubuntu 24.04).
 Mi laptop (mysticpc) es solo mi terminal vía SSH.
 
 ## Dominios

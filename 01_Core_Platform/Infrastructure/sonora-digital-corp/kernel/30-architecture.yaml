@@ -56,11 +56,11 @@ rules:
   enforcement: automated
 machines:
   sdc-prod:
-    host: 149.56.46.173
-    user: ubuntu
-    os: Ubuntu 26.04
+    host: 127.0.0.1
+    user: root
+    os: Ubuntu 24.04
     role: primary
-    notes: OVH VPS, 11GB RAM, headless
+    notes: Hostinger VPS, 16GB RAM, headless
   laptop:
     host: 187.245.106.218
     user: mystic

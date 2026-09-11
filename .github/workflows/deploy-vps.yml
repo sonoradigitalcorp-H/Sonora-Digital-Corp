@@ -1,8 +1,8 @@
-# Deploy a VPS OVH (sdc-prod) — SOLO desde rama next, requiere approval manual
+# Deploy a VPS HOSTINGER (srv1960584) — SOLO desde rama next, requiere approval manual
 # Secrets requeridos (Settings → Secrets → Actions):
-#   VPS_HOST=149.56.46.173
-#   VPS_USER=ubuntu
-#   VPS_KEY=clave privada id_ed25519_sdc (base64 o multilinea)
+#   VPS_HOST=45.90.108.12
+#   VPS_USER=root
+#   VPS_KEY=clave privada id_ed25519 (base64 o multilinea)
 #   VPS_SSH_PORT=22
 name: Deploy VPS (next → producción)
 

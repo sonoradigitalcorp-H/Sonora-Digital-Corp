@@ -43,6 +43,6 @@ orden, control, crecimiento, clientes, horas de vuelta, sin pendientes.
 | nathaly | Nathaly · Contabilidad | verde #0e8a6d | Tu contabilidad en orden y tu tiempo de vuelta |
 
 ## Infra (para el sistema, no para el cliente)
-- Todo pesado corre en sdc-prod VPS OVH 149.56.46.173.
+- Todo pesado corre en sdc-prod VPS HOSTINGER 45.90.108.12 (vía túnel SSH).
 - STT faster-whisper :5292, TTS kokoro/edge :5293, LLM ai_server :8643.
 - Laptop solo observa. Nunca carga modelos.

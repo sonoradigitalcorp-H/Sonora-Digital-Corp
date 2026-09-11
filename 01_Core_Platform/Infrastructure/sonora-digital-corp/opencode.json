@@ -292,37 +292,37 @@
     },
     "engram": {
       "type": "remote",
-      "url": "http://149.56.46.173:7437",
+      "url": "http://127.0.0.1:7437",
       "enabled": true,
       "description": "Engram \u2014 memoria persistente multi-sesi\u00f3n"
     },
     "qdrant": {
       "type": "remote",
-      "url": "http://149.56.46.173:6333",
+      "url": "http://127.0.0.1:6333",
       "enabled": true,
       "description": "Qdrant \u2014 vector DB para b\u00fasqueda sem\u00e1ntica"
     },
     "neo4j": {
       "type": "remote",
-      "url": "http://149.56.46.173:7687",
+      "url": "http://127.0.0.1:7687",
       "enabled": true,
       "description": "Neo4j \u2014 graph DB para relaciones y CRM"
     },
     "n8n": {
       "type": "remote",
-      "url": "http://149.56.46.173:5678",
+      "url": "http://127.0.0.1:5678",
       "enabled": true,
       "description": "n8n \u2014 workflow automation"
     },
     "adk": {
       "type": "remote",
-      "url": "http://149.56.46.173:6401",
+      "url": "http://127.0.0.1:6401",
       "enabled": true,
       "description": "ADK Bridge \u2014 36 agentes ADK (research, sales, support, onboarding, content, abe*)"
     },
     "shield": {
       "type": "remote",
-      "url": "http://149.56.46.173:8930",
+      "url": "http://127.0.0.1:8930",
       "enabled": true,
       "description": "Mystic Shield \u2014 diagn\u00f3stico de seguridad con IA, PDF, audio, WhatsApp, Email"
     }

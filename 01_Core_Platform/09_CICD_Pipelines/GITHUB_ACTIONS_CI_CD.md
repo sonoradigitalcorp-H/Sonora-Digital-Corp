@@ -170,7 +170,7 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: 22
           script: |
-            rsync -avz -e "ssh -i ~/.ssh/id_ed25519_sdc" ~/.engram/ ubuntu@149.56.46.173:~/.engram/
+            rsync -avz -e "ssh -i ~/.ssh/id_ed25519" ~/.engram/ root@45.90.108.12:~/.engram/
 
   # 7. Notify
   notify:
@@ -196,7 +196,7 @@ jobs:
 | Secret | Descripción |
 |--------|-------------|
 | `OPENROUTER_API_KEY` | Key para eval prompts (opcional) |
-| `VPS_HOST` | `149.56.46.173` |
+| `VPS_HOST` | `45.90.108.12` |
 | `VPS_SSH_KEY` | Private key `id_ed25519_sdc` (base64 encoded) |
 | `GITHUB_TOKEN` | Auto-provided |
 
@@ -287,7 +287,7 @@ services:
 ssh sdc-prod 'cd /opt/hermes && docker compose pull && docker compose up -d && curl -f http://localhost:8643/health'
 
 # Sync Engram manual
-rsync -avz ~/.engram/ ubuntu@149.56.46.173:~/.engram/
+rsync -avz ~/.engram/ root@45.90.108.12:~/.engram/
 
 # Verificar salud
 curl https://sonoradigitalcorp.com/health

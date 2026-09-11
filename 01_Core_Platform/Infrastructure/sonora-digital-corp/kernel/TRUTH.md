@@ -213,18 +213,16 @@ Autonomy levels: L0(Manual) → L1(Assisted) → L2(Supervised) → L3(Delegated
 
 | What | Value |
 |------|-------|
-| IP | 149.56.46.173 |
-| OS | Ubuntu 26.04 |
-| User | ubuntu |
-| SSH key | `~/.ssh/id_ed25519_sdc` |
-| SSH host | 149.56.46.173 |
-| Monorepo path | `/home/ubuntu/sonora-digital-corp/` (physical) |
-| Symlink | `~/sdc → /home/ubuntu/sonora-digital-corp/` |
-| Latest commit | `a7d9ee9` |
+| IP | 45.90.108.12 |
+| OS | Ubuntu 24.04 |
+| User | root |
+| SSH key | `~/.ssh/id_ed25519` |
+| SSH host | 45.90.108.12 |
+| Stack path | `/opt/sdc` (Docker Compose, `docker-compose.yml`) |
+| Latest infra | Hostinger `srv1960584` (desde 2026-09-10; OVH/Contabo eliminados) |
 | n8n | Docker, port 5678 |
-| Neo4j | Docker, port 7687 |
 | Qdrant | Docker, port 6333 |
-| LangFuse | Docker, port 3000 (unhealthy) |
+| Supabase | Docker, port 5432 (citas/leads) |
 | Playwright MCP | Docker, port 8931 (unhealthy) |
 | Web UI | Docker, port 5174 |
 

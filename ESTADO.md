@@ -1,13 +1,21 @@
 # ESTADO VIVO
 
-## 🚨 MIGRACIÓN OVH→CONTABO en curso (2026-09-03) — VER WEB CAÍDA
-- **OVH `149.56.46.173` CAÍDO desde ~10:20 hoy** (cron `vps-health` alertando 22/80/11434): ya NO es "ruta intermitente", son 5+ horas.
-- **sonoradigitalcorp.com = HTTP 530** (Cloudflare origin unreachable) → **WEB PÚBLICA CAÍDA**.
-- **Contabo `109.199.101.225`** (vmi3551687, cliente 15363300, Cloud VPS 8 no-setup→YA con SO): puerto 22 ABIERTO pero **NINGUNA llave entra** (`Permission denied` root/ubuntu × 3 llaves). So instaló SIN la key `mystic-contabo` inyectada.
-- **BLOQUEO**: requiere 1 de 2: (A) reinstall Contabo con llave pública `mystic-contabo` en panel, o (B) contraseña root para `sshpass`. Hasta entonces NO hay deploy a Contabo.
-- **Composio Gmail ✅ CONECTADO Y VERIFICADO** (2026-09-03): `sonoradigitalcorp@gmail.com`, 3935 msgs, fetch real OK. También activos: googlecalendar, telegram, notion, github, whatsapp, instagram, etc. MCP composio registrado (`ck_` key en config, backend 200).
-- **Inventario FASE 2 creado**: `00_Administration/plans/MIGRACION_CONTABO_INVENTARIO_FASE2.md` (19 servicios clasificados A/B/C/D + crons + secrets + DNS).
-- Sesión de migración (Gemini): `ses_f98467e05ffegRciFO9Ip5f6vJ`. `id_contabo_new` queda como llave Contabo (en `~/.ssh/ssh_keys_backup/`).
+## 🎉 VPS HOSTINGER ACTIVO — OVH y CONTABO ELIMINADOS (2026-09-10)
+- **Nuevo hogar único en producción**: Hostinger `srv1960584` = `45.90.108.12` (IPv6 `2a02:4780:10:f7a0::1`). Ubuntu 24.04.4 LTS, 4 cores, **16GB RAM**, disco 193G (18%).
+- **SSH**: `root@45.90.108.12` con la llave local `~/.ssh/id_ed25519` (mystic@mysticpc). VERIFICADO root funcional.
+- **Stack completo CORRIENDO** (Docker Compose `/opt/sdc`, solo `docker` systemd): sdc-hermes(:8642), sdc-nginx(80/443), sdc-ollama(:11434), sdc-qdrant(:6333), sdc-n8n(:5678), sdc-supabase-db(:5432), sdc-grafana/sdc-prometheus, sdc-cloudflared, sdc-ocr, sdc-supabase-auth/rest/realtime. 13 contenedores.
+- **Dominio `tubandera.online`**: DNS A @ -> 45.90.108.12 (Hostinger). `sonoradigitalcorp.com`: servido via nginx+cloudflared del VPS Hostinger (200 OK HTTPS).
+- **API Hostinger** (`~/.secrets/sonora/hostinger.env`) verificado 200 en `sonoradigitalcorp.com`.
+- **OLLAMA_ENDPOINT local -> `http://127.0.0.1:11434` via tunel SSH `root@45.90.108.12`** (ollama Hostinger en loopback). Verificado /api/tags 200.
+- **OVH `149.56.46.173`**: ELIMINADO de la config. Monitor `vps-health.sh` comentado en crontab, tunel SSH OVH muerto y retirado, llave `id_ed25519_sdc` ARCHIVADA en `~/.ssh/ssh_keys_backup/ovh_sdc-20260910/` (rollback de emergencia, NO activa).
+- **Contabo `109.199.101.225`**: plan abandonado. Llaves `id_contabo_new` BORRADAS, skill `contabo-migration` archivado.
+- **Crons**: `auto-mejora-diaria.sh` y crontab re-apuntados a Hostinger (root@45.90.108.12).
+- Migracion OVH->(Contabo)->**Hostinger** completa. Skills OVH/Contabo archivados en `~/.hermes/skills/_archived_ovh_contabo_20260910/`.
+
+## 🚨 PROGRAMA LEGADO — OVH CAIDO / CONTABO ABANDONADO (contexto historico)
+(*Seccion conservada como historia; lo operativo ya se migro a Hostinger arriba*)
+- **OVH `149.56.46.173` CAIDO** (cron `vps-health` alertando hasta 2026-09-10) -> **reemplazado por Hostinger**. NO revertir.
+- **Contabo `109.199.101.225`** tenia puerto 22 abierto pero SIN llave -> plan abandonado, nunca se completo.
 
 ## 24/7 VPS VERIFICADO + NGINX FIX (2026-08-26)
 +- ✅ **8 servicios activos y enabled** (arrancan al boot): vps-ai-server, sdc-stt, sdc-tts, tubandera-bot, hermes-gateway, hermosillo-webhook, cloudflared-tunnel, **nginx**.

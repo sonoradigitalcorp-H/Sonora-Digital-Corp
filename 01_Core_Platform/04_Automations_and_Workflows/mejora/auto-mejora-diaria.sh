@@ -26,11 +26,11 @@ OUT="$LOG/auto-mejora-$TS.log"
     [ "$C" -gt 1 ] && echo "⚠️ $m x$C — matar extras" && pkill -of "$m"
   done
 
-  echo "--- 3. Servicios VPS (via SSH, no gasta LLM) ---"
+  echo "--- 3. Servicios VPS Hostinger (via SSH, no gasta LLM) ---"
   ssh -o ConnectTimeout=6 -o BatchMode=yes -o IdentitiesOnly=yes \
-    ubuntu@149.56.46.173 -p 22 -i "$HOME/.ssh/id_ed25519_sdc" -o StrictHostKeyChecking=no \
-    "for s in nginx cloudflared-tunnel vps-ai-server hermosillo-webhook hermes-gateway; do printf '%s ' \$(systemctl is-active \$s); done" \
-    2>/dev/null || echo "⚠️ VPS no alcanzable"
+    root@45.90.108.12 -p 22 -i "$HOME/.ssh/id_ed25519" -o StrictHostKeyChecking=no \
+    'systemctl is-active docker >/dev/null 2>&1 && docker ps --format "{{.Names}} {{.Status}}" 2>/dev/null | head -15 || echo "docker no responde"' \
+    2>/dev/null || echo "⚠️ VPS Hostinger no alcanzable"
 
   echo "--- 4. Disk ---"
   df -h / | awk 'NR==2 { if ($5+0 > 85) print "⚠️ DISK "$5; else print "Disk OK "$5 }'
