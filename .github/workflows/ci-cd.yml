@@ -53,6 +53,8 @@ jobs:
     name: Eval Prompts (nemotron-free)
     runs-on: ubuntu-latest
     needs: lint
+    env:
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
     steps:
       - uses: actions/checkout@v4
       - name: Setup Python
@@ -62,9 +64,7 @@ jobs:
       - name: Install deps
         run: pip install -q pyyaml
       - name: Run eval
-        if: ${{ secrets.OPENROUTER_API_KEY != '' }}
-        env:
-          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+        if: ${{ env.OPENROUTER_API_KEY != '' }}
         run: python3 01_Core_Platform/09_CICD_Pipelines/prompt_registry/run_eval.py
       - name: Upload eval results
         uses: actions/upload-artifact@v4
