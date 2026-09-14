@@ -1,5 +1,16 @@
 # ESTADO VIVO
 
+## 🔧 CONSOLIDACIÓN ECOSISTEMA — VPS FUENTE CANÓNICA (2026-09-14)
+- **SDD-0014 creado**: `01_Core_Platform/09_CICD_Pipelines/Specs/SDD/0014-ecosistema-unificado-vps/` (SPEC + Gherkin + Plan).
+- **Fase 1 completada**: Gateway local HERMES APAGADO (mysticpc). VPS Hostinger `45.90.108.12` = fuente canónica única.
+- **Fase 2 completada**: Token Tu-Bandera `@TBasistente_bot` ROTADO y funcionando. Archivo `.env` profile con token viejo → actualizado. 3 bots Telegram activos en VPS: hermosillo-cont, sonora-digital-corp, tu-bandera.
+- **Fase 3 completada**: Memoria consolidada. 5 facts de `memory_store.db` local → migrados a Engram (808 obs total). `memory_store.db` con 5 facts copiado a VPS. `memory_enabled: true` activado. 3 colecciones Qdrant: `engram_memories`, `hermes`, `tubandera_kb`.
+- **Fase 4 pospuesta**: Limpieza `opencode.db` (2.2GB, 346K events) pendiente — DB funcional, riesgo de corrupción si se toca en vivo. Backup en `/tmp/opencode_backup_20260914/`.
+- **Proceso stuck eliminado**: `python3 -c "import re..."` quemando 99.9% CPU desde Sep 11 → kill -9.
+- **Backups**: `/tmp/hermes_backup_20260914/` (engram + memory_store), `/tmp/opencode_backup_20260914/` (opencode.db 2.0GB).
+- **Lección**: Profile `.env` OVERRIDES config.yaml token. Siempre verificar `profiles/<nombre>/.env` además de `config.yaml`.
+- **Lección**: `docker compose up -d hermes` NO recrea si el servicio no cambió — usar `--force-recreate` después de cambios en config/env.
+
 ## 🎉 VPS HOSTINGER ACTIVO — OVH y CONTABO ELIMINADOS (2026-09-10)
 - **Nuevo hogar único en producción**: Hostinger `srv1960584` = `45.90.108.12` (IPv6 `2a02:4780:10:f7a0::1`). Ubuntu 24.04.4 LTS, 4 cores, **16GB RAM**, disco 193G (18%).
 - **SSH**: `root@45.90.108.12` con la llave local `~/.ssh/id_ed25519` (mystic@mysticpc). VERIFICADO root funcional.
