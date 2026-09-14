@@ -1,0 +1,10 @@
+[Unit]
+Description=Hermes Proactive Scheduler — Daily Timer (7am CDT / 14:00 UTC)
+
+[Timer]
+OnCalendar=*-*-* 14:00:00
+Persistent=true
+RandomizedDelaySec=60
+
+[Install]
+WantedBy=timers.target

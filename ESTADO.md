@@ -1,5 +1,29 @@
 # ESTADO VIVO
 
+## 🔄 RESTAURACIÓN COMPLETA + SCHEDULER PROACTIVO (2026-09-14)
+- **Auditoría reveló**: ESTADO.md era FICCIÓN — `/opt/hermes/` estaba VACÍO en el VPS tras reprovisionamiento. Solo existía Docker Compose (13 containers) + tubandera-bot.
+- **Servicios restaurados desde repo local** (commit `4073770d`):
+  - `vps-ai-server.py` → `/opt/hermes/` (API chat+STT/TTS proxy, :8643) ✅ active+enabled
+  - `stt_server.py` → `/opt/hermes/voice/` (faster-whisper base int8, :5292) ✅ active+enabled
+  - `tts_server.py` → `/opt/hermes/voice/` (edge-tts, :5293) ✅ active+enabled
+  - `sync_metrics.py`, `run_automejora.py` → `/opt/hermes/scripts/`
+- **Web pages restauradas**: tubandera.html, nathaly.html, chat.html → `/opt/sdc/nginx/html/` ✅ 200 OK
+- **Nginx actualizado** (`/opt/sdc/nginx/conf.d/default.conf`): `/api/` → :8643, `/health` → :8643, `/webhook/` → :5291, `/hermosillo_assets/`, `/tubandera_assets/`
+- **Scheduler proactivo creado**: `proactive_scheduler.py` — briefings matutinos 7am CDT, health checks, contradiction detector, OpenRouter credits monitor. Timer `proactive-scheduler.timer` activo.
+- **Venv Python**: `/opt/hermes/venv/` con pydantic, requests, edge-tts, faster-whisper, prometheus_client, psycopg2-binary
+- **Estado real de servicios** (verificado 2026-09-14 16:20 UTC):
+  - 6 servicios activos: vps-ai-server, sdc-stt, sdc-tts, hermes-gateway, cloudflared-tunnel, nginx
+  - 13 Docker containers healthy
+  - OpenRouter: $2.10 restantes ($7.90 usados)
+  - Qdrant: 3 colecciones (hermes, tubandera_kb, engram_memories) — vectors_count = 0 (pendiente re-indexación)
+  - Ollama: 3 modelos (nomic-embed-text, qwen2.5:7b, gemma:2b)
+  - RAM: 13.7%, Disco: 21%, Load: 0.13
+- **Pendientes**:
+  - Re-indexar Qdrant (collections existen pero 0 vectors)
+  - Migrar contenido web de `/opt/sdc/nginx/html/` (assets tu-bandera, hermosillo_assets)
+  - Cron suite_test horario + sync_metrics cada 10min
+  - Fase 4: limpieza opencode.db (2.2GB)
+
 ## 🔧 CONSOLIDACIÓN ECOSISTEMA — VPS FUENTE CANÓNICA (2026-09-14)
 - **SDD-0014 creado**: `01_Core_Platform/09_CICD_Pipelines/Specs/SDD/0014-ecosistema-unificado-vps/` (SPEC + Gherkin + Plan).
 - **Fase 1 completada**: Gateway local HERMES APAGADO (mysticpc). VPS Hostinger `45.90.108.12` = fuente canónica única.
